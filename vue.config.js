@@ -5,13 +5,22 @@ module.exports = defineConfig({
   pluginOptions: {
     vuetify: {},
     i18n: {
-      locale: undefined,
-      fallbackLocale: undefined,
-      localeDir: undefined,
-      enableLegacy: undefined,
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableLegacy: false,
       runtimeOnly: false,
       compositionOnly: false,
       fullInstall: true
+    }
+  },
+  css: {
+    loaderOptions: {
+      css: {
+        modules: {
+          auto: () => true
+        }
+      }
     }
   }
 })

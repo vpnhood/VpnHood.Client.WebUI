@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-main>
-      <router-view/>
+    <v-main id="main-bg">
+      <router-view id="routerView"/>
     </v-main>
   </v-app>
 </template>
@@ -19,3 +19,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+#main-bg{
+  background-image: linear-gradient(#1940b0, #122272);
+}
+#routerView{
+  background: url("/src/assets/img/body-bg.png") no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+}
+@media (max-width: 425px) {
+  #routerView{
+    background-image: url("/src/assets/img/body-bg-mobile.png");
+  }
+}
+</style>

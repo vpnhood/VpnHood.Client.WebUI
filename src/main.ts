@@ -1,11 +1,10 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './plugins/router'
 import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
 import i18n from './locales/i18n'
-
-loadFonts()
+import './assets/css/override.css'
+import './assets/css/general.css'
 
 createApp(App).use(i18n)
   .use(router)

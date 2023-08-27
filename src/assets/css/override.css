@@ -1,0 +1,6 @@
+.v-btn{
+    text-transform: none !important;
+}
+.v-overlay__scrim{
+    opacity: 50% !important;
+}

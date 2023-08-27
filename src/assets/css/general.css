@@ -1,0 +1,309 @@
+/*---------------------- Import font ------------------------*/
+@font-face {
+    font-family: body;
+    src: url('../fonts/arial.ttf') format('truetype');
+}
+@font-face {
+    font-family: title;
+    src: url('../fonts/ARIALNB.TTF') format('truetype');
+}
+/*--------------------- Define Color ---------------------*/
+:root {
+    --dark-blue: #122272;
+    --medium-blue: #132a7a;
+    --light-blue: #1940b0;
+    --sky-blue: #16a3fe;
+    --master-green: #23c99d;
+    --sharp-master-green: #3ff6a9;
+    --light-purple: #8d9fe4;
+    --muted-color: rgba(255, 255, 255, 0.2);
+    --light-gray: #929292;
+    --connected-glare: green;
+}
+/*-------------------- Default Style -------------------*/
+body,.v-application [class*="text-"] {
+    font-family: body, sans-serif !important;
+}
+.v-application [class*="text-h"] {
+    font-family: title, sans-serif !important;
+}
+.bg-dark-blue{
+    background-color: var(--dark-blue);
+}
+.bg-medium-blue{
+    background-color: var(--medium-blue);
+}
+.bg-light-blue{
+    background-color: var(--light-blue);
+}
+.bg-sky-blue{
+    background-color: var(--sky-blue);
+}
+.bg-master-green{
+    background-color: var(--master-green);
+}
+.bg-light-purple{
+    background-color: var(--light-purple);
+}
+.color-master-green{
+    color: var(--master-green);
+}
+.color-sharp-master-green{
+    color: var(--sharp-master-green);
+}
+.color-sky-blue{
+    color: var(--sky-blue);
+}
+.color-light-purple{
+    color: var(--light-purple);
+}
+.main-button {
+    color: white !important;
+    height: 40px !important;
+    width: 200px;
+    background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));
+    transition: all 0.4s ease;
+    margin: 0 0 0 0;
+    border-radius: 5px;
+}
+.main-button:focus {
+    box-shadow: 0px 16px 20px 15px rgba(0, 0, 0, .20);
+    border: white 3px solid;
+}
+.main-button:before {
+    display: none !important;
+}
+@media tv {
+    .main-button {
+        border-color: #ffffff00;
+        border-width: 3px;
+        border-style: dashed;
+    }
+
+    .main-button:focus {
+        border-color: #ffffff;
+    }
+}
+#disconnectButton {
+    background: var(--sky-blue);
+}
+
+#disconnectingButton {
+    background: var(--sky-blue);
+}
+
+.state-none #circleOuter {
+    opacity: 0.3;
+}
+
+.white-link:hover,
+.white-link:focus {
+    color: var(--sky-blue);
+}
+/*------------------- Home Middle Section -------------------*/
+#circleOuter {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    padding-top: 15px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#circle {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#circleOuter:before,
+#circle:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 2px white solid;
+    border-radius: 50%;
+    transition: all 1.5s ease;
+}
+
+#circleContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.state-None #circleOuter {
+    opacity: 0.3;
+}
+
+#bandwidthUsage {
+    font-size: 20px;
+    transition: color 0.4s ease;
+}
+
+#bandwithTotal {
+    font-family: 'Arial-Narow-Bold';
+    font-size: 25px;
+    color: var(--sky-blue);
+    transition: color 0.4s ease;
+}
+
+.state-diagnosing #circleOuter:before,
+.state-diagnosing #circle:before,
+.state-connecting #circleOuter:before,
+.state-connecting #circle:before,
+.state-disconnecting #circleOuter:before,
+.state-disconnecting #circle:before {
+    animation: circle-anim 2s infinite;
+}
+
+.state-diagnosing #circle:before,
+.state-disconnecting #circle:before,
+.state-connecting #circle:before {
+    animation-delay: 1s;
+}
+
+.state-none #speedSection
+{
+    visibility: hidden;
+}
+@keyframes circle-anim {
+    0% {opacity: 0.80;}
+    40% {opacity: 0.2;}
+    60% {opacity: 0.2;}
+    100% {opacity: 0.80;}
+}
+.state-connected #circleOuter:before {
+    border-width: 0px;
+    box-shadow: inset 0 0 30px #fff,
+    inset 10px 0 50px var(--connected-glare),
+    inset -10px 0 50px var(--connected-glare),
+    0 0 50px #fff,
+    -10px 0 30px var(--connected-glare),
+    10px 0 30px var(--connected-glare);
+}
+/*------------------- Home Bottom Section -------------------*/
+#homeContainer {
+    max-width: 1024px;
+}
+
+#configSection .config-btn {
+    border: 1px rgba(22, 163, 254, 0.3) solid;
+    border-radius: 5px;
+    padding: 8px 10px 10px 10px;
+    cursor: pointer;
+    background: #132a7a38;
+    transition: all .4s linear;
+    width: 100%;
+    text-align: left;
+}
+
+#configSection .v-btn__content {
+    justify-content: left;
+}
+
+#speedSection {
+    opacity: 0;
+    transition: opacity 1.4s ease;
+}
+
+.state-connected #speedSection {
+    opacity: 1;
+}
+
+.speedLabel {
+    color: var(--sky-blue);
+    margin-right: 5px;
+}
+
+.speedUnit {
+    margin-left: 5px;
+    margin-right: 5px;
+    color: var(--light-purple);
+}
+
+.config-label {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+    /* text-transform: none; */
+}
+
+.config-icon {
+    margin-right: 4px;
+    font-size: 20px !important;
+}
+
+.config-arrow,
+.config-icon,
+.config-label {
+    color: var(--sky-blue) !important;
+}
+
+.config {
+    color: var(--light-purple) !important;
+    text-transform: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 0.85rem;
+}
+/*------------------- Responsive -------------------*/
+@media all and (max-width: 425px) {
+    #sectionWrapper:before {
+        background-image: url("../img/body-bg-mobile.png");
+    }
+    #logo img {
+        max-width: 60px;
+    }
+    h1,
+    h2,
+    h3 {
+        font-family: 'Arial-Narow-Bold';
+        font-size: 25px;
+    }
+}
+
+@media all and (min-width: 600px) {
+    .my-card-view {
+        border: 1px rgba(22, 163, 254, 0.3) solid;
+        border-radius: 10px;
+        padding: 30px;
+        background: #132a7a85;
+        width: 100%;
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+    .main-button {
+        width: 250px;
+    }
+}
+
+@media all and (min-width: 1024px) {
+    html {
+        font-size: 20px;
+    }
+    .main-button:focus {
+        box-shadow: 0px 15px 14px 3px rgba(0, 0, 0, 0.20);
+    }
+    .main-button:focus:before {
+        display: none;
+    }
+    #configSection>button:focus {
+        background: #132a7ab0;
+        border-color: var(--master-green);
+        transition: all .4s linear;
+        outline: none;
+    }
+}
