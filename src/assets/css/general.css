@@ -1,11 +1,24 @@
 /*---------------------- Import font ------------------------*/
 @font-face {
-    font-family: body;
-    src: url('../fonts/arial.ttf') format('truetype');
+    font-family: 'Arial-Regular';
+    font-style: normal;
+    src: url('../fonts/ARIAL.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'Arial-Narow';
+    font-style: normal;
+    src: url('../fonts/ARIALN.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'Arial-Narow-Bold';
+    font-style: normal;
+    src: url('../fonts/ARIALNB.TTF') format('truetype');
 }
 @font-face {
-    font-family: title;
-    src: url('../fonts/ARIALNB.TTF') format('truetype');
+    font-family: 'Arial-Bold';
+    src: url('../fonts/ARIALB.TTF') format('truetype');
 }
 /*--------------------- Define Color ---------------------*/
 :root {
@@ -22,10 +35,12 @@
 }
 /*-------------------- Default Style -------------------*/
 body,.v-application [class*="text-"] {
-    font-family: body, sans-serif !important;
+    font-family: 'Arial-Narow', sans-serif !important;
 }
+h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
+.title,
 .v-application [class*="text-h"] {
-    font-family: title, sans-serif !important;
+    font-family: 'Arial-Bold', sans-serif !important;
 }
 .bg-dark-blue{
     background-color: var(--dark-blue);
@@ -57,7 +72,60 @@ body,.v-application [class*="text-"] {
 .color-light-purple{
     color: var(--light-purple);
 }
+.txt-large-1{font-size: 1.1rem;}
+.txt-large-2{font-size: 1.2rem;}
+.txt-large-3{font-size: 1.3rem;}
+.txt-large-4{font-size: 1.4rem;}
+.txt-large-5{font-size: 1.5rem;}
+.txt-large-6{font-size: 1.6rem;}
+.txt-large-7{font-size: 1.7rem;}
+.txt-large-8{font-size: 1.8rem;}
+.txt-large-9{font-size: 1.9rem;}
+.txt-large-10{font-size: 2rem;}
+.txt-small-1{font-size: 0.9rem;}
+.txt-small-2{font-size: 0.8rem;}
+.txt-small-3{font-size: 0.7rem;}
+.txt-small-4{font-size: 0.6rem;}
+.txt-small-5{font-size: 0.5rem;}
+.txt-small-6{font-size: 0.4rem;}
+.txt-small-7{font-size: 0.3rem;}
+.txt-small-8{font-size: 0.2rem;}
+.txt-small-9{font-size: 0.1rem;}
+.regular-font{
+    font-family: 'Arial-Regular', serif;
+}
+.title-bold{
+    font-family: 'Arial-Bold', serif;
+}
+.color-sharp-master-green{
+    color: var(--sharp-master-green);
+}
+.h-100 {
+    height: 100%;
+}
+
+.app-version-mini {
+    font-family: 'Arial';
+    font-size: 0.7em !important
+}
+
+.app-title {
+    font-family: 'Arial-Narow-Bold';
+    font-size: 18px;
+}
+
+#stateText {
+    font-family: 'Arial-Regular';
+    font-size: 20px;
+}
+
+.main-button.theme--light.v-btn.v-btn--has-bg {
+    background-color: unset;
+}
+
 .main-button {
+    font-family: 'Arial-Narow-Bold';
+    font-size: 16px !important;
     color: white !important;
     height: 40px !important;
     width: 200px;
@@ -66,13 +134,16 @@ body,.v-application [class*="text-"] {
     margin: 0 0 0 0;
     border-radius: 5px;
 }
+
 .main-button:focus {
     box-shadow: 0px 16px 20px 15px rgba(0, 0, 0, .20);
     border: white 3px solid;
 }
+
 .main-button:before {
     display: none !important;
 }
+
 @media tv {
     .main-button {
         border-color: #ffffff00;
@@ -84,6 +155,7 @@ body,.v-application [class*="text-"] {
         border-color: #ffffff;
     }
 }
+
 #disconnectButton {
     background: var(--sky-blue);
 }
@@ -100,7 +172,11 @@ body,.v-application [class*="text-"] {
 .white-link:focus {
     color: var(--sky-blue);
 }
-/*------------------- Home Middle Section -------------------*/
+
+/*--------------------End of Default Style--------------------*/
+
+/*--------------------Home Middle Section--------------------*/
+
 #circleOuter {
     width: 200px;
     height: 200px;
@@ -174,22 +250,45 @@ body,.v-application [class*="text-"] {
 {
     visibility: hidden;
 }
+
 @keyframes circle-anim {
-    0% {opacity: 0.80;}
-    40% {opacity: 0.2;}
-    60% {opacity: 0.2;}
-    100% {opacity: 0.80;}
+    0% {
+        opacity: 0.80;
+    }
+
+    40% {
+        opacity: 0.2;
+    }
+
+    60% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0.80;
+    }
 }
+
 .state-connected #circleOuter:before {
+    /* border-color: var(--master-green); */
     border-width: 0px;
     box-shadow: inset 0 0 30px #fff,
+        /* inner white */
     inset 10px 0 50px var(--connected-glare),
+        /* inner left magenta short */
     inset -10px 0 50px var(--connected-glare),
+        /* inner right cyan broad */
     0 0 50px #fff,
+        /* outer white */
     -10px 0 30px var(--connected-glare),
+        /* outer left magenta */
     10px 0 30px var(--connected-glare);
+    /* outer right cyan */
 }
-/*------------------- Home Bottom Section -------------------*/
+
+/*--------------------End of Home Middle Section--------------------*/
+
+/*--------------------Home Bottom Section--------------------*/
 #homeContainer {
     max-width: 1024px;
 }
@@ -218,17 +317,6 @@ body,.v-application [class*="text-"] {
     opacity: 1;
 }
 
-.speedLabel {
-    color: var(--sky-blue);
-    margin-right: 5px;
-}
-
-.speedUnit {
-    margin-left: 5px;
-    margin-right: 5px;
-    color: var(--light-purple);
-}
-
 .config-label {
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -255,14 +343,20 @@ body,.v-application [class*="text-"] {
     text-overflow: ellipsis;
     font-size: 0.85rem;
 }
-/*------------------- Responsive -------------------*/
+
+/*--------------------End of Home Bottom Section--------------------*/
+
+/*--------------------Responsive--------------------*/
+
 @media all and (max-width: 425px) {
     #sectionWrapper:before {
         background-image: url("../img/body-bg-mobile.png");
     }
+
     #logo img {
         max-width: 60px;
     }
+
     h1,
     h2,
     h3 {
@@ -285,6 +379,7 @@ body,.v-application [class*="text-"] {
         flex-wrap: nowrap;
         align-items: center;
     }
+
     .main-button {
         width: 250px;
     }
@@ -294,12 +389,15 @@ body,.v-application [class*="text-"] {
     html {
         font-size: 20px;
     }
+
     .main-button:focus {
         box-shadow: 0px 15px 14px 3px rgba(0, 0, 0, 0.20);
     }
+
     .main-button:focus:before {
         display: none;
     }
+
     #configSection>button:focus {
         background: #132a7ab0;
         border-color: var(--master-green);
@@ -307,3 +405,5 @@ body,.v-application [class*="text-"] {
         outline: none;
     }
 }
+
+/*--------------------End of Responsive--------------------*/

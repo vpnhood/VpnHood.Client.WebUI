@@ -1,14 +1,14 @@
 import axios, {AxiosInstance} from "axios";
+import {ApiClient} from './VpnHood.Client.Api';
 
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string | undefined = process.env.VUE_APP_STORE_SERVER_API_BASE_URL;
-    private readonly appId: string | undefined = process.env.VUE_APP_STORE_SERVER_APP_ID;
+    private readonly baseUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
 
     constructor() {
 
-        if (this.baseUrl == undefined || this.appId == undefined)
+        if (this.baseUrl == undefined)
             throw new Error("Server API base url or app id is not set in the .env file.");
 
         //Define the axios default config
@@ -16,6 +16,7 @@ export class ClientApiFactory {
             baseURL: this.baseUrl,
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
         });
 
@@ -23,8 +24,6 @@ export class ClientApiFactory {
 
             async (config) => {
                 config.timeout = 15000;
-                const token = localStorage.getItem('storeJwtToken');
-                config.headers.Authorization = `Bearer ${token}`
                 return config;
             },
             async (error) => {
@@ -42,8 +41,9 @@ export class ClientApiFactory {
         return this._instance;
     }
 
-    /*public CreateTeamClient(): TeamClient {
-        return new TeamClient(this.baseUrl, this.axiosInstance);
-    }*/
+    //For each class of VpnHood.Client.Api.ts, we need to create a new method like below
+    public ApiClient(): ApiClient {
+        return new ApiClient(this.baseUrl, this.axiosInstance);
+    }
 
 }

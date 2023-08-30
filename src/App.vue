@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main id="main-bg">
+    <v-main id="mainBg">
       <router-view id="routerView"/>
     </v-main>
   </v-app>
@@ -21,7 +21,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#main-bg{
+#mainBg{
   background-image: linear-gradient(#1940b0, #122272);
 }
 #routerView{

@@ -14,13 +14,5 @@ module.exports = defineConfig({
       fullInstall: true
     }
   },
-  css: {
-    loaderOptions: {
-      css: {
-        modules: {
-          auto: () => true
-        }
-      }
-    }
-  }
+
 })
