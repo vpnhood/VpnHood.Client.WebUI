@@ -1,12 +1,13 @@
 import {ClientApiFactory} from "@/hood/ClientApiFactory";
-import {AppConnectionState, AppState, ConnectParam, LoadAppParam} from "@/hood/VpnHood.Client.Api";
+import {AppConnectionState, AppFeatures, AppState, ConnectParam, LoadAppParam} from "@/hood/VpnHood.Client.Api";
 
 const apiClient = ClientApiFactory.instance.ApiClient();
 
 export class ClientApp {
 
-    public State: AppState | undefined ;
+    public State: AppState | undefined;
     public ConnectionState: AppConnectionState | undefined ;
+    public Features: AppFeatures | undefined;
 
     public async loadApp(options?: {withSettings?: boolean, withState?: boolean, withClientProfileItems?: boolean, withFeatures?: boolean}): Promise<void> {
         const loadApp = await apiClient.loadApp(
@@ -16,6 +17,9 @@ export class ClientApp {
                 withClientProfileItems: options?.withClientProfileItems ?? false,
                 withFeatures: options?.withFeatures ?? false,
             }))
+
+        if (loadApp.features)
+            this.Features = loadApp.features;
 
         if (loadApp.state){
             this.State = loadApp.state;
@@ -40,5 +44,9 @@ export class ClientApp {
 
     public async disconnect(): Promise<void> {
         await apiClient.disconnect();
+    }
+    public appVersion(isFull: boolean): string | undefined {
+        if (this.Features)
+           return isFull ? this.Features?.version : this.Features?.version.split(".")[2];
     }
 }

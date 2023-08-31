@@ -1,15 +1,16 @@
 <template>
   <v-container
-      :class="['d-flex flex-column justify-space-between pb-5 h-100 state-'+this.connectionState().toLowerCase()]">
+      :class="['d-flex flex-column justify-space-between pb-5 h-100 state-'+$clientApp.ConnectionState.toLowerCase()]">
 
     <div id="topSection">
 
     </div>
 
     <div id="middleSection">
+
       <!-- Speed -->
-      <v-row id="speedSection" align-content="center" justify="center"
-             :class="[this.isConnected ? 'opacity-100': 'opacity-0', 'mb-4']">
+      <v-row id="speedSection" v-if="this.$clientApp.State" align-content="center" justify="center"
+             :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
         <v-col cols="auto">
           <span class="color-sky-blue">{{ $t("downloadSpeed") }}:</span>
           <span class="px-2">{{ formatSpeed(this.$clientApp.State.speed.received) }}</span>
@@ -21,40 +22,41 @@
           <span class="color-light-purple">Mbps</span>
         </v-col>
       </v-row>
+
       <!-- Circle -->
-      <div id="circleOuter" :class="[isConnected ? 'opacity-100' : 'opacity-30']">
+      <div id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
         <div id="circle">
-          <div id="circleContent" class="align-center op">
-            <span id="stateText">{{ this.connectionState() }}</span>
-            <!-- usage -->
-            <div v-if="isConnected && this.bandwidthUsage()">
-              <div id="bandwidthUsage">
-                <span>{{ this.bandwidthUsage().used }}GB of</span>
-              </div>
-              <div id="bandwidthTotal">
-                <span>{{ this.bandwidthUsage().total }}GB</span>
-              </div>
+          <div class="d-flex flex-column align-center justify-center">
+
+            <!-- Connection state text -->
+            <span class="txt-large-4">{{ $t($clientApp.ConnectionState.toUpperCase()) }}</span>
+
+            <!-- Usage -->
+            <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+              <span class="txt-large-3">{{ bandwidthUsage().used }}GB of</span>
+              <span class="color-sky-blue h1">{{ bandwidthUsage().total }}GB</span>
             </div>
-            <!-- check -->
-            <v-icon class="state-icon" v-if="this.stateIcon() && !this.bandwidthUsage()" size="50" color="white">
-              mdi-{{ this.stateIcon() }}
+
+            <!-- Check -->
+            <v-icon v-if="stateIcon()" size="50" color="white">
+              mdi-{{ stateIcon() }}
             </v-icon>
+
           </div>
         </div>
       </div>
 
       <!-- Connect buttons -->
-      <v-col cols="12" order-sm="12" align-self="start" class="text-center">
-        <!-- Connect Button -->
-        <v-btn :class="[!isConnected ? 'grad-btn': 'blue-btn', 'btn']"
-               @click="[!isConnected ? this.$clientApp.connect() : this.$clientApp.disconnect()]">
-          {{ this.$clientApp.ConnectionState }}
+      <v-col cols="12" class="text-center mt-3">
+        <v-btn :class="[!isConnected() ? 'grad-btn': 'blue-btn', 'btn']"
+               @click="[!isConnected() ? $clientApp.connect() : $clientApp.disconnect()]">
+          {{ $clientApp.ConnectionState }}
         </v-btn>
       </v-col>
+
     </div>
 
     <div id="bottomSection">
-
     </div>
 
   </v-container>
@@ -62,34 +64,14 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import {AppConnectionState} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'HomeView',
   data() {
     return {
-      isConnected: this.connectionState() === "Connected",
     }
   },
-  async created() {
-    await this.$clientApp.loadApp({
-      withState: true,
-      withFeatures: true,
-      withSettings: true,
-      withClientProfileItems: true
-    });
-    setInterval(async () => {
-      if (!document.hidden)
-        await this.$clientApp.loadApp({withState: true});
-      console.log(this.$clientApp.ConnectionState);
-      console.log(this.$clientApp.State?.speed);
-      console.log(this.isConnected);
-      console.log(this.connectionState());
-
-    }, 1000);
-
-  },
-
-  computed: {},
 
   methods: {
     connectionState(): string {
@@ -110,11 +92,12 @@ export default defineComponent({
     },
 
     stateIcon(): string | null {
-      if (this.connectionState() === "Connected") return "check";
-      if (this.connectionState() === 'None' || this.connectionState() === 'Disconnected') return "power-plug-off";
-      if (this.connectionState() === 'Connecting') return "power";
-      if (this.connectionState() === 'Diagnosing') return "network_check";
-      if (this.connectionState() === 'Waiting') return "hourglass_top";
+      if (this.$clientApp.ConnectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
+      if (this.$clientApp.ConnectionState === AppConnectionState.None) return "power-plug-off";
+      if (this.$clientApp.ConnectionState === AppConnectionState.Connecting) return "power-plug";
+      if (this.$clientApp.ConnectionState === AppConnectionState.Diagnosing) return "network_check";
+      if (this.$clientApp.ConnectionState=== AppConnectionState.Waiting) return "hourglass_top";
+      console.log(this.$clientApp.ConnectionState);
       return null;
     },
 
@@ -138,6 +121,10 @@ export default defineComponent({
 
     formatSpeed(speed: number): string {
       return (speed * 10 / 1000000).toFixed(2);
+    },
+
+    isConnected(): boolean{
+      return this.connectionState() == AppConnectionState.Connected;
     },
   }
 });

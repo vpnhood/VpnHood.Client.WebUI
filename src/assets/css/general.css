@@ -29,19 +29,27 @@
     --master-green: #23c99d;
     --sharp-master-green: #3ff6a9;
     --light-purple: #8d9fe4;
-    --muted-color: rgba(255, 255, 255, 0.2);
+    --muted-color: rgb(136, 136, 136);
     --light-gray: #929292;
     --connected-glare: green;
+    --gray: #3f3f3f;
 }
 /*-------------------- Default Style -------------------*/
-body,.v-application [class*="text-"] {
+body,.v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6) {
     font-family: 'Arial-Narow', sans-serif !important;
 }
 h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 .title,
 .v-application [class*="text-h"] {
-    font-family: 'Arial-Bold', sans-serif !important;
+    font-family: 'Arial-Narow-Bold', sans-serif !important;
 }
+h1,.h1{font-size: 25px;}
+h2,.h2{font-size: 24px;}
+h3,.h3{font-size: 23px;}
+h4,.h4{font-size: 22px;}
+h5,.h5{font-size: 21px;}
+h6,.h6{font-size: 20px;}
+
 .bg-dark-blue{
     background-color: var(--dark-blue);
 }
@@ -72,6 +80,12 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 .color-light-purple{
     color: var(--light-purple);
 }
+.color-gray{
+    color: var(--gray);
+}
+.color-muted{
+    color: var(--muted-color);
+}
 .opacity-0{
     opacity: 0;
     transition: opacity 1.4s ease;
@@ -84,36 +98,27 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     opacity: 1;
     transition: opacity 1.4s ease;
 }
-.txt-large-1{font-size: 1.1rem;}
-.txt-large-2{font-size: 1.2rem;}
-.txt-large-3{font-size: 1.3rem;}
-.txt-large-4{font-size: 1.4rem;}
-.txt-large-5{font-size: 1.5rem;}
-.txt-large-6{font-size: 1.6rem;}
-.txt-large-7{font-size: 1.7rem;}
-.txt-large-8{font-size: 1.8rem;}
-.txt-large-9{font-size: 1.9rem;}
-.txt-large-10{font-size: 2rem;}
-.txt-small-1{font-size: 0.9rem;}
-.txt-small-2{font-size: 0.8rem;}
-.txt-small-3{font-size: 0.7rem;}
-.txt-small-4{font-size: 0.6rem;}
-.txt-small-5{font-size: 0.5rem;}
-.txt-small-6{font-size: 0.4rem;}
-.txt-small-7{font-size: 0.3rem;}
-.txt-small-8{font-size: 0.2rem;}
-.txt-small-9{font-size: 0.1rem;}
-.regular-font{
-    font-family: 'Arial-Regular', serif;
-}
-.title-bold{
-    font-family: 'Arial-Bold', serif;
-}
+.txt-large-1{font-size: 1.1rem !important;}
+.txt-large-2{font-size: 1.2rem !important;}
+.txt-large-3{font-size: 1.3rem !important;}
+.txt-large-4{font-size: 1.4rem !important;}
+.txt-large-5{font-size: 1.5rem !important;}
+.txt-large-6{font-size: 1.6rem !important;}
+.txt-large-7{font-size: 1.7rem !important;}
+.txt-large-8{font-size: 1.8rem !important;}
+.txt-large-9{font-size: 1.9rem !important;}
+.txt-large-10{font-size: 2rem !important;}
+.txt-small-1{font-size: 0.9rem !important;}
+.txt-small-2{font-size: 0.8rem !important;}
+.txt-small-3{font-size: 0.7rem !important;}
+.txt-small-4{font-size: 0.6rem !important;}
+.txt-small-5{font-size: 0.5rem !important;}
+.txt-small-6{font-size: 0.4rem !important;}
+.txt-small-7{font-size: 0.3rem !important;}
+.txt-small-8{font-size: 0.2rem !important;}
+.txt-small-9{font-size: 0.1rem !important;}
 .color-sharp-master-green{
     color: var(--sharp-master-green);
-}
-.h-100 {
-    height: 100%;
 }
 
 .app-version-mini {
@@ -126,28 +131,12 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     font-size: 18px;
 }
 
-#stateText {
-    font-family: 'Arial-Regular';
-    font-size: 20px;
-}
-
-.btn.theme--light.v-btn.v-btn--has-bg,
-.main-button.theme--light.v-btn.v-btn--has-bg {
+.btn.theme--light.v-btn.v-btn--has-bg{
     background-color: unset;
 }
-.main-button {
-    font-family: 'Arial-Narow-Bold';
-    font-size: 16px !important;
-    color: white !important;
-    height: 40px !important;
-    width: 200px;
-    background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));
-    transition: all 0.4s ease;
-    margin: 0 0 0 0;
-    border-radius: 5px;
-}
+
 .btn{
-    font-family: 'Arial-Narow-Bold';
+    font-family: 'Arial-Bold';
     font-size: 16px !important;
     color: white !important;
     height: 40px !important;
@@ -155,21 +144,13 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     transition: all 0.4s ease;
     margin: 0 0 0 0;
     border-radius: 5px;
+    background-color: var(--sky-blue);
 }
 .grad-btn{
     background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));
 }
 .blue-btn{
     background: var(--sky-blue);
-}
-
-.main-button:focus {
-    box-shadow: 0px 16px 20px 15px rgba(0, 0, 0, .20);
-    border: white 3px solid;
-}
-
-.main-button:before {
-    display: none !important;
 }
 
 @media tv {
@@ -182,14 +163,6 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     .main-button:focus {
         border-color: #ffffff;
     }
-}
-
-#disconnectButton {
-    background: var(--sky-blue);
-}
-
-#disconnectingButton {
-    background: var(--sky-blue);
 }
 
 .white-link:hover,
@@ -205,16 +178,15 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    padding-top: 15px;
+    padding: 15px;
     margin: 0 auto;
     position: relative;
 }
 
 #circle {
-    width: 170px;
-    height: 170px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    margin: 0 auto;
     position: relative;
     display: flex;
     justify-content: center;
@@ -233,24 +205,6 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     border-radius: 50%;
     transition: all 1.5s ease;
 }
-
-#circleContent {
-    display: flex;
-    flex-direction: column;
-}
-
-#bandwidthUsage {
-    font-size: 20px;
-    transition: color 0.4s ease;
-}
-
-#bandwidthTotal {
-    font-family: 'Arial-Narow-Bold';
-    font-size: 25px;
-    color: var(--sky-blue);
-    transition: color 0.4s ease;
-}
-
 .state-diagnosing #circleOuter:before,
 .state-diagnosing #circle:before,
 .state-connecting #circleOuter:before,
@@ -264,11 +218,6 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 .state-disconnecting #circle:before,
 .state-connecting #circle:before {
     animation-delay: 1s;
-}
-
-.state-none #speedSection
-{
-    visibility: hidden;
 }
 
 @keyframes circle-anim {
@@ -290,20 +239,13 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 }
 
 .state-connected #circleOuter:before {
-    /* border-color: var(--master-green); */
-    border-width: 0px;
+    border-width: 0;
     box-shadow: inset 0 0 30px #fff,
-        /* inner white */
     inset 10px 0 50px var(--connected-glare),
-        /* inner left magenta short */
     inset -10px 0 50px var(--connected-glare),
-        /* inner right cyan broad */
     0 0 50px #fff,
-        /* outer white */
     -10px 0 30px var(--connected-glare),
-        /* outer left magenta */
     10px 0 30px var(--connected-glare);
-    /* outer right cyan */
 }
 
 /*--------------------End of Home Middle Section--------------------*/
