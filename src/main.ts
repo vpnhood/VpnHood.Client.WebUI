@@ -5,21 +5,12 @@ import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import './assets/css/override.css'
 import './assets/css/general.css'
-import {ClientApiFactory} from "@/hood/ClientApiFactory";
-import {LoadAppParam} from "@/hood/VpnHood.Client.Api";
+import {ClientApp} from "@/hood/ClientApp";
 
 
 const app = createApp(App);
-app.config.globalProperties.$loadApp = async () => {
-    await ClientApiFactory.instance.ApiClient().loadApp(
-        new LoadAppParam({
-            withSettings: true,
-            withState: true,
-            withClientProfileItems: true,
-            withFeatures: true,
-        })
-    );
-};
+const clientApp: ClientApp = new ClientApp();
+app.config.globalProperties.$clientApp = reactive(clientApp);
 
 app.use(i18n)
     .use(router)

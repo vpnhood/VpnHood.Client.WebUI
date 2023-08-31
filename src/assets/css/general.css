@@ -72,6 +72,18 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 .color-light-purple{
     color: var(--light-purple);
 }
+.opacity-0{
+    opacity: 0;
+    transition: opacity 1.4s ease;
+}
+.opacity-30{
+    opacity: .3;
+    transition: opacity 1.4s ease;
+}
+.opacity-100{
+    opacity: 1;
+    transition: opacity 1.4s ease;
+}
 .txt-large-1{font-size: 1.1rem;}
 .txt-large-2{font-size: 1.2rem;}
 .txt-large-3{font-size: 1.3rem;}
@@ -119,10 +131,10 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     font-size: 20px;
 }
 
+.btn.theme--light.v-btn.v-btn--has-bg,
 .main-button.theme--light.v-btn.v-btn--has-bg {
     background-color: unset;
 }
-
 .main-button {
     font-family: 'Arial-Narow-Bold';
     font-size: 16px !important;
@@ -133,6 +145,22 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     transition: all 0.4s ease;
     margin: 0 0 0 0;
     border-radius: 5px;
+}
+.btn{
+    font-family: 'Arial-Narow-Bold';
+    font-size: 16px !important;
+    color: white !important;
+    height: 40px !important;
+    width: 200px;
+    transition: all 0.4s ease;
+    margin: 0 0 0 0;
+    border-radius: 5px;
+}
+.grad-btn{
+    background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));
+}
+.blue-btn{
+    background: var(--sky-blue);
 }
 
 .main-button:focus {
@@ -162,10 +190,6 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 
 #disconnectingButton {
     background: var(--sky-blue);
-}
-
-.state-none #circleOuter {
-    opacity: 0.3;
 }
 
 .white-link:hover,
@@ -215,16 +239,12 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
     flex-direction: column;
 }
 
-.state-None #circleOuter {
-    opacity: 0.3;
-}
-
 #bandwidthUsage {
     font-size: 20px;
     transition: color 0.4s ease;
 }
 
-#bandwithTotal {
+#bandwidthTotal {
     font-family: 'Arial-Narow-Bold';
     font-size: 25px;
     color: var(--sky-blue);
@@ -306,15 +326,6 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 
 #configSection .v-btn__content {
     justify-content: left;
-}
-
-#speedSection {
-    opacity: 0;
-    transition: opacity 1.4s ease;
-}
-
-.state-connected #speedSection {
-    opacity: 1;
 }
 
 .config-label {

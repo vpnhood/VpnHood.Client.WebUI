@@ -1,8 +1,7 @@
-import Vue from 'vue'
-import app from "@/App.vue";
+import {ClientApp} from "@/hood/ClientApp";
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
-        $loadApp: app.config.globalProperties.$loadApp;
+        $clientApp: ClientApp;
     }
 }
