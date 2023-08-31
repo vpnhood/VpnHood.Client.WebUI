@@ -48,9 +48,9 @@
 
       <!-- Connect buttons -->
       <v-col cols="12" class="text-center mt-3">
-        <v-btn :class="[!isConnected() ? 'grad-btn': 'blue-btn', 'btn']"
+        <v-btn :class="[!isConnected() ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
                @click="[!isConnected() ? $clientApp.connect() : $clientApp.disconnect()]">
-          {{ $clientApp.ConnectionState }}
+          {{ buttonText() }}
         </v-btn>
       </v-col>
 
@@ -72,22 +72,28 @@ export default defineComponent({
     return {
     }
   },
+  created() {
+    setInterval(async () => {
+      if (!document.hidden)
+        await this.$clientApp.loadApp({withState: true});
+    }, 1000);
+  },
 
   methods: {
-    connectionState(): string {
+    buttonText(): string {
       switch (this.$clientApp.ConnectionState) {
         case "Connecting":
           return this.$t('CONNECTING');
         case "Waiting":
           return this.$t('WAITING');
         case "Connected":
-          return this.$t('CONNECTED');
+          return this.$t('DISCONNECT');
         case "Disconnecting":
           return this.$t('DISCONNECTING');
         case "Diagnosing":
           return this.$t('DIAGNOSING');
         default:
-          return this.$t('DISCONNECTED');
+          return this.$t('CONNECT');
       }
     },
 
@@ -124,7 +130,7 @@ export default defineComponent({
     },
 
     isConnected(): boolean{
-      return this.connectionState() == AppConnectionState.Connected;
+      return this.$clientApp.ConnectionState == AppConnectionState.Connected;
     },
   }
 });
