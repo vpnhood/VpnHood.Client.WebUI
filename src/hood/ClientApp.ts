@@ -1,15 +1,43 @@
 import {ClientApiFactory} from "@/hood/ClientApiFactory";
-import {AppConnectionState, AppFeatures, AppState, ConnectParam, LoadAppParam} from "@/hood/VpnHood.Client.Api";
+import {AppFeatures, AppSettings, AppState, ConnectParam, LoadAppParam, UserSettings} from "@/hood/VpnHood.Client.Api";
+import {ApiClient} from './VpnHood.Client.Api';
 
-const apiClient = ClientApiFactory.instance.ApiClient();
+const apiClient: ApiClient = ClientApiFactory.instance.ApiClient();
 
 export class ClientApp {
 
-    public State: AppState | undefined;
-    public ConnectionState: AppConnectionState | undefined ;
-    public Features: AppFeatures | undefined;
+    public State: AppState;
+    public Features: AppFeatures;
+    public Settings: AppSettings;
 
-    public async loadApp(options?: {withSettings?: boolean, withState?: boolean, withClientProfileItems?: boolean, withFeatures?: boolean}): Promise<void> {
+    public constructor(
+        apiClient: ApiClient,
+        state: AppState,
+        features: AppFeatures,
+        settings: AppSettings) {
+        // Initialize
+        this.State = state;
+        this.Features = features;
+        this.Settings = settings;
+    }
+
+    public static async create(): Promise<ClientApp> {
+
+        const result = await apiClient.loadApp(new LoadAppParam({
+            withSettings: true,
+            withState: true,
+            withClientProfileItems: true,
+            withFeatures: true,
+        }));
+        return new ClientApp(apiClient,result.state!, result.features!, result.settings!);
+    }
+
+    public async loadApp(options?: {
+        withSettings?: boolean,
+        withState?: boolean,
+        withClientProfileItems?: boolean,
+        withFeatures?: boolean
+    }): Promise<void> {
         const loadApp = await apiClient.loadApp(
             new LoadAppParam({
                 withSettings: options?.withSettings ?? false,
@@ -21,32 +49,35 @@ export class ClientApp {
         if (loadApp.features)
             this.Features = loadApp.features;
 
-        if (loadApp.state){
+        if (loadApp.state) {
             this.State = loadApp.state;
-            this.ConnectionState = loadApp.state.connectionState;
+            this.State.connectionState = loadApp.state.connectionState;
+        }
+        if (loadApp.settings) {
+            this.Settings = loadApp.settings;
         }
 
     }
 
-
-
     public async connect(): Promise<void> {
-        const loadApp = await apiClient.loadApp(new LoadAppParam({
-            withSettings: true,
-            withState: false,
-            withClientProfileItems: false,
-            withFeatures: false,
-        }))
-        const defaultClientProfileId = loadApp.settings?.userSettings.defaultClientProfileId;
+        await this.loadApp({withSettings: true});
+        const defaultClientProfileId = this.Settings.userSettings.defaultClientProfileId;
         if (defaultClientProfileId)
-            await apiClient.connect(new ConnectParam({clientProfileId: defaultClientProfileId}))
+            await apiClient.connect(new ConnectParam({clientProfileId: defaultClientProfileId}));
+        else throw new Error("Could not found default client profile id");
     }
 
     public async disconnect(): Promise<void> {
         await apiClient.disconnect();
     }
-    public appVersion(isFull: boolean): string | undefined {
+
+    public appVersion(isFull: boolean): string {
         if (this.Features)
-           return isFull ? this.Features?.version : this.Features?.version.split(".")[2];
+            return isFull ? this.Features?.version : this.Features?.version.split(".")[2];
+        else throw new Error("Could not found app version");
+    }
+
+    public async setUserSetting(userSetting: UserSettings): Promise<void> {
+        await apiClient.setUserSettings(userSetting);
     }
 }

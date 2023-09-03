@@ -8,11 +8,29 @@ import './assets/css/general.css'
 import {ClientApp} from "@/hood/ClientApp";
 
 
-const app = createApp(App);
-const clientApp: ClientApp = new ClientApp();
-app.config.globalProperties.$clientApp = reactive(clientApp);
+// main
+async function main():Promise<void> {
+    try {
+        // init app
 
-app.use(i18n)
-    .use(router)
-    .use(vuetify)
-    .mount('#app')
+        const clientApp: ClientApp = await ClientApp.create();
+        const app = createApp(App);
+        app.config.globalProperties.$clientApp = reactive(clientApp);
+
+        app.use(i18n)
+            .use(router)
+            .use(vuetify)
+            .mount('#app')
+    }
+    catch (ex) {
+        // show error page
+        /*new Vue({
+            i18n,
+            router,
+            vuetify,
+            render: h => h(AppError, { props: { error: ex } })
+        }).$mount('#app');*/
+    }
+}
+
+main();

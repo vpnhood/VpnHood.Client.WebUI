@@ -1,6 +1,6 @@
 <template>
   <v-container
-      :class="['d-flex flex-column justify-space-between pb-5 h-100 state-'+$clientApp.ConnectionState.toLowerCase()]">
+      :class="['d-flex flex-column justify-space-between pb-5 h-100 state-'+$clientApp.State.connectionState.toLowerCase()]">
 
     <div id="topSection">
 
@@ -29,7 +29,7 @@
           <div class="d-flex flex-column align-center justify-center">
 
             <!-- Connection state text -->
-            <span class="txt-large-4">{{ $t($clientApp.ConnectionState.toUpperCase()) }}</span>
+            <span class="txt-large-4">{{ $t($clientApp.State.connectionState.toUpperCase()) }}</span>
 
             <!-- Usage -->
             <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
@@ -56,7 +56,13 @@
 
     </div>
 
-    <div id="bottomSection">
+    <div id="bottomSection" class="text-truncate">
+      <div class="config-item">
+        <span>{{ $t('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}</span>
+        <img v-if="!$clientApp.Settings.userSettings.tunnelClientCountry"
+             :src="require(`../assets/img/country_flags/${$clientApp.State.clientIpGroup.ipGroupId}.png`)" max-width="24" class="ms-2" />
+        <span v-else>{{$t("NO")}}</span>
+      </div>
     </div>
 
   </v-container>
@@ -69,19 +75,21 @@ import {AppConnectionState} from "@/hood/VpnHood.Client.Api";
 export default defineComponent({
   name: 'HomeView',
   data() {
-    return {
-    }
+    return {}
   },
   created() {
     setInterval(async () => {
       if (!document.hidden)
-        await this.$clientApp.loadApp({withState: true});
+        await this.$clientApp.loadApp({withState: true, withSettings: true});
     }, 1000);
   },
 
+  computed: {},
+
   methods: {
+
     buttonText(): string {
-      switch (this.$clientApp.ConnectionState) {
+      switch (this.$clientApp.State.connectionState) {
         case "Connecting":
           return this.$t('CONNECTING');
         case "Waiting":
@@ -98,12 +106,11 @@ export default defineComponent({
     },
 
     stateIcon(): string | null {
-      if (this.$clientApp.ConnectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
-      if (this.$clientApp.ConnectionState === AppConnectionState.None) return "power-plug-off";
-      if (this.$clientApp.ConnectionState === AppConnectionState.Connecting) return "power-plug";
-      if (this.$clientApp.ConnectionState === AppConnectionState.Diagnosing) return "network_check";
-      if (this.$clientApp.ConnectionState=== AppConnectionState.Waiting) return "hourglass_top";
-      console.log(this.$clientApp.ConnectionState);
+      if (this.$clientApp.State.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
+      if (this.$clientApp.State.connectionState === AppConnectionState.None) return "power-plug-off";
+      if (this.$clientApp.State.connectionState === AppConnectionState.Connecting) return "power-plug";
+      if (this.$clientApp.State.connectionState === AppConnectionState.Diagnosing) return "network_check";
+      if (this.$clientApp.State.connectionState === AppConnectionState.Waiting) return "hourglass_top";
       return null;
     },
 
@@ -129,9 +136,23 @@ export default defineComponent({
       return (speed * 10 / 1000000).toFixed(2);
     },
 
-    isConnected(): boolean{
-      return this.$clientApp.ConnectionState == AppConnectionState.Connected;
+    isConnected(): boolean {
+      return this.$clientApp.State.connectionState == AppConnectionState.Connected;
     },
   }
 });
 </script>
+<style scoped>
+.config-item {
+  color: var(--light-purple);
+  background: #132a7ac9;
+  border: 1px rgba(22, 163, 254, 0.3) solid;
+  border-radius: 6px;
+  height: 40px;
+  padding: 0 15px;
+  font-size: .9em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>

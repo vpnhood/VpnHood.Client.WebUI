@@ -50,42 +50,22 @@ h4,.h4{font-size: 22px;}
 h5,.h5{font-size: 21px;}
 h6,.h6{font-size: 20px;}
 
-.bg-dark-blue{
-    background-color: var(--dark-blue);
-}
-.bg-medium-blue{
-    background-color: var(--medium-blue);
-}
-.bg-light-blue{
-    background-color: var(--light-blue);
-}
-.bg-sky-blue{
-    background-color: var(--sky-blue);
-}
-.bg-master-green{
-    background-color: var(--master-green);
-}
-.bg-light-purple{
-    background-color: var(--light-purple);
-}
-.color-master-green{
-    color: var(--master-green);
-}
-.color-sharp-master-green{
-    color: var(--sharp-master-green);
-}
-.color-sky-blue{
-    color: var(--sky-blue);
-}
-.color-light-purple{
-    color: var(--light-purple);
-}
-.color-gray{
-    color: var(--gray);
-}
-.color-muted{
-    color: var(--muted-color);
-}
+/*-------- General background color --------*/
+.bg-dark-blue{background-color: var(--dark-blue);}
+.bg-medium-blue{background-color: var(--medium-blue);}
+.bg-light-blue{background-color: var(--light-blue);}
+.bg-sky-blue{background-color: var(--sky-blue);}
+.bg-master-green{background-color: var(--master-green);}
+.bg-light-purple{background-color: var(--light-purple);}
+
+/*-------- General text color --------*/
+.color-master-green{color: var(--master-green);}
+.color-sharp-master-green{color: var(--sharp-master-green);}
+.color-sky-blue{color: var(--sky-blue);}
+.color-light-purple{color: var(--light-purple);}
+.color-gray{color: var(--gray);}
+.color-muted{color: var(--muted-color);}
+
 .opacity-0{
     opacity: 0;
     transition: opacity 1.4s ease;
@@ -117,41 +97,44 @@ h6,.h6{font-size: 20px;}
 .txt-small-7{font-size: 0.3rem !important;}
 .txt-small-8{font-size: 0.2rem !important;}
 .txt-small-9{font-size: 0.1rem !important;}
-.color-sharp-master-green{
-    color: var(--sharp-master-green);
-}
 
 .app-version-mini {
-    font-family: 'Arial';
+    font-family: 'Arial', serif;
     font-size: 0.7em !important
 }
 
 .app-title {
-    font-family: 'Arial-Narow-Bold';
+    font-family: 'Arial-Narow-Bold', serif;
     font-size: 18px;
 }
 
-.btn.theme--light.v-btn.v-btn--has-bg{
-    background-color: unset;
-}
+.btn.theme--light.v-btn.v-btn--has-bg{background-color: unset;}
 
 .btn{
-    font-family: 'Arial-Bold';
-    font-size: 15px !important;
-    color: white !important;
-    height: 40px !important;
+    font-family: 'Arial-Bold', serif;
+    font-size: 15px;
+    color: white;
+    height: 40px;
     width: 200px;
     transition: all 0.4s ease;
     margin: 0 0 0 0;
     border-radius: 5px;
     background-color: var(--sky-blue);
 }
-.grad-btn{
-    background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));
+.grad-btn{background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));}
+.blue-btn{background: var(--sky-blue);}
+.blue-border-btn{
+    font-family: 'Arial-Regular', serif;
+    font-size: .8rem;
+    color: var(--sky-blue);
+    box-shadow: none;
+    border-radius: 5px;
+    border: 1px rgba(22, 163, 254, 0.3) solid;
+    padding: 8px 10px 10px 10px;
+    background: #132a7ac9;
+    justify-content: start;
 }
-.blue-btn{
-    background: var(--sky-blue);
-}
+.blue-border-btn i{line-height: inherit;}
 
 @media tv {
     .main-button {
@@ -166,14 +149,9 @@ h6,.h6{font-size: 20px;}
 }
 
 .white-link:hover,
-.white-link:focus {
-    color: var(--sky-blue);
-}
-
-/*--------------------End of Default Style--------------------*/
+.white-link:focus {color: var(--sky-blue);}
 
 /*--------------------Home Middle Section--------------------*/
-
 #circleOuter {
     width: 200px;
     height: 200px;
@@ -221,21 +199,10 @@ h6,.h6{font-size: 20px;}
 }
 
 @keyframes circle-anim {
-    0% {
-        opacity: 0.80;
-    }
-
-    40% {
-        opacity: 0.2;
-    }
-
-    60% {
-        opacity: 0.2;
-    }
-
-    100% {
-        opacity: 0.80;
-    }
+    0% {opacity: 0.80;}
+    40% {opacity: 0.2;}
+    60% {opacity: 0.2;}
+    100% {opacity: 0.80;}
 }
 
 .state-connected #circleOuter:before {
@@ -251,71 +218,26 @@ h6,.h6{font-size: 20px;}
 /*--------------------End of Home Middle Section--------------------*/
 
 /*--------------------Home Bottom Section--------------------*/
-#homeContainer {
-    max-width: 1024px;
-}
+#homeContainer {max-width: 1024px;}
 
-#configSection .config-btn {
-    border: 1px rgba(22, 163, 254, 0.3) solid;
-    border-radius: 5px;
-    padding: 8px 10px 10px 10px;
-    cursor: pointer;
-    background: #132a7a38;
-    transition: all .4s linear;
-    width: 100%;
-    text-align: left;
-}
 
-#configSection .v-btn__content {
-    justify-content: left;
-}
+
+#configSection .v-btn__content {justify-content: left;}
 
 .config-label {
     text-decoration: underline;
     text-underline-offset: 4px;
-    cursor: pointer;
-    /* text-transform: none; */
-}
-
-.config-icon {
-    margin-right: 4px;
-    font-size: 20px !important;
 }
 
 .config-arrow,
 .config-icon,
-.config-label {
-    color: var(--sky-blue) !important;
-}
+.config-label {color: var(--sky-blue) !important;}
 
-.config {
-    color: var(--light-purple) !important;
-    text-transform: none;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 0.85rem;
-}
-
-/*--------------------End of Home Bottom Section--------------------*/
 
 /*--------------------Responsive--------------------*/
 
 @media all and (max-width: 425px) {
-    #sectionWrapper:before {
-        background-image: url("../img/body-bg-mobile.png");
-    }
-
-    #logo img {
-        max-width: 60px;
-    }
-
-    h1,
-    h2,
-    h3 {
-        font-family: 'Arial-Narow-Bold';
-        font-size: 25px;
-    }
+    #logo img {max-width: 60px;}
 }
 
 @media all and (min-width: 600px) {
@@ -332,24 +254,12 @@ h6,.h6{font-size: 20px;}
         flex-wrap: nowrap;
         align-items: center;
     }
-
-    .main-button {
-        width: 250px;
-    }
 }
 
 @media all and (min-width: 1024px) {
-    html {
-        font-size: 20px;
-    }
-
-    .main-button:focus {
-        box-shadow: 0px 15px 14px 3px rgba(0, 0, 0, 0.20);
-    }
-
-    .main-button:focus:before {
-        display: none;
-    }
+    html {font-size: 20px;}
+    .main-button:focus {box-shadow: 0 15px 14px 3px rgba(0, 0, 0, 0.20);}
+    .main-button:focus:before {display: none;}
 
     #configSection>button:focus {
         background: #132a7ab0;
@@ -358,5 +268,4 @@ h6,.h6{font-size: 20px;}
         outline: none;
     }
 }
-
 /*--------------------End of Responsive--------------------*/
