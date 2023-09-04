@@ -12,17 +12,18 @@ import {ClientApp} from "@/hood/ClientApp";
 async function main():Promise<void> {
     try {
         // init app
-
         const clientApp: ClientApp = await ClientApp.create();
         const app = createApp(App);
         app.config.globalProperties.$clientApp = reactive(clientApp);
 
+        // init Vue
         app.use(i18n)
             .use(router)
             .use(vuetify)
             .mount('#app')
     }
     catch (ex) {
+        console.log("Could not create client app.", ex);
         // show error page
         /*new Vue({
             i18n,

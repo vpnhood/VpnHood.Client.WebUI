@@ -1,11 +1,15 @@
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css';
+import 'vuetify/styles';
+import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 
 // Vuetify
 import { createVuetify } from 'vuetify'
 
 export default createVuetify({
+    components:{
+        VBottomSheet,
+    },
         defaults:{
             VList:{
                 bgColor: 'transparent',
@@ -19,6 +23,7 @@ export default createVuetify({
                     colors:{
                         background: '#122272',
                         surface: '#FFFFFF',
+                        'on-surface':'#212121',
                         primary: '#1940b0',
                         'primary-darken-1': '#122272',
                         secondary: '#23c99d',

@@ -40,7 +40,9 @@ body,.v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
 }
 h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
 .title,
-.v-application [class*="text-h"] {
+.v-application [class*="text-h"],
+.v-card-title,
+.v-list-item-title{
     font-family: 'Arial-Narow-Bold', sans-serif !important;
 }
 h1,.h1{font-size: 25px;}

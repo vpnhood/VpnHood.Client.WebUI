@@ -1,6 +1,6 @@
 <template>
   <v-container
-      :class="['d-flex flex-column justify-space-between pb-5 h-100 state-'+$clientApp.State.connectionState.toLowerCase()]">
+      :class="['d-flex flex-column justify-space-between pb-3 h-100 state-'+$clientApp.state.connectionState.toLowerCase()]">
 
     <div id="topSection">
 
@@ -9,16 +9,16 @@
     <div id="middleSection">
 
       <!-- Speed -->
-      <v-row id="speedSection" v-if="this.$clientApp.State" align-content="center" justify="center"
+      <v-row id="speedSection" align-content="center" justify="center"
              :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
         <v-col cols="auto">
           <span class="color-sky-blue">{{ $t("downloadSpeed") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$clientApp.State.speed.received) }}</span>
+          <span class="px-2">{{ formatSpeed(this.$clientApp.state.speed.received) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
         <v-col cols="auto">
           <span class="color-sky-blue">{{ $t("uploadSpeed") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$clientApp.State.speed.sent) }}</span>
+          <span class="px-2">{{ formatSpeed(this.$clientApp.state.speed.sent) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
       </v-row>
@@ -29,7 +29,7 @@
           <div class="d-flex flex-column align-center justify-center">
 
             <!-- Connection state text -->
-            <span class="txt-large-4">{{ $t($clientApp.State.connectionState.toUpperCase()) }}</span>
+            <span class="txt-large-4">{{ $t($clientApp.state.connectionState.toUpperCase()) }}</span>
 
             <!-- Usage -->
             <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
@@ -57,25 +57,74 @@
     </div>
 
     <div id="bottomSection" class="text-truncate">
-      <div class="config-item">
-        <span>{{ $t('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}</span>
-        <img v-if="!$clientApp.Settings.userSettings.tunnelClientCountry"
-             :src="require(`../assets/img/country_flags/${$clientApp.State.clientIpGroup.ipGroupId}.png`)" max-width="24" class="ms-2" />
-        <span v-else>{{$t("NO")}}</span>
-      </div>
+
+      <!-- Country button -->
+      <v-btn
+          depressed
+          block
+          variant="text"
+          prepend-icon="mdi-earth"
+          class="config-item mb-2"
+          @click="$refs.tunnelClientCountrySheet.isShow = true"
+      >
+        <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
+        <v-icon>mdi-chevron-right</v-icon>
+        <span class="text-capitalize color-light-purple">{{ $clientApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY") }}</span>
+        <img v-if="!$clientApp.settings.userSettings.tunnelClientCountry"
+             :src="require(`../assets/img/country_flags/${$clientApp.state.clientIpGroup.ipGroupId}.png`)" alt="country flag" width="24" class="ms-2" />
+      </v-btn>
+
+      <!-- Protocol button -->
+      <v-btn
+          depressed
+          block
+          variant="text"
+          prepend-icon="mdi-transit-connection-variant"
+          class="config-item mb-2"
+          @click="$refs.protocolSheet.isShow = true"
+      >
+        <span>{{ $t("PROTOCOL_TITLE") }}</span>
+        <v-icon>mdi-chevron-right</v-icon>
+        <span class="text-capitalize color-light-purple">{{ $clientApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
+      </v-btn>
+
+      <!-- Servers button -->
+      <v-btn
+          depressed
+          block
+          variant="text"
+          prepend-icon="mdi-dns"
+          class="config-item mb-0"
+          @click="$refs.serverSheet.isShow = true"
+      >
+        <span>{{ $t("SELECTED_SERVER") }}</span>
+        <v-icon>mdi-chevron-right</v-icon>
+        <span class="text-capitalize color-light-purple">{{ activeClientProfileName() }}</span>
+      </v-btn>
     </div>
 
+
+    <TunnelClientCountrySheet ref="tunnelClientCountrySheet" />
+    <ProtocolSheet ref="protocolSheet"/>
+    <ServersSheet ref="serverSheet"/>
   </v-container>
+
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {AppConnectionState} from "@/hood/VpnHood.Client.Api";
+import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
+import ProtocolSheet from "@/components/ProtocolSheet.vue";
+import ServersSheet from "@/components/ServersSheet.vue";
 
 export default defineComponent({
   name: 'HomeView',
+  components: {ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
   data() {
-    return {}
+    return {
+
+    }
   },
   created() {
     setInterval(async () => {
@@ -84,12 +133,14 @@ export default defineComponent({
     }, 1000);
   },
 
-  computed: {},
+  computed: {
+
+  },
 
   methods: {
 
     buttonText(): string {
-      switch (this.$clientApp.State.connectionState) {
+      switch (this.$clientApp.state.connectionState) {
         case "Connecting":
           return this.$t('CONNECTING');
         case "Waiting":
@@ -106,25 +157,25 @@ export default defineComponent({
     },
 
     stateIcon(): string | null {
-      if (this.$clientApp.State.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
-      if (this.$clientApp.State.connectionState === AppConnectionState.None) return "power-plug-off";
-      if (this.$clientApp.State.connectionState === AppConnectionState.Connecting) return "power-plug";
-      if (this.$clientApp.State.connectionState === AppConnectionState.Diagnosing) return "network_check";
-      if (this.$clientApp.State.connectionState === AppConnectionState.Waiting) return "hourglass_top";
+      if (this.$clientApp.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
+      if (this.$clientApp.state.connectionState === AppConnectionState.None) return "power-plug-off";
+      if (this.$clientApp.state.connectionState === AppConnectionState.Connecting) return "power-plug";
+      if (this.$clientApp.state.connectionState === AppConnectionState.Diagnosing) return "network_check";
+      if (this.$clientApp.state.connectionState === AppConnectionState.Waiting) return "hourglass_top";
       return null;
     },
 
     bandwidthUsage(): {} | null {
-      if (!this.$clientApp.State || !this.$clientApp.State.sessionStatus || !this.$clientApp.State.sessionStatus.accessUsage)
+      if (!this.$clientApp.state || !this.$clientApp.state.sessionStatus || !this.$clientApp.state.sessionStatus.accessUsage)
         return null;
 
-      let accessUsage = this.$clientApp.State.sessionStatus.accessUsage;
+      let accessUsage = this.$clientApp.state.sessionStatus.accessUsage;
       if (accessUsage.maxTraffic == 0)
         return null;
 
       let mb = 1000000;
       let gb = 1000 * mb;
-      let traffic = this.$clientApp.State.accountTraffic;
+      let traffic = this.$clientApp.state.accountTraffic;
 
       let ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
       ret.total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)) : Number((ret.total / mb).toFixed(0));
@@ -137,22 +188,21 @@ export default defineComponent({
     },
 
     isConnected(): boolean {
-      return this.$clientApp.State.connectionState == AppConnectionState.Connected;
+      return this.$clientApp.state.connectionState == AppConnectionState.Connected;
     },
+    activeClientProfileName():string{
+      const activeClientProfile = this.$clientApp.clientProfileItems.find(x => x.id === this.$clientApp.state.activeClientProfileId);
+      return activeClientProfile?.token.name ?? '';
+    }
   }
 });
 </script>
 <style scoped>
 .config-item {
-  color: var(--light-purple);
+  color: var(--sky-blue);
   background: #132a7ac9;
   border: 1px rgba(22, 163, 254, 0.3) solid;
-  border-radius: 6px;
   height: 40px;
-  padding: 0 15px;
-  font-size: .9em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: start;
 }
 </style>

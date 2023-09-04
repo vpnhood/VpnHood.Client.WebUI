@@ -1,36 +1,35 @@
 <template>
   <v-dialog
-      :model-value="modelValue"
-      value="true"
-      close-on-content-click
+      v-model="isShow"
       close-on-back
   >
-    <v-card>
-      <v-toolbar class="headline grey lighten-2">
-        <v-btn icon @click="close()">
-          <v-icon small>close</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{ $t("TUNNEL_MY_COUNTRY") }}</v-toolbar-title>
-      </v-toolbar>
-      <v-radio-group v-model="tunnelClientCountry">
-        <v-card-text>{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</v-card-text>
-        <v-card-text>
+    <v-card :title="$t('TUNNEL_MY_COUNTRY')">
+      <v-divider class="mt-3"></v-divider>
+      <v-card-text>
+        <p class="pb-4 color-muted">{{$t('TUNNEL_MY_COUNTRY_DESC')}}</p>
+        <v-radio-group v-model="tunnelClientCountry" hide-details>
           <v-radio
               :label="$t('TUNNEL_MY_COUNTRY_ON')"
               :value="true"
-              class="my-4"
+              color="info"
+              class="mb-4"
           ></v-radio>
           <v-radio
               :label="$t('TUNNEL_MY_COUNTRY_OFF')"
               :value="false"
-              class="my-4"
+              color="info"
           >
           </v-radio>
-        </v-card-text>
-      </v-radio-group>
+        </v-radio-group>
+        <v-chip
+            color="var(--master-green)"
+            :text="$t('RECOMMENDED')"
+            class="w-100 justify-center"
+        ></v-chip>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="this.$emit('update:modelValue',false)">
+        <v-btn color="blue darken-1" variant="text" @click="isShow = false">
           {{ $t("CLOSE") }}
         </v-btn>
       </v-card-actions>
@@ -43,22 +42,21 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "TunnelClientCountrySheet",
-  props: {
-    modelValue: Boolean,
+  data() {
+    return {
+      isShow: false,
+    }
   },
-  emits: [
-    "update:modelValue",
-  ],
   computed: {
     tunnelClientCountry:
         {
           get() {
-            return this.$clientApp.Settings?.userSettings.tunnelClientCountry;
+            return this.$clientApp.settings.userSettings.tunnelClientCountry;
           },
           set(value: boolean) {
-            this.$clientApp.Settings.userSettings.tunnelClientCountry = value;
-            /*this.$clientApp.setUserSetting({tunnelClientCountry: true});*/
+            this.$clientApp.settings.userSettings.tunnelClientCountry = value;
           }
         },
+  },
 })
 </script>

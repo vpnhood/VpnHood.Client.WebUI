@@ -1,5 +1,6 @@
 <template>
   <v-app id="mainBg">
+    <TunnelClientCountrySheet/>
     <v-navigation-drawer
         v-model="drawer"
         location="left"
@@ -37,21 +38,22 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import NavigationPane from "@/components/NavigationPane.vue";
+import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
 
 export default defineComponent({
   name: 'App',
-  components: {NavigationPane},
+  components: {TunnelClientCountrySheet, NavigationPane},
   data: () => ({
     drawer: false,
   }),
-  async created() {
+  /*async created() {
     await this.$clientApp.loadApp({
       withState: true,
       withFeatures: true,
       withSettings: true,
       withClientProfileItems: true
     });
-  },
+  },*/
 
 })
 </script>
