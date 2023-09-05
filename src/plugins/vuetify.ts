@@ -10,11 +10,11 @@ export default createVuetify({
     components:{
         VBottomSheet,
     },
-        defaults:{
+        /*defaults:{
             VList:{
                 bgColor: 'transparent',
             },
-        },
+        },*/
         theme:{
             defaultTheme: 'VpnHoodTheme',
             themes:{
@@ -36,7 +36,7 @@ export default createVuetify({
                         'on-sky-blue': '#ffffff',
                         'light-purple': '#8d9fe4',
                         'on-light-purple': '#ffffff',
-                        error: '#B00020',
+                        error: '#ff5252',
                         info: '#2196F3',
                         success: '#4CAF50',
                         warning: '#FB8C00',

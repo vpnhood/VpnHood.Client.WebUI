@@ -1,30 +1,39 @@
 <template>
-  <v-bottom-sheet v-model="isShow">
-    <v-sheet>
+  <v-bottom-sheet close-on-back v-model="isShow" >
+
       <!-- Add Test Server -->
-      <v-card v-if="testServerVisible" class="mx-auto ma-5" max-width="600" variant="flat">
-        <v-card-title>{{ $t("addTestServer") }}</v-card-title>
-        <v-card-subtitle>{{ $t("addTestServerSubtitle") }}</v-card-subtitle>
-        <v-btn variant="text" @click="addTestServer()">{{ $t("add") }}</v-btn>
+      <v-card v-if="testServerVisible" class="mx-auto ma-5" width="100%" max-width="600" variant="flat" >
+        <v-card-title>{{ $t("ADD_TEST_SERVER") }}</v-card-title>
+        <v-card-subtitle>{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-subtitle>
+        <v-btn variant="text" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
         <v-divider class="mt-5"/>
       </v-card>
 
       <!-- Add Private Server -->
-      <v-card class="mx-auto" max-width="600" variant="flat">
-        <v-card-title>{{ $t("addAcessKeyTitle") }}</v-card-title>
-        <v-card-subtitle>{{ $t("addAcessKeySubtitle") }}</v-card-subtitle>
-        <v-text-field v-model="accessKeyValue" spellcheck="false" autocomplete="off"
-                      :error-messages="accessKeyErrorMessage" class="mx-5" @input="onKeyAccessChanged"
-                      append-icon="vpn_key"
-                      :placeholder="accessKeyPrefix" solo autofocus></v-text-field>
+      <v-card class="mx-auto py-4" width="100%" max-width="600" variant="flat" >
+        <v-card-title class="pb-0">{{ $t("ADD_ACCESS_KEY_TITLE") }}</v-card-title>
+        <v-card-subtitle class="mb-5">{{ $t("ADD_ACCESS_KEY_SUBTITLE") }}</v-card-subtitle>
+        <v-text-field
+            v-model="accessKeyValue"
+            :error-messages="accessKeyErrorMessage"
+            :placeholder="accessKeyPrefix"
+            @input="onKeyAccessChanged"
+            append-inner-icon="mdi-key"
+            spellcheck="false"
+            autocomplete="off"
+            density="compact"
+            color="sharp-master-green"
+            bg-color="#eceffb"
+            class="mx-4"
+            autofocus
+        ></v-text-field>
       </v-card>
-    </v-sheet>
+
   </v-bottom-sheet>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
-
 
 export default defineComponent({
   name: 'AddServerSheet',
@@ -54,7 +63,7 @@ export default defineComponent({
 
       let validateValue = this.validateAccessKey(value);
       if (!validateValue) {
-        this.accessKeyErrorMessage = this.$t("invalidAccessKeyFormat", {prefix: this.accessKeyPrefix});
+        this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_FORMAT", {prefix: this.accessKeyPrefix});
         return;
       }
 
@@ -73,7 +82,7 @@ export default defineComponent({
     validateAccessKey(accessKey: string): string | null {
       try {
         accessKey = accessKey.replace(/(^[^A-Za-z0-9]*)|([^A-Za-z0-9=+/]*$)/g, '');
-        if (accessKey.indexOf("vh://") == 0) accessKey = accessKey.substr(5);
+        if (accessKey.indexOf("vh://") == 0) accessKey = accessKey.substring(5);
 
         const json = atob(accessKey);
         return JSON.parse(json) != null ? accessKey : null;

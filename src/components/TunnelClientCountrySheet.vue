@@ -1,8 +1,5 @@
 <template>
-  <v-dialog
-      v-model="isShow"
-      close-on-back
-  >
+  <v-dialog v-model="isShow" close-on-back>
     <v-card :title="$t('TUNNEL_MY_COUNTRY')">
       <v-divider class="mt-3"></v-divider>
       <v-card-text>

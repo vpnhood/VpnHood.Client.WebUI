@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isShow">
+  <v-dialog v-model="isShow" close-on-back>
     <v-card :title="$t('PROTOCOL')">
       <v-divider class="mt-3"></v-divider>
       <v-card-text>

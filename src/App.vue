@@ -26,6 +26,22 @@
 
       <v-btn icon>
         <v-icon>mdi-dots-vertical</v-icon>
+        <v-menu activator="parent">
+          <v-list>
+            <!-- Add Server -->
+            <v-list-item :title="$t('ADD_SERVER')" prepend-icon="mdi-plus" link
+                         @click="$refs.addServerSheet.isShow = true"></v-list-item>
+            <!-- Manage Servers -->
+            <v-list-item :title="$t('MANAGE_SERVERS')" prepend-icon="mdi-dns" link></v-list-item>
+            <v-divider/>
+            <!-- Settings -->
+            <v-list-item :title="$t('SETTINGS')" prepend-icon="mdi-cog" link></v-list-item>
+            <v-divider/>
+            <!-- Diagnose -->
+            <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted"
+                         prepend-icon="mdi-wifi-alert" link></v-list-item>
+          </v-list>
+        </v-menu>
       </v-btn>
     </v-app-bar>
 
