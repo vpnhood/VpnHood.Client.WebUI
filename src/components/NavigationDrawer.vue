@@ -1,8 +1,16 @@
 <template>
-  <div>
+  <v-navigation-drawer
+      v-model="drawer"
+      location="left"
+      temporary
+      floating
+  >
     <!-- Header -->
     <div class="d-flex align-center bg-medium-blue pa-4">
+
+      <!-- App logo -->
       <v-img src="../assets/img/new-logo-cropped.png" max-width="60px"/>
+
       <!-- App full version -->
       <div class="text-white ms-3">
         <h3>{{ $t("APP_NAME") }}</h3>
@@ -11,6 +19,7 @@
           <span>{{ $clientApp.appVersion(true) }}</span>
         </div>
       </div>
+
     </div>
 
     <!-- Menu items -->
@@ -27,14 +36,16 @@
       </v-list-item>
     </v-list>
 
-  </div>
+  </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  data: () => ({
+  data () {
+    return{
+      drawer: false,
       menuItems: [
         {
           title: 'WHATS_NEW',
@@ -52,11 +63,8 @@ export default defineComponent({
           link: 'https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server',
         },
       ],
-  }),
-  computed: {
-
+    }
   },
-  methods: {}
 });
 </script>
 

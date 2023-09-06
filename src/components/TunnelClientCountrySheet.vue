@@ -3,26 +3,28 @@
     <v-card :title="$t('TUNNEL_MY_COUNTRY')">
       <v-divider class="mt-3"></v-divider>
       <v-card-text>
-        <p class="pb-4 color-muted">{{$t('TUNNEL_MY_COUNTRY_DESC')}}</p>
+        <p class="pb-4 color-muted">{{ $t('TUNNEL_MY_COUNTRY_DESC') }}</p>
         <v-radio-group v-model="tunnelClientCountry" hide-details>
           <v-radio
               :label="$t('TUNNEL_MY_COUNTRY_ON')"
               :value="true"
-              color="info"
+              color="error"
               class="mb-4"
           ></v-radio>
           <v-radio
-              :label="$t('TUNNEL_MY_COUNTRY_OFF')"
               :value="false"
-              color="info"
+              color="sharp-master-green"
           >
+            <template v-slot:label>
+                <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
+                <v-chip
+                    class="ms-2"
+                    color="var(--master-green)"
+                    :text="$t('RECOMMENDED')"
+                ></v-chip>
+            </template>
           </v-radio>
         </v-radio-group>
-        <v-chip
-            color="var(--master-green)"
-            :text="$t('RECOMMENDED')"
-            class="w-100 justify-center"
-        ></v-chip>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -52,6 +54,7 @@ export default defineComponent({
           },
           set(value: boolean) {
             this.$clientApp.settings.userSettings.tunnelClientCountry = value;
+            this.$clientApp.saveUserSetting();
           }
         },
   },

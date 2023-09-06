@@ -1,12 +1,59 @@
 <template>
-  <v-container
-      :class="['d-flex flex-column justify-space-between pb-3 h-100 state-'+$clientApp.state.connectionState.toLowerCase()]">
+  <v-container class="d-flex flex-column justify-space-between pb-3 h-100">
 
+    <!-- App bar & navigation drawer -->
     <div id="topSection">
+
+      <!-- Navigation drawer -->
+      <NavigationDrawer ref="navigationDrawer"/>
+
+      <!-- App bar -->
+      <v-app-bar
+          color="transparent"
+          elevation="0"
+      >
+        <!-- Navigation drawer button -->
+        <template v-slot:prepend>
+          <v-app-bar-nav-icon
+              @click.stop="$refs.navigationDrawer.drawer = !$refs.navigationDrawer.drawer"></v-app-bar-nav-icon>
+        </template>
+
+        <!-- App name -->
+        <v-spacer></v-spacer>
+        <h6>{{ $t("APP_NAME") }}</h6>
+        <v-spacer></v-spacer>
+
+        <!-- App mini version -->
+        <span class="opacity-30 txt-small-1">v {{ $clientApp.appVersion(false) }}</span>
+
+        <!-- Client menu -->
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+          <v-menu activator="parent">
+            <v-list>
+              <!-- Add Server -->
+              <v-list-item :title="$t('ADD_SERVER')" prepend-icon="mdi-plus" link
+                           @click="$refs.addServerSheet.isShow = true"></v-list-item>
+              <!-- Manage Servers -->
+              <v-list-item :title="$t('MANAGE_SERVERS')" prepend-icon="mdi-dns" link
+                           @click="$refs.serverSheet.isShow = true"></v-list-item>
+              <v-divider/>
+              <!-- Settings -->
+              <v-list-item :title="$t('SETTINGS')" prepend-icon="mdi-cog" link
+                           @click="$refs.settingsSheet.isShow = true"></v-list-item>
+              <v-divider/>
+              <!-- Diagnose -->
+              <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted"
+                           prepend-icon="mdi-wifi-alert" link></v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn>
+      </v-app-bar>
 
     </div>
 
-    <div id="middleSection">
+    <!-- Speed & Circle & Connect button -->
+    <div id="middleSection" :class="'state-' + [$clientApp.state.connectionState.toLowerCase()]">
 
       <!-- Speed -->
       <v-row id="speedSection" align-content="center" justify="center"
@@ -29,12 +76,17 @@
           <div class="d-flex flex-column align-center justify-center">
 
             <!-- Connection state text -->
-            <span class="txt-large-4">{{ $t($clientApp.state.connectionState.toUpperCase()) }}</span>
+            <span class="txt-large-4">{{
+                $clientApp.state.connectionState === "None"
+                    ? $t("DISCONNECTED")
+                    : $t($clientApp.state.connectionState.toUpperCase())
+              }}
+            </span>
 
             <!-- Usage -->
             <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-              <span class="txt-large-3">{{ bandwidthUsage().used }}GB of</span>
-              <span class="color-sky-blue h1">{{ bandwidthUsage().total }}GB</span>
+              <span class="txt-large-3">{{ bandwidthUsage().used }} GB {{ $t("OF") }}</span>
+              <span class="color-sky-blue h1">{{ bandwidthUsage().total }} GB</span>
             </div>
 
             <!-- Check -->
@@ -48,14 +100,15 @@
 
       <!-- Connect buttons -->
       <v-col cols="12" class="text-center mt-3">
-        <v-btn :class="[!isConnected() ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
-               @click="[!isConnected() ? $clientApp.connect() : $clientApp.disconnect()]">
-          {{ buttonText() }}
+        <v-btn :class="[$clientApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
+               @click="[$clientApp.state.connectionState === 'None' ? $clientApp.connect() : $clientApp.disconnect()]">
+          {{ connectButtonText() }}
         </v-btn>
       </v-col>
 
     </div>
 
+    <!-- Config buttons -->
     <div id="bottomSection" class="text-truncate">
 
       <!-- Country button -->
@@ -69,9 +122,12 @@
       >
         <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ $clientApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY") }}</span>
+        <span class="text-capitalize color-light-purple">{{
+            $clientApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+          }}</span>
         <img v-if="!$clientApp.settings.userSettings.tunnelClientCountry"
-             :src="require(`../assets/img/country_flags/${$clientApp.state.clientIpGroup.ipGroupId}.png`)" alt="country flag" width="24" class="ms-2" />
+             :src="require(`../assets/img/country_flags/${$clientApp.state.clientIpGroup.ipGroupId}.png`)"
+             alt="country flag" width="24" class="ms-2"/>
       </v-btn>
 
       <!-- Protocol button -->
@@ -85,7 +141,9 @@
       >
         <span>{{ $t("PROTOCOL_TITLE") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ $clientApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
+        <span class="text-capitalize color-light-purple">{{
+            $clientApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
+          }}</span>
       </v-btn>
 
       <!-- Servers button -->
@@ -99,14 +157,18 @@
       >
         <span>{{ $t("SELECTED_SERVER") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ activeClientProfileName() }}</span>
+        <span class="text-capitalize color-light-purple">{{ lastActiveClientProfileName() }}</span>
       </v-btn>
+
     </div>
 
-
-    <TunnelClientCountrySheet ref="tunnelClientCountrySheet" />
+    <!-- Components -->
+    <TunnelClientCountrySheet ref="tunnelClientCountrySheet"/>
     <ProtocolSheet ref="protocolSheet"/>
     <ServersSheet ref="serverSheet"/>
+    <AddServerSheet ref="addServerSheet"/>
+    <SettingSheet ref="settingsSheet"/>
+
   </v-container>
 
 </template>
@@ -117,13 +179,16 @@ import {AppConnectionState} from "@/hood/VpnHood.Client.Api";
 import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
 import ProtocolSheet from "@/components/ProtocolSheet.vue";
 import ServersSheet from "@/components/ServersSheet.vue";
+import AddServerSheet from "@/components/AddServerSheet.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import SettingSheet from "@/components/SettingsSheet.vue";
 
 export default defineComponent({
   name: 'HomeView',
-  components: {ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
+  components: {SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
   data() {
     return {
-
+      drawer: false,
     }
   },
   created() {
@@ -133,16 +198,14 @@ export default defineComponent({
     }, 1000);
   },
 
-  computed: {
-
-  },
+  computed: {},
 
   methods: {
 
-    buttonText(): string {
+    connectButtonText(): string {
       switch (this.$clientApp.state.connectionState) {
         case "Connecting":
-          return this.$t('CONNECTING');
+          return this.$t('DISCONNECT');
         case "Waiting":
           return this.$t('WAITING');
         case "Connected":
@@ -190,8 +253,8 @@ export default defineComponent({
     isConnected(): boolean {
       return this.$clientApp.state.connectionState == AppConnectionState.Connected;
     },
-    activeClientProfileName():string{
-      const activeClientProfile = this.$clientApp.clientProfileItems.find(x => x.id === this.$clientApp.state.activeClientProfileId);
+    lastActiveClientProfileName(): string {
+      const activeClientProfile = this.$clientApp.clientProfileItems.find(x => x.id === this.$clientApp.state.lastActiveClientProfileId);
       return activeClientProfile?.token.name ?? '';
     }
   }

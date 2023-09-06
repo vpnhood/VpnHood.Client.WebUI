@@ -5,8 +5,8 @@
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
         <v-radio-group v-model="useUdpChannel" hide-details>
-          <v-radio :label="$t('PROTOCOL_UDP_ON')" :value="true" ></v-radio>
-          <v-radio :label="$t('PROTOCOL_UDP_OFF')" :value="false" ></v-radio>
+          <v-radio :label="$t('PROTOCOL_UDP_ON')" :value="true" color="info"></v-radio>
+          <v-radio :label="$t('PROTOCOL_UDP_OFF')" :value="false" color="info"></v-radio>
         </v-radio-group>
       </v-card-text>
       <v-card-actions>
@@ -37,6 +37,7 @@ export default defineComponent({
           },
           set(value) {
             this.$clientApp.settings.userSettings.useUdpChannel = value;
+            this.$clientApp.saveUserSetting();
           }
         },
   },

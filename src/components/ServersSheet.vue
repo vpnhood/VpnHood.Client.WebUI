@@ -52,7 +52,7 @@
                 <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted" prepend-icon="mdi-wifi-alert" link></v-list-item>
                 <v-divider/>
                 <!-- Delete -->
-                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link></v-list-item>
+                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link @click="$clientApp.removeClientProfile(item.clientProfile)"></v-list-item>
               </v-list>
             </v-menu>
           </v-btn>

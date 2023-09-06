@@ -1,3 +1,4 @@
+.v-navigation-drawer__scrim,
 .v-overlay__scrim{
-    opacity: 50% !important;
+    opacity: 60% !important;
 }

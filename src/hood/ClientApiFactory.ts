@@ -42,7 +42,7 @@ export class ClientApiFactory {
     }
 
     //For each class of VpnHood.Client.Api.ts, we need to create a new method like below
-    public ApiClient(): ApiClient {
+    public CreateApiClient(): ApiClient {
         return new ApiClient(this.baseUrl, this.axiosInstance);
     }
 

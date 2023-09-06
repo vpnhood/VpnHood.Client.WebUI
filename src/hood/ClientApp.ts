@@ -5,12 +5,12 @@ import {
     AppState,
     ClientProfileItem,
     ConnectParam,
-    LoadAppParam,
+    LoadAppParam, RemoveClientProfileParam,
     UserSettings
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
 
-const apiClient: ApiClient = ClientApiFactory.instance.ApiClient();
+const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class ClientApp {
 
@@ -66,9 +66,11 @@ export class ClientApp {
         if (loadApp.settings) {
             this.settings = loadApp.settings;
         }
+        if (loadApp.clientProfileItems) {
+            this.clientProfileItems = loadApp.clientProfileItems;
+        }
 
     }
-
     public async connect(clientProfileId?: string): Promise<void> {
         if (!clientProfileId)
             await this.loadApp({withSettings: true});
@@ -88,7 +90,12 @@ export class ClientApp {
         return isFull ? this.features?.version : this.features?.version.split(".")[2];
     }
 
-    public async saveUserSetting(userSetting: UserSettings): Promise<void> {
-        await apiClient.setUserSettings(userSetting);
+    public async saveUserSetting(): Promise<void> {
+        await apiClient.setUserSettings(this.settings.userSettings);
+    }
+
+    public async removeClientProfile(clientProfile: RemoveClientProfileParam): Promise<void> {
+        await apiClient.removeClientProfile(clientProfile);
+        await this.loadApp({withClientProfileItems: true});
     }
 }

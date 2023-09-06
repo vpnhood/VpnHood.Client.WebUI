@@ -81,9 +81,11 @@ export default defineComponent({
 
     validateAccessKey(accessKey: string): string | null {
       try {
+        console.log("1111",accessKey,"2222");
+        console.log("11111111111111111");
         accessKey = accessKey.replace(/(^[^A-Za-z0-9]*)|([^A-Za-z0-9=+/]*$)/g, '');
-        if (accessKey.indexOf("vh://") == 0) accessKey = accessKey.substring(5);
-
+        console.log("22222222222222222");
+        if (accessKey.startsWith("vh://")) accessKey = accessKey.substring(5);
         const json = atob(accessKey);
         return JSON.parse(json) != null ? accessKey : null;
       } catch (ex) {
