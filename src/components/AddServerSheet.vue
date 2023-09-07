@@ -17,7 +17,7 @@
             v-model="accessKeyValue"
             :error-messages="accessKeyErrorMessage"
             :placeholder="accessKeyPrefix"
-            @input="onKeyAccessChanged"
+            @input="addAccessKey"
             append-inner-icon="mdi-key"
             spellcheck="false"
             autocomplete="off"
@@ -34,16 +34,16 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {AddClientProfileParam} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'AddServerSheet',
-
   data() {
     return {
       isShow: false,
-      accessKeyValue: null,
+      accessKeyValue: "",
       accessKeyErrorMessage: "",
-      accessKeyPrefix: "vh://"
+      accessKeyPrefix: "vh://",
     }
   },
 
@@ -55,47 +55,44 @@ export default defineComponent({
   },
 
   methods: {
-    async onKeyAccessChanged(value: string): Promise<void> {
-      this.accessKeyErrorMessage = "";
+    async addAccessKey(): Promise<void>{
 
-      if (value == null || value == "")
-        return;
-
-      let validateValue = this.validateAccessKey(value);
-      if (!validateValue) {
-        this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_FORMAT", {prefix: this.accessKeyPrefix});
+      // Check is text field value started with vh://
+      if (this.accessKeyValue != null && this.accessKeyValue.substring(0, 5) !== this.accessKeyPrefix){
+        this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_PREFIX")+this.accessKeyPrefix;
         return;
       }
 
-      try {
-        //let clientProfile = await this.$clientApp.addAccessKey({accessKey: validateValue});
-        //let isNew = !this.$clientApp.clientProfileItems.find(x => x.clientProfile.clientProfileId == clientProfile.clientProfileId);
-        this.accessKeyValue = null;
-        await this.$clientApp.loadApp();
-        this.isShow = false;
-        //this.$clientApp.newServerAdded = isNew;
-      } catch (err: any) {
-        this.accessKeyErrorMessage = err.toString();
-      }
-    },
+      // Remove vh:// from text field value
+      const accessKey = this.accessKeyValue?.substring(5);
 
-    validateAccessKey(accessKey: string): string | null {
       try {
-        console.log("1111",accessKey,"2222");
-        console.log("11111111111111111");
-        accessKey = accessKey.replace(/(^[^A-Za-z0-9]*)|([^A-Za-z0-9=+/]*$)/g, '');
-        console.log("22222222222222222");
-        if (accessKey.startsWith("vh://")) accessKey = accessKey.substring(5);
-        const json = atob(accessKey);
-        return JSON.parse(json) != null ? accessKey : null;
-      } catch (ex) {
-        return null;
+        // Check AccessKey is valid base64 format
+        const validateAccessKey = JSON.parse(atob(accessKey));
+        if (validateAccessKey != null){
+          // Add accessKey and connect to it
+          await this.$clientApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
+          // Find new added client profile ID
+          const clientProfileId = this.$clientApp.clientProfileItems.find(x => x.token.sid == validateAccessKey.sid);
+          if (clientProfileId){
+            // Pass client profile ID to the parent
+            this.$emit("newClientProfileId", clientProfileId.id);
+            this.isShow = false;
+          }
+          else throw new Error("Could not found new client profile id");
+        }
+      }
+      catch (err){
+        // if accessKey is not valid base64 format
+        console.log(err);
+        this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_FORMAT");
+        return;
       }
     },
 
     async addTestServer() {
       //await this.$clientApp.addTestServer();
-      this.accessKeyValue = null;
+      //this.accessKeyValue = null;
       await this.$clientApp.loadApp();
       this.isShow = false;
       //this.$clientApp.newServerAdded = true;

@@ -20,10 +20,10 @@
           rounded
           @click="connect(item.id)"
           class="server-item rounded-lg my-4 py-4"
-          :style="item.id === $clientApp.state.activeClientProfileId ? 'border: solid #23c99d 3px' : ''"
+          :style="item.id === $clientApp.state.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
       >
         <!-- َActive item icon -->
-        <template v-slot:prepend v-if="item.id === $clientApp.state.activeClientProfileId">
+        <template v-slot:prepend v-if="item.id === $clientApp.state.defaultClientProfileId">
           <v-avatar size="25" color="#23c99d66">
             <v-icon size="25" color="var(--master-green)">mdi-check-all</v-icon>
           </v-avatar>
@@ -61,7 +61,7 @@
       </v-list-item>
     </v-list>
 
-    <AddServerSheet ref="addServerSheet"></AddServerSheet>
+    <AddServerSheet ref="addServerSheet" @new-client-profile-id="connect"></AddServerSheet>
   </v-bottom-sheet>
 </template>
 
@@ -83,6 +83,7 @@ export default defineComponent({
       this.$clientApp.connect(clientProfileId);
       this.isShow = false;
     },
+    // Hidden full ip in the server list
     redactIp(ipAddress: string): string {
       if (ipAddress == null) return "";
       let tokens = ipAddress.split(".");

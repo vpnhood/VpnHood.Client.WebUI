@@ -1,5 +1,6 @@
 import {ClientApiFactory} from "@/hood/ClientApiFactory";
 import {
+    AddClientProfileParam,
     AppFeatures,
     AppSettings,
     AppState,
@@ -75,9 +76,9 @@ export class ClientApp {
         if (!clientProfileId)
             await this.loadApp({withSettings: true});
 
-        const defaultClientProfileId = clientProfileId ?? this.settings.userSettings.defaultClientProfileId;
-        if (defaultClientProfileId)
-            await apiClient.connect(new ConnectParam({clientProfileId: defaultClientProfileId}));
+        const selectedClientProfileId = clientProfileId ?? this.settings.userSettings.defaultClientProfileId;
+        if (selectedClientProfileId)
+            await apiClient.connect(new ConnectParam({clientProfileId: selectedClientProfileId}));
 
         else throw new Error("Could not found default client profile id");
     }
@@ -96,6 +97,11 @@ export class ClientApp {
 
     public async removeClientProfile(clientProfile: RemoveClientProfileParam): Promise<void> {
         await apiClient.removeClientProfile(clientProfile);
+        await this.loadApp({withClientProfileItems: true});
+    }
+
+    public async addAccessKey(accessKey: AddClientProfileParam): Promise<void> {
+        await apiClient.addAccessKey(accessKey);
         await this.loadApp({withClientProfileItems: true});
     }
 }
