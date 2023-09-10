@@ -21,8 +21,8 @@
   "clientProfileName": "Name",
   "REMOVE": "Delete",
   "RENAME": "Rename",
-  "warning": "Warning",
-  "cancel": "Cancel",
+  "WARNING": "Warning",
+  "CANCEL": "Cancel",
   "CLOSE": "close",
   "save": "Save",
   "ok": "OK",
@@ -39,7 +39,7 @@
   "openReport": "Open Report",
   "sendReport": "Send Report",
   "GENERAL": "General",
-  "confirmRemoveServer": "Do you really want to remove this server?<br/><br/>{serverName}",
+  "CONFIRM_REMOVE_SERVER": "Do you really want to remove this server?",
   "ADD_TEST_SERVER": "Add public server",
   "ADD_TEST_SERVER_SUBTITLE": "You have removed the Public Test Server. This server is free and for evaluation.",
   "ADD_ACCESS_KEY_TITLE": "Add private access key",
@@ -103,6 +103,7 @@
   "goPremiumWithVpnHoodStore":"Go Premium on Google Play",
   "continueWithFreeSlowSpeed":"Continue With Free Slow Speed",
   "NO": "No",
+  "YES": "Yes",
   "RECOMMENDED": "Recommended",
   "OF": "of"
 }

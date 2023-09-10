@@ -7,13 +7,12 @@ import {
     ClientProfileItem,
     ConnectParam,
     LoadAppParam, RemoveClientProfileParam,
-    UserSettings
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
 
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
-export class ClientApp {
+export class VpnHoodApp {
 
     public state: AppState;
     public features: AppFeatures;
@@ -33,14 +32,14 @@ export class ClientApp {
         this.clientProfileItems = clientProfileItems;
     }
 
-    public static async create(): Promise<ClientApp> {
+    public static async create(): Promise<VpnHoodApp> {
         const result = await apiClient.loadApp(new LoadAppParam({
             withSettings: true,
             withState: true,
             withClientProfileItems: true,
             withFeatures: true,
         }));
-        return new ClientApp(apiClient, result.state!, result.features!, result.settings!, result.clientProfileItems!);
+        return new VpnHoodApp(apiClient, result.state!, result.features!, result.settings!, result.clientProfileItems!);
     }
 
     public async loadApp(options?: {
@@ -72,15 +71,11 @@ export class ClientApp {
         }
 
     }
-    public async connect(clientProfileId?: string): Promise<void> {
-        if (!clientProfileId)
-            await this.loadApp({withSettings: true});
-
-        const selectedClientProfileId = clientProfileId ?? this.settings.userSettings.defaultClientProfileId;
-        if (selectedClientProfileId)
-            await apiClient.connect(new ConnectParam({clientProfileId: selectedClientProfileId}));
-
-        else throw new Error("Could not found default client profile id");
+    public async connect(): Promise<void> {
+        if (!this.settings.userSettings.defaultClientProfileId){
+            throw new Error("Could not find default client profile id");
+        }
+        await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
     }
 
     public async disconnect(): Promise<void> {
@@ -95,13 +90,24 @@ export class ClientApp {
         await apiClient.setUserSettings(this.settings.userSettings);
     }
 
-    public async removeClientProfile(clientProfile: RemoveClientProfileParam): Promise<void> {
-        await apiClient.removeClientProfile(clientProfile);
+    public async removeClientProfile(clientProfileParam: RemoveClientProfileParam): Promise<void> {
+        await apiClient.removeClientProfile(clientProfileParam);
         await this.loadApp({withClientProfileItems: true});
     }
 
     public async addAccessKey(accessKey: AddClientProfileParam): Promise<void> {
         await apiClient.addAccessKey(accessKey);
         await this.loadApp({withClientProfileItems: true});
+    }
+
+    public async diagnose(clientProfileId?: string): Promise<void>{
+        if (!clientProfileId)
+            await this.loadApp({withSettings: true});
+
+        const selectedClientProfileId = clientProfileId ?? this.settings.userSettings.defaultClientProfileId;
+        if (selectedClientProfileId)
+            await apiClient.diagnose(new ConnectParam({clientProfileId: selectedClientProfileId}));
+
+        else throw new Error("Could not found default client profile id");
     }
 }

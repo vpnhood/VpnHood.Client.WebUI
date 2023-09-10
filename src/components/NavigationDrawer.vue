@@ -23,17 +23,57 @@
     </div>
 
     <!-- Menu items -->
-    <v-list dense class="pt-0" >
+    <v-list dense class="pt-0">
+
+      <!-- Settings -->
       <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :href="item.link"
-          target="_blank"
-          :title="$t(item.title)"
-          :prepend-icon="item.icon"
+          :title="$t('SETTINGS')"
+          prepend-icon="mdi-cog"
           class="menu-item color-gray txt-small-1"
+          @click="$emit('openSettings')"
       >
       </v-list-item>
+
+      <!-- Diagnose -->
+      <v-list-item
+          :title="$t('DIAGNOSE')"
+          prepend-icon="mdi-wifi-alert"
+          class="menu-item color-gray txt-small-1"
+          :disabled="$clientApp.state.hasDiagnoseStarted"
+          @click="$clientApp.diagnose()"
+      >
+      </v-list-item>
+
+      <!-- Whats new -->
+      <v-list-item
+          :title="$t('WHATS_NEW')"
+          prepend-icon="mdi-bullhorn"
+          class="menu-item color-gray txt-small-1"
+          href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
+          target="_blank"
+      >
+      </v-list-item>
+
+      <!-- Send feedback -->
+      <v-list-item
+          :title="$t('SEND_FEEDBACK')"
+          prepend-icon="mdi-message-alert"
+          class="menu-item color-gray txt-small-1"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
+          target="_blank"
+      >
+      </v-list-item>
+
+      <!-- Create personal server -->
+      <v-list-item
+          :title="$t('CREATE_PERSONAL_SERVER')"
+          prepend-icon="mdi-shield-account-variant"
+          class="menu-item color-gray txt-small-1"
+          href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
+          target="_blank"
+      >
+      </v-list-item>
+
     </v-list>
 
   </v-navigation-drawer>
@@ -43,33 +83,16 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  data () {
-    return{
+  data() {
+    return {
       drawer: false,
-      menuItems: [
-        {
-          title: 'WHATS_NEW',
-          icon: 'mdi-bullhorn',
-          link: 'https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md',
-        },
-        {
-          title: 'SEND_FEEDBACK',
-          icon: 'mdi-message-alert',
-          link: 'https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link',
-        },
-        {
-          title: 'CREATE_PERSONAL_SERVER',
-          icon: 'mdi-shield-account-variant',
-          link: 'https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server',
-        },
-      ],
     }
   },
 });
 </script>
 
 <style scoped>
-.menu-item{
+.menu-item {
   border-bottom: 1px #e8e8e8 solid;
 }
 </style>

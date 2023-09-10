@@ -5,7 +5,7 @@
     <div id="topSection">
 
       <!-- Navigation drawer -->
-      <NavigationDrawer ref="navigationDrawer"/>
+      <NavigationDrawer ref="navigationDrawer" @open-settings="$refs.settingsSheet.isShow = true" />
 
       <!-- App bar -->
       <v-app-bar
@@ -24,30 +24,7 @@
         <v-spacer></v-spacer>
 
         <!-- App mini version -->
-        <span class="opacity-30 txt-small-1">v {{ $clientApp.appVersion(false) }}</span>
-
-        <!-- Client menu -->
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
-          <v-menu activator="parent">
-            <v-list>
-              <!-- Add Server -->
-              <v-list-item :title="$t('ADD_SERVER')" prepend-icon="mdi-plus" link
-                           @click="$refs.addServerSheet.isShow = true"></v-list-item>
-              <!-- Manage Servers -->
-              <v-list-item :title="$t('MANAGE_SERVERS')" prepend-icon="mdi-dns" link
-                           @click="$refs.serverSheet.isShow = true"></v-list-item>
-              <v-divider/>
-              <!-- Settings -->
-              <v-list-item :title="$t('SETTINGS')" prepend-icon="mdi-cog" link
-                           @click="$refs.settingsSheet.isShow = true"></v-list-item>
-              <v-divider/>
-              <!-- Diagnose -->
-              <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted"
-                           prepend-icon="mdi-wifi-alert" link></v-list-item>
-            </v-list>
-          </v-menu>
-        </v-btn>
+        <span class="opacity-30 txt-small-1 me-4">v {{ $clientApp.appVersion(false) }}</span>
       </v-app-bar>
 
     </div>
@@ -98,7 +75,7 @@
         </div>
       </div>
 
-      <!-- Connect buttons -->
+      <!-- Connect button -->
       <v-col cols="12" class="text-center mt-3">
         <v-btn :class="[$clientApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
                @click="[$clientApp.state.connectionState === 'None' ? $clientApp.connect() : $clientApp.disconnect()]">
@@ -157,7 +134,7 @@
       >
         <span>{{ $t("SELECTED_SERVER") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ lastActiveClientProfileName() }}</span>
+        <span class="text-capitalize color-light-purple">{{ getDefaultClientProfileName() }}</span>
       </v-btn>
 
     </div>
@@ -253,10 +230,15 @@ export default defineComponent({
     isConnected(): boolean {
       return this.$clientApp.state.connectionState == AppConnectionState.Connected;
     },
-    lastActiveClientProfileName(): string {
-      const activeClientProfile = this.$clientApp.clientProfileItems.find(x => x.id === this.$clientApp.state.lastActiveClientProfileId);
-      return activeClientProfile?.token.name ?? '';
-    }
+
+    getDefaultClientProfileName(): string {
+      const clientProfileItem = this.$clientApp.clientProfileItems.find(x => x.id ===  this.$clientApp.settings.userSettings.defaultClientProfileId);
+      if (!clientProfileItem || !clientProfileItem.token.name){
+        throw new Error("Could not find default client profile id");
+      }
+      return clientProfileItem.token.name;
+    },
+
   }
 });
 </script>

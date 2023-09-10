@@ -45,29 +45,54 @@
             <v-icon>mdi-dots-vertical</v-icon>
             <v-menu activator="parent">
               <v-list>
+
                 <!-- Rename -->
                 <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" link></v-list-item>
                 <v-divider/>
+
                 <!-- Diagnose -->
-                <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted" prepend-icon="mdi-wifi-alert" link></v-list-item>
+                <v-list-item :title="$t('DIAGNOSE')" :disabled="$clientApp.state.hasDiagnoseStarted" prepend-icon="mdi-wifi-alert" link @click="diagnose(item.clientProfile.clientProfileId)"></v-list-item>
                 <v-divider/>
+
                 <!-- Delete -->
-                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link @click="$clientApp.removeClientProfile(item.clientProfile)"></v-list-item>
+                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link >
+                  <!-- Confirm delete server dialog -->
+                  <v-dialog v-model="showConfirmDelete" activator="parent"  close-on-back>
+                    <v-card>
+                      <v-card-title id="deleteConfirmTitle">{{$t('WARNING')}}</v-card-title>
+                      <v-card-text>
+                        <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
+                        <strong>{{item.token.name}}</strong>
+                      </v-card-text>
+                      <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
+                        <v-btn  variant="text"  @click="removeServer(item.clientProfile.clientProfileId)">
+                          {{ $t("YES") }}
+                        </v-btn>
+                        <v-btn color="blue" variant="text" @click="showConfirmDelete = false">
+                          {{ $t("NO") }}
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-list-item>
+
               </v-list>
             </v-menu>
           </v-btn>
         </template>
-
       </v-list-item>
     </v-list>
 
+    <!-- Add server sheet -->
     <AddServerSheet ref="addServerSheet" @new-client-profile-id="connect"></AddServerSheet>
+
   </v-bottom-sheet>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
+import {RemoveClientProfileParam} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ServersSheet',
@@ -75,15 +100,31 @@ export default defineComponent({
   data() {
     return {
       isShow: false,
+      showConfirmDelete: false,
     }
   },
 
   methods: {
-    connect(clientProfileId: string) {
-      this.$clientApp.connect(clientProfileId);
+    async connect(clientProfileId: string): Promise<void > {
       this.isShow = false;
+      this.$clientApp.settings.userSettings.defaultClientProfileId = clientProfileId;
+      await this.$clientApp.saveUserSetting();
+      await this.$clientApp.connect();
     },
-    // Hidden full ip in the server list
+
+    async diagnose(clientProfileId: string): Promise<void>{
+      this.isShow = false;
+      await this.$clientApp.diagnose(clientProfileId);
+    },
+
+    async removeServer(clientProfileId: string): Promise<void>{
+      await this.$clientApp.removeClientProfile(new RemoveClientProfileParam({
+        clientProfileId: clientProfileId
+      }));
+      this.showConfirmDelete = false;
+    },
+
+    // Hidden full ip in the servers list
     redactIp(ipAddress: string): string {
       if (ipAddress == null) return "";
       let tokens = ipAddress.split(".");
@@ -97,6 +138,10 @@ export default defineComponent({
 .server-item {
   box-shadow: 0 1px 2px 1px rgb(0 0 0 / 15%);
   background-color: #eceffb;
+}
+#deleteConfirmTitle{
+  background-color: #FB8C00;
+  color: white;
 }
 
 </style>

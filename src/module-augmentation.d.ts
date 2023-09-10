@@ -1,7 +1,7 @@
-import {ClientApp} from "@/hood/ClientApp";
+import {VpnHoodApp} from "@/hood/VpnHoodApp";
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
-        $clientApp: ClientApp;
+        $clientApp: VpnHoodApp;
     }
 }
