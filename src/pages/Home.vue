@@ -232,11 +232,11 @@ export default defineComponent({
     },
 
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$clientApp.clientProfileItems.find(x => x.id ===  this.$clientApp.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileItem || !clientProfileItem.token.name){
+      const clientProfileItem = this.$clientApp.clientProfileItems.find(x => x.clientProfile.clientProfileId ===  this.$clientApp.settings.userSettings.defaultClientProfileId);
+      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name){
         throw new Error("Could not find default client profile id");
       }
-      return clientProfileItem.token.name;
+      return clientProfileItem.clientProfile.name ?? clientProfileItem.token.name;
     },
 
   }

@@ -6,7 +6,7 @@ import {
     AppState,
     ClientProfileItem,
     ConnectParam,
-    LoadAppParam, RemoveClientProfileParam,
+    LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
 
@@ -73,7 +73,7 @@ export class VpnHoodApp {
     }
     public async connect(): Promise<void> {
         if (!this.settings.userSettings.defaultClientProfileId){
-            throw new Error("Could not find default client profile id");
+            throw new Error("Could not find default client profile id.");
         }
         await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
     }
@@ -88,6 +88,11 @@ export class VpnHoodApp {
 
     public async saveUserSetting(): Promise<void> {
         await apiClient.setUserSettings(this.settings.userSettings);
+    }
+
+    public async setClientProfile(clientProfileParam: SetClientProfileParam): Promise<void> {
+        await apiClient.setClientProfile(clientProfileParam);
+        await this.loadApp({withClientProfileItems: true});
     }
 
     public async removeClientProfile(clientProfileParam: RemoveClientProfileParam): Promise<void> {

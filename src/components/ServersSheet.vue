@@ -31,9 +31,8 @@
 
         <!-- Profile name -->
         <v-list-item-title class="mb-2">
-          <span class="title">{{ item.token.name }} </span>
-          <span v-if="item.token.sid != null && item.token.sid > ''" class="text-caption text-right justify-end">
-                  (sid:{{ item.token.sid }})</span>
+          <span class="title me-1">{{item.clientProfile.name ?? item.token.name }} </span>
+          <span class="text-caption text-right justify-end">(sid:{{ item.token.sid }})</span>
         </v-list-item-title>
 
         <!-- Support ID -->
@@ -47,7 +46,21 @@
               <v-list>
 
                 <!-- Rename -->
-                <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" link></v-list-item>
+                <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" link>
+
+                  <v-dialog v-model="showRename" activator="parent" close-on-back>
+                    <v-card :title="$t('RENAME')" >
+                      <v-card-text>
+                        <v-text-field v-model="newClientProfileName" :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)" spellcheck="false" autocomplete="off" color="blue darken-1" clearable></v-text-field>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" variant="text" :text="$t('CANCEL')" @click="showRename = false"></v-btn>
+                        <v-btn color="blue darken-1" variant="text" :text="$t('SAVE')" @click="saveNewClientProfileName(item.clientProfile)"></v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-list-item>
                 <v-divider/>
 
                 <!-- Diagnose -->
@@ -92,7 +105,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
-import {RemoveClientProfileParam} from "@/hood/VpnHood.Client.Api";
+import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ServersSheet',
@@ -101,6 +114,8 @@ export default defineComponent({
     return {
       isShow: false,
       showConfirmDelete: false,
+      showRename: false,
+      newClientProfileName:null,
     }
   },
 
@@ -130,6 +145,15 @@ export default defineComponent({
       let tokens = ipAddress.split(".");
       return tokens[0] + ".*.*." + tokens[3];
     },
+
+    async saveNewClientProfileName(renamedClientProfile: ClientProfile):Promise<void>{
+      this.showRename = false;
+      const clientProfile = this.$clientApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
+      if (!clientProfile){throw new Error("Could not find client profile id.")}
+
+      this.newClientProfileName == "" ? clientProfile.name = null : clientProfile.name = this.newClientProfileName;
+      await this.$clientApp.setClientProfile(new SetClientProfileParam({clientProfile}));
+    }
   }
 })
 </script>

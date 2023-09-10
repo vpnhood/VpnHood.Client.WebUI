@@ -24,7 +24,7 @@
   "WARNING": "Warning",
   "CANCEL": "Cancel",
   "CLOSE": "close",
-  "save": "Save",
+  "SAVE": "Save",
   "ok": "OK",
   "noname": "Server",
   "uploadSpeed": "Up",
@@ -105,5 +105,6 @@
   "NO": "No",
   "YES": "Yes",
   "RECOMMENDED": "Recommended",
-  "OF": "of"
+  "OF": "of",
+  "ENTER_NEW_NAME_FOR": "Enter new name for "
 }
