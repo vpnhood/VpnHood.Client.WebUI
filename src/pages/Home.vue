@@ -24,25 +24,25 @@
         <v-spacer></v-spacer>
 
         <!-- App mini version -->
-        <span class="opacity-30 txt-small-1 me-4">v {{ $clientApp.appVersion(false) }}</span>
+        <span class="opacity-30 txt-small-1 me-4">v {{ $vpnHoodApp.appVersion(false) }}</span>
       </v-app-bar>
 
     </div>
 
     <!-- Speed & Circle & Connect button -->
-    <div id="middleSection" :class="'state-' + [$clientApp.state.connectionState.toLowerCase()]">
+    <div id="middleSection" :class="'state-' + [$vpnHoodApp.state.connectionState.toLowerCase()]">
 
       <!-- Speed -->
       <v-row id="speedSection" align-content="center" justify="center"
              :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
         <v-col cols="auto">
           <span class="color-sky-blue">{{ $t("downloadSpeed") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$clientApp.state.speed.received) }}</span>
+          <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.received) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
         <v-col cols="auto">
           <span class="color-sky-blue">{{ $t("uploadSpeed") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$clientApp.state.speed.sent) }}</span>
+          <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.sent) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
       </v-row>
@@ -54,9 +54,9 @@
 
             <!-- Connection state text -->
             <span class="txt-large-4">{{
-                $clientApp.state.connectionState === "None"
+                $vpnHoodApp.state.connectionState === "None"
                     ? $t("DISCONNECTED")
-                    : $t($clientApp.state.connectionState.toUpperCase())
+                    : $t($vpnHoodApp.state.connectionState.toUpperCase())
               }}
             </span>
 
@@ -77,8 +77,8 @@
 
       <!-- Connect button -->
       <v-col cols="12" class="text-center mt-3">
-        <v-btn :class="[$clientApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
-               @click="[$clientApp.state.connectionState === 'None' ? $clientApp.connect() : $clientApp.disconnect()]">
+        <v-btn :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
+               @click="[$vpnHoodApp.state.connectionState === 'None' ? $vpnHoodApp.connect() : $vpnHoodApp.disconnect()]">
           {{ connectButtonText() }}
         </v-btn>
       </v-col>
@@ -100,10 +100,10 @@
         <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
         <span class="text-capitalize color-light-purple">{{
-            $clientApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+            $vpnHoodApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
           }}</span>
-        <img v-if="!$clientApp.settings.userSettings.tunnelClientCountry"
-             :src="require(`../assets/img/country_flags/${$clientApp.state.clientIpGroup.ipGroupId}.png`)"
+        <img v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry"
+             :src="require(`../assets/img/country_flags/${$vpnHoodApp.state.clientIpGroup.ipGroupId}.png`)"
              alt="country flag" width="24" class="ms-2"/>
       </v-btn>
 
@@ -119,7 +119,7 @@
         <span>{{ $t("PROTOCOL_TITLE") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
         <span class="text-capitalize color-light-purple">{{
-            $clientApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
+            $vpnHoodApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
           }}</span>
       </v-btn>
 
@@ -171,7 +171,7 @@ export default defineComponent({
   created() {
     setInterval(async () => {
       if (!document.hidden)
-        await this.$clientApp.loadApp({withState: true, withSettings: true});
+        await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
     }, 1000);
   },
 
@@ -180,7 +180,7 @@ export default defineComponent({
   methods: {
 
     connectButtonText(): string {
-      switch (this.$clientApp.state.connectionState) {
+      switch (this.$vpnHoodApp.state.connectionState) {
         case "Connecting":
           return this.$t('DISCONNECT');
         case "Waiting":
@@ -197,25 +197,25 @@ export default defineComponent({
     },
 
     stateIcon(): string | null {
-      if (this.$clientApp.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
-      if (this.$clientApp.state.connectionState === AppConnectionState.None) return "power-plug-off";
-      if (this.$clientApp.state.connectionState === AppConnectionState.Connecting) return "power-plug";
-      if (this.$clientApp.state.connectionState === AppConnectionState.Diagnosing) return "network_check";
-      if (this.$clientApp.state.connectionState === AppConnectionState.Waiting) return "hourglass_top";
+      if (this.$vpnHoodApp.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
+      if (this.$vpnHoodApp.state.connectionState === AppConnectionState.None) return "power-plug-off";
+      if (this.$vpnHoodApp.state.connectionState === AppConnectionState.Connecting) return "power-plug";
+      if (this.$vpnHoodApp.state.connectionState === AppConnectionState.Diagnosing) return "speedometer";
+      if (this.$vpnHoodApp.state.connectionState === AppConnectionState.Waiting) return "hourglass_top";
       return null;
     },
 
     bandwidthUsage(): {} | null {
-      if (!this.$clientApp.state || !this.$clientApp.state.sessionStatus || !this.$clientApp.state.sessionStatus.accessUsage)
+      if (!this.$vpnHoodApp.state || !this.$vpnHoodApp.state.sessionStatus || !this.$vpnHoodApp.state.sessionStatus.accessUsage)
         return null;
 
-      let accessUsage = this.$clientApp.state.sessionStatus.accessUsage;
+      let accessUsage = this.$vpnHoodApp.state.sessionStatus.accessUsage;
       if (accessUsage.maxTraffic == 0)
         return null;
 
       let mb = 1000000;
       let gb = 1000 * mb;
-      let traffic = this.$clientApp.state.accountTraffic;
+      let traffic = this.$vpnHoodApp.state.accountTraffic;
 
       let ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
       ret.total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)) : Number((ret.total / mb).toFixed(0));
@@ -228,11 +228,11 @@ export default defineComponent({
     },
 
     isConnected(): boolean {
-      return this.$clientApp.state.connectionState == AppConnectionState.Connected;
+      return this.$vpnHoodApp.state.connectionState == AppConnectionState.Connected;
     },
 
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$clientApp.clientProfileItems.find(x => x.clientProfile.clientProfileId ===  this.$clientApp.settings.userSettings.defaultClientProfileId);
+      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId ===  this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
       if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name){
         throw new Error("Could not find default client profile id");
       }

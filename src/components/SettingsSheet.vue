@@ -41,13 +41,13 @@ export default defineComponent({
     excludeLocalNetwork:
     {
       get() {
-        return this.$clientApp.settings.userSettings.excludeLocalNetwork;
+        return this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork;
       },
       set(value) {
-        if (this.$clientApp.settings.userSettings.excludeLocalNetwork != value) {
-          this.$clientApp.settings.userSettings.excludeLocalNetwork = value;
-          //this.$clientApp.saveUserSettings();
-          this.$clientApp.disconnect();
+        if (this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork != value) {
+          this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork = value;
+          //this.$vpnHoodApp.saveUserSettings();
+          this.$vpnHoodApp.disconnect();
         }
       }
     },

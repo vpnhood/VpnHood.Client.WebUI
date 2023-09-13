@@ -9,10 +9,14 @@ import {
     LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
+import {VpnHoodAlertProperty} from "@/hood/VpnHoodAlertProperty";
+import i18n from "@/locales/i18n";
 
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
+
+    public alert: VpnHoodAlertProperty = new VpnHoodAlertProperty();
 
     public state: AppState;
     public features: AppFeatures;
@@ -71,8 +75,9 @@ export class VpnHoodApp {
         }
 
     }
+
     public async connect(): Promise<void> {
-        if (!this.settings.userSettings.defaultClientProfileId){
+        if (!this.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
         await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
@@ -105,14 +110,21 @@ export class VpnHoodApp {
         await this.loadApp({withClientProfileItems: true});
     }
 
-    public async diagnose(clientProfileId?: string): Promise<void>{
-        if (!clientProfileId)
-            await this.loadApp({withSettings: true});
+    public async diagnose(): Promise<void> {
+        if (!this.settings.userSettings.defaultClientProfileId) {
+            throw new Error("Could not find default client profile id.");
+        }
+        await apiClient.diagnose(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+    }
 
-        const selectedClientProfileId = clientProfileId ?? this.settings.userSettings.defaultClientProfileId;
-        if (selectedClientProfileId)
-            await apiClient.diagnose(new ConnectParam({clientProfileId: selectedClientProfileId}));
+    public showError(err: any): void {
+        console.log(err);
+        const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err;
+        this.showMessage(errorMessage);
+    }
 
-        else throw new Error("Could not found default client profile id");
+    public showMessage(text: string): void {
+        this.alert.showAlertDialog = true;
+        this.alert.dialogText = text;
     }
 }

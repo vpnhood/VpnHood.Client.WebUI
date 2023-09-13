@@ -49,8 +49,8 @@ export default defineComponent({
 
   computed: {
     testServerVisible(): boolean {
-      return !this.$clientApp.clientProfileItems.find(
-          x => x.clientProfile.tokenId == this.$clientApp.features.testServerTokenId);
+      return !this.$vpnHoodApp.clientProfileItems.find(
+          x => x.clientProfile.tokenId == this.$vpnHoodApp.features.testServerTokenId);
     }
   },
 
@@ -71,9 +71,9 @@ export default defineComponent({
         const validateAccessKey = JSON.parse(atob(accessKey));
         if (validateAccessKey != null){
           // Add accessKey and connect to it
-          await this.$clientApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
+          await this.$vpnHoodApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
           // Find new added client profile ID
-          const clientProfileId = this.$clientApp.clientProfileItems.find(x => x.token.sid == validateAccessKey.sid);
+          const clientProfileId = this.$vpnHoodApp.clientProfileItems.find(x => x.token.sid == validateAccessKey.sid);
           if (clientProfileId){
             // Pass client profile ID to the parent
             this.$emit("newClientProfileId", clientProfileId.id);
@@ -91,11 +91,11 @@ export default defineComponent({
     },
 
     async addTestServer() {
-      //await this.$clientApp.addTestServer();
+      //await this.$vpnHoodApp.addTestServer();
       //this.accessKeyValue = null;
-      await this.$clientApp.loadApp();
+      await this.$vpnHoodApp.loadApp();
       this.isShow = false;
-      //this.$clientApp.newServerAdded = true;
+      //this.$vpnHoodApp.newServerAdded = true;
     },
   }
 })

@@ -2,15 +2,18 @@
   <v-app id="mainBg">
     <v-main>
       <router-view/>
+      <alert-dialog v-model="this.$vpnHoodApp.alert.showAlertDialog" :dialog-text="this.$vpnHoodApp.alert.dialogText" />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
+import AlertDialog from "@/components/AlertDialog.vue";
 
 export default defineComponent({
   name: 'App',
+  components: {AlertDialog},
 })
 </script>
 

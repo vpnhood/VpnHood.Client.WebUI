@@ -106,5 +106,6 @@
   "YES": "Yes",
   "RECOMMENDED": "Recommended",
   "OF": "of",
-  "ENTER_NEW_NAME_FOR": "Enter new name for "
+  "ENTER_NEW_NAME_FOR": "Enter new name for ",
+  "GLOBAL_CATCH_EXCEPTION_TITLE": "Global Error"
 }

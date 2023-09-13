@@ -50,11 +50,11 @@ export default defineComponent({
     tunnelClientCountry:
         {
           get() {
-            return this.$clientApp.settings.userSettings.tunnelClientCountry;
+            return this.$vpnHoodApp.settings.userSettings.tunnelClientCountry;
           },
           set(value: boolean) {
-            this.$clientApp.settings.userSettings.tunnelClientCountry = value;
-            this.$clientApp.saveUserSetting();
+            this.$vpnHoodApp.settings.userSettings.tunnelClientCountry = value;
+            this.$vpnHoodApp.saveUserSetting();
           }
         },
   },

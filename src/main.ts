@@ -7,14 +7,16 @@ import './assets/css/override.css'
 import './assets/css/general.css'
 import {VpnHoodApp} from "@/hood/VpnHoodApp";
 
-
 // main
 async function main():Promise<void> {
     try {
         // init app
-        const clientApp: VpnHoodApp = await VpnHoodApp.create();
+        const vpnHoodApp: VpnHoodApp = reactive(await VpnHoodApp.create());
         const app = createApp(App);
-        app.config.globalProperties.$clientApp = reactive(clientApp);
+        app.config.globalProperties.$vpnHoodApp = vpnHoodApp;
+
+        // Global catch exception
+        app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);
 
         // init Vue
         app.use(i18n)
@@ -33,5 +35,4 @@ async function main():Promise<void> {
         }).$mount('#app');*/
     }
 }
-
 main();

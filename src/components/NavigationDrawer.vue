@@ -16,7 +16,7 @@
         <h3>{{ $t("APP_NAME") }}</h3>
         <div class="color-sharp-master-green txt-small-2">
           <span class="me-2">{{ this.$t("VERSION") }}:</span>
-          <span>{{ $clientApp.appVersion(true) }}</span>
+          <span>{{ $vpnHoodApp.appVersion(true) }}</span>
         </div>
       </div>
 
@@ -37,10 +37,10 @@
       <!-- Diagnose -->
       <v-list-item
           :title="$t('DIAGNOSE')"
-          prepend-icon="mdi-wifi-alert"
+          prepend-icon="mdi-speedometer"
           class="menu-item color-gray txt-small-1"
-          :disabled="$clientApp.state.hasDiagnoseStarted"
-          @click="$clientApp.diagnose()"
+          :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
+          @click="$vpnHoodApp.diagnose()"
       >
       </v-list-item>
 

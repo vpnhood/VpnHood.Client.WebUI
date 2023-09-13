@@ -33,11 +33,11 @@ export default defineComponent({
     useUdpChannel:
         {
           get() {
-            return this.$clientApp.settings.userSettings.useUdpChannel;
+            return this.$vpnHoodApp.settings.userSettings.useUdpChannel;
           },
           set(value) {
-            this.$clientApp.settings.userSettings.useUdpChannel = value;
-            this.$clientApp.saveUserSetting();
+            this.$vpnHoodApp.settings.userSettings.useUdpChannel = value;
+            this.$vpnHoodApp.saveUserSetting();
           }
         },
   },

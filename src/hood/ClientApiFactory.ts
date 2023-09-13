@@ -20,7 +20,7 @@ export class ClientApiFactory {
             },
         });
 
-        this.axiosInstance.interceptors.request.use(
+        /*this.axiosInstance.interceptors.request.use(
 
             async (config) => {
                 config.timeout = 15000;
@@ -30,7 +30,7 @@ export class ClientApiFactory {
                 throw error;
                 //return Promise.reject(error);
             },
-        );
+        );*/
     }
 
     private static _instance: ClientApiFactory | null = null;
