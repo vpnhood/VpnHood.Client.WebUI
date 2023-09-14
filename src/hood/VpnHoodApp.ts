@@ -10,12 +10,11 @@ import {
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
 import {VpnHoodAlertProperty} from "@/hood/VpnHoodAlertProperty";
-import i18n from "@/locales/i18n";
 
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
-
+    public readonly serverUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
     public alert: VpnHoodAlertProperty = new VpnHoodAlertProperty();
 
     public state: AppState;
@@ -118,8 +117,9 @@ export class VpnHoodApp {
     }
 
     public showError(err: any): void {
+        console.log(this.state.logExists);
         console.log(err);
-        const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err;
+        const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err.message;
         this.showMessage(errorMessage);
     }
 

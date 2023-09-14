@@ -36,8 +36,8 @@
   "WHATS_NEW": "What's New?",
   "SEND_FEEDBACK": "Send Feedback",
   "CREATE_PERSONAL_SERVER": "Create a Personal Server",
-  "openReport": "Open Report",
-  "sendReport": "Send Report",
+  "OPEN_REPORT": "Open Report",
+  "SEND_REPORT": "Send Report",
   "GENERAL": "General",
   "CONFIRM_REMOVE_SERVER": "Do you really want to remove this server?",
   "ADD_TEST_SERVER": "Add public server",
@@ -107,5 +107,4 @@
   "RECOMMENDED": "Recommended",
   "OF": "of",
   "ENTER_NEW_NAME_FOR": "Enter new name for ",
-  "GLOBAL_CATCH_EXCEPTION_TITLE": "Global Error"
 }
