@@ -7,6 +7,7 @@ import './assets/css/override.css'
 import './assets/css/general.css'
 import {VpnHoodApp} from "@/hood/VpnHoodApp";
 
+
 // main
 async function main():Promise<void> {
     try {

@@ -5,7 +5,7 @@ import {
     AppSettings,
     AppState,
     ClientProfileItem,
-    ConnectParam,
+    ConnectParam, DeviceAppInfo,
     LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
@@ -126,5 +126,9 @@ export class VpnHoodApp {
     public showMessage(text: string): void {
         this.alert.showAlertDialog = true;
         this.alert.dialogText = text;
+    }
+
+    public getInstalledApps(): Promise<DeviceAppInfo[]> {
+        return apiClient.installedApps();
     }
 }

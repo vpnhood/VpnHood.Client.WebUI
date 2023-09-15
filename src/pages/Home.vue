@@ -36,12 +36,12 @@
       <v-row id="speedSection" align-content="center" justify="center"
              :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
         <v-col cols="auto">
-          <span class="color-sky-blue">{{ $t("downloadSpeed") }}:</span>
+          <span class="color-sky-blue">{{ $t("DOWNLOAD_SPEED") }}:</span>
           <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.received) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
         <v-col cols="auto">
-          <span class="color-sky-blue">{{ $t("uploadSpeed") }}:</span>
+          <span class="color-sky-blue">{{ $t("UPLOAD_SPEED") }}:</span>
           <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.sent) }}</span>
           <span class="color-light-purple">Mbps</span>
         </v-col>
@@ -88,7 +88,7 @@
     <!-- Config buttons -->
     <div id="bottomSection" class="text-truncate">
 
-      <!-- Country button -->
+      <!-- Exclude country button -->
       <v-btn
           depressed
           block
@@ -105,6 +105,20 @@
         <img v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry"
              :src="require(`../assets/img/country_flags/${$vpnHoodApp.state.clientIpGroup.ipGroupId}.png`)"
              alt="country flag" width="24" class="ms-2"/>
+      </v-btn>
+
+      <!-- App filter button -->
+      <v-btn v-if="$vpnHoodApp.features.isExcludeAppsSupported || $vpnHoodApp.features.isIncludeAppsSupported"
+             depressed
+             block
+             variant="text"
+             prepend-icon="mdi-apps"
+             class="config-item mb-2"
+             @click="showAppFilterSheet()"
+      >
+        <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
+        <v-icon>mdi-chevron-right</v-icon>
+        <span class="config">{{ this.appFilterStatus }}</span>
       </v-btn>
 
       <!-- Protocol button -->
@@ -234,9 +248,18 @@ export default defineComponent({
     getDefaultClientProfileName(): string {
       const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId ===  this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
       if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name){
-        throw new Error("Could not find default client profile id");
+        return this.$t("NO_SERVER_SELECTED");
       }
       return clientProfileItem.clientProfile.name ?? clientProfileItem.token.name;
+    },
+
+    appFilterStatus() {
+      let appFilters = this.$vpnHoodApp.settings.userSettings.appFilters;
+      if (!appFilters) appFilters = [];
+
+      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Exclude') return this.$t("APP_FILTER_STATUS_EXCLUDE", { x: appFilters.length });
+      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Include') return this.$t("APP_FILTER_STATUS_INCLUDE", { x: appFilters.length });
+      return this.$t("APP_FILTER_STATUS_ALL");
     },
 
   }
