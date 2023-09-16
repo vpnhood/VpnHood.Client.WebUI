@@ -78,7 +78,7 @@
       <!-- Connect button -->
       <v-col cols="12" class="text-center mt-3">
         <v-btn :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
-               @click="[$vpnHoodApp.state.connectionState === 'None' ? $vpnHoodApp.connect() : $vpnHoodApp.disconnect()]">
+               @click="[$vpnHoodApp.state.connectionState === 'None' ? connect() : $vpnHoodApp.disconnect()]">
           {{ connectButtonText() }}
         </v-btn>
       </v-col>
@@ -102,7 +102,7 @@
         <span class="text-capitalize color-light-purple">{{
             $vpnHoodApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
           }}</span>
-        <img v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry"
+        <img v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry && $vpnHoodApp.state.clientIpGroup?.ipGroupId "
              :src="require(`../assets/img/country_flags/${$vpnHoodApp.state.clientIpGroup.ipGroupId}.png`)"
              alt="country flag" width="24" class="ms-2"/>
       </v-btn>
@@ -114,11 +114,11 @@
              variant="text"
              prepend-icon="mdi-apps"
              class="config-item mb-2"
-             @click="showAppFilterSheet()"
+             @click="$refs.appFilterSheet.isShow = true"
       >
         <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
         <v-icon>mdi-chevron-right</v-icon>
-        <span class="config">{{ this.appFilterStatus }}</span>
+        <span class="text-capitalize color-light-purple">{{ this.appFilterStatus() }}</span>
       </v-btn>
 
       <!-- Protocol button -->
@@ -159,6 +159,8 @@
     <ServersSheet ref="serverSheet"/>
     <AddServerSheet ref="addServerSheet"/>
     <SettingSheet ref="settingsSheet"/>
+    <PublicServerHintDialog  ref="publicServerHint"/>
+    <AppFilterSheet  ref="appFilterSheet"/>
 
   </v-container>
 
@@ -173,13 +175,19 @@ import ServersSheet from "@/components/ServersSheet.vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import SettingSheet from "@/components/SettingsSheet.vue";
+import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
+import AppFilterSheet from "@/components/AppFilterSheet.vue";
 
 export default defineComponent({
   name: 'HomeView',
-  components: {SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
+  components: {
+    AppFilterSheet,
+    PublicServerHintDialog,
+    SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
   data() {
     return {
       drawer: false,
+      isShowPublicServerHint: false,
     }
   },
   created() {
@@ -192,6 +200,14 @@ export default defineComponent({
   computed: {},
 
   methods: {
+    async connect(): Promise<void>{
+      const selectedClientProfileName = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId == this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
+      if(selectedClientProfileName?.token.name == "VpnHood Public Servers"){
+        (this.$refs.publicServerHint as any).isShow = true;
+      }else {
+        await this.$vpnHoodApp.connect();
+      }
+    },
 
     connectButtonText(): string {
       switch (this.$vpnHoodApp.state.connectionState) {

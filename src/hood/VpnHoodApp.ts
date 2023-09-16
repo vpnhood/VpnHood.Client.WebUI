@@ -117,7 +117,6 @@ export class VpnHoodApp {
     }
 
     public showError(err: any): void {
-        console.log(this.state.logExists);
         console.log(err);
         const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err.message;
         this.showMessage(errorMessage);
@@ -128,7 +127,7 @@ export class VpnHoodApp {
         this.alert.dialogText = text;
     }
 
-    public getInstalledApps(): Promise<DeviceAppInfo[]> {
-        return apiClient.installedApps();
+    public async getInstalledApps(): Promise<DeviceAppInfo[]> {
+        return await apiClient.installedApps();
     }
 }

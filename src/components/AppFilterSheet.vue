@@ -1,6 +1,6 @@
 <template>
-  <v-bottom-sheet inset scrollable close-on-back v-model="isShow" max-width="600">
-    <v-toolbar theme="light" elevation="3" style="z-index: 1" class="rounded-t-xl">
+  <v-bottom-sheet inset fullscreen scrollable close-on-back v-model="isShow" max-width="600">
+    <v-toolbar theme="light" elevation="3" style="z-index: 1" >
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)"  @click="isShow = false"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')" class="pl-0"></v-toolbar-title>
     </v-toolbar>
@@ -20,7 +20,7 @@
           :loading="appsLoaded"
           v-if="$vpnHoodApp.settings.userSettings.appFiltersMode !== 'All'"
           v-model="$vpnHoodApp.settings.userSettings.appFilters"
-          :items="$vpnHoodApp.getInstalledApps ? $vpnHoodApp.getInstalledApps : []"
+          :items="getInstalledApp() ? getInstalledApp() : []"
           filled
           chips
           color="blue-grey lighten-2"
@@ -68,9 +68,10 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {DeviceAppInfo} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
-  name: 'AppFilter',
+  name: 'AppFilterSheet',
   components: {
   },
   created() {
@@ -87,8 +88,12 @@ export default defineComponent({
   methods: {
     async refresh() {
       this.appsLoaded = true;
-      this.$vpnHoodApp.getInstalledApps();
+      await this.getInstalledApp;
       this.appsLoaded = false;
+    },
+
+    async getInstalledApp():Promise<DeviceAppInfo[]>{
+      return await this.$vpnHoodApp.getInstalledApps();
     },
 
     getFilterModes() {
