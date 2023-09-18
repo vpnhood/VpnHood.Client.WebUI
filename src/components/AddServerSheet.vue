@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-sheet close-on-back v-model="isShow" >
+  <v-bottom-sheet close-on-back :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600" >
 
       <!-- Add Test Server -->
       <v-card v-if="testServerVisible" class="mx-auto ma-5" width="100%" max-width="600" variant="flat" >
@@ -38,9 +38,15 @@ import {AddClientProfileParam} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'AddServerSheet',
+  props:{
+    modelValue:Boolean,
+  },
+  emits: [
+    "update:modelValue",
+    "newClientProfileId",
+  ],
   data() {
     return {
-      isShow: false,
       accessKeyValue: "",
       accessKeyErrorMessage: "",
       accessKeyPrefix: "vh://",
@@ -76,8 +82,7 @@ export default defineComponent({
           const clientProfileId = this.$vpnHoodApp.clientProfileItems.find(x => x.token.sid == validateAccessKey.sid);
           if (clientProfileId){
             // Pass client profile ID to the parent
-            this.$emit("newClientProfileId", clientProfileId.id);
-            this.isShow = false;
+            this.$emit('update:modelValue', false, 'newClientProfileId', clientProfileId.id);
           }
           else throw new Error("Could not found new client profile id");
         }
@@ -90,11 +95,12 @@ export default defineComponent({
       }
     },
 
+    //TODO Complete addTestServer function
     async addTestServer() {
       //await this.$vpnHoodApp.addTestServer();
       //this.accessKeyValue = null;
       await this.$vpnHoodApp.loadApp();
-      this.isShow = false;
+      this.$emit('update:modelValue', false);
       //this.$vpnHoodApp.newServerAdded = true;
     },
   }

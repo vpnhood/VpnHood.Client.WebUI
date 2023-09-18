@@ -9,13 +9,13 @@ import {
     LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
-import {VpnHoodAlertProperty} from "@/hood/VpnHoodAlertProperty";
+import {VpnHoodGlobalProperty} from "@/hood/VpnHoodGlobalProperty";
 
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
     public readonly serverUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
-    public alert: VpnHoodAlertProperty = new VpnHoodAlertProperty();
+    public vpnHoodGlobalProperty: VpnHoodGlobalProperty = new VpnHoodGlobalProperty();
 
     public state: AppState;
     public features: AppFeatures;
@@ -79,7 +79,33 @@ export class VpnHoodApp {
         if (!this.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
-        await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+
+        // Find default client profile
+        const defaultClientProfile: ClientProfileItem | undefined = this.clientProfileItems.find(
+            x => x.clientProfile.clientProfileId == this.settings.userSettings.defaultClientProfileId);
+
+        // If selected server is VpnHood public server
+        if(defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.vpnHoodGlobalProperty.showPremiumServerAd){
+
+            // Set user used public servers at least once
+            localStorage.setItem("isPublicServersUsedAtLeastOnce", "true");
+
+            // Check is user set don't show public server hint
+            const dontShowServerHintStatus: string | null = localStorage.getItem("vh:DontShowPublicServerHint");
+
+            // Show public server hint
+            if ( dontShowServerHintStatus !== "true" )
+                this.vpnHoodGlobalProperty.showPublicServerHint = true;
+
+            // Show premium server ad
+            else
+                this.vpnHoodGlobalProperty.showPremiumServerAd = true;
+
+        }
+        else{
+            this.vpnHoodGlobalProperty.showPremiumServerAd = false;
+            await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+        }
     }
 
     public async disconnect(): Promise<void> {
@@ -123,8 +149,8 @@ export class VpnHoodApp {
     }
 
     public showMessage(text: string): void {
-        this.alert.showAlertDialog = true;
-        this.alert.dialogText = text;
+        this.vpnHoodGlobalProperty.showAlertDialog = true;
+        this.vpnHoodGlobalProperty.dialogText = text;
     }
 
     public async getInstalledApps(): Promise<DeviceAppInfo[]> {

@@ -1,6 +1,7 @@
 <template>
   <v-dialog
       :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue',$event)"
       persistent
       width="auto">
     <v-card

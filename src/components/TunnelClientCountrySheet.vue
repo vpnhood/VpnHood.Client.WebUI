@@ -1,9 +1,10 @@
 <template>
-  <v-dialog v-model="isShow" close-on-back>
-    <v-card :title="$t('TUNNEL_MY_COUNTRY')">
-      <v-divider class="mt-3"></v-divider>
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back>
+    <v-card>
+      <v-card-title class="bg-grey-lighten-3">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>
+      <v-divider></v-divider>
       <v-card-text>
-        <p class="pb-4 color-muted">{{ $t('TUNNEL_MY_COUNTRY_DESC') }}</p>
+        <p class="pb-4 color-muted">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
         <v-radio-group v-model="tunnelClientCountry" hide-details>
           <v-radio
               :label="$t('TUNNEL_MY_COUNTRY_ON')"
@@ -28,7 +29,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" variant="text" @click="isShow = false">
+        <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
           {{ $t("CLOSE") }}
         </v-btn>
       </v-card-actions>
@@ -41,11 +42,12 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "TunnelClientCountrySheet",
-  data() {
-    return {
-      isShow: false,
-    }
+  props:{
+    modelValue:Boolean,
   },
+  emits: [
+    "update:modelValue",
+  ],
   computed: {
     tunnelClientCountry:
         {

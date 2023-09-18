@@ -1,7 +1,9 @@
 <template>
-  <v-dialog v-model="isShow" close-on-back>
-    <v-card :title="$t('PROTOCOL')">
-      <v-divider class="mt-3"></v-divider>
+
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"  close-on-back>
+    <v-card>
+      <v-card-title class="bg-grey-lighten-3">{{$t("PROTOCOL")}}</v-card-title>
+      <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
         <v-radio-group v-model="useUdpChannel" hide-details>
@@ -11,7 +13,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" variant="text" @click="isShow = false">
+        <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
           {{ $t("CLOSE") }}
         </v-btn>
       </v-card-actions>
@@ -24,18 +26,19 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: 'ProtocolSheet',
-  data() {
-    return {
-      isShow: false,
-    }
+  props:{
+    modelValue:Boolean,
   },
+  emits: [
+    "update:modelValue",
+  ],
   computed: {
     useUdpChannel:
         {
           get() {
             return this.$vpnHoodApp.settings.userSettings.useUdpChannel;
           },
-          set(value) {
+          set(value: boolean) {
             this.$vpnHoodApp.settings.userSettings.useUdpChannel = value;
             this.$vpnHoodApp.saveUserSetting();
           }

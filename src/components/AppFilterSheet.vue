@@ -1,7 +1,7 @@
 <template>
-  <v-bottom-sheet inset fullscreen scrollable close-on-back v-model="isShow" max-width="600">
+  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen scrollable close-on-back max-width="600">
     <v-toolbar theme="light" elevation="3" style="z-index: 1" >
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)"  @click="isShow = false"></v-btn>
+      <v-btn icon="mdi-close" size="small" color="var(--muted-color)"  @click="this.$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')" class="pl-0"></v-toolbar-title>
     </v-toolbar>
 
@@ -74,12 +74,17 @@ export default defineComponent({
   name: 'AppFilterSheet',
   components: {
   },
+  props:{
+    modelValue:Boolean,
+  },
+  emits: [
+    "update:modelValue",
+  ],
   created() {
     this.refresh();
   },
   data() {
     return {
-      isShow: false,
       appsLoaded: true,
       search: ""
     }

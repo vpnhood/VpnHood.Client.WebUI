@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-      v-model="drawer"
+      :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="left"
       temporary
       floating
@@ -9,7 +9,7 @@
     <div class="d-flex align-center bg-medium-blue pa-4">
 
       <!-- App logo -->
-      <v-img src="../assets/img/new-logo-cropped.png" max-width="60px"/>
+      <v-img src="../assets/images/new-logo-cropped.png" max-width="60px"/>
 
       <!-- App full version -->
       <div class="text-white ms-3">
@@ -83,11 +83,13 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  data() {
-    return {
-      drawer: false,
-    }
+  props:{
+    modelValue:Boolean,
   },
+  emits: [
+    "update:modelValue",
+    "openSettings",
+  ],
 });
 </script>
 

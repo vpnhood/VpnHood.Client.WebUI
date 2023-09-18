@@ -1,169 +1,167 @@
 <template>
-  <v-container class="d-flex flex-column justify-space-between pb-3 h-100">
+  <!-- Navigation drawer -->
+  <NavigationDrawer v-model="isShowNavigationDrawer" @open-settings="isShowSettingsSheet = true"/>
 
-    <!-- App bar & navigation drawer -->
-    <div id="topSection">
+  <!-- App bar -->
+  <v-app-bar
+      color="transparent"
+      elevation="0"
+  >
+    <!-- Navigation drawer button -->
+    <template v-slot:prepend>
+      <v-app-bar-nav-icon
+          @click.stop="isShowNavigationDrawer = !isShowNavigationDrawer"></v-app-bar-nav-icon>
+    </template>
 
-      <!-- Navigation drawer -->
-      <NavigationDrawer ref="navigationDrawer" @open-settings="$refs.settingsSheet.isShow = true" />
+    <!-- App name -->
+    <v-spacer></v-spacer>
+    <h6>{{ $t("APP_NAME") }}</h6>
+    <v-spacer></v-spacer>
 
-      <!-- App bar -->
-      <v-app-bar
-          color="transparent"
-          elevation="0"
-      >
-        <!-- Navigation drawer button -->
-        <template v-slot:prepend>
-          <v-app-bar-nav-icon
-              @click.stop="$refs.navigationDrawer.drawer = !$refs.navigationDrawer.drawer"></v-app-bar-nav-icon>
-        </template>
+    <!-- App mini version -->
+    <span class="opacity-30 txt-small-1 me-4">v {{ $vpnHoodApp.appVersion(false) }}</span>
+  </v-app-bar>
 
-        <!-- App name -->
-        <v-spacer></v-spacer>
-        <h6>{{ $t("APP_NAME") }}</h6>
-        <v-spacer></v-spacer>
-
-        <!-- App mini version -->
-        <span class="opacity-30 txt-small-1 me-4">v {{ $vpnHoodApp.appVersion(false) }}</span>
-      </v-app-bar>
-
-    </div>
-
-    <!-- Speed & Circle & Connect button -->
-    <div id="middleSection" :class="'state-' + [$vpnHoodApp.state.connectionState.toLowerCase()]">
-
-      <!-- Speed -->
-      <v-row id="speedSection" align-content="center" justify="center"
-             :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
-        <v-col cols="auto">
-          <span class="color-sky-blue">{{ $t("DOWNLOAD_SPEED") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.received) }}</span>
-          <span class="color-light-purple">Mbps</span>
-        </v-col>
-        <v-col cols="auto">
-          <span class="color-sky-blue">{{ $t("UPLOAD_SPEED") }}:</span>
-          <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.sent) }}</span>
-          <span class="color-light-purple">Mbps</span>
-        </v-col>
-      </v-row>
-
-      <!-- Circle -->
-      <div id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
-        <div id="circle">
-          <div class="d-flex flex-column align-center justify-center">
-
-            <!-- Connection state text -->
-            <span class="txt-large-4">{{
-                $vpnHoodApp.state.connectionState === "None"
-                    ? $t("DISCONNECTED")
-                    : $t($vpnHoodApp.state.connectionState.toUpperCase())
-              }}
-            </span>
-
-            <!-- Usage -->
-            <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-              <span class="txt-large-3">{{ bandwidthUsage().used }} GB {{ $t("OF") }}</span>
-              <span class="color-sky-blue h1">{{ bandwidthUsage().total }} GB</span>
-            </div>
-
-            <!-- Check -->
-            <v-icon v-if="stateIcon()" size="50" color="white">
-              mdi-{{ stateIcon() }}
-            </v-icon>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- Connect button -->
-      <v-col cols="12" class="text-center mt-3">
-        <v-btn :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase']"
-               @click="[$vpnHoodApp.state.connectionState === 'None' ? connect() : $vpnHoodApp.disconnect()]">
-          {{ connectButtonText() }}
-        </v-btn>
+  <v-container class="h-100">
+    <v-row align-content="space-between" class="h-100 my-0">
+      <!-- Go Premium Store Ad -->
+      <v-col cols="12" class="text-center pt-0">
+        <PremiumServerAd v-if="checkPremiumServerAdStatus" v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPremiumServerAd"/>
       </v-col>
 
-    </div>
+      <!-- Speed & Circle & Connect button -->
+      <v-col cols="12" :class="'py-0 text-center state-' + [$vpnHoodApp.state.connectionState.toLowerCase()]">
 
-    <!-- Config buttons -->
-    <div id="bottomSection" class="text-truncate">
+        <!-- Speed -->
+        <v-row id="speedSection" align-content="center" justify="center"
+               :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-4']">
+          <v-col cols="auto">
+            <span class="color-sky-blue">{{ $t("DOWNLOAD_SPEED") }}:</span>
+            <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.received) }}</span>
+            <span class="color-light-purple">Mbps</span>
+          </v-col>
+          <v-col cols="auto">
+            <span class="color-sky-blue">{{ $t("UPLOAD_SPEED") }}:</span>
+            <span class="px-2">{{ formatSpeed(this.$vpnHoodApp.state.speed.sent) }}</span>
+            <span class="color-light-purple">Mbps</span>
+          </v-col>
+        </v-row>
 
-      <!-- Exclude country button -->
-      <v-btn
-          depressed
-          block
-          variant="text"
-          prepend-icon="mdi-earth"
-          class="config-item mb-2"
-          @click="$refs.tunnelClientCountrySheet.isShow = true"
-      >
-        <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
-        <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{
-            $vpnHoodApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
-          }}</span>
-        <img v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry && $vpnHoodApp.state.clientIpGroup?.ipGroupId "
-             :src="require(`../assets/img/country_flags/${$vpnHoodApp.state.clientIpGroup.ipGroupId}.png`)"
-             alt="country flag" width="24" class="ms-2"/>
-      </v-btn>
+        <!-- Circle -->
+        <div id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
+          <div id="circle">
+            <div class="d-flex flex-column align-center justify-center">
 
-      <!-- App filter button -->
-      <v-btn v-if="$vpnHoodApp.features.isExcludeAppsSupported || $vpnHoodApp.features.isIncludeAppsSupported"
-             depressed
-             block
-             variant="text"
-             prepend-icon="mdi-apps"
-             class="config-item mb-2"
-             @click="$refs.appFilterSheet.isShow = true"
-      >
-        <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
-        <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ this.appFilterStatus() }}</span>
-      </v-btn>
+              <!-- Connection state text -->
+              <span class="txt-large-4">{{
+                  $vpnHoodApp.state.connectionState === "None"
+                      ? $t("DISCONNECTED")
+                      : $t($vpnHoodApp.state.connectionState.toUpperCase())
+                }}
+            </span>
 
-      <!-- Protocol button -->
-      <v-btn
-          depressed
-          block
-          variant="text"
-          prepend-icon="mdi-transit-connection-variant"
-          class="config-item mb-2"
-          @click="$refs.protocolSheet.isShow = true"
-      >
-        <span>{{ $t("PROTOCOL_TITLE") }}</span>
-        <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{
-            $vpnHoodApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
-          }}</span>
-      </v-btn>
+              <!-- Usage -->
+              <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+                <span class="txt-large-3">{{ bandwidthUsage().used }} GB {{ $t("OF") }}</span>
+                <span class="color-sky-blue h1">{{ bandwidthUsage().total }} GB</span>
+              </div>
 
-      <!-- Servers button -->
-      <v-btn
-          depressed
-          block
-          variant="text"
-          prepend-icon="mdi-dns"
-          class="config-item mb-0"
-          @click="$refs.serverSheet.isShow = true"
-      >
-        <span>{{ $t("SELECTED_SERVER") }}</span>
-        <v-icon>mdi-chevron-right</v-icon>
-        <span class="text-capitalize color-light-purple">{{ getDefaultClientProfileName() }}</span>
-      </v-btn>
+              <!-- Check -->
+              <v-icon v-if="stateIcon()" size="50" color="white">
+                mdi-{{ stateIcon() }}
+              </v-icon>
 
-    </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Components -->
-    <TunnelClientCountrySheet ref="tunnelClientCountrySheet"/>
-    <ProtocolSheet ref="protocolSheet"/>
-    <ServersSheet ref="serverSheet"/>
-    <AddServerSheet ref="addServerSheet"/>
-    <SettingSheet ref="settingsSheet"/>
-    <PublicServerHintDialog  ref="publicServerHint"/>
-    <AppFilterSheet  ref="appFilterSheet"/>
+        <!-- Connect button -->
+        <v-btn
+            :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase mt-3']"
+            @click="[$vpnHoodApp.state.connectionState === 'None' ? $vpnHoodApp.connect() : $vpnHoodApp.disconnect()]">
+          {{ connectButtonText() }}
+        </v-btn>
 
+      </v-col>
+
+      <!-- Config buttons -->
+      <v-col cols="12" class="text-truncate pb-0">
+
+        <!-- Exclude country button -->
+        <v-btn
+            depressed
+            block
+            variant="text"
+            prepend-icon="mdi-earth"
+            class="config-item mb-2"
+            @click="isShowTunnelCountrySheet = true"
+        >
+          <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
+          <v-icon>mdi-chevron-right</v-icon>
+          <span class="text-capitalize color-light-purple">{{
+              $vpnHoodApp.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+            }}</span>
+          <img
+              v-if="!$vpnHoodApp.settings.userSettings.tunnelClientCountry && $vpnHoodApp.state.clientIpGroup?.ipGroupId "
+              :src="require(`../assets/images/country_flags/${$vpnHoodApp.state.clientIpGroup.ipGroupId}.png`)"
+              alt="country flag" width="24" class="ms-2"/>
+        </v-btn>
+
+        <!-- App filter button -->
+        <v-btn v-if="$vpnHoodApp.features.isExcludeAppsSupported || $vpnHoodApp.features.isIncludeAppsSupported"
+               depressed
+               block
+               variant="text"
+               prepend-icon="mdi-apps"
+               class="config-item mb-2"
+               @click="$refs.appFilterSheet.isShow = true"
+        >
+          <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
+          <v-icon>mdi-chevron-right</v-icon>
+          <span class="text-capitalize color-light-purple">{{ this.appFilterStatus() }}</span>
+        </v-btn>
+
+        <!-- Protocol button -->
+        <v-btn
+            depressed
+            block
+            variant="text"
+            prepend-icon="mdi-transit-connection-variant"
+            class="config-item mb-2"
+            @click="isShowProtocolSheet = true"
+        >
+          <span>{{ $t("PROTOCOL_TITLE") }}</span>
+          <v-icon>mdi-chevron-right</v-icon>
+          <span class="text-capitalize color-light-purple">{{
+              $vpnHoodApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
+            }}</span>
+        </v-btn>
+
+        <!-- Servers button -->
+        <v-btn
+            depressed
+            block
+            variant="text"
+            prepend-icon="mdi-dns"
+            class="config-item mb-0"
+            @click="isShowServersSheet = true"
+        >
+          <span>{{ $t("SELECTED_SERVER") }}</span>
+          <v-icon>mdi-chevron-right</v-icon>
+          <span class="text-capitalize color-light-purple">{{ getDefaultClientProfileName() }}</span>
+        </v-btn>
+
+      </v-col>
+    </v-row>
   </v-container>
 
+  <!-- Components -->
+  <TunnelClientCountrySheet v-model="isShowTunnelCountrySheet"/>
+  <ProtocolSheet v-model="isShowProtocolSheet"/>
+  <AppFilterSheet v-model="isShowAppFilterSheet"/>
+  <ServersSheet v-model="isShowServersSheet"/>
+  <AddServerSheet v-model="isShowAddServerSheet"/>
+  <SettingSheet v-model="isShowSettingsSheet"/>
 </template>
 
 <script lang="ts">
@@ -175,40 +173,39 @@ import ServersSheet from "@/components/ServersSheet.vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import SettingSheet from "@/components/SettingsSheet.vue";
-import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import AppFilterSheet from "@/components/AppFilterSheet.vue";
+import PremiumServerAd from "@/components/PremiumServerAd.vue";
 
 export default defineComponent({
   name: 'HomeView',
   components: {
+    PremiumServerAd,
     AppFilterSheet,
-    PublicServerHintDialog,
-    SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet},
+    SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet
+  },
   data() {
     return {
-      drawer: false,
+      isShowNavigationDrawer: false,
+      isShowTunnelCountrySheet: false,
+      isShowAppFilterSheet: false,
+      isShowProtocolSheet: false,
+      isShowServersSheet: false,
+      isShowAddServerSheet: false,
+      isShowSettingsSheet: false,
       isShowPublicServerHint: false,
     }
   },
   created() {
+    // Reload state and setting every 1 second if app window is focused
     setInterval(async () => {
       if (!document.hidden)
         await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
     }, 1000);
   },
 
-  computed: {},
-
   methods: {
-    async connect(): Promise<void>{
-      const selectedClientProfileName = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId == this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
-      if(selectedClientProfileName?.token.name == "VpnHood Public Servers"){
-        (this.$refs.publicServerHint as any).isShow = true;
-      }else {
-        await this.$vpnHoodApp.connect();
-      }
-    },
 
+    // Return text for connect button based on connection state
     connectButtonText(): string {
       switch (this.$vpnHoodApp.state.connectionState) {
         case "Connecting":
@@ -226,6 +223,7 @@ export default defineComponent({
       }
     },
 
+    // Return icon based on connection state
     stateIcon(): string | null {
       if (this.$vpnHoodApp.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
       if (this.$vpnHoodApp.state.connectionState === AppConnectionState.None) return "power-plug-off";
@@ -235,6 +233,7 @@ export default defineComponent({
       return null;
     },
 
+    // Calculate user bandwidth usage
     bandwidthUsage(): {} | null {
       if (!this.$vpnHoodApp.state || !this.$vpnHoodApp.state.sessionStatus || !this.$vpnHoodApp.state.sessionStatus.accessUsage)
         return null;
@@ -253,29 +252,41 @@ export default defineComponent({
       return ret;
     },
 
+    // Return connection download and upload speed based on Mbps
     formatSpeed(speed: number): string {
       return (speed * 10 / 1000000).toFixed(2);
     },
+
 
     isConnected(): boolean {
       return this.$vpnHoodApp.state.connectionState == AppConnectionState.Connected;
     },
 
+    // Return current active server name
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId ===  this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name){
+      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
+      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
         return this.$t("NO_SERVER_SELECTED");
       }
       return clientProfileItem.clientProfile.name ?? clientProfileItem.token.name;
     },
 
+    // Return status of filtered apps by user (Only in mobile)
     appFilterStatus() {
       let appFilters = this.$vpnHoodApp.settings.userSettings.appFilters;
       if (!appFilters) appFilters = [];
 
-      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Exclude') return this.$t("APP_FILTER_STATUS_EXCLUDE", { x: appFilters.length });
-      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Include') return this.$t("APP_FILTER_STATUS_INCLUDE", { x: appFilters.length });
+      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Exclude') return this.$t("APP_FILTER_STATUS_EXCLUDE", {x: appFilters.length});
+      if (this.$vpnHoodApp.settings.userSettings.appFiltersMode == 'Include') return this.$t("APP_FILTER_STATUS_INCLUDE", {x: appFilters.length});
       return this.$t("APP_FILTER_STATUS_ALL");
+    },
+
+    // Checking whether to display the premium server ad or not
+    checkPremiumServerAdStatus(): boolean{
+      const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("isPublicServersUsedAtLeastOnce");
+      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
+      return !!(isPublicServersUsedAtLeastOnce && clientProfileItem?.token.name === "VpnHood Public Servers");
+
     },
 
   }

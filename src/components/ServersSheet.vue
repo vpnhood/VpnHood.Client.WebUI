@@ -1,12 +1,12 @@
 <template>
-  <v-bottom-sheet inset scrollable close-on-back v-model="isShow" max-width="600">
+  <v-bottom-sheet inset scrollable close-on-back :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
 
     <!-- List header -->
     <v-toolbar theme="light" elevation="3" style="z-index: 1" class="rounded-t-xl">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="isShow = false"></v-btn>
+      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="this.$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('SERVERS')"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn rounded color="var(--master-green)" @click="$refs.addServerSheet.isShow = true;">
+      <v-btn rounded color="var(--master-green)" @click="isShowAddServerSheet = true;">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
       </v-btn>
@@ -97,7 +97,7 @@
     </v-list>
 
     <!-- Add server sheet -->
-    <AddServerSheet ref="addServerSheet" @new-client-profile-id="connect"></AddServerSheet>
+    <AddServerSheet v-model="isShowAddServerSheet" @new-client-profile-id="connect"></AddServerSheet>
 
   </v-bottom-sheet>
 </template>
@@ -110,9 +110,15 @@ import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/
 export default defineComponent({
   name: 'ServersSheet',
   components: {AddServerSheet},
+  props:{
+    modelValue:Boolean,
+  },
+  emits: [
+    "update:modelValue",
+  ],
   data() {
     return {
-      isShow: false,
+      isShowAddServerSheet: false,
       showConfirmDelete: false,
       showRename: false,
       newClientProfileName:null,
@@ -121,14 +127,14 @@ export default defineComponent({
 
   methods: {
     async connect(clientProfileId: string): Promise<void > {
-      this.isShow = false;
+      this.$emit('update:modelValue',false);
       this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.connect();
     },
 
     async diagnose(clientProfileId: string): Promise<void>{
-      this.isShow = false;
+      this.$emit('update:modelValue',false)
       this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.diagnose();
@@ -148,6 +154,7 @@ export default defineComponent({
       return tokens[0] + ".*.*." + tokens[3];
     },
 
+    // Rename client profile name by user
     async saveNewClientProfileName(renamedClientProfile: ClientProfile):Promise<void>{
       this.showRename = false;
       const clientProfile = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
