@@ -122,7 +122,7 @@ h6,.h6{font-size: 20px;}
     border-radius: 5px;
     background-color: var(--sky-blue);
 }
-.grad-btn{background-image: linear-gradient(to right, var(--sky-blue), var(--master-green));}
+.grad-btn{background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));}
 .blue-btn{background: var(--sky-blue);}
 .blue-border-btn{
     font-family: 'Arial-Regular', serif;

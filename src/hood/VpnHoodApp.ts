@@ -88,7 +88,7 @@ export class VpnHoodApp {
         if(defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.vpnHoodGlobalProperty.showPremiumServerAd){
 
             // Set user used public servers at least once
-            localStorage.setItem("isPublicServersUsedAtLeastOnce", "true");
+            localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
 
             // Check is user set don't show public server hint
             const dontShowServerHintStatus: string | null = localStorage.getItem("vh:DontShowPublicServerHint");
@@ -105,6 +105,14 @@ export class VpnHoodApp {
         else{
             this.vpnHoodGlobalProperty.showPremiumServerAd = false;
             await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+
+            // Show suppress snackbar
+            if (this.state.sessionStatus?.suppressedTo !== 'None')
+                this.vpnHoodGlobalProperty.showSuppressSnackbar = true;
+
+            // Show update snackbar
+            if (this.state.lastPublishInfo)
+                this.vpnHoodGlobalProperty.showUpdateSnackbar = true;
         }
     }
 
@@ -112,14 +120,16 @@ export class VpnHoodApp {
         await apiClient.disconnect();
     }
 
-    public appVersion(isFull: boolean): string {
+    public getAppVersion(isFull: boolean): string {
         return isFull ? this.features?.version : this.features?.version.split(".")[2];
     }
 
+    // Save any change by user
     public async saveUserSetting(): Promise<void> {
         await apiClient.setUserSettings(this.settings.userSettings);
     }
 
+    // Select profile by user
     public async setClientProfile(clientProfileParam: SetClientProfileParam): Promise<void> {
         await apiClient.setClientProfile(clientProfileParam);
         await this.loadApp({withClientProfileItems: true});
@@ -142,17 +152,20 @@ export class VpnHoodApp {
         await apiClient.diagnose(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
     }
 
+    // Get error message
     public showError(err: any): void {
         console.log(err);
         const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err.message;
         this.showMessage(errorMessage);
     }
 
+    // Show error dialog
     public showMessage(text: string): void {
         this.vpnHoodGlobalProperty.showAlertDialog = true;
         this.vpnHoodGlobalProperty.dialogText = text;
     }
 
+    // Get installed apps list on the user device
     public async getInstalledApps(): Promise<DeviceAppInfo[]> {
         return await apiClient.installedApps();
     }

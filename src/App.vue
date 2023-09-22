@@ -4,8 +4,7 @@
       <router-view/>
       <!-- Global Alert Dialog -->
       <alert-dialog v-model="$vpnHoodApp.vpnHoodGlobalProperty.showAlertDialog" :dialog-text="$vpnHoodApp.vpnHoodGlobalProperty.dialogText" />
-      <!-- Public Server Hint -->
-      <PublicServerHintDialog  v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPublicServerHint"/>
+
     </v-main>
   </v-app>
 </template>
@@ -13,11 +12,10 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
-import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 
 export default defineComponent({
   name: 'App',
-  components: {AlertDialog, PublicServerHintDialog},
+  components: {AlertDialog},
 })
 </script>
 

@@ -16,7 +16,7 @@
         <h3>{{ $t("APP_NAME") }}</h3>
         <div class="color-sharp-master-green txt-small-2">
           <span class="me-2">{{ this.$t("VERSION") }}:</span>
-          <span>{{ $vpnHoodApp.appVersion(true) }}</span>
+          <span>{{ $vpnHoodApp.getAppVersion(true) }}</span>
         </div>
       </div>
 
