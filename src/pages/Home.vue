@@ -3,30 +3,14 @@
   <NavigationDrawer v-model="isShowNavigationDrawer" @open-settings="isShowSettingsSheet = true"/>
 
   <!-- App bar -->
-  <v-app-bar
-      color="transparent"
-      elevation="0"
-  >
-    <!-- Navigation drawer button -->
-    <template v-slot:prepend>
-      <v-app-bar-nav-icon
-          @click.stop="isShowNavigationDrawer = !isShowNavigationDrawer"></v-app-bar-nav-icon>
-    </template>
-
-    <!-- App name -->
-    <v-spacer></v-spacer>
-    <h6>{{ $t("APP_NAME") }}</h6>
-    <v-spacer></v-spacer>
-
-    <!-- App mini version -->
-    <span class="opacity-30 txt-small-1 me-4">v {{ $vpnHoodApp.appVersion(false) }}</span>
-  </v-app-bar>
+  <AppBar @openNavigationDrawer="isShowNavigationDrawer = true"/>
 
   <v-container class="h-100">
     <v-row align-content="space-between" class="h-100 my-0">
+
       <!-- Go Premium Store Ad -->
       <v-col cols="12" class="text-center pt-0">
-        <PremiumServerAd v-if="checkPremiumServerAdStatus" v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPremiumServerAd"/>
+        <PremiumServerAd v-if="checkPremiumServerAdStatus()" v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPremiumServerAd"/>
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
@@ -77,7 +61,7 @@
 
         <!-- Connect button -->
         <v-btn
-            :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase mt-3']"
+            :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase mt-5']"
             @click="[$vpnHoodApp.state.connectionState === 'None' ? $vpnHoodApp.connect() : $vpnHoodApp.disconnect()]">
           {{ connectButtonText() }}
         </v-btn>
@@ -156,6 +140,9 @@
   </v-container>
 
   <!-- Components -->
+  <UpdateSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar"/>
+  <SuppressSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showSuppressSnackbar"/>
+  <PublicServerHintDialog v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPublicServerHint"/>
   <TunnelClientCountrySheet v-model="isShowTunnelCountrySheet"/>
   <ProtocolSheet v-model="isShowProtocolSheet"/>
   <AppFilterSheet v-model="isShowAppFilterSheet"/>
@@ -175,13 +162,26 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import SettingSheet from "@/components/SettingsSheet.vue";
 import AppFilterSheet from "@/components/AppFilterSheet.vue";
 import PremiumServerAd from "@/components/PremiumServerAd.vue";
+import AppBar from "@/components/AppBar.vue";
+import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
+import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
+import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 
 export default defineComponent({
   name: 'HomeView',
   components: {
+    UpdateSnackbar,
+    SuppressSnackbar,
+    PublicServerHintDialog,
+    AppBar,
     PremiumServerAd,
     AppFilterSheet,
-    SettingSheet, NavigationDrawer, AddServerSheet, ServersSheet, ProtocolSheet, TunnelClientCountrySheet
+    SettingSheet,
+    NavigationDrawer,
+    AddServerSheet,
+    ServersSheet,
+    ProtocolSheet,
+    TunnelClientCountrySheet
   },
   data() {
     return {
@@ -201,10 +201,13 @@ export default defineComponent({
       if (!document.hidden)
         await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
     }, 1000);
+
+    // Show update snackbar at the opening app if update is available
+    if (this.$vpnHoodApp.state.lastPublishInfo)
+      this.$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar = true;
   },
 
   methods: {
-
     // Return text for connect button based on connection state
     connectButtonText(): string {
       switch (this.$vpnHoodApp.state.connectionState) {
@@ -283,7 +286,7 @@ export default defineComponent({
 
     // Checking whether to display the premium server ad or not
     checkPremiumServerAdStatus(): boolean{
-      const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("isPublicServersUsedAtLeastOnce");
+      const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("vh:isPublicServersUsedAtLeastOnce");
       const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
       return !!(isPublicServersUsedAtLeastOnce && clientProfileItem?.token.name === "VpnHood Public Servers");
 

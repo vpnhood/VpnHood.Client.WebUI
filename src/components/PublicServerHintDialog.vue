@@ -3,12 +3,16 @@
     <v-card>
       <v-card-title class="bg-grey-lighten-3">{{$t("PUBLIC_SERVER_WARNING_TITLE")}}</v-card-title>
       <v-divider></v-divider>
+
       <v-card-text class="txt-small-1">
         <p class="pb-4 color-muted" v-html="$t('PUBLIC_SERVER_WARNING')"></p>
         <p><strong>{{$t("WARNING")}}!</strong> {{$t("PRIVACY_WARNING")}}</p>
         <a class="text-info" href="https://www.vpnhood.com/privacy-policy" target="_blank">{{ $t("READ_PRIVACY_POLICY") }}</a>
       </v-card-text>
+
       <v-divider></v-divider>
+
+      <!-- Dont show this message again checkbox -->
       <v-checkbox
           v-model="isDontShowMessage"
           :label="$t('DONT_SHOW_MESSAGE')"
@@ -16,14 +20,20 @@
           hide-details
       >
       </v-checkbox>
+
       <v-card-actions>
         <v-spacer></v-spacer>
+
+        <!-- Cancel button -->
         <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
           {{ $t("CANCEL") }}
         </v-btn>
-        <v-btn color="blue darken-1" variant="text" @click="connect">
+
+        <!-- Accept button -->
+        <v-btn color="blue darken-1" variant="text" @click="showPremiumServerAd">
           {{ $t("ACCEPT") }}
         </v-btn>
+
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -45,7 +55,7 @@ export default defineComponent({
     }
   },
   methods:{
-    async connect(): Promise<void>{
+    async showPremiumServerAd(): Promise<void>{
       // Set isDontShowMessage status to the user local storage
       this.isDontShowMessage ? localStorage.setItem("vh:DontShowPublicServerHint", "true") : localStorage.setItem("vh:DontShowPublicServerHint", "false");
 
