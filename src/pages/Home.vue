@@ -208,6 +208,7 @@ export default defineComponent({
   },
 
   methods: {
+
     // Return text for connect button based on connection state
     connectButtonText(): string {
       switch (this.$vpnHoodApp.state.connectionState) {

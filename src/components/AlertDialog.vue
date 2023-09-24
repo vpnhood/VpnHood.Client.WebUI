@@ -25,7 +25,7 @@
             variant="flat"
             block
             class="text-center mb-4 color-master-green"
-            @click="diagnose && this.$emit('update:modelValue',false)"
+            @click="diagnose"
         >
           {{ $t("DIAGNOSE") }}
         </v-btn>
@@ -91,7 +91,8 @@ export default defineComponent({
     "update:dialogText",
   ],
   methods:{
-    async diagnose(){
+    async diagnose(): Promise<void>{
+      this.$emit('update:modelValue',false)
       await this.$vpnHoodApp.diagnose();
     },
 
@@ -112,6 +113,7 @@ export default defineComponent({
         console.log(log);
 
         // Create a root reference
+        // TODO Firebase
        /* var storageRef = firebase.storage().ref();
         const spacePath = `logs/client/${reportId}.txt`;
         var spaceRef = storageRef.child(spacePath);

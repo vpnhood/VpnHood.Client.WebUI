@@ -1,12 +1,19 @@
 <template>
   <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen scrollable close-on-back max-width="600">
-    <v-toolbar theme="light" elevation="3" style="z-index: 1" >
+    <v-toolbar theme="light" elevation="3" style="z-index: 1" density="compact">
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)"  @click="this.$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')"></v-toolbar-title>
     </v-toolbar>
 
     <v-card>
       <v-card-item>
+
+        <!-- Disconnecting alert -->
+        <v-alert
+            color="light-purple"
+            :text="$t('APP_FILTER_DISCONNECTING_NOTE')"
+        ></v-alert>
+
         <!-- Filter mode items -->
         <v-select
             v-model="appFiltersMode"
@@ -15,6 +22,7 @@
             :label="$t('APP_FILTER_DESC')"
             variant="outlined"
             class="mt-5"
+            color="primary"
         ></v-select>
 
         <!-- autocomplete -->
@@ -23,11 +31,12 @@
             :loading="isUpdating"
             v-model="appFilters"
             :items="installedApps"
-            item-text="appName"
+            item-title="appName"
             item-value="appId"
             :label="$t('SELECTED_APPS')"
             variant="outlined"
-            color="blue-grey lighten-2"
+            color="primary"
+            class="test"
             chips
             closable-chips
             multiple
@@ -48,10 +57,10 @@
           <template v-slot:item="{props, item}">
             <v-list-item
                 v-bind="props"
-                :title="item?.raw?.appName"
+                :title="item.raw.appName"
                 :prepend-avatar="'data:image/png;base64, ' + item.raw.iconPng"
-                color="sky-blue"
-
+                color="primary"
+                border
             >
             </v-list-item>
           </template>
@@ -83,7 +92,7 @@ export default defineComponent({
   },
   async created() {
     this.isUpdating = true;
-    await this.getInstalledApp();
+    this.installedApps = await this.getInstalledApp();
     this.isUpdating = false;
   },
   computed: {
@@ -92,9 +101,10 @@ export default defineComponent({
           get() {
             return this.$vpnHoodApp.settings.userSettings.appFiltersMode;
           },
-          set(value: FilterMode) {
+          async set(value: FilterMode) {
             this.$vpnHoodApp.settings.userSettings.appFiltersMode = value;
-            this.$vpnHoodApp.saveUserSetting();
+            await this.$vpnHoodApp.saveUserSetting();
+            await this.$vpnHoodApp.disconnect();
           }
         },
 
@@ -103,20 +113,20 @@ export default defineComponent({
           get() {
             return this.$vpnHoodApp.settings.userSettings.appFilters;
           },
-          set(value: string[] | null) {
+          async set(value: string[] | null) {
             this.$vpnHoodApp.settings.userSettings.appFilters = value;
-            this.$vpnHoodApp.saveUserSetting();
+            await this.$vpnHoodApp.saveUserSetting();
+            await this.$vpnHoodApp.disconnect();
           }
         },
   },
   methods: {
-    async getInstalledApp():Promise<void>{
+    async getInstalledApp():Promise<DeviceAppInfo[]>{
       const AppsList =  await this.$vpnHoodApp.getInstalledApps();
-      const sortedApps = AppsList.sort((a, b) => a.appName.localeCompare(b.appName, undefined, { sensitivity: 'base' }));
-      this.installedApps = sortedApps;
+      return  AppsList.sort((a, b) => a.appName.localeCompare(b.appName, undefined, {sensitivity: 'base'}));
     },
 
-    getFilterModes() {
+    getFilterModes(): any[] {
       // Set filter apps
       let filterModes = [{
         text: this.$t('APP_FILTER_ALL'),
@@ -137,13 +147,6 @@ export default defineComponent({
 
       return filterModes;
     },
-
-    async configChanged() {
-      if (this.$vpnHoodApp.state.connectionState !== 'None')
-        await this.$vpnHoodApp.disconnect();
-
-      await this.$vpnHoodApp.saveUserSetting();
-    }
   }
 })
 </script>

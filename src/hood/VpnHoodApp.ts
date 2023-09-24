@@ -154,7 +154,7 @@ export class VpnHoodApp {
 
     // Get error message
     public showError(err: any): void {
-        console.log(err);
+        console.error(err);
         const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err.message;
         this.showMessage(errorMessage);
     }

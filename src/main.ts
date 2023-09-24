@@ -27,6 +27,7 @@ async function main():Promise<void> {
             .mount('#app')
     }
     catch (ex: any) {
+        // TODO Create new Vue
         console.log("Could not create client app.", ex);
         // show error page
         /*new Vue({

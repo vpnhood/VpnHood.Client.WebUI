@@ -47,7 +47,7 @@
           variant="outlined"
           color="sky-blue"
           class="text-capitalize"
-          @click="$vpnHoodApp.connect();"
+          @click="$vpnHoodApp.connect()"
       >
         {{$t('CONTINUE_WITH_FREE_SLOW_SPEED')}}
       </v-btn>
@@ -81,7 +81,7 @@ export default defineComponent({
   },
   emits: [
     "update:modelValue",
-  ],
+  ]
 })
 </script>
 
