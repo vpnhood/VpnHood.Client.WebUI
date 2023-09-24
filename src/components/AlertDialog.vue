@@ -3,7 +3,7 @@
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
       persistent
-      width="auto">
+      >
     <v-card
         rounded="lg"
         color="master-green"

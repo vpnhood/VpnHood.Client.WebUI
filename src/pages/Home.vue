@@ -92,13 +92,13 @@
         </v-btn>
 
         <!-- App filter button -->
-        <v-btn v-if="$vpnHoodApp.features.isExcludeAppsSupported || $vpnHoodApp.features.isIncludeAppsSupported"
+        <v-btn
                depressed
                block
                variant="text"
                prepend-icon="mdi-apps"
                class="config-item mb-2"
-               @click="$refs.appFilterSheet.isShow = true"
+               @click="isShowAppFilterSheet = true"
         >
           <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
