@@ -97,7 +97,7 @@
     </v-list>
 
     <!-- Add server sheet -->
-    <AddServerSheet v-model="isShowAddServerSheet" @new-client-profile-id="connect"></AddServerSheet>
+    <AddServerSheet v-model="isShowAddServerSheet" @new-access-key-added="this.$emit('update:modelValue',false)"></AddServerSheet>
 
   </v-bottom-sheet>
 </template>

@@ -62,7 +62,7 @@
         <!-- Connect button -->
         <v-btn
             :class="[$vpnHoodApp.state.connectionState === 'None' ? 'grad-btn': 'blue-btn', 'btn text-uppercase mt-5']"
-            @click="[$vpnHoodApp.state.connectionState === 'None' ? $vpnHoodApp.connect() : $vpnHoodApp.disconnect()]">
+            @click="onConnectButtonClick">
           {{ connectButtonText() }}
         </v-btn>
 
@@ -139,6 +139,10 @@
     </v-row>
   </v-container>
 
+  <v-snackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showNewServerAdded" location="top" :timeout="3000" color="success">
+    {{ $t("NEW_SERVER_ADDED")}}
+  </v-snackbar>
+
   <!-- Components -->
   <UpdateSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar"/>
   <SuppressSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showSuppressSnackbar"/>
@@ -202,12 +206,26 @@ export default defineComponent({
         await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
     }, 1000);
 
+    // TODO Show update in home page
     // Show update snackbar at the opening app if update is available
     if (this.$vpnHoodApp.state.lastPublishInfo)
       this.$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar = true;
   },
 
   methods: {
+
+    async onConnectButtonClick(){
+
+      // If user has no server
+      if (!this.$vpnHoodApp.state.defaultClientProfileId){
+        this.isShowAddServerSheet = true;
+        return;
+      }
+
+      this.$vpnHoodApp.state.connectionState === 'None'
+          ? await this.$vpnHoodApp.connect()
+          : await this.$vpnHoodApp.disconnect();
+    },
 
     // Return text for connect button based on connection state
     connectButtonText(): string {
@@ -268,7 +286,7 @@ export default defineComponent({
 
     // Return current active server name
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
+      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.state.defaultClientProfileId);
       if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
         return this.$t("NO_SERVER_SELECTED");
       }

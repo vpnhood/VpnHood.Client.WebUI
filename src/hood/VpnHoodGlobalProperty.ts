@@ -15,4 +15,7 @@ export class VpnHoodGlobalProperty {
 
     // Show premium server ad property
     public showUpdateSnackbar: boolean = false;
+
+    // Show premium server ad property
+    public showNewServerAdded: boolean = false;
 }

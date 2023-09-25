@@ -64,7 +64,7 @@
   "PROTOCOL_UDP_ON": "Use UDP (Faster)",
   "PROTOCOL_UDP_OFF": "No UDP (Slower)",
   "SELECTED_APPS": "Selected Apps",
-  "newServerAdded": "A new server has been added.",
+  "NEW_SERVER_ADDED": "A new server has been added.",
   "changelog": "What's New?",
   "EXCLUDE_LOCAL_NETWORK": "Exclude Local Network (LAN)",
   "EXCLUDE_LOCAL_NETWORK_DESC": "Do not send my local network packets to VPN servers. I need to access the other computers and devices on my local network.",

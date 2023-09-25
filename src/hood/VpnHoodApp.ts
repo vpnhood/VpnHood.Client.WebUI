@@ -73,9 +73,13 @@ export class VpnHoodApp {
             this.clientProfileItems = loadApp.clientProfileItems;
         }
 
+        console.log(this.state.sessionStatus?.suppressedTo);
+
+
     }
 
     public async connect(): Promise<void> {
+
         if (!this.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
@@ -103,21 +107,29 @@ export class VpnHoodApp {
 
         }
         else{
+            // Close Premium server Ad
             this.vpnHoodGlobalProperty.showPremiumServerAd = false;
-            await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
-
-            // Show suppress snackbar
-            if (this.state.sessionStatus?.suppressedTo !== 'None')
-                this.vpnHoodGlobalProperty.showSuppressSnackbar = true;
 
             // Show update snackbar
             if (this.state.lastPublishInfo)
                 this.vpnHoodGlobalProperty.showUpdateSnackbar = true;
+
+            await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+
+            // Show suppress snackbar
+            if (this.state.sessionStatus?.suppressedTo !== 'None' || this.state.sessionStatus?.suppressedBy !== 'None')
+                this.vpnHoodGlobalProperty.showSuppressSnackbar = true;
+
+            console.log(this.state.sessionStatus?.suppressedTo, "JJJJJJ");
+            console.log(this.vpnHoodGlobalProperty.showSuppressSnackbar);
+
+
         }
     }
 
     public async disconnect(): Promise<void> {
         await apiClient.disconnect();
+        this.vpnHoodGlobalProperty.showSuppressSnackbar = false;
     }
 
     public getAppVersion(isFull: boolean): string {
@@ -127,6 +139,7 @@ export class VpnHoodApp {
     // Save any change by user
     public async saveUserSetting(): Promise<void> {
         await apiClient.setUserSettings(this.settings.userSettings);
+        await this.loadApp({withSettings: true});
     }
 
     // Select profile by user
@@ -143,6 +156,11 @@ export class VpnHoodApp {
     public async addAccessKey(accessKey: AddClientProfileParam): Promise<void> {
         await apiClient.addAccessKey(accessKey);
         await this.loadApp({withClientProfileItems: true});
+    }
+
+    public async addTestServer(): Promise<void> {
+        await apiClient.addTestServer();
+        await this.loadApp({withClientProfileItems: true, withState: true});
     }
 
     public async diagnose(): Promise<void> {
