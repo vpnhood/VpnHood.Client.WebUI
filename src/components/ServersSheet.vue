@@ -36,7 +36,7 @@
         </v-list-item-title>
 
         <!-- Support ID -->
-        <v-list-item-subtitle v-text="redactIp(item.token.ep[0])"/>
+        <v-list-item-subtitle>{{redactIp(item.token.ep[0])}}</v-list-item-subtitle>
 
         <!-- Menu -->
         <template v-slot:append>
