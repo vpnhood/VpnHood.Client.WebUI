@@ -10,7 +10,7 @@
 
       <!-- Go Premium Store Ad -->
       <v-col cols="12" class="text-center pt-0">
-        <PremiumServerAd v-if="checkPremiumServerAdStatus()" v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPremiumServerAd"/>
+        <PremiumServerAd v-if="checkPremiumServerAdStatus()" v-model="$vpnHoodApp.uiState.showPremiumServerAd"/>
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
@@ -139,14 +139,14 @@
     </v-row>
   </v-container>
 
-  <v-snackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showNewServerAdded" location="top" :timeout="3000" color="success">
+  <v-snackbar v-model="$vpnHoodApp.uiState.showNewServerAdded" location="top" :timeout="3000" color="success">
     {{ $t("NEW_SERVER_ADDED")}}
   </v-snackbar>
 
   <!-- Components -->
-  <UpdateSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar"/>
-  <SuppressSnackbar v-model="$vpnHoodApp.vpnHoodGlobalProperty.showSuppressSnackbar"/>
-  <PublicServerHintDialog v-model="$vpnHoodApp.vpnHoodGlobalProperty.showPublicServerHint"/>
+  <UpdateSnackbar v-model="$vpnHoodApp.uiState.showUpdateSnackbar"/>
+  <SuppressSnackbar v-model="$vpnHoodApp.uiState.showSuppressSnackbar"/>
+  <PublicServerHintDialog v-model="$vpnHoodApp.uiState.showPublicServerHint"/>
   <TunnelClientCountrySheet v-model="isShowTunnelCountrySheet"/>
   <ProtocolSheet v-model="isShowProtocolSheet"/>
   <AppFilterSheet v-model="isShowAppFilterSheet"/>
@@ -209,7 +209,7 @@ export default defineComponent({
     // TODO Show update in home page
     // Show update snackbar at the opening app if update is available
     if (this.$vpnHoodApp.state.lastPublishInfo)
-      this.$vpnHoodApp.vpnHoodGlobalProperty.showUpdateSnackbar = true;
+      this.$vpnHoodApp.uiState.showUpdateSnackbar = true;
   },
 
   methods: {

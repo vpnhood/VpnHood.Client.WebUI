@@ -120,7 +120,7 @@ export default defineComponent({
       this.$emit('update:modelValue', false);
 
       // Show new server added snackbar
-      this.$vpnHoodApp.vpnHoodGlobalProperty.showNewServerAdded = true;
+      this.$vpnHoodApp.uiState.showNewServerAdded = true;
 
       // Connect to server
       await this.$vpnHoodApp.connect();

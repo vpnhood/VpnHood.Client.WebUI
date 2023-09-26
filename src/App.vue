@@ -3,7 +3,7 @@
     <v-main>
       <router-view/>
       <!-- Global Alert Dialog -->
-      <alert-dialog v-model="$vpnHoodApp.vpnHoodGlobalProperty.showAlertDialog" :dialog-text="$vpnHoodApp.vpnHoodGlobalProperty.dialogText" />
+      <alert-dialog v-model="$vpnHoodApp.uiState.showAlertDialog" :dialog-text="$vpnHoodApp.uiState.dialogText" />
 
     </v-main>
   </v-app>

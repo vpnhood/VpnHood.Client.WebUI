@@ -1,4 +1,4 @@
-export class VpnHoodGlobalProperty {
+export class UIState {
 
     // General custom alert dialog property
     public showAlertDialog: boolean = false;

@@ -95,5 +95,8 @@
   "OF": "of",
   "ENTER_NEW_NAME_FOR": "Enter new name for ",
   "ERROR": "Error",
-  "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately after changing the options to apply the changes"
+  "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately after changing the options to apply the changes",
+  "OOPS": "OOOOps!",
+  "LOAD_APP_ERROR_DESC": "There was a problem running the App",
+  "RELOAD_APP": "Reload App"
 }

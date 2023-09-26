@@ -60,7 +60,7 @@ export default defineComponent({
       this.isDontShowMessage ? localStorage.setItem("vh:DontShowPublicServerHint", "true") : localStorage.setItem("vh:DontShowPublicServerHint", "false");
 
       this.$emit('update:modelValue',false);
-      this.$vpnHoodApp.vpnHoodGlobalProperty.showPremiumServerAd = true;
+      this.$vpnHoodApp.uiState.showPremiumServerAd = true;
     }
   }
 })

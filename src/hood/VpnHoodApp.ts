@@ -9,13 +9,14 @@ import {
     LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
-import {VpnHoodGlobalProperty} from "@/hood/VpnHoodGlobalProperty";
+import {UIState} from "@/hood/UIState";
 
+// ApiClient prevents VpnHoodApp from being reactive when it is placed as a property in the class
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
     public readonly serverUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
-    public vpnHoodGlobalProperty: VpnHoodGlobalProperty = new VpnHoodGlobalProperty();
+    public uiState: UIState = new UIState();
 
     public state: AppState;
     public features: AppFeatures;
@@ -89,7 +90,7 @@ export class VpnHoodApp {
             x => x.clientProfile.clientProfileId == this.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if(defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.vpnHoodGlobalProperty.showPremiumServerAd){
+        if(defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.uiState.showPremiumServerAd){
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -99,29 +100,29 @@ export class VpnHoodApp {
 
             // Show public server hint
             if ( dontShowServerHintStatus !== "true" )
-                this.vpnHoodGlobalProperty.showPublicServerHint = true;
+                this.uiState.showPublicServerHint = true;
 
             // Show premium server ad
             else
-                this.vpnHoodGlobalProperty.showPremiumServerAd = true;
+                this.uiState.showPremiumServerAd = true;
 
         }
         else{
             // Close Premium server Ad
-            this.vpnHoodGlobalProperty.showPremiumServerAd = false;
+            this.uiState.showPremiumServerAd = false;
 
             // Show update snackbar
             if (this.state.lastPublishInfo)
-                this.vpnHoodGlobalProperty.showUpdateSnackbar = true;
+                this.uiState.showUpdateSnackbar = true;
 
             await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
 
             // Show suppress snackbar
             if (this.state.sessionStatus?.suppressedTo !== 'None' || this.state.sessionStatus?.suppressedBy !== 'None')
-                this.vpnHoodGlobalProperty.showSuppressSnackbar = true;
+                this.uiState.showSuppressSnackbar = true;
 
             console.log(this.state.sessionStatus?.suppressedTo, "JJJJJJ");
-            console.log(this.vpnHoodGlobalProperty.showSuppressSnackbar);
+            console.log(this.uiState.showSuppressSnackbar);
 
 
         }
@@ -129,7 +130,7 @@ export class VpnHoodApp {
 
     public async disconnect(): Promise<void> {
         await apiClient.disconnect();
-        this.vpnHoodGlobalProperty.showSuppressSnackbar = false;
+        this.uiState.showSuppressSnackbar = false;
     }
 
     public getAppVersion(isFull: boolean): string {
@@ -179,8 +180,8 @@ export class VpnHoodApp {
 
     // Show error dialog
     public showMessage(text: string): void {
-        this.vpnHoodGlobalProperty.showAlertDialog = true;
-        this.vpnHoodGlobalProperty.dialogText = text;
+        this.uiState.showAlertDialog = true;
+        this.uiState.dialogText = text;
     }
 
     // Get installed apps list on the user device
