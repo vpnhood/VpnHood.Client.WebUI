@@ -12,6 +12,7 @@
     "@mdi/font": "7.2.96",
     "axios": "^1.5.1",
     "core-js": "^3.32.2",
+    "firebase": "^10.4.0",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
     "vue-class-component": "^7.2.6",

@@ -5,8 +5,12 @@ import {
     AppSettings,
     AppState,
     ClientProfileItem,
-    ConnectParam, DeviceAppInfo,
-    LoadAppParam, RemoveClientProfileParam, SetClientProfileParam,
+    ConnectParam,
+    DeviceAppInfo,
+    LoadAppParam,
+    RemoveClientProfileParam,
+    SessionSuppressType,
+    SetClientProfileParam,
 } from "@/hood/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
 import {UIState} from "@/hood/UIState";
@@ -15,7 +19,7 @@ import {UIState} from "@/hood/UIState";
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
-    public readonly serverUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
+    public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
     public uiState: UIState = new UIState();
 
     public state: AppState;
@@ -74,6 +78,7 @@ export class VpnHoodApp {
             this.clientProfileItems = loadApp.clientProfileItems;
         }
 
+        // TODO Delete console
         console.log(this.state.sessionStatus?.suppressedTo);
 
 
@@ -118,9 +123,10 @@ export class VpnHoodApp {
             await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
 
             // Show suppress snackbar
-            if (this.state.sessionStatus?.suppressedTo !== 'None' || this.state.sessionStatus?.suppressedBy !== 'None')
+            if (this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None || this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
                 this.uiState.showSuppressSnackbar = true;
 
+            // TODO Delete console
             console.log(this.state.sessionStatus?.suppressedTo, "JJJJJJ");
             console.log(this.uiState.showSuppressSnackbar);
 
@@ -134,7 +140,7 @@ export class VpnHoodApp {
     }
 
     public getAppVersion(isFull: boolean): string {
-        return isFull ? this.features?.version : this.features?.version.split(".")[2];
+        return isFull ? this.features.version : this.features.version.split(".")[2];
     }
 
     // Save any change by user

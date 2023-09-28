@@ -1,9 +1,10 @@
 <template>
-  <v-bottom-sheet inset scrollable close-on-back :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
+  <v-bottom-sheet inset scrollable close-on-back :modelValue="modelValue"
+                  @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
 
     <!-- List header -->
     <v-toolbar theme="light" elevation="3" style="z-index: 1" class="rounded-t-xl">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="this.$emit('update:modelValue',false)"></v-btn>
+      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('SERVERS')"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn rounded color="var(--master-green)" @click="isShowAddServerSheet = true;">
@@ -31,12 +32,12 @@
 
         <!-- Profile name -->
         <v-list-item-title class="mb-2">
-          <span class="title me-1">{{item.clientProfile.name ?? item.token.name }} </span>
+          <span class="title me-1">{{ item.clientProfile.name ?? item.token.name }} </span>
           <span class="text-caption text-right justify-end">(sid:{{ item.token.sid }})</span>
         </v-list-item-title>
 
         <!-- Support ID -->
-        <v-list-item-subtitle>{{redactIp(item.token.ep[0])}}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{ redactIp(item.token.ep[0]) }}</v-list-item-subtitle>
 
         <!-- Menu -->
         <template v-slot:append>
@@ -49,14 +50,19 @@
                 <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" link>
 
                   <v-dialog v-model="showRename" activator="parent" close-on-back>
-                    <v-card :title="$t('RENAME')" >
+                    <v-card :title="$t('RENAME')">
                       <v-card-text>
-                        <v-text-field v-model="newClientProfileName" :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)" spellcheck="false" autocomplete="off" color="blue darken-1" clearable></v-text-field>
+                        <v-text-field v-model="newClientProfileName"
+                                      :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
+                                      spellcheck="false" autocomplete="off" color="blue darken-1"
+                                      clearable></v-text-field>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" variant="text" :text="$t('CANCEL')" @click="showRename = false"></v-btn>
-                        <v-btn color="blue darken-1" variant="text" :text="$t('SAVE')" @click="saveNewClientProfileName(item.clientProfile)"></v-btn>
+                        <v-btn color="blue darken-1" variant="text" :text="$t('CANCEL')"
+                               @click="showRename = false"></v-btn>
+                        <v-btn color="blue darken-1" variant="text" :text="$t('SAVE')"
+                               @click="saveNewClientProfileName(item.clientProfile)"></v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -64,21 +70,23 @@
                 <v-divider/>
 
                 <!-- Diagnose -->
-                <v-list-item :title="$t('DIAGNOSE')" :disabled="$vpnHoodApp.state.hasDiagnoseStarted" prepend-icon="mdi-speedometer" link @click="diagnose(item.clientProfile.clientProfileId)"></v-list-item>
+                <v-list-item :title="$t('DIAGNOSE')" :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
+                             prepend-icon="mdi-speedometer" link
+                             @click="diagnose(item.clientProfile.clientProfileId)"></v-list-item>
                 <v-divider/>
 
                 <!-- Delete -->
-                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link >
+                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link>
                   <!-- Confirm delete server dialog -->
-                  <v-dialog v-model="showConfirmDelete" activator="parent"  close-on-back>
+                  <v-dialog v-model="showConfirmDelete" activator="parent" close-on-back>
                     <v-card>
-                      <v-card-title id="deleteConfirmTitle">{{$t('WARNING')}}</v-card-title>
+                      <v-card-title id="deleteConfirmTitle">{{ $t('WARNING') }}</v-card-title>
                       <v-card-text>
                         <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
-                        <strong>{{item.token.name}}</strong>
+                        <strong>{{ item.token.name }}</strong>
                       </v-card-text>
                       <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
-                        <v-btn  variant="text"  @click="removeServer(item.clientProfile.clientProfileId)">
+                        <v-btn variant="text" @click="removeServer(item.clientProfile.clientProfileId)">
                           {{ $t("YES") }}
                         </v-btn>
                         <v-btn color="blue" variant="text" @click="showConfirmDelete = false">
@@ -97,7 +105,8 @@
     </v-list>
 
     <!-- Add server sheet -->
-    <AddServerSheet v-model="isShowAddServerSheet" @new-access-key-added="this.$emit('update:modelValue',false)"></AddServerSheet>
+    <AddServerSheet v-model="isShowAddServerSheet"
+                    @new-access-key-added="$emit('update:modelValue',false)"></AddServerSheet>
 
   </v-bottom-sheet>
 </template>
@@ -110,8 +119,8 @@ import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/
 export default defineComponent({
   name: 'ServersSheet',
   components: {AddServerSheet},
-  props:{
-    modelValue:Boolean,
+  props: {
+    modelValue: Boolean,
   },
   emits: [
     "update:modelValue",
@@ -121,26 +130,26 @@ export default defineComponent({
       isShowAddServerSheet: false,
       showConfirmDelete: false,
       showRename: false,
-      newClientProfileName:null,
+      newClientProfileName: null,
     }
   },
 
   methods: {
-    async connect(clientProfileId: string): Promise<void > {
-      this.$emit('update:modelValue',false);
+    async connect(clientProfileId: string): Promise<void> {
+      this.$emit('update:modelValue', false);
       this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.connect();
     },
 
-    async diagnose(clientProfileId: string): Promise<void>{
-      this.$emit('update:modelValue',false)
+    async diagnose(clientProfileId: string): Promise<void> {
+      this.$emit('update:modelValue', false)
       this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.diagnose();
     },
 
-    async removeServer(clientProfileId: string): Promise<void>{
+    async removeServer(clientProfileId: string): Promise<void> {
       await this.$vpnHoodApp.removeClientProfile(new RemoveClientProfileParam({
         clientProfileId: clientProfileId
       }));
@@ -155,10 +164,11 @@ export default defineComponent({
     },
 
     // Rename client profile name by user
-    async saveNewClientProfileName(renamedClientProfile: ClientProfile):Promise<void>{
+    async saveNewClientProfileName(renamedClientProfile: ClientProfile): Promise<void> {
       this.showRename = false;
       const clientProfile = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
-      if (!clientProfile){throw new Error("Could not find client profile id.")}
+      if (!clientProfile)
+        throw new Error("Could not find client profile id.");
 
       this.newClientProfileName == "" ? clientProfile.name = null : clientProfile.name = this.newClientProfileName;
       await this.$vpnHoodApp.setClientProfile(new SetClientProfileParam({clientProfile}));
@@ -172,7 +182,8 @@ export default defineComponent({
   box-shadow: 0 1px 2px 1px rgb(0 0 0 / 15%);
   background-color: #eceffb;
 }
-#deleteConfirmTitle{
+
+#deleteConfirmTitle {
   background-color: #FB8C00;
   color: white;
 }

@@ -15,7 +15,7 @@
       <div class="text-white ms-3">
         <h3>{{ $t("APP_NAME") }}</h3>
         <div class="color-sharp-master-green txt-small-2">
-          <span class="me-2">{{ this.$t("VERSION") }}:</span>
+          <span class="me-2">{{ $t("VERSION") }}:</span>
           <span>{{ $vpnHoodApp.getAppVersion(true) }}</span>
         </div>
       </div>
@@ -84,7 +84,7 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   props:{
-    modelValue:Boolean,
+    modelValue: Boolean,
   },
   emits: [
     "update:modelValue",

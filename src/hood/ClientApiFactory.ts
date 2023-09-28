@@ -4,7 +4,7 @@ import {ApiClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string | undefined = process.env.VUE_APP_CLIENT_API_BASE_URL;
+    private readonly baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
 
     constructor() {
 

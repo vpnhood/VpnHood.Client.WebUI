@@ -3,7 +3,7 @@
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
       persistent
-      >
+  >
     <v-card
         rounded="lg"
         color="master-green"
@@ -38,7 +38,7 @@
             block
             prepend-icon="mdi-open-in-new"
             class="text-center mb-4 color-master-green"
-            :href="this.$vpnHoodApp.serverUrl + logFileLocation"
+            :href="$vpnHoodApp.serverUrl + logFileLocation"
             target="_blank"
         >
           {{ $t("OPEN_REPORT") }}
@@ -63,7 +63,7 @@
             variant="flat"
             block
             class="text-center color-master-green"
-            @click="this.$emit('update:modelValue',false)"
+            @click="$emit('update:modelValue',false)"
         >
           {{ $t("CLOSE") }}
         </v-btn>
@@ -74,31 +74,31 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-
+//import firebase from "firebase/compat";
 export default defineComponent({
   name: "AlertDialog",
   props: {
     modelValue: Boolean,
     dialogText: String,
   },
-  data(){
-    return{
-      logFileLocation:'/api/log.txt',
+  data() {
+    return {
+      logFileLocation: '/api/log.txt',
     }
   },
   emits: [
     "update:modelValue",
     "update:dialogText",
   ],
-  methods:{
-    async diagnose(): Promise<void>{
-      this.$emit('update:modelValue',false)
+  methods: {
+    async diagnose(): Promise<void> {
+      this.$emit('update:modelValue', false);
       await this.$vpnHoodApp.diagnose();
     },
 
     async sendReport() {
       try {
-        this.$emit('update:modelValue',false);
+        this.$emit('update:modelValue', false);
         const reportId =
             this.$vpnHoodApp.settings.clientId.substring(0, 8) + "@" +
             new Date().toISOString().substring(0, 19).replace(/:/g, "").replace(/-/g, "") + "-" +
@@ -114,21 +114,20 @@ export default defineComponent({
 
         // Create a root reference
         // TODO Firebase
-       /* var storageRef = firebase.storage().ref();
+        /*let storageRef = firebase.storage().ref();
         const spacePath = `logs/client/${reportId}.txt`;
-        var spaceRef = storageRef.child(spacePath);
+        let spaceRef = storageRef.child(spacePath);
 
-        await spaceRef.putString(log);
-        console.log('Report has been sent!'); // eslint-disable-line no-console*/
-      }
-      catch (ex) {
-        console.error('Oops! Could not even send the report details!', ex); // eslint-disable-line no-console
+        await spaceRef.putString(log);*/
+        console.log('Report has been sent!');
+      } catch (ex) {
+        console.error('Oops! Could not even send the report details!', ex);
       }
     },
 
     uuidv4() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        let r = Math.random() * 16, v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     },

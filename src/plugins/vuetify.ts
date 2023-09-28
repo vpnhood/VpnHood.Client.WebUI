@@ -1,20 +1,12 @@
-// Styles
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-
-// Vuetify
 import { createVuetify } from 'vuetify'
 
 export default createVuetify({
     components:{
         VBottomSheet,
     },
-        /*defaults:{
-            VList:{
-                bgColor: 'transparent',
-            },
-        },*/
         theme:{
             defaultTheme: 'VpnHoodTheme',
             themes:{
@@ -45,9 +37,7 @@ export default createVuetify({
                         'medium-emphasis-opacity':'0.8'
                     },
                 },
-
             },
         }
     }
-  // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 )

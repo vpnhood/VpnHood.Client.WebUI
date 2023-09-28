@@ -1,7 +1,8 @@
 <template>
-  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen scrollable close-on-back max-width="600">
+  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen
+                  scrollable close-on-back max-width="600">
     <v-toolbar theme="light" elevation="3" style="z-index: 1" density="compact">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)"  @click="this.$emit('update:modelValue',false)"></v-btn>
+      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')"></v-toolbar-title>
     </v-toolbar>
 
@@ -27,7 +28,7 @@
 
         <!-- autocomplete -->
         <v-autocomplete
-            v-if="$vpnHoodApp.settings.userSettings.appFiltersMode !== 'All'"
+            v-if="$vpnHoodApp.settings.userSettings.appFiltersMode !== FilterMode.All"
             :loading="isUpdating"
             v-model="appFilters"
             :items="installedApps"
@@ -78,8 +79,8 @@ import {DeviceAppInfo, FilterMode} from "@/hood/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'AppFilterSheet',
-  props:{
-    modelValue:Boolean,
+  props: {
+    modelValue: Boolean,
   },
   emits: [
     "update:modelValue",
@@ -88,6 +89,7 @@ export default defineComponent({
     return {
       isUpdating: true,
       installedApps: [] as DeviceAppInfo[],
+      FilterMode
     }
   },
   async created() {
@@ -121,29 +123,31 @@ export default defineComponent({
         },
   },
   methods: {
-    async getInstalledApp():Promise<DeviceAppInfo[]>{
-      const AppsList =  await this.$vpnHoodApp.getInstalledApps();
-      return  AppsList.sort((a, b) => a.appName.localeCompare(b.appName, undefined, {sensitivity: 'base'}));
+    async getInstalledApp(): Promise<DeviceAppInfo[]> {
+      const AppsList = await this.$vpnHoodApp.getInstalledApps();
+      return AppsList.sort((a, b) => a.appName.localeCompare(b.appName, undefined, {sensitivity: 'base'}));
     },
 
     getFilterModes(): any[] {
       // Set filter apps
       let filterModes = [{
         text: this.$t('APP_FILTER_ALL'),
-        value: 'All',
+        value: FilterMode.All,
       }];
 
+      // TODO Unmark if
       //if (this.$vpnHoodApp.features.isExcludeAppsSupported)
-        filterModes.push({
-          text: this.$t('APP_FILTER_EXCLUDE'),
-          value: 'Exclude',
-        });
+      filterModes.push({
+        text: this.$t('APP_FILTER_EXCLUDE'),
+        value: FilterMode.Exclude,
+      });
 
+      // TODO Unmark if
       //if (this.$vpnHoodApp.features.isIncludeAppsSupported)
-        filterModes.push({
-          text: this.$t('APP_FILTER_INCLUDE'),
-          value: 'Include',
-        });
+      filterModes.push({
+        text: this.$t('APP_FILTER_INCLUDE'),
+        value: FilterMode.Include,
+      });
 
       return filterModes;
     },

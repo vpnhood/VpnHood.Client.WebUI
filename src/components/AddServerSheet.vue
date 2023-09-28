@@ -9,7 +9,7 @@
         </v-card-title>
         <v-card-text class="pt-0">{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-text>
         <v-card-actions class="px-4">
-          <v-btn variant="tonal" block="" color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
+          <v-btn variant="tonal" block color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
         </v-card-actions>
       </v-card>
 
@@ -64,7 +64,7 @@ export default defineComponent({
   computed: {
     testServerVisible(): boolean {
       return !this.$vpnHoodApp.clientProfileItems.find(
-          x => x.clientProfile.tokenId == this.$vpnHoodApp.features.testServerTokenId);
+          x => x.clientProfile.tokenId === this.$vpnHoodApp.features.testServerTokenId);
     }
   },
 
@@ -85,7 +85,7 @@ export default defineComponent({
           await this.$vpnHoodApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
 
           // Find new added client profile ID
-          const clientProfileId = this.$vpnHoodApp.clientProfileItems.find(x => x.token.sid == validateAccessKey.sid);
+          const clientProfileId = this.$vpnHoodApp.clientProfileItems.find(x => x.token.sid === validateAccessKey.sid);
 
           // If new client profile is added
           if (clientProfileId)

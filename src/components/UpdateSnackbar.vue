@@ -4,10 +4,13 @@
       location="top"
       vertical
       :timeout="-1"
-      :color="$vpnHoodApp.state.versionStatus === 'Deprecated' ? 'warning' : 'sky-blue'"
-      >
+      :color="$vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'sky-blue'"
+  >
 
-    <p class="text-subtitle-1 mb-2">{{ $vpnHoodApp.state.versionStatus === 'Deprecated' ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")}}</p>
+    <p class="text-subtitle-1 mb-2">
+      {{
+      $vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")
+      }}</p>
 
     <p> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
     <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.state.lastPublishInfo?.version }}</p>
@@ -39,9 +42,16 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {VersionStatus} from "@/hood/VpnHood.Client.Api";
+
 export default defineComponent({
   name: "UpdateSnackbar",
-  props:{
+  data() {
+    return {
+      VersionStatus
+    }
+  },
+  props: {
     modelValue: Boolean,
   },
   emits: [

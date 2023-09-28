@@ -8,7 +8,7 @@
   >
     <!-- If suppressed to -->
     <span
-        v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== 'None'"
+        v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
         class="text-justify"
     >
       {{ $t("SESSION_SUPPRESSED_BY_OTHER") }}
@@ -16,7 +16,7 @@
 
     <!-- If suppressed by -->
     <span
-        v-if="$vpnHoodApp.state.sessionStatus?.suppressedBy !== 'None'"
+        v-if="$vpnHoodApp.state.sessionStatus?.suppressedBy !== SessionSuppressType.None"
         class="text-justify"
     >
       {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
@@ -36,8 +36,14 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {SessionSuppressType} from "@/hood/VpnHood.Client.Api";
 export default defineComponent({
   name: "SuppressSnackbar",
+  data(){
+    return{
+      SessionSuppressType
+    }
+  },
   props:{
     modelValue: Boolean,
   },
