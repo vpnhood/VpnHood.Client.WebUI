@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-//import firebase from "firebase/compat";
+import firebase from "firebase/compat";
 export default defineComponent({
   name: "AlertDialog",
   props: {
@@ -114,11 +114,11 @@ export default defineComponent({
 
         // Create a root reference
         // TODO Firebase
-        /*let storageRef = firebase.storage().ref();
+        let storageRef = firebase.storage().ref();
         const spacePath = `logs/client/${reportId}.txt`;
         let spaceRef = storageRef.child(spacePath);
 
-        await spaceRef.putString(log);*/
+        await spaceRef.putString(log);
         console.log('Report has been sent!');
       } catch (ex) {
         console.error('Oops! Could not even send the report details!', ex);

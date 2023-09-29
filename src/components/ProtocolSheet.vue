@@ -1,6 +1,6 @@
 <template>
 
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"  close-on-back>
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600" close-on-back>
     <v-card>
       <v-card-title class="bg-grey-lighten-3">{{$t("PROTOCOL")}}</v-card-title>
       <v-divider></v-divider>

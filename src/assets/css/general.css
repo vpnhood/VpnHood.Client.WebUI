@@ -16,10 +16,12 @@
     font-style: normal;
     src: url('../fonts/ARIALNB.TTF') format('truetype');
 }
+
 @font-face {
     font-family: 'Arial-Bold';
     src: url('../fonts/ARIALB.TTF') format('truetype');
 }
+
 /*--------------------- Define Color ---------------------*/
 :root {
     --dark-blue: #122272;
@@ -34,70 +36,183 @@
     --connected-glare: green;
     --gray: #3f3f3f;
 }
+
 /*-------------------- Default Style -------------------*/
-body,.v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
+body, .v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
     font-family: 'Arial-Narow', sans-serif !important;
 }
-h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6,
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
 .title,
 .v-application [class*="text-h"],
-.v-card-title{
+.v-card-title {
     font-family: 'Arial-Narow-Bold', sans-serif !important;
 }
-h1,.h1{font-size: 25px;}
-h2,.h2{font-size: 24px;}
-h3,.h3{font-size: 23px;}
-h4,.h4{font-size: 22px;}
-h5,.h5{font-size: 21px;}
-h6,.h6{font-size: 20px;}
+
+h1, .h1 {
+    font-size: 25px;
+}
+
+h2, .h2 {
+    font-size: 24px;
+}
+
+h3, .h3 {
+    font-size: 23px;
+}
+
+h4, .h4 {
+    font-size: 22px;
+}
+
+h5, .h5 {
+    font-size: 21px;
+}
+
+h6, .h6 {
+    font-size: 20px;
+}
 
 /*-------- General background color --------*/
-.bg-dark-blue{background-color: var(--dark-blue);}
-.bg-medium-blue{background-color: var(--medium-blue);}
-.bg-light-blue{background-color: var(--light-blue);}
-.bg-sky-blue{background-color: var(--sky-blue);}
-.bg-master-green{background-color: var(--master-green);}
-.bg-light-purple{background-color: var(--light-purple);}
+.bg-dark-blue {
+    background-color: var(--dark-blue);
+}
+
+.bg-medium-blue {
+    background-color: var(--medium-blue);
+}
+
+.bg-light-blue {
+    background-color: var(--light-blue);
+}
+
+.bg-sky-blue {
+    background-color: var(--sky-blue);
+}
+
+.bg-master-green {
+    background-color: var(--master-green);
+}
+
+.bg-light-purple {
+    background-color: var(--light-purple);
+}
 
 /*-------- General text color --------*/
-.color-master-green{color: var(--master-green);}
-.color-sharp-master-green{color: var(--sharp-master-green);}
-.color-sky-blue{color: var(--sky-blue);}
-.color-light-purple{color: var(--light-purple);}
-.color-gray{color: var(--gray);}
-.color-muted{color: var(--muted-color);}
+.color-master-green {
+    color: var(--master-green);
+}
 
-.opacity-0{
+.color-sharp-master-green {
+    color: var(--sharp-master-green);
+}
+
+.color-sky-blue {
+    color: var(--sky-blue);
+}
+
+.color-light-purple {
+    color: var(--light-purple);
+}
+
+.color-gray {
+    color: var(--gray);
+}
+
+.color-muted {
+    color: var(--muted-color);
+}
+
+.opacity-0 {
     opacity: 0;
     transition: opacity 1.4s ease;
 }
-.opacity-30{
+
+.opacity-30 {
     opacity: .3;
     transition: opacity 1.4s ease;
 }
-.opacity-100{
+
+.opacity-100 {
     opacity: 1;
     transition: opacity 1.4s ease;
 }
-.txt-large-1{font-size: 1.1rem !important;}
-.txt-large-2{font-size: 1.2rem !important;}
-.txt-large-3{font-size: 1.3rem !important;}
-.txt-large-4{font-size: 1.4rem !important;}
-.txt-large-5{font-size: 1.5rem !important;}
-.txt-large-6{font-size: 1.6rem !important;}
-.txt-large-7{font-size: 1.7rem !important;}
-.txt-large-8{font-size: 1.8rem !important;}
-.txt-large-9{font-size: 1.9rem !important;}
-.txt-large-10{font-size: 2rem !important;}
-.txt-small-1{font-size: 0.9rem !important;}
-.txt-small-2{font-size: 0.8rem !important;}
-.txt-small-3{font-size: 0.7rem !important;}
-.txt-small-4{font-size: 0.6rem !important;}
-.txt-small-5{font-size: 0.5rem !important;}
-.txt-small-6{font-size: 0.4rem !important;}
-.txt-small-7{font-size: 0.3rem !important;}
-.txt-small-8{font-size: 0.2rem !important;}
-.txt-small-9{font-size: 0.1rem !important;}
+
+.txt-large-1 {
+    font-size: 1.1rem !important;
+}
+
+.txt-large-2 {
+    font-size: 1.2rem !important;
+}
+
+.txt-large-3 {
+    font-size: 1.3rem !important;
+}
+
+.txt-large-4 {
+    font-size: 1.4rem !important;
+}
+
+.txt-large-5 {
+    font-size: 1.5rem !important;
+}
+
+.txt-large-6 {
+    font-size: 1.6rem !important;
+}
+
+.txt-large-7 {
+    font-size: 1.7rem !important;
+}
+
+.txt-large-8 {
+    font-size: 1.8rem !important;
+}
+
+.txt-large-9 {
+    font-size: 1.9rem !important;
+}
+
+.txt-large-10 {
+    font-size: 2rem !important;
+}
+
+.txt-small-1 {
+    font-size: 0.9rem !important;
+}
+
+.txt-small-2 {
+    font-size: 0.8rem !important;
+}
+
+.txt-small-3 {
+    font-size: 0.7rem !important;
+}
+
+.txt-small-4 {
+    font-size: 0.6rem !important;
+}
+
+.txt-small-5 {
+    font-size: 0.5rem !important;
+}
+
+.txt-small-6 {
+    font-size: 0.4rem !important;
+}
+
+.txt-small-7 {
+    font-size: 0.3rem !important;
+}
+
+.txt-small-8 {
+    font-size: 0.2rem !important;
+}
+
+.txt-small-9 {
+    font-size: 0.1rem !important;
+}
 
 .app-version-mini {
     font-family: 'Arial', serif;
@@ -109,9 +224,11 @@ h6,.h6{font-size: 20px;}
     font-size: 18px;
 }
 
-.btn.theme--light.v-btn.v-btn--has-bg{background-color: unset;}
+.btn.theme--light.v-btn.v-btn--has-bg {
+    background-color: unset;
+}
 
-.btn{
+.btn {
     font-family: 'Arial-Bold', serif;
     font-size: 15px;
     color: white;
@@ -122,9 +239,16 @@ h6,.h6{font-size: 20px;}
     border-radius: 5px;
     background-color: var(--sky-blue);
 }
-.grad-btn{background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));}
-.blue-btn{background: var(--sky-blue);}
-.blue-border-btn{
+
+.grad-btn {
+    background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));
+}
+
+.blue-btn {
+    background: var(--sky-blue);
+}
+
+.blue-border-btn {
     font-family: 'Arial-Regular', serif;
     font-size: .8rem;
     color: var(--sky-blue);
@@ -135,7 +259,10 @@ h6,.h6{font-size: 20px;}
     background: #132a7ac9;
     justify-content: start;
 }
-.blue-border-btn i{line-height: inherit;}
+
+.blue-border-btn i {
+    line-height: inherit;
+}
 
 @media tv {
     .main-button {
@@ -150,7 +277,9 @@ h6,.h6{font-size: 20px;}
 }
 
 .white-link:hover,
-.white-link:focus {color: var(--sky-blue);}
+.white-link:focus {
+    color: var(--sky-blue);
+}
 
 /*--------------------Home Middle Section--------------------*/
 #circleOuter {
@@ -184,6 +313,7 @@ h6,.h6{font-size: 20px;}
     border-radius: 50%;
     transition: all 1.5s ease;
 }
+
 .state-diagnosing #circleOuter:before,
 .state-diagnosing #circle:before,
 .state-connecting #circleOuter:before,
@@ -200,10 +330,18 @@ h6,.h6{font-size: 20px;}
 }
 
 @keyframes circle-anim {
-    0% {opacity: 0.80;}
-    40% {opacity: 0.2;}
-    60% {opacity: 0.2;}
-    100% {opacity: 0.80;}
+    0% {
+        opacity: 0.80;
+    }
+    40% {
+        opacity: 0.2;
+    }
+    60% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 0.80;
+    }
 }
 
 .state-connected #circleOuter:before {
@@ -219,11 +357,14 @@ h6,.h6{font-size: 20px;}
 /*--------------------End of Home Middle Section--------------------*/
 
 /*--------------------Home Bottom Section--------------------*/
-#homeContainer {max-width: 1024px;}
+#homeContainer {
+    max-width: 1024px;
+}
 
 
-
-#configSection .v-btn__content {justify-content: left;}
+#configSection .v-btn__content {
+    justify-content: left;
+}
 
 .config-label {
     text-decoration: underline;
@@ -232,13 +373,17 @@ h6,.h6{font-size: 20px;}
 
 .config-arrow,
 .config-icon,
-.config-label {color: var(--sky-blue) !important;}
+.config-label {
+    color: var(--sky-blue) !important;
+}
 
 
 /*--------------------Responsive--------------------*/
 
 @media all and (max-width: 425px) {
-    #logo img {max-width: 60px;}
+    #logo img {
+        max-width: 60px;
+    }
 }
 
 @media all and (min-width: 600px) {
@@ -258,15 +403,24 @@ h6,.h6{font-size: 20px;}
 }
 
 @media all and (min-width: 1024px) {
-    html {font-size: 20px;}
-    .main-button:focus {box-shadow: 0 15px 14px 3px rgba(0, 0, 0, 0.20);}
-    .main-button:focus:before {display: none;}
+    html {
+        font-size: 20px;
+    }
 
-    #configSection>button:focus {
+    .main-button:focus {
+        box-shadow: 0 15px 14px 3px rgba(0, 0, 0, 0.20);
+    }
+
+    .main-button:focus:before {
+        display: none;
+    }
+
+    #configSection > button:focus {
         background: #132a7ab0;
         border-color: var(--master-green);
         transition: all .4s linear;
         outline: none;
     }
 }
+
 /*--------------------End of Responsive--------------------*/

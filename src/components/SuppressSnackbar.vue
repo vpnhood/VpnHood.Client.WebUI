@@ -5,13 +5,14 @@
       location="top"
       :timeout="-1"
       color="deep-purple accent-4"
+
   >
     <!-- If suppressed to -->
     <span
         v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
         class="text-justify"
     >
-      {{ $t("SESSION_SUPPRESSED_BY_OTHER") }}
+      {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
     </span>
 
     <!-- If suppressed by -->
@@ -19,7 +20,7 @@
         v-if="$vpnHoodApp.state.sessionStatus?.suppressedBy !== SessionSuppressType.None"
         class="text-justify"
     >
-      {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
+      {{ $t("SESSION_SUPPRESSED_BY_OTHER") }}
     </span>
 
 

@@ -38,11 +38,7 @@
             <div class="d-flex flex-column align-center justify-center">
 
               <!-- Connection state text -->
-              <span class="txt-large-4">{{
-                  $vpnHoodApp.state.connectionState === AppConnectionState.None
-                      ? $t("DISCONNECTED")
-                      : $t($vpnHoodApp.state.connectionState.toUpperCase())
-                }}
+              <span class="txt-large-4">{{$vpnHoodApp.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.state.connectionState.toUpperCase()) }}
             </span>
 
               <!-- Usage -->
@@ -92,6 +88,7 @@
 
         <!-- App filter button -->
         <v-btn
+            v-if="$vpnHoodApp.features.isExcludeAppsSupported || $vpnHoodApp.features.isIncludeAppsSupported"
             depressed
             :block="true"
             variant="text"
@@ -115,9 +112,7 @@
         >
           <span>{{ $t("PROTOCOL_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize color-light-purple">{{
-              $vpnHoodApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
-            }}</span>
+          <span class="text-capitalize color-light-purple">{{$vpnHoodApp.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
         </v-btn>
 
         <!-- Servers button -->
@@ -138,6 +133,7 @@
     </v-row>
   </v-container>
 
+  <!-- Show Toast on top of the page when a new server is added -->
   <v-snackbar v-model="$vpnHoodApp.uiState.showNewServerAdded" location="top" :timeout="3000" color="success">
     {{ $t("NEW_SERVER_ADDED") }}
   </v-snackbar>
@@ -206,11 +202,6 @@ export default defineComponent({
       if (!document.hidden)
         await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
     }, 1000);
-
-    // TODO Show update in home page
-    // Show update snackbar at the opening app if update is available
-    if (this.$vpnHoodApp.state.lastPublishInfo)
-      this.$vpnHoodApp.uiState.showUpdateSnackbar = true;
   },
 
   methods: {

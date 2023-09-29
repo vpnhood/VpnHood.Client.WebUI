@@ -1,5 +1,6 @@
 <template>
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back>
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600"
+            close-on-back>
     <v-card>
       <v-card-title class="bg-grey-lighten-3">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>
       <v-divider></v-divider>
@@ -17,12 +18,12 @@
               color="sharp-master-green"
           >
             <template v-slot:label>
-                <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
-                <v-chip
-                    class="ms-2"
-                    color="var(--master-green)"
-                    :text="$t('RECOMMENDED')"
-                ></v-chip>
+              <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
+              <v-chip
+                  class="ms-2"
+                  color="var(--master-green)"
+                  :text="$t('RECOMMENDED')"
+              ></v-chip>
             </template>
           </v-radio>
         </v-radio-group>
@@ -42,8 +43,8 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "TunnelClientCountrySheet",
-  props:{
-    modelValue:Boolean,
+  props: {
+    modelValue: Boolean,
   },
   emits: [
     "update:modelValue",

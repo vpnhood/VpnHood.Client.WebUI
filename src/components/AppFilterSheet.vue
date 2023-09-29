@@ -93,9 +93,11 @@ export default defineComponent({
     }
   },
   async created() {
-    this.isUpdating = true;
-    this.installedApps = await this.getInstalledApp();
-    this.isUpdating = false;
+    if (this.$vpnHoodApp.features.isExcludeAppsSupported || this.$vpnHoodApp.features.isIncludeAppsSupported) {
+      this.isUpdating = true;
+      this.installedApps = await this.getInstalledApp();
+      this.isUpdating = false;
+    }
   },
   computed: {
     appFiltersMode:
@@ -136,18 +138,18 @@ export default defineComponent({
       }];
 
       // TODO Unmark if
-      //if (this.$vpnHoodApp.features.isExcludeAppsSupported)
-      filterModes.push({
-        text: this.$t('APP_FILTER_EXCLUDE'),
-        value: FilterMode.Exclude,
-      });
+      if (this.$vpnHoodApp.features.isExcludeAppsSupported)
+        filterModes.push({
+          text: this.$t('APP_FILTER_EXCLUDE'),
+          value: FilterMode.Exclude,
+        });
 
       // TODO Unmark if
-      //if (this.$vpnHoodApp.features.isIncludeAppsSupported)
-      filterModes.push({
-        text: this.$t('APP_FILTER_INCLUDE'),
-        value: FilterMode.Include,
-      });
+      if (this.$vpnHoodApp.features.isIncludeAppsSupported)
+        filterModes.push({
+          text: this.$t('APP_FILTER_INCLUDE'),
+          value: FilterMode.Include,
+        });
 
       return filterModes;
     },

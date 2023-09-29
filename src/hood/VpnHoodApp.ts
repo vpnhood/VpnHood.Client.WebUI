@@ -28,7 +28,6 @@ export class VpnHoodApp {
     public clientProfileItems: ClientProfileItem[];
 
     public constructor(
-        apiClient: ApiClient,
         state: AppState,
         features: AppFeatures,
         settings: AppSettings,
@@ -47,7 +46,7 @@ export class VpnHoodApp {
             withClientProfileItems: true,
             withFeatures: true,
         }));
-        return new VpnHoodApp(apiClient, result.state!, result.features!, result.settings!, result.clientProfileItems!);
+        return new VpnHoodApp(result.state!, result.features!, result.settings!, result.clientProfileItems!);
     }
 
     public async loadApp(options?: {
@@ -62,7 +61,7 @@ export class VpnHoodApp {
                 withState: options?.withState ?? false,
                 withClientProfileItems: options?.withClientProfileItems ?? false,
                 withFeatures: options?.withFeatures ?? false,
-            }))
+            }));
 
         if (loadApp.features)
             this.features = loadApp.features;
@@ -70,6 +69,11 @@ export class VpnHoodApp {
         if (loadApp.state) {
             this.state = loadApp.state;
             this.state.connectionState = loadApp.state.connectionState;
+            // Show update snackbar
+            // TODO Delete console
+            console.log(this.state.lastPublishInfo);
+            if (this.state.lastPublishInfo)
+                this.uiState.showUpdateSnackbar = true;
         }
         if (loadApp.settings) {
             this.settings = loadApp.settings;
@@ -92,10 +96,10 @@ export class VpnHoodApp {
 
         // Find default client profile
         const defaultClientProfile: ClientProfileItem | undefined = this.clientProfileItems.find(
-            x => x.clientProfile.clientProfileId == this.settings.userSettings.defaultClientProfileId);
+            x => x.clientProfile.clientProfileId === this.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if(defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.uiState.showPremiumServerAd){
+        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.uiState.showPremiumServerAd) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -104,21 +108,16 @@ export class VpnHoodApp {
             const dontShowServerHintStatus: string | null = localStorage.getItem("vh:DontShowPublicServerHint");
 
             // Show public server hint
-            if ( dontShowServerHintStatus !== "true" )
+            if (dontShowServerHintStatus !== "true")
                 this.uiState.showPublicServerHint = true;
 
             // Show premium server ad
             else
                 this.uiState.showPremiumServerAd = true;
 
-        }
-        else{
+        } else {
             // Close Premium server Ad
             this.uiState.showPremiumServerAd = false;
-
-            // Show update snackbar
-            if (this.state.lastPublishInfo)
-                this.uiState.showUpdateSnackbar = true;
 
             await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
 
@@ -126,7 +125,7 @@ export class VpnHoodApp {
             if (this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None || this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
                 this.uiState.showSuppressSnackbar = true;
 
-            // TODO Delete console
+            // TODO Check Suppress Snackbar
             console.log(this.state.sessionStatus?.suppressedTo, "JJJJJJ");
             console.log(this.uiState.showSuppressSnackbar);
 

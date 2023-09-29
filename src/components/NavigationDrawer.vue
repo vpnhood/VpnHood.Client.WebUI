@@ -83,7 +83,7 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  props:{
+  props: {
     modelValue: Boolean,
   },
   emits: [

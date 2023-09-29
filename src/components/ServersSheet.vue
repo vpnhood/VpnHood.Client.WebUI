@@ -1,9 +1,9 @@
 <template>
   <v-bottom-sheet inset scrollable close-on-back :modelValue="modelValue"
-                  @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
+                  @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- List header -->
-    <v-toolbar theme="light" elevation="3" style="z-index: 1" class="rounded-t-xl">
+    <v-toolbar theme="light" elevation="3" style="z-index: 1;" class="rounded-t-xl">
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('SERVERS')"></v-toolbar-title>
       <v-spacer></v-spacer>
@@ -37,7 +37,7 @@
         </v-list-item-title>
 
         <!-- Support ID -->
-        <v-list-item-subtitle>{{ redactIp(item.token.ep[0]) }}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</v-list-item-subtitle>
 
         <!-- Menu -->
         <template v-slot:append>
@@ -54,14 +54,14 @@
                       <v-card-text>
                         <v-text-field v-model="newClientProfileName"
                                       :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
-                                      spellcheck="false" autocomplete="off" color="blue darken-1"
+                                      spellcheck="false" autocomplete="off" color="primary"
                                       clearable></v-text-field>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" variant="text" :text="$t('CANCEL')"
+                        <v-btn color="primary" variant="text" :text="$t('CANCEL')"
                                @click="showRename = false"></v-btn>
-                        <v-btn color="blue darken-1" variant="text" :text="$t('SAVE')"
+                        <v-btn color="primary" variant="text" :text="$t('SAVE')"
                                @click="saveNewClientProfileName(item.clientProfile)"></v-btn>
                       </v-card-actions>
                     </v-card>
@@ -143,7 +143,7 @@ export default defineComponent({
     },
 
     async diagnose(clientProfileId: string): Promise<void> {
-      this.$emit('update:modelValue', false)
+      this.$emit('update:modelValue', false);
       this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.diagnose();
@@ -158,7 +158,6 @@ export default defineComponent({
 
     // Hidden full ip in the servers list
     redactIp(ipAddress: string): string {
-      if (ipAddress == null) return "";
       let tokens = ipAddress.split(".");
       return tokens[0] + ".*.*." + tokens[3];
     },
@@ -170,7 +169,7 @@ export default defineComponent({
       if (!clientProfile)
         throw new Error("Could not find client profile id.");
 
-      this.newClientProfileName == "" ? clientProfile.name = null : clientProfile.name = this.newClientProfileName;
+      this.newClientProfileName === null ? clientProfile.name = null : clientProfile.name = this.newClientProfileName;
       await this.$vpnHoodApp.setClientProfile(new SetClientProfileParam({clientProfile}));
     }
   }
