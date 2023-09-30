@@ -74,7 +74,8 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import firebase from "firebase/compat";
+import {getStorage, ref, uploadBytes} from "firebase/storage";
+
 export default defineComponent({
   name: "AlertDialog",
   props: {
@@ -99,27 +100,27 @@ export default defineComponent({
     async sendReport() {
       try {
         this.$emit('update:modelValue', false);
-        const reportId =
+        const reportId: string =
             this.$vpnHoodApp.settings.clientId.substring(0, 8) + "@" +
             new Date().toISOString().substring(0, 19).replace(/:/g, "").replace(/-/g, "") + "-" +
             this.uuidv4().substring(0, 8);
-        const link = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
+        const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
         window.open(link, "VpnHood-BugReport");
 
         // get report
-        const url = this.$vpnHoodApp.serverUrl + this.logFileLocation;
-        const response = await fetch(url);
-        const log = await response.text();
-        console.log(log);
+        const url: string = this.$vpnHoodApp.serverUrl + this.logFileLocation;
+        const response: Response = await fetch(url);
+        const log: Blob = await response.blob();
 
         // Create a root reference
-        // TODO Firebase
-        let storageRef = firebase.storage().ref();
+        const storage = getStorage();
         const spacePath = `logs/client/${reportId}.txt`;
-        let spaceRef = storageRef.child(spacePath);
+        const storageRef = ref(storage, spacePath);
 
-        await spaceRef.putString(log);
-        console.log('Report has been sent!');
+        // Send report
+        uploadBytes(storageRef, log).then(() => {
+          console.log('Report has been sent!');
+        });
       } catch (ex) {
         console.error('Oops! Could not even send the report details!', ex);
       }

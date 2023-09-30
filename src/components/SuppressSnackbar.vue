@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {SessionSuppressType} from "@/hood/VpnHood.Client.Api";
+import {SessionSuppressType} from "@/services/VpnHood.Client.Api";
 export default defineComponent({
   name: "SuppressSnackbar",
   data(){

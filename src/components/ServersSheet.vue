@@ -114,7 +114,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
-import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/hood/VpnHood.Client.Api";
+import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ServersSheet',

@@ -18,4 +18,7 @@ export class UIState {
 
     // Show premium server ad property
     public showNewServerAdded: boolean = false;
+
+    // Set ignore update time
+    public userIgnoreUpdateHours: number = 0;
 }

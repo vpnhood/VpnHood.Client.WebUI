@@ -1880,7 +1880,7 @@ export class ApiException extends Error {
     exceptionTypeName?: string;
     exceptionTypeFullName?: string;
     headers: any;
-    data: any;
+    data: any = {};
 
     constructor(
         message: string,
@@ -1896,7 +1896,6 @@ export class ApiException extends Error {
         this.statusCode = statusCode;
         this.response = response;
         this.headers = headers;
-
         let serverException: ServerException | null = ServerException.tryParse(response);
         if (serverException) {
             Object.keys(serverException.Data).forEach((key) => {

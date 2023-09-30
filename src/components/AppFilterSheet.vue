@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {DeviceAppInfo, FilterMode} from "@/hood/VpnHood.Client.Api";
+import {DeviceAppInfo, FilterMode} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'AppFilterSheet',
@@ -137,14 +137,12 @@ export default defineComponent({
         value: FilterMode.All,
       }];
 
-      // TODO Unmark if
       if (this.$vpnHoodApp.features.isExcludeAppsSupported)
         filterModes.push({
           text: this.$t('APP_FILTER_EXCLUDE'),
           value: FilterMode.Exclude,
         });
 
-      // TODO Unmark if
       if (this.$vpnHoodApp.features.isIncludeAppsSupported)
         filterModes.push({
           text: this.$t('APP_FILTER_INCLUDE'),

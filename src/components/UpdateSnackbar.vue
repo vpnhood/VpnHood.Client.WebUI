@@ -4,7 +4,7 @@
       location="top"
       vertical
       :timeout="-1"
-      :color="$vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'sky-blue'"
+      :color="$vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >
 
     <p class="text-subtitle-1 mb-2">
@@ -22,7 +22,7 @@
       <!-- Update button -->
       <v-btn
           :href="$vpnHoodApp.state.lastPublishInfo?.installationPageUrl"
-          variant="text"
+          variant="tonal"
           target="_blank"
           :text="$t('UPDATE')"
       >
@@ -31,7 +31,7 @@
       <!-- Ignore button -->
       <v-btn
           variant="text"
-          @click="$emit('update:modelValue',false)"
+          @click="ignoreUpdate"
           :text="$t('IGNORE')"
       >
       </v-btn>
@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {VersionStatus} from "@/hood/VpnHood.Client.Api";
+import {VersionStatus} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: "UpdateSnackbar",
@@ -57,5 +57,11 @@ export default defineComponent({
   emits: [
     "update:modelValue",
   ],
+  methods:{
+    ignoreUpdate() {
+      this.$vpnHoodApp.uiState.userIgnoreUpdateHours = new Date().getHours();
+      this.$emit('update:modelValue', false);
+    }
+  }
 })
 </script>

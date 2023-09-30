@@ -6,9 +6,10 @@ import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import './assets/css/override.css'
 import './assets/css/general.css'
-import {VpnHoodApp} from "@/hood/VpnHoodApp";
+import "./services/Firebase";
+import {VpnHoodApp} from "@/services/VpnHoodApp";
 
-async function main():Promise<void> {
+async function main(): Promise<void> {
     try {
         // init app
         const vpnHoodApp: VpnHoodApp = reactive(await VpnHoodApp.create());
@@ -25,8 +26,7 @@ async function main():Promise<void> {
             .use(router)
             .use(vuetify)
             .mount('#app')
-    }
-    catch (ex: any) {
+    } catch (ex: any) {
         console.error("Could not create client app.", ex);
 
         // show error page

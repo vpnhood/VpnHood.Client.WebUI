@@ -152,7 +152,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {AppConnectionState, FilterMode} from "@/hood/VpnHood.Client.Api";
+import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
 import ProtocolSheet from "@/components/ProtocolSheet.vue";
 import ServersSheet from "@/components/ServersSheet.vue";

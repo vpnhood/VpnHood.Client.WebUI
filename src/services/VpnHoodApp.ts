@@ -1,4 +1,4 @@
-import {ClientApiFactory} from "@/hood/ClientApiFactory";
+import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
     AddClientProfileParam,
     AppFeatures,
@@ -11,9 +11,9 @@ import {
     RemoveClientProfileParam,
     SessionSuppressType,
     SetClientProfileParam,
-} from "@/hood/VpnHood.Client.Api";
+} from "@/services/VpnHood.Client.Api";
 import {ApiClient} from './VpnHood.Client.Api';
-import {UIState} from "@/hood/UIState";
+import {UIState} from "@/services/UIState";
 
 // ApiClient prevents VpnHoodApp from being reactive when it is placed as a property in the class
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
@@ -69,10 +69,8 @@ export class VpnHoodApp {
         if (loadApp.state) {
             this.state = loadApp.state;
             this.state.connectionState = loadApp.state.connectionState;
-            // Show update snackbar
-            // TODO Delete console
-            console.log(this.state.lastPublishInfo);
-            if (this.state.lastPublishInfo)
+            // Show update snackbar if the user has not ignored or more than 2 hours have passed
+            if (this.state.lastPublishInfo && new Date().getHours() > (this.uiState.userIgnoreUpdateHours * 2))
                 this.uiState.showUpdateSnackbar = true;
         }
         if (loadApp.settings) {
@@ -81,11 +79,6 @@ export class VpnHoodApp {
         if (loadApp.clientProfileItems) {
             this.clientProfileItems = loadApp.clientProfileItems;
         }
-
-        // TODO Delete console
-        console.log(this.state.sessionStatus?.suppressedTo);
-
-
     }
 
     public async connect(): Promise<void> {
@@ -124,12 +117,6 @@ export class VpnHoodApp {
             // Show suppress snackbar
             if (this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None || this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
                 this.uiState.showSuppressSnackbar = true;
-
-            // TODO Check Suppress Snackbar
-            console.log(this.state.sessionStatus?.suppressedTo, "JJJJJJ");
-            console.log(this.uiState.showSuppressSnackbar);
-
-
         }
     }
 
