@@ -1,7 +1,7 @@
 <template>
   <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen
-                  scrollable close-on-back max-width="600">
-    <v-toolbar theme="light" elevation="3" style="z-index: 1" density="compact">
+                  scrollable close-on-back>
+    <v-toolbar theme="light" elevation="3" style="z-index: 1;" density="compact">
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')"></v-toolbar-title>
     </v-toolbar>

@@ -4,12 +4,12 @@ import {ApiClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
+    private baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
 
     constructor() {
 
-        if (this.baseUrl == undefined)
-            throw new Error("Server API base url or app id is not set in the .env file.");
+        if (!this.baseUrl)
+            this.baseUrl = window.location.origin;
 
         //Define the axios default config
         this.axiosInstance = axios.create({

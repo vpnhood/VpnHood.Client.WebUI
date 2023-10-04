@@ -153,7 +153,7 @@ export class VpnHoodApp {
 
     public async addTestServer(): Promise<void> {
         await apiClient.addTestServer();
-        await this.loadApp({withClientProfileItems: true, withState: true});
+        await this.loadApp({withClientProfileItems: true});
     }
 
     public async diagnose(): Promise<void> {

@@ -1,6 +1,6 @@
 <template>
   <v-bottom-sheet inset fullscreen scrollable close-on-back :modelValue="modelValue"
-                  @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
+                  @update:modelValue="$emit('update:modelValue',$event)">
     <v-toolbar theme="light" elevation="3" style="z-index: 1;" density="compact">
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('SETTINGS')"></v-toolbar-title>

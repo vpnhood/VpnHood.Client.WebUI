@@ -58,7 +58,7 @@
 
         <!-- Connect button -->
         <v-btn
-            :class="[$vpnHoodApp.state.connectionState === AppConnectionState.None ? 'grad-btn': 'blue-btn', 'btn text-uppercase mt-5']"
+            :class="[$vpnHoodApp.state.connectionState === AppConnectionState.None ? 'grad-btn': 'blue-btn', 'btn mt-5']"
             @click="onConnectButtonClick">
           {{ connectButtonText() }}
         </v-btn>
@@ -310,7 +310,10 @@ export default defineComponent({
   color: var(--sky-blue);
   background: #132a7ac9;
   border: 1px rgba(22, 163, 254, 0.3) solid;
-  height: 40px;
+  min-height: 40px;
   justify-content: start;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 </style>

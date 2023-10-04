@@ -38,6 +38,10 @@
 }
 
 /*-------------------- Default Style -------------------*/
+html {
+    overflow-y: auto;
+}
+
 body, .v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
     font-family: 'Arial-Narow', sans-serif !important;
 }
@@ -98,6 +102,10 @@ h6, .h6 {
     background-color: var(--light-purple);
 }
 
+.bg-warning {
+    background-color: rgb(var(--v-theme-warning));
+}
+
 /*-------- General text color --------*/
 .color-master-green {
     color: var(--master-green);
@@ -121,6 +129,10 @@ h6, .h6 {
 
 .color-muted {
     color: var(--muted-color);
+}
+
+.color-on-warning {
+    color: rgb(var(--v-theme-on-warning));
 }
 
 .opacity-0 {

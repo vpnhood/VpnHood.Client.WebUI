@@ -57,8 +57,7 @@
     "rules": {}
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
+    "last 65 Chrome versions",
     "not dead",
     "not ie 11"
   ]

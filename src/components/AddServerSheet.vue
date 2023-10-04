@@ -128,10 +128,10 @@ export default defineComponent({
 
       // Add public server
       await this.$vpnHoodApp.addTestServer();
-
-      // If the default profile is set after adding the server
-      if (this.$vpnHoodApp.state.defaultClientProfileId)
-        await this.connect(this.$vpnHoodApp.state.defaultClientProfileId);
+      // Show new server added snackbar
+      this.$vpnHoodApp.uiState.showNewServerAdded = true;
+      // Close current sheet
+      this.$emit('update:modelValue', false);
     },
   }
 })
