@@ -20,5 +20,5 @@ export class UIState {
     public showNewServerAdded: boolean = false;
 
     // Set ignore update time
-    public userIgnoreUpdateHours: number = 0;
+    public userIgnoreUpdateTime?: number;
 }

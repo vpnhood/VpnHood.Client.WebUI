@@ -1,5 +1,6 @@
 <template>
-  <v-bottom-sheet inset close-on-back :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)">
+  <v-bottom-sheet close-on-back :modelValue="modelValue"
+                  @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Add Test Server -->
     <v-card v-if="testServerVisible" class="mx-auto mb-5 pb-3" width="100%" variant="flat">
@@ -9,7 +10,7 @@
       </v-card-title>
       <v-card-text class="pt-0">{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-text>
       <v-card-actions class="px-4">
-        <v-btn variant="tonal" block color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
+        <v-btn variant="tonal" :block="true" color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
       </v-card-actions>
     </v-card>
 
@@ -32,7 +33,7 @@
             density="compact"
             color="sharp-master-green"
             bg-color="#eceffb"
-            autofocus
+            :autofocus="true"
         ></v-text-field>
       </v-card-actions>
     </v-card>
@@ -60,7 +61,6 @@ export default defineComponent({
       accessKeyPrefix: "vh://",
     }
   },
-
   computed: {
     testServerVisible(): boolean {
       return !this.$vpnHoodApp.clientProfileItems.find(

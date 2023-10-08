@@ -2,7 +2,7 @@
   <v-snackbar
       :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="top"
-      vertical
+      :vertical="true"
       :timeout="-1"
       :color="$vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >
@@ -57,9 +57,9 @@ export default defineComponent({
   emits: [
     "update:modelValue",
   ],
-  methods:{
+  methods: {
     ignoreUpdate() {
-      this.$vpnHoodApp.uiState.userIgnoreUpdateHours = new Date().getHours();
+      this.$vpnHoodApp.uiState.userIgnoreUpdateTime = new Date().getTime();
       this.$emit('update:modelValue', false);
     }
   }

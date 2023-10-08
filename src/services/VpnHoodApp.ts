@@ -69,13 +69,21 @@ export class VpnHoodApp {
         if (loadApp.state) {
             this.state = loadApp.state;
             this.state.connectionState = loadApp.state.connectionState;
-            // Show update snackbar if the user has not ignored or more than 2 hours have passed
-            if (this.state.lastPublishInfo && new Date().getHours() > (this.uiState.userIgnoreUpdateHours * 2))
-                this.uiState.showUpdateSnackbar = true;
+
+            // Show update snackbar if the user has not ignored or more than 24 hours have passed
+            if (this.state.lastPublishInfo) {
+                if (!this.uiState.userIgnoreUpdateTime)
+                    this.uiState.showUpdateSnackbar = true;
+
+                else
+                    this.uiState.showUpdateSnackbar = (new Date().getTime() - this.uiState.userIgnoreUpdateTime) >= 24 * 60 * 60 * 1000;
+            }
         }
+
         if (loadApp.settings) {
             this.settings = loadApp.settings;
         }
+
         if (loadApp.clientProfileItems) {
             this.clientProfileItems = loadApp.clientProfileItems;
         }
@@ -83,6 +91,7 @@ export class VpnHoodApp {
 
     public async connect(): Promise<void> {
 
+        // TODO userSettings.defaultClientProfileId VS state.defaultClientProfileId
         if (!this.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }

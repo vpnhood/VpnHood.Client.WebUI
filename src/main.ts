@@ -44,16 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (/Android/i.test(userAgent)) {
 
         // Extract WebView version from user agent string
-        const match = userAgent.match(/Version\/(\d+\.\d+)/i);
+        const match = userAgent.match(/Chrome\/(\d+\.\d+)/i);
         const pageContents: any = document.getElementById("app");
 
         if (match && match[1]) {
             const webViewVersion = parseFloat(match[1]);
 
             // Check if WebView version is not supported
-            if (webViewVersion < 69) {
-                pageContents.innerHTML = "<h1>Device is Android and WebView version is smaller than 105</h1>";
+            if (webViewVersion < 68) {
+                pageContents.innerHTML = "<h1>Device is Android and WebView version is smaller than 69 " + userAgent + "</h1>";
                 console.log("Device is Android and WebView version is smaller than 69");
+                console.log(webViewVersion);
             } else {
                 // WebView version is supported and runs the app normally
                 // noinspection JSIgnoredPromiseFromCall

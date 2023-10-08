@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-sheet inset scrollable fullscreen close-on-back :modelValue="modelValue"
+  <v-bottom-sheet :scrollable="true" :fullscreen="true" close-on-back :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- List header -->
@@ -50,7 +50,7 @@
                   <v-list>
 
                     <!-- Rename -->
-                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" link>
+                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" :link="true">
 
                       <v-dialog v-model="showRename" activator="parent" close-on-back max-width="600">
                         <v-card :title="$t('RENAME')">
@@ -58,7 +58,7 @@
                             <v-text-field v-model="newClientProfileName"
                                           :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
                                           spellcheck="false" autocomplete="off" color="primary"
-                                          clearable></v-text-field>
+                                          :clearable="true"></v-text-field>
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer></v-spacer>
@@ -74,12 +74,12 @@
 
                     <!-- Diagnose -->
                     <v-list-item :title="$t('DIAGNOSE')" :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
-                                 prepend-icon="mdi-speedometer" link
+                                 prepend-icon="mdi-speedometer" :link="true"
                                  @click="diagnose(item.clientProfile.clientProfileId)"></v-list-item>
                     <v-divider/>
 
                     <!-- Delete -->
-                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" link>
+                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" :link="true">
                       <!-- Confirm delete server dialog -->
                       <v-dialog v-model="showConfirmDelete" activator="parent" close-on-back max-width="600">
                         <v-card>

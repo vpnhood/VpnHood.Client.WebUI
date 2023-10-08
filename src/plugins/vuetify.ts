@@ -1,21 +1,21 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import { createVuetify } from 'vuetify'
+import {createVuetify} from 'vuetify'
 
 export default createVuetify({
-    components:{
-        VBottomSheet,
-    },
-        theme:{
+        components: {
+            VBottomSheet,
+        },
+        theme: {
             defaultTheme: 'VpnHoodTheme',
-            themes:{
-                VpnHoodTheme:{
+            themes: {
+                VpnHoodTheme: {
                     dark: true,
-                    colors:{
+                    colors: {
                         background: '#122272',
                         surface: '#FFFFFF',
-                        'on-surface':'#212121',
+                        'on-surface': '#212121',
                         primary: '#1940b0',
                         'primary-darken-1': '#122272',
                         secondary: '#23c99d',
@@ -34,8 +34,8 @@ export default createVuetify({
                         success: '#4CAF50',
                         warning: '#ffe066',
                     },
-                    variables:{
-                        'medium-emphasis-opacity':'0.8'
+                    variables: {
+                        'medium-emphasis-opacity': '0.8'
                     },
                 },
             },

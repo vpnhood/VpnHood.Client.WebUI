@@ -197,7 +197,7 @@ export default defineComponent({
     }
   },
   created() {
-    // Reload state and setting every 1 second if app window is focused
+    // Reload 'state' and 'setting' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
         await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});

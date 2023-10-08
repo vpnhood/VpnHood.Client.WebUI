@@ -57,7 +57,10 @@
     "rules": {}
   },
   "browserslist": [
-    "chrome >= 62",
+    "chrome >= 69",
+    "> 1%",
+    "last 2 versions",
+    "not dead",
     "not ie 11"
   ]
 }
