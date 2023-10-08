@@ -1,4 +1,13 @@
 .v-navigation-drawer__scrim,
-.v-overlay__scrim{
+.v-overlay__scrim {
     opacity: 60% !important;
+}
+
+/*For handle UI in old browser*/
+.v-dialog > .v-overlay__content {
+    margin: 0;
+}
+
+.v-main {
+    flex-basis: 0;
 }
