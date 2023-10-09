@@ -1,6 +1,7 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
     AddClientProfileParam,
+    AppConnectionState,
     AppFeatures,
     AppSettings,
     AppState,
@@ -12,15 +13,15 @@ import {
     SessionSuppressType,
     SetClientProfileParam,
 } from "@/services/VpnHood.Client.Api";
-import {ApiClient} from './VpnHood.Client.Api';
-import {UIState} from "@/services/UIState";
+import {ApiClient} from "./VpnHood.Client.Api";
+import {UiState} from "@/services/UiState";
 
 // ApiClient prevents VpnHoodApp from being reactive when it is placed as a property in the class
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
 export class VpnHoodApp {
     public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
-    public uiState: UIState = new UIState();
+    public uiState: UiState = new UiState();
 
     public state: AppState;
     public features: AppFeatures;
@@ -78,6 +79,18 @@ export class VpnHoodApp {
                 else
                     this.uiState.showUpdateSnackbar = (new Date().getTime() - this.uiState.userIgnoreUpdateTime) >= 24 * 60 * 60 * 1000;
             }
+
+            if (this.state.connectRequestTime){
+                this.uiState.connectRequestTime = this.state.connectRequestTime;
+            }
+
+            // Show suppress snackbar if connection state is connected
+            if (
+                (this.state.connectionState === AppConnectionState.Connected && this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None) ||
+                (this.state.connectionState === AppConnectionState.None && this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
+            ){
+                this.uiState.showSuppressSnackbar = true;
+            }
         }
 
         if (loadApp.settings) {
@@ -91,7 +104,6 @@ export class VpnHoodApp {
 
     public async connect(): Promise<void> {
 
-        // TODO userSettings.defaultClientProfileId VS state.defaultClientProfileId
         if (!this.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
@@ -122,10 +134,6 @@ export class VpnHoodApp {
             this.uiState.showPremiumServerAd = false;
 
             await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
-
-            // Show suppress snackbar
-            if (this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None || this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
-                this.uiState.showSuppressSnackbar = true;
         }
     }
 
@@ -182,7 +190,7 @@ export class VpnHoodApp {
     // Show error dialog
     public showMessage(text: string): void {
         this.uiState.showAlertDialog = true;
-        this.uiState.dialogText = text;
+        this.uiState.alertDialogText = text;
     }
 
     // Get installed apps list on the user device

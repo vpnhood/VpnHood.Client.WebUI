@@ -1,7 +1,6 @@
 <template>
   <!-- Navigation drawer -->
-  <NavigationDrawer v-model="isShowNavigationDrawer"
-                    @open-settings="isShowSettingsSheet = true; isShowNavigationDrawer = false"/>
+  <NavigationDrawer v-model="isShowNavigationDrawer" @open-settings="isShowSettingsSheet = true"/>
 
   <!-- App bar -->
   <AppBar @openNavigationDrawer="isShowNavigationDrawer = true"/>
@@ -167,6 +166,10 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 
 export default defineComponent({
+  // TODO Show diagnose result
+  // TODO suppress
+  // TODO last error
+  // TODO disable diagnose started
   name: 'HomeView',
   components: {
     UpdateSnackbar,
@@ -200,7 +203,7 @@ export default defineComponent({
     // Reload 'state' and 'setting' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
-        await this.$vpnHoodApp.loadApp({withState: true, withSettings: true});
+        await this.$vpnHoodApp.loadApp({withState: true});
     }, 1000);
   },
 
@@ -209,7 +212,7 @@ export default defineComponent({
     async onConnectButtonClick() {
 
       // If user has no server
-      if (!this.$vpnHoodApp.state.defaultClientProfileId) {
+      if (!this.$vpnHoodApp.settings.userSettings.defaultClientProfileId) {
         this.isShowAddServerSheet = true;
         return;
       }
@@ -277,7 +280,7 @@ export default defineComponent({
 
     // Return current active server name
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.state.defaultClientProfileId);
+      const clientProfileItem = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.settings.userSettings.defaultClientProfileId);
       if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
         return this.$t("NO_SERVER_SELECTED");
       }

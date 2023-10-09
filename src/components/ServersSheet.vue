@@ -24,10 +24,10 @@
               rounded
               @click="connect(item.id)"
               class="server-item rounded-lg mb-4 py-4"
-              :style="item.id === $vpnHoodApp.state.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
+              :style="item.id === $vpnHoodApp.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
           >
             <!-- َActive item icon -->
-            <template v-slot:prepend v-if="item.id === $vpnHoodApp.state.defaultClientProfileId">
+            <template v-slot:prepend v-if="item.id === $vpnHoodApp.settings.userSettings.defaultClientProfileId">
               <v-avatar size="25" color="#23c99d66">
                 <v-icon size="25" color="var(--master-green)">mdi-check-all</v-icon>
               </v-avatar>
@@ -46,56 +46,89 @@
             <template v-slot:append>
               <v-btn icon size="large" variant="plain">
                 <v-icon>mdi-dots-vertical</v-icon>
-                <v-menu activator="parent">
+                <v-menu activator="parent" :close-on-content-click="true">
+
+                  <!-- Menu items -->
                   <v-list>
 
-                    <!-- Rename -->
-                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" :link="true">
+                    <!-- Rename item -->
+                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil">
 
+                      <!-- Rename dialog -->
                       <v-dialog v-model="showRename" activator="parent" close-on-back max-width="600">
                         <v-card :title="$t('RENAME')">
+
                           <v-card-text>
-                            <v-text-field v-model="newClientProfileName"
-                                          :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
-                                          spellcheck="false" autocomplete="off" color="primary"
-                                          :clearable="true"></v-text-field>
+                            <!-- Name text field -->
+                            <v-text-field
+                                v-model="newClientProfileName"
+                                :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
+                                spellcheck="false"
+                                autocomplete="off" color="primary"
+                                :clearable="true">
+                            </v-text-field>
                           </v-card-text>
+
                           <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" variant="text" :text="$t('CANCEL')"
-                                   @click="showRename = false"></v-btn>
-                            <v-btn color="primary" variant="text" :text="$t('SAVE')"
-                                   @click="saveNewClientProfileName(item.clientProfile)"></v-btn>
+                            <!-- Cancel rename button -->
+                            <v-btn
+                                color="primary"
+                                variant="text"
+                                :text="$t('CANCEL')"
+                                @click="showRename = false">
+                            </v-btn>
+
+                            <!-- Save rename button -->
+                            <v-btn
+                                color="primary"
+                                variant="text"
+                                :text="$t('SAVE')"
+                                @click="saveNewClientProfileName(item.clientProfile)">
+                            </v-btn>
                           </v-card-actions>
                         </v-card>
                       </v-dialog>
                     </v-list-item>
                     <v-divider/>
 
-                    <!-- Diagnose -->
-                    <v-list-item :title="$t('DIAGNOSE')" :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
-                                 prepend-icon="mdi-speedometer" :link="true"
-                                 @click="diagnose(item.clientProfile.clientProfileId)"></v-list-item>
+                    <!-- Diagnose item -->
+                    <v-list-item
+                        :title="$t('DIAGNOSE')"
+                        :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
+                        prepend-icon="mdi-speedometer"
+                        @click="diagnose(item.clientProfile.clientProfileId)">
+                    </v-list-item>
                     <v-divider/>
 
-                    <!-- Delete -->
-                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" :link="true">
+                    <!-- Delete item -->
+                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete">
                       <!-- Confirm delete server dialog -->
                       <v-dialog v-model="showConfirmDelete" activator="parent" close-on-back max-width="600">
                         <v-card>
+
                           <v-card-title class="color-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
+
                           <v-card-text>
                             <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
                             <strong>{{ item.token.name }}</strong>
                           </v-card-text>
+
+                          <!-- Dialog buttons -->
                           <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
+
+                            <!-- Confirm delete button -->
                             <v-btn variant="text" @click="removeServer(item.clientProfile.clientProfileId)">
                               {{ $t("YES") }}
                             </v-btn>
+
+                            <!-- Cancel delete button -->
                             <v-btn variant="tonal" @click="showConfirmDelete = false">
                               {{ $t("NO") }}
                             </v-btn>
+
                           </v-card-actions>
+
                         </v-card>
                       </v-dialog>
                     </v-list-item>
@@ -110,8 +143,10 @@
     </v-card>
 
     <!-- Add server sheet -->
-    <AddServerSheet v-model="isShowAddServerSheet"
-                    @new-access-key-added="$emit('update:modelValue',false)"></AddServerSheet>
+    <AddServerSheet
+        v-model="isShowAddServerSheet"
+        @new-access-key-added="$emit('update:modelValue',false)">
+    </AddServerSheet>
 
   </v-bottom-sheet>
 </template>
@@ -155,10 +190,10 @@ export default defineComponent({
     },
 
     async removeServer(clientProfileId: string): Promise<void> {
+      this.showConfirmDelete = false;
       await this.$vpnHoodApp.removeClientProfile(new RemoveClientProfileParam({
         clientProfileId: clientProfileId
       }));
-      this.showConfirmDelete = false;
     },
 
     // Hidden full ip in the servers list

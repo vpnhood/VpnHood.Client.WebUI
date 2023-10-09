@@ -2,18 +2,15 @@
   <v-dialog
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
-      persistent
+      :persistent="true"
   >
     <v-card
         rounded="lg"
         color="master-green"
         class="pt-0 pb-3 notice position-relative text-white">
-      <v-card-title>
+      <v-card-text>
         <v-icon class="pe-3">mdi-alert-circle-outline</v-icon>
-        <span>{{$t("ERROR")}}</span>
-      </v-card-title>
-      <v-card-text class="pt-0">
-        <p>{{ dialogText }}</p>
+        <span>{{ dialogText }}</span>
       </v-card-text>
       <v-divider class="mb-3 border-opacity-25"></v-divider>
       <v-card-actions class="flex-column px-5">
@@ -23,7 +20,7 @@
             v-if="!$vpnHoodApp.state.logExists && $vpnHoodApp.state.lastActiveClientProfileId"
             rounded="pill"
             variant="flat"
-            block
+            :block="true"
             class="text-center mb-4 color-master-green"
             @click="diagnose"
         >
@@ -35,7 +32,7 @@
             v-if="$vpnHoodApp.state.logExists"
             rounded="pill"
             variant="flat"
-            block
+            :block="true"
             prepend-icon="mdi-open-in-new"
             class="text-center mb-4 color-master-green"
             :href="$vpnHoodApp.serverUrl + logFileLocation"
@@ -49,7 +46,7 @@
             v-if="$vpnHoodApp.state.logExists"
             rounded="pill"
             variant="flat"
-            block
+            :block="true"
             prepend-icon="mdi-send-outline"
             class="text-center mb-4 color-master-green"
             target="_blank"
@@ -61,7 +58,7 @@
         <v-btn
             rounded="pill"
             variant="flat"
-            block
+            :block="true"
             class="text-center color-master-green"
             @click="$emit('update:modelValue',false)"
         >

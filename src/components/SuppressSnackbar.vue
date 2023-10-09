@@ -8,9 +8,9 @@
       color="deep-purple accent-4"
 
   >
-    <!-- If suppressed to -->
+    <!-- If 'suppressed to' is available and 'suppressed by' is none, because 'suppress by' has priority over 'suppress to' -->
     <span
-        v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
+        v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None && $vpnHoodApp.state.sessionStatus?.suppressedBy === SessionSuppressType.None"
         class="text-justify"
     >
       {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}

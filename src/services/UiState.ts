@@ -1,24 +1,27 @@
-export class UIState {
+export class UiState {
 
     // General custom alert dialog property
     public showAlertDialog: boolean = false;
-    public dialogText: string = "";
+    public alertDialogText: string = "";
 
-    // Show public server hint property
+    // Public server hint message state
     public showPublicServerHint: boolean = false;
 
-    // Show premium server ad property
+    // Premium server ad state
     public showPremiumServerAd: boolean = false;
 
-    // Show premium server ad property
+    // Suppress message state
     public showSuppressSnackbar: boolean = false;
 
-    // Show premium server ad property
+    // Update message state
     public showUpdateSnackbar: boolean = false;
 
-    // Show premium server ad property
+    // New server added message state
     public showNewServerAdded: boolean = false;
 
-    // Set ignore update time
+    // Time of user ignored update
     public userIgnoreUpdateTime?: number;
+
+    // Time of user selected connect button
+    public connectRequestTime?: Date;
 }

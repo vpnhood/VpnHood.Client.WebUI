@@ -2,8 +2,9 @@
   <v-navigation-drawer
       :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="left"
-      temporary
-      floating
+
+      :temporary="true"
+      :floating="true"
   >
     <!-- Header -->
     <div class="d-flex align-center bg-medium-blue pa-4">
@@ -30,7 +31,7 @@
           :title="$t('SETTINGS')"
           prepend-icon="mdi-cog"
           class="menu-item color-gray txt-small-1"
-          @click="$emit('openSettings')"
+          @click="$emit('openSettings'); $emit('update:modelValue',false)"
       >
       </v-list-item>
 
@@ -40,7 +41,7 @@
           prepend-icon="mdi-speedometer"
           class="menu-item color-gray txt-small-1"
           :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
-          @click="$vpnHoodApp.diagnose()"
+          @click="$vpnHoodApp.diagnose(); $emit('update:modelValue',false)"
       >
       </v-list-item>
 
@@ -50,6 +51,7 @@
           prepend-icon="mdi-bullhorn"
           class="menu-item color-gray txt-small-1"
           href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
+          @click="$emit('update:modelValue',false)"
           target="_blank"
       >
       </v-list-item>
@@ -60,6 +62,7 @@
           prepend-icon="mdi-message-alert"
           class="menu-item color-gray txt-small-1"
           href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
+          @click="$emit('update:modelValue',false)"
           target="_blank"
       >
       </v-list-item>
@@ -70,6 +73,7 @@
           prepend-icon="mdi-shield-account-variant"
           class="menu-item color-gray txt-small-1"
           href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
+          @click="$emit('update:modelValue',false)"
           target="_blank"
       >
       </v-list-item>

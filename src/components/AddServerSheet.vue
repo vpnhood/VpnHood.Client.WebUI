@@ -1,6 +1,6 @@
 <template>
-  <v-bottom-sheet close-on-back :modelValue="modelValue"
-                  @update:modelValue="$emit('update:modelValue',$event)">
+  <v-dialog max-width="600" close-on-back :modelValue="modelValue"
+            @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Add Test Server -->
     <v-card v-if="testServerVisible" class="mx-auto mb-5 pb-3" width="100%" variant="flat">
@@ -38,7 +38,7 @@
       </v-card-actions>
     </v-card>
 
-  </v-bottom-sheet>
+  </v-dialog>
 </template>
 
 <script lang="ts">
