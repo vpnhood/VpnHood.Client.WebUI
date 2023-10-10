@@ -15,10 +15,14 @@ import {
 } from "@/services/VpnHood.Client.Api";
 import {ApiClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
+import {UiConstants} from "@/UiConstants";
 
 // ApiClient prevents VpnHoodApp from being reactive when it is placed as a property in the class
 const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
 
+export class VpnHoodAppData {
+
+}
 export class VpnHoodApp {
     public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
     public uiState: UiState = new UiState();
@@ -68,29 +72,10 @@ export class VpnHoodApp {
             this.features = loadApp.features;
 
         if (loadApp.state) {
+            // The function is created based on IDE recommend
             this.state = loadApp.state;
             this.state.connectionState = loadApp.state.connectionState;
-
-            // Show update snackbar if the user has not ignored or more than 24 hours have passed
-            if (this.state.lastPublishInfo) {
-                if (!this.uiState.userIgnoreUpdateTime)
-                    this.uiState.showUpdateSnackbar = true;
-
-                else
-                    this.uiState.showUpdateSnackbar = (new Date().getTime() - this.uiState.userIgnoreUpdateTime) >= 24 * 60 * 60 * 1000;
-            }
-
-            if (this.state.connectRequestTime){
-                this.uiState.connectRequestTime = this.state.connectRequestTime;
-            }
-
-            // Show suppress snackbar if connection state is connected
-            if (
-                (this.state.connectionState === AppConnectionState.Connected && this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None) ||
-                (this.state.connectionState === AppConnectionState.None && this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None)
-            ){
-                this.uiState.showSuppressSnackbar = true;
-            }
+            this.processAppState();
         }
 
         if (loadApp.settings) {
@@ -99,6 +84,35 @@ export class VpnHoodApp {
 
         if (loadApp.clientProfileItems) {
             this.clientProfileItems = loadApp.clientProfileItems;
+        }
+    }
+
+    // TODO How to Private
+    public processAppState():  void {
+
+        if (this.state.lastError) {
+            this.showError(this.state.lastError);
+        }
+
+        // Show update message if the user has not ignored or more than 24 hours have passed
+        if (this.state.lastPublishInfo) {
+            this.uiState.showUpdateSnackbar = this.uiState.userIgnoreUpdateTime == null ||
+                (new Date().getTime() - this.uiState.userIgnoreUpdateTime) >= UiConstants.userIgnoreUpdateTime;
+        }
+
+        //console.log(this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None);
+        // Show 'suppress by' message
+        if (this.state.connectionState === AppConnectionState.None &&
+            this.state.sessionStatus?.suppressedBy &&
+            this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None) {
+            this.uiState.showSuppressSnackbar = this.uiState.userIgnoreSuppressByTime === this.state.connectRequestTime;
+        }
+
+        // Show 'suppress to' message
+        if (this.state.connectionState === AppConnectionState.Connected &&
+            this.state.sessionStatus?.suppressedTo &&
+            this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None) {
+            this.uiState.showSuppressSnackbar = this.uiState.userIgnoreSuppressToTime !== this.state.connectRequestTime;
         }
     }
 

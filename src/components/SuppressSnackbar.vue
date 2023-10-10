@@ -8,14 +8,6 @@
       color="deep-purple accent-4"
 
   >
-    <!-- If 'suppressed to' is available and 'suppressed by' is none, because 'suppress by' has priority over 'suppress to' -->
-    <span
-        v-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None && $vpnHoodApp.state.sessionStatus?.suppressedBy === SessionSuppressType.None"
-        class="text-justify"
-    >
-      {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
-    </span>
-
     <!-- If suppressed by -->
     <span
         v-if="$vpnHoodApp.state.sessionStatus?.suppressedBy !== SessionSuppressType.None"
@@ -24,12 +16,20 @@
       {{ $t("SESSION_SUPPRESSED_BY_OTHER") }}
     </span>
 
+    <!-- If 'suppressed to' is available and 'suppressed by' is none, because 'suppress by' has priority over 'suppress to' -->
+    <span
+        v-else-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
+        class="text-justify"
+    >
+      {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
+    </span>
+
 
     <template v-slot:actions>
       <v-btn
           icon="mdi-close"
           size="small"
-          @click="$emit('update:modelValue',false)"
+          @click="onCloseButton"
       >
       </v-btn>
     </template>
@@ -52,5 +52,18 @@ export default defineComponent({
   emits: [
     "update:modelValue",
   ],
+  methods:{
+    onCloseButton(){
+      // Set ignore time by user for 'suppress by' to prevent showing up again until a new connection is created
+      if (this.$vpnHoodApp.state.sessionStatus?.suppressedBy)
+        this.$vpnHoodApp.uiState.userIgnoreSuppressByTime = new Date();
+
+      // Set ignore time by user for 'suppress to' to prevent showing up again until a new connection is created
+      if (this.$vpnHoodApp.state.sessionStatus?.suppressedTo && this.$vpnHoodApp.state.connectRequestTime)
+        this.$vpnHoodApp.uiState.userIgnoreSuppressToTime = this.$vpnHoodApp.state.connectRequestTime;
+
+      this.$emit('update:modelValue',false);
+    }
+  }
 })
 </script>

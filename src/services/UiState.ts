@@ -12,6 +12,8 @@ export class UiState {
 
     // Suppress message state
     public showSuppressSnackbar: boolean = false;
+    public userIgnoreSuppressToTime: Date | null = null;
+    public userIgnoreSuppressByTime: Date | null = null;
 
     // Update message state
     public showUpdateSnackbar: boolean = false;
@@ -20,8 +22,6 @@ export class UiState {
     public showNewServerAdded: boolean = false;
 
     // Time of user ignored update
-    public userIgnoreUpdateTime?: number;
+    public userIgnoreUpdateTime: number | null = null;
 
-    // Time of user selected connect button
-    public connectRequestTime?: Date;
 }

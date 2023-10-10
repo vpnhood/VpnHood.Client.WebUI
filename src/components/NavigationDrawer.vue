@@ -2,7 +2,6 @@
   <v-navigation-drawer
       :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="left"
-
       :temporary="true"
       :floating="true"
   >
