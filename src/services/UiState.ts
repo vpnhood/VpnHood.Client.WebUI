@@ -24,4 +24,7 @@ export class UiState {
     // Time of user ignored update
     public userIgnoreUpdateTime: number | null = null;
 
+    // Time of user ignored last error message
+    public userIgnoreLastErrorTime?: Date | null = null;
+
 }

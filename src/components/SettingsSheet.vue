@@ -47,12 +47,12 @@ export default defineComponent({
     excludeLocalNetwork:
         {
           get() {
-            return this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork;
+            return this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork;
           },
-          set(value: boolean) {
-            if (this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork !== value) {
-              this.$vpnHoodApp.settings.userSettings.excludeLocalNetwork = value;
-              this.$vpnHoodApp.saveUserSetting();
+          async set(value: boolean) {
+            if (this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork !== value) {
+              this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork = value;
+              await this.$vpnHoodApp.saveUserSetting();
               this.$vpnHoodApp.disconnect();
             }
           }

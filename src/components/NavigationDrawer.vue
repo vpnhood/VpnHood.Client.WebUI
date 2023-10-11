@@ -39,7 +39,7 @@
           :title="$t('DIAGNOSE')"
           prepend-icon="mdi-speedometer"
           class="menu-item color-gray txt-small-1"
-          :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
+          :disabled="!$vpnHoodApp.canDiagnose()"
           @click="$vpnHoodApp.diagnose(); $emit('update:modelValue',false)"
       >
       </v-list-item>

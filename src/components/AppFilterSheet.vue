@@ -28,7 +28,7 @@
 
         <!-- autocomplete -->
         <v-autocomplete
-            v-if="$vpnHoodApp.settings.userSettings.appFiltersMode !== FilterMode.All"
+            v-if="$vpnHoodApp.data.settings.userSettings.appFiltersMode !== FilterMode.All"
             :loading="isUpdating"
             v-model="appFilters"
             :items="installedApps"
@@ -93,7 +93,7 @@ export default defineComponent({
     }
   },
   async created() {
-    if (this.$vpnHoodApp.features.isExcludeAppsSupported || this.$vpnHoodApp.features.isIncludeAppsSupported) {
+    if (this.$vpnHoodApp.data.features.isExcludeAppsSupported || this.$vpnHoodApp.data.features.isIncludeAppsSupported) {
       this.isUpdating = true;
       this.installedApps = await this.getInstalledApp();
       this.isUpdating = false;
@@ -103,10 +103,10 @@ export default defineComponent({
     appFiltersMode:
         {
           get() {
-            return this.$vpnHoodApp.settings.userSettings.appFiltersMode;
+            return this.$vpnHoodApp.data.settings.userSettings.appFiltersMode;
           },
           async set(value: FilterMode) {
-            this.$vpnHoodApp.settings.userSettings.appFiltersMode = value;
+            this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = value;
             await this.$vpnHoodApp.saveUserSetting();
             await this.$vpnHoodApp.disconnect();
           }
@@ -115,10 +115,10 @@ export default defineComponent({
     appFilters:
         {
           get() {
-            return this.$vpnHoodApp.settings.userSettings.appFilters;
+            return this.$vpnHoodApp.data.settings.userSettings.appFilters;
           },
           async set(value: string[] | null) {
-            this.$vpnHoodApp.settings.userSettings.appFilters = value;
+            this.$vpnHoodApp.data.settings.userSettings.appFilters = value;
             await this.$vpnHoodApp.saveUserSetting();
             await this.$vpnHoodApp.disconnect();
           }
@@ -137,13 +137,13 @@ export default defineComponent({
         value: FilterMode.All,
       }];
 
-      if (this.$vpnHoodApp.features.isExcludeAppsSupported)
+      if (this.$vpnHoodApp.data.features.isExcludeAppsSupported)
         filterModes.push({
           text: this.$t('APP_FILTER_EXCLUDE'),
           value: FilterMode.Exclude,
         });
 
-      if (this.$vpnHoodApp.features.isIncludeAppsSupported)
+      if (this.$vpnHoodApp.data.features.isIncludeAppsSupported)
         filterModes.push({
           text: this.$t('APP_FILTER_INCLUDE'),
           value: FilterMode.Include,

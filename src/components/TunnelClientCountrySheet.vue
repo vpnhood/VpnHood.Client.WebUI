@@ -58,11 +58,11 @@ export default defineComponent({
     tunnelClientCountry:
         {
           get() {
-            return this.$vpnHoodApp.settings.userSettings.tunnelClientCountry;
+            return this.$vpnHoodApp.data.settings.userSettings.tunnelClientCountry;
           },
-          set(value: boolean) {
-            this.$vpnHoodApp.settings.userSettings.tunnelClientCountry = value;
-            this.$vpnHoodApp.saveUserSetting();
+          async set(value: boolean) {
+            this.$vpnHoodApp.data.settings.userSettings.tunnelClientCountry = value;
+            await this.$vpnHoodApp.saveUserSetting();
           }
         },
   },

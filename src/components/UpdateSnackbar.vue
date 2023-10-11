@@ -5,16 +5,16 @@
       :vertical="true"
 
       :timeout="-1"
-      :color="$vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
+      :color="$vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >
 
     <p class="text-subtitle-1 mb-2">
       {{
-      $vpnHoodApp.state.versionStatus === VersionStatus.Deprecated ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")
+      $vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")
       }}</p>
 
     <p> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
-    <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.state.lastPublishInfo?.version }}</p>
+    <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
 
     <v-divider class="mt-4"/>
 
@@ -22,7 +22,7 @@
 
       <!-- Update button -->
       <v-btn
-          :href="$vpnHoodApp.state.lastPublishInfo?.installationPageUrl"
+          :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
           variant="tonal"
           target="_blank"
           :text="$t('UPDATE')"
@@ -60,7 +60,7 @@ export default defineComponent({
   ],
   methods: {
     ignoreUpdate() {
-      this.$vpnHoodApp.uiState.userIgnoreUpdateTime = new Date().getTime();
+      this.$vpnHoodApp.data.uiState.userIgnoreUpdateTime = new Date().getTime();
       this.$emit('update:modelValue', false);
     }
   }

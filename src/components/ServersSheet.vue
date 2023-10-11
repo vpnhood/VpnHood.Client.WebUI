@@ -19,15 +19,15 @@
         <v-list>
           <!-- Server item -->
           <v-list-item
-              v-for="(item, i) in $vpnHoodApp.clientProfileItems"
+              v-for="(item, i) in $vpnHoodApp.data.clientProfileItems"
               :key="i"
               rounded
               @click="connect(item.id)"
               class="server-item rounded-lg mb-4 py-4"
-              :style="item.id === $vpnHoodApp.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
+              :style="item.id === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
           >
             <!-- َActive item icon -->
-            <template v-slot:prepend v-if="item.id === $vpnHoodApp.settings.userSettings.defaultClientProfileId">
+            <template v-slot:prepend v-if="item.id === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
               <v-avatar size="25" color="#23c99d66">
                 <v-icon size="25" color="var(--master-green)">mdi-check-all</v-icon>
               </v-avatar>
@@ -95,7 +95,7 @@
                     <!-- Diagnose item -->
                     <v-list-item
                         :title="$t('DIAGNOSE')"
-                        :disabled="$vpnHoodApp.state.hasDiagnoseStarted"
+                        :disabled="!$vpnHoodApp.canDiagnose()"
                         prepend-icon="mdi-speedometer"
                         @click="diagnose(item.clientProfile.clientProfileId)">
                     </v-list-item>
@@ -177,14 +177,14 @@ export default defineComponent({
   methods: {
     async connect(clientProfileId: string): Promise<void> {
       this.$emit('update:modelValue', false);
-      this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.connect();
     },
 
     async diagnose(clientProfileId: string): Promise<void> {
       this.$emit('update:modelValue', false);
-      this.$vpnHoodApp.settings.userSettings.defaultClientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.diagnose();
     },
@@ -205,7 +205,7 @@ export default defineComponent({
     // Rename client profile name by user
     async saveNewClientProfileName(renamedClientProfile: ClientProfile): Promise<void> {
       this.showRename = false;
-      const clientProfile = this.$vpnHoodApp.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
+      const clientProfile = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
       if (!clientProfile)
         throw new Error("Could not find client profile id.");
 

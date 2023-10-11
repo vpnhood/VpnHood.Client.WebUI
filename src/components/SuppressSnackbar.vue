@@ -4,13 +4,13 @@
       close-on-content-click
       location="top"
       :timeout="-1"
-      class="mt-12"
+      class="mt-15"
       color="deep-purple accent-4"
 
   >
     <!-- If suppressed by -->
     <span
-        v-if="$vpnHoodApp.state.sessionStatus?.suppressedBy !== SessionSuppressType.None"
+        v-if="$vpnHoodApp.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None"
         class="text-justify"
     >
       {{ $t("SESSION_SUPPRESSED_BY_OTHER") }}
@@ -18,7 +18,7 @@
 
     <!-- If 'suppressed to' is available and 'suppressed by' is none, because 'suppress by' has priority over 'suppress to' -->
     <span
-        v-else-if="$vpnHoodApp.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
+        v-else-if="$vpnHoodApp.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None"
         class="text-justify"
     >
       {{ $t("SESSION_SUPPRESSED_TO_OTHER") }}
@@ -55,12 +55,12 @@ export default defineComponent({
   methods:{
     onCloseButton(){
       // Set ignore time by user for 'suppress by' to prevent showing up again until a new connection is created
-      if (this.$vpnHoodApp.state.sessionStatus?.suppressedBy)
-        this.$vpnHoodApp.uiState.userIgnoreSuppressByTime = new Date();
+      if (this.$vpnHoodApp.data.state.sessionStatus?.suppressedBy && this.$vpnHoodApp.data.state.connectRequestTime)
+        this.$vpnHoodApp.data.uiState.userIgnoreSuppressByTime = this.$vpnHoodApp.data.state.connectRequestTime;
 
       // Set ignore time by user for 'suppress to' to prevent showing up again until a new connection is created
-      if (this.$vpnHoodApp.state.sessionStatus?.suppressedTo && this.$vpnHoodApp.state.connectRequestTime)
-        this.$vpnHoodApp.uiState.userIgnoreSuppressToTime = this.$vpnHoodApp.state.connectRequestTime;
+      if (this.$vpnHoodApp.data.state.sessionStatus?.suppressedTo && this.$vpnHoodApp.data.state.connectRequestTime)
+        this.$vpnHoodApp.data.uiState.userIgnoreSuppressToTime = this.$vpnHoodApp.data.state.connectRequestTime;
 
       this.$emit('update:modelValue',false);
     }

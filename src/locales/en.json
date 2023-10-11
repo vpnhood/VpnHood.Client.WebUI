@@ -10,6 +10,7 @@
   "DISCONNECT": "Disconnect",
   "DISCONNECTED": "Disconnected",
   "DISCONNECTING": "Disconnecting...",
+  "STOP_DIAGNOSING": "Stop Diagnosing",
   "DIAGNOSING": "Diagnosing...",
   "WAITING": "Waiting...",
   "ADD_SERVER": "Add Server",

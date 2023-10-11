@@ -16,42 +16,43 @@ import {
 import {ApiClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UiConstants} from "@/UiConstants";
+import {reactive} from "vue";
 
-// ApiClient prevents VpnHoodApp from being reactive when it is placed as a property in the class
-const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
-
+// VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
-
-}
-export class VpnHoodApp {
     public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
     public uiState: UiState = new UiState();
-
     public state: AppState;
-    public features: AppFeatures;
     public settings: AppSettings;
+    public features: AppFeatures;
     public clientProfileItems: ClientProfileItem[];
 
-    public constructor(
-        state: AppState,
-        features: AppFeatures,
-        settings: AppSettings,
-        clientProfileItems: ClientProfileItem[]) {
-        // Initialize
+    public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileItems: ClientProfileItem[]) {
         this.state = state;
+        this.settings = setting;
         this.features = features;
-        this.settings = settings;
         this.clientProfileItems = clientProfileItems;
+    }
+}
+
+export class VpnHoodApp {
+    public data: VpnHoodAppData;
+    public apiClient: ApiClient;
+
+    private constructor(apiClient: ApiClient, appData: VpnHoodAppData) {
+        this.data = reactive(appData);
+        this.apiClient = apiClient;
     }
 
     public static async create(): Promise<VpnHoodApp> {
+        const apiClient: ApiClient = ClientApiFactory.instance.CreateApiClient();
         const result = await apiClient.loadApp(new LoadAppParam({
             withSettings: true,
             withState: true,
             withClientProfileItems: true,
             withFeatures: true,
         }));
-        return new VpnHoodApp(result.state!, result.features!, result.settings!, result.clientProfileItems!);
+        return new VpnHoodApp(apiClient, new VpnHoodAppData(result.state!, result.settings!, result.features!, result.clientProfileItems!));
     }
 
     public async loadApp(options?: {
@@ -60,7 +61,7 @@ export class VpnHoodApp {
         withClientProfileItems?: boolean,
         withFeatures?: boolean
     }): Promise<void> {
-        const loadApp = await apiClient.loadApp(
+        const loadApp = await this.apiClient.loadApp(
             new LoadAppParam({
                 withSettings: options?.withSettings ?? false,
                 withState: options?.withState ?? false,
@@ -69,65 +70,70 @@ export class VpnHoodApp {
             }));
 
         if (loadApp.features)
-            this.features = loadApp.features;
+            this.data.features = loadApp.features;
 
         if (loadApp.state) {
             // The function is created based on IDE recommend
-            this.state = loadApp.state;
-            this.state.connectionState = loadApp.state.connectionState;
+            this.data.state = loadApp.state;
+            this.data.state.connectionState = loadApp.state.connectionState;
             this.processAppState();
         }
 
         if (loadApp.settings) {
-            this.settings = loadApp.settings;
+            this.data.settings = loadApp.settings;
         }
 
         if (loadApp.clientProfileItems) {
-            this.clientProfileItems = loadApp.clientProfileItems;
+            this.data.clientProfileItems = loadApp.clientProfileItems;
         }
     }
 
-    // TODO How to Private
-    public processAppState():  void {
+    private processAppState(): void {
 
-        if (this.state.lastError) {
-            this.showError(this.state.lastError);
+        if (this.data.state.lastError &&
+            this.data.uiState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
+            this.data.uiState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
+            console.log("lastError", this.data.state.lastError);
+            this.showError(this.data.state.lastError);
         }
 
         // Show update message if the user has not ignored or more than 24 hours have passed
-        if (this.state.lastPublishInfo) {
-            this.uiState.showUpdateSnackbar = this.uiState.userIgnoreUpdateTime == null ||
-                (new Date().getTime() - this.uiState.userIgnoreUpdateTime) >= UiConstants.userIgnoreUpdateTime;
+        if (this.data.state.lastPublishInfo) {
+            this.data.uiState.showUpdateSnackbar = this.data.uiState.userIgnoreUpdateTime == null ||
+                (new Date().getTime() - this.data.uiState.userIgnoreUpdateTime) >= UiConstants.userIgnoreUpdateTime;
         }
 
-        //console.log(this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None);
         // Show 'suppress by' message
-        if (this.state.connectionState === AppConnectionState.None &&
-            this.state.sessionStatus?.suppressedBy &&
-            this.state.sessionStatus?.suppressedBy !== SessionSuppressType.None) {
-            this.uiState.showSuppressSnackbar = this.uiState.userIgnoreSuppressByTime === this.state.connectRequestTime;
+        // noinspection OverlyComplexBooleanExpressionJS
+        if (this.data.state.connectionState === AppConnectionState.None &&
+            this.data.state.sessionStatus?.suppressedBy &&
+            this.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None &&
+            this.data.uiState.userIgnoreSuppressByTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
+            this.data.uiState.showSuppressSnackbar = true;
         }
 
         // Show 'suppress to' message
-        if (this.state.connectionState === AppConnectionState.Connected &&
-            this.state.sessionStatus?.suppressedTo &&
-            this.state.sessionStatus?.suppressedTo !== SessionSuppressType.None) {
-            this.uiState.showSuppressSnackbar = this.uiState.userIgnoreSuppressToTime !== this.state.connectRequestTime;
+        // noinspection OverlyComplexBooleanExpressionJS
+        if (this.data.state.connectionState === AppConnectionState.Connected &&
+            this.data.state.sessionStatus?.suppressedTo &&
+            this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None &&
+            this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
+            this.data.uiState.showSuppressSnackbar = true
         }
     }
 
     public async connect(): Promise<void> {
 
-        if (!this.settings.userSettings.defaultClientProfileId) {
+        if (!this.data.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
 
         // Find default client profile
-        const defaultClientProfile: ClientProfileItem | undefined = this.clientProfileItems.find(
-            x => x.clientProfile.clientProfileId === this.settings.userSettings.defaultClientProfileId);
+        const defaultClientProfile: ClientProfileItem | undefined = this.data.clientProfileItems.find(
+            x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.uiState.showPremiumServerAd) {
+        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.data.uiState.showPremiumServerAd) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -137,78 +143,81 @@ export class VpnHoodApp {
 
             // Show public server hint
             if (dontShowServerHintStatus !== "true")
-                this.uiState.showPublicServerHint = true;
+                this.data.uiState.showPublicServerHint = true;
 
             // Show premium server ad
             else
-                this.uiState.showPremiumServerAd = true;
+                this.data.uiState.showPremiumServerAd = true;
 
         } else {
             // Close Premium server Ad
-            this.uiState.showPremiumServerAd = false;
+            this.data.uiState.showPremiumServerAd = false;
 
-            await apiClient.connect(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+            await this.apiClient.connect(new ConnectParam({clientProfileId: this.data.settings.userSettings.defaultClientProfileId}));
         }
     }
 
     public async disconnect(): Promise<void> {
-        await apiClient.disconnect();
-        this.uiState.showSuppressSnackbar = false;
+        await this.apiClient.disconnect();
+        this.data.uiState.showSuppressSnackbar = false;
     }
 
     public getAppVersion(isFull: boolean): string {
-        return isFull ? this.features.version : this.features.version.split(".")[2];
+        return isFull ? this.data.features.version : this.data.features.version.split(".")[2];
     }
 
     // Save any change by user
     public async saveUserSetting(): Promise<void> {
-        await apiClient.setUserSettings(this.settings.userSettings);
+        await this.apiClient.setUserSettings(this.data.settings.userSettings);
         await this.loadApp({withSettings: true});
     }
 
     // Select profile by user
     public async setClientProfile(clientProfileParam: SetClientProfileParam): Promise<void> {
-        await apiClient.setClientProfile(clientProfileParam);
+        await this.apiClient.setClientProfile(clientProfileParam);
         await this.loadApp({withClientProfileItems: true});
     }
 
     public async removeClientProfile(clientProfileParam: RemoveClientProfileParam): Promise<void> {
-        await apiClient.removeClientProfile(clientProfileParam);
+        await this.apiClient.removeClientProfile(clientProfileParam);
         await this.loadApp({withClientProfileItems: true});
     }
 
     public async addAccessKey(accessKey: AddClientProfileParam): Promise<void> {
-        await apiClient.addAccessKey(accessKey);
+        await this.apiClient.addAccessKey(accessKey);
         await this.loadApp({withClientProfileItems: true});
     }
 
     public async addTestServer(): Promise<void> {
-        await apiClient.addTestServer();
+        await this.apiClient.addTestServer();
         await this.loadApp({withClientProfileItems: true});
     }
 
     public async diagnose(): Promise<void> {
-        if (!this.settings.userSettings.defaultClientProfileId) {
+        if (!this.data.settings.userSettings.defaultClientProfileId) {
             throw new Error("Could not find default client profile id.");
         }
-        await apiClient.diagnose(new ConnectParam({clientProfileId: this.settings.userSettings.defaultClientProfileId}));
+        await this.apiClient.diagnose(new ConnectParam({clientProfileId: this.data.settings.userSettings.defaultClientProfileId}));
+    }
+
+    public canDiagnose(): boolean {
+        return this.data.state.connectionState === AppConnectionState.None || !this.data.state.hasDiagnoseStarted;
     }
 
     // Get error message
     public showError(err: any): void {
         console.error(err);
-        const errorMessage = this.state.lastError != null || undefined ? this.state.lastError : err.message;
-        this.showMessage(errorMessage);
+        this.showMessage(err.message ?? err);
     }
 
     // Show error dialog
     public showMessage(text: string): void {
-        this.uiState.showAlertDialog = true;
-        this.uiState.alertDialogText = text;
+        this.data.uiState.showAlertDialog = true;
+        this.data.uiState.alertDialogText = text;
     }
 
     // Get installed apps list on the user device
     public async getInstalledApps(): Promise<DeviceAppInfo[]> {
-        return await apiClient.installedApps();
+        return await this.apiClient.installedApps();
     }
 }

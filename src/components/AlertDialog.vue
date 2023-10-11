@@ -17,7 +17,7 @@
 
         <!-- Diagnose -->
         <v-btn
-            v-if="!$vpnHoodApp.state.logExists && $vpnHoodApp.state.lastActiveClientProfileId"
+            v-if="!$vpnHoodApp.data.state.logExists && $vpnHoodApp.data.state.lastActiveClientProfileId"
             rounded="pill"
             variant="flat"
             :block="true"
@@ -29,13 +29,13 @@
 
         <!-- OpenReport -->
         <v-btn
-            v-if="$vpnHoodApp.state.logExists"
+            v-if="$vpnHoodApp.data.state.logExists"
             rounded="pill"
             variant="flat"
             :block="true"
             prepend-icon="mdi-open-in-new"
             class="text-center mb-4 color-master-green"
-            :href="$vpnHoodApp.serverUrl + logFileLocation"
+            :href="$vpnHoodApp.data.serverUrl + logFileLocation"
             target="_blank"
         >
           {{ $t("OPEN_REPORT") }}
@@ -43,7 +43,7 @@
 
         <!-- SendReport -->
         <v-btn
-            v-if="$vpnHoodApp.state.logExists"
+            v-if="$vpnHoodApp.data.state.logExists"
             rounded="pill"
             variant="flat"
             :block="true"
@@ -98,14 +98,14 @@ export default defineComponent({
       try {
         this.$emit('update:modelValue', false);
         const reportId: string =
-            this.$vpnHoodApp.settings.clientId.substring(0, 8) + "@" +
+            this.$vpnHoodApp.data.settings.clientId.substring(0, 8) + "@" +
             new Date().toISOString().substring(0, 19).replace(/:/g, "").replace(/-/g, "") + "-" +
             this.uuidv4().substring(0, 8);
         const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
         window.open(link, "VpnHood-BugReport");
 
         // get report
-        const url: string = this.$vpnHoodApp.serverUrl + this.logFileLocation;
+        const url: string = this.$vpnHoodApp.data.serverUrl + this.logFileLocation;
         const response: Response = await fetch(url);
         const log: Blob = await response.blob();
 
