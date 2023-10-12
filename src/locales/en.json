@@ -11,6 +11,7 @@
   "DISCONNECTED": "Disconnected",
   "DISCONNECTING": "Disconnecting...",
   "STOP_DIAGNOSING": "Stop Diagnosing",
+  "CONNECTED_IN_DIAGNOSTIC_MODE": "You are connected in diagnostic mode.",
   "DIAGNOSING": "Diagnosing...",
   "WAITING": "Waiting...",
   "ADD_SERVER": "Add Server",
@@ -99,5 +100,6 @@
   "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately after changing the options to apply the changes",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
-  "RELOAD_APP": "Reload App"
+  "RELOAD_APP": "Reload App",
+  "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button."
 }

@@ -72,11 +72,8 @@
 
     <!-- Check the device and show update message if the platform is Android and WebView is not supported -->
     <script>
-        const updateMessage = document.getElementById("updateMessage");
-        const appContents = document.getElementById("app");
-        const minimumSupportedWebViewVersion = 69;
-
         document.addEventListener("DOMContentLoaded", () => {
+            const minimumSupportedWebViewVersion = 69;
             const userAgent = window.navigator.userAgent;
 
             // If device is Android
@@ -91,18 +88,20 @@
 
                     // If WebView version is not supported
                     if (webViewVersion < minimumSupportedWebViewVersion) {
-                        console.log("Device is Android and WebView version is smaller than" + minimumSupportedWebViewVersion);
+                        console.log("Device is Android and WebView version is less than" + minimumSupportedWebViewVersion);
                         showUpdate();
                     }
                 }
                 // Could not find WebView version
                 else {
-                    console.log("Could not determine the device's WebView version, maybe its version is too old, oldest supported version is" + minimumSupportedWebViewVersion);
+                    console.log("The device's WebView version could not be determined. It's possible that the version is outdated. The oldest supported version is " + minimumSupportedWebViewVersion);
                     showUpdate();
                 }
             }
         });
         function showUpdate() {
+            const updateMessage = document.getElementById("updateMessage");
+            const appContents = document.getElementById("app");
             appContents.style.display = "none !important";
             updateMessage.style.display = "block";
         }
@@ -113,7 +112,7 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
 </noscript>
-<div id="updateMessage" >
+<div id="updateMessage" style="display: none;">
     <h6>VpnHood!</h6>
     <div id="updateContentWrapper">
             <div id="updateIconWrapper">

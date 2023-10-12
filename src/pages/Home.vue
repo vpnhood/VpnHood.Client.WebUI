@@ -145,7 +145,6 @@
   <ProtocolSheet v-model="isShowProtocolSheet"/>
   <AppFilterSheet v-model="isShowAppFilterSheet"/>
   <ServersSheet v-model="isShowServersSheet"/>
-  <AddServerSheet v-model="isShowAddServerSheet"/>
   <SettingSheet v-model="isShowSettingsSheet"/>
 </template>
 
@@ -155,7 +154,6 @@ import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
 import ProtocolSheet from "@/components/ProtocolSheet.vue";
 import ServersSheet from "@/components/ServersSheet.vue";
-import AddServerSheet from "@/components/AddServerSheet.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import SettingSheet from "@/components/SettingsSheet.vue";
 import AppFilterSheet from "@/components/AppFilterSheet.vue";
@@ -167,7 +165,6 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 
 export default defineComponent({
   // TODO unhandled error on stop diagnosing
-  // TODO Duplicate error message on stop diagnosing
   name: 'HomeView',
   components: {
     UpdateSnackbar,
@@ -178,7 +175,6 @@ export default defineComponent({
     AppFilterSheet,
     SettingSheet,
     NavigationDrawer,
-    AddServerSheet,
     ServersSheet,
     ProtocolSheet,
     TunnelClientCountrySheet
@@ -190,7 +186,6 @@ export default defineComponent({
       isShowAppFilterSheet: false,
       isShowProtocolSheet: false,
       isShowServersSheet: false,
-      isShowAddServerSheet: false,
       isShowSettingsSheet: false,
       isShowPublicServerHint: false,
       /*** VpnHood Api enums ***/
@@ -209,9 +204,10 @@ export default defineComponent({
 
     async onConnectButtonClick() {
 
-      // If user has no server
-      if (!this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId) {
-        this.isShowAddServerSheet = true;
+      // If user has no selected server
+      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
+        this.isShowServersSheet = true;
         return;
       }
 
@@ -222,20 +218,24 @@ export default defineComponent({
 
     // Return text for connect button based on connection state
     connectButtonText(): string {
-      switch (this.$vpnHoodApp.data.state.connectionState) {
-        case AppConnectionState.Connecting:
-          return this.$t('DISCONNECT');
-        case AppConnectionState.Waiting:
-          return this.$t('WAITING');
-        case AppConnectionState.Connected:
-          return this.$t('DISCONNECT');
-        case AppConnectionState.Disconnecting:
-          return this.$t('DISCONNECTING');
-        case AppConnectionState.Diagnosing:
-          return this.$t('STOP_DIAGNOSING');
-        default:
-          return this.$t('CONNECT');
-      }
+      if(!this.$vpnHoodApp.canDiagnose() && this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected)
+        return this.$t("STOP_DIAGNOSING");
+
+      else
+        switch (this.$vpnHoodApp.data.state.connectionState) {
+          case AppConnectionState.Connecting:
+            return this.$t('DISCONNECT');
+          case AppConnectionState.Waiting:
+            return this.$t('WAITING');
+          case AppConnectionState.Connected:
+            return this.$t('DISCONNECT');
+          case AppConnectionState.Disconnecting:
+            return this.$t('DISCONNECTING');
+          case AppConnectionState.Diagnosing:
+            return this.$t('STOP_DIAGNOSING');
+          default:
+            return this.$t('CONNECT');
+        }
     },
 
     // Return icon based on connection state

@@ -85,11 +85,11 @@ export default defineComponent({
           await this.$vpnHoodApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
 
           // Find new added client profile ID
-          const clientProfileId = this.$vpnHoodApp.data.clientProfileItems.find(x => x.token.sid === validateAccessKey.sid);
+          const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.token.sid === validateAccessKey.sid);
 
-          // If new client profile is added
-          if (clientProfileId)
-            await this.connect(clientProfileId.id);
+          // Connect to the server if new client profile is added
+          if (clientProfileItem)
+            await this.connect(clientProfileItem.id);
 
           else throw Error;
 
@@ -128,10 +128,12 @@ export default defineComponent({
 
       // Add public server
       await this.$vpnHoodApp.addTestServer();
-      // Show new server added snackbar
-      this.$vpnHoodApp.data.uiState.showNewServerAdded = true;
-      // Close current sheet
-      this.$emit('update:modelValue', false);
+
+      // Connect to the server
+      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
+      if (clientProfileItem?.clientProfile) {
+        await this.connect(clientProfileItem.id);
+      }
     },
   }
 })

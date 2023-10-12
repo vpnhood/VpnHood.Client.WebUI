@@ -16,7 +16,14 @@
     <!-- Servers list -->
     <v-card>
       <v-card-item>
-        <v-list>
+        <v-alert
+            v-if="$vpnHoodApp.data.clientProfileItems.length === 0"
+            :text="$t('NO_SERVER_AVAILABLE')"
+            density="compact"
+            type="warning"
+        >
+        </v-alert>
+        <v-list v-else>
           <!-- Server item -->
           <v-list-item
               v-for="(item, i) in $vpnHoodApp.data.clientProfileItems"

@@ -85,11 +85,15 @@ export class VpnHoodApp {
 
         if (loadApp.clientProfileItems) {
             this.data.clientProfileItems = loadApp.clientProfileItems;
+            if (loadApp.clientProfileItems.length === 0){
+                this.data.settings.userSettings.defaultClientProfileId = null;
+            }
         }
     }
 
     private processAppState(): void {
 
+        // Show last error message if the user has not ignored
         if (this.data.state.lastError &&
             this.data.uiState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
             this.data.uiState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
