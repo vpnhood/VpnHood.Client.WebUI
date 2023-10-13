@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {AddClientProfileParam} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'AddServerSheet',
@@ -82,14 +81,14 @@ export default defineComponent({
 
         try {
           // Add accessKey
-          await this.$vpnHoodApp.addAccessKey(new AddClientProfileParam({accessKey: accessKey}));
+          await this.$vpnHoodApp.addAccessKey(accessKey);
 
           // Find new added client profile ID
           const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.token.sid === validateAccessKey.sid);
 
           // Connect to the server if new client profile is added
           if (clientProfileItem)
-            await this.connect(clientProfileItem.id);
+            await this.connect(clientProfileItem.clientProfileId);
 
           else throw Error;
 
@@ -131,8 +130,8 @@ export default defineComponent({
 
       // Connect to the server
       const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-      if (clientProfileItem?.clientProfile) {
-        await this.connect(clientProfileItem.id);
+      if (clientProfileItem?.clientProfileId) {
+        await this.connect(clientProfileItem.clientProfileId);
       }
     },
   }

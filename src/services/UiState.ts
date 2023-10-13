@@ -27,4 +27,7 @@ export class UiState {
     // Time of user ignored last error message
     public userIgnoreLastErrorTime?: Date | null = null;
 
+    // Time of user ignored last error message
+    public configTime: Date = new Date();
+
 }

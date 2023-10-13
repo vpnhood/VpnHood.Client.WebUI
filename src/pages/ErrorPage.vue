@@ -12,7 +12,7 @@
           <v-card-title>{{$t("OOPS")}}</v-card-title>
           <v-card-text>{{$t('LOAD_APP_ERROR_DESC')}}</v-card-text>
           <v-card-actions>
-            <v-btn block color="master-green" variant="tonal" :text="$t('RELOAD_APP')" @click="reloadUI"></v-btn>
+            <v-btn :block="true" color="master-green" variant="tonal" :text="$t('RELOAD_APP')" @click="reloadUI"></v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

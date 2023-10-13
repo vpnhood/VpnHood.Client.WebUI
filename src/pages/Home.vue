@@ -164,7 +164,6 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 
 export default defineComponent({
-  // TODO unhandled error on stop diagnosing
   name: 'HomeView',
   components: {
     UpdateSnackbar,
@@ -196,7 +195,7 @@ export default defineComponent({
     // Reload 'state' and 'setting' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
-        await this.$vpnHoodApp.loadApp({withState: true});
+        await this.$vpnHoodApp.reloadState();
     }, 1000);
   },
 
@@ -204,11 +203,17 @@ export default defineComponent({
 
     async onConnectButtonClick() {
 
-      // If user has no selected server
-      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
-        this.isShowServersSheet = true;
-        return;
+      // If user has no selected server and want to connect
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None){
+
+        // Find selected server
+        const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(
+            x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+
+        if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
+          this.isShowServersSheet = true;
+          return;
+        }
       }
 
       this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None

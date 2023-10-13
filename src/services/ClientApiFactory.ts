@@ -4,7 +4,7 @@ import {ApiClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
+    private readonly baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
 
     constructor() {
 
@@ -33,6 +33,7 @@ export class ClientApiFactory {
         );*/
     }
 
+    // noinspection LocalVariableNamingConventionJS
     private static _instance: ClientApiFactory | null = null;
     public static get instance(): ClientApiFactory {
         if (this._instance === null)
@@ -42,7 +43,7 @@ export class ClientApiFactory {
     }
 
     //For each class of VpnHood.Client.Api.ts, we need to create a new method like below
-    public CreateApiClient(): ApiClient {
+    public createApiClient(): ApiClient {
         return new ApiClient(this.baseUrl, this.axiosInstance);
     }
 

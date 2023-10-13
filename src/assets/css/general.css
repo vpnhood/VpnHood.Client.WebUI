@@ -1,4 +1,4 @@
-/*---------------------- Import font ------------------------*/
+/** * ---------------------- Import font ------------------------ * **/
 @font-face {
     font-family: 'Arial-Regular';
     font-style: normal;
@@ -22,7 +22,7 @@
     src: url('../fonts/ARIALB.TTF') format('truetype');
 }
 
-/*--------------------- Define Color ---------------------*/
+/** --------------------- Define Color --------------------- **/
 :root {
     --dark-blue: #122272;
     --medium-blue: #132a7a;
@@ -37,7 +37,7 @@
     --gray: #3f3f3f;
 }
 
-/*-------------------- Default Style -------------------*/
+/** -------------------- Default Style ------------------- **/
 html {
     overflow-y: auto;
 }
@@ -77,7 +77,7 @@ h6, .h6 {
     font-size: 20px;
 }
 
-/*-------- General background color --------*/
+/** -------- General background color -------- **/
 .bg-dark-blue {
     background-color: var(--dark-blue);
 }
@@ -102,11 +102,12 @@ h6, .h6 {
     background-color: var(--light-purple);
 }
 
+/*noinspection ALL*/
 .bg-warning {
     background-color: rgb(var(--v-theme-warning));
 }
 
-/*-------- General text color --------*/
+/** -------- General text color -------- **/
 .color-master-green {
     color: var(--master-green);
 }
@@ -131,6 +132,7 @@ h6, .h6 {
     color: var(--muted-color);
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 .color-on-warning {
     color: rgb(var(--v-theme-on-warning));
 }
@@ -228,16 +230,7 @@ h6, .h6 {
 
 .app-version-mini {
     font-family: 'Arial', serif;
-    font-size: 0.7em !important
-}
-
-.app-title {
-    font-family: 'Arial-Narow-Bold', serif;
-    font-size: 18px;
-}
-
-.btn.theme--light.v-btn.v-btn--has-bg {
-    background-color: unset;
+    font-size: 0.7em !important;
 }
 
 .btn {
@@ -256,22 +249,6 @@ h6, .h6 {
     background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));
 }
 
-.blue-btn {
-    background: var(--sky-blue);
-}
-
-.blue-border-btn {
-    font-family: 'Arial-Regular', serif;
-    font-size: .8rem;
-    color: var(--sky-blue);
-    box-shadow: none;
-    border-radius: 5px;
-    border: 1px rgba(22, 163, 254, 0.3) solid;
-    padding: 8px 10px 10px 10px;
-    background: #132a7ac9;
-    justify-content: start;
-}
-
 .blue-border-btn i {
     line-height: inherit;
 }
@@ -288,12 +265,7 @@ h6, .h6 {
     }
 }
 
-.white-link:hover,
-.white-link:focus {
-    color: var(--sky-blue);
-}
-
-/*--------------------Home Middle Section--------------------*/
+/** --------------------Home Middle Section-------------------- **/
 #circleOuter {
     width: 200px;
     height: 200px;
@@ -366,51 +338,13 @@ h6, .h6 {
     10px 0 30px var(--connected-glare);
 }
 
-/*--------------------End of Home Middle Section--------------------*/
+/** --------------------End of Home Middle Section-------------------- **/
 
-/*--------------------Home Bottom Section--------------------*/
-#homeContainer {
-    max-width: 1024px;
-}
-
-
-#configSection .v-btn__content {
-    justify-content: left;
-}
-
-.config-label {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-.config-arrow,
-.config-icon,
-.config-label {
-    color: var(--sky-blue) !important;
-}
-
-
-/*--------------------Responsive--------------------*/
+/** --------------------Responsive-------------------- **/
 
 @media all and (max-width: 425px) {
     #logo img {
         max-width: 60px;
-    }
-}
-
-@media all and (min-width: 600px) {
-    .my-card-view {
-        border: 1px rgba(22, 163, 254, 0.3) solid;
-        border-radius: 10px;
-        padding: 30px;
-        background: #132a7a85;
-        width: 100%;
-        min-height: 360px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex-wrap: nowrap;
-        align-items: center;
     }
 }
 
@@ -419,14 +353,7 @@ h6, .h6 {
         font-size: 20px;
     }
 
-    .main-button:focus {
-        box-shadow: 0 15px 14px 3px rgba(0, 0, 0, 0.20);
-    }
-
-    .main-button:focus:before {
-        display: none;
-    }
-
+    /*noinspection CssBrowserCompatibilityForProperties*/
     #configSection > button:focus {
         background: #132a7ab0;
         border-color: var(--master-green);
@@ -435,4 +362,4 @@ h6, .h6 {
     }
 }
 
-/*--------------------End of Responsive--------------------*/
+/** --------------------End of Responsive-------------------- **/

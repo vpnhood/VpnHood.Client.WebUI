@@ -1,6 +1,6 @@
 <template>
-  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" inset fullscreen
-                  scrollable close-on-back>
+  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" :inset="true" :fullscreen="true"
+                  :scrollable="true" close-on-back>
     <v-toolbar theme="light" elevation="3" style="z-index: 1;" density="compact">
       <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
       <v-toolbar-title :text="$t('APP_FILTER')"></v-toolbar-title>
@@ -38,9 +38,9 @@
             variant="outlined"
             color="primary"
             class="test"
-            chips
+            :chips="true"
             closable-chips
-            multiple
+            :multiple="true"
         >
           <!-- Selected items chip -->
           <template v-slot:chip="{props, item}">
@@ -126,8 +126,8 @@ export default defineComponent({
   },
   methods: {
     async getInstalledApp(): Promise<DeviceAppInfo[]> {
-      const AppsList = await this.$vpnHoodApp.getInstalledApps();
-      return AppsList.sort((a, b) => a.appName.localeCompare(b.appName, undefined, {sensitivity: 'base'}));
+      const deviceAppInfos = await this.$vpnHoodApp.getInstalledApps();
+      return deviceAppInfos.sort((a, b) => a.appName.localeCompare(b.appName, undefined, {sensitivity: 'base'}));
     },
 
     getFilterModes(): any[] {

@@ -1,5 +1,6 @@
 import {initializeApp} from 'firebase/app'
 
+// noinspection SpellCheckingInspection
 initializeApp({
     apiKey: "AIzaSyB2Br41jN32DmXyH-HqdcsOXVnaGON1ay0",
     authDomain: "client-d2460.firebaseapp.com",

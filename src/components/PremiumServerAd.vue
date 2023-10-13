@@ -1,7 +1,7 @@
 <template>
   <!-- Minimize Premium Server ad -->
   <v-btn
-      flat
+      :flat="true"
       variant="outlined"
       color="sharp-master-green"
       rounded="pill"
@@ -14,7 +14,7 @@
   </v-btn>
 
   <!-- Maximize Premium Server Ad -->
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back fullscreen>
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back :fullscreen="true">
     <v-card color="primary-darken-1" class="pa-8 justify-center align-center">
 
       <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center bg-medium-blue">
@@ -36,7 +36,7 @@
         <!-- Go to VpnHood Store page on google play button -->
         <v-btn
             href="https://play.google.com/store/apps/details?id=com.vphood.store.android"
-            block
+            :block="true"
             target="_blank"
             rounded="pill"
             height="45"
@@ -49,7 +49,7 @@
         <!-- Continue with free slow speed button -->
         <v-btn
             v-if="!showByUser"
-            block
+            :block="true"
             height="45"
             rounded="pill"
             variant="outlined"
@@ -63,7 +63,7 @@
         <!-- Close button -->
         <v-btn
             v-else
-            block
+            :block="true"
             height="45"
             rounded="pill"
             variant="outlined"
@@ -110,6 +110,7 @@ export default defineComponent({
   border: 1px var(--sky-blue) solid;
 }
 
+/*noinspection ALL*/
 .v-card-item {
   max-width: 500px;
 }

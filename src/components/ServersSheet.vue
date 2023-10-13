@@ -29,12 +29,12 @@
               v-for="(item, i) in $vpnHoodApp.data.clientProfileItems"
               :key="i"
               rounded
-              @click="connect(item.id)"
+              @click="connect(item.clientProfileId)"
               class="server-item rounded-lg mb-4 py-4"
-              :style="item.id === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
+              :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
           >
             <!-- َActive item icon -->
-            <template v-slot:prepend v-if="item.id === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
+            <template v-slot:prepend v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
               <v-avatar size="25" color="#23c99d66">
                 <v-icon size="25" color="var(--master-green)">mdi-check-all</v-icon>
               </v-avatar>
@@ -125,7 +125,7 @@
                           <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
 
                             <!-- Confirm delete button -->
-                            <v-btn variant="text" @click="removeServer(item.clientProfile.clientProfileId)">
+                            <v-btn variant="text" @click="removeServer(item.clientProfileId)">
                               {{ $t("YES") }}
                             </v-btn>
 
@@ -161,7 +161,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerSheet from "@/components/AddServerSheet.vue";
-import {ClientProfile, RemoveClientProfileParam, SetClientProfileParam} from "@/services/VpnHood.Client.Api";
+import {ClientProfile, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ServersSheet',
@@ -198,9 +198,7 @@ export default defineComponent({
 
     async removeServer(clientProfileId: string): Promise<void> {
       this.showConfirmDelete = false;
-      await this.$vpnHoodApp.removeClientProfile(new RemoveClientProfileParam({
-        clientProfileId: clientProfileId
-      }));
+      await this.$vpnHoodApp.removeClientProfile(clientProfileId);
     },
 
     // Hidden full ip in the servers list
@@ -212,12 +210,10 @@ export default defineComponent({
     // Rename client profile name by user
     async saveNewClientProfileName(renamedClientProfile: ClientProfile): Promise<void> {
       this.showRename = false;
-      const clientProfile = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === renamedClientProfile.clientProfileId)?.clientProfile;
-      if (!clientProfile)
-        throw new Error("Could not find client profile id.");
-
-      this.newClientProfileName === null ? clientProfile.name = null : clientProfile.name = this.newClientProfileName;
-      await this.$vpnHoodApp.setClientProfile(new SetClientProfileParam({clientProfile}));
+      await this.$vpnHoodApp.updateClientProfile(
+          renamedClientProfile.clientProfileId,
+          new ClientProfileUpdateParams({name: this.newClientProfileName})
+      );
     }
   }
 })
