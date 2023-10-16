@@ -1,10 +1,10 @@
 {
   "name": "vpnhood.client.webui2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "yarn version --patch && vue-cli-service build",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src \\\"./src/**/*.?(js|vue)\\\" --locales \\\"src/locales/**/*.json\\\""
   },
@@ -14,6 +14,7 @@
     "core-js": "^3.32.2",
     "firebase": "^10.4.0",
     "roboto-fontface": "*",
+    "ts-node": "^10.9.1",
     "vue": "^3.2.13",
     "vue-class-component": "^7.2.6",
     "vue-i18n": "^9.4.1",
@@ -25,6 +26,7 @@
     "@babel/core": "^7.23.0",
     "@babel/eslint-parser": "^7.22.15",
     "@intlify/vue-i18n-loader": "^4.2.0",
+    "@types/node": "^20.8.6",
     "@types/webfontloader": "^1.6.35",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
