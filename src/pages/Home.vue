@@ -20,14 +20,14 @@
         <v-row id="speedSection" align-content="center" justify="center"
                :class="[isConnected() ? 'opacity-100': 'opacity-0', 'mb-2']">
           <v-col cols="auto">
-            <span class="color-sky-blue">{{ $t("DOWNLOAD_SPEED") }}:</span>
-            <span class="px-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
-            <span class="color-light-purple">Mbps</span>
+            <span class="color-sky-blue text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
+            <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
+            <span class="color-light-purple text-caption">Mbps</span>
           </v-col>
           <v-col cols="auto">
-            <span class="color-sky-blue">{{ $t("UPLOAD_SPEED") }}:</span>
-            <span class="px-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
-            <span class="color-light-purple">Mbps</span>
+            <span class="color-sky-blue text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
+            <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
+            <span class="color-light-purple text-caption">Mbps</span>
           </v-col>
         </v-row>
 
@@ -37,13 +37,13 @@
             <div class="d-flex flex-column align-center justify-center">
 
               <!-- Connection state text -->
-              <span class="txt-large-4">{{$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase()) }}
+              <span class="text-body-1">{{$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase()) }}
             </span>
 
               <!-- Usage -->
               <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-                <span class="txt-large-3">{{ bandwidthUsage()?.used }} GB {{ $t("OF") }}</span>
-                <span class="color-sky-blue h1">{{ bandwidthUsage()?.total }} GB</span>
+                <span class="text-body-1">{{ bandwidthUsage()?.used }} GB {{ $t("OF") }}</span>
+                <span class="color-sky-blue">{{ bandwidthUsage()?.total }} GB</span>
               </div>
 
               <!-- Check -->
@@ -57,7 +57,10 @@
 
         <!-- Connect button -->
         <v-btn
-            :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn': 'blue-btn', 'btn mt-5']"
+            height="40px"
+            width="190px"
+            rounded="pill"
+            :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn': '', 'btn text-button mt-5']"
             @click="onConnectButtonClick">
           {{ connectButtonText() }}
         </v-btn>
@@ -78,7 +81,7 @@
         >
           <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize color-light-purple">{{$vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY") }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{$vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY") }}</span>
           <img
               v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId "
               :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
@@ -97,7 +100,7 @@
         >
           <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize color-light-purple">{{ appFilterStatus() }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{ appFilterStatus() }}</span>
         </v-btn>
 
         <!-- Protocol button -->
@@ -111,7 +114,7 @@
         >
           <span>{{ $t("PROTOCOL_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize color-light-purple">{{$vpnHoodApp.data.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{$vpnHoodApp.data.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
         </v-btn>
 
         <!-- Servers button -->
@@ -125,7 +128,7 @@
         >
           <span>{{ $t("SELECTED_SERVER") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize color-light-purple">{{ getDefaultClientProfileName() }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{ getDefaultClientProfileName() }}</span>
         </v-btn>
 
       </v-col>
@@ -192,6 +195,7 @@ export default defineComponent({
     }
   },
   created() {
+
     // Reload 'state' and 'setting' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)

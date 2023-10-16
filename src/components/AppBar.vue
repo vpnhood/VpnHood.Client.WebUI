@@ -6,11 +6,11 @@
 
     <!-- App name -->
     <v-spacer></v-spacer>
-    <h6>{{ $t("APP_NAME") }}</h6>
+    <h4>{{ $t("APP_NAME") }}</h4>
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
-    <span class="opacity-30 txt-small-1 me-4">v {{ $vpnHoodApp.getAppVersion(false) }}</span>
+    <span class="text-disabled text-caption me-4">v {{ $vpnHoodApp.getAppVersion(false) }}</span>
 
   </v-app-bar>
 </template>

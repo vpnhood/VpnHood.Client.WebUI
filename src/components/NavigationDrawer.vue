@@ -11,15 +11,18 @@
       <!-- App logo -->
       <v-img src="../assets/images/new-logo-cropped.png" max-width="60px"/>
 
-      <!-- App full version -->
       <div class="text-white ms-3">
+
+        <!-- App name -->
         <h3>{{ $t("APP_NAME") }}</h3>
+
+        <!-- App full version -->
         <div class="color-sharp-master-green txt-small-2">
           <span class="me-2">{{ $t("VERSION") }}:</span>
-          <span>{{ $vpnHoodApp.getAppVersion(true) }}</span>
+          <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
-      </div>
 
+      </div>
     </div>
 
     <!-- Menu items -->
@@ -93,6 +96,19 @@ export default defineComponent({
     "update:modelValue",
     "openSettings",
   ],
+  methods:{
+    mergedAppAndUiVersion(): string{
+      const appVersion = this.$vpnHoodApp.data.features.version.split('.');
+      const uiVersion = process.env["VUE_APP_VERSION"]?.split('.');
+      if (uiVersion){
+        appVersion[appVersion.length - 1] = uiVersion[2];
+        return appVersion.join('.');
+      }
+      else {
+        return this.$vpnHoodApp.data.features.version;
+      }
+    }
+  }
 });
 </script>
 

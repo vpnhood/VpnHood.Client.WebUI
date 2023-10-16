@@ -1,25 +1,7 @@
 /** * ---------------------- Import font ------------------------ * **/
 @font-face {
-    font-family: 'Arial-Regular';
-    font-style: normal;
-    src: url('../fonts/ARIAL.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'Arial-Narow';
-    font-style: normal;
-    src: url('../fonts/ARIALN.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'Arial-Narow-Bold';
-    font-style: normal;
-    src: url('../fonts/ARIALNB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'Arial-Bold';
-    src: url('../fonts/ARIALB.TTF') format('truetype');
+    font-family: 'Roboto-Regular';
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
 }
 
 /** --------------------- Define Color --------------------- **/
@@ -43,38 +25,14 @@ html {
 }
 
 body, .v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
-    font-family: 'Arial-Narow', sans-serif !important;
+    font-family: "Roboto-Regular", sans-serif !important;
 }
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
 .title,
 .v-application [class*="text-h"],
 .v-card-title {
-    font-family: 'Arial-Narow-Bold', sans-serif !important;
-}
-
-h1, .h1 {
-    font-size: 25px;
-}
-
-h2, .h2 {
-    font-size: 24px;
-}
-
-h3, .h3 {
-    font-size: 23px;
-}
-
-h4, .h4 {
-    font-size: 22px;
-}
-
-h5, .h5 {
-    font-size: 21px;
-}
-
-h6, .h6 {
-    font-size: 20px;
+    font-family: "Roboto-Regular", sans-serif !important;
 }
 
 /** -------- General background color -------- **/
@@ -229,20 +187,14 @@ h6, .h6 {
 }
 
 .app-version-mini {
-    font-family: 'Arial', serif;
+    font-family: 'Roboto-Regular', serif;
     font-size: 0.7em !important;
 }
 
 .btn {
-    font-family: 'Arial-Bold', serif;
-    font-size: 15px;
-    color: white;
-    height: 40px;
-    width: 200px;
     transition: all 0.4s ease;
-    margin: 0 0 0 0;
-    border-radius: 5px;
     background-color: var(--sky-blue);
+    color: white;
 }
 
 .grad-btn {
@@ -267,8 +219,8 @@ h6, .h6 {
 
 /** --------------------Home Middle Section-------------------- **/
 #circleOuter {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     padding: 15px;
     margin: 0 auto;

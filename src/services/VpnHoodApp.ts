@@ -146,7 +146,8 @@ export class VpnHoodApp {
     }
 
     public getAppVersion(isFull: boolean): string {
-        return isFull ? this.data.features.version : this.data.features.version.split(".")[2];
+        const fullVersion: string = this.data.features.version;
+        return isFull ? fullVersion.substring(0, fullVersion.lastIndexOf('.')) : fullVersion.split(".")[2];
     }
 
     // Save any change by user
