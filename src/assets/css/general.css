@@ -2,6 +2,9 @@
 @font-face {
     font-family: 'Roboto-Regular';
     src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+}@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
 }
 
 /** --------------------- Define Color --------------------- **/
@@ -20,176 +23,33 @@
 }
 
 /** -------------------- Default Style ------------------- **/
-html {
-    overflow-y: auto;
-}
-
-body, .v-application [class*="text-"]:not(h1,h2,h3,h4,h5,h6,button) {
-    font-family: "Roboto-Regular", sans-serif !important;
-}
-
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
-.title,
-.v-application [class*="text-h"],
-.v-card-title {
-    font-family: "Roboto-Regular", sans-serif !important;
-}
+html {overflow-y: auto;}
+body, .v-application{font-family: "Roboto-Regular", sans-serif !important; font-size: 15px;}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", sans-serif !important;}
 
 /** -------- General background color -------- **/
-.bg-dark-blue {
-    background-color: var(--dark-blue);
-}
-
-.bg-medium-blue {
-    background-color: var(--medium-blue);
-}
-
-.bg-light-blue {
-    background-color: var(--light-blue);
-}
-
-.bg-sky-blue {
-    background-color: var(--sky-blue);
-}
-
-.bg-master-green {
-    background-color: var(--master-green);
-}
-
-.bg-light-purple {
-    background-color: var(--light-purple);
-}
-
-/*noinspection ALL*/
-.bg-warning {
-    background-color: rgb(var(--v-theme-warning));
-}
+.bg-dark-blue {background-color: var(--dark-blue);}
+.bg-medium-blue {background-color: var(--medium-blue);}
+.bg-light-blue {background-color: var(--light-blue);}
+.bg-sky-blue {background-color: var(--sky-blue);}
+.bg-master-green {background-color: var(--master-green);}
+.bg-light-purple {background-color: var(--light-purple);}
+/*noinspection CssUnresolvedCustomProperty*/
+.bg-warning {background-color: rgb(var(--v-theme-warning));}
 
 /** -------- General text color -------- **/
-.color-master-green {
-    color: var(--master-green);
-}
-
-.color-sharp-master-green {
-    color: var(--sharp-master-green);
-}
-
-.color-sky-blue {
-    color: var(--sky-blue);
-}
-
-.color-light-purple {
-    color: var(--light-purple);
-}
-
-.color-gray {
-    color: var(--gray);
-}
-
-.color-muted {
-    color: var(--muted-color);
-}
-
+.color-master-green {color: var(--master-green);}
+.color-sharp-master-green {color: var(--sharp-master-green);}
+.color-sky-blue {color: var(--sky-blue);}
+.color-light-purple {color: var(--light-purple);}
+.color-gray {color: var(--gray);}
+.color-muted {color: var(--muted-color);}
 /*noinspection CssUnresolvedCustomProperty*/
-.color-on-warning {
-    color: rgb(var(--v-theme-on-warning));
-}
+.color-on-warning {color: rgb(var(--v-theme-on-warning));}
 
-.opacity-0 {
-    opacity: 0;
-    transition: opacity 1.4s ease;
-}
-
-.opacity-30 {
-    opacity: .3;
-    transition: opacity 1.4s ease;
-}
-
-.opacity-100 {
-    opacity: 1;
-    transition: opacity 1.4s ease;
-}
-
-.txt-large-1 {
-    font-size: 1.1rem !important;
-}
-
-.txt-large-2 {
-    font-size: 1.2rem !important;
-}
-
-.txt-large-3 {
-    font-size: 1.3rem !important;
-}
-
-.txt-large-4 {
-    font-size: 1.4rem !important;
-}
-
-.txt-large-5 {
-    font-size: 1.5rem !important;
-}
-
-.txt-large-6 {
-    font-size: 1.6rem !important;
-}
-
-.txt-large-7 {
-    font-size: 1.7rem !important;
-}
-
-.txt-large-8 {
-    font-size: 1.8rem !important;
-}
-
-.txt-large-9 {
-    font-size: 1.9rem !important;
-}
-
-.txt-large-10 {
-    font-size: 2rem !important;
-}
-
-.txt-small-1 {
-    font-size: 0.9rem !important;
-}
-
-.txt-small-2 {
-    font-size: 0.8rem !important;
-}
-
-.txt-small-3 {
-    font-size: 0.7rem !important;
-}
-
-.txt-small-4 {
-    font-size: 0.6rem !important;
-}
-
-.txt-small-5 {
-    font-size: 0.5rem !important;
-}
-
-.txt-small-6 {
-    font-size: 0.4rem !important;
-}
-
-.txt-small-7 {
-    font-size: 0.3rem !important;
-}
-
-.txt-small-8 {
-    font-size: 0.2rem !important;
-}
-
-.txt-small-9 {
-    font-size: 0.1rem !important;
-}
-
-.app-version-mini {
-    font-family: 'Roboto-Regular', serif;
-    font-size: 0.7em !important;
-}
+.opacity-0 {opacity: 0; transition: opacity 1.4s ease;}
+.opacity-30 {opacity: .3; transition: opacity 1.4s ease;}
+.opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
 
 .btn {
     transition: all 0.4s ease;
@@ -197,13 +57,8 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
     color: white;
 }
 
-.grad-btn {
-    background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));
-}
-
-.blue-border-btn i {
-    line-height: inherit;
-}
+.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));}
+.blue-border-btn i {line-height: inherit;}
 
 @media tv {
     .main-button {
@@ -266,18 +121,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
 }
 
 @keyframes circle-anim {
-    0% {
-        opacity: 0.80;
-    }
-    40% {
-        opacity: 0.2;
-    }
-    60% {
-        opacity: 0.2;
-    }
-    100% {
-        opacity: 0.80;
-    }
+    0% {opacity: 0.80;}
+    40% {opacity: 0.2;}
+    60% {opacity: 0.2;}
+    100% {opacity: 0.80;}
 }
 
 .state-connected #circleOuter:before {
@@ -294,24 +141,19 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
 
 /** --------------------Responsive-------------------- **/
 
-@media all and (max-width: 425px) {
-    #logo img {
-        max-width: 60px;
-    }
-}
+/*@media all and (max-width: 425px) {*/
+/*    #logo img {max-width: 60px;}*/
+/*}*/
 
-@media all and (min-width: 1024px) {
-    html {
-        font-size: 20px;
-    }
+/*@media all and (min-width: 1024px) {*/
+/*    html {font-size: 20px;}*/
 
-    /*noinspection CssBrowserCompatibilityForProperties*/
-    #configSection > button:focus {
-        background: #132a7ab0;
-        border-color: var(--master-green);
-        transition: all .4s linear;
-        outline: none;
-    }
-}
-
+/*    !*noinspection CssBrowserCompatibilityForProperties*!*/
+/*    #configSection > button:focus {*/
+/*        background: #132a7ab0;*/
+/*        border-color: var(--master-green);*/
+/*        transition: all .4s linear;*/
+/*        outline: none;*/
+/*    }*/
+/*}*/
 /** --------------------End of Responsive-------------------- **/

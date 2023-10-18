@@ -1,34 +1,34 @@
 <template>
   <v-bottom-sheet :inset="true" :fullscreen="true" :scrollable="true" close-on-back :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
-    <v-toolbar theme="light" elevation="3" style="z-index: 1;" density="compact">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
-      <v-toolbar-title :text="$t('SETTINGS')"></v-toolbar-title>
+
+    <!-- Page header -->
+    <v-toolbar color="secondary" elevation="3" style="z-index: 1;" density="compact">
+
+      <!-- Close button -->
+      <v-btn icon="mdi-close" size="small" @click="$emit('update:modelValue',false)"></v-btn>
+
+      <!-- Page title -->
+      <v-toolbar-title class="text-body-1" :text="$t('SETTINGS')"></v-toolbar-title>
     </v-toolbar>
 
     <v-card>
       <v-card-item>
         <!-- Disconnecting alert -->
-        <v-alert
-            color="light-purple"
-            :text="$t('APP_FILTER_DISCONNECTING_NOTE')"
-        ></v-alert>
+        <v-alert type="warning" :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
+        <!-- Exclude local network option -->
         <v-checkbox
             v-model="excludeLocalNetwork"
-            color="primary"
+            color="secondary"
             class="mb-4"
             :label="$t('EXCLUDE_LOCAL_NETWORK')"
             :messages="$t('EXCLUDE_LOCAL_NETWORK_DESC')"
         >
-
         </v-checkbox>
         <v-divider></v-divider>
-        <!-- Exclude local network option -->
-
       </v-card-item>
     </v-card>
-
   </v-bottom-sheet>
 </template>
 

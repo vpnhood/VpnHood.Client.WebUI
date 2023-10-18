@@ -5,19 +5,19 @@
       variant="outlined"
       color="sharp-master-green"
       rounded="pill"
-      height="50"
-      class="font-weight-bold"
+      height="40"
       @click="$emit('update:modelValue',true); showByUser = true"
+      class="ps-1 pe-3"
   >
-    <img class="me-2" :src="require(`@/assets/images/ad-icon-minimize.png`)" width="40" alt="Premium Server Ad icon"/>
+    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>
     {{$t("STORE_AD_TITLE")}}
   </v-btn>
 
   <!-- Maximize Premium Server Ad -->
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back :fullscreen="true">
-    <v-card color="primary-darken-1" class="pa-8 justify-center align-center">
+    <v-card class="pa-8 justify-center align-center add-bg">
 
-      <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center bg-medium-blue">
+      <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center">
 
         <!-- Image -->
         <v-img src="../assets/images/ad-icon.png" max-width="400px" class="mx-auto"/>
@@ -27,7 +27,7 @@
           {{$t("STORE_AD_TITLE")}}</h3>
 
         <!-- Description -->
-        <p id="adDesc" class="regular-font text--white" v-html="$t('STORE_AD_DESCRIPTION')"></p>
+        <p id="adDesc" class="regular-font text-white" v-html="$t('STORE_AD_DESCRIPTION')"></p>
 
       </v-card-item>
 
@@ -108,10 +108,15 @@ export default defineComponent({
 
 #adContentWrapper {
   border: 1px var(--sky-blue) solid;
+  background-color: #06124BFF;
 }
 
 /*noinspection ALL*/
 .v-card-item {
   max-width: 500px;
+}
+
+.add-bg{
+  background-color: #06124bcf;
 }
 </style>

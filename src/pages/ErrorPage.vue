@@ -1,10 +1,10 @@
 <template>
   <v-container class="h-screen bg-dark-blue text-center text-white">
     <!-- App name -->
-    <h6>{{ $t("APP_NAME") }}</h6>
+    <h3>{{ $t("APP_NAME") }}</h3>
 
     <v-row align-content="center" justify="center" class="h-100">
-      <v-col cols="10">
+      <v-col cols="11">
         <div style="z-index: 1;" class="d-inline-flex align-center justify-center bg-master-green rounded-lg pa-2 position-relative">
           <v-icon size="80px" color="white">mdi-emoticon-sad-outline</v-icon>
         </div>

@@ -17,7 +17,7 @@
         <h3>{{ $t("APP_NAME") }}</h3>
 
         <!-- App full version -->
-        <div class="color-sharp-master-green txt-small-2">
+        <div class="color-sharp-master-green text-caption">
           <span class="me-2">{{ $t("VERSION") }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
@@ -32,7 +32,7 @@
       <v-list-item
           :title="$t('SETTINGS')"
           prepend-icon="mdi-cog"
-          class="menu-item color-gray txt-small-1"
+          class="menu-item color-gray"
           @click="$emit('openSettings'); $emit('update:modelValue',false)"
       >
       </v-list-item>
@@ -41,7 +41,7 @@
       <v-list-item
           :title="$t('DIAGNOSE')"
           prepend-icon="mdi-speedometer"
-          class="menu-item color-gray txt-small-1"
+          class="menu-item color-gray"
           :disabled="!$vpnHoodApp.canDiagnose()"
           @click="$vpnHoodApp.diagnose(); $emit('update:modelValue',false)"
       >
@@ -51,7 +51,7 @@
       <v-list-item
           :title="$t('WHATS_NEW')"
           prepend-icon="mdi-bullhorn"
-          class="menu-item color-gray txt-small-1"
+          class="menu-item color-gray"
           href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
           @click="$emit('update:modelValue',false)"
           target="_blank"
@@ -62,7 +62,7 @@
       <v-list-item
           :title="$t('SEND_FEEDBACK')"
           prepend-icon="mdi-message-alert"
-          class="menu-item color-gray txt-small-1"
+          class="menu-item color-gray"
           href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
           @click="$emit('update:modelValue',false)"
           target="_blank"
@@ -73,7 +73,7 @@
       <v-list-item
           :title="$t('CREATE_PERSONAL_SERVER')"
           prepend-icon="mdi-shield-account-variant"
-          class="menu-item color-gray txt-small-1"
+          class="menu-item color-gray"
           href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
           @click="$emit('update:modelValue',false)"
           target="_blank"

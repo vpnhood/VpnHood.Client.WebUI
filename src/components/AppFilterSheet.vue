@@ -1,32 +1,36 @@
 <template>
   <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" :inset="true" :fullscreen="true"
                   :scrollable="true" close-on-back>
-    <v-toolbar theme="light" elevation="3" style="z-index: 1;" density="compact">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
-      <v-toolbar-title :text="$t('APP_FILTER')"></v-toolbar-title>
+
+    <!-- Page header -->
+    <v-toolbar color="secondary" elevation="3" style="z-index: 1;" density="compact">
+
+      <!-- Close button -->
+      <v-btn icon="mdi-close" size="small" @click="$emit('update:modelValue',false)"></v-btn>
+
+      <!-- Page title -->
+      <v-toolbar-title class="text-body-1" :text="$t('APP_FILTER')"></v-toolbar-title>
     </v-toolbar>
 
     <v-card>
       <v-card-item>
 
         <!-- Disconnecting alert -->
-        <v-alert
-            color="light-purple"
-            :text="$t('APP_FILTER_DISCONNECTING_NOTE')"
-        ></v-alert>
+        <v-alert type="warning" :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
-        <!-- Filter mode items -->
+        <!-- Which app can use vpn -->
         <v-select
             v-model="appFiltersMode"
             :items="getFilterModes()"
             item-title="text"
             :label="$t('APP_FILTER_DESC')"
             variant="outlined"
-            class="mt-5"
-            color="primary"
+            class="mt-5 mb-4"
+            color="secondary"
+            hide-details
         ></v-select>
 
-        <!-- autocomplete -->
+        <!-- Choose apps -->
         <v-autocomplete
             v-if="$vpnHoodApp.data.settings.userSettings.appFiltersMode !== FilterMode.All"
             :loading="isUpdating"
@@ -36,31 +40,31 @@
             item-value="appId"
             :label="$t('SELECTED_APPS')"
             variant="outlined"
-            color="primary"
-            class="test"
+            color="secondary"
             :chips="true"
             closable-chips
             :multiple="true"
+            hide-details
         >
-          <!-- Selected items chip -->
+          <!-- Selected apps -->
           <template v-slot:chip="{props, item}">
             <v-chip
                 v-bind="props"
                 :text="item.raw.appName"
                 :prepend-avatar="'data:image/png;base64, ' + item.raw.iconPng"
                 variant="tonal"
-                color="primary"
+                color="secondary"
             >
             </v-chip>
           </template>
 
-          <!-- List items -->
+          <!-- App list items -->
           <template v-slot:item="{props, item}">
             <v-list-item
                 v-bind="props"
                 :title="item.raw.appName"
                 :prepend-avatar="'data:image/png;base64, ' + item.raw.iconPng"
-                color="primary"
+                color="secondary"
                 border
             >
             </v-list-item>

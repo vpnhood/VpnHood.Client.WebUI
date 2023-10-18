@@ -1,13 +1,19 @@
 <template>
-  <v-bottom-sheet :scrollable="true" :fullscreen="true" close-on-back :modelValue="modelValue"
+  <v-bottom-sheet :inset="true" :scrollable="true" :fullscreen="true" close-on-back :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
-    <!-- List header -->
-    <v-toolbar theme="light" elevation="3" style="z-index: 1;">
-      <v-btn icon="mdi-close" size="small" color="var(--muted-color)" @click="$emit('update:modelValue',false)"></v-btn>
-      <v-toolbar-title :text="$t('SERVERS')"></v-toolbar-title>
+    <!-- Page header -->
+    <v-toolbar color="secondary" elevation="3" style="z-index: 1;">
+
+      <!-- Close button -->
+      <v-btn icon="mdi-close" size="small" @click="$emit('update:modelValue',false)"></v-btn>
+
+      <!-- Page title -->
+      <v-toolbar-title class="text-body-1" :text="$t('SERVERS')"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn rounded color="var(--master-green)" @click="isShowAddServerSheet = true;">
+
+      <!-- Add server button -->
+      <v-btn rounded variant="tonal" @click="isShowAddServerSheet = true;">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
       </v-btn>
@@ -31,7 +37,7 @@
               rounded
               @click="connect(item.clientProfileId)"
               class="server-item rounded-lg mb-4 py-4"
-              :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 3px' : ''"
+              :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 2px' : ''"
           >
             <!-- َActive item icon -->
             <template v-slot:prepend v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
@@ -47,7 +53,7 @@
             </v-list-item-title>
 
             <!-- Support ID -->
-            <v-list-item-subtitle>{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</v-list-item-subtitle>
+            <v-list-item-subtitle class="text-caption">{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</v-list-item-subtitle>
 
             <!-- Menu -->
             <template v-slot:append>

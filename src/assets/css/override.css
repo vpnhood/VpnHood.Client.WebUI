@@ -1,3 +1,9 @@
+.v-application [class*="text-h"],
+.v-card-title{
+    font-family: "Roboto-Bold", sans-serif !important;
+    font-size: 1rem;
+}
+
 /*noinspection CssUnusedSymbol*/
 .v-navigation-drawer__scrim,
 .v-overlay__scrim {
@@ -13,4 +19,7 @@
 /*noinspection CssUnusedSymbol*/
 .v-main {
     flex-basis: 0;
+}
+.v-list-item-title{
+    font-size: 0.9rem;
 }

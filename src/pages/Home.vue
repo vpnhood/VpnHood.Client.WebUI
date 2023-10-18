@@ -5,7 +5,7 @@
   <!-- App bar -->
   <AppBar @openNavigationDrawer="isShowNavigationDrawer = true"/>
 
-  <v-container class="h-100">
+  <v-container class="h-100 pt-0">
     <v-row align-content="space-between" class="h-100 my-0">
 
       <!-- Go Premium Store Ad -->

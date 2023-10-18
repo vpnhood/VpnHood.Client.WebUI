@@ -3,18 +3,18 @@
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600"
             close-on-back>
     <v-card>
-      <v-card-title class="bg-grey-lighten-3">{{$t("PROTOCOL")}}</v-card-title>
+      <v-card-title class="bg-master-green">{{$t("PROTOCOL")}}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
         <v-radio-group v-model="useUdpChannel" hide-details>
-          <v-radio :label="$t('PROTOCOL_UDP_ON')" :value="true" color="info"></v-radio>
-          <v-radio :label="$t('PROTOCOL_UDP_OFF')" :value="false" color="info"></v-radio>
+          <v-radio :label="$t('PROTOCOL_UDP_ON')" :value="true" color="secondary"></v-radio>
+          <v-radio :label="$t('PROTOCOL_UDP_OFF')" :value="false" color="secondary"></v-radio>
         </v-radio-group>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
+        <v-btn color="secondary" variant="text" @click="$emit('update:modelValue',false)">
           {{ $t("CLOSE") }}
         </v-btn>
       </v-card-actions>

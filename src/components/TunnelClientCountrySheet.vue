@@ -6,7 +6,7 @@
       close-on-back
   >
     <v-card>
-      <v-card-title class="bg-grey-lighten-3">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>
+      <v-card-title class="bg-master-green">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
@@ -16,7 +16,6 @@
               :label="$t('TUNNEL_MY_COUNTRY_ON')"
               :value="true"
               color="error"
-              class="mb-4"
           ></v-radio>
           <v-radio
               :value="false"
@@ -35,7 +34,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
+        <v-btn color="secondary" variant="text" @click="$emit('update:modelValue',false)">
           {{ $t("CLOSE") }}
         </v-btn>
       </v-card-actions>

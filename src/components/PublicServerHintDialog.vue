@@ -4,7 +4,7 @@
       <v-card-title class="bg-grey-lighten-3">{{$t("PUBLIC_SERVER_WARNING_TITLE")}}</v-card-title>
       <v-divider></v-divider>
 
-      <v-card-text class="txt-small-1">
+      <v-card-text class="text-body-2">
         <p class="pb-4 color-muted" v-html="$t('PUBLIC_SERVER_WARNING')"></p>
         <p><strong>{{$t("WARNING")}}!</strong> {{$t("PRIVACY_WARNING")}}</p>
         <a class="text-info" href="https://www.vpnhood.com/privacy-policy" target="_blank">{{ $t("READ_PRIVACY_POLICY") }}</a>

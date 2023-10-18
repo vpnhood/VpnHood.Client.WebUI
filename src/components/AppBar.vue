@@ -6,7 +6,7 @@
 
     <!-- App name -->
     <v-spacer></v-spacer>
-    <h4>{{ $t("APP_NAME") }}</h4>
+    <h3>{{ $t("APP_NAME") }}</h3>
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
