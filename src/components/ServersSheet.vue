@@ -156,22 +156,22 @@
     </v-card>
 
     <!-- Add server sheet -->
-    <AddServerSheet
+    <AddServerDialog
         v-model="isShowAddServerSheet"
         @new-access-key-added="$emit('update:modelValue',false)">
-    </AddServerSheet>
+    </AddServerDialog>
 
   </v-bottom-sheet>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import AddServerSheet from "@/components/AddServerSheet.vue";
+import AddServerDialog from "@/components/AddServerDialog.vue";
 import {ClientProfile, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ServersSheet',
-  components: {AddServerSheet},
+  components: {AddServerDialog},
   props: {
     modelValue: Boolean,
   },

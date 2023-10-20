@@ -10,8 +10,10 @@ import {
 } from "@/services/VpnHood.Client.Api";
 import {ApiClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
-import {UiConstants} from "@/UiConstants";
+import {ComponentName, UiConstants} from "@/UiConstants";
+
 import {reactive} from "vue";
+import router from "@/plugins/router";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -52,7 +54,7 @@ export class VpnHoodApp {
         this.data.features = config.features;
         this.data.settings = config.settings;
         this.data.clientProfileItems = config.clientProfileItems;
-        if (config.clientProfileItems.length === 0){
+        if (config.clientProfileItems.length === 0) {
             this.data.settings.userSettings.defaultClientProfileId = null;
         }
 
@@ -63,7 +65,7 @@ export class VpnHoodApp {
         this.data.state = await this.apiClient.getState();
 
         // Setting has change and must reload
-        if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()){
+        if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()) {
             this.data.uiState.configTime = this.data.state.configTime;
             await this.reloadSettings();
         }
@@ -73,7 +75,7 @@ export class VpnHoodApp {
             this.data.uiState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
             this.data.uiState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
             console.error(this.data.state.lastError);
-            this.showError(this.data.state.lastError);
+            await this.showError(this.data.state.lastError);
         }
 
         // Show update message if the user has not ignored or more than 24 hours have passed
@@ -112,7 +114,7 @@ export class VpnHoodApp {
             x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.data.uiState.showPremiumServerAd) {
+        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.isShowComponent(ComponentName.PremiumServerAdDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -122,15 +124,15 @@ export class VpnHoodApp {
 
             // Show public server hint
             if (dontShowServerHintStatus !== "true")
-                this.data.uiState.showPublicServerHint = true;
+                await this.showComponent(true, ComponentName.PublicServerHintDialog);
 
             // Show premium server ad
             else
-                this.data.uiState.showPremiumServerAd = true;
+                await this.showComponent(true, ComponentName.PremiumServerAdDialog);
 
         } else {
             // Close Premium server Ad
-            this.data.uiState.showPremiumServerAd = false;
+            await this.showComponent(false, ComponentName.PremiumServerAdDialog);
 
             await this.apiClient.connect(null);
         }
@@ -140,7 +142,7 @@ export class VpnHoodApp {
         await this.apiClient.disconnect();
         if (this.data.state.sessionStatus?.suppressedTo &&
             this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None &&
-            this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None){
+            this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None) {
             this.data.uiState.showSuppressSnackbar = false;
         }
     }
@@ -188,19 +190,42 @@ export class VpnHoodApp {
     }
 
     // Get error message
-    public showError(err: any): void {
+    public async showError(err: any): Promise<void> {
         console.error(err);
-        this.showMessage(err.message ?? err);
+        await this.showMessage(err.message ?? err);
     }
 
     // Show error dialog
-    public showMessage(text: string): void {
-        this.data.uiState.showAlertDialog = true;
+    public async showMessage(text: string): Promise<void> {
+        await this.showComponent(true, ComponentName.AlertDialog);
         this.data.uiState.alertDialogText = text;
     }
 
     // Get installed apps list on the user device
-    public async getInstalledApps(): Promise<DeviceAppInfo[]> {
-        return await this.apiClient.getInstalledApps();
+    public getInstalledApps(): Promise<DeviceAppInfo[]> {
+        return this.apiClient.getInstalledApps();
+    }
+
+
+    public isShowComponent(componentName: string): boolean {
+        return router.currentRoute.value.query[componentName] === "true";
+    }
+
+    private showComponentPromise: Promise<void> = Promise.resolve();
+
+    public async showComponent(isShow: boolean, componentName: string): Promise<void> {
+        await this.showComponentPromise;
+        this.showComponentPromise = this.showComponentInternal(isShow, componentName);
+        await this.showComponentPromise;
+    }
+
+    private async showComponentInternal(isShow: boolean, componentName: string): Promise<void> {
+        if (isShow) {
+            await router.push({query: {...router.currentRoute.value.query, [componentName]: "true"}});
+        } else if (router.currentRoute.value.query[componentName]) {
+            const query = {...router.currentRoute.value.query};
+            delete query[componentName];
+            await router.replace({query});
+        }
     }
 }

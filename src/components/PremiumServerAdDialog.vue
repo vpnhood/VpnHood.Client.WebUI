@@ -80,7 +80,7 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "PremiumServerAd",
+  name: "PremiumServerAdDialog",
   data() {
     return {
       showByUser: false,

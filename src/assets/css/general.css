@@ -60,18 +60,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 .grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));}
 .blue-border-btn i {line-height: inherit;}
 
-@media tv {
-    .main-button {
-        border-color: #ffffff00;
-        border-width: 3px;
-        border-style: dashed;
-    }
-
-    .main-button:focus {
-        border-color: #ffffff;
-    }
-}
-
 /** --------------------Home Middle Section-------------------- **/
 #circleOuter {
     width: 180px;
@@ -138,22 +126,3 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 }
 
 /** --------------------End of Home Middle Section-------------------- **/
-
-/** --------------------Responsive-------------------- **/
-
-/*@media all and (max-width: 425px) {*/
-/*    #logo img {max-width: 60px;}*/
-/*}*/
-
-/*@media all and (min-width: 1024px) {*/
-/*    html {font-size: 20px;}*/
-
-/*    !*noinspection CssBrowserCompatibilityForProperties*!*/
-/*    #configSection > button:focus {*/
-/*        background: #132a7ab0;*/
-/*        border-color: var(--master-green);*/
-/*        transition: all .4s linear;*/
-/*        outline: none;*/
-/*    }*/
-/*}*/
-/** --------------------End of Responsive-------------------- **/

@@ -10,7 +10,7 @@
 
       <!-- Go Premium Store Ad -->
       <v-col cols="12" class="text-center pt-0">
-        <PremiumServerAd v-if="checkPremiumServerAdStatus()" v-model="$vpnHoodApp.data.uiState.showPremiumServerAd"/>
+        <PremiumServerAdDialog v-if="checkPremiumServerAdStatus()" v-model="isShowPremiumServerAd"/>
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
@@ -37,7 +37,9 @@
             <div class="d-flex flex-column align-center justify-center">
 
               <!-- Connection state text -->
-              <span class="text-body-1">{{$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase()) }}
+              <span class="text-body-1">{{
+                  $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
+                }}
             </span>
 
               <!-- Usage -->
@@ -77,11 +79,13 @@
             variant="text"
             prepend-icon="mdi-earth"
             class="config-item mb-2"
-            @click="isShowTunnelCountrySheet = true"
+            @click="isShowTunnelCountry = true"
         >
           <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize text-caption color-light-purple">{{$vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY") }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{
+              $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+            }}</span>
           <img
               v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId "
               :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
@@ -114,7 +118,9 @@
         >
           <span>{{ $t("PROTOCOL_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
-          <span class="text-capitalize text-caption color-light-purple">{{$vpnHoodApp.data.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF') }}</span>
+          <span class="text-capitalize text-caption color-light-purple">{{
+              $vpnHoodApp.data.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
+            }}</span>
         </v-btn>
 
         <!-- Servers button -->
@@ -143,9 +149,9 @@
   <!-- Components -->
   <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar"/>
   <SuppressSnackbar v-model="$vpnHoodApp.data.uiState.showSuppressSnackbar"/>
-  <PublicServerHintDialog v-model="$vpnHoodApp.data.uiState.showPublicServerHint"/>
-  <TunnelClientCountrySheet v-model="isShowTunnelCountrySheet"/>
-  <ProtocolSheet v-model="isShowProtocolSheet"/>
+  <PublicServerHintDialog v-model="isShowPublicServerHint"/>
+  <TunnelClientCountryDialog v-model="isShowTunnelCountry"/>
+  <ProtocolDialog v-model="isShowProtocolSheet"/>
   <AppFilterSheet v-model="isShowAppFilterSheet"/>
   <ServersSheet v-model="isShowServersSheet"/>
   <SettingSheet v-model="isShowSettingsSheet"/>
@@ -154,17 +160,18 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
-import TunnelClientCountrySheet from "@/components/TunnelClientCountrySheet.vue";
-import ProtocolSheet from "@/components/ProtocolSheet.vue";
+import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
+import ProtocolDialog from "@/components/ProtocolDialog.vue";
 import ServersSheet from "@/components/ServersSheet.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import SettingSheet from "@/components/SettingsSheet.vue";
 import AppFilterSheet from "@/components/AppFilterSheet.vue";
-import PremiumServerAd from "@/components/PremiumServerAd.vue";
+import PremiumServerAdDialog from "@/components/PremiumServerAdDialog.vue";
 import AppBar from "@/components/AppBar.vue";
 import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
+import {ComponentName} from "@/UiConstants";
 
 export default defineComponent({
   name: 'HomeView',
@@ -173,34 +180,92 @@ export default defineComponent({
     SuppressSnackbar,
     PublicServerHintDialog,
     AppBar,
-    PremiumServerAd,
+    PremiumServerAdDialog,
     AppFilterSheet,
     SettingSheet,
     NavigationDrawer,
     ServersSheet,
-    ProtocolSheet,
-    TunnelClientCountrySheet
+    ProtocolDialog,
+    TunnelClientCountryDialog
   },
   data() {
     return {
-      isShowNavigationDrawer: false,
-      isShowTunnelCountrySheet: false,
-      isShowAppFilterSheet: false,
-      isShowProtocolSheet: false,
-      isShowServersSheet: false,
-      isShowSettingsSheet: false,
-      isShowPublicServerHint: false,
       /*** VpnHood Api enums ***/
       AppConnectionState
     }
   },
   created() {
-
     // Reload 'state' and 'setting' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
         await this.$vpnHoodApp.reloadState();
     }, 1000);
+  },
+  computed: {
+    isShowPremiumServerAd:{
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.PremiumServerAdDialog);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.PremiumServerAdDialog);
+      }
+    },
+    isShowPublicServerHint:{
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.PublicServerHintDialog);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.PublicServerHintDialog);
+      }
+    },
+    isShowTunnelCountry: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.TunnelClientCountryDialog);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.TunnelClientCountryDialog);
+      }
+    },
+    isShowNavigationDrawer: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.NavigationDrawer);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.NavigationDrawer);
+      }
+    },
+    isShowAppFilterSheet: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.AppFilterSheet);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.AppFilterSheet);
+      }
+    },
+    isShowSettingsSheet: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.SettingSheet);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.SettingSheet);
+      }
+    },
+    isShowProtocolSheet: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.ProtocolDialog);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.ProtocolDialog);
+      }
+    },
+    isShowServersSheet: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.ServersSheet);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.ServersSheet);
+      }
+    },
   },
 
   methods: {
@@ -208,7 +273,7 @@ export default defineComponent({
     async onConnectButtonClick() {
 
       // If user has no selected server and want to connect
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None){
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) {
 
         // Find selected server
         const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(
@@ -227,7 +292,7 @@ export default defineComponent({
 
     // Return text for connect button based on connection state
     connectButtonText(): string {
-      if(!this.$vpnHoodApp.canDiagnose() && this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected)
+      if (!this.$vpnHoodApp.canDiagnose() && this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected)
         return this.$t("STOP_DIAGNOSING");
 
       else
@@ -309,9 +374,7 @@ export default defineComponent({
       const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("vh:isPublicServersUsedAtLeastOnce");
       const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
       return !!(isPublicServersUsedAtLeastOnce && clientProfileItem?.token.name === "VpnHood Public Servers");
-
     },
-
   }
 });
 </script>

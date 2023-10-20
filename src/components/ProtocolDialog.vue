@@ -26,7 +26,7 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: 'ProtocolSheet',
+  name: 'ProtocolDialog',
   props:{
     modelValue:Boolean,
   },

@@ -1,5 +1,10 @@
 <template>
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back>
+  <v-dialog
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue',$event)"
+      close-on-back
+      max-width="600"
+  >
     <v-card>
       <v-card-title class="bg-grey-lighten-3">{{$t("PUBLIC_SERVER_WARNING_TITLE")}}</v-card-title>
       <v-divider></v-divider>
@@ -60,7 +65,7 @@ export default defineComponent({
       this.isDontShowMessage ? localStorage.setItem("vh:DontShowPublicServerHint", "true") : localStorage.setItem("vh:DontShowPublicServerHint", "false");
 
       this.$emit('update:modelValue',false);
-      this.$vpnHoodApp.data.uiState.showPremiumServerAd = true;
+      await this.$vpnHoodApp.showComponent(true, "PremiumServerAdDialog");
     }
   }
 })

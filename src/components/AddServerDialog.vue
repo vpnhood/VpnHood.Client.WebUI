@@ -45,7 +45,7 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: 'AddServerSheet',
+  name: 'AddServerDialog',
   props: {
     modelValue: Boolean,
   },

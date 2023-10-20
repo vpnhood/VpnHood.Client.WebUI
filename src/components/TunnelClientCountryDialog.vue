@@ -46,7 +46,7 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "TunnelClientCountrySheet",
+  name: "TunnelClientCountryDialog",
   props: {
     modelValue: Boolean,
   },
@@ -64,6 +64,6 @@ export default defineComponent({
             await this.$vpnHoodApp.saveUserSetting();
           }
         },
-  },
+  }
 })
 </script>

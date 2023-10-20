@@ -33,7 +33,7 @@
           :title="$t('SETTINGS')"
           prepend-icon="mdi-cog"
           class="menu-item color-gray"
-          @click="$emit('openSettings'); $emit('update:modelValue',false)"
+          @click="$emit('openSettings')"
       >
       </v-list-item>
 

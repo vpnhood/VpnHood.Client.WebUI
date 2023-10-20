@@ -3,8 +3,7 @@
     <v-main>
       <router-view/>
       <!-- Global Alert Dialog -->
-      <alert-dialog v-model="$vpnHoodApp.data.uiState.showAlertDialog" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
-
+      <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText"/>
     </v-main>
   </v-app>
 </template>
@@ -12,11 +11,22 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
+import {ComponentName} from "@/UiConstants";
 
 export default defineComponent({
   name: 'App',
   components: {AlertDialog},
-})
+  computed: {
+    isAlertDialogVisible: {
+      get(): boolean {
+        return this.$vpnHoodApp.isShowComponent(ComponentName.AlertDialog);
+      },
+      async set(value: boolean) {
+        await this.$vpnHoodApp.showComponent(value, ComponentName.AlertDialog);
+      }
+    }
+  }
+});
 </script>
 
 <style scoped>
