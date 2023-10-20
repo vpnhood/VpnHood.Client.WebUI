@@ -158,6 +158,9 @@
 </template>
 
 <script lang="ts">
+// TODO Reserve navigation drawer icon size
+// TODO Check trudy reported issue
+// TODO Handle nested dialog by router query
 import {defineComponent} from 'vue';
 import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
