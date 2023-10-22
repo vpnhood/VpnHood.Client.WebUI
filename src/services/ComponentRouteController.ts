@@ -24,12 +24,12 @@ export class ComponentRouteController {
         return router.currentRoute.value.query[componentName] === "true";
     }
 
-    public static async showComponent( componentName: string, value: boolean = true): Promise<void> {
+    public static async showComponent(componentName: string, value: boolean = true): Promise<void> {
         //show component by timeout tp make sure previus back is finished
         setTimeout(() => {
             const showLock: AsyncLock = new AsyncLock();
-            showLock.acquire("showLock", () => {
-                this.showComponentInternal(componentName, value);
+            showLock.acquire("showLock", async () => {
+                await this.showComponentInternal(componentName, value);
             });
         }, value ? 100 : 0);
 
@@ -44,17 +44,13 @@ export class ComponentRouteController {
             await router.push({ path: route.path, query: { ...route.query, [componentName]: "true" } });
             window.document.title = componentName;
         } else {
+            // make sure remove the route (because back may not work)
+            const query = { ...route.query };
+            delete query[componentName];
+            router.push({ path: route.path, query: query, replace: true });
+
+            // remove the route from history
             router.back();
-            console.log("ssszz");
-            //find router bug ig backbutton does not work. a big spit
-            setTimeout(() => {
-                if (this.isShowComponent(componentName))
-                {
-                    const query = { ...route.query };
-                    delete query[componentName];
-                    router.push({ path: route.path, query: query, replace: true });
-                }
-            }, 100);
         }
     }
 
