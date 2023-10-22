@@ -4,14 +4,15 @@ import {
     AppFeatures,
     AppSettings,
     AppState,
-    ClientProfileItem, ClientProfileUpdateParams,
+    ClientProfileItem,
+    ClientProfileUpdateParams,
     DeviceAppInfo,
     SessionSuppressType,
 } from "@/services/VpnHood.Client.Api";
 import {ApiClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {ComponentName, UiConstants} from "@/UiConstants";
-
+//import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import router from "@/plugins/router";
 
@@ -23,7 +24,6 @@ export class VpnHoodAppData {
     public settings: AppSettings;
     public features: AppFeatures;
     public clientProfileItems: ClientProfileItem[];
-
     public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileItems: ClientProfileItem[]) {
         this.state = state;
         this.settings = setting;
@@ -74,7 +74,6 @@ export class VpnHoodApp {
         if (this.data.state.lastError &&
             this.data.uiState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
             this.data.uiState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
-            console.error(this.data.state.lastError);
             await this.showError(this.data.state.lastError);
         }
 
@@ -220,12 +219,23 @@ export class VpnHoodApp {
     }
 
     private async showComponentInternal(isShow: boolean, componentName: string): Promise<void> {
+        console.log(isShow, componentName);
+        if (isShow === this.isShowComponent(componentName))
+            return;
+
+        if (this.isShowComponent(ComponentName.NavigationDrawer)){
+            const query = {...router.currentRoute.value.query};
+            delete query[componentName];
+            await router.replace({query});
+        }
+
         if (isShow) {
             await router.push({query: {...router.currentRoute.value.query, [componentName]: "true"}});
         } else if (router.currentRoute.value.query[componentName]) {
             const query = {...router.currentRoute.value.query};
             delete query[componentName];
-            await router.replace({query});
+            //await router.replace({query});
+            router.back();
         }
     }
 }

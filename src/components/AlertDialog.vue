@@ -82,7 +82,7 @@ export default defineComponent({
   },
   data() {
     return {
-      logFileLocation: '/api/log.txt',
+      logFileLocation: '/api/app/log.txt',
     }
   },
   emits: [
@@ -101,7 +101,8 @@ export default defineComponent({
         const reportId: string =
             this.$vpnHoodApp.data.settings.clientId.substring(0, 8) + "@" +
             new Date().toISOString().substring(0, 19).replace(/:/g, "").replace(/-/g, "") + "-" +
-            this.uuidv4().substring(0, 8);
+            Math.random().toString().substring(2,10);
+
         const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
         window.open(link, "VpnHood-BugReport");
 
@@ -122,14 +123,6 @@ export default defineComponent({
       } catch (ex) {
         console.error('Oops! Could not even send the report details!', ex);
       }
-    },
-
-    uuidv4() {
-      // noinspection SpellCheckingInspection
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        let r = Math.random() * 16, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
     },
   }
 })

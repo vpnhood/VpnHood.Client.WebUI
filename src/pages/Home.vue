@@ -175,6 +175,7 @@ import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentName} from "@/UiConstants";
+//import {ComponentRouteController} from "@/services/ComponentRouteController";
 
 export default defineComponent({
   name: 'HomeView',
