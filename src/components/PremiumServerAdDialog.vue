@@ -14,7 +14,7 @@
   </v-btn>
 
   <!-- Maximize Premium Server Ad -->
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" close-on-back :fullscreen="true">
+  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" :fullscreen="true">
     <v-card class="pa-8 justify-center align-center add-bg">
 
       <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center">

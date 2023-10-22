@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.2.96",
+    "async-lock": "^1.4.0",
     "axios": "^1.5.1",
     "core-js": "^3.32.2",
     "firebase": "^10.4.0",
@@ -26,6 +27,7 @@
     "@babel/core": "^7.23.0",
     "@babel/eslint-parser": "^7.22.15",
     "@intlify/vue-i18n-loader": "^4.2.0",
+    "@types/async-lock": "^1.4.1",
     "@types/node": "^20.8.6",
     "@types/webfontloader": "^1.6.35",
     "@typescript-eslint/eslint-plugin": "^6.7.3",

@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-sheet :inset="true" :scrollable="true" :fullscreen="true" close-on-back :modelValue="modelValue"
+  <v-bottom-sheet :inset="true" :scrollable="true" :fullscreen="true" :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Page header -->
@@ -13,7 +13,7 @@
       <v-spacer></v-spacer>
 
       <!-- Add server button -->
-      <v-btn rounded variant="tonal" @click="isShowAddServerSheet = true;">
+      <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
       </v-btn>
@@ -157,7 +157,7 @@
 
     <!-- Add server sheet -->
     <AddServerDialog
-        v-model="isShowAddServerSheet"
+        v-model="ComponentRouteController.create($componentName.AddServerDialog).isShow"
         @new-access-key-added="$emit('update:modelValue',false)">
     </AddServerDialog>
 
@@ -168,6 +168,7 @@
 import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
 import {ClientProfile, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
+import { ComponentRouteController } from "@/services/ComponentRouteController";
 
 export default defineComponent({
   name: 'ServersSheet',
@@ -180,10 +181,10 @@ export default defineComponent({
   ],
   data() {
     return {
-      isShowAddServerSheet: false,
       showConfirmDelete: false,
       showRename: false,
       newClientProfileName: null,
+      ComponentRouteController,
     }
   },
 

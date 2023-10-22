@@ -1,4 +1,4 @@
-import {ClientApiFactory} from "@/services/ClientApiFactory";
+import { ClientApiFactory } from "@/services/ClientApiFactory";
 import {
     AppConnectionState,
     AppFeatures,
@@ -9,12 +9,11 @@ import {
     DeviceAppInfo,
     SessionSuppressType,
 } from "@/services/VpnHood.Client.Api";
-import {ApiClient} from "./VpnHood.Client.Api";
-import {UiState} from "@/services/UiState";
-import {ComponentName, UiConstants} from "@/UiConstants";
-//import {ComponentRouteController} from "@/services/ComponentRouteController";
-import {reactive} from "vue";
-import router from "@/plugins/router";
+import { ApiClient } from "./VpnHood.Client.Api";
+import { UiState } from "@/services/UiState";
+import { ComponentName, UiConstants } from "@/UiConstants";
+import { ComponentRouteController } from "@/services/ComponentRouteController";
+import { reactive } from "vue";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -113,26 +112,18 @@ export class VpnHoodApp {
             x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !this.isShowComponent(ComponentName.PremiumServerAdDialog)) {
+        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
 
             // Check is user set don't show public server hint
-            const dontShowServerHintStatus: string | null = localStorage.getItem("vh:DontShowPublicServerHint");
-
-            // Show public server hint
-            if (dontShowServerHintStatus !== "true")
-                await this.showComponent(true, ComponentName.PublicServerHintDialog);
-
-            // Show premium server ad
-            else
-                await this.showComponent(true, ComponentName.PremiumServerAdDialog);
+            const showServerHintStatus: boolean = localStorage.getItem("vh:DontShowPublicServerHint") === "true";
+            await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog,  showServerHintStatus);
 
         } else {
             // Close Premium server Ad
-            await this.showComponent(false, ComponentName.PremiumServerAdDialog);
-
+            await ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog, false);
             await this.apiClient.connect(null);
         }
     }
@@ -196,46 +187,12 @@ export class VpnHoodApp {
 
     // Show error dialog
     public async showMessage(text: string): Promise<void> {
-        await this.showComponent(true, ComponentName.AlertDialog);
         this.data.uiState.alertDialogText = text;
+        await ComponentRouteController.showComponent(ComponentName.AlertDialog);
     }
 
     // Get installed apps list on the user device
     public getInstalledApps(): Promise<DeviceAppInfo[]> {
         return this.apiClient.getInstalledApps();
-    }
-
-
-    public isShowComponent(componentName: string): boolean {
-        return router.currentRoute.value.query[componentName] === "true";
-    }
-
-    private showComponentPromise: Promise<void> = Promise.resolve();
-
-    public async showComponent(isShow: boolean, componentName: string): Promise<void> {
-        await this.showComponentPromise;
-        this.showComponentPromise = this.showComponentInternal(isShow, componentName);
-        await this.showComponentPromise;
-    }
-
-    private async showComponentInternal(isShow: boolean, componentName: string): Promise<void> {
-        console.log(isShow, componentName);
-        if (isShow === this.isShowComponent(componentName))
-            return;
-
-        if (this.isShowComponent(ComponentName.NavigationDrawer)){
-            const query = {...router.currentRoute.value.query};
-            delete query[componentName];
-            await router.replace({query});
-        }
-
-        if (isShow) {
-            await router.push({query: {...router.currentRoute.value.query, [componentName]: "true"}});
-        } else if (router.currentRoute.value.query[componentName]) {
-            const query = {...router.currentRoute.value.query};
-            delete query[componentName];
-            //await router.replace({query});
-            router.back();
-        }
     }
 }

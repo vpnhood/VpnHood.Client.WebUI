@@ -61,11 +61,8 @@ export default defineComponent({
   },
   methods:{
     async showPremiumServerAd(): Promise<void>{
-      // Set isDontShowMessage status to the user local storage
-      this.isDontShowMessage ? localStorage.setItem("vh:DontShowPublicServerHint", "true") : localStorage.setItem("vh:DontShowPublicServerHint", "false");
-
+       localStorage.setItem("vh:DontShowPublicServerHint", this.isDontShowMessage.toString());
       this.$emit('update:modelValue',false);
-      await this.$vpnHoodApp.showComponent(true, "PremiumServerAdDialog");
     }
   }
 })

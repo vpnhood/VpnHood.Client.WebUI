@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="600" close-on-back :modelValue="modelValue"
+  <v-dialog max-width="600" :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Add Test Server -->

@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-sheet :inset="true" :fullscreen="true" :scrollable="true" close-on-back :modelValue="modelValue"
+  <v-bottom-sheet :inset="true" :fullscreen="true" :scrollable="true" :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Page header -->

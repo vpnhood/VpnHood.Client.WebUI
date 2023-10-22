@@ -8,6 +8,7 @@ import './assets/css/override.css'
 import './assets/css/general.css'
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
+import {ComponentName} from "@/UiConstants";
 
 async function main(): Promise<void> {
     try {
@@ -17,6 +18,7 @@ async function main(): Promise<void> {
 
         // Global property
         app.config.globalProperties.$vpnHoodApp = vpnHoodApp;
+        app.config.globalProperties.$componentName = ComponentName;
 
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);

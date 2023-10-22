@@ -3,7 +3,6 @@
       :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="top"
       :vertical="true"
-
       :timeout="-1"
       :color="$vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >

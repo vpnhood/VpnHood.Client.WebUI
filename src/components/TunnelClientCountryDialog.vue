@@ -2,8 +2,7 @@
   <v-dialog
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
-      max-width="600"
-      close-on-back
+      max-width="600"      
   >
     <v-card>
       <v-card-title class="bg-master-green">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>

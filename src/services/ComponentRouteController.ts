@@ -1,10 +1,8 @@
-/*
 import router from "@/plugins/router";
-import {ComponentName} from "@/UiConstants";
+import AsyncLock from 'async-lock';
 
 export class ComponentRouteController {
 
-    private static showComponentPromise: Promise<void> = Promise.resolve();
     public componentName: string;
     private constructor(componentName: string) {
         this.componentName = componentName;
@@ -15,7 +13,7 @@ export class ComponentRouteController {
 
     // noinspection JSUnusedGlobalSymbols
     public set isShow(value: boolean) {
-        ComponentRouteController.showComponent(value, this.componentName).then();
+        ComponentRouteController.showComponent(this.componentName, value).then();
     }
 
     public static create(componentName: string): ComponentRouteController {
@@ -26,32 +24,38 @@ export class ComponentRouteController {
         return router.currentRoute.value.query[componentName] === "true";
     }
 
-    public static async showComponent(value: boolean, componentName: string): Promise<void> {
-        await this.showComponentPromise;
-        console.log(value, componentName);
-        this.showComponentPromise = this.showComponentInternal(value, componentName);
-        await this.showComponentPromise;
-        console.log(value, componentName);
+    public static async showComponent( componentName: string, value: boolean = true): Promise<void> {
+        //show component by timeout tp make sure previus back is finished
+        setTimeout(() => {
+            const showLock: AsyncLock = new AsyncLock();
+            showLock.acquire("showLock", () => {
+                this.showComponentInternal(value, componentName);
+            });
+        }, value ? 100 : 0);
+
+        return Promise.resolve();
     }
     private static async showComponentInternal(value: boolean, componentName: string): Promise<void> {
-
         if (value === this.isShowComponent(componentName))
             return;
-        console.log(value, this.isShowComponent(componentName));
-        if (this.isShowComponent(ComponentName.NavigationDrawer)){
-            const query = {...router.currentRoute.value.query};
-            delete query[componentName];
-            await router.replace({query});
-        }
 
+        const route = router.currentRoute.value;
         if (value) {
-            await router.push({query: {...router.currentRoute.value.query, [componentName]: "true"}});
-        } else if (router.currentRoute.value.query[componentName]) {
-            const query = {...router.currentRoute.value.query};
-            delete query[componentName];
+            await router.push({ path: route.path, query: { ...route.query, [componentName]: "true" } });
+            window.document.title = componentName;
+        } else {
             router.back();
-
+            
+            //find router bug ig backbutton does not work. a big spit
+            setTimeout(() => {
+                if (this.isShowComponent(componentName))
+                {
+                    const query = { ...route.query };
+                    delete query[componentName];
+                    router.push({ path: route.path, query: query, replace: true });
+                }
+            }, 100);
         }
     }
 
-}*/
+}
