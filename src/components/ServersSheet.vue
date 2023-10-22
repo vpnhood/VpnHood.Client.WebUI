@@ -59,50 +59,13 @@
             <template v-slot:append>
               <v-btn icon size="large" variant="plain">
                 <v-icon>mdi-dots-vertical</v-icon>
-                <v-menu activator="parent" :close-on-content-click="true">
+                <v-menu activator="parent">
 
                   <!-- Menu items -->
                   <v-list>
 
                     <!-- Rename item -->
-                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil">
-
-                      <!-- Rename dialog -->
-                      <v-dialog v-model="showRename" activator="parent" close-on-back max-width="600">
-                        <v-card :title="$t('RENAME')">
-
-                          <v-card-text>
-                            <!-- Name text field -->
-                            <v-text-field
-                                v-model="newClientProfileName"
-                                :label="$t('ENTER_NEW_NAME_FOR') + (item.clientProfile.name ?? item.token.name)"
-                                spellcheck="false"
-                                autocomplete="off" color="primary"
-                                :clearable="true">
-                            </v-text-field>
-                          </v-card-text>
-
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <!-- Cancel rename button -->
-                            <v-btn
-                                color="primary"
-                                variant="text"
-                                :text="$t('CANCEL')"
-                                @click="showRename = false">
-                            </v-btn>
-
-                            <!-- Save rename button -->
-                            <v-btn
-                                color="primary"
-                                variant="text"
-                                :text="$t('SAVE')"
-                                @click="saveNewClientProfileName(item.clientProfile)">
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </v-list-item>
+                    <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)" />
                     <v-divider/>
 
                     <!-- Diagnose item -->
@@ -115,36 +78,7 @@
                     <v-divider/>
 
                     <!-- Delete item -->
-                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete">
-                      <!-- Confirm delete server dialog -->
-                      <v-dialog v-model="showConfirmDelete" activator="parent" close-on-back max-width="600">
-                        <v-card>
-
-                          <v-card-title class="color-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
-
-                          <v-card-text>
-                            <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
-                            <strong>{{ item.token.name }}</strong>
-                          </v-card-text>
-
-                          <!-- Dialog buttons -->
-                          <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
-
-                            <!-- Confirm delete button -->
-                            <v-btn variant="text" @click="removeServer(item.clientProfileId)">
-                              {{ $t("YES") }}
-                            </v-btn>
-
-                            <!-- Cancel delete button -->
-                            <v-btn variant="tonal" @click="showConfirmDelete = false">
-                              {{ $t("NO") }}
-                            </v-btn>
-
-                          </v-card-actions>
-
-                        </v-card>
-                      </v-dialog>
-                    </v-list-item>
+                    <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)" />
 
                   </v-list>
                 </v-menu>
@@ -161,13 +95,80 @@
         @new-access-key-added="$emit('update:modelValue',false)">
     </AddServerDialog>
 
+    <!-- Rename dialog -->
+    <v-dialog v-model="ComponentRouteController.create($componentName.RenameServerDialog).isShow"  max-width="600">
+      <v-card :title="$t('RENAME')">
+
+        <v-card-text>
+          <!-- Name text field -->
+          <v-text-field
+              v-model="newClientProfileName"
+              :label="$t('ENTER_NEW_NAME_FOR') + (actionOnCurrentClientProfileItem.clientProfile.name ?? actionOnCurrentClientProfileItem.token.name)"
+              spellcheck="false"
+              autocomplete="off" color="primary"
+              :clearable="true">
+          </v-text-field>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <!-- Cancel rename button -->
+          <v-btn
+              color="primary"
+              variant="text"
+              :text="$t('CANCEL')"
+              @click="ComponentRouteController.showComponent($componentName.RenameServerDialog, false)">
+          </v-btn>
+
+          <!-- Save rename button -->
+          <v-btn
+              color="primary"
+              variant="text"
+              :text="$t('SAVE')"
+              @click="saveNewClientProfileName(actionOnCurrentClientProfileItem.clientProfile)">
+          </v-btn>
+
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Confirm delete server dialog -->
+    <v-dialog v-model="ComponentRouteController.create($componentName.ConfirmDeleteServerDialog).isShow" max-width="600">
+      <v-card>
+
+        <v-card-title class="color-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
+
+        <v-card-text>
+          <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
+          <strong>{{ actionOnCurrentClientProfileItem.token.name }}</strong>
+        </v-card-text>
+
+        <!-- Dialog buttons -->
+        <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
+
+          <!-- Confirm delete button -->
+          <v-btn variant="text" @click="removeServer(actionOnCurrentClientProfileItem.clientProfileId)">
+            {{ $t("YES") }}
+          </v-btn>
+
+          <!-- Cancel delete button -->
+          <v-btn variant="tonal" @click="ComponentRouteController.showComponent($componentName.ConfirmDeleteServerDialog, false)">
+            {{ $t("NO") }}
+          </v-btn>
+
+        </v-card-actions>
+
+      </v-card>
+    </v-dialog>
+
   </v-bottom-sheet>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
-import {ClientProfile, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
+import {ClientProfile, ClientProfileItem, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 import { ComponentRouteController } from "@/services/ComponentRouteController";
 
 export default defineComponent({
@@ -181,9 +182,8 @@ export default defineComponent({
   ],
   data() {
     return {
-      showConfirmDelete: false,
-      showRename: false,
-      newClientProfileName: null,
+      newClientProfileName: "",
+      actionOnCurrentClientProfileItem: ClientProfileItem,
       ComponentRouteController,
     }
   },
@@ -203,8 +203,15 @@ export default defineComponent({
       await this.$vpnHoodApp.diagnose();
     },
 
+    // Show confirm dialog for delete server
+    async showConfirmDeleteDialog(clientProfileItem: ClientProfileItem): Promise<void>{
+      this.actionOnCurrentClientProfileItem = clientProfileItem;
+      await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog);
+    },
+
+    // Delete server by user
     async removeServer(clientProfileId: string): Promise<void> {
-      this.showConfirmDelete = false;
+      await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog, false);
       await this.$vpnHoodApp.removeClientProfile(clientProfileId);
     },
 
@@ -214,13 +221,20 @@ export default defineComponent({
       return tokens[0] + ".*.*." + tokens[3];
     },
 
-    // Rename client profile name by user
+    // Show rename server dialog
+    async showRenameDialog(clientProfileItem: ClientProfileItem): Promise<void>{
+      this.actionOnCurrentClientProfileItem = clientProfileItem;
+      await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog);
+    },
+
+    // Rename server by user
     async saveNewClientProfileName(renamedClientProfile: ClientProfile): Promise<void> {
-      this.showRename = false;
+      await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog, false);
       await this.$vpnHoodApp.updateClientProfile(
           renamedClientProfile.clientProfileId,
           new ClientProfileUpdateParams({name: this.newClientProfileName})
       );
+      this.newClientProfileName = "";
     }
   }
 })
@@ -231,5 +245,4 @@ export default defineComponent({
   box-shadow: 0 1px 2px 1px rgb(0 0 0 / 15%);
   background-color: #eceffb;
 }
-
 </style>

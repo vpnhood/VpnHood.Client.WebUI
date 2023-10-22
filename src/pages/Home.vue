@@ -6,7 +6,7 @@
   <AppBar />
 
   <v-container class="h-100 pt-0">
-    <v-row align-content="space-between" class="h-100 my-0">
+    <v-row align-content="space-between" justify="center" class="h-100 my-0">
 
       <!-- Go Premium Store Ad -->
       <v-col cols="12" class="text-center pt-0">
@@ -70,7 +70,7 @@
       </v-col>
 
       <!-- Config buttons -->
-      <v-col cols="12" class="text-truncate pb-0">
+      <v-col cols="12" md="8" lg="6" class="text-truncate pb-0">
 
         <!-- Exclude country button -->
         <v-btn 
@@ -125,7 +125,7 @@
           depressed 
           :block="true" 
           variant="text" 
-          prepend-icon="mdi-dns" 
+          prepend-icon="mdi-dns"
           class="config-item mb-0"
           @click="ComponentRouteController.showComponent($componentName.ServersSheet)">
           <span>{{ $t("SELECTED_SERVER") }}</span>
