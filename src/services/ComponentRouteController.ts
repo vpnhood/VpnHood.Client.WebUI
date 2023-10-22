@@ -29,13 +29,13 @@ export class ComponentRouteController {
         setTimeout(() => {
             const showLock: AsyncLock = new AsyncLock();
             showLock.acquire("showLock", () => {
-                this.showComponentInternal(value, componentName);
+                this.showComponentInternal(componentName, value);
             });
         }, value ? 100 : 0);
 
         return Promise.resolve();
     }
-    private static async showComponentInternal(value: boolean, componentName: string): Promise<void> {
+    private static async showComponentInternal(componentName: string, value: boolean): Promise<void> {
         if (value === this.isShowComponent(componentName))
             return;
 
@@ -45,7 +45,7 @@ export class ComponentRouteController {
             window.document.title = componentName;
         } else {
             router.back();
-            
+            console.log("ssszz");
             //find router bug ig backbutton does not work. a big spit
             setTimeout(() => {
                 if (this.isShowComponent(componentName))

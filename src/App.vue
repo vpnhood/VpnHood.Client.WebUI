@@ -1,26 +1,31 @@
 <template>
   <v-app id="mainBg">
     <v-main>
-      <router-view/>
+      <router-view />
       <!-- Global Alert Dialog -->
-      <alert-dialog v-model="ComponentRouteController.create($componentName.AlertDialog).isShow" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText"/>
+      <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
-import { ComponentRouteController } from "@/services/ComponentRouteController";
-
+import { ComponentRouteController } from './services/ComponentRouteController';
 
 export default defineComponent({
   name: 'App',
-  components: {AlertDialog},
-
-  data() {
-    return {
-      ComponentRouteController,
+  components: { AlertDialog },
+  computed: {
+    isAlertDialogVisible: {
+      get(): boolean {
+        return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog);
+      },
+      async set(value: boolean) {
+        if (!value)
+          await this.$vpnHoodApp.apiClient.clearLastError();
+        await ComponentRouteController.showComponent(this.$componentName.AlertDialog, value);
+      }
     }
   }
 });
