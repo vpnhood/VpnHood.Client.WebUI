@@ -118,8 +118,13 @@ export class VpnHoodApp {
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
 
             // Check is user set don't show public server hint
-            const showServerHintStatus: boolean = localStorage.getItem("vh:DontShowPublicServerHint") === "true";
-            await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog,  showServerHintStatus);
+            const showServerHintStatus: boolean = localStorage.getItem("vh:DontShowPublicServerHint") !=="true";
+
+            // Show public server hint or Show premium server ad
+            if (showServerHintStatus)
+                await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
+            else
+                await  ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog);
 
         } else {
             // Close Premium server Ad

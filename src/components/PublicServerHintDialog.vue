@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import { ComponentRouteController } from '@/services/ComponentRouteController';
 export default defineComponent({
   name: "PublicServerHintDialog",
   props:{
@@ -63,6 +64,7 @@ export default defineComponent({
     async showPremiumServerAd(): Promise<void>{
        localStorage.setItem("vh:DontShowPublicServerHint", this.isDontShowMessage.toString());
       this.$emit('update:modelValue',false);
+      await ComponentRouteController.showComponent(this.$componentName.PremiumServerAdDialog);
     }
   }
 })
