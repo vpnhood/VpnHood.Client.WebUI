@@ -3,7 +3,8 @@
   <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow" />
 
   <!-- App bar -->
-  <AppBar @openNavigationDrawer="ComponentRouteController.showComponent($componentName.NavigationDrawer)" />
+  <AppBar />
+
   <v-container class="h-100 pt-0">
     <v-row align-content="space-between" class="h-100 my-0">
 
@@ -153,8 +154,6 @@
 </template>
 
 <script lang="ts">
-// TODO Reserve navigation drawer icon size
-// TODO Check trudy reported issue
 // TODO Handle nested dialog by router query
 import { defineComponent } from 'vue';
 import { AppConnectionState, FilterMode } from "@/services/VpnHood.Client.Api";
@@ -193,7 +192,7 @@ export default defineComponent({
     }
   },
   created() {
-    // Reload 'state' and 'setting' every 1 second if app window is focused.
+    // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
         await this.$vpnHoodApp.reloadState();
@@ -212,7 +211,7 @@ export default defineComponent({
           x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
 
         if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
-          ComponentRouteController.showComponent(this.$componentName.ServersSheet);
+          await ComponentRouteController.showComponent(this.$componentName.ServersSheet);
           return;
         }
       }

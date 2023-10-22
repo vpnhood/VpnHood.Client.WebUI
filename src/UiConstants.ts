@@ -5,7 +5,7 @@ export class UiConstants {
 export enum ComponentName {
     PremiumServerAdDialog = "PremiumServerAdDialog",
     PublicServerHintDialog = "PublicServerHintDialog",
-    tunnelClientCountryDialog = "TunnelClientCountryDialog",
+    TunnelClientCountryDialog = "TunnelClientCountryDialog",
     NavigationDrawer = "NavigationDrawer",
     AppFilterSheet = "AppFilterSheet",
     SettingSheet = "SettingSheet",

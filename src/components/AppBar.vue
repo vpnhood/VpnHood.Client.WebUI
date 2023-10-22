@@ -2,7 +2,7 @@
   <v-app-bar color="transparent" elevation="0">
 
     <!-- Navigation drawer button -->
-    <v-app-bar-nav-icon @click="$emit('openNavigationDrawer')"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent($componentName.NavigationDrawer)"></v-app-bar-nav-icon>
 
     <!-- App name -->
     <v-spacer></v-spacer>
@@ -17,11 +17,14 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {ComponentRouteController} from "@/services/ComponentRouteController";
 
 export default defineComponent({
   name: "AppBar",
-  emits: [
-    "openNavigationDrawer",
-  ],
+  data(){
+    return{
+      ComponentRouteController
+    }
+  },
 })
 </script>

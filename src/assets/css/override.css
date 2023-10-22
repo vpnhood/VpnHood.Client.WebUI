@@ -7,7 +7,8 @@
 /*noinspection CssUnusedSymbol*/
 .v-navigation-drawer__scrim,
 .v-overlay__scrim {
-    opacity: 60% !important;
+    opacity: 0.6;
+    transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
 /*For handle UI in old browser*/
