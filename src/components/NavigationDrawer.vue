@@ -95,8 +95,7 @@ export default defineComponent({
     modelValue: Boolean,
   },
   emits: [
-    "update:modelValue",
-    "openSettings",
+    "update:modelValue"
   ],
   methods: {
     async openSettingsPage(): Promise<void> {

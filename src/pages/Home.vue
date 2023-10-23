@@ -138,7 +138,7 @@
   </v-container>
 
   <!-- Show Toast on top of the page when a new server is added -->
-  <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="success">
+  <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="secondary">
     {{ $t("NEW_SERVER_ADDED") }}
   </v-snackbar>
 
@@ -154,7 +154,6 @@
 </template>
 
 <script lang="ts">
-// TODO Handle nested dialog by router query
 import { defineComponent } from 'vue';
 import { AppConnectionState, FilterMode } from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";

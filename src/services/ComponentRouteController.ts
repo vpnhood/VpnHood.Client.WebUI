@@ -31,7 +31,7 @@ export class ComponentRouteController {
             showLock.acquire("showLock", async () => {
                 await this.showComponentInternal(componentName, value);
             });
-        }, value ? 100 : 0);
+        }, value ? 200 : 100);
 
         return Promise.resolve();
     }

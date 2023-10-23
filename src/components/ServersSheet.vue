@@ -183,7 +183,7 @@ export default defineComponent({
   data() {
     return {
       newClientProfileName: "",
-      actionOnCurrentClientProfileItem: ClientProfileItem,
+      actionOnCurrentClientProfileItem: {} as ClientProfileItem,
       ComponentRouteController,
     }
   },
