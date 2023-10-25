@@ -48,12 +48,14 @@
 
             <!-- Profile name -->
             <v-list-item-title class="mb-2">
-              <span class="title me-1">{{ item.clientProfile.name ?? item.token.name }} </span>
-              <span class="text-caption text-right justify-end">(sid:{{ item.token.sid }})</span>
+              <span class="title">{{ item.clientProfile.name ?? item.token.name }} </span>
             </v-list-item-title>
 
             <!-- Support ID -->
-            <v-list-item-subtitle class="text-caption">{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</v-list-item-subtitle>
+            <v-list-item-subtitle class="text-caption">
+              <span>{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</span>
+              <span class="ms-1 text-caption text-right justify-end">(sid:{{ item.token.sid }})</span>
+            </v-list-item-subtitle>
 
             <!-- Menu -->
             <template v-slot:append>
