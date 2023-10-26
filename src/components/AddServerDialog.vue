@@ -1,18 +1,6 @@
 <template>
-  <v-dialog max-width="600" :modelValue="modelValue"
+  <v-dialog id="addServerDialog" max-width="600" :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue',$event)">
-
-    <!-- Add Test Server -->
-    <v-card v-if="testServerVisible" class="mx-auto mb-5 pb-3" width="100%" variant="flat">
-      <v-card-title>
-        {{ $t("ADD_TEST_SERVER") }}
-        <v-divider class="mt-2"/>
-      </v-card-title>
-      <v-card-text class="pt-0">{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-text>
-      <v-card-actions class="px-4">
-        <v-btn variant="tonal" :block="true" color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
-      </v-card-actions>
-    </v-card>
 
     <!-- Add Private Server -->
     <v-card class="mx-auto pb-3" width="100%" variant="flat">
@@ -23,7 +11,7 @@
       <v-card-text class="pt-0">{{ $t("ADD_ACCESS_KEY_SUBTITLE") }}</v-card-text>
       <v-card-actions class="px-4">
         <v-text-field
-            v-model="accessKeyValue"
+            v-model="accessKey"
             :error-messages="accessKeyErrorMessage"
             :placeholder="accessKeyPrefix"
             @input="addAccessKey"
@@ -35,6 +23,18 @@
             bg-color="#eceffb"
             :autofocus="true"
         ></v-text-field>
+      </v-card-actions>
+    </v-card>
+
+    <!-- Add Test Server -->
+    <v-card v-if="testServerVisible" class="mx-auto mt-5 pt-3" width="100%" variant="flat">
+      <v-card-title>
+        {{ $t("ADD_TEST_SERVER") }}
+        <v-divider class="mt-2"/>
+      </v-card-title>
+      <v-card-text class="pt-0">{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-text>
+      <v-card-actions class="px-4">
+        <v-btn variant="tonal" :block="true" color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
       </v-card-actions>
     </v-card>
 
@@ -55,7 +55,7 @@ export default defineComponent({
   ],
   data() {
     return {
-      accessKeyValue: "",
+      accessKey: "",
       accessKeyErrorMessage: "",
       accessKeyPrefix: "vh://",
     }
@@ -70,35 +70,20 @@ export default defineComponent({
   methods: {
     async addAccessKey(): Promise<void> {
 
-      // Remove 'vh://' from text field value if exists
-      const accessKey = this.accessKeyValue?.substring(0, 5) === this.accessKeyPrefix
-          ? this.accessKeyValue.substring(5)
-          : this.accessKeyValue;
-
       try {
-        // Check AccessKey is valid base64 format
-        const validateAccessKey = JSON.parse(atob(accessKey));
 
-        try {
-          // Add accessKey
-          await this.$vpnHoodApp.addAccessKey(accessKey);
+        // Add accessKey
+        const clientProfile = await this.$vpnHoodApp.addAccessKey(this.accessKey);
 
-          // Find new added client profile ID
-          const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.token.sid === validateAccessKey.sid);
+        // Find new added client profile ID
+        const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.tokenId === clientProfile.tokenId);
 
-          // Connect to the server if new client profile is added
-          if (clientProfileItem)
-            await this.connect(clientProfileItem.clientProfileId);
+        // Connect to the server if new client profile is added
+        if (clientProfileItem)
+          await this.connect(clientProfileItem.clientProfileId);
 
-          else throw Error;
+        else throw Error;
 
-        } catch (err) {
-          // Check is text field value started with vh://
-          if (this.accessKeyValue?.substring(0, 5) !== this.accessKeyPrefix)
-            this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_PREFIX") + this.accessKeyPrefix;
-
-          else throw Error;
-        }
       } catch (err) {
         // If accessKey is not valid base64 format or invalid
         console.error(err);
@@ -137,3 +122,8 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+#addServerDialog .v-overlay__content{
+  top: 50px;
+}
+</style>

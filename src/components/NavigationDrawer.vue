@@ -30,55 +30,67 @@
     <v-list dense class="pt-0">
 
       <!-- Settings -->
-      <v-list-item
-          :title="$t('SETTINGS')"
-          prepend-icon="mdi-cog"
-          class="menu-item color-gray"
-          @click="openSettingsPage"
-      >
+      <v-list-item class="menu-item has-border" @click="openSettingsPage">
+
+        <v-list-item-title>
+          <v-icon>mdi-cog</v-icon>
+          <span class="ms-3">{{$t('SETTINGS')}}</span>
+        </v-list-item-title>
+
       </v-list-item>
 
       <!-- Diagnose -->
-      <v-list-item
-          :title="$t('DIAGNOSE')"
-          prepend-icon="mdi-speedometer"
-          class="menu-item color-gray"
-          :disabled="!$vpnHoodApp.canDiagnose()"
-          @click="diagnose"
-      >
+      <v-list-item class="menu-item has-border" :disabled="!$vpnHoodApp.canDiagnose()" @click="diagnose">
+
+        <v-list-item-title>
+          <v-icon>mdi-stethoscope</v-icon>
+          <span class="ms-3">{{$t('DIAGNOSE')}}</span>
+        </v-list-item-title>
       </v-list-item>
 
       <!-- Whats new -->
       <v-list-item
-          :title="$t('WHATS_NEW')"
-          prepend-icon="mdi-bullhorn"
-          class="menu-item color-gray"
+          :nav="true"
+          density="compact"
+          class="menu-item mt-4"
           href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
           @click="$emit('update:modelValue',false)"
-          target="_blank"
-      >
+          target="_blank">
+
+        <v-list-item-title>
+          <v-icon>mdi-bullhorn</v-icon>
+          <span class="ms-3 text-caption">{{$t('WHATS_NEW')}}</span>
+        </v-list-item-title>
       </v-list-item>
 
       <!-- Send feedback -->
       <v-list-item
-          :title="$t('SEND_FEEDBACK')"
-          prepend-icon="mdi-message-alert"
-          class="menu-item color-gray"
+          :nav="true"
+          density="compact"
+          class="menu-item"
           href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
           @click="$emit('update:modelValue',false)"
-          target="_blank"
-      >
+          target="_blank">
+
+        <v-list-item-title>
+          <v-icon>mdi-message-alert</v-icon>
+          <span class="ms-3 text-caption">{{$t('SEND_FEEDBACK')}}</span>
+        </v-list-item-title>
       </v-list-item>
 
       <!-- Create personal server -->
       <v-list-item
-          :title="$t('CREATE_PERSONAL_SERVER')"
-          prepend-icon="mdi-shield-account-variant"
-          class="menu-item color-gray"
+          :nav="true"
+          density="compact"
+          class="menu-item"
           href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
           @click="$emit('update:modelValue',false)"
-          target="_blank"
-      >
+          target="_blank">
+
+        <v-list-item-title>
+          <v-icon>mdi-server</v-icon>
+          <span class="ms-3 text-caption">{{$t('CREATE_PERSONAL_SERVER')}}</span>
+        </v-list-item-title>
       </v-list-item>
 
     </v-list>
@@ -95,8 +107,7 @@ export default defineComponent({
     modelValue: Boolean,
   },
   emits: [
-    "update:modelValue",
-    "openSettings",
+    "update:modelValue"
   ],
   methods: {
     async openSettingsPage(): Promise<void> {
@@ -125,6 +136,12 @@ export default defineComponent({
 
 <style scoped>
 .menu-item {
+  color: var(--gray);
+}
+.menu-item.has-border{
   border-bottom: 1px #e8e8e8 solid;
+}
+.menu-item i{
+  opacity: .8;
 }
 </style>

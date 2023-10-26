@@ -3,7 +3,7 @@ import {
     AppConnectionState,
     AppFeatures,
     AppSettings,
-    AppState,
+    AppState, ClientProfile,
     ClientProfileItem,
     ClientProfileUpdateParams,
     DeviceAppInfo,
@@ -95,7 +95,7 @@ export class VpnHoodApp {
         // noinspection OverlyComplexBooleanExpressionJS
         if (this.data.state.connectionState === AppConnectionState.Connected &&
             this.data.state.sessionStatus?.suppressedTo &&
-            this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None &&
+            this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.Other &&
             this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
             this.data.uiState.showSuppressSnackbar = true
         }
@@ -112,7 +112,7 @@ export class VpnHoodApp {
             x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.token.name === "VpnHood Public Servers" && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
+        if (defaultClientProfile?.token.name === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -163,9 +163,10 @@ export class VpnHoodApp {
         await this.reloadSettings();
     }
 
-    public async addAccessKey(accessKey: string): Promise<void> {
-        await this.apiClient.addAccessKey(accessKey);
+    public async addAccessKey(accessKey: string): Promise<ClientProfile> {
+        const clientProfile = await this.apiClient.addAccessKey(accessKey);
         await this.reloadSettings();
+        return clientProfile;
     }
 
     public async addTestServer(): Promise<void> {

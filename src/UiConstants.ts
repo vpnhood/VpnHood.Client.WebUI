@@ -12,5 +12,7 @@ export enum ComponentName {
     ProtocolDialog = "ProtocolDialog",
     ServersSheet = "ServersSheet",
     AlertDialog = "AlertDialog",
-    AddServerDialog = "AddServerDialog"
+    AddServerDialog = "AddServerDialog",
+    RenameServerDialog = "RenameServerDialog",
+    ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",
 }
