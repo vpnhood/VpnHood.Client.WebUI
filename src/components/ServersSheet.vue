@@ -1,9 +1,9 @@
 <template>
-  <v-bottom-sheet :inset="true" :scrollable="true" :fullscreen="true" :modelValue="modelValue"
+  <v-bottom-sheet :inset="true" :scrollable="true" :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Page header -->
-    <v-toolbar color="secondary" elevation="3" style="z-index: 1;">
+    <v-toolbar class="rounded-t-lg" color="secondary" elevation="3" style="z-index: 1;" >
 
       <!-- Close button -->
       <v-btn icon="mdi-close" size="small" @click="$emit('update:modelValue',false)"></v-btn>
@@ -22,13 +22,18 @@
     <!-- Servers list -->
     <v-card>
       <v-card-item>
+
+        <!-- Show alert, if user has not any server -->
         <v-alert
             v-if="$vpnHoodApp.data.clientProfileItems.length === 0"
             :text="$t('NO_SERVER_AVAILABLE')"
             density="compact"
             type="warning"
+            class="mb-5"
         >
         </v-alert>
+
+        <!-- Servers list -->
         <v-list v-else>
           <!-- Server item -->
           <v-list-item

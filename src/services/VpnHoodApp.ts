@@ -112,7 +112,7 @@ export class VpnHoodApp {
             x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.token.name === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
+        if (defaultClientProfile?.clientProfile.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");

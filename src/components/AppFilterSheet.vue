@@ -1,6 +1,11 @@
 <template>
-  <v-bottom-sheet :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" :inset="true" :fullscreen="true"
-                  :scrollable="true">
+  <v-bottom-sheet
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue',$event)"
+      :inset="true"
+      :scrollable="true"
+      :fullscreen="true"
+  >
 
     <!-- Page header -->
     <v-toolbar color="secondary" elevation="3" style="z-index: 1;" density="compact">

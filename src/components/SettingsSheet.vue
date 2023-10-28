@@ -1,9 +1,9 @@
 <template>
-  <v-bottom-sheet :inset="true" :fullscreen="true" :scrollable="true" :modelValue="modelValue"
+  <v-bottom-sheet :inset="true" :scrollable="true" :modelValue="modelValue"
                   @update:modelValue="$emit('update:modelValue',$event)">
 
     <!-- Page header -->
-    <v-toolbar color="secondary" elevation="3" style="z-index: 1;" density="compact">
+    <v-toolbar class="rounded-t-lg" color="secondary" elevation="3" style="z-index: 1;" density="compact">
 
       <!-- Close button -->
       <v-btn icon="mdi-close" size="small" @click="$emit('update:modelValue',false)"></v-btn>

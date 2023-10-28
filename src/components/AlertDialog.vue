@@ -18,7 +18,7 @@
 
         <!-- Diagnose -->
         <v-btn
-            v-if="!$vpnHoodApp.data.state.logExists && $vpnHoodApp.data.state.lastActiveClientProfileId"
+            v-if="!$vpnHoodApp.data.state.logExists && $vpnHoodApp.data.state.hasProblemDetected"
             rounded="pill"
             variant="flat"
             :block="true"
