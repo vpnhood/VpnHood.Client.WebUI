@@ -2,10 +2,10 @@
   <v-dialog
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
-      max-width="600"      
+      max-width="600"
   >
     <v-card>
-      <v-card-title class="bg-master-green">{{$t("TUNNEL_MY_COUNTRY")}}</v-card-title>
+      <v-card-title class="bg-master-green">{{ $t("TUNNEL_MY_COUNTRY") }}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>

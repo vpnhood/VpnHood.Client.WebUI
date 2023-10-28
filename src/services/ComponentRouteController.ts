@@ -25,13 +25,13 @@ export class ComponentRouteController {
     }
 
     public static async showComponent(componentName: string, value: boolean = true): Promise<void> {
-        //show component by timeout tp make sure previus back is finished
+        //show component by timeout tp make sure previous back is finished
         setTimeout(() => {
             const showLock: AsyncLock = new AsyncLock();
             showLock.acquire("showLock", async () => {
                 await this.showComponentInternal(componentName, value);
             });
-        }, value ? 100 : 0);
+        }, value ? 200 : 100);
 
         return Promise.resolve();
     }
@@ -47,11 +47,10 @@ export class ComponentRouteController {
             // make sure remove the route (because back may not work)
             const query = { ...route.query };
             delete query[componentName];
-            router.push({ path: route.path, query: query, replace: true });
+            await router.push({ path: route.path, query: query, replace: true });
 
             // remove the route from history
             router.back();
         }
     }
-
 }

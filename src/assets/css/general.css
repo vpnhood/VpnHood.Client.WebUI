@@ -53,11 +53,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 
 .btn {
     transition: all 0.4s ease;
-    background-color: var(--sky-blue);
+    background-color: var(--sky-blue) !important;
     color: white;
 }
 
-.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green));}
+.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green)) !important;}
 .blue-border-btn i {line-height: inherit;}
 
 /** --------------------Home Middle Section-------------------- **/

@@ -10,7 +10,7 @@
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
-    <span class="text-disabled text-caption me-4">v {{ $vpnHoodApp.getAppVersion(false) }}</span>
+    <span class="text-disabled text-caption me-4">v{{ $vpnHoodApp.getAppVersion(false) }}</span>
 
   </v-app-bar>
 </template>
