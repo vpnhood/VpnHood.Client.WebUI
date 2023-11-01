@@ -1,15 +1,15 @@
 <template>
 
   <!-- Page header -->
-  <v-toolbar color="secondary" elevation="3" density="compact">
+  <v-app-bar color="secondary" density="compact" elevation="3">
 
     <!-- Close button -->
-    <v-btn icon="mdi-close" size="small" @click="$router.replace('/')"></v-btn>
+    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
 
     <!-- Page title -->
-    <v-toolbar-title class="text-body-1" :text="$t('SETTINGS')"></v-toolbar-title>
+    <v-app-bar-title class="text-body-1 text-white">{{$t('SETTINGS')}}</v-app-bar-title>
 
-  </v-toolbar>
+  </v-app-bar>
 
   <v-sheet>
 

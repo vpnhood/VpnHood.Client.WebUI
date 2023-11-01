@@ -1,21 +1,23 @@
 <template>
 
   <!-- Page header -->
-  <v-toolbar color="secondary" elevation="3" >
+  <v-app-bar color="secondary" density="compact" elevation="3">
 
     <!-- Close button -->
-    <v-btn icon="mdi-close" size="small" @click="$router.replace('/')"></v-btn>
+    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
 
     <!-- Page title -->
-    <v-toolbar-title class="text-body-1" :text="$t('SERVERS')"></v-toolbar-title>
-    <v-spacer></v-spacer>
+    <v-app-bar-title class="text-body-1 text-white">{{$t('SERVERS')}}</v-app-bar-title>
 
     <!-- Add server button -->
-    <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
-      <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
-      {{ $t("ADD_SERVER") }}
-    </v-btn>
-  </v-toolbar>
+    <template v-slot:append>
+      <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
+        <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
+        {{ $t("ADD_SERVER") }}
+      </v-btn>
+    </template>
+
+  </v-app-bar>
 
   <v-sheet>
 
