@@ -1,11 +1,26 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import HomeView from '../pages/Home.vue'
+import HomePage from '../pages/Home.vue'
 
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: HomeView
+        name: 'Home',
+        component: HomePage
+    },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: () => import(/* webpackChunkName: "Settings" */ '@/pages/Settings.vue'),
+    },
+    {
+        path: '/apps-filter',
+        name: 'Apps Filter',
+        component: () => import(/* webpackChunkName: "AppsFilter" */ '@/pages/AppsFilter.vue'),
+    },
+    {
+        path: '/servers',
+        name: 'Servers',
+        component: () => import(/* webpackChunkName: "Servers" */ '@/pages/Servers.vue'),
     }
 ];
 

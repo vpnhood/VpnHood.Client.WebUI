@@ -30,7 +30,9 @@
     <v-list dense class="pt-0">
 
       <!-- Settings -->
-      <v-list-item class="menu-item has-border" @click="openSettingsPage">
+      <v-list-item
+          class="menu-item has-border"
+          @click="$router.replace({path: '/settings'})">
 
         <v-list-item-title>
           <v-icon>mdi-cog</v-icon>

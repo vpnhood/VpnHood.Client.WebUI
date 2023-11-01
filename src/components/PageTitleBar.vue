@@ -1,17 +1,22 @@
-<script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-
-@Component({})
-export default class PageTitleBar extends Vue {
-
-}
-</script>
-
 <template>
-  $END$
+  <v-app-bar
+      color="secondary"
+      density="compact"
+      elevation="3"
+  >
+    <!-- Close button -->
+    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.go(-1)"></v-app-bar-nav-icon>
+
+    <!-- Page title -->
+    <v-app-bar-title class="text-body-1 text-white">{{$route.name}}</v-app-bar-title>
+
+  </v-app-bar>
 </template>
 
-<style scoped>
+<script lang="ts">
+import {defineComponent} from "vue";
 
-</style>
+export default defineComponent({
+  name: "PageTitleBar",
+})
+</script>

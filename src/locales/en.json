@@ -47,7 +47,7 @@
   "PUBLIC_SERVER_WARNING_TITLE": "Public Server Hint",
   "PUBLIC_SERVER_WARNING": "It is a connection to public servers created for evaluation. It may be slow or not accessible sometimes.<br/>To have a reliable and fast connection, you need to connect to Private Servers.",
   "DONT_SHOW_MESSAGE": "Don't show this message again.",
-  "APP_FILTER": "Allowed Apps",
+  "APP_FILTER": "Apps Filter",
   "APP_FILTER_DESC": "Which apps can use VPN?",
   "APP_FILTER_STATUS_TITLE": "Apps",
   "APP_FILTER_STATUS_ALL": "All apps",

@@ -1,6 +1,31 @@
 <template>
-  <v-dialog id="addServerDialog" max-width="600" :modelValue="modelValue"
-            @update:modelValue="$emit('update:modelValue',$event)">
+  <v-bottom-sheet
+      id="addServerDialog"
+      @update:modelValue="$emit('update:modelValue',$event)"
+      :inset="true"
+      :modelValue="modelValue"
+
+  >
+
+    <!-- Add Test Server -->
+    <v-alert
+        v-if="testServerVisible"
+        color="warning"
+        :closable="true"
+        rounded="0"
+        class="text-caption"
+    >
+      <p>{{ $t('ADD_TEST_SERVER_SUBTITLE') }}</p>
+      <v-btn
+          class="mt-3"
+          variant="tonal"
+          @click="addTestServer()"
+          size="small"
+      >
+        {{ $t("ADD_TEST_SERVER") }}
+      </v-btn>
+
+    </v-alert>
 
     <!-- Add Private Server -->
     <v-card class="mx-auto pb-3" width="100%" variant="flat">
@@ -18,27 +43,15 @@
             append-inner-icon="mdi-key"
             spellcheck="false"
             autocomplete="off"
+            :autofocus="true"
             density="compact"
             color="sharp-master-green"
             bg-color="#eceffb"
-            :autofocus="true"
         ></v-text-field>
       </v-card-actions>
     </v-card>
 
-    <!-- Add Test Server -->
-    <v-card v-if="testServerVisible" class="mx-auto mt-5 pt-3" width="100%" variant="flat">
-      <v-card-title>
-        {{ $t("ADD_TEST_SERVER") }}
-        <v-divider class="mt-2"/>
-      </v-card-title>
-      <v-card-text class="pt-0">{{ $t("ADD_TEST_SERVER_SUBTITLE") }}</v-card-text>
-      <v-card-actions class="px-4">
-        <v-btn variant="tonal" :block="true" color="master-green" @click="addTestServer()">{{ $t("ADD") }}</v-btn>
-      </v-card-actions>
-    </v-card>
-
-  </v-dialog>
+  </v-bottom-sheet>
 </template>
 
 <script lang="ts">
@@ -95,11 +108,13 @@ export default defineComponent({
       this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
 
+      // Close current sheet
+      this.$emit('update:modelValue', false);
+
       // Close parent sheet
       this.$emit('newAccessKeyAdded');
 
-      // Close current sheet
-      this.$emit('update:modelValue', false);
+      this.accessKey = "";
 
       // Show new server added snackbar
       this.$vpnHoodApp.data.uiState.showNewServerAdded = true;
@@ -123,7 +138,7 @@ export default defineComponent({
 })
 </script>
 <style>
-#addServerDialog .v-overlay__content{
+/*#addServerDialog .v-overlay__content{
   top: 50px;
-}
+}*/
 </style>

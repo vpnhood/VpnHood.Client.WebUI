@@ -4,6 +4,13 @@ import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {createVuetify} from 'vuetify'
 
 export default createVuetify({
+    defaults:{
+        VSheet: {
+            color: '#eaeaea',
+            height: '100%',
+            class: 'pa-4',
+        },
+    },
         components: {
             VBottomSheet,
         },

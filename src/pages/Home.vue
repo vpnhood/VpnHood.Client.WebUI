@@ -102,7 +102,8 @@
             variant="text"
             prepend-icon="mdi-apps"
             class="config-item mb-2"
-            @click="ComponentRouteController.showComponent($componentName.AppFilterSheet)">
+            to="/apps-filter"
+        >
           <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
           <span class="text-capitalize text-caption color-light-purple">{{ appFilterStatus() }}</span>
@@ -130,7 +131,8 @@
             variant="text"
             prepend-icon="mdi-dns"
             class="config-item mb-0"
-            @click="ComponentRouteController.showComponent($componentName.ServersSheet)">
+            to="/servers"
+        >
           <span>{{ $t("SELECTED_SERVER") }}</span>
           <v-icon>mdi-chevron-right</v-icon>
           <span class="text-capitalize text-caption color-light-purple">{{ getDefaultClientProfileName() }}</span>
@@ -151,9 +153,6 @@
   <PublicServerHintDialog v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
   <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
   <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
-  <AppFilterSheet v-model="ComponentRouteController.create($componentName.AppFilterSheet).isShow"/>
-  <ServersSheet v-model="ComponentRouteController.create($componentName.ServersSheet).isShow"/>
-  <SettingSheet v-model="ComponentRouteController.create($componentName.SettingSheet).isShow"/>
 </template>
 
 <script lang="ts">
@@ -161,10 +160,7 @@ import {defineComponent} from 'vue';
 import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
 import ProtocolDialog from "@/components/ProtocolDialog.vue";
-import ServersSheet from "@/components/ServersSheet.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import SettingSheet from "@/components/SettingsSheet.vue";
-import AppFilterSheet from "@/components/AppFilterSheet.vue";
 import PremiumServerAdDialog from "@/components/PremiumServerAdDialog.vue";
 import AppBar from "@/components/AppBar.vue";
 import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
@@ -172,17 +168,14 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 export default defineComponent({
-  name: 'HomeView',
+  name: 'HomePage',
   components: {
     UpdateSnackbar,
     SuppressSnackbar,
     PublicServerHintDialog,
     AppBar,
     PremiumServerAdDialog,
-    AppFilterSheet,
-    SettingSheet,
     NavigationDrawer,
-    ServersSheet,
     ProtocolDialog,
     TunnelClientCountryDialog
   },

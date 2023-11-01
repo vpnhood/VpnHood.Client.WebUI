@@ -16,7 +16,6 @@
   <!-- Maximize Premium Server Ad -->
   <v-dialog
       transition="dialog-bottom-transition"
-      :eager="true"
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
       :fullscreen="true"
@@ -26,7 +25,7 @@
       <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center">
 
         <!-- Image -->
-        <v-img src="../assets/images/ad-icon.png" max-width="400px" class="mx-auto"/>
+        <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="400px" class="mx-auto"/>
 
         <!-- Title -->
         <h3 id="adTitle" class="title-bold color-sharp-master-green text-uppercase pb-2 mb-5 mt-5">
