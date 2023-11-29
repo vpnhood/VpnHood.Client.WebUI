@@ -63,7 +63,7 @@
             height="40px"
             width="190px"
             rounded="pill"
-            :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting"
+            :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting || $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
             :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn' : '', 'btn text-button mt-5']"
             @click="onConnectButtonClick"
         >
@@ -223,19 +223,14 @@ export default defineComponent({
         return this.$t("STOP_DIAGNOSING");
 
       else
-        switch (this.$vpnHoodApp.data.state.connectionState) {
-          case AppConnectionState.Connecting:
-            return this.$t('DISCONNECT');
-          case AppConnectionState.Waiting:
-            return this.$t('WAITING');
-          case AppConnectionState.Connected:
-            return this.$t('DISCONNECT');
-          case AppConnectionState.Disconnecting:
-            return this.$t('DISCONNECTING');
-          case AppConnectionState.Diagnosing:
-            return this.$t('STOP_DIAGNOSING');
-          default:
-            return this.$t('CONNECT');
+      switch (this.$vpnHoodApp.data.state.connectionState) {
+          case AppConnectionState.Initializing: return this.$t('INITIALIZING');
+          case AppConnectionState.Connecting: return this.$t('DISCONNECT');
+          case AppConnectionState.Waiting: return this.$t('WAITING');
+          case AppConnectionState.Connected: return this.$t('DISCONNECT');
+          case AppConnectionState.Disconnecting: return this.$t('DISCONNECTING');
+          case AppConnectionState.Diagnosing: return this.$t('STOP_DIAGNOSING');
+          default: return this.$t('CONNECT');
         }
     },
 

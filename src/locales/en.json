@@ -5,6 +5,7 @@
   "help": "Help",
   "VERSION": "Version",
   "CONNECT": "Connect",
+  "INITIALIZING": "Initializing...", 
   "CONNECTING": "Connecting...",
   "CONNECTED": "Connected",
   "DISCONNECT": "Disconnect",
