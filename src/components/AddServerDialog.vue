@@ -4,7 +4,6 @@
       @update:modelValue="$emit('update:modelValue',$event)"
       :inset="true"
       :modelValue="modelValue"
-
   >
 
     <!-- Add Test Server -->
@@ -16,6 +15,7 @@
         class="text-caption"
     >
       <p>{{ $t('ADD_TEST_SERVER_SUBTITLE') }}</p>
+
       <v-btn
           class="mt-3"
           variant="tonal"
@@ -73,6 +73,14 @@ export default defineComponent({
       accessKeyPrefix: "vh://",
     }
   },
+
+  updated() {
+    if (!this.modelValue) {
+      this.accessKey = "";
+      this.accessKeyErrorMessage = "";
+    }
+  },
+
   computed: {
     testServerVisible(): boolean {
       return !this.$vpnHoodApp.data.clientProfileItems.find(
@@ -137,8 +145,3 @@ export default defineComponent({
   }
 })
 </script>
-<style>
-/*#addServerDialog .v-overlay__content{
-  top: 50px;
-}*/
-</style>

@@ -46,8 +46,8 @@
 
                 <!-- Usage -->
                 <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-                  <span class="text-body-1">{{ bandwidthUsage()?.used }} GB {{ $t("OF") }}</span>
-                  <span class="color-sky-blue">{{ bandwidthUsage()?.total }} GB</span>
+                  <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
+                  <span class="color-sky-blue">{{ bandwidthUsage()?.Total }}</span>
                 </div>
 
                 <!-- Check -->
@@ -256,7 +256,7 @@ export default defineComponent({
     },
 
     // Calculate user bandwidth usage
-    bandwidthUsage(): { used: number, total: number } | null {
+    bandwidthUsage(): { Used: string, Total: string } | null {
       if (!this.$vpnHoodApp.data.state || !this.$vpnHoodApp.data.state.sessionStatus || !this.$vpnHoodApp.data.state.sessionStatus.accessUsage)
         return null;
 
@@ -269,9 +269,9 @@ export default defineComponent({
       let traffic = this.$vpnHoodApp.data.state.accountTraffic;
 
       let ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
-      ret.total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)) : Number((ret.total / mb).toFixed(0));
-      ret.used = ret.used >= gb ? Number((ret.used / gb).toFixed(1)) : Number((ret.used / mb).toFixed(0));
-      return ret;
+      const total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)).toString() + " GB" : Number((ret.total / mb).toFixed(0)).toString() + " MB";
+      const used = ret.used >= gb ? Number((ret.used / gb).toFixed(1)).toString() + " GB" : Number((ret.used / mb).toFixed(0)).toString() + " MB";
+      return {Used: used, Total: total};
     },
 
     // Return connection download and upload speed based on Mbps

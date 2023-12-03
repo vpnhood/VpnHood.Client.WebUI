@@ -2,15 +2,16 @@
   <v-snackbar
       :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)"
       location="top"
+      max-width="570px"
       :vertical="true"
       :timeout="-1"
       :color="$vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >
-
     <p class="text-subtitle-1 mb-2">
       {{
       $vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")
-      }}</p>
+      }}
+    </p>
 
     <p> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
     <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
