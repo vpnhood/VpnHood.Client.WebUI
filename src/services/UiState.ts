@@ -9,7 +9,7 @@ export class UiState {
     public userIgnoreSuppressByTime: Date | null = null;
 
     // Update message state
-    public showUpdateSnackbar: boolean = false;
+    public showUpdateSnackbar: boolean = true;
 
     // New server added message state
     public showNewServerAdded: boolean = false;

@@ -1,19 +1,20 @@
-import { ClientApiFactory } from "@/services/ClientApiFactory";
+import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
     AppConnectionState,
     AppFeatures,
     AppSettings,
-    AppState, ClientProfile,
+    AppState,
+    ClientProfile,
     ClientProfileItem,
     ClientProfileUpdateParams,
     DeviceAppInfo,
     SessionSuppressType,
 } from "@/services/VpnHood.Client.Api";
-import { ApiClient } from "./VpnHood.Client.Api";
-import { UiState } from "@/services/UiState";
-import { ComponentName, UiConstants } from "@/UiConstants";
-import { ComponentRouteController } from "@/services/ComponentRouteController";
-import { reactive } from "vue";
+import {ApiClient} from "./VpnHood.Client.Api";
+import {UiState} from "@/services/UiState";
+import {ComponentName, UiConstants} from "@/UiConstants";
+import {ComponentRouteController} from "@/services/ComponentRouteController";
+import {reactive} from "vue";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -97,7 +98,13 @@ export class VpnHoodApp {
             this.data.state.sessionStatus?.suppressedTo &&
             this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.Other &&
             this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-            this.data.uiState.showSuppressSnackbar = true
+            this.data.uiState.showSuppressSnackbar = true;
+        }
+
+        // Hide 'suppress' message
+        if (this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None &&
+            this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None){
+            this.data.uiState.showSuppressSnackbar = false;
         }
     }
 

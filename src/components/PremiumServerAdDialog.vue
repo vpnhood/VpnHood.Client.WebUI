@@ -60,9 +60,9 @@
             variant="outlined"
             color="sky-blue"
             class="text-capitalize"
+            :text="$t('CONTINUE_WITH_FREE_SLOW_SPEED')"
             @click="$vpnHoodApp.connect()"
         >
-          {{$t('CONTINUE_WITH_FREE_SLOW_SPEED')}}
         </v-btn>
 
         <!-- Close button -->
@@ -73,9 +73,10 @@
             rounded="pill"
             variant="outlined"
             color="sky-blue"
+            :text="$t('CLOSE')"
             @click="$emit('update:modelValue',false); showByUser = false">
-          {{$t('CLOSE')}}
         </v-btn>
+
       </v-card-item>
     </v-card>
   </v-dialog>

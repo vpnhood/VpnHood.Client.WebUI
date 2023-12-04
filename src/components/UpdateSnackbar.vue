@@ -7,37 +7,56 @@
       :timeout="-1"
       :color="$vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
   >
-    <p class="text-subtitle-1 mb-2">
+    <p class="text-subtitle-1 mb-3">
       {{
       $vpnHoodApp.data.state.versionStatus === VersionStatus.Deprecated ? $t("VERSION_IS_DEPRECATED") : $t("VERSION_IS_OLD")
       }}
     </p>
 
-    <p> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
-    <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
+    <!-- Update from google play -->
+    <v-btn
+        :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
+        color="primary"
+        class="text-capitalize"
+        :block="true"
+        target="_blank"
+        :text="$t('UPDATE_FROM_GOOGLE_PLAY')"
+    >
+    </v-btn>
 
-    <v-divider class="mt-4"/>
+    <!-- Update from direct link -->
+    <v-btn
+        class="mt-2 text-capitalize"
+        :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
+        variant="tonal"
+        :block="true"
+        target="_blank"
+        :text="$t('UPDATE_FROM_DIRECT_LINK')"
+    >
+    </v-btn>
+    <!-- Direct link notice -->
+    <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-50">
+      {{$t('UPDATE_FROM_DIRECT_LINK_NOTICE')}}
+    </p>
 
-    <template v-slot:actions>
+    <v-divider class="mt-3 mb-2"/>
 
-      <!-- Update button -->
-      <v-btn
-          :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
-          variant="tonal"
-          target="_blank"
-          :text="$t('UPDATE')"
-      >
-      </v-btn>
+    <div class="d-flex align-center justify-space-between">
+      <!-- Compare versions -->
+      <div class="text-caption">
+        <p class="opacity-30"> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
+        <p class="opacity-50"> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
+      </div>
 
       <!-- Ignore button -->
       <v-btn
           variant="text"
           @click="ignoreUpdate"
+          size="small"
           :text="$t('IGNORE')"
       >
       </v-btn>
-
-    </template>
+    </div>
   </v-snackbar>
 </template>
 

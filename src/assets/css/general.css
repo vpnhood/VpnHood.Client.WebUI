@@ -38,6 +38,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 .bg-warning {background-color: rgb(var(--v-theme-warning));}
 
 /** -------- General text color -------- **/
+.color-light-blue {color: var(--light-blue);}
 .color-master-green {color: var(--master-green);}
 .color-sharp-master-green {color: var(--sharp-master-green);}
 .color-sky-blue {color: var(--sky-blue);}
@@ -49,9 +50,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 
 .opacity-0 {opacity: 0; transition: opacity 1.4s ease;}
 .opacity-30 {opacity: .3; transition: opacity 1.4s ease;}
+.opacity-50 {opacity: .5; transition: opacity 1.4s ease;}
 .opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
 
-.btn {
+.blue-btn {
     transition: all 0.4s ease;
     background-color: var(--sky-blue) !important;
     color: white;

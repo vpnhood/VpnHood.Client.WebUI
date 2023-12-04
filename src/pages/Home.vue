@@ -61,11 +61,12 @@
 
           <!-- Connect button -->
           <v-btn
+              id="connectBtn"
               height="40px"
               width="190px"
               rounded="pill"
               :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting || $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
-              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn' : '', 'btn text-button mt-5']"
+              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn' : '', 'blue-btn text-button mt-5']"
               @click="onConnectButtonClick"
           >
             {{ connectButtonText() }}
@@ -312,6 +313,9 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+#connectBtn:disabled{
+  color: rgba(255, 255, 255, 0.50);
+}
 .config-item {
   color: var(--sky-blue);
   background: #132a7ac9;
