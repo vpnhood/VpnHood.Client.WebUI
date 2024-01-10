@@ -83,8 +83,8 @@ export default defineComponent({
 
   computed: {
     testServerVisible(): boolean {
-      return !this.$vpnHoodApp.data.clientProfileItems.find(
-          x => x.clientProfile.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
+      return !this.$vpnHoodApp.data.clientProfileInfos.find(
+          x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
     }
   },
 
@@ -94,14 +94,11 @@ export default defineComponent({
       try {
 
         // Add accessKey
-        const clientProfile = await this.$vpnHoodApp.addAccessKey(this.accessKey);
-
-        // Find new added client profile ID
-        const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.tokenId === clientProfile.tokenId);
+        const clientProfileInfo = await this.$vpnHoodApp.addAccessKey(this.accessKey);
 
         // Connect to the server if new client profile is added
-        if (clientProfileItem)
-          await this.connect(clientProfileItem.clientProfileId);
+        if (clientProfileInfo)
+          await this.connect(clientProfileInfo.clientProfileId);
 
         else throw Error;
 
@@ -137,9 +134,9 @@ export default defineComponent({
       await this.$vpnHoodApp.addTestServer();
 
       // Connect to the server
-      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-      if (clientProfileItem?.clientProfileId) {
-        await this.connect(clientProfileItem.clientProfileId);
+      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
+      if (clientProfileInfo?.clientProfileId) {
+        await this.connect(clientProfileInfo.clientProfileId);
       }
     },
   }

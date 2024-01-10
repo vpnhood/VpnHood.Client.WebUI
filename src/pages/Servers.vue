@@ -23,7 +23,7 @@
 
     <!-- Show alert, if user has not any server -->
     <v-alert
-        v-if="$vpnHoodApp.data.clientProfileItems.length === 0"
+        v-if="$vpnHoodApp.data.clientProfileInfos.length === 0"
         :text="$t('NO_SERVER_AVAILABLE')"
         density="compact"
         type="warning"
@@ -35,7 +35,7 @@
     <v-list v-else bg-color="transparent">
       <!-- Server item -->
       <v-list-item
-          v-for="(item, index) in $vpnHoodApp.data.clientProfileItems"
+          v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
           :key="index"
           rounded="lg"
           lines="two"
@@ -54,13 +54,13 @@
 
         <!-- Profile name -->
         <v-list-item-title class="mb-2">
-          <span class="title">{{ item.clientProfile.name ?? item.token.name }} </span>
+          <span class="title">{{ item.clientProfileName }} </span>
         </v-list-item-title>
 
         <!-- Support ID -->
         <v-list-item-subtitle class="text-caption">
-          <p>{{ item.token.ep ? redactIp(item.token.ep[0]) : "" }}</p>
-          <p class="mb-0 text-caption">(sid:{{ item.token.sid }})</p>
+          <p>(sid:{{ item.supportId }})</p>
+          <p class="mb-0 text-caption">{{ item.hostNames ? item.hostNames[0] : "" }}</p>
         </v-list-item-subtitle>
 
         <!-- Menu -->
@@ -81,7 +81,7 @@
                     :title="$t('DIAGNOSE')"
                     :disabled="!$vpnHoodApp.canDiagnose()"
                     prepend-icon="mdi-speedometer"
-                    @click="diagnose(item.clientProfile.clientProfileId)">
+                    @click="diagnose(item.clientProfileId)">
                 </v-list-item>
                 <v-divider/>
 
@@ -110,7 +110,7 @@
           <!-- Name text field -->
           <v-text-field
               v-model="newClientProfileName"
-              :label="$t('ENTER_NEW_NAME_FOR') + (actionOnCurrentClientProfileItem.clientProfile.name ?? actionOnCurrentClientProfileItem.token.name)"
+              :label="$t('ENTER_NEW_NAME_FOR') + (actionOnCurrentClientProfileInfo.clientProfileName)"
               spellcheck="false"
               autocomplete="off" color="primary"
               :clearable="true">
@@ -133,7 +133,7 @@
               color="primary"
               variant="text"
               :text="$t('SAVE')"
-              @click="saveNewClientProfileName(actionOnCurrentClientProfileItem.clientProfile)">
+              @click="saveNewClientProfileName(actionOnCurrentClientProfileInfo)">
           </v-btn>
 
         </v-card-actions>
@@ -149,14 +149,14 @@
 
         <v-card-text>
           <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
-          <strong>{{ actionOnCurrentClientProfileItem.token.name }}</strong>
+          <strong>{{ actionOnCurrentClientProfileInfo.clientProfileName }}</strong>
         </v-card-text>
 
         <!-- Dialog buttons -->
         <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
 
           <!-- Confirm delete button -->
-          <v-btn variant="text" @click="removeServer(actionOnCurrentClientProfileItem.clientProfileId)">
+          <v-btn variant="text" @click="removeServer(actionOnCurrentClientProfileInfo.clientProfileId)">
             {{ $t("YES") }}
           </v-btn>
 
@@ -177,7 +177,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
-import {ClientProfile, ClientProfileItem, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
+import {ClientProfileInfo, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 
 export default defineComponent({
@@ -192,7 +192,7 @@ export default defineComponent({
   data() {
     return {
       newClientProfileName: "",
-      actionOnCurrentClientProfileItem: {} as ClientProfileItem,
+      actionOnCurrentClientProfileInfo: {} as ClientProfileInfo,
       ComponentRouteController,
     }
   },
@@ -213,8 +213,8 @@ export default defineComponent({
     },
 
     // Show confirm dialog for delete server
-    async showConfirmDeleteDialog(clientProfileItem: ClientProfileItem): Promise<void> {
-      this.actionOnCurrentClientProfileItem = clientProfileItem;
+    async showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
+      this.actionOnCurrentClientProfileInfo = clientProfileInfo;
       await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog);
     },
 
@@ -231,13 +231,13 @@ export default defineComponent({
     },
 
     // Show rename server dialog
-    async showRenameDialog(clientProfileItem: ClientProfileItem): Promise<void> {
-      this.actionOnCurrentClientProfileItem = clientProfileItem;
+    async showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
+      this.actionOnCurrentClientProfileInfo = clientProfileInfo;
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog);
     },
 
     // Rename server by user
-    async saveNewClientProfileName(renamedClientProfile: ClientProfile): Promise<void> {
+    async saveNewClientProfileName(renamedClientProfile: ClientProfileInfo): Promise<void> {
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog, false);
       await this.$vpnHoodApp.updateClientProfile(
           renamedClientProfile.clientProfileId,
@@ -250,6 +250,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/*noinspection CssUnusedSymbol*/
 .server-item {
   box-shadow: 0 1px 2px 1px rgb(0 0 0 / 15%);
   background-color: #eceffb;

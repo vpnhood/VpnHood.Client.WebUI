@@ -64,8 +64,8 @@
   "PROTOCOL": "Protocol",
   "PROTOCOL_TITLE": "Protocol",
   "PROTOCOL_DESC": "UDP is much faster for apps that heavily use it, such as torrents, but it may not work with some firewalls and proxies. If you disable UDP, all apps still work, but they may get much slower.",
-  "PROTOCOL_UDP_ON": "Use UDP (Faster)",
-  "PROTOCOL_UDP_OFF": "No UDP (Slower)",
+  "PROTOCOL_UDP_ON": "Use UDP",
+  "PROTOCOL_UDP_OFF": "No UDP",
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
   "changelog": "What's New?",
@@ -86,7 +86,8 @@
   "install": "Install",
   "IGNORE": "Ignore",
   "UPDATE_FROM_GOOGLE_PLAY": "Update From Google Play",
-  "UPDATE_FROM_DIRECT_LINK": "Update From Direct Link",
+  "UPDATE_FROM_DIRECT_LINK": "Update From Alternative link",
+  "DO_NOT_HAVE_ACCESS_TO_GOOGLE_PLAY": "Don't have access to Google Play?",
   "UPDATE_FROM_DIRECT_LINK_NOTICE": "Use only if you do not have access to Google Play",
   "CURRENT_VERSION": "Your Version:",
   "NEW_VERSION": "New Version:",
@@ -104,5 +105,6 @@
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",
-  "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button."
+  "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button.",
+  "CHECK_FOR_UPDATE": "Check for update"
 }

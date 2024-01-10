@@ -4,15 +4,14 @@ import {
     AppFeatures,
     AppSettings,
     AppState,
-    ClientProfile,
-    ClientProfileItem,
+    ClientProfileInfo,
     ClientProfileUpdateParams,
     DeviceAppInfo,
     SessionSuppressType,
 } from "@/services/VpnHood.Client.Api";
-import {ApiClient} from "./VpnHood.Client.Api";
+import {AppApiClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
-import {ComponentName, UiConstants} from "@/UiConstants";
+import {ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 
@@ -23,29 +22,29 @@ export class VpnHoodAppData {
     public state: AppState;
     public settings: AppSettings;
     public features: AppFeatures;
-    public clientProfileItems: ClientProfileItem[];
-    public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileItems: ClientProfileItem[]) {
+    public clientProfileInfos: ClientProfileInfo[];
+    public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileInfos: ClientProfileInfo[]) {
         this.state = state;
         this.settings = setting;
         this.features = features;
-        this.clientProfileItems = clientProfileItems;
+        this.clientProfileInfos = clientProfileInfos;
     }
 }
 
 export class VpnHoodApp {
     public data: VpnHoodAppData;
-    public apiClient: ApiClient;
+    public apiClient: AppApiClient;
 
-    private constructor(apiClient: ApiClient, appData: VpnHoodAppData) {
+    private constructor(apiClient: AppApiClient, appData: VpnHoodAppData) {
         this.data = reactive(appData);
         this.apiClient = apiClient;
         this.data.uiState.configTime = this.data.state.configTime;
     }
 
     public static async create(): Promise<VpnHoodApp> {
-        const apiClient: ApiClient = ClientApiFactory.instance.createApiClient();
+        const apiClient: AppApiClient = ClientApiFactory.instance.createApiClient();
         const config = await apiClient.getConfig();
-        return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileItems));
+        return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos));
     }
 
     private async reloadSettings(): Promise<void> {
@@ -53,8 +52,8 @@ export class VpnHoodApp {
 
         this.data.features = config.features;
         this.data.settings = config.settings;
-        this.data.clientProfileItems = config.clientProfileItems;
-        if (config.clientProfileItems.length === 0) {
+        this.data.clientProfileInfos = config.clientProfileInfos;
+        if (config.clientProfileInfos.length === 0) {
             this.data.settings.userSettings.defaultClientProfileId = null;
         }
 
@@ -78,9 +77,8 @@ export class VpnHoodApp {
         }
 
         // Show update message if the user has not ignored or more than 24 hours have passed
-        if (this.data.state.lastPublishInfo) {
-            this.data.uiState.showUpdateSnackbar = this.data.uiState.userIgnoreUpdateTime == null ||
-                (new Date().getTime()) - this.data.uiState.userIgnoreUpdateTime >= UiConstants.userIgnoreUpdateTime;
+        if (this.data.state.lastPublishInfo?.packageUrl !== undefined) {
+            this.data.uiState.showUpdateSnackbar = true;
         }
 
         // Show 'suppress by' message
@@ -115,11 +113,11 @@ export class VpnHoodApp {
         }
 
         // Find default client profile
-        const defaultClientProfile: ClientProfileItem | undefined = this.data.clientProfileItems.find(
-            x => x.clientProfile.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
+        const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
+            x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.clientProfile.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
+        if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
@@ -170,10 +168,10 @@ export class VpnHoodApp {
         await this.reloadSettings();
     }
 
-    public async addAccessKey(accessKey: string): Promise<ClientProfile> {
-        const clientProfile = await this.apiClient.addAccessKey(accessKey);
+    public async addAccessKey(accessKey: string): Promise<ClientProfileInfo> {
+        const clientProfileInfo = await this.apiClient.addAccessKey(accessKey);
         await this.reloadSettings();
-        return clientProfile;
+        return clientProfileInfo;
     }
 
     public async addTestServer(): Promise<void> {
@@ -207,5 +205,13 @@ export class VpnHoodApp {
     // Get installed apps list on the user device
     public getInstalledApps(): Promise<DeviceAppInfo[]> {
         return this.apiClient.getInstalledApps();
+    }
+
+    public async postPoneUpdate(): Promise<void>{
+        await this.apiClient.versionCheckPostpone();
+    }
+
+    public async checkForUpdate(): Promise<void>{
+        await this.apiClient.versionCheck();
     }
 }

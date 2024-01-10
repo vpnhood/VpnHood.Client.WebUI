@@ -1,5 +1,5 @@
 import axios, {AxiosInstance} from "axios";
-import {ApiClient} from './VpnHood.Client.Api';
+import {AppApiClient} from './VpnHood.Client.Api';
 
 export class ClientApiFactory {
 
@@ -42,9 +42,8 @@ export class ClientApiFactory {
         return this._instance;
     }
 
-    //For each class of VpnHood.Client.Api.ts, we need to create a new method like below
-    public createApiClient(): ApiClient {
-        return new ApiClient(this.baseUrl, this.axiosInstance);
+    public createApiClient(): AppApiClient {
+        return new AppApiClient(this.baseUrl, this.axiosInstance);
     }
 
 }

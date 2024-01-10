@@ -82,6 +82,7 @@
               depressed
               :block="true"
               variant="text"
+              size="small"
               prepend-icon="mdi-earth"
               class="config-item mb-2"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
@@ -102,6 +103,7 @@
               depressed
               :block="true"
               variant="text"
+              size="small"
               prepend-icon="mdi-apps"
               class="config-item mb-2"
               to="/apps-filter"
@@ -116,6 +118,7 @@
               depressed
               :block="true"
               variant="text"
+              size="small"
               prepend-icon="mdi-transit-connection-variant"
               class="config-item mb-2"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
@@ -131,6 +134,7 @@
               depressed
               :block="true"
               variant="text"
+              size="small"
               prepend-icon="mdi-dns"
               class="config-item mb-0"
               to="/servers"
@@ -206,10 +210,10 @@ export default defineComponent({
       if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) {
 
         // Find selected server
-        const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(
-            x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+        const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(
+            x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
 
-        if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
+        if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
           await ComponentRouteController.showComponent(this.$componentName.ServersSheet);
           return;
         }
@@ -286,11 +290,11 @@ export default defineComponent({
 
     // Return current active server name
     getDefaultClientProfileName(): string {
-      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileItem || !clientProfileItem.clientProfile || !clientProfileItem.token.name) {
+      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+      if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
         return this.$t("NO_SERVER_SELECTED");
       }
-      return clientProfileItem.clientProfile.name ?? clientProfileItem.token.name;
+      return clientProfileInfo.clientProfileName ?? clientProfileInfo.clientProfileName;
     },
 
     // Return status of filtered apps by user (Only in mobile)
@@ -306,8 +310,8 @@ export default defineComponent({
     // Checking whether to display the premium server ad or not
     checkPremiumServerAdStatus(): boolean {
       const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("vh:isPublicServersUsedAtLeastOnce");
-      const clientProfileItem = this.$vpnHoodApp.data.clientProfileItems.find(x => x.clientProfile.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      return !!(isPublicServersUsedAtLeastOnce && clientProfileItem?.token.name === "VpnHood Public Servers");
+      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+      return !!(isPublicServersUsedAtLeastOnce && clientProfileInfo?.clientProfileName === "VpnHood Public Servers");
     }
   }
 });

@@ -30,23 +30,26 @@
     <v-list dense class="pt-0">
 
       <!-- Settings -->
-      <v-list-item
-          class="menu-item has-border"
-          @click="$router.replace({path: '/settings'})">
-
+      <v-list-item class="menu-item has-border" @click="$router.replace({path: '/settings'})">
         <v-list-item-title>
           <v-icon>mdi-cog</v-icon>
           <span class="ms-3">{{$t('SETTINGS')}}</span>
         </v-list-item-title>
-
       </v-list-item>
 
       <!-- Diagnose -->
       <v-list-item class="menu-item has-border" :disabled="!$vpnHoodApp.canDiagnose()" @click="diagnose">
-
         <v-list-item-title>
           <v-icon>mdi-stethoscope</v-icon>
           <span class="ms-3">{{$t('DIAGNOSE')}}</span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Check for update -->
+      <v-list-item class="menu-item has-border" @click="checkForUpdate">
+        <v-list-item-title>
+          <v-icon>mdi-update</v-icon>
+          <span class="ms-3">{{$t('CHECK_FOR_UPDATE')}}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -131,6 +134,10 @@ export default defineComponent({
       } else {
         return this.$vpnHoodApp.data.features.version;
       }
+    },
+
+    async checkForUpdate(){
+      await this.$vpnHoodApp.checkForUpdate();
     }
   }
 });

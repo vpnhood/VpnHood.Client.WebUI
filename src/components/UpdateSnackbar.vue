@@ -15,7 +15,8 @@
 
     <!-- Update from google play -->
     <v-btn
-        :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
+        v-if="$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
+        :href="$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
         color="primary"
         class="text-capitalize"
         :block="true"
@@ -24,20 +25,34 @@
     >
     </v-btn>
 
-    <!-- Update from direct link -->
+    <!-- Do not access to google play question -->
     <v-btn
-        class="mt-2 text-capitalize"
-        :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
-        variant="tonal"
+        v-if="$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl && !showAlternativeDownloadLink"
+        class="mt-2 text-lowercase text-caption color-light-blue"
+        @click="showAlternativeDownloadLink = true"
+        variant="text"
         :block="true"
-        target="_blank"
-        :text="$t('UPDATE_FROM_DIRECT_LINK')"
+        :text="$t('DO_NOT_HAVE_ACCESS_TO_GOOGLE_PLAY')"
     >
     </v-btn>
-    <!-- Direct link notice -->
-    <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-50">
-      {{$t('UPDATE_FROM_DIRECT_LINK_NOTICE')}}
-    </p>
+
+    <div v-if="!$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl || showAlternativeDownloadLink">
+      <!-- Update from direct link -->
+      <v-btn
+          class="mt-2 text-capitalize"
+          :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
+          variant="tonal"
+          :block="true"
+          target="_blank"
+          :text="$t('UPDATE_FROM_DIRECT_LINK')"
+      >
+      </v-btn>
+
+      <!-- Direct link notice -->
+      <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-50">
+        {{$t('UPDATE_FROM_DIRECT_LINK_NOTICE')}}
+      </p>
+    </div>
 
     <v-divider class="mt-3 mb-2"/>
 
@@ -68,7 +83,8 @@ export default defineComponent({
   name: "UpdateSnackbar",
   data() {
     return {
-      VersionStatus
+      VersionStatus,
+      showAlternativeDownloadLink: false,
     }
   },
   props: {
@@ -78,8 +94,8 @@ export default defineComponent({
     "update:modelValue",
   ],
   methods: {
-    ignoreUpdate() {
-      this.$vpnHoodApp.data.uiState.userIgnoreUpdateTime = new Date().getTime();
+    async ignoreUpdate() {
+      await this.$vpnHoodApp.postPoneUpdate();
       this.$emit('update:modelValue', false);
     }
   }
