@@ -85,6 +85,7 @@
   "VERSION_IS_OLD": "There is a new version available to install.",
   "install": "Install",
   "IGNORE": "Ignore",
+  "LATER": "Later",
   "UPDATE_FROM_GOOGLE_PLAY": "Update From Google Play",
   "UPDATE_FROM_DIRECT_LINK": "Update From Alternative link",
   "DO_NOT_HAVE_ACCESS_TO_GOOGLE_PLAY": "Don't have access to Google Play?",

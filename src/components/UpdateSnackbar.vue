@@ -68,7 +68,7 @@
           variant="text"
           @click="ignoreUpdate"
           size="small"
-          :text="$t('IGNORE')"
+          :text="$t('LATER')"
       >
       </v-btn>
     </div>

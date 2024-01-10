@@ -48,7 +48,8 @@
       <!-- Check for update -->
       <v-list-item class="menu-item has-border" @click="checkForUpdate">
         <v-list-item-title>
-          <v-icon>mdi-update</v-icon>
+          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary"/>
+          <v-icon v-else>mdi-update</v-icon>
           <span class="ms-3">{{$t('CHECK_FOR_UPDATE')}}</span>
         </v-list-item-title>
       </v-list-item>
@@ -108,6 +109,11 @@ import {defineComponent} from 'vue'
 import {ComponentRouteController} from '@/services/ComponentRouteController';
 
 export default defineComponent({
+  data(){
+    return{
+      isCheckForUpdate: false,
+    }
+  },
   props: {
     modelValue: Boolean,
   },
@@ -137,7 +143,17 @@ export default defineComponent({
     },
 
     async checkForUpdate(){
-      await this.$vpnHoodApp.checkForUpdate();
+      try {
+        this.isCheckForUpdate = true;
+        await this.$vpnHoodApp.checkForUpdate();
+      }
+      catch (err: any){
+        throw new Error(err);
+      }
+      finally {
+        this.isCheckForUpdate = false;
+      }
+
     }
   }
 });
