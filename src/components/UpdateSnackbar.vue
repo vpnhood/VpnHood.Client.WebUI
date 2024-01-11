@@ -13,6 +13,18 @@
       }}
     </p>
 
+    <!-- Direct link without google play -->
+    <v-btn
+        v-if="!$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
+        :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
+        color="primary"
+        class="text-capitalize"
+        :block="true"
+        target="_blank"
+        :text="$t('UPDATE_FROM_DIRECT_LINK')"
+    >
+    </v-btn>
+
     <!-- Update from google play -->
     <v-btn
         v-if="$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
@@ -36,7 +48,7 @@
     >
     </v-btn>
 
-    <div v-if="!$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl || showAlternativeDownloadLink">
+    <div v-if="showAlternativeDownloadLink">
       <!-- Update from direct link -->
       <v-btn
           class="mt-2 text-capitalize"
@@ -44,13 +56,13 @@
           variant="tonal"
           :block="true"
           target="_blank"
-          :text="$t('UPDATE_FROM_DIRECT_LINK')"
+          :text="$t('UPDATE_FROM_ALTERNATIVE_LINK')"
       >
       </v-btn>
 
       <!-- Direct link notice -->
       <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-50">
-        {{$t('UPDATE_FROM_DIRECT_LINK_NOTICE')}}
+        {{$t('UPDATE_FROM_ALTERNATIVE_LINK_NOTICE')}}
       </p>
     </div>
 
@@ -59,13 +71,13 @@
     <div class="d-flex align-center justify-space-between">
       <!-- Compare versions -->
       <div class="text-caption">
-        <p class="opacity-30"> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
-        <p class="opacity-50"> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
+        <p class="opacity-50"> {{ $t("CURRENT_VERSION") }} {{ $vpnHoodApp.getAppVersion(true) }}</p>
+        <p> {{ $t("NEW_VERSION") }} {{ $vpnHoodApp.data.state.lastPublishInfo?.version }}</p>
       </div>
 
       <!-- Ignore button -->
       <v-btn
-          variant="text"
+          variant="tonal"
           @click="ignoreUpdate"
           size="small"
           :text="$t('LATER')"

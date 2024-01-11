@@ -57,7 +57,7 @@
           <span class="title">{{ item.clientProfileName }} </span>
         </v-list-item-title>
 
-        <!-- Support ID -->
+        <!-- Support ID and Host name -->
         <v-list-item-subtitle class="text-caption">
           <p>(sid:{{ item.supportId }})</p>
           <p class="mb-0 text-caption">{{ item.hostNames ? item.hostNames[0] : "" }}</p>
