@@ -152,6 +152,10 @@ export default defineComponent({
       }
       finally {
         this.isCheckForUpdate = false;
+        this.$emit('update:modelValue', false);
+        if (this.$vpnHoodApp.data.state.lastPublishInfo?.packageUrl === undefined){
+          await this.$vpnHoodApp.showMessage(this.$t("YOU_ARE_UP_TO_DATE"));
+        }
       }
 
     }

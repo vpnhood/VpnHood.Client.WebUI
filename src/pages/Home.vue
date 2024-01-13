@@ -52,7 +52,7 @@
 
                 <!-- Check -->
                 <v-icon v-if="stateIcon()" size="50" color="white">
-                  mdi-{{ stateIcon() }}
+                  {{ stateIcon() }}
                 </v-icon>
 
               </div>
@@ -238,7 +238,7 @@ export default defineComponent({
           case AppConnectionState.Connecting:
             return this.$t('DISCONNECT');
           case AppConnectionState.Waiting:
-            return this.$t('WAITING');
+            return this.$t('DISCONNECT');
           case AppConnectionState.Connected:
             return this.$t('DISCONNECT');
           case AppConnectionState.Disconnecting:
@@ -252,11 +252,11 @@ export default defineComponent({
 
     // Return icon based on connection state
     stateIcon(): string | null {
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "check";
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) return "power-plug-off";
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connecting) return "power-plug";
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Diagnosing) return "stethoscope";
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Waiting) return "hourglass_top";
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected && !this.bandwidthUsage()) return "mdi-check";
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) return "mdi-power-plug-off";
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connecting) return "mdi-power-plug";
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Diagnosing) return "mdi-stethoscope";
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Waiting) return "mdi-timer-sand";
       return null;
     },
 
