@@ -1,5 +1,5 @@
 export class UiConstants {
-    static userIgnoreUpdateTime: number = 24 * 60 * 60 * 1000;
+    static dayOfDate: number = 24 * 60 * 60 * 1000;
 }
 
 export enum ComponentName {

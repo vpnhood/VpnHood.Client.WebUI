@@ -109,5 +109,5 @@
   "RELOAD_APP": "Reload App",
   "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button.",
   "CHECK_FOR_UPDATE": "Check for update",
-  "YOU_ARE_UP_TO_DATE": "You're up to date."
+  "EXPIRE": "Exp"
 }

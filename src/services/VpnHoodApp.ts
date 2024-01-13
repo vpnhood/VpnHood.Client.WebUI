@@ -56,7 +56,6 @@ export class VpnHoodApp {
         if (config.clientProfileInfos.length === 0) {
             this.data.settings.userSettings.defaultClientProfileId = null;
         }
-
     }
 
     public async reloadState(): Promise<void> {

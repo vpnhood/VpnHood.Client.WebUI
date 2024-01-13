@@ -16,7 +16,7 @@
     <!-- Direct link without google play -->
     <v-btn
         v-if="!$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
-        :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
+        :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
         color="primary"
         class="text-capitalize"
         :block="true"
@@ -52,7 +52,7 @@
       <!-- Update from direct link -->
       <v-btn
           class="mt-2 text-capitalize"
-          :href="$vpnHoodApp.data.state.lastPublishInfo?.packageUrl"
+          :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
           variant="tonal"
           :block="true"
           target="_blank"

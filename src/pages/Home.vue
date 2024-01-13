@@ -55,6 +55,8 @@
                   {{ stateIcon() }}
                 </v-icon>
 
+                <!-- Access Key expire date -->
+                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'color-red' : 'color-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
               </div>
             </div>
           </div>
@@ -175,6 +177,7 @@ import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
+import {UiConstants} from "@/UiConstants";
 
 export default defineComponent({
   name: 'HomePage',
@@ -274,8 +277,8 @@ export default defineComponent({
       let traffic = this.$vpnHoodApp.data.state.accountTraffic;
 
       let ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
-      const total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)).toString() + " GB" : Number((ret.total / mb).toFixed(0)).toString() + " MB";
-      const used = ret.used >= gb ? Number((ret.used / gb).toFixed(1)).toString() + " GB" : Number((ret.used / mb).toFixed(0)).toString() + " MB";
+      const total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)).toString() + "GB" : Number((ret.total / mb).toFixed(0)).toString() + "MB";
+      const used = ret.used >= gb ? Number((ret.used / gb).toFixed(1)).toString() + "GB" : Number((ret.used / mb).toFixed(0)).toString() + "MB";
       return {Used: used, Total: total};
     },
 
@@ -312,6 +315,27 @@ export default defineComponent({
       const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("vh:isPublicServersUsedAtLeastOnce");
       const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
       return !!(isPublicServersUsedAtLeastOnce && clientProfileInfo?.clientProfileName === "VpnHood Public Servers");
+    },
+
+    getExpireDate(): string | null {
+      if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.Connected || !this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
+        return null;
+
+      const expDate: any = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
+      const options = {year: 'numeric', month: '2-digit', day: '2-digit'};
+      // noinspection TypeScriptValidateJSTypes
+      return expDate.toLocaleString("locales", options).replace(',', '');
+    },
+
+    alertForExpire(): boolean{
+      if (!this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
+        return false;
+
+      const expDate: any = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
+      const currentDate = new Date().getTime();
+      const diffTime = Math.abs(expDate - currentDate);
+      const diffDays = Math.ceil(diffTime / UiConstants.dayOfDate);
+      return diffDays <= 3;
     }
   }
 });

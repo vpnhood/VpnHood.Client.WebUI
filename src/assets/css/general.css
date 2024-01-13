@@ -20,6 +20,7 @@
     --light-gray: #929292;
     --connected-glare: green;
     --gray: #3f3f3f;
+    --red: #ff5252;
 }
 
 /** -------------------- Default Style ------------------- **/
@@ -45,6 +46,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 .color-light-purple {color: var(--light-purple);}
 .color-gray {color: var(--gray);}
 .color-muted {color: var(--muted-color);}
+.color-red {color: var(--red);}
 /*noinspection CssUnresolvedCustomProperty*/
 .color-on-warning {color: rgb(var(--v-theme-on-warning));}
 

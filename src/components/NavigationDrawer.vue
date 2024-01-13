@@ -106,7 +106,6 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {ComponentRouteController} from '@/services/ComponentRouteController';
 
 export default defineComponent({
   data(){
@@ -121,10 +120,6 @@ export default defineComponent({
     "update:modelValue"
   ],
   methods: {
-    async openSettingsPage(): Promise<void> {
-      this.$emit('update:modelValue', false);
-      await ComponentRouteController.showComponent(this.$componentName.SettingSheet);
-    },
 
     async diagnose(): Promise<void> {
       this.$emit('update:modelValue', false);
@@ -153,11 +148,7 @@ export default defineComponent({
       finally {
         this.isCheckForUpdate = false;
         this.$emit('update:modelValue', false);
-        if (this.$vpnHoodApp.data.state.lastPublishInfo?.packageUrl === undefined){
-          await this.$vpnHoodApp.showMessage(this.$t("YOU_ARE_UP_TO_DATE"));
-        }
       }
-
     }
   }
 });
