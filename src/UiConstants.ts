@@ -1,5 +1,5 @@
 export class UiConstants {
-    static dayOfDate: number = 24 * 60 * 60 * 1000;
+    static daysOfDate: number = 24 * 60 * 60 * 1000;
 }
 
 export enum ComponentName {

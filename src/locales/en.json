@@ -1,5 +1,6 @@
 {
-  "APP_NAME": "VpnHood!",
+  "VPN_HOOD_APP_NAME": "VpnHood!",
+  "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "Settings",
   "ADD": "Add",
   "help": "Help",
@@ -93,10 +94,13 @@
   "UPDATE_FROM_ALTERNATIVE_LINK_NOTICE": "Use only if you do not have access to Google Play",
   "CURRENT_VERSION": "Your Version:",
   "NEW_VERSION": "New Version:",
-  "STORE_AD_TITLE": "get fast premium servers",
-  "STORE_AD_DESCRIPTION": "Now, you can purchase fast, premium servers using official <strong class='title-bold'>VpnHood</strong> <strong class='title-bold color-sharp-master-green'>STORE</strong> App",
-  "GO_PREMIUM_ON_GOOGLE_PLAY": "Go Premium on Google Play",
-  "CONTINUE_WITH_FREE_SLOW_SPEED": "Continue With Free Slow Speed",
+  "PREMIUM_SERVER_AD_TITLE": "get fast premium servers",
+  "PREMIUM_FEATURE_1": "Remove Ads",
+  "PREMIUM_FEATURE_2": "An additional server (Hidden Server)",
+  "PREMIUM_FEATURE_3": "Auto renewed monthly",
+  "PREMIUM_FEATURE_4": "Unlimited bandwidth",
+  "PREMIUM_FEATURE_5": "Cancel anytime on Google Play",
+  "BUY_PREMIUM_SERVER": "Buy Subscription",
   "NO": "No",
   "YES": "Yes",
   "RECOMMENDED": "Recommended",
@@ -109,5 +113,7 @@
   "RELOAD_APP": "Reload App",
   "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button.",
   "CHECK_FOR_UPDATE": "Check for update",
-  "EXPIRE": "Exp"
+  "EXPIRE": "Exp",
+  "LESS_LATENCY": "Less latency",
+  "DEFAULT": "Default"
 }

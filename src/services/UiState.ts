@@ -19,4 +19,7 @@ export class UiState {
 
     // Time of user ignored last error message
     public configTime: Date = new Date();
+
+    public appIsVpnHoodConnect: boolean = true;
+    public userHaseActiveSubscription: boolean = false;
 }

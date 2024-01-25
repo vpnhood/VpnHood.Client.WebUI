@@ -9,7 +9,7 @@ import {
     DeviceAppInfo,
     SessionSuppressType,
 } from "@/services/VpnHood.Client.Api";
-import {AppApiClient} from "./VpnHood.Client.Api";
+import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
@@ -33,16 +33,16 @@ export class VpnHoodAppData {
 
 export class VpnHoodApp {
     public data: VpnHoodAppData;
-    public apiClient: AppApiClient;
+    public apiClient: AppClient;
 
-    private constructor(apiClient: AppApiClient, appData: VpnHoodAppData) {
+    private constructor(apiClient: AppClient, appData: VpnHoodAppData) {
         this.data = reactive(appData);
         this.apiClient = apiClient;
         this.data.uiState.configTime = this.data.state.configTime;
     }
 
     public static async create(): Promise<VpnHoodApp> {
-        const apiClient: AppApiClient = ClientApiFactory.instance.createApiClient();
+        const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.getConfig();
         return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos));
     }

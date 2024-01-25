@@ -2,7 +2,7 @@
   <div class="bg-dark-blue">
     <v-container class="h-screen text-center text-white">
     <!-- App name -->
-    <h3>{{ $t("APP_NAME") }}</h3>
+    <h3>{{ $vpnHoodApp.data.uiState.appIsVpnHoodConnect ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME') }}</h3>
 
     <v-row align-content="center" justify="center" class="h-100">
       <v-col cols="11" sm="7" lg="4">

@@ -15,7 +15,7 @@
       <div class="text-white ms-3">
 
         <!-- App name -->
-        <h3>{{ $t("APP_NAME") }}</h3>
+        <h3>{{ $t("VPN_HOOD_APP_NAME") }}</h3>
 
         <!-- App full version -->
         <div class="color-sharp-master-green text-caption">

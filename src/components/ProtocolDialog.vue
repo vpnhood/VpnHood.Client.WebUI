@@ -7,8 +7,21 @@
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
         <v-radio-group v-model="useUdpChannel" hide-details>
-          <v-radio :label="$t('PROTOCOL_UDP_ON')" :value="true" color="secondary"></v-radio>
-          <v-radio :label="$t('PROTOCOL_UDP_OFF')" :value="false" color="secondary"></v-radio>
+
+          <v-radio :value="true" color="warning">
+            <template v-slot:label>
+              <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
+              <v-chip class="ms-2" size="small" variant="flat" color="warning" :text="$t('LESS_LATENCY')"></v-chip>
+            </template>
+          </v-radio>
+
+          <v-radio :value="false" color="secondary">
+            <template v-slot:label>
+              <span>{{ $t("PROTOCOL_UDP_OFF") }}</span>
+              <v-chip class="ms-2" size="small" color="secondary" :text="$t('DEFAULT')"></v-chip>
+            </template>
+          </v-radio>
+
         </v-radio-group>
       </v-card-text>
       <v-card-actions>

@@ -10,7 +10,7 @@
     <v-app-bar-title class="text-body-1 text-white">{{$t('SERVERS')}}</v-app-bar-title>
 
     <!-- Add server button -->
-    <template v-slot:append>
+    <template v-slot:append v-if="!$vpnHoodApp.data.uiState.appIsVpnHoodConnect">
       <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
@@ -73,8 +73,8 @@
               <v-list>
 
                 <!-- Rename item -->
-                <v-list-item :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
-                <v-divider/>
+                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
+                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId" />
 
                 <!-- Diagnose item -->
                 <v-list-item
@@ -83,10 +83,10 @@
                     prepend-icon="mdi-speedometer"
                     @click="diagnose(item.clientProfileId)">
                 </v-list-item>
-                <v-divider/>
+                <v-divider v-if="!$vpnHoodApp.data.uiState.appIsVpnHoodConnect"/>
 
                 <!-- Delete item -->
-                <v-list-item :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
+                <v-list-item v-if="!$vpnHoodApp.data.uiState.appIsVpnHoodConnect" :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
 
               </v-list>
             </v-menu>

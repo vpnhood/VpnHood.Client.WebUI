@@ -14,7 +14,7 @@
     --light-blue: #1940b0;
     --sky-blue: #16a3fe;
     --master-green: #23c99d;
-    --sharp-master-green: #3ff6a9;
+    --sharp-master-green: #41faa4;
     --light-purple: #8d9fe4;
     --muted-color: rgb(136, 136, 136);
     --light-gray: #929292;
@@ -61,7 +61,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
     color: white;
 }
 
-.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green)) !important;}
+.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green) 90%) !important;}
 .blue-border-btn i {line-height: inherit;}
 
 /** --------------------Home Middle Section-------------------- **/

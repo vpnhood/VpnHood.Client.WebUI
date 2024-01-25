@@ -5,80 +5,71 @@
       variant="outlined"
       color="sharp-master-green"
       rounded="pill"
+      size="small"
       height="40"
-      @click="$emit('update:modelValue',true); showByUser = true"
+      @click="$emit('update:modelValue',true)"
       class="ps-1 pe-3"
   >
     <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>
-    {{$t("STORE_AD_TITLE")}}
+    {{$t("PREMIUM_SERVER_AD_TITLE")}}
   </v-btn>
 
   <!-- Maximize Premium Server Ad -->
   <v-dialog
+      id="premiumServerAd"
       transition="dialog-bottom-transition"
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
       :fullscreen="true"
   >
-    <v-card class="pa-8 justify-center align-center add-bg">
-
-      <v-card-item id="adContentWrapper" class="rounded-lg pa-5 mb-8 text-center">
-
-        <!-- Image -->
-        <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="400px" class="mx-auto"/>
-
-        <!-- Title -->
-        <h3 id="adTitle" class="title-bold color-sharp-master-green text-uppercase pb-2 mb-5 mt-5">
-          {{$t("STORE_AD_TITLE")}}</h3>
-
-        <!-- Description -->
-        <p id="adDesc" class="regular-font text-white" v-html="$t('STORE_AD_DESCRIPTION')"></p>
-
-      </v-card-item>
-
-      <!-- Buttons -->
-      <v-card-item class="pa-0 w-100">
-        <!-- Go to VpnHood Store page on google play button -->
-        <v-btn
-            href="https://play.google.com/store/apps/details?id=com.vphood.store.android"
-            :block="true"
-            target="_blank"
-            rounded="pill"
-            height="45"
-            variant="elevated"
-            class="grad-btn mb-4 "
-            :text="$t('GO_PREMIUM_ON_GOOGLE_PLAY')"
-        >
-        </v-btn>
-
-        <!-- Continue with free slow speed button -->
-        <v-btn
-            v-if="!showByUser"
-            :block="true"
-            height="45"
-            rounded="pill"
-            variant="outlined"
-            color="sky-blue"
-            class="text-capitalize"
-            :text="$t('CONTINUE_WITH_FREE_SLOW_SPEED')"
-            @click="$vpnHoodApp.connect()"
-        >
-        </v-btn>
-
+      <v-card color="#06124bd4" :flat="true" class="px-8 justify-center align-center">
         <!-- Close button -->
-        <v-btn
-            v-else
-            :block="true"
-            height="45"
-            rounded="pill"
-            variant="outlined"
-            color="sky-blue"
-            :text="$t('CLOSE')"
-            @click="$emit('update:modelValue',false); showByUser = false">
-        </v-btn>
+        <v-btn icon="mdi-window-close" variant="tonal" color="white" size="small" class="mx-auto mb-5" @click="$emit('update:modelValue',false)"/>
 
-      </v-card-item>
-    </v-card>
+        <v-card-item id="adContentWrapper" class="rounded-xl pa-8 mb-5">
+          <!-- Image -->
+          <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="250px" class="mx-auto"/>
+
+          <!-- Title -->
+          <h3 id="adTitle" class="title-bold color-sharp-master-green text-uppercase text-center pb-4 mb-4">
+            {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
+
+          <!-- Description -->
+          <ul id="adDesc" class="text-white text-body-2">
+            <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_1")}}</li>
+            <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_2")}}</li>
+            <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_3")}}</li>
+            <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_4")}}</li>
+            <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_5")}}</li>
+          </ul>
+        </v-card-item>
+
+        <!-- Buttons -->
+        <v-card-item class="pa-0 w-100">
+          <!-- Go to VpnHood Store page on google play button -->
+          <v-btn
+              href="https://play.google.com/store/apps/details?id=com.vphood.store.android"
+              :block="true"
+              rounded="pill"
+              height="45"
+              variant="elevated"
+              class="grad-btn font-weight-bold text-capitalize"
+              :text="$t('BUY_PREMIUM_SERVER')"
+          >
+          </v-btn>
+
+          <!-- Close button -->
+  <!--        <v-btn
+              :block="true"
+              height="45"
+              rounded="pill"
+              variant="outlined"
+              color="sky-blue"
+              :text="$t('CLOSE')"
+              @click="$emit('update:modelValue',false)">
+          </v-btn>-->
+        </v-card-item>
+      </v-card>
   </v-dialog>
 </template>
 
@@ -87,11 +78,6 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "PremiumServerAdDialog",
-  data() {
-    return {
-      showByUser: false,
-    }
-  },
   props: {
     modelValue: Boolean,
   },
@@ -106,23 +92,16 @@ export default defineComponent({
   font-size: 130%;
   border-bottom: 1px rgba(63, 246, 169, 0.15) solid;
 }
-
 #adDesc {
-  font-size: 17px;
   line-height: 31px;
 }
-
 #adContentWrapper {
-  border: 1px var(--sky-blue) solid;
+  border: 1px rgba(22, 163, 254, 0.44) solid;
   background-color: #06124BFF;
 }
-
 /*noinspection ALL*/
 .v-card-item {
+  width: 100%;
   max-width: 500px;
-}
-
-.add-bg{
-  background-color: #06124bcf;
 }
 </style>

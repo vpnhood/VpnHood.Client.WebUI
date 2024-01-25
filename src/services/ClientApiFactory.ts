@@ -1,10 +1,10 @@
 import axios, {AxiosInstance} from "axios";
-import {AppApiClient} from './VpnHood.Client.Api';
+import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
 
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
+    private readonly baseUrl: string | undefined = process.env["VUE_APP_CONNECT_API_BASE_URL"];
 
     constructor() {
 
@@ -42,8 +42,15 @@ export class ClientApiFactory {
         return this._instance;
     }
 
-    public createApiClient(): AppApiClient {
-        return new AppApiClient(this.baseUrl, this.axiosInstance);
+    public createAppClient(): AppClient {
+        return new AppClient(this.baseUrl, this.axiosInstance);
+    }
+
+    public createAccountClient(): AccountClient {
+        return new AccountClient(this.baseUrl, this.axiosInstance);
+    }
+    public createBillingClient(): BillingClient {
+        return new BillingClient(this.baseUrl, this.axiosInstance);
     }
 
 }

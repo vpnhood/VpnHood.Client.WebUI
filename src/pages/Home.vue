@@ -11,7 +11,7 @@
 
         <!-- Go Premium Store Ad -->
         <v-col cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-if="checkPremiumServerAdStatus()"
+          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.appIsVpnHoodConnect && !$vpnHoodApp.data.uiState.userHaseActiveSubscription"
                                  v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
         </v-col>
 
@@ -72,6 +72,19 @@
               @click="onConnectButtonClick"
           >
             {{ connectButtonText() }}
+          </v-btn>
+
+          <!-- Connect button -->
+          <v-btn
+              id="SignIn"
+              height="40px"
+              width="190px"
+              rounded="pill"
+              :block="true"
+              class="grad-btn text-button mt-5"
+              @click="signInWithGoogle"
+              text="SignIn"
+          >
           </v-btn>
 
         </v-col>
@@ -178,6 +191,7 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {UiConstants} from "@/UiConstants";
+import {ClientApiFactory} from "@/services/ClientApiFactory";
 
 export default defineComponent({
   name: 'HomePage',
@@ -206,6 +220,16 @@ export default defineComponent({
   },
 
   methods: {
+
+    async signInWithGoogle(){
+      const accountClient = ClientApiFactory.instance.createAccountClient();
+      await accountClient.signInWithGoogle();
+      const account = await accountClient.get();
+      console.log(account);
+      const billingClient = ClientApiFactory.instance.createBillingClient();
+      const subscriptionPlans = await billingClient.getSubscriptionPlans();
+      console.log(subscriptionPlans);
+    },
 
     async onConnectButtonClick() {
 
@@ -310,13 +334,6 @@ export default defineComponent({
       return this.$t("APP_FILTER_STATUS_ALL");
     },
 
-    // Checking whether to display the premium server ad or not
-    checkPremiumServerAdStatus(): boolean {
-      const isPublicServersUsedAtLeastOnce: string | null = localStorage.getItem("vh:isPublicServersUsedAtLeastOnce");
-      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      return !!(isPublicServersUsedAtLeastOnce && clientProfileInfo?.clientProfileName === "VpnHood Public Servers");
-    },
-
     getExpireDate(): string | null {
       if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.Connected || !this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
         return null;
@@ -334,7 +351,7 @@ export default defineComponent({
       const expDate: any = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
       const currentDate = new Date().getTime();
       const diffTime = Math.abs(expDate - currentDate);
-      const diffDays = Math.ceil(diffTime / UiConstants.dayOfDate);
+      const diffDays = Math.ceil(diffTime / UiConstants.daysOfDate);
       return diffDays <= 3;
     }
   }
