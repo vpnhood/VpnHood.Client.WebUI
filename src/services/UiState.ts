@@ -20,6 +20,8 @@ export class UiState {
     // Time of user ignored last error message
     public configTime: Date = new Date();
 
-    public appIsVpnHoodConnect: boolean = true;
+    public isGoogleSignInSupported: boolean = false;
     public userHaseActiveSubscription: boolean = false;
+
+    public showLoadingDialog: boolean = false;
 }

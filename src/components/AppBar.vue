@@ -6,7 +6,9 @@
 
     <!-- App name -->
     <v-spacer></v-spacer>
-    <h3>{{ $vpnHoodApp.data.uiState.appIsVpnHoodConnect ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME') }}</h3>
+    <h3>{{
+        $vpnHoodApp.data.uiState.isGoogleSignInSupported ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME')
+      }}</h3>
     <v-spacer></v-spacer>
 
     <!-- App mini version -->

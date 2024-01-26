@@ -115,5 +115,6 @@
   "CHECK_FOR_UPDATE": "Check for update",
   "EXPIRE": "Exp",
   "LESS_LATENCY": "Less latency",
-  "DEFAULT": "Default"
+  "DEFAULT": "Default",
+  "PLEASE_WAIT": "Please wait"
 }

@@ -2,6 +2,7 @@
   <v-app id="mainBg">
     <v-main>
       <router-view />
+      <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog"/>
       <!-- Global Alert Dialog -->
       <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
     </v-main>
@@ -12,10 +13,16 @@
 import { defineComponent } from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
+import {ClientApiFactory} from "@/services/ClientApiFactory";
+import LoadingDialog from "@/components/LoadingDialog.vue";
 
 export default defineComponent({
   name: 'App',
-  components: { AlertDialog },
+  components: {LoadingDialog, AlertDialog },
+  async created() {
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
+  },
   computed: {
     isAlertDialogVisible: {
       get(): boolean {

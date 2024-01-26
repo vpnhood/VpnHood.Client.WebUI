@@ -4,13 +4,9 @@ import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string | undefined = process.env["VUE_APP_CONNECT_API_BASE_URL"];
+    private readonly baseUrl: string = process.env["VUE_APP_CONNECT_API_BASE_URL"] ?? window.location.origin;
 
     constructor() {
-
-        if (!this.baseUrl)
-            this.baseUrl = window.location.origin;
-
         //Define the axios default config
         this.axiosInstance = axios.create({
             baseURL: this.baseUrl,
@@ -19,18 +15,6 @@ export class ClientApiFactory {
                 'Accept': 'application/json',
             },
         });
-
-        /*this.axiosInstance.interceptors.request.use(
-
-            async (config) => {
-                config.timeout = 15000;
-                return config;
-            },
-            async (error) => {
-                throw error;
-                //return Promise.reject(error);
-            },
-        );*/
     }
 
     // noinspection LocalVariableNamingConventionJS

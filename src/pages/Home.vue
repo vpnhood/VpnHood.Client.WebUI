@@ -11,7 +11,7 @@
 
         <!-- Go Premium Store Ad -->
         <v-col cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.appIsVpnHoodConnect && !$vpnHoodApp.data.uiState.userHaseActiveSubscription"
+          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.uiState.userHaseActiveSubscription"
                                  v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
         </v-col>
 
@@ -74,8 +74,9 @@
             {{ connectButtonText() }}
           </v-btn>
 
-          <!-- Connect button -->
+          <!-- Login button -->
           <v-btn
+              v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
               id="SignIn"
               height="40px"
               width="190px"
@@ -135,7 +136,7 @@
               variant="text"
               size="small"
               prepend-icon="mdi-transit-connection-variant"
-              class="config-item mb-2"
+              class="config-item"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
@@ -146,12 +147,13 @@
 
           <!-- Servers button -->
           <v-btn
+              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported"
               depressed
               :block="true"
               variant="text"
               size="small"
               prepend-icon="mdi-dns"
-              class="config-item mb-0"
+              class="config-item mt-2 mb-0"
               to="/servers"
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
@@ -192,7 +194,6 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {UiConstants} from "@/UiConstants";
 import {ClientApiFactory} from "@/services/ClientApiFactory";
-
 export default defineComponent({
   name: 'HomePage',
   components: {
@@ -211,7 +212,7 @@ export default defineComponent({
       ComponentRouteController,
     }
   },
-  created() {
+  async created() {
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
@@ -220,19 +221,20 @@ export default defineComponent({
   },
 
   methods: {
-
     async signInWithGoogle(){
-      const accountClient = ClientApiFactory.instance.createAccountClient();
-      await accountClient.signInWithGoogle();
-      const account = await accountClient.get();
-      console.log(account);
-      const billingClient = ClientApiFactory.instance.createBillingClient();
-      const subscriptionPlans = await billingClient.getSubscriptionPlans();
-      console.log(subscriptionPlans);
+      try {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
+        const accountClient = ClientApiFactory.instance.createAccountClient();
+        await accountClient.signInWithGoogle();
+        const account = await accountClient.get();
+        console.log(account);
+      }
+      finally {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+      }
     },
 
     async onConnectButtonClick() {
-
       // If user has no selected server and want to connect
       if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) {
 
