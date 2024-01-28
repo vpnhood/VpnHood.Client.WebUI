@@ -7,7 +7,7 @@
       rounded="pill"
       size="small"
       height="40"
-      @click="$emit('update:modelValue',true)"
+      @click="showProducts"
       class="ps-1 pe-3"
   >
     <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>
@@ -83,7 +83,12 @@ export default defineComponent({
   },
   emits: [
     "update:modelValue",
-  ]
+  ],
+  methods:{
+    showProducts(){
+      this.$emit('update:modelValue',true);
+    }
+  }
 })
 </script>
 

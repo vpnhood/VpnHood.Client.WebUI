@@ -11,7 +11,7 @@
 
         <!-- Go Premium Store Ad -->
         <v-col cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.uiState.userHaseActiveSubscription"
+          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount?.subscriptionPlanId"
                                  v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
         </v-col>
 
@@ -74,7 +74,7 @@
             {{ connectButtonText() }}
           </v-btn>
 
-          <!-- Login button -->
+          <!-- SignIn button TODO remove -->
           <v-btn
               v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
               id="SignIn"
@@ -85,6 +85,19 @@
               class="grad-btn text-button mt-5"
               @click="signInWithGoogle"
               text="SignIn"
+          >
+          </v-btn>
+
+          <!-- SignOut button TODO remove -->
+          <v-btn
+              v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
+              height="40px"
+              width="190px"
+              rounded="pill"
+              :block="true"
+              class="grad-btn text-button mt-5"
+              @click="signOut"
+              text="SignOut"
           >
           </v-btn>
 
@@ -221,6 +234,12 @@ export default defineComponent({
   },
 
   methods: {
+    // TODO remove
+    async signOut(){
+      const accountClient = ClientApiFactory.instance.createAccountClient();
+      await accountClient.signOut();
+    },
+    // TODO remove
     async signInWithGoogle(){
       try {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;

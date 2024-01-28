@@ -14,11 +14,13 @@ import {UiState} from "@/services/UiState";
 import {ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
+import {UserState} from "@/services/UserState";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
     public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
     public uiState: UiState = new UiState();
+    public userState: UserState = new UserState();
     public state: AppState;
     public settings: AppSettings;
     public features: AppFeatures;
@@ -70,8 +72,8 @@ export class VpnHoodApp {
 
         // Show last error message if the user has not ignored
         if (this.data.state.lastError &&
-            this.data.uiState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-            this.data.uiState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
+            this.data.userState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
+            this.data.userState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
             await this.showError(this.data.state.lastError);
         }
 

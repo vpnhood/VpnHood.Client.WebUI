@@ -15,13 +15,9 @@ export class UiState {
     public showNewServerAdded: boolean = false;
 
     // Time of user ignored last error message
-    public userIgnoreLastErrorTime?: Date | null = null;
-
-    // Time of user ignored last error message
     public configTime: Date = new Date();
 
     public isGoogleSignInSupported: boolean = false;
-    public userHaseActiveSubscription: boolean = false;
 
     public showLoadingDialog: boolean = false;
 }

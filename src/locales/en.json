@@ -116,5 +116,6 @@
   "EXPIRE": "Exp",
   "LESS_LATENCY": "Less latency",
   "DEFAULT": "Default",
-  "PLEASE_WAIT": "Please wait"
+  "PLEASE_WAIT": "Please wait",
+  "COULD_NOT_SILENT_SIGN_IN": "There is an error with your account, please sign in again"
 }

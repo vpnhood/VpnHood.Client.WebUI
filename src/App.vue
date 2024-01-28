@@ -22,6 +22,17 @@ export default defineComponent({
   async created() {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
+    try {
+      this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
+      console.log(this.$vpnHoodApp.data.userState.userAccount);
+    }
+    catch (err: any){
+      console.log(err);
+      if (err.message === "Could not get refresh token.")
+        throw new Error(this.$t("COULD_NOT_SILENT_SIGN_IN"));
+    }
+
+
   },
   computed: {
     isAlertDialogVisible: {
