@@ -11,10 +11,10 @@ import {
 } from "@/services/VpnHood.Client.Api";
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
+import {UserState} from "@/services/UserState";
 import {ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
-import {UserState} from "@/services/UserState";
 import i18n from "@/locales/i18n";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
@@ -216,5 +216,17 @@ export class VpnHoodApp {
 
     public async checkForUpdate(): Promise<void>{
         await this.apiClient.versionCheck();
+    }
+
+    public async signIn(): Promise<void>{
+        const accountClient = ClientApiFactory.instance.createAccountClient();
+        await accountClient.signInWithGoogle();
+        this.data.userState.userAccount = await accountClient.get();
+    }
+
+    public async signOut(): Promise<void>{
+        const accountClient = ClientApiFactory.instance.createAccountClient();
+        await accountClient.signOut();
+        this.data.userState.userAccount = null;
     }
 }

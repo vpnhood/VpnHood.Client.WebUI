@@ -123,6 +123,7 @@
   "BUNDLE_SERVERS": "Bundle Servers",
   "BUNDLE_SERVERS_DESC": "Hidden and Global servers",
   "SIGN_IN_WITH_GOOGLE": "Sign in with Google",
+  "SIGN_OUT": "Sign out",
   "SIGN_IN_TO_CONTINUE": "Please sign in to continue",
   "ALREADY_SUBSCRIBED": "Already subscribed",
   "GLOBAL_SERVERS_NOTICE": "Please note: do not purchase this type of ServerKey if VPN connections are restricted in your location, such as in the following countries.<br/>Instead, consider ordering the \"Hidden Server\".<ul class=\"ps-5 my-3\"><li>Cuba</li><li>China</li><li>North Korea</li><li>Iran</li><li>Russia</li><li>Syria</li></ul><span class=\"text-medium-emphasis text-body-2 font-italic\">",

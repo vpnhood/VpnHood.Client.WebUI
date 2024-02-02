@@ -54,6 +54,22 @@
         </v-list-item-title>
       </v-list-item>
 
+      <!-- Sign in button -->
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="menu-item has-border" @click="onSignIn">
+        <v-list-item-title>
+          <v-icon>mdi-login</v-icon>
+          <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Sign out button -->
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="menu-item has-border" @click="onSignOut">
+        <v-list-item-title>
+          <v-icon>mdi-logout</v-icon>
+          <span class="ms-3">{{$t('SIGN_OUT')}}</span>
+        </v-list-item-title>
+      </v-list-item>
+
       <!-- Whats new -->
       <v-list-item
           :nav="true"
@@ -149,6 +165,22 @@ export default defineComponent({
         this.isCheckForUpdate = false;
         this.$emit('update:modelValue', false);
       }
+    },
+
+    async onSignIn(){
+      try {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
+        await this.$vpnHoodApp.signIn();
+        this.$emit('update:modelValue', false);
+      }
+      finally {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+      }
+    },
+
+    onSignOut(){
+      this.$vpnHoodApp.signOut();
+      this.$emit('update:modelValue', false);
     }
   }
 });

@@ -31,7 +31,7 @@
         <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="cardWrapper rounded-xl text-center pa-5 mb-3">
           <p class="text-white border-b border-color-sky-blue mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
           <v-btn
-              @click="signIn"
+              @click="onSignIn"
               rounded="pill"
               size="large"
               color="white"
@@ -294,12 +294,10 @@ export default defineComponent({
       }
     },
 
-    async signIn(){
+    async onSignIn(){
       try {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-        const accountClient = ClientApiFactory.instance.createAccountClient();
-        await accountClient.signInWithGoogle();
-        this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
+        await this.$vpnHoodApp.signIn();
         await this.showProducts();
       }
       finally {
@@ -330,6 +328,7 @@ export default defineComponent({
 })
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 #adTitle {
   font-size: 130%;
@@ -362,6 +361,7 @@ export default defineComponent({
   color: white !important;
 }
 </style>
+<!--suppress CssUnusedSymbol -->
 <style>
 .plan-item .v-list-item__overlay{
   display: none !important;

@@ -74,19 +74,6 @@
             {{ connectButtonText() }}
           </v-btn>
 
-          <!-- SignOut button TODO remove -->
-          <v-btn
-              v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
-              height="40px"
-              width="190px"
-              rounded="pill"
-              :block="true"
-              class="grad-btn text-button mt-5"
-              @click="signOut"
-              text="SignOut"
-          >
-          </v-btn>
-
         </v-col>
 
         <!-- Config buttons -->
@@ -192,7 +179,6 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {UiConstants} from "@/UiConstants";
-import {ClientApiFactory} from "@/services/ClientApiFactory";
 export default defineComponent({
   name: 'HomePage',
   components: {
@@ -220,13 +206,6 @@ export default defineComponent({
   },
 
   methods: {
-    // TODO remove
-    async signOut(){
-      const accountClient = ClientApiFactory.instance.createAccountClient();
-      await accountClient.signOut();
-      this.$vpnHoodApp.data.userState.userAccount = null;
-    },
-
     async onConnectButtonClick() {
       // If user has no selected server and want to connect
       if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) {
