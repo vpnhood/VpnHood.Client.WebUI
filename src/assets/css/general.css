@@ -9,7 +9,7 @@
 
 /** --------------------- Define Color --------------------- **/
 :root {
-    --primary-darken-2: #06124bd4;
+    --primary-darken-2: #06124b;
     --dark-blue: #122272;
     --medium-blue: #132a7a;
     --light-blue: #1940b0;
@@ -65,7 +65,12 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 
 .grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green) 90%) !important;}
 .blue-border-btn i {line-height: inherit;}
-
+.border-color-sky-blue{
+    border-color: rgba(22, 163, 254, 0.3) !important;
+}
+.list-unstyled{
+    list-style: none;
+}
 /** --------------------Home Middle Section-------------------- **/
 #circleOuter {
     width: 180px;
@@ -133,5 +138,4 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
     -10px 0 30px var(--connected-glare),
     10px 0 30px var(--connected-glare);
 }
-
 /** --------------------End of Home Middle Section-------------------- **/

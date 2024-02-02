@@ -20,15 +20,17 @@ export default defineComponent({
   name: 'App',
   components: {LoadingDialog, AlertDialog },
   async created() {
-    try {
-      this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-      const accountClient = ClientApiFactory.instance.createAccountClient();
-      this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
-      this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
-      console.log(this.$vpnHoodApp.data.userState.userAccount);
-    }
-    finally {
-      this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
+    if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
+      try {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
+        this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
+        console.log(this.$vpnHoodApp.data.userState.userAccount);
+      }
+      finally {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+      }
     }
 
   },

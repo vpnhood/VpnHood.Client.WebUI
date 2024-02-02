@@ -25,7 +25,7 @@ export default createVuetify({
                         'on-surface': '#212121',
                         primary: '#1940b0',
                         'primary-darken-1': '#122272',
-                        'primary-darken-2': '#06124bd4',
+                        'primary-darken-2': '#06124b',
                         secondary: '#23c99d',
                         'on-secondary': '#ffffff',
                         'master-green': '#23c99d',

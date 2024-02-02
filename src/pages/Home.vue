@@ -74,20 +74,6 @@
             {{ connectButtonText() }}
           </v-btn>
 
-          <!-- SignIn button TODO remove -->
-          <v-btn
-              v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
-              id="SignIn"
-              height="40px"
-              width="190px"
-              rounded="pill"
-              :block="true"
-              class="grad-btn text-button mt-5"
-              @click="signInWithGoogle"
-              text="SignIn"
-          >
-          </v-btn>
-
           <!-- SignOut button TODO remove -->
           <v-btn
               v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
@@ -238,18 +224,7 @@ export default defineComponent({
     async signOut(){
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.signOut();
-    },
-    // TODO remove
-    async signInWithGoogle(){
-      try {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-        const accountClient = ClientApiFactory.instance.createAccountClient();
-        await accountClient.signInWithGoogle();
-        this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
-      }
-      finally {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
-      }
+      this.$vpnHoodApp.data.userState.userAccount = null;
     },
 
     async onConnectButtonClick() {

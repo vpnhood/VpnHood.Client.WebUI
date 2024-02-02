@@ -35,7 +35,7 @@
         </v-btn>
 
         <!-- Accept button -->
-        <v-btn color="blue darken-1" variant="text" @click="showPremiumServerAd">
+        <v-btn color="blue darken-1" variant="text" @click="acceptAndConnect">
           {{ $t("ACCEPT") }}
         </v-btn>
 
@@ -46,7 +46,6 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import { ComponentRouteController } from '@/services/ComponentRouteController';
 export default defineComponent({
   name: "PublicServerHintDialog",
   props:{
@@ -61,10 +60,10 @@ export default defineComponent({
     }
   },
   methods:{
-    async showPremiumServerAd(): Promise<void>{
+    async acceptAndConnect(): Promise<void>{
        localStorage.setItem("vh:DontShowPublicServerHint", this.isDontShowMessage.toString());
       this.$emit('update:modelValue',false);
-      await ComponentRouteController.showComponent(this.$componentName.PremiumServerAdDialog);
+      await this.$vpnHoodApp.connect()
     }
   }
 })

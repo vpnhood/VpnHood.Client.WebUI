@@ -119,23 +119,16 @@ export class VpnHoodApp {
             x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
         // If selected server is VpnHood public server
-        if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PremiumServerAdDialog)) {
+        if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
 
             // Set user used public servers at least once
             localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
 
-            // Check is user set don't show public server hint
-            const showServerHintStatus: boolean = localStorage.getItem("vh:DontShowPublicServerHint") !=="true";
-
             // Show public server hint or Show premium server ad
-            if (showServerHintStatus)
+            if (localStorage.getItem("vh:DontShowPublicServerHint") !=="true")
                 await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
-            else
-                await  ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog);
 
         } else {
-            // Close Premium server Ad
-            await ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog, false);
             await this.apiClient.connect(null);
         }
     }
