@@ -11,7 +11,7 @@
           <v-radio :value="true" color="warning">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
-              <v-chip class="ms-2" size="small" variant="flat" color="info" :text="$t('LESS_LATENCY')"></v-chip>
+              <span class="text-caption ms-2 color-muted" >{{$t('LESS_LATENCY')}}</span>
             </template>
           </v-radio>
 
