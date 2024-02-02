@@ -13,3 +13,9 @@ export enum ComponentName {
     RenameServerDialog = "RenameServerDialog",
     ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",
 }
+
+export enum SubscriptionPlansId {
+    HiddenServer = "hidden-server",
+    GlobalServer = "global-servers",
+    BundleServers = "bundle-servers",
+}

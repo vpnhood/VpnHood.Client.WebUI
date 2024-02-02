@@ -245,8 +245,7 @@ export default defineComponent({
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signInWithGoogle();
-        const account = await accountClient.get();
-        console.log(account);
+        this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
       }
       finally {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = false;

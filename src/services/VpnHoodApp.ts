@@ -15,6 +15,7 @@ import {ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import {UserState} from "@/services/UserState";
+import i18n from "@/locales/i18n";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -194,7 +195,15 @@ export class VpnHoodApp {
     // Get error message
     public async showError(err: any): Promise<void> {
         console.error(err);
-        await this.showMessage(err.message ?? err);
+
+        if (err.statusCode === 401){
+            const accountClient = ClientApiFactory.instance.createAccountClient();
+            const isUserSignedOut = await accountClient.isSignedOut();
+            if(!isUserSignedOut)
+                await this.showMessage(i18n.global.t("COULD_NOT_SILENT_SIGN_IN"));
+        }
+        else
+            await this.showMessage(err.message ?? err);
     }
 
     // Show error dialog

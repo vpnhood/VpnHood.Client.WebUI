@@ -9,6 +9,7 @@
 
 /** --------------------- Define Color --------------------- **/
 :root {
+    --primary-darken-2: #06124bd4;
     --dark-blue: #122272;
     --medium-blue: #132a7a;
     --light-blue: #1940b0;
@@ -16,6 +17,7 @@
     --master-green: #23c99d;
     --sharp-master-green: #41faa4;
     --light-purple: #8d9fe4;
+    --dark-purple: #6a7193;
     --muted-color: rgb(136, 136, 136);
     --light-gray: #929292;
     --connected-glare: green;

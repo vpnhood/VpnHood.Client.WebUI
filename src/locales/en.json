@@ -96,11 +96,10 @@
   "NEW_VERSION": "New Version:",
   "PREMIUM_SERVER_AD_TITLE": "get fast premium servers",
   "PREMIUM_FEATURE_1": "Remove Ads",
-  "PREMIUM_FEATURE_2": "An additional server (Hidden Server)",
-  "PREMIUM_FEATURE_3": "Auto renewed monthly",
-  "PREMIUM_FEATURE_4": "Unlimited bandwidth",
-  "PREMIUM_FEATURE_5": "Cancel anytime on Google Play",
-  "BUY_PREMIUM_SERVER": "Buy Subscription",
+  "PREMIUM_FEATURE_2": "Auto renewed monthly",
+  "PREMIUM_FEATURE_3": "Unlimited bandwidth",
+  "PREMIUM_FEATURE_4": "Cancel anytime on Google Play",
+  "CONTINUE": "Continue",
   "NO": "No",
   "YES": "Yes",
   "RECOMMENDED": "Recommended",
@@ -117,5 +116,10 @@
   "LESS_LATENCY": "Less latency",
   "DEFAULT": "Default",
   "PLEASE_WAIT": "Please wait",
-  "COULD_NOT_SILENT_SIGN_IN": "There is an error with your account, please sign in again"
+  "COULD_NOT_SILENT_SIGN_IN": "There is an error with your account, please sign in again",
+  "PER_MONTH": "/month",
+  "HIDDEN_SERVER": "Hidden Server",
+  "GLOBAL_SERVERS": "Global Servers",
+  "BUNDLE_SERVERS": "Bundle Servers",
+  "BUNDLE_SERVERS_DESC": "Hidden and Global servers"
 }
