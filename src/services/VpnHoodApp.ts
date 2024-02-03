@@ -192,8 +192,10 @@ export class VpnHoodApp {
         if (err.statusCode === 401){
             const accountClient = ClientApiFactory.instance.createAccountClient();
             const isUserSignedOut = await accountClient.isSignedOut();
-            if(!isUserSignedOut)
+            if(!isUserSignedOut){
                 await this.showMessage(i18n.global.t("COULD_NOT_SILENT_SIGN_IN"));
+            }
+
         }
         else
             await this.showMessage(err.message ?? err);

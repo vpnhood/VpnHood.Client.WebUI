@@ -238,11 +238,12 @@
             rounded="pill"
             variant="outlined"
             class="ms-2 px-8"
-            @click="showPlanNoticeDialog = false">
+            @click="closePlanNoticeDialog">
           {{ $t("CLOSE") }}
         </v-btn>
         <v-spacer/>
         <v-btn
+            v-if="showContinueInNotice"
             rounded="pill"
             variant="flat"
             append-icon="mdi-chevron-right"
@@ -277,6 +278,7 @@ export default defineComponent({
       showPendingProcessDialog: false,
       showPurchaseCompleteDialog: false,
       showPlanNoticeDialog: false,
+      showContinueInNotice: false,
       planNoticeType: "",
     }
   },
@@ -316,12 +318,32 @@ export default defineComponent({
       this.showPlanNoticeDialog = true;
     },
 
+    closePlanNoticeDialog(){
+      this.showContinueInNotice = false;
+      this.showPlanNoticeDialog = false;
+    },
+
     onContinuePurchase(){
       this.planNoticeType = this.selectedPlanId;
+      this.showContinueInNotice = true;
       this.showPlanNoticeDialog = true;
     },
 
     async googlePlayPurchaseProduct(){
+      this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
+      const billingClient = ClientApiFactory.instance.createBillingClient();
+      const userId = this.$vpnHoodApp.data.userState.userAccount?.userId;
+      if (!userId)
+        throw new Error("Could not found UserId");
+      try {
+        await billingClient.purchase(userId, this.selectedPlanId);
+      }
+      catch (err: any){
+        console.error(err);
+      }
+      finally {
+        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+      }
 
     },
   }
