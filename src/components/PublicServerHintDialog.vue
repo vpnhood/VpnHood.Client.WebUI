@@ -2,7 +2,7 @@
   <v-dialog
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
-      close-on-back
+      :close-on-back="true"
       max-width="600"
   >
     <v-card>
@@ -30,7 +30,7 @@
         <v-spacer></v-spacer>
 
         <!-- Cancel button -->
-        <v-btn color="blue darken-1" variant="text" @click="$emit('update:modelValue',false)">
+        <v-btn color="blue darken-1" variant="text" @click="cancel">
           {{ $t("CANCEL") }}
         </v-btn>
 
@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {AppConnectionState} from "@/services/VpnHood.Client.Api";
 export default defineComponent({
   name: "PublicServerHintDialog",
   props:{
@@ -64,6 +65,13 @@ export default defineComponent({
        localStorage.setItem("vh:DontShowPublicServerHint", this.isDontShowMessage.toString());
       this.$emit('update:modelValue',false);
       await this.$vpnHoodApp.connect()
+    },
+    async cancel(){
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected) {
+        this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = this.$vpnHoodApp.data.state.lastActiveClientProfileId;
+        await this.$vpnHoodApp.saveUserSetting();
+      }
+      this.$emit('update:modelValue',false);
     }
   }
 })

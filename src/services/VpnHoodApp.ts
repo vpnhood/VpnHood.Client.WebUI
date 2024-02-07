@@ -109,9 +109,8 @@ export class VpnHoodApp {
     }
 
     public async connect(): Promise<void> {
-
         if (!this.data.settings.userSettings.defaultClientProfileId) {
-            throw new Error("Could not find default client profile id.");
+            throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
         }
 
         // Find default client profile
@@ -121,16 +120,13 @@ export class VpnHoodApp {
         // If selected server is VpnHood public server
         if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
 
-            // Set user used public servers at least once
-            localStorage.setItem("vh:isPublicServersUsedAtLeastOnce", "true");
-
-            // Show public server hint or Show premium server ad
-            if (localStorage.getItem("vh:DontShowPublicServerHint") !=="true")
+            // Show public server hint
+            if (localStorage.getItem("vh:DontShowPublicServerHint") !=="true"){
                 await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
-
-        } else {
-            await this.apiClient.connect(null);
+                return;
+            }
         }
+        await this.apiClient.connect();
     }
 
     public async disconnect(): Promise<void> {
@@ -176,7 +172,7 @@ export class VpnHoodApp {
 
     public async diagnose(): Promise<void> {
         if (!this.data.settings.userSettings.defaultClientProfileId) {
-            throw new Error("Could not find default client profile id.");
+            throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
         }
         await this.apiClient.diagnose(this.data.settings.userSettings.defaultClientProfileId);
     }
@@ -189,14 +185,9 @@ export class VpnHoodApp {
     public async showError(err: any): Promise<void> {
         console.error(err);
 
-        if (err.statusCode === 401){
-            const accountClient = ClientApiFactory.instance.createAccountClient();
-            const isUserSignedOut = await accountClient.isSignedOut();
-            if(!isUserSignedOut){
-                await this.showMessage(i18n.global.t("COULD_NOT_SILENT_SIGN_IN"));
-            }
+        if (err.statusCode === 401 && !this.data.userState.userAccount)
+            await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
 
-        }
         else
             await this.showMessage(err.message ?? err);
     }

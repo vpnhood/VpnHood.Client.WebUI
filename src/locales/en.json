@@ -116,7 +116,7 @@
   "LESS_LATENCY": "Less latency",
   "DEFAULT": "Default",
   "PLEASE_WAIT": "Please wait",
-  "COULD_NOT_SILENT_SIGN_IN": "There is an error with your account, please sign in again",
+  "AUTHENTICATION_ERROR": "There is an error with your account, please sign in again",
   "PER_MONTH": "/month",
   "HIDDEN_SERVER": "Hidden Server",
   "GLOBAL_SERVERS": "Global Servers",
@@ -128,5 +128,6 @@
   "ALREADY_SUBSCRIBED": "Already subscribed",
   "GLOBAL_SERVERS_NOTICE": "Please note: do not purchase this type of ServerKey if VPN connections are restricted in your location, such as in the following countries.<br/>Instead, consider ordering the \"Hidden Server\".<ul class=\"ps-5 my-3\"><li>Cuba</li><li>China</li><li>North Korea</li><li>Iran</li><li>Russia</li><li>Syria</li></ul><span class=\"text-medium-emphasis text-body-2 font-italic\">",
   "HIDDEN_SERVER_NOTICE": "Please be aware that changing the server location in different countries is not possible with the “HiddenServer”",
-  "BUNDLE_SERVERS_NOTICE": ""
+  "BUNDLE_SERVERS_NOTICE": "",
+  "EMPTY_DEFAULT_CLIENT_PROFILE": "Could not find default client profile id."
 }

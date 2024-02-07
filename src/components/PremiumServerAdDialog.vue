@@ -330,16 +330,16 @@ export default defineComponent({
     },
 
     async googlePlayPurchaseProduct(){
-      this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-      const billingClient = ClientApiFactory.instance.createBillingClient();
-      const userId = this.$vpnHoodApp.data.userState.userAccount?.userId;
-      if (!userId)
-        throw new Error("Could not found UserId");
+      this.closePlanNoticeDialog();
       try {
-        await billingClient.purchase(userId, this.selectedPlanId);
+        const billingClient = ClientApiFactory.instance.createBillingClient();
+        const orderId = await billingClient.purchase(this.selectedPlanId);
+        console.log(orderId);
+        this.showPurchaseCompleteDialog = true;
       }
       catch (err: any){
-        console.error(err);
+        if(err.message === "A task was canceled.")
+          console.error(err);
       }
       finally {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = false;

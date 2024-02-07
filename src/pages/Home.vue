@@ -215,7 +215,7 @@ export default defineComponent({
             x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
 
         if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
-          await ComponentRouteController.showComponent(this.$componentName.ServersSheet);
+          this.$router.push("/servers");
           return;
         }
       }
@@ -295,7 +295,7 @@ export default defineComponent({
       if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
         return this.$t("NO_SERVER_SELECTED");
       }
-      return clientProfileInfo.clientProfileName ?? clientProfileInfo.clientProfileName;
+      return clientProfileInfo.clientProfileName;
     },
 
     // Return status of filtered apps by user (Only in mobile)
