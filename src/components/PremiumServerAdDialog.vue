@@ -329,22 +329,59 @@ export default defineComponent({
       this.showPlanNoticeDialog = true;
     },
 
-    async googlePlayPurchaseProduct(){
+    async googlePlayPurchaseProduct(): Promise<void>{
       this.closePlanNoticeDialog();
       try {
         const billingClient = ClientApiFactory.instance.createBillingClient();
         const orderId = await billingClient.purchase(this.selectedPlanId);
         console.log(orderId);
-        this.showPurchaseCompleteDialog = true;
+        this.showPendingProcessDialog = true;
+        await this.processPendingOrder(orderId);
       }
       catch (err: any){
         if(err.message === "A task was canceled.")
           console.error(err);
       }
       finally {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+        this.showPendingProcessDialog = false;
       }
+    },
 
+    // Check current order state 'isProcessed' for 6 time
+    async processPendingOrder(orderId: string): Promise<void> {
+      const currentUserClient = ClientApiFactory.instance.createAccountClient();
+
+      for (let counter = 0; counter < 5; counter++) {
+        try {
+          const pendingOrder = await currentUserClient.getSubscriptionOrderByProviderOrderId(orderId);
+
+          if (!pendingOrder.isProcessed)
+            throw new Error("Order has not processed yet.");
+
+          await this.getAccessKeys(pendingOrder.subscriptionId);
+
+          // Order process complete
+          this.showPurchaseCompleteDialog = true;
+          return;
+        }
+        catch (err: any) {
+          console.log(err);
+          await new Promise<void>(resolve => setTimeout(resolve, 5000));
+        }
+      }
+      throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
+    },
+
+    async getAccessKeys(subscriptionId: string){
+      const currentUserClient = ClientApiFactory.instance.createAccountClient();
+      const accessKeyList = await currentUserClient.getAccessKeys(subscriptionId);
+      await this.addAccessKeysToClientProfile(accessKeyList);
+    },
+
+    async addAccessKeysToClientProfile(accessKeyList: string[]): Promise<void>{
+      for (let x = 0; x < accessKeyList.length; x++){
+        await this.$vpnHoodApp.addAccessKey(accessKeyList[x]);
+      }
     },
   }
 })

@@ -2,16 +2,25 @@
 
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
     <v-card>
-      <v-card-title class="bg-master-green">{{$t("PROTOCOL")}}</v-card-title>
+      <v-card-title class="bg-master-green">{{ $t("PROTOCOL") }}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
-        <v-radio-group v-model="useUdpChannel" hide-details>
+
+        <!-- UDP not supported alert -->
+        <v-alert
+            v-if="isUdpUnsupported()"
+            class="mb-3"
+            type="warning"
+            :text="$t('UDP_NOT_SUPPORTED_MESSAGE')"
+        />
+
+        <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()">
 
           <v-radio :value="true" color="warning">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
-              <span class="text-caption ms-2 color-muted" >{{$t('LESS_LATENCY')}}</span>
+              <span class="text-caption ms-2 color-muted">{{ $t('LESS_LATENCY') }}</span>
             </template>
           </v-radio>
 
@@ -36,11 +45,12 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {AppConnectionState} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: 'ProtocolDialog',
-  props:{
-    modelValue:Boolean,
+  props: {
+    modelValue: Boolean,
   },
   emits: [
     "update:modelValue",
@@ -49,6 +59,10 @@ export default defineComponent({
     useUdpChannel:
         {
           get() {
+            if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected &&
+            this.$vpnHoodApp.data.state.isUdpChannelSupported === false)
+              return false;
+
             return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel;
           },
           async set(value: boolean) {
@@ -57,5 +71,11 @@ export default defineComponent({
           }
         },
   },
+  methods:{
+    isUdpUnsupported(): boolean{
+      return this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected &&
+          this.$vpnHoodApp.data.state.isUdpChannelSupported === false;
+    }
+  }
 })
 </script>

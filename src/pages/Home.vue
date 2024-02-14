@@ -126,14 +126,12 @@
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption color-light-purple">{{
-                $vpnHoodApp.data.settings.userSettings.useUdpChannel ? $t('PROTOCOL_UDP_ON') : $t('PROTOCOL_UDP_OFF')
-              }}</span>
+            <span class="text-capitalize text-caption color-light-purple">{{ udpProtocolButtonText() }}</span>
           </v-btn>
 
           <!-- Servers button -->
           <v-btn
-              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported"
+              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.length > 0"
               depressed
               :block="true"
               variant="text"
@@ -327,6 +325,15 @@ export default defineComponent({
       const diffTime = Math.abs(expDate - currentDate);
       const diffDays = Math.ceil(diffTime / UiConstants.daysOfDate);
       return diffDays <= 3;
+    },
+
+    udpProtocolButtonText(): string{
+      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected && this.$vpnHoodApp.data.state.isUdpChannelSupported === false)
+        return this.$t('PROTOCOL_UDP_OFF');
+
+      else
+      return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel ? this.$t('PROTOCOL_UDP_ON') : this.$t('PROTOCOL_UDP_OFF')
+
     }
   }
 });
