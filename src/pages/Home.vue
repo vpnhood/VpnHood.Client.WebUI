@@ -331,9 +331,7 @@ export default defineComponent({
       if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected && this.$vpnHoodApp.data.state.isUdpChannelSupported === false)
         return this.$t('PROTOCOL_UDP_OFF');
 
-      else
       return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel ? this.$t('PROTOCOL_UDP_ON') : this.$t('PROTOCOL_UDP_OFF')
-
     }
   }
 });
