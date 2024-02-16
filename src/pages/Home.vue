@@ -11,7 +11,7 @@
 
         <!-- Go Premium Store Ad -->
         <v-col cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount?.subscriptionPlanId"
+          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported "
                                  v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
         </v-col>
 
@@ -131,7 +131,7 @@
 
           <!-- Servers button -->
           <v-btn
-              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.length > 0"
+              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.length > 1"
               depressed
               :block="true"
               variant="text"

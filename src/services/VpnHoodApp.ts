@@ -165,6 +165,16 @@ export class VpnHoodApp {
         return clientProfileInfo;
     }
 
+    public async updateConnectAppClientProfiles(): Promise<void> {
+        const clientProfileInfo = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.testServerTokenId);
+        if (clientProfileInfo.length > 0){
+            for (const clientProfile of clientProfileInfo){
+                await this.removeClientProfile(clientProfile.clientProfileId);
+            }
+            await this.getAndSaveSubscriptionAccessKey();
+        }
+    }
+
     public async addTestServer(): Promise<void> {
         await this.apiClient.addTestServer();
         await this.reloadSettings();
@@ -221,5 +231,24 @@ export class VpnHoodApp {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signOut();
         this.data.userState.userAccount = null;
+    }
+
+    async getAndSaveSubscriptionAccessKey(): Promise<void>{
+        if (this.data.userState.userAccount?.subscriptionPlanId){
+            const accountClient = ClientApiFactory.instance.createAccountClient();
+            const accessKeyList = await accountClient.getAccessKeys(this.data.userState.userAccount.subscriptionPlanId);
+            for (let x = 0; x < accessKeyList.length; x++){
+                await this.addAccessKey(accessKeyList[x]);
+            }
+        }
+        else
+            throw new Error("Could not found user subscription id.");
+    }
+
+    async processUserAccount(): Promise<void>{
+        const accountClient = ClientApiFactory.instance.createAccountClient();
+        this.data.userState.userAccount = await accountClient.get();
+        if(this.data.userState.userAccount?.subscriptionPlanId)
+            await this.updateConnectAppClientProfiles();
     }
 }

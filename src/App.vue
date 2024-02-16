@@ -22,11 +22,11 @@ export default defineComponent({
   async created() {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
+    // If app is the VpnHoodConnect
     if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
       try {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-        this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
-        console.log(this.$vpnHoodApp.data.userState.userAccount);
+        await this.$vpnHoodApp.processUserAccount();
       }
       finally {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = false;

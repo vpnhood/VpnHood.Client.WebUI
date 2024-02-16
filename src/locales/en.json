@@ -130,5 +130,8 @@
   "HIDDEN_SERVER_NOTICE": "Please be aware that changing the server location in different countries is not possible with the “HiddenServer”",
   "BUNDLE_SERVERS_NOTICE": "",
   "EMPTY_DEFAULT_CLIENT_PROFILE": "Could not find default client profile id.",
-  "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol."
+  "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol.",
+  "CONGRATULATIONS": "Congratulations",
+  "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "The plan is active and server(s) added to the servers list.",
+  "SHOW_SERVERS": "Show servers"
 }

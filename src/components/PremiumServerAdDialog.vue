@@ -49,7 +49,7 @@
         </v-card-item>
 
         <!-- Products list -->
-        <template v-else>
+        <template v-else-if="subscriptionPlans.length > 0">
           <v-card-item class="cardWrapper rounded-xl pa-5 mb-3">
             <!-- Image -->
             <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
@@ -203,8 +203,9 @@
               variant="flat"
               append-icon="mdi-chevron-right"
               class="ms-2 px-5 color-master-green"
+              @click="showServers"
               >
-            {{ $t("MY_SERVER_KEYS") }}
+            {{ $t("SHOW_SERVERS") }}
           </v-btn>
 
           <v-btn
@@ -310,7 +311,6 @@ export default defineComponent({
     async showProducts(){
       const billingClient = ClientApiFactory.instance.createBillingClient();
       this.subscriptionPlans = await billingClient.getSubscriptionPlans();
-      console.log(this.subscriptionPlans);
     },
 
     openPlanNoticeDialog(planId: string){
@@ -334,7 +334,6 @@ export default defineComponent({
       try {
         const billingClient = ClientApiFactory.instance.createBillingClient();
         const orderId = await billingClient.purchase(this.selectedPlanId);
-        console.log(orderId);
         this.showPendingProcessDialog = true;
         await this.processPendingOrder(orderId);
       }
@@ -348,19 +347,18 @@ export default defineComponent({
     },
 
     // Check current order state 'isProcessed' for 6 time
-    async processPendingOrder(orderId: string): Promise<void> {
-      const currentUserClient = ClientApiFactory.instance.createAccountClient();
+    async processPendingOrder(providerOrderId: string): Promise<void> {
+      const accountClient = ClientApiFactory.instance.createAccountClient();
 
       for (let counter = 0; counter < 5; counter++) {
         try {
-          const pendingOrder = await currentUserClient.getSubscriptionOrderByProviderOrderId(orderId);
+          const appSubscriptionOrder = await accountClient.getSubscriptionOrderByProviderOrderId(providerOrderId);
 
-          if (!pendingOrder.isProcessed)
+          if (!appSubscriptionOrder.isProcessed)
             throw new Error("Order has not processed yet.");
 
-          await this.getAccessKeys(pendingOrder.subscriptionId);
-
           // Order process complete
+          await this.$vpnHoodApp.processUserAccount();
           this.showPurchaseCompleteDialog = true;
           return;
         }
@@ -372,17 +370,10 @@ export default defineComponent({
       throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
     },
 
-    async getAccessKeys(subscriptionId: string){
-      const currentUserClient = ClientApiFactory.instance.createAccountClient();
-      const accessKeyList = await currentUserClient.getAccessKeys(subscriptionId);
-      await this.addAccessKeysToClientProfile(accessKeyList);
-    },
-
-    async addAccessKeysToClientProfile(accessKeyList: string[]): Promise<void>{
-      for (let x = 0; x < accessKeyList.length; x++){
-        await this.$vpnHoodApp.addAccessKey(accessKeyList[x]);
-      }
-    },
+    showServers(){
+      this.$emit('update:modelValue',false);
+      this.$router.replace("/servers");
+    }
   }
 })
 </script>
