@@ -221,7 +221,7 @@ export default defineComponent({
     // Delete server by user
     async removeServer(clientProfileId: string): Promise<void> {
       await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog, false);
-      await this.$vpnHoodApp.removeClientProfile(clientProfileId);
+      await this.$vpnHoodApp.deleteClientProfile(clientProfileId);
     },
 
     // Hidden full ip in the servers list

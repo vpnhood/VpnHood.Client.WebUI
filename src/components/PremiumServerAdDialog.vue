@@ -78,7 +78,7 @@
                   color="white"
                   base-color="primary-darken-2"
                   variant="flat"
-                  :disabled="$vpnHoodApp.data.userState.userAccount.subscriptionPlanId === plan.subscriptionPlanId"
+                  :disabled="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId"
                   :active="plan.subscriptionPlanId === selectedPlanId"
                   active-class="active"
                   class="plan-item ps-2 mb-2"
@@ -86,7 +86,6 @@
               >
                 <template v-slot:prepend>
                   <v-radio
-                      v-if="$vpnHoodApp.data.userState.userAccount.subscriptionPlanId !== plan.subscriptionPlanId"
                       v-model="selectedPlanId"
                       density="compact"
                       :true-value="plan.subscriptionPlanId"
@@ -106,10 +105,9 @@
                 <v-list-item-subtitle class="text-caption text-white opacity-30">
 
                   <!-- Already subscribed -->
-                  <template v-if="$vpnHoodApp.data.userState.userAccount.subscriptionPlanId === plan.subscriptionPlanId">
+                  <template v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId">
                     <v-chip
                         color="sharp-master-green"
-                        density="compact"
                         variant="tonal"
                         size="small"
                         :text="$t('ALREADY_SUBSCRIBED')"
@@ -285,7 +283,6 @@ export default defineComponent({
   },
   methods:{
     async onOpenDialog(){
-      this.$emit('update:modelValue',true);
       if (this.$vpnHoodApp.data.userState.userAccount){
         try {
           this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
@@ -295,6 +292,7 @@ export default defineComponent({
           this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
         }
       }
+      this.$emit('update:modelValue',true);
     },
 
     async onSignIn(){
@@ -346,28 +344,15 @@ export default defineComponent({
       }
     },
 
-    // Check current order state 'isProcessed' for 6 time
     async processPendingOrder(providerOrderId: string): Promise<void> {
       const accountClient = ClientApiFactory.instance.createAccountClient();
-
-      for (let counter = 0; counter < 5; counter++) {
-        try {
-          const appSubscriptionOrder = await accountClient.getSubscriptionOrderByProviderOrderId(providerOrderId);
-
-          if (!appSubscriptionOrder.isProcessed)
-            throw new Error("Order has not processed yet.");
-
-          // Order process complete
-          await this.$vpnHoodApp.processUserAccount();
-          this.showPurchaseCompleteDialog = true;
-          return;
-        }
-        catch (err: any) {
-          console.log(err);
-          await new Promise<void>(resolve => setTimeout(resolve, 5000));
-        }
+      const isOrderProcessed = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
+      if (isOrderProcessed){
+        await this.$vpnHoodApp.processUserAccount();
+        this.showPurchaseCompleteDialog = true;
       }
-      throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
+      else
+        throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
     },
 
     showServers(){

@@ -64,9 +64,12 @@
 
       <!-- Sign out button -->
       <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="menu-item has-border" @click="onSignOut">
-        <v-list-item-title>
+        <v-list-item-title class="d-flex align-center">
           <v-icon>mdi-logout</v-icon>
-          <span class="ms-3">{{$t('SIGN_OUT')}}</span>
+          <div class="d-inline-flex flex-column ms-3">
+            <span>{{$t('SIGN_OUT')}}</span>
+            <span class="text-caption opacity-50">{{$vpnHoodApp.data.userState.userAccount.email}}</span>
+          </div>
         </v-list-item-title>
       </v-list-item>
 

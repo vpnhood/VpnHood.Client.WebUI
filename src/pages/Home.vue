@@ -131,7 +131,7 @@
 
           <!-- Servers button -->
           <v-btn
-              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.length > 1"
+              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId !== $vpnHoodApp.data.features.testServerTokenId)"
               depressed
               :block="true"
               variant="text"
@@ -343,7 +343,7 @@ export default defineComponent({
 .config-item {
   color: var(--sky-blue);
   background: #132a7ac9;
-  border: 1px rgba(22, 163, 254, 0.3) solid;
+  border: 1px var(--sky-blue-opacity) solid;
   min-height: 40px;
   justify-content: start;
   white-space: nowrap !important;

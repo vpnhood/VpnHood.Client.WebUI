@@ -133,5 +133,6 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol.",
   "CONGRATULATIONS": "Congratulations",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "The plan is active and server(s) added to the servers list.",
-  "SHOW_SERVERS": "Show servers"
+  "SHOW_SERVERS": "Show servers",
+  "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete order process..."
 }

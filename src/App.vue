@@ -51,7 +51,7 @@ export default defineComponent({
 
 <style scoped>
 #mainBg {
-  background-image: linear-gradient(#1940b0, #122272);
+  background-image: linear-gradient(var(--light-blue), var(--dark-blue));
   position: relative;
 }
 

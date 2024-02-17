@@ -14,6 +14,7 @@
     --medium-blue: #132a7a;
     --light-blue: #1940b0;
     --sky-blue: #16a3fe;
+    --sky-blue-opacity: rgba(22, 163, 254, 0.3);
     --master-green: #23c99d;
     --sharp-master-green: #41faa4;
     --light-purple: #8d9fe4;
@@ -99,7 +100,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
     bottom: 0;
     left: 0;
     right: 0;
-    border: 2px white solid;
+    border: 1px white solid;
     border-radius: 50%;
     transition: all 1.5s ease;
 }
