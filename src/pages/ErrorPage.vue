@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-dark-blue">
+  <div style="background-color: #122272;">
     <v-container class="h-screen text-center text-white">
     <!-- App name -->
     <h3>{{

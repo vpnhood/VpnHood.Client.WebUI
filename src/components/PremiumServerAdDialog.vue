@@ -10,7 +10,8 @@
       @click="onOpenDialog"
       class="ps-1 pe-3"
   >
-    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>
+    <v-icon icon="mdi-crown" color="primary" size="30" class="bg-secondary rounded-circle me-2"/>
+<!--    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>-->
     {{$t("PREMIUM_SERVER_AD_TITLE")}}
   </v-btn>
 
@@ -22,14 +23,14 @@
       @update:modelValue="$emit('update:modelValue',$event)"
       :fullscreen="true"
   >
-      <v-card color="#06124bd4" :flat="true" class="pa-5 justify-center align-center">
+      <v-card color="rgba(var(--v-theme-primary-darken-2), 0.9)" :flat="true" class="pa-5 justify-center align-center">
 
         <!-- Close button -->
         <v-btn icon="mdi-window-close" variant="tonal" color="white" size="small" class="d-block mx-auto mb-4" @click="$emit('update:modelValue',false)"/>
 
         <!-- Sign in with google button -->
-        <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="cardWrapper rounded-xl text-center pa-5 mb-3">
-          <p class="text-white border-b border-color-sky-blue mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
+        <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="bg-primary-darken-2 border border-sky-blue border-opacity-50 rounded-xl text-center pa-5 mb-3">
+          <p class="text-white border-b border-sky-blue border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
           <v-btn
               @click="onSignIn"
               rounded="pill"
@@ -50,12 +51,12 @@
 
         <!-- Products list -->
         <template v-else-if="subscriptionPlans.length > 0">
-          <v-card-item class="cardWrapper rounded-xl pa-5 mb-3">
+          <v-card-item class="bg-primary-darken-2 border border-sky-blue border-opacity-50 rounded-xl pa-5 mb-3">
             <!-- Image -->
             <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
 
             <!-- Title -->
-            <h3 id="adTitle" class="title-bold color-sharp-master-green text-uppercase text-center pb-2 mb-2">
+            <h3 id="adTitle" class="title-bold border-b border-sharp-master-green border-opacity-25 text-sharp-master-green text-uppercase text-center pb-2 mb-2">
               {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
 
             <!-- Description -->
@@ -76,12 +77,13 @@
                   :key="plan.subscriptionPlanId"
                   lines="two"
                   color="white"
+                  rounded="15"
                   base-color="primary-darken-2"
                   variant="flat"
                   :disabled="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId"
                   :active="plan.subscriptionPlanId === selectedPlanId"
-                  active-class="active"
-                  class="plan-item ps-2 mb-2"
+                  active-class="border border-opacity-100 border-sharp-master-green bg-primary-darken-2 text-white"
+                  class="ps-2 mb-2 border border-opacity-25"
                   @click="selectedPlanId = plan.subscriptionPlanId"
               >
                 <template v-slot:prepend>
@@ -141,7 +143,7 @@
                 rounded="pill"
                 height="45"
                 variant="elevated"
-                class="grad-btn font-weight-bold text-capitalize"
+                :class="[$vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'app-is-connect' : '', 'master-btn font-weight-bold text-capitalize']"
                 :text="$t('CONTINUE')"
                 @click="onContinuePurchase"
             />
@@ -246,7 +248,7 @@
             rounded="pill"
             variant="flat"
             append-icon="mdi-chevron-right"
-            class="ms-2 px-5 color-master-green"
+            class="ms-2 px-5 text-master-green"
             @click="googlePlayPurchaseProduct()">
           {{ $t("CONTINUE") }}
         </v-btn>
@@ -363,42 +365,19 @@ export default defineComponent({
 })
 </script>
 
-<!--suppress CssUnusedSymbol -->
+
 <style scoped>
-#adTitle {
-  font-size: 130%;
-  border-bottom: 1px rgba(63, 246, 169, 0.15) solid;
-}
-#adDesc {
-  line-height: 31px;
-}
-.cardWrapper {
-  border: 1px rgba(22, 163, 254, 0.44) solid;
-  background-color: var(--primary-darken-2);
-}
+#adTitle {font-size: 130%;}
+#adDesc {line-height: 31px;}
+
 /*noinspection ALL*/
 .v-card-item {
   width: 100%;
   max-width: 500px;
 }
-.plan-item{
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 15px;
-}
-.plan-item:not(.active){
-  border-color: rgba(255, 255, 255, 0.2);
-}
-.plan-item.active{
-  border-width: 2px;
-  border-color: var(--sharp-master-green);
-  background-color: var(--primary-darken-2) !important;
-  color: white !important;
-}
 </style>
+
 <!--suppress CssUnusedSymbol -->
 <style>
-.plan-item .v-list-item__overlay{
-  display: none !important;
-}
+.v-list-item__overlay{display: none !important;}
 </style>

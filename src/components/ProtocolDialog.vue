@@ -3,7 +3,6 @@
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
     <v-card>
       <v-card-title class="bg-master-green">{{ $t("PROTOCOL") }}</v-card-title>
-      <v-divider></v-divider>
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("PROTOCOL_DESC") }}</p>
 
@@ -17,7 +16,7 @@
 
         <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()">
 
-          <v-radio :value="true" color="warning">
+          <v-radio :value="true" color="secondary">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
               <span class="text-caption ms-2 color-muted">{{ $t('LESS_LATENCY') }}</span>

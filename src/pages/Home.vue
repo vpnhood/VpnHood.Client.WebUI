@@ -24,12 +24,12 @@
             <v-col cols="auto">
               <span class="color-sky-blue text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
-              <span class="color-light-purple text-caption">Mbps</span>
+              <span class="text-light-purple text-caption">Mbps</span>
             </v-col>
             <v-col cols="auto">
               <span class="color-sky-blue text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
-              <span class="color-light-purple text-caption">Mbps</span>
+              <span class="text-light-purple text-caption">Mbps</span>
             </v-col>
           </v-row>
 
@@ -56,7 +56,7 @@
                 </v-icon>
 
                 <!-- Access Key expire date -->
-                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'color-red' : 'color-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
+                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@
               width="190px"
               rounded="pill"
               :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting || $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
-              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'grad-btn' : '', 'blue-btn text-button mt-5']"
+              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'master-btn' : '', 'blue-btn text-button mt-5', $vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'app-is-connect' : '']"
               @click="onConnectButtonClick"
           >
             {{ connectButtonText() }}
@@ -90,7 +90,7 @@
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
             <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption color-light-purple">{{
+            <span class="text-capitalize text-caption text-light-purple">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
               }}</span>
             <img
@@ -112,7 +112,7 @@
           >
             <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption color-light-purple">{{ appFilterStatus() }}</span>
+            <span class="text-capitalize text-caption text-light-purple">{{ appFilterStatus() }}</span>
           </v-btn>
 
           <!-- Protocol button -->
@@ -126,7 +126,7 @@
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption color-light-purple">{{ udpProtocolButtonText() }}</span>
+            <span class="text-capitalize text-caption text-light-purple">{{ udpProtocolButtonText() }}</span>
           </v-btn>
 
           <!-- Servers button -->
@@ -142,7 +142,7 @@
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption color-light-purple">{{ getDefaultClientProfileName() }}</span>
+            <span class="text-capitalize text-caption text-light-purple">{{ getDefaultClientProfileName() }}</span>
           </v-btn>
 
         </v-col>
@@ -341,9 +341,9 @@ export default defineComponent({
   color: rgba(255, 255, 255, 0.50);
 }
 .config-item {
-  color: var(--sky-blue);
-  background: #132a7ac9;
-  border: 1px var(--sky-blue-opacity) solid;
+  color: rgb(var(--v-theme-sky-blue));
+  background: rgba(var(--v-theme-primary-darken-1), 0.8);
+  border: 1px rgba(var(--v-theme-sky-blue), 0.3) solid;
   min-height: 40px;
   justify-content: start;
   white-space: nowrap !important;

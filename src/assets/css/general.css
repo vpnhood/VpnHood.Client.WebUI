@@ -9,9 +9,6 @@
 
 /** --------------------- Define Color --------------------- **/
 :root {
-    --primary-darken-2: #06124b;
-    --dark-blue: #122272;
-    --medium-blue: #132a7a;
     --light-blue: #1940b0;
     --sky-blue: #16a3fe;
     --sky-blue-opacity: rgba(22, 163, 254, 0.3);
@@ -23,7 +20,6 @@
     --light-gray: #929292;
     --connected-glare: green;
     --gray: #3f3f3f;
-    --red: #ff5252;
 }
 
 /** -------------------- Default Style ------------------- **/
@@ -32,8 +28,6 @@ body, .v-application{font-family: "Roboto-Regular", sans-serif !important; font-
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", sans-serif !important;}
 
 /** -------- General background color -------- **/
-.bg-dark-blue {background-color: var(--dark-blue);}
-.bg-medium-blue {background-color: var(--medium-blue);}
 .bg-light-blue {background-color: var(--light-blue);}
 .bg-sky-blue {background-color: var(--sky-blue);}
 .bg-master-green {background-color: var(--master-green);}
@@ -46,32 +40,28 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 .color-master-green {color: var(--master-green);}
 .color-sharp-master-green {color: var(--sharp-master-green);}
 .color-sky-blue {color: var(--sky-blue);}
-.color-light-purple {color: var(--light-purple);}
 .color-gray {color: var(--gray);}
 .color-muted {color: var(--muted-color);}
-.color-red {color: var(--red);}
 /*noinspection CssUnresolvedCustomProperty*/
 .color-on-warning {color: rgb(var(--v-theme-on-warning));}
-
+.rounded-15{border-radius: 15px;}
 .opacity-0 {opacity: 0; transition: opacity 1.4s ease;}
-.opacity-30 {opacity: .3; transition: opacity 1.4s ease;}
-.opacity-50 {opacity: .5; transition: opacity 1.4s ease;}
+.opacity-30 {opacity: 0.3; transition: opacity 1.4s ease;}
+.opacity-50 {opacity: 0.5; transition: opacity 1.4s ease;}
+.opacity-80 {opacity: 0.8; transition: opacity 1.4s ease;}
 .opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
 
 .blue-btn {
     transition: all 0.4s ease;
-    background-color: var(--sky-blue) !important;
+    /*noinspection CssUnresolvedCustomProperty*/
+    background-color: rgb(var(--v-theme-sky-blue)) !important;
     color: white;
 }
 
-.grad-btn {background-image: linear-gradient(to right, var(--sky-blue), var(--sharp-master-green) 90%) !important;}
+.master-btn:not(.app-is-connect) { /*noinspection CssUnresolvedCustomProperty*/background-image: linear-gradient(to right, rgb(var(--v-theme-sky-blue)), rgb(var(--v-theme-sharp-master-green)) 90%) !important;}
+.master-btn.app-is-connect { /*noinspection CssUnresolvedCustomProperty*/ background: rgb(var(--v-theme-secondary)) !important;}
 .blue-border-btn i {line-height: inherit;}
-.border-color-sky-blue{
-    border-color: rgba(22, 163, 254, 0.3) !important;
-}
-.list-unstyled{
-    list-style: none;
-}
+.list-unstyled{list-style: none;}
 /** --------------------Home Middle Section-------------------- **/
 #circleOuter {
     width: 180px;

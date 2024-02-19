@@ -1,5 +1,5 @@
 <template>
-  <v-app id="mainBg">
+  <v-app id="mainBg" :class="[$vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'connect-app' : '']">
     <v-main>
       <router-view />
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog"/>
@@ -9,13 +9,18 @@
   </v-app>
 </template>
 
+<script setup lang="ts">
+import {useTheme} from "vuetify";
+const theme = useTheme();
+theme.global.name.value = "VpnHoodConnect";
+</script>
+
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import LoadingDialog from "@/components/LoadingDialog.vue";
-
 export default defineComponent({
   name: 'App',
   components: {LoadingDialog, AlertDialog },
@@ -45,13 +50,13 @@ export default defineComponent({
         await ComponentRouteController.showComponent(this.$componentName.AlertDialog, value);
       }
     }
-  }
+  },
 });
 </script>
 
 <style scoped>
 #mainBg {
-  background-image: linear-gradient(var(--light-blue), var(--dark-blue));
+  background-image: linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
   position: relative;
 }
 
@@ -64,6 +69,9 @@ export default defineComponent({
   left: 0;
   background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
+}
+#mainBg.connect-app:before {
+  opacity: .3;
 }
 
 @media (max-width: 425px) {

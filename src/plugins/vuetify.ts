@@ -2,7 +2,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {createVuetify} from 'vuetify'
-
+/* temporary color 153 30 52*/
 export default createVuetify({
     defaults:{
         VSheet: {
@@ -15,9 +15,9 @@ export default createVuetify({
             VBottomSheet,
         },
         theme: {
-            defaultTheme: 'VpnHoodTheme',
+            defaultTheme: 'VpnHood',
             themes: {
-                VpnHoodTheme: {
+                VpnHood: {
                     dark: true,
                     colors: {
                         background: '#122272',
@@ -37,13 +37,48 @@ export default createVuetify({
                         'light-purple': '#8d9fe4',
                         'on-light-purple': '#ffffff',
                         'on-warning': '#704d00',
+                        'gray': '#3f3f3f',
                         error: '#ff5252',
                         info: '#2196F3',
                         success: '#4CAF50',
                         warning: '#ffe066',
                     },
                     variables: {
-                        'medium-emphasis-opacity': '0.8'
+                        'medium-emphasis-opacity': '0.8',
+                        'border-color':'#e8e8e8',
+                        'border-opacity': 1,
+                    },
+                },
+                VpnHoodConnect: {
+                    dark: true,
+                    colors: {
+                        background: '#211951',
+                        surface: '#FFFFFF',
+                        'on-surface': '#212121',
+                        primary: '#211951',
+                        'primary-darken-1': '#211951',
+                        'primary-darken-2': '#150e3d',
+                        secondary: '#e7b481',
+                        'on-secondary': '#ffffff',
+                        'master-green': '#e7b481',
+                        'on-master-green': '#ffffff',
+                        'sharp-master-green': '#e7b481',
+                        'on-sharp-master-green': '#ffffff',
+                        'sky-blue': '#e7b481',
+                        'on-sky-blue': '#ffffff',
+                        'light-purple': '#f0f3ff',
+                        'on-light-purple': '#ffffff',
+                        'on-warning': '#704d00',
+                        'gray': '#3f3f3f',
+                        error: '#ff5252',
+                        info: '#2196F3',
+                        success: '#4CAF50',
+                        warning: '#ffe066',
+                    },
+                    variables: {
+                        'medium-emphasis-opacity': '0.8',
+                        'border-color':'#e8e8e8',
+                        'border-opacity': 1,
                     },
                 },
             },

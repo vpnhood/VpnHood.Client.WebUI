@@ -7,7 +7,7 @@
       :disable-route-watcher="true"
       :floating="true">
     <!-- Header -->
-    <div class="d-flex align-center bg-medium-blue pa-4">
+    <div class="d-flex align-center bg-primary-darken-1 pa-4">
 
       <!-- App logo -->
       <v-img :eager="true" src="../assets/images/logo.png" alt="logo" max-width="60" width="60" height="60"/>
@@ -18,7 +18,7 @@
         <h3>{{ $t("VPN_HOOD_APP_NAME") }}</h3>
 
         <!-- App full version -->
-        <div class="color-sharp-master-green text-caption">
+        <div class="text-sharp-master-green text-caption">
           <span class="me-2">{{ $t("VERSION") }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
@@ -30,15 +30,15 @@
     <v-list dense class="pt-0">
 
       <!-- Settings -->
-      <v-list-item class="menu-item has-border" @click="$router.replace({path: '/settings'})">
+      <v-list-item class="border-b" @click="$router.replace({path: '/settings'})">
         <v-list-item-title>
-          <v-icon>mdi-cog</v-icon>
+          <v-icon class="opacity-80">mdi-cog</v-icon>
           <span class="ms-3">{{$t('SETTINGS')}}</span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Diagnose -->
-      <v-list-item class="menu-item has-border" :disabled="!$vpnHoodApp.canDiagnose()" @click="diagnose">
+      <v-list-item class="border-b" :disabled="!$vpnHoodApp.canDiagnose()" @click="diagnose">
         <v-list-item-title>
           <v-icon>mdi-stethoscope</v-icon>
           <span class="ms-3">{{$t('DIAGNOSE')}}</span>
@@ -46,7 +46,7 @@
       </v-list-item>
 
       <!-- Check for update -->
-      <v-list-item class="menu-item has-border" @click="checkForUpdate">
+      <v-list-item class="border-b" @click="checkForUpdate">
         <v-list-item-title>
           <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary"/>
           <v-icon v-else>mdi-update</v-icon>
@@ -55,7 +55,7 @@
       </v-list-item>
 
       <!-- Sign in button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="menu-item has-border" @click="onSignIn">
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignIn">
         <v-list-item-title>
           <v-icon>mdi-login</v-icon>
           <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
@@ -63,7 +63,7 @@
       </v-list-item>
 
       <!-- Sign out button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="menu-item has-border" @click="onSignOut">
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignOut">
         <v-list-item-title class="d-flex align-center">
           <v-icon>mdi-logout</v-icon>
           <div class="d-inline-flex flex-column ms-3">
@@ -77,7 +77,7 @@
       <v-list-item
           :nav="true"
           density="compact"
-          class="menu-item mt-4"
+          class="opacity-80 mt-4"
           href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
           @click="$emit('update:modelValue',false)"
           target="_blank">
@@ -92,7 +92,7 @@
       <v-list-item
           :nav="true"
           density="compact"
-          class="menu-item"
+          class="opacity-80"
           href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
           @click="$emit('update:modelValue',false)"
           target="_blank">
@@ -107,7 +107,7 @@
       <v-list-item
           :nav="true"
           density="compact"
-          class="menu-item"
+          class="opacity-80"
           href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
           @click="$emit('update:modelValue',false)"
           target="_blank">
@@ -188,15 +188,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.menu-item {
-  color: var(--gray);
-}
-.menu-item.has-border{
-  border-bottom: 1px #e8e8e8 solid;
-}
-.menu-item i{
-  opacity: .8;
-}
-</style>

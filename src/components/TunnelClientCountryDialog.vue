@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title class="bg-master-green">{{ $t("TUNNEL_MY_COUNTRY") }}</v-card-title>
-      <v-divider></v-divider>
+
       <v-card-text>
         <p class="pb-4 color-muted">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
 
@@ -14,7 +14,7 @@
           <v-radio
               :label="$t('TUNNEL_MY_COUNTRY_ON')"
               :value="true"
-              color="error"
+              color="sharp-master-green"
           ></v-radio>
           <v-radio
               :value="false"
@@ -24,7 +24,7 @@
               <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
               <v-chip
                   class="ms-2"
-                  color="var(--master-green)"
+                  color="rgb(var(--v-theme-master-green))"
                   :text="$t('RECOMMENDED')"
               ></v-chip>
             </template>
