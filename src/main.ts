@@ -20,8 +20,12 @@ async function main(): Promise<void> {
         app.config.globalProperties.$vpnHoodApp = vpnHoodApp;
         app.config.globalProperties.$componentName = ComponentName;
 
+        // Set app theme
+        vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? "VpnHood";
+
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);
+
 
         // init Vue
         app.use(i18n)

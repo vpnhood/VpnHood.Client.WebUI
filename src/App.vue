@@ -1,19 +1,17 @@
 <template>
-  <v-app id="mainBg" :class="[$vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'connect-app' : '']">
+  <v-app id="mainBg" :class="$vpnHoodApp.data.features.uiName">
     <v-main>
       <router-view />
+
+      <!-- Loading dialog before each api call -->
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog"/>
-      <!-- Global Alert Dialog -->
+
+      <!-- Global alert dialog -->
       <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
     </v-main>
+
   </v-app>
 </template>
-
-<script setup lang="ts">
-import {useTheme} from "vuetify";
-const theme = useTheme();
-theme.global.name.value = "VpnHoodConnect";
-</script>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -27,7 +25,8 @@ export default defineComponent({
   async created() {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
-    // If app is the VpnHoodConnect
+
+    // App is the VpnHoodConnect
     if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
       try {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
@@ -37,8 +36,8 @@ export default defineComponent({
         this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
       }
     }
-
   },
+
   computed: {
     isAlertDialogVisible: {
       get(): boolean {
@@ -51,11 +50,13 @@ export default defineComponent({
       }
     }
   },
+
 });
 </script>
 
 <style scoped>
 #mainBg {
+  /*noinspection CssUnresolvedCustomProperty*/
   background-image: linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
   position: relative;
 }
@@ -70,13 +71,16 @@ export default defineComponent({
   background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
 }
-#mainBg.connect-app:before {
-  opacity: .3;
-}
-
 @media (max-width: 425px) {
   #mainBg:before {
     background-image: url("/src/assets/images/body-bg-mobile.png");
   }
 }
+
+/*** App is the VpnHoodConnect ***/
+/*noinspection CssUnusedSymbol*/
+#mainBg.VpnHoodConnect:before {
+  opacity: .3;
+}
+
 </style>

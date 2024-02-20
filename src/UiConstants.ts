@@ -19,3 +19,8 @@ export enum SubscriptionPlansId {
     GlobalServer = "global-servers",
     BundleServers = "bundle-servers",
 }
+
+export enum AppName{
+    VpnHood = "VpnHood",
+    VpnHoodConnect = "VpnHoodConnect",
+}

@@ -10,9 +10,8 @@
       <v-row align-content="space-between" justify="center" class="h-100 my-0">
 
         <!-- Go Premium Store Ad -->
-        <v-col cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported "
-                                 v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
+        <v-col v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" cols="12" class="text-center pt-0">
+          <PremiumServerAdDialog v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
         </v-col>
 
         <!-- Speed & Circle & Connect button -->
@@ -33,8 +32,8 @@
             </v-col>
           </v-row>
 
-          <!-- Circle -->
-          <div id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
+          <!--VpnHood Circle -->
+          <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHood" id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
             <div id="circle">
               <div class="d-flex flex-column align-center justify-center">
 
@@ -58,6 +57,35 @@
                 <!-- Access Key expire date -->
                 <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
               </div>
+            </div>
+          </div>
+
+          <!--VpnHoodConnect Circle -->
+          <div v-else id="connectionCircleIndicator" :class="[isConnected() ? 'connect' : 'disconnect']">
+            <div class="position-absolute w-100 h-100">
+              <div id="rotateCircle"></div>
+            </div>
+            <div class="d-flex flex-column align-center justify-center">
+
+              <!-- Connection state text -->
+              <span class="text-body-1">{{
+                  $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
+                }}
+              </span>
+
+              <!-- Usage -->
+              <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+                <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
+                <span class="color-sky-blue">{{ bandwidthUsage()?.Total }}</span>
+              </div>
+
+              <!-- Check -->
+              <v-icon v-if="stateIcon()" size="50" color="white">
+                {{ stateIcon() }}
+              </v-icon>
+
+              <!-- Access Key expire date -->
+              <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
             </div>
           </div>
 
@@ -131,7 +159,6 @@
 
           <!-- Servers button -->
           <v-btn
-              v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported || $vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId !== $vpnHoodApp.data.features.testServerTokenId)"
               depressed
               :block="true"
               variant="text"
@@ -158,8 +185,7 @@
     <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar"/>
     <SuppressSnackbar v-model="$vpnHoodApp.data.uiState.showSuppressSnackbar"/>
     <PublicServerHintDialog v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
-    <TunnelClientCountryDialog
-        v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
+    <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
   </div>
 </template>
@@ -176,7 +202,7 @@ import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import {UiConstants} from "@/UiConstants";
+import {UiConstants, AppName} from "@/UiConstants";
 export default defineComponent({
   name: 'HomePage',
   components: {
@@ -191,6 +217,7 @@ export default defineComponent({
   },
   data() {
     return {
+      AppName,
       AppConnectionState,
       ComponentRouteController,
     }
@@ -337,9 +364,78 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+#connectionCircleIndicator{
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.2;
+  transition: opacity .8s ease;
+}
+
+/*noinspection CssUnusedSymbol*/
+#connectionCircleIndicator.connect{
+  opacity: 1;
+}
+#rotateCircle{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: rotate 3s linear infinite;
+  animation-play-state: paused;
+}
+.connect #rotateCircle{
+  /*noinspection CssUnresolvedCustomProperty*/
+  border-color: rgb(var(--v-theme-secondary));
+  animation-play-state: running;
+}
+#rotateCircle:before,
+#rotateCircle:after{
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: white;
+}
+#rotateCircle:before {
+  bottom: 24px;
+  left: 6px;
+}
+#rotateCircle:after {
+  top: 24px;
+  right: 6px;
+}
+.connect #rotateCircle:before,
+.connect #rotateCircle:after{
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  /*noinspection CssUnresolvedCustomProperty*/
+  background-color: rgb(var(--v-theme-secondary));
+}
+@keyframes rotate {
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(360deg);}
+}
+
 #connectBtn:disabled{
   color: rgba(255, 255, 255, 0.50);
 }
+
+/*noinspection CssUnresolvedCustomProperty*/
 .config-item {
   color: rgb(var(--v-theme-sky-blue));
   background: rgba(var(--v-theme-primary-darken-1), 0.8);

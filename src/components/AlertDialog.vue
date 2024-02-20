@@ -22,11 +22,10 @@
             rounded="pill"
             variant="flat"
             :block="true"
-            class="text-center mb-4 color-master-green"
+            class="text-center mb-4 text-master-green"
+            :text="$t('DIAGNOSE')"
             @click="diagnose"
-        >
-          {{ $t("DIAGNOSE") }}
-        </v-btn>
+        />
 
         <!-- OpenReport -->
         <v-btn
@@ -35,12 +34,11 @@
             variant="flat"
             :block="true"
             prepend-icon="mdi-open-in-new"
-            class="text-center mb-4 color-master-green"
+            class="text-center mb-4 text-master-green"
             :href="$vpnHoodApp.data.serverUrl + logFileLocation"
+            :text="$t('OPEN_REPORT')"
             target="_blank"
-        >
-          {{ $t("OPEN_REPORT") }}
-        </v-btn>
+        />
 
         <!-- SendReport -->
         <v-btn
@@ -49,22 +47,21 @@
             variant="flat"
             :block="true"
             prepend-icon="mdi-send-outline"
-            class="text-center mb-4 color-master-green"
+            class="text-center mb-4 text-master-green"
             target="_blank"
+            :text="$t('SEND_REPORT')"
             @click="sendReport()"
-        >{{ $t("SEND_REPORT") }}
-        </v-btn>
+        />
 
         <!-- Close -->
         <v-btn
             rounded="pill"
             variant="flat"
             :block="true"
-            class="text-center color-master-green"
+            class="text-center text-master-green"
+            :text="$t('CLOSE')"
             @click="$emit('update:modelValue',false)"
-        >
-          {{ $t("CLOSE") }}
-        </v-btn>
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>

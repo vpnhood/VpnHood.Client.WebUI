@@ -4,13 +4,13 @@
   <v-app-bar color="secondary" density="compact" elevation="3">
 
     <!-- Close button -->
-    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')" />
 
     <!-- Page title -->
-    <v-app-bar-title class="text-body-1 text-white">{{$t('SERVERS')}}</v-app-bar-title>
+    <v-app-bar-title :text="$t('SERVERS')" class="text-body-1 text-white"/>
 
     <!-- Add server button -->
-    <template v-slot:append v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported">
+    <template v-slot:append v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported">
       <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
@@ -28,8 +28,8 @@
         density="compact"
         type="warning"
         class="mb-5"
-    >
-    </v-alert>
+    />
+
 
     <!-- Servers list -->
     <v-list v-else bg-color="transparent">
@@ -95,6 +95,10 @@
       </v-list-item>
     </v-list>
 
+    <!-- VpnHoodConnect alert if the user does not have a premium server -->
+    <v-alert
+        v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount?.subscriptionId == null"
+        class="mb-3" type="warning" :text="$t('SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING')"/>
 
     <!-- Add server sheet -->
     <AddServerDialog
@@ -125,16 +129,16 @@
               color="primary"
               variant="text"
               :text="$t('CANCEL')"
-              @click="ComponentRouteController.showComponent($componentName.RenameServerDialog, false)">
-          </v-btn>
+              @click="ComponentRouteController.showComponent($componentName.RenameServerDialog, false)"
+          />
 
           <!-- Save rename button -->
           <v-btn
               color="primary"
               variant="text"
               :text="$t('SAVE')"
-              @click="saveNewClientProfileName(actionOnCurrentClientProfileInfo)">
-          </v-btn>
+              @click="saveNewClientProfileName(actionOnCurrentClientProfileInfo)"
+          />
 
         </v-card-actions>
       </v-card>
@@ -156,21 +160,22 @@
         <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
 
           <!-- Confirm delete button -->
-          <v-btn variant="text" @click="removeServer(actionOnCurrentClientProfileInfo.clientProfileId)">
-            {{ $t("YES") }}
-          </v-btn>
+          <v-btn
+              variant="text"
+              :text="$t('YES')"
+              @click="removeServer(actionOnCurrentClientProfileInfo.clientProfileId)"
+          />
 
           <!-- Cancel delete button -->
-          <v-btn variant="tonal"
-                 @click="ComponentRouteController.showComponent($componentName.ConfirmDeleteServerDialog, false)">
-            {{ $t("NO") }}
-          </v-btn>
+          <v-btn
+              variant="tonal"
+              :text="$t('NO')"
+              @click="ComponentRouteController.showComponent($componentName.ConfirmDeleteServerDialog, false)"
+          />
 
         </v-card-actions>
-
       </v-card>
     </v-dialog>
-
   </v-sheet>
 </template>
 
@@ -222,12 +227,6 @@ export default defineComponent({
     async removeServer(clientProfileId: string): Promise<void> {
       await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog, false);
       await this.$vpnHoodApp.deleteClientProfile(clientProfileId);
-    },
-
-    // Hidden full ip in the servers list
-    redactIp(ipAddress: string): string {
-      let tokens = ipAddress.split(".");
-      return tokens[0] + ".*.*." + tokens[3];
     },
 
     // Show rename server dialog

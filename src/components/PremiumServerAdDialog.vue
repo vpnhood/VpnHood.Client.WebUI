@@ -91,7 +91,7 @@
                       v-model="selectedPlanId"
                       density="compact"
                       :true-value="plan.subscriptionPlanId"
-                      :class="[selectedPlanId === plan.subscriptionPlanId?'':'opacity-30', 'me-3 text-white' ]"
+                      :class="[selectedPlanId === plan.subscriptionPlanId ? '' : 'opacity-30', 'me-3 text-white' ]"
                       color="sharp-master-green"
                   />
                 </template>
@@ -154,81 +154,52 @@
   </v-dialog>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog
-      v-model="showPendingProcessDialog"
-      :persistent="true"
-      width="auto">
-    <v-card
-        rounded="lg"
-        color="master-green"
-        class="py-5">
-
+  <v-dialog v-model="showPendingProcessDialog" :persistent="true" width="auto">
+    <v-card rounded="lg" color="master-green" class="py-5">
       <v-card-text>
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
-        <v-progress-linear
-            class="mt-4"
-            :indeterminate="true"
-            rounded
-        ></v-progress-linear>
+        <v-progress-linear class="mt-4" :indeterminate="true" rounded />
       </v-card-text>
     </v-card>
   </v-dialog>
 
   <!-- Purchase complete dialog -->
-  <v-dialog
-      v-model="showPurchaseCompleteDialog"
-      :persistent="true"
-      width="auto">
-    <v-card
-        rounded="lg"
-        color="master-green"
-        class="py-5">
-
+  <v-dialog v-model="showPurchaseCompleteDialog" :persistent="true" width="auto">
+    <v-card rounded="lg" color="master-green" class="py-5">
       <!-- If order is complete -->
       <v-card-title class="text-center text-h5">
-        <div>
-          <v-icon class="text-h2">mdi-party-popper</v-icon>
-        </div>
+        <div><v-icon class="text-h2">mdi-party-popper</v-icon></div>
         {{ $t("CONGRATULATIONS") }}
       </v-card-title>
 
-      <v-card-text>
-        {{ $t("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE") }}
-      </v-card-text>
+      <v-card-text>{{ $t("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE") }}</v-card-text>
 
       <v-card-actions>
         <div class="mx-auto">
           <v-btn
-              rounded="pill"
-              variant="flat"
-              append-icon="mdi-chevron-right"
-              class="ms-2 px-5 color-master-green"
-              @click="showServers"
-              >
-            {{ $t("SHOW_SERVERS") }}
-          </v-btn>
+            rounded="pill"
+            variant="flat"
+            append-icon="mdi-chevron-right"
+            class="ms-2 px-5 color-master-green"
+            :text="$t('SHOW_SERVERS')"
+            @click="showServers"
+          />
 
           <v-btn
-              rounded="pill"
-              variant="outlined"
-              class="ms-2 px-8"
-              @click="showPurchaseCompleteDialog = false">
-            {{ $t("CLOSE") }}
-          </v-btn>
+            rounded="pill"
+            variant="outlined"
+            class="ms-2 px-8"
+            :text="$t('CLOSE')"
+            @click="showPurchaseCompleteDialog = false"
+          />
         </div>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <!-- Notice dialog on purchase subscription -->
-  <v-dialog
-      v-model="showPlanNoticeDialog"
-      :persistent="true"
-      width="auto">
-    <v-card
-        rounded="lg"
-        color="master-green"
-        class="pt-0 pb-3 notice position-relative">
+  <v-dialog v-model="showPlanNoticeDialog" :persistent="true" width="auto">
+    <v-card rounded="lg" color="master-green" class="pt-0 pb-3 notice position-relative">
       <v-card-text>
         <p v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t('HIDDEN_SERVER_NOTICE')}}</p>
         <p v-if="planNoticeType === SubscriptionPlansId.GlobalServer" v-html="$t('GLOBAL_SERVERS_NOTICE')"></p>
@@ -239,9 +210,9 @@
             rounded="pill"
             variant="outlined"
             class="ms-2 px-8"
-            @click="closePlanNoticeDialog">
-          {{ $t("CLOSE") }}
-        </v-btn>
+            :text="$t('CLOSE')"
+            @click="closePlanNoticeDialog"
+        />
         <v-spacer/>
         <v-btn
             v-if="showContinueInNotice"
@@ -249,9 +220,9 @@
             variant="flat"
             append-icon="mdi-chevron-right"
             class="ms-2 px-5 text-master-green"
-            @click="googlePlayPurchaseProduct()">
-          {{ $t("CONTINUE") }}
-        </v-btn>
+            :text="$t('CONTINUE')"
+            @click="googlePlayPurchaseProduct()"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -348,7 +319,7 @@ export default defineComponent({
 
     async processPendingOrder(providerOrderId: string): Promise<void> {
       const accountClient = ClientApiFactory.instance.createAccountClient();
-      const isOrderProcessed = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
+      const isOrderProcessed: boolean = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
       if (isOrderProcessed){
         await this.$vpnHoodApp.processUserAccount();
         this.showPurchaseCompleteDialog = true;
