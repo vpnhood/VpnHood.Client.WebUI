@@ -3,21 +3,20 @@
   <v-btn
       :flat="true"
       variant="outlined"
-      color="sharp-master-green"
+      color="tertiary"
       rounded="pill"
       size="small"
       height="40"
       @click="onOpenDialog"
       class="ps-1 pe-3"
   >
-    <v-icon icon="mdi-crown" color="primary" size="30" class="bg-secondary rounded-circle me-2"/>
+    <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
 <!--    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>-->
     {{$t("PREMIUM_SERVER_AD_TITLE")}}
   </v-btn>
 
   <!-- Maximize Premium Server Ad -->
   <v-dialog
-      id="premiumServerAd"
       transition="dialog-bottom-transition"
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
@@ -29,8 +28,8 @@
         <v-btn icon="mdi-window-close" variant="tonal" color="white" size="small" class="d-block mx-auto mb-4" @click="$emit('update:modelValue',false)"/>
 
         <!-- Sign in with google button -->
-        <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="bg-primary-darken-2 border border-sky-blue border-opacity-50 rounded-xl text-center pa-5 mb-3">
-          <p class="text-white border-b border-sky-blue border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
+        <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl text-center pa-5 mb-3">
+          <p class="text-white border-b border-tertiary border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
           <v-btn
               @click="onSignIn"
               rounded="pill"
@@ -51,20 +50,20 @@
 
         <!-- Products list -->
         <template v-else-if="subscriptionPlans.length > 0">
-          <v-card-item class="bg-primary-darken-2 border border-sky-blue border-opacity-50 rounded-xl pa-5 mb-3">
+          <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-5 mb-3">
             <!-- Image -->
             <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
 
             <!-- Title -->
-            <h3 id="adTitle" class="title-bold border-b border-sharp-master-green border-opacity-25 text-sharp-master-green text-uppercase text-center pb-2 mb-2">
+            <h3 id="adTitle" class="title-bold border-b border-tertiary border-opacity-25 text-tertiary text-uppercase text-center pb-2 mb-2">
               {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
 
             <!-- Description -->
             <ul id="adDesc" class="list-unstyled text-white text-body-2">
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_1")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_2")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_3")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="sharp-master-green"/>{{$t("PREMIUM_FEATURE_4")}}</li>
+              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_1")}}</li>
+              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_2")}}</li>
+              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_3")}}</li>
+              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_4")}}</li>
             </ul>
           </v-card-item>
 
@@ -82,8 +81,8 @@
                   variant="flat"
                   :disabled="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId"
                   :active="plan.subscriptionPlanId === selectedPlanId"
-                  active-class="border border-opacity-100 border-sharp-master-green bg-primary-darken-2 text-white"
-                  class="ps-2 mb-2 border border-opacity-25"
+                  active-class="border border-opacity-100 border-tertiary bg-primary-darken-2 text-white"
+                  class="ps-2 mb-2 border border-surface border-opacity-25"
                   @click="selectedPlanId = plan.subscriptionPlanId"
               >
                 <template v-slot:prepend>
@@ -92,7 +91,7 @@
                       density="compact"
                       :true-value="plan.subscriptionPlanId"
                       :class="[selectedPlanId === plan.subscriptionPlanId ? '' : 'opacity-30', 'me-3 text-white' ]"
-                      color="sharp-master-green"
+                      color="tertiary"
                   />
                 </template>
 
@@ -109,7 +108,7 @@
                   <!-- Already subscribed -->
                   <template v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId">
                     <v-chip
-                        color="sharp-master-green"
+                        color="secondary"
                         variant="tonal"
                         size="small"
                         :text="$t('ALREADY_SUBSCRIBED')"
@@ -143,7 +142,7 @@
                 rounded="pill"
                 height="45"
                 variant="elevated"
-                :class="[$vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'app-is-connect' : '', 'master-btn font-weight-bold text-capitalize']"
+                class="master-btn font-weight-bold text-capitalize"
                 :text="$t('CONTINUE')"
                 @click="onContinuePurchase"
             />
@@ -155,7 +154,7 @@
 
   <!-- Pending purchase process dialog -->
   <v-dialog v-model="showPendingProcessDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="master-green" class="py-5">
+    <v-card rounded="lg" color="secondary" class="py-5">
       <v-card-text>
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
         <v-progress-linear class="mt-4" :indeterminate="true" rounded />
@@ -165,7 +164,7 @@
 
   <!-- Purchase complete dialog -->
   <v-dialog v-model="showPurchaseCompleteDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="master-green" class="py-5">
+    <v-card rounded="lg" color="secondary" class="py-5">
       <!-- If order is complete -->
       <v-card-title class="text-center text-h5">
         <div><v-icon class="text-h2">mdi-party-popper</v-icon></div>
@@ -180,7 +179,7 @@
             rounded="pill"
             variant="flat"
             append-icon="mdi-chevron-right"
-            class="ms-2 px-5 color-master-green"
+            class="ms-2 px-5 text-secondary"
             :text="$t('SHOW_SERVERS')"
             @click="showServers"
           />
@@ -199,27 +198,29 @@
 
   <!-- Notice dialog on purchase subscription -->
   <v-dialog v-model="showPlanNoticeDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="master-green" class="pt-0 pb-3 notice position-relative">
+    <v-card rounded="lg" color="secondary" class="position-relative">
       <v-card-text>
         <p v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t('HIDDEN_SERVER_NOTICE')}}</p>
         <p v-if="planNoticeType === SubscriptionPlansId.GlobalServer" v-html="$t('GLOBAL_SERVERS_NOTICE')"></p>
         <p v-if="planNoticeType === SubscriptionPlansId.BundleServers">{{$t('BUNDLE_SERVERS_NOTICE')}}</p>
       </v-card-text>
       <v-card-actions>
+        <v-spacer/>
         <v-btn
             rounded="pill"
-            variant="outlined"
-            class="ms-2 px-8"
+            variant="text"
+            color="primary"
+            class="me-2"
             :text="$t('CLOSE')"
             @click="closePlanNoticeDialog"
         />
-        <v-spacer/>
         <v-btn
             v-if="showContinueInNotice"
             rounded="pill"
             variant="flat"
+            color="primary"
             append-icon="mdi-chevron-right"
-            class="ms-2 px-5 text-master-green"
+            class="me-2 px-5"
             :text="$t('CONTINUE')"
             @click="googlePlayPurchaseProduct()"
         />

@@ -45,8 +45,7 @@
             autocomplete="off"
             :autofocus="true"
             density="compact"
-            color="sharp-master-green"
-            bg-color="#eceffb"
+            color="secondary"
         ></v-text-field>
       </v-card-actions>
     </v-card>

@@ -7,7 +7,7 @@
   >
     <v-card
         rounded="lg"
-        color="master-green"
+        color="secondary"
         class="pt-0 pb-3 notice position-relative text-white">
       <v-card-text>
         <v-icon class="pe-3">mdi-alert-circle-outline</v-icon>
@@ -22,7 +22,7 @@
             rounded="pill"
             variant="flat"
             :block="true"
-            class="text-center mb-4 text-master-green"
+            class="text-center mb-4 text-secondary"
             :text="$t('DIAGNOSE')"
             @click="diagnose"
         />
@@ -34,7 +34,7 @@
             variant="flat"
             :block="true"
             prepend-icon="mdi-open-in-new"
-            class="text-center mb-4 text-master-green"
+            class="text-center mb-4 text-secondary"
             :href="$vpnHoodApp.data.serverUrl + logFileLocation"
             :text="$t('OPEN_REPORT')"
             target="_blank"
@@ -47,7 +47,7 @@
             variant="flat"
             :block="true"
             prepend-icon="mdi-send-outline"
-            class="text-center mb-4 text-master-green"
+            class="text-center mb-4 text-secondary"
             target="_blank"
             :text="$t('SEND_REPORT')"
             @click="sendReport()"
@@ -58,7 +58,7 @@
             rounded="pill"
             variant="flat"
             :block="true"
-            class="text-center text-master-green"
+            class="text-center text-secondary"
             :text="$t('CLOSE')"
             @click="$emit('update:modelValue',false)"
         />

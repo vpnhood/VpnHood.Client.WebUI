@@ -10,7 +10,7 @@
     <v-app-bar-title :text="$t('SERVERS')" class="text-body-1 text-white"/>
 
     <!-- Add server button -->
-    <template v-slot:append v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported">
+    <template v-slot:append >
       <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
@@ -42,13 +42,13 @@
           variant="elevated"
           @click="connect(item.clientProfileId)"
           class="mb-3"
-          :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid #23c99d 2px' : ''"
+          :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid rgb(var(--v-theme-secondary)) 2px' : ''"
       >
         <!-- َActive item icon -->
         <template v-slot:prepend
                   v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
-          <v-avatar size="25" color="#23c99d66">
-            <v-icon size="25" color="var(--master-green)">mdi-check-all</v-icon>
+          <v-avatar size="25" color="rgba(var(--v-theme-secondary), .3)">
+            <v-icon size="25" color="secondary">mdi-check-all</v-icon>
           </v-avatar>
         </template>
 
@@ -83,10 +83,10 @@
                     prepend-icon="mdi-speedometer"
                     @click="diagnose(item.clientProfileId)">
                 </v-list-item>
-                <v-divider v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported"/>
+                <v-divider v-if="$vpnHoodApp.data.features.isAddServerSupported"/>
 
                 <!-- Delete item -->
-                <v-list-item v-if="!$vpnHoodApp.data.uiState.isGoogleSignInSupported" :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
+                <v-list-item v-if="$vpnHoodApp.data.features.isAddServerSupported" :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
 
               </v-list>
             </v-menu>
@@ -97,8 +97,9 @@
 
     <!-- VpnHoodConnect alert if the user does not have a premium server -->
     <v-alert
-        v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount?.subscriptionId == null"
-        class="mb-3" type="warning" :text="$t('SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING')"/>
+        v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId == null"
+        class="mb-3" type="warning" :text="$t('SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING')"
+    />
 
     <!-- Add server sheet -->
     <AddServerDialog
@@ -116,7 +117,8 @@
               v-model="newClientProfileName"
               :label="$t('ENTER_NEW_NAME_FOR') + (actionOnCurrentClientProfileInfo.clientProfileName)"
               spellcheck="false"
-              autocomplete="off" color="primary"
+              autocomplete="off"
+              color="primary"
               :clearable="true">
           </v-text-field>
         </v-card-text>
@@ -184,6 +186,7 @@ import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
 import {ClientProfileInfo, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
+import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   name: 'ServersPage',
@@ -196,9 +199,10 @@ export default defineComponent({
   ],
   data() {
     return {
+      AppName,
+      ComponentRouteController,
       newClientProfileName: "",
       actionOnCurrentClientProfileInfo: {} as ClientProfileInfo,
-      ComponentRouteController,
     }
   },
 
@@ -247,11 +251,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped>
-/*noinspection CssUnusedSymbol*/
-.server-item {
-  box-shadow: 0 1px 2px 1px rgb(0 0 0 / 15%);
-  background-color: #eceffb;
-}
-</style>

@@ -4,8 +4,9 @@ import ErrorPage from "@/pages/ErrorPage.vue";
 import router from './plugins/router'
 import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
-import './assets/css/override.css'
 import './assets/css/general.css'
+import './assets/css/override.css'
+
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
 import {ComponentName} from "@/UiConstants";
@@ -22,6 +23,9 @@ async function main(): Promise<void> {
 
         // Set app theme
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? "VpnHood";
+
+        // Add css based on ui name
+        require(vpnHoodApp.data.features.uiName ? '@/assets/css/vpn-hood-connect.css' : '@/assets/css/vpn-hood.css');
 
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);

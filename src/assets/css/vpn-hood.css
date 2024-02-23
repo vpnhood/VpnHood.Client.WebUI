@@ -1,0 +1,83 @@
+.master-btn {
+    /*noinspection CssUnresolvedCustomProperty*/
+    background-image: linear-gradient(to right, rgb(var(--v-theme-tertiary)),
+    rgb(var(--v-theme-secondary-lighten-1)) 90%) !important;
+}
+.secondary-btn {
+    transition: all 0.4s ease;
+    /*noinspection CssUnresolvedCustomProperty*/
+    background-color: rgb(var(--v-theme-tertiary)) !important;
+    color: white;
+}
+.master-btn.v-btn--disabled,
+.secondary-btn.v-btn--disabled{
+    color: rgba(255, 255, 255, 0.7);
+}
+/** --------------------Home Middle Section-------------------- **/
+#circleOuter {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    padding: 15px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#circleOuter:before,
+#circle:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px white solid;
+    border-radius: 50%;
+    transition: all 1.5s ease;
+}
+
+.state-initializing #circleOuter:before,
+.state-initializing #circle:before,
+.state-diagnosing #circleOuter:before,
+.state-diagnosing #circle:before,
+.state-connecting #circleOuter:before,
+.state-connecting #circle:before,
+.state-disconnecting #circleOuter:before,
+.state-disconnecting #circle:before {
+    animation: circle-anim 2s infinite;
+}
+
+.state-initializing #circle:before,
+.state-diagnosing #circle:before,
+.state-disconnecting #circle:before,
+.state-connecting #circle:before {
+    animation-delay: 1s;
+}
+
+@keyframes circle-anim {
+    0% {opacity: 0.80;}
+    40% {opacity: 0.2;}
+    60% {opacity: 0.2;}
+    100% {opacity: 0.80;}
+}
+
+.state-connected #circleOuter:before {
+    border-width: 0;
+    box-shadow: inset 0 0 30px #fff,
+    inset 10px 0 50px green,
+    inset -10px 0 50px green,
+    0 0 50px #fff,
+    -10px 0 30px green,
+    10px 0 30px green;
+}
+/** --------------------End of Home Middle Section-------------------- **/

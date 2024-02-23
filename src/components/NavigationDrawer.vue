@@ -18,7 +18,7 @@
         <h3>{{ $t("VPN_HOOD_APP_NAME") }}</h3>
 
         <!-- App full version -->
-        <div class="text-sharp-master-green text-caption">
+        <div class="text-secondary-lighten-1 text-caption">
           <span class="me-2">{{ $t("VERSION") }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>

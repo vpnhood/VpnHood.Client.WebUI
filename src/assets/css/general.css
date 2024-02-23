@@ -6,127 +6,16 @@
     font-family: 'Roboto-Bold';
     src: url('../fonts/Roboto-Bold.ttf') format('truetype');
 }
-
-/** --------------------- Define Color --------------------- **/
-:root {
-    --light-blue: #1940b0;
-    --sky-blue: #16a3fe;
-    --sky-blue-opacity: rgba(22, 163, 254, 0.3);
-    --master-green: #23c99d;
-    --sharp-master-green: #41faa4;
-    --light-purple: #8d9fe4;
-    --dark-purple: #6a7193;
-    --muted-color: rgb(136, 136, 136);
-    --light-gray: #929292;
-    --connected-glare: green;
-    --gray: #3f3f3f;
-}
-
 /** -------------------- Default Style ------------------- **/
 html {overflow-y: auto;}
 body, .v-application{font-family: "Roboto-Regular", sans-serif !important; font-size: 15px;}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", sans-serif !important;}
 
-/** -------- General background color -------- **/
-.bg-light-blue {background-color: var(--light-blue);}
-.bg-sky-blue {background-color: var(--sky-blue);}
-.bg-master-green {background-color: var(--master-green);}
-.bg-light-purple {background-color: var(--light-purple);}
 /*noinspection CssUnresolvedCustomProperty*/
-.bg-warning {background-color: rgb(var(--v-theme-warning));}
-
-/** -------- General text color -------- **/
-.color-light-blue {color: var(--light-blue);}
-.color-master-green {color: var(--master-green);}
-.color-sharp-master-green {color: var(--sharp-master-green);}
-.color-sky-blue {color: var(--sky-blue);}
-.color-gray {color: var(--gray);}
-.color-muted {color: var(--muted-color);}
-/*noinspection CssUnresolvedCustomProperty*/
-.color-on-warning {color: rgb(var(--v-theme-on-warning));}
 .rounded-15{border-radius: 15px;}
 .opacity-0 {opacity: 0; transition: opacity 1.4s ease;}
 .opacity-30 {opacity: 0.3; transition: opacity 1.4s ease;}
 .opacity-50 {opacity: 0.5; transition: opacity 1.4s ease;}
 .opacity-80 {opacity: 0.8; transition: opacity 1.4s ease;}
 .opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
-
-.blue-btn {
-    transition: all 0.4s ease;
-    /*noinspection CssUnresolvedCustomProperty*/
-    background-color: rgb(var(--v-theme-sky-blue)) !important;
-    color: white;
-}
-
-.master-btn:not(.app-is-connect) { /*noinspection CssUnresolvedCustomProperty*/background-image: linear-gradient(to right, rgb(var(--v-theme-sky-blue)), rgb(var(--v-theme-sharp-master-green)) 90%) !important;}
-.master-btn.app-is-connect { /*noinspection CssUnresolvedCustomProperty*/ background: rgb(var(--v-theme-secondary)) !important;}
-.blue-border-btn i {line-height: inherit;}
 .list-unstyled{list-style: none;}
-/** --------------------Home Middle Section-------------------- **/
-#circleOuter {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    padding: 15px;
-    margin: 0 auto;
-    position: relative;
-}
-
-#circle {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#circleOuter:before,
-#circle:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border: 1px white solid;
-    border-radius: 50%;
-    transition: all 1.5s ease;
-}
-
-.state-initializing #circleOuter:before,
-.state-initializing #circle:before,
-.state-diagnosing #circleOuter:before,
-.state-diagnosing #circle:before,
-.state-connecting #circleOuter:before,
-.state-connecting #circle:before,
-.state-disconnecting #circleOuter:before,
-.state-disconnecting #circle:before {
-    animation: circle-anim 2s infinite;
-}
-
-.state-initializing #circle:before,
-.state-diagnosing #circle:before,
-.state-disconnecting #circle:before,
-.state-connecting #circle:before {
-    animation-delay: 1s;
-}
-
-@keyframes circle-anim {
-    0% {opacity: 0.80;}
-    40% {opacity: 0.2;}
-    60% {opacity: 0.2;}
-    100% {opacity: 0.80;}
-}
-
-.state-connected #circleOuter:before {
-    border-width: 0;
-    box-shadow: inset 0 0 30px #fff,
-    inset 10px 0 50px var(--connected-glare),
-    inset -10px 0 50px var(--connected-glare),
-    0 0 50px #fff,
-    -10px 0 30px var(--connected-glare),
-    10px 0 30px var(--connected-glare);
-}
-/** --------------------End of Home Middle Section-------------------- **/

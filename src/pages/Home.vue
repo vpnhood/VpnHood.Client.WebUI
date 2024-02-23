@@ -10,8 +10,11 @@
       <v-row align-content="space-between" justify="center" class="h-100 my-0">
 
         <!-- Go Premium Store Ad -->
-        <v-col v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"/>
+        <v-col  cols="12" class="text-center pt-0">
+          <PremiumServerAdDialog
+              v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
+              v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"
+          />
         </v-col>
 
         <!-- Speed & Circle & Connect button -->
@@ -21,47 +24,19 @@
           <v-row id="speedSection" align-content="center" justify="center"
                  :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
             <v-col cols="auto">
-              <span class="color-sky-blue text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
+              <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
-              <span class="text-light-purple text-caption">Mbps</span>
+              <span class="text-white opacity-50 text-caption">Mbps</span>
             </v-col>
             <v-col cols="auto">
-              <span class="color-sky-blue text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
+              <span class="text-ui-tertiary text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
-              <span class="text-light-purple text-caption">Mbps</span>
+              <span class="text-white opacity-50 text-caption">Mbps</span>
             </v-col>
           </v-row>
 
-          <!--VpnHood Circle -->
-          <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHood" id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
-            <div id="circle">
-              <div class="d-flex flex-column align-center justify-center">
-
-                <!-- Connection state text -->
-                <span class="text-body-1">{{
-                    $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
-                  }}
-              </span>
-
-                <!-- Usage -->
-                <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-                  <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
-                  <span class="color-sky-blue">{{ bandwidthUsage()?.Total }}</span>
-                </div>
-
-                <!-- Check -->
-                <v-icon v-if="stateIcon()" size="50" color="white">
-                  {{ stateIcon() }}
-                </v-icon>
-
-                <!-- Access Key expire date -->
-                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
-              </div>
-            </div>
-          </div>
-
           <!--VpnHoodConnect Circle -->
-          <div v-else id="connectionCircleIndicator" :class="[isConnected() ? 'connect' : 'disconnect']">
+          <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" id="connectionCircleIndicator" :class="[$vpnHoodApp.data.state.connectionState.toLowerCase(), 'my-3']">
             <div class="position-absolute w-100 h-100">
               <div id="rotateCircle"></div>
             </div>
@@ -76,7 +51,7 @@
               <!-- Usage -->
               <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
                 <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
-                <span class="color-sky-blue">{{ bandwidthUsage()?.Total }}</span>
+                <span class="text-secondary">{{ bandwidthUsage()?.Total }}</span>
               </div>
 
               <!-- Check -->
@@ -85,18 +60,46 @@
               </v-icon>
 
               <!-- Access Key expire date -->
-              <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-light-purple', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
+              <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
             </div>
           </div>
 
+          <!--VpnHood Circle -->
+          <div v-else id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
+            <div id="circle">
+              <div class="d-flex flex-column align-center justify-center">
+
+                <!-- Connection state text -->
+                <span class="text-body-1">{{
+                    $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
+                  }}
+              </span>
+
+                <!-- Usage -->
+                <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+                  <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
+                  <span class="text-tertiary">{{ bandwidthUsage()?.Total }}</span>
+                </div>
+
+                <!-- Check -->
+                <v-icon v-if="stateIcon()" size="50" color="white">
+                  {{ stateIcon() }}
+                </v-icon>
+
+                <!-- Access Key expire date -->
+                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
+              </div>
+            </div>
+          </div>
+
+
           <!-- Connect button -->
           <v-btn
-              id="connectBtn"
               height="40px"
-              width="190px"
+              width="180px"
               rounded="pill"
               :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting || $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
-              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.None ? 'master-btn' : '', 'blue-btn text-button mt-5', $vpnHoodApp.data.uiState.isGoogleSignInSupported ? 'app-is-connect' : '']"
+              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected ? 'secondary-btn' : 'master-btn', 'text-button mt-5']"
               @click="onConnectButtonClick"
           >
             {{ connectButtonText() }}
@@ -111,14 +114,14 @@
           <v-btn
               depressed
               :block="true"
-              variant="text"
+              variant="outlined"
               size="small"
               prepend-icon="mdi-earth"
-              class="config-item mb-2"
+              class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
             <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption text-light-purple">{{
+            <span class="text-capitalize text-caption text-white opacity-50">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
               }}</span>
             <img
@@ -135,12 +138,12 @@
               variant="text"
               size="small"
               prepend-icon="mdi-apps"
-              class="config-item mb-2"
+              class="config-item mb-1"
               to="/apps-filter"
           >
             <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption text-light-purple">{{ appFilterStatus() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
 
           <!-- Protocol button -->
@@ -150,11 +153,11 @@
               variant="text"
               size="small"
               prepend-icon="mdi-transit-connection-variant"
-              class="config-item"
+              class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption text-light-purple">{{ udpProtocolButtonText() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
           </v-btn>
 
           <!-- Servers button -->
@@ -164,19 +167,19 @@
               variant="text"
               size="small"
               prepend-icon="mdi-dns"
-              class="config-item mt-2 mb-0"
+              class="config-item"
               to="/servers"
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption text-light-purple">{{ getDefaultClientProfileName() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
           </v-btn>
 
         </v-col>
       </v-row>
     </v-container>
 
-    <!-- Show Toast on top of the page when a new server is added -->
+    <!-- New server added toast -->
     <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="secondary">
       {{ $t("NEW_SERVER_ADDED") }}
     </v-snackbar>
@@ -373,38 +376,50 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   opacity: 0.2;
-  transition: opacity .8s ease;
+  border: 1px solid white;
+  border-radius: 50%;
+  transition: all .8s ease;
+}
+/*noinspection CssUnusedSymbol*/
+#connectionCircleIndicator:not(.disconnect,.none){
+  /*noinspection CssUnresolvedCustomProperty*/
+  border-color: rgb(var(--v-theme-tertiary));
+  opacity: 1;
 }
 
 /*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator.connect{
-  opacity: 1;
+#connectionCircleIndicator.connected{
+  animation: shine-border .2s ease forwards;
+  animation-delay: .6s;
 }
+
+
 #rotateCircle{
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 1px solid white;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   animation: rotate 3s linear infinite;
   animation-play-state: paused;
+  transition: all .3s ease;
 }
-.connect #rotateCircle{
-  /*noinspection CssUnresolvedCustomProperty*/
-  border-color: rgb(var(--v-theme-secondary));
+
+/*noinspection CssUnusedSymbol*/
+#connectionCircleIndicator:not(.disconnect,.none,.connected) #rotateCircle{
   animation-play-state: running;
 }
 #rotateCircle:before,
 #rotateCircle:after{
   content: '';
   position: absolute;
-  width: 13px;
-  height: 13px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background-color: white;
+  transition: all .5s ease-in;
 }
 #rotateCircle:before {
   bottom: 24px;
@@ -414,32 +429,80 @@ export default defineComponent({
   top: 24px;
   right: 6px;
 }
-.connect #rotateCircle:before,
-.connect #rotateCircle:after{
-  content: '';
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
+
+/*noinspection CssUnusedSymbol*/
+#connectionCircleIndicator:not(.disconnect,.none) #rotateCircle:before,
+#connectionCircleIndicator:not(.disconnect,.none) #rotateCircle:after{
   /*noinspection CssUnresolvedCustomProperty*/
-  background-color: rgb(var(--v-theme-secondary));
+  background-color: rgb(var(--v-theme-tertiary));
 }
+#connectionCircleIndicator.connected #rotateCircle:before{
+  bottom: 68px;
+  left: 68px;
+  animation: resize-and-shine .8s ease forwards;
+  animation-delay: .4s;
+}
+#connectionCircleIndicator.connected #rotateCircle:after{
+  top: 66px;
+  right: 66px;
+  animation: resize-and-hide .8s ease forwards;
+  animation-delay: .4s;
+}
+
 @keyframes rotate {
   0% {transform: rotate(0deg);}
   100% {transform: rotate(360deg);}
 }
 
-#connectBtn:disabled{
-  color: rgba(255, 255, 255, 0.50);
+@keyframes resize-and-hide {
+  from{
+    left: unset;
+    right: unset;
+    top: unset;
+    bottom: unset;
+    background-color: rgba(21,245,186, 1);
+  }
+  to{
+    left: unset;
+    right: unset;
+    top: unset;
+    bottom: unset;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(21,245,186, 0);
+  }
 }
-
+@keyframes resize-and-shine {
+  from{
+    left: unset;
+    right: unset;
+    top: unset;
+    bottom: unset;
+    background: none;
+  }
+  to {
+    left: unset;
+    right: unset;
+    top: unset;
+    bottom: unset;
+    background: none;
+    width: 105%;
+    height: 105%;
+    filter: blur(2px);
+    box-shadow: 0 0 30px 10px #15f5ba;
+    border: 1px solid #15f5ba;
+  }
+}
+@keyframes shine-border {
+  to {
+    border-color: white;
+  }
+}
 /*noinspection CssUnresolvedCustomProperty*/
 .config-item {
-  color: rgb(var(--v-theme-sky-blue));
+  color: rgb(var(--v-theme-tertiary));
   background: rgba(var(--v-theme-primary-darken-1), 0.8);
-  border: 1px rgba(var(--v-theme-sky-blue), 0.3) solid;
+  border: 1px rgba(var(--v-theme-tertiary), 0.3) solid;
   min-height: 40px;
   justify-content: start;
   white-space: nowrap !important;
