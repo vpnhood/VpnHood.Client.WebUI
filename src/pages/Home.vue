@@ -168,7 +168,7 @@
               size="small"
               prepend-icon="mdi-dns"
               class="config-item"
-              to="/servers"
+              @click="showServers()"
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
@@ -190,6 +190,7 @@
     <PublicServerHintDialog v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
     <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
+    <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
   </div>
 </template>
 
@@ -206,9 +207,11 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {UiConstants, AppName} from "@/UiConstants";
+import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 export default defineComponent({
   name: 'HomePage',
   components: {
+    ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
     PublicServerHintDialog,
@@ -321,6 +324,17 @@ export default defineComponent({
     getDefaultClientProfileName(): string {
       const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
       if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
+
+        // Just for VpnHoodConnect
+        // Always set public server as default profile if user does not have premium server or default selected server.
+        if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
+          const testServerProfile = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
+          if (!testServerProfile) throw new Error("Could not found public server profile.");
+          this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile?.clientProfileId;
+          this.$vpnHoodApp.saveUserSetting();
+          return testServerProfile?.clientProfileName;
+        }
+
         return this.$t("NO_SERVER_SELECTED");
       }
       return clientProfileInfo.clientProfileName;
@@ -362,142 +376,20 @@ export default defineComponent({
         return this.$t('PROTOCOL_UDP_OFF');
 
       return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel ? this.$t('PROTOCOL_UDP_ON') : this.$t('PROTOCOL_UDP_OFF')
+    },
+
+    showServers(): void{
+      if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
+        this.ComponentRouteController.showComponent(this.$componentName.ServersDialogForVpnHoodConnect);
+      else
+        this.$router.push('/servers');
     }
   }
 });
 </script>
+
 <style scoped>
-#connectionCircleIndicator{
-  position: relative;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.2;
-  border: 1px solid white;
-  border-radius: 50%;
-  transition: all .8s ease;
-}
-/*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator:not(.disconnect,.none){
-  /*noinspection CssUnresolvedCustomProperty*/
-  border-color: rgb(var(--v-theme-tertiary));
-  opacity: 1;
-}
 
-/*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator.connected{
-  animation: shine-border .2s ease forwards;
-  animation-delay: .6s;
-}
-
-
-#rotateCircle{
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  animation: rotate 3s linear infinite;
-  animation-play-state: paused;
-  transition: all .3s ease;
-}
-
-/*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator:not(.disconnect,.none,.connected) #rotateCircle{
-  animation-play-state: running;
-}
-#rotateCircle:before,
-#rotateCircle:after{
-  content: '';
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: white;
-  transition: all .5s ease-in;
-}
-#rotateCircle:before {
-  bottom: 24px;
-  left: 6px;
-}
-#rotateCircle:after {
-  top: 24px;
-  right: 6px;
-}
-
-/*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator:not(.disconnect,.none) #rotateCircle:before,
-#connectionCircleIndicator:not(.disconnect,.none) #rotateCircle:after{
-  /*noinspection CssUnresolvedCustomProperty*/
-  background-color: rgb(var(--v-theme-tertiary));
-}
-#connectionCircleIndicator.connected #rotateCircle:before{
-  bottom: 68px;
-  left: 68px;
-  animation: resize-and-shine .8s ease forwards;
-  animation-delay: .4s;
-}
-#connectionCircleIndicator.connected #rotateCircle:after{
-  top: 66px;
-  right: 66px;
-  animation: resize-and-hide .8s ease forwards;
-  animation-delay: .4s;
-}
-
-@keyframes rotate {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
-}
-
-@keyframes resize-and-hide {
-  from{
-    left: unset;
-    right: unset;
-    top: unset;
-    bottom: unset;
-    background-color: rgba(21,245,186, 1);
-  }
-  to{
-    left: unset;
-    right: unset;
-    top: unset;
-    bottom: unset;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(21,245,186, 0);
-  }
-}
-@keyframes resize-and-shine {
-  from{
-    left: unset;
-    right: unset;
-    top: unset;
-    bottom: unset;
-    background: none;
-  }
-  to {
-    left: unset;
-    right: unset;
-    top: unset;
-    bottom: unset;
-    background: none;
-    width: 105%;
-    height: 105%;
-    filter: blur(2px);
-    box-shadow: 0 0 30px 10px #15f5ba;
-    border: 1px solid #15f5ba;
-  }
-}
-@keyframes shine-border {
-  to {
-    border-color: white;
-  }
-}
 /*noinspection CssUnresolvedCustomProperty*/
 .config-item {
   color: rgb(var(--v-theme-tertiary));

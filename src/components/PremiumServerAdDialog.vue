@@ -331,7 +331,7 @@ export default defineComponent({
 
     showServers(){
       this.$emit('update:modelValue',false);
-      this.$router.replace("/servers");
+      this.$router.replace("/ServersDialogForVpnHoodConnect");
     }
   }
 })

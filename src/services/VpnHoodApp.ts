@@ -225,12 +225,11 @@ export class VpnHoodApp {
 
     async processUserAccount(): Promise<void>{
         await this.removePremiumClientProfile();
-
         const accountClient = ClientApiFactory.instance.createAccountClient();
         this.data.userState.userAccount = await accountClient.get();
-
-        if(this.data.userState.userAccount.subscriptionId)
+        if(this.data.userState.userAccount.subscriptionId){
             await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
+        }
     }
 
     public async removePremiumClientProfile(): Promise<void> {
@@ -243,6 +242,8 @@ export class VpnHoodApp {
     async getAndSaveSubscriptionAccessKeys(subscriptionId: string): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
         const accessKeyList = await accountClient.getAccessKeys(subscriptionId);
+        if (!accessKeyList) throw new Error("Could not found any access key for this subscription id. SubscriptionId: " + subscriptionId);
+
         for (const accessKey of accessKeyList){
             await this.addAccessKey(accessKey);
         }

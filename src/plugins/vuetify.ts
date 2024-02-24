@@ -20,8 +20,6 @@ export default createVuetify({
                 VpnHood: {
                     dark: true,
                     colors: {
-                        'ui-primary': '#1940b0',
-                        'ui-secondary': '#23c99d',
                         'ui-tertiary': '#16a3fe',
                         background: '#122272',
                         surface: '#ffffff',
@@ -57,8 +55,6 @@ export default createVuetify({
                 VpnHoodConnect: {
                     dark: true,
                     colors: {
-                        'ui-primary': '#211951',
-                        'ui-secondary': '#7b7afe',
                         'ui-tertiary': '#7b7afe',
                         background: '#211951',
                         surface: '#ffffff',

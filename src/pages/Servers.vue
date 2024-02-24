@@ -10,7 +10,7 @@
     <v-app-bar-title :text="$t('SERVERS')" class="text-body-1 text-white"/>
 
     <!-- Add server button -->
-    <template v-slot:append >
+    <template v-slot:append v-if="$vpnHoodApp.data.features.isAddServerSupported">
       <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
         <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
         {{ $t("ADD_SERVER") }}
@@ -21,7 +21,7 @@
 
   <v-sheet>
 
-    <!-- Show alert, if user has not any server -->
+    <!-- Show alert, if user does not have any server -->
     <v-alert
         v-if="$vpnHoodApp.data.clientProfileInfos.length === 0"
         :text="$t('NO_SERVER_AVAILABLE')"
@@ -94,12 +94,6 @@
         </template>
       </v-list-item>
     </v-list>
-
-    <!-- VpnHoodConnect alert if the user does not have a premium server -->
-    <v-alert
-        v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId == null"
-        class="mb-3" type="warning" :text="$t('SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING')"
-    />
 
     <!-- Add server sheet -->
     <AddServerDialog
