@@ -135,5 +135,6 @@
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "The plan is active and server(s) added to the servers list.",
   "SHOW_SERVERS": "Show servers",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete order process...",
-  "SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING": "After purchasing a premium server, it will be included in this section."
+  "SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING": "After purchasing a premium server, it will be included in this section.",
+  "PREMIUM": "Premium"
 }

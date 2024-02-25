@@ -1,6 +1,7 @@
 <template>
   <!-- Minimize Premium Server ad -->
   <v-btn
+      v-if="!$vpnHoodApp.data.userState.userAccount?.subscriptionId"
       :flat="true"
       variant="outlined"
       color="tertiary"
@@ -14,6 +15,15 @@
 <!--    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>-->
     {{$t("PREMIUM_SERVER_AD_TITLE")}}
   </v-btn>
+  <v-chip
+      v-else
+      prepend-icon="mdi-account-star"
+      :text="$t('PREMIUM')"
+      color="secondary-lighten-1"
+      variant="tonal"
+      tag="h6"
+      @click="onOpenDialog"
+  />
 
   <!-- Maximize Premium Server Ad -->
   <v-dialog

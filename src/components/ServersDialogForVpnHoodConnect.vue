@@ -13,6 +13,7 @@
         <v-list v-else bg-color="transparent">
           <!-- Server item -->
           <v-list-item
+              v-show="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
               rounded="lg"
