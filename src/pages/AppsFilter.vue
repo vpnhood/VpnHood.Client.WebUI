@@ -44,7 +44,7 @@
             variant="outlined"
             color="secondary"
             :chips="true"
-            closable-chips
+            :closable-chips="true"
             :multiple="true"
             hide-details
         >

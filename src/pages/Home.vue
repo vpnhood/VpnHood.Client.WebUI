@@ -162,6 +162,7 @@
 
           <!-- Servers button -->
           <v-btn
+              v-if="$vpnHoodApp.data.features.uiName == null || $vpnHoodApp.data.clientProfileInfos.length > 2"
               depressed
               :block="true"
               variant="text"
@@ -246,8 +247,21 @@ export default defineComponent({
             x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
 
         if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
-          this.$router.push("/servers");
-          return;
+
+          // Just for VpnHoodConnect
+          // Always set public server as default profile if user does not have a premium server or default selected server.
+          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
+            const testServerProfile = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
+            if (!testServerProfile) throw new Error("Could not found public server profile.");
+            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile?.clientProfileId;
+            await this.$vpnHoodApp.saveUserSetting();
+          }
+
+          // Just for VpnHood
+          else {
+            this.$router.push("/servers");
+            return;
+          }
         }
       }
 
@@ -323,20 +337,9 @@ export default defineComponent({
     // Return current active server name
     getDefaultClientProfileName(): string {
       const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
-
-        // Just for VpnHoodConnect
-        // Always set public server as default profile if user does not have premium server or default selected server.
-        if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
-          const testServerProfile = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-          if (!testServerProfile) throw new Error("Could not found public server profile.");
-          this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile?.clientProfileId;
-          this.$vpnHoodApp.saveUserSetting();
-          return testServerProfile?.clientProfileName;
-        }
-
+      if (!clientProfileInfo || !clientProfileInfo.clientProfileName)
         return this.$t("NO_SERVER_SELECTED");
-      }
+
       return clientProfileInfo.clientProfileName;
     },
 

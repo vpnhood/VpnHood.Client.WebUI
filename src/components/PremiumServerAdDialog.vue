@@ -95,7 +95,7 @@
                   class="ps-2 mb-2 border border-surface border-opacity-25"
                   @click="selectedPlanId = plan.subscriptionPlanId"
               >
-                <template v-slot:prepend>
+                <template v-slot:prepend v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId !== plan.subscriptionPlanId">
                   <v-radio
                       v-model="selectedPlanId"
                       density="compact"
@@ -118,7 +118,7 @@
                   <!-- Already subscribed -->
                   <template v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId">
                     <v-chip
-                        color="secondary"
+                        color="secondary-lighten-1"
                         variant="tonal"
                         size="small"
                         :text="$t('ALREADY_SUBSCRIBED')"

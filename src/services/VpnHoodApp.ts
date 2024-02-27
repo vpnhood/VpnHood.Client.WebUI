@@ -184,8 +184,10 @@ export class VpnHoodApp {
     public async showError(err: any): Promise<void> {
         console.error(err);
 
-        if (err.statusCode === 401 && !this.data.userState.userAccount)
+        if (err.statusCode === 401 && !this.data.userState.userAccount){
             await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
+            await this.signOut();
+        }
 
         else
             await this.showMessage(err.message ?? err);

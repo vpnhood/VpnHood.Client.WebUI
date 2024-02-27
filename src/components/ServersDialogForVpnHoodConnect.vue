@@ -1,46 +1,38 @@
 <template>
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
-    <v-card>
-      <v-card-title class="bg-secondary">{{ $t('SERVERS') }}</v-card-title>
-      <v-card-text>
-
-        <!-- Alert when user does not have a premium server -->
-        <p v-if="$vpnHoodApp.data.userState.userAccount?.subscriptionId == null">
-          {{$t('SHOW_PREMIUM_SERVER_HERE_AFTER_PURCHASING')}}
-        </p>
+    <v-card color="primary-darken-2" :flat="true" rounded="lg">
+      <v-card-title class="text-secondary border-secondary border-b text-center">{{ $t('YOUR_PREMIUM_SERVERS') }}</v-card-title>
+      <v-card-text class="pb-0">
 
         <!-- Servers list -->
-        <v-list v-else bg-color="transparent">
+        <v-list bg-color="transparent" class="pb-0">
           <!-- Server item -->
           <v-list-item
+              v-model="defaultClientProfileId"
               v-show="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
-              rounded="lg"
-              lines="two"
-              variant="elevated"
-              @click="connect(item.clientProfileId)"
-              class="mb-3"
-              :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid rgb(var(--v-theme-secondary)) 2px' : ''"
+              rounded="15"
+              base-color="primary-darken-2"
+              variant="flat"
+              class="ps-2 mb-2 border border-surface border-opacity-25"
+              active-class="border border-opacity-100 border-secondary-lighten-1"
+              :active="item.clientProfileId === defaultClientProfileId"
+              @click="defaultClientProfileId = item.clientProfileId"
           >
             <!-- َActive item icon -->
-            <template v-slot:prepend
-                      v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
-              <v-avatar size="25" color="rgba(var(--v-theme-secondary), .3)">
-                <v-icon size="25" color="secondary">mdi-check-all</v-icon>
-              </v-avatar>
+            <template v-slot:prepend>
+              <v-radio
+                  v-model="defaultClientProfileId"
+                  density="compact"
+                  :value="item.clientProfileId"
+                  :color="item.clientProfileId === defaultClientProfileId ? 'secondary-lighten-1' : 'gray'"
+                  :class="[item.clientProfileId === defaultClientProfileId ? '' : 'opacity-30', 'me-3' ]"
+              />
             </template>
 
             <!-- Profile name -->
-            <v-list-item-title class="mb-2">
-              <span class="title">{{ item.clientProfileName }} </span>
-            </v-list-item-title>
-
-            <!-- Support ID and Host name -->
-            <v-list-item-subtitle class="text-caption">
-              <p>(sid:{{ item.supportId }})</p>
-              <p class="mb-0 text-caption">{{ item.hostNames ? item.hostNames[0] : "" }}</p>
-            </v-list-item-subtitle>
+            <v-list-item-title class="title">{{ item.clientProfileName }}</v-list-item-title>
 
           </v-list-item>
         </v-list>
@@ -67,13 +59,19 @@ export default defineComponent({
   emits: [
     "update:modelValue",
   ],
-  methods:{
-    async connect(clientProfileId: string): Promise<void> {
-      this.$router.replace('/');
-      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
-      await this.$vpnHoodApp.saveUserSetting();
-      await this.$vpnHoodApp.connect();
-    },
-  }
+  computed: {
+    defaultClientProfileId:
+        {
+          get() {
+            return this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId;
+          },
+          async set(value: string) {
+            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = value;
+            await this.$vpnHoodApp.saveUserSetting();
+            this.$router.replace('/');
+            await this.$vpnHoodApp.connect();
+          }
+        },
+  },
 })
 </script>
