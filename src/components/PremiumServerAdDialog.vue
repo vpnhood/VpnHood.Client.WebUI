@@ -17,8 +17,9 @@
   </v-btn>
   <v-chip
       v-else
-      prepend-icon="mdi-account-star"
-      :text="$t('PREMIUM')"
+      prepend-icon="mdi-crown"
+      append-icon="mdi-dots-vertical"
+      :text="$t('PREMIUM_USER')"
       color="secondary-lighten-1"
       variant="tonal"
       tag="h6"
@@ -84,7 +85,6 @@
               <v-list-item
                   v-for="plan in subscriptionPlans"
                   :key="plan.subscriptionPlanId"
-                  lines="two"
                   color="white"
                   rounded="15"
                   base-color="primary-darken-2"
@@ -100,38 +100,44 @@
                       v-model="selectedPlanId"
                       density="compact"
                       :true-value="plan.subscriptionPlanId"
-                      :class="[selectedPlanId === plan.subscriptionPlanId ? '' : 'opacity-30', 'me-3 text-white' ]"
+                      :class="[selectedPlanId === plan.subscriptionPlanId ? '' : 'opacity-30', 'me-1 text-white' ]"
                       color="tertiary"
                   />
                 </template>
 
                 <!-- Plan title -->
-                <v-list-item-title class="d-flex align-center">
-                  <h3 v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</h3>
-                  <h3 v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</h3>
-                  <h3 v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</h3>
-                  <v-btn icon="mdi-information-symbol" size="20px" variant="outlined" color="white" class="ms-3 opacity-30" @click="openPlanNoticeDialog(plan.subscriptionPlanId)"/>
+                <v-list-item-title :class="[$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId ? 'ms-4' : '', 'd-flex align-center']">
+                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</h4>
+                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</h4>
+                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</h4>
+                  <v-btn
+                      v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId !== plan.subscriptionPlanId"
+                      icon="mdi-information-symbol"
+                      size="20px"
+                      variant="outlined"
+                      color="white"
+                      class="ms-3 opacity-30"
+                      @click="openPlanNoticeDialog(plan.subscriptionPlanId)"
+                  />
                 </v-list-item-title>
 
-                <v-list-item-subtitle class="text-caption text-white opacity-30">
+                <v-list-item-subtitle v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId" class="text-caption text-white opacity-30">
 
                   <!-- Already subscribed -->
-                  <template v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId">
-                    <v-chip
-                        color="secondary-lighten-1"
-                        variant="tonal"
-                        size="small"
-                        :text="$t('ALREADY_SUBSCRIBED')"
-                        class="mt-2"
-                    />
-                  </template>
+                  <v-chip
+                      color="secondary-lighten-1"
+                      variant="tonal"
+                      size="small"
+                      :text="$t('ALREADY_SUBSCRIBED')"
+                      class="ms-2"
+                  />
 
                   <!-- Plan description -->
-                  <template v-else>
-                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</span>
-                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</span>
-                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS_DESC") }}</span>
-                  </template>
+<!--                  <template v-else>
+                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER_SUBTITLE") }}</span>
+                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS_SUBTITLE") }}</span>
+                    <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS_SUBTITLE") }}</span>
+                  </template>-->
                 </v-list-item-subtitle>
 
                 <!-- Plan price -->
@@ -151,6 +157,7 @@
                 :block="true"
                 rounded="pill"
                 height="45"
+                :disabled="selectedPlanId === $vpnHoodApp.data.userState.userAccount.providerPlanId"
                 variant="elevated"
                 class="master-btn font-weight-bold text-capitalize"
                 :text="$t('CONTINUE')"
@@ -163,55 +170,44 @@
   </v-dialog>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog v-model="showPendingProcessDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="secondary" class="py-5">
-      <v-card-text>
+  <v-dialog v-model="showPendingProcessDialog" :persistent="true" max-width="600">
+    <v-card rounded="lg" color="secondary">
+      <v-card-text class="px-3">
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
-        <v-progress-linear class="mt-4" :indeterminate="true" rounded />
+        <v-progress-linear :indeterminate="true" rounded class="mt-3 mb-4" />
       </v-card-text>
     </v-card>
   </v-dialog>
 
   <!-- Purchase complete dialog -->
-  <v-dialog v-model="showPurchaseCompleteDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="secondary" class="py-5">
-      <!-- If order is complete -->
-      <v-card-title class="text-center text-h5">
-        <div><v-icon class="text-h2">mdi-party-popper</v-icon></div>
-        {{ $t("CONGRATULATIONS") }}
+  <v-dialog v-model="showPurchaseCompleteDialog" :persistent="true" max-width="600">
+    <v-card rounded="lg" color="secondary">
+      <v-card-title class="text-center">
+        <v-icon class="text-h2">mdi-party-popper</v-icon>
+        <h2>{{ $t("CONGRATULATIONS") }}</h2>
       </v-card-title>
 
       <v-card-text>{{ $t("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE") }}</v-card-text>
 
       <v-card-actions>
-        <div class="mx-auto">
-          <v-btn
+        <v-spacer/>
+        <v-btn
             rounded="pill"
-            variant="flat"
-            append-icon="mdi-chevron-right"
-            class="ms-2 px-5 text-secondary"
-            :text="$t('SHOW_SERVERS')"
-            @click="showServers"
-          />
-
-          <v-btn
-            rounded="pill"
-            variant="outlined"
-            class="ms-2 px-8"
+            variant="text"
+            color="primary"
             :text="$t('CLOSE')"
             @click="showPurchaseCompleteDialog = false"
-          />
-        </div>
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <!-- Notice dialog on purchase subscription -->
-  <v-dialog v-model="showPlanNoticeDialog" :persistent="true" width="auto">
-    <v-card rounded="lg" color="secondary" class="position-relative">
+  <v-dialog v-model="showPlanNoticeDialog" :persistent="true" max-width="600">
+    <v-card rounded="lg" color="secondary">
       <v-card-text>
         <p v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t('HIDDEN_SERVER_NOTICE')}}</p>
-        <p v-if="planNoticeType === SubscriptionPlansId.GlobalServer" v-html="$t('GLOBAL_SERVERS_NOTICE')"></p>
+        <p v-if="planNoticeType === SubscriptionPlansId.GlobalServer">{{$t('GLOBAL_SERVERS_NOTICE')}}</p>
         <p v-if="planNoticeType === SubscriptionPlansId.BundleServers">{{$t('BUNDLE_SERVERS_NOTICE')}}</p>
       </v-card-text>
       <v-card-actions>
@@ -220,7 +216,6 @@
             rounded="pill"
             variant="text"
             color="primary"
-            class="me-2"
             :text="$t('CLOSE')"
             @click="closePlanNoticeDialog"
         />
@@ -230,7 +225,7 @@
             variant="flat"
             color="primary"
             append-icon="mdi-chevron-right"
-            class="me-2 px-5"
+            class="px-3"
             :text="$t('CONTINUE')"
             @click="googlePlayPurchaseProduct()"
         />
@@ -338,11 +333,6 @@ export default defineComponent({
       else
         throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
     },
-
-    showServers(){
-      this.$emit('update:modelValue',false);
-      this.$router.replace("/ServersDialogForVpnHoodConnect");
-    }
   }
 })
 </script>
@@ -350,7 +340,7 @@ export default defineComponent({
 
 <style scoped>
 #adTitle {font-size: 130%;}
-#adDesc {line-height: 31px;}
+#adDesc {line-height: 26px;}
 
 /*noinspection ALL*/
 .v-card-item {

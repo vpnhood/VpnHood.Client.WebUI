@@ -1,3 +1,6 @@
+export class LocalStorage {
+    public static readonly userAccount: string = "VhConnectUserAccount";
+}
 export class UiConstants {
     static daysOfDate: number = 24 * 60 * 60 * 1000;
 }

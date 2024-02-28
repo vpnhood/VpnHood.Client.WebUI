@@ -1,5 +1,6 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
+    AppAccount,
     AppConnectionState,
     AppFeatures,
     AppSettings,
@@ -12,7 +13,7 @@ import {
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UserState} from "@/services/UserState";
-import {ComponentName} from "@/UiConstants";
+import {ComponentName, LocalStorage} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
@@ -184,6 +185,7 @@ export class VpnHoodApp {
     public async showError(err: any): Promise<void> {
         console.error(err);
 
+        // Just for VpnHoodConnect
         if (err.statusCode === 401 && !this.data.userState.userAccount){
             await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
@@ -212,6 +214,9 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
+    //------------------------------------------
+    // Just for VpnHoodConnect
+    //------------------------------------------
     public async signIn(): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signInWithGoogle();
@@ -225,15 +230,69 @@ export class VpnHoodApp {
         this.data.userState.userAccount = null;
     }
 
+    // Get user account info from the browser local storage
+    getLocalUserAccount(): AppAccount | null{
+        const localUserAccountInfo = localStorage.getItem(LocalStorage.userAccount);
+        return localUserAccountInfo ? JSON.parse(localUserAccountInfo) : null;
+    }
+
+    // Save user account info to the browser local storage
+    setLocalUserAccount(appAccount: AppAccount){
+        localStorage.setItem(LocalStorage.userAccount, JSON.stringify(appAccount));
+    }
+
+    // Compare local user account info with store server user account info
+    syncUserAccount(appAccount: AppAccount): boolean{
+        const localUserAccountInfo = this.getLocalUserAccount();
+        if (!localUserAccountInfo){
+            this.setLocalUserAccount(appAccount);
+            return false;
+        }
+        return localUserAccountInfo.subscriptionId === appAccount.subscriptionId
+            && localUserAccountInfo.providerPlanId === appAccount.providerPlanId;
+    }
+
+    // Always call after launch app or sign-in
     async processUserAccount(): Promise<void>{
-        await this.removePremiumClientProfile();
         const accountClient = ClientApiFactory.instance.createAccountClient();
         this.data.userState.userAccount = await accountClient.get();
-        if(this.data.userState.userAccount.subscriptionId){
+
+        // User is guest
+        if (!this.data.userState.userAccount){
+            console.log("User is guest");
+            return;
+        }
+
+        // User does not have an active subscription
+        if (!this.data.userState.userAccount.subscriptionId){
+            console.log("User does not have an active subscription");
+            await this.disconnectFromPremiumServer();
+            await this.removePremiumClientProfile();
+            return;
+        }
+
+        const isUserAccountSynced =  this.syncUserAccount(this.data.userState.userAccount);
+
+        // User has an active subscription and synced with previous local state
+        if (isUserAccountSynced){
+            console.log("User has active and synced subscription");
+            return;
+        }
+
+        // User purchase a subscription or change previous subscription
+        else {
+            console.log("User purchase a subscription or change previous subscription");
+            this.setLocalUserAccount(this.data.userState.userAccount);
+            if (this.data.state.connectionState === AppConnectionState.Connected)
+                await this.disconnect();
+
+            await this.removePremiumClientProfile();
             await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
+            await this.setPremiumClientProfileAsDefault();
         }
     }
 
+    // Remove all user premium client profile
     public async removePremiumClientProfile(): Promise<void> {
         const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.testServerTokenId);
         for (const clientProfile of premiumClientProfiles){
@@ -241,6 +300,7 @@ export class VpnHoodApp {
         }
     }
 
+    // Get subscription accessKey(s) and save as client profile
     async getAndSaveSubscriptionAccessKeys(subscriptionId: string): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
         const accessKeyList = await accountClient.getAccessKeys(subscriptionId);
@@ -248,6 +308,29 @@ export class VpnHoodApp {
 
         for (const accessKey of accessKeyList){
             await this.addAccessKey(accessKey);
+        }
+    }
+
+    // Set one of the premium client profile as default
+    async setPremiumClientProfileAsDefault(): Promise<void>{
+        const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.testServerTokenId);
+        if (!premiumServer)
+            throw new Error("Could not set premium server as default profile. Premium server is undefined");
+
+        this.data.settings.userSettings.defaultClientProfileId = premiumServer.clientProfileId;
+        await this.saveUserSetting();
+    }
+
+    // Disconnect Vpn if is connected with premium server
+    async disconnectFromPremiumServer(): Promise<void>{
+        if (this.data.state.connectionState === AppConnectionState.Connected){
+
+            // Find default client profile
+            const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
+                x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
+
+            if (defaultClientProfile?.tokenId !== this.data.features.testServerTokenId)
+                await this.disconnect();
         }
     }
 }
