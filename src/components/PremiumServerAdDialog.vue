@@ -115,8 +115,8 @@
                       icon="mdi-information-symbol"
                       size="20px"
                       variant="outlined"
-                      color="white"
-                      class="ms-3 opacity-30"
+                      color="purple"
+                      class="ms-2"
                       @click="openPlanNoticeDialog(plan.subscriptionPlanId)"
                   />
                 </v-list-item-title>

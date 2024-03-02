@@ -162,7 +162,7 @@
 
           <!-- Servers button -->
           <v-btn
-              v-if="$vpnHoodApp.data.features.uiName == null || $vpnHoodApp.data.clientProfileInfos.length > 2"
+              v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect || $vpnHoodApp.data.clientProfileInfos.length > 2"
               depressed
               :block="true"
               variant="text"

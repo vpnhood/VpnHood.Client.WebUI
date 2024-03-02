@@ -9,7 +9,7 @@ import './assets/css/override.css'
 
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
-import {ComponentName} from "@/UiConstants";
+import {AppName, ComponentName} from "@/UiConstants";
 
 async function main(): Promise<void> {
     try {
@@ -22,10 +22,15 @@ async function main(): Promise<void> {
         app.config.globalProperties.$componentName = ComponentName;
 
         // Set app theme
-        vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? "VpnHood";
+        vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
+
 
         // Add css based on ui name
-        require(vpnHoodApp.data.features.uiName ? '@/assets/css/vpn-hood-connect.css' : '@/assets/css/vpn-hood.css');
+        if (vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
+            require('@/assets/css/vpn-hood-connect.css');
+
+        else
+            require('@/assets/css/vpn-hood.css');
 
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);

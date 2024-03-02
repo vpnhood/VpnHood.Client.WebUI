@@ -2,7 +2,6 @@ import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {createVuetify} from 'vuetify'
-/* temporary color 153 30 52*/
 export default createVuetify({
     defaults:{
         VSheet: {

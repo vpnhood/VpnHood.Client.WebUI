@@ -9,8 +9,23 @@
     <!-- Header -->
     <div class="d-flex align-center bg-primary-darken-1 pa-4">
 
-      <!-- App logo -->
-      <v-img :eager="true" src="../assets/images/logo.png" alt="logo" max-width="60" width="60" height="60"/>
+      <!-- VpnHoodConnect logo -->
+      <v-img v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" :eager="true"
+             src="../assets/images/logo-connect.png"
+             alt="logo"
+             max-width="60"
+             width="60"
+             height="60"
+      />
+
+      <!-- VpnHood logo -->
+      <v-img v-else :eager="true"
+             src="../assets/images/logo.png"
+             alt="logo"
+             max-width="60"
+             width="60"
+             height="60"
+      />
 
       <div class="text-white ms-3">
 
@@ -105,6 +120,7 @@
 
       <!-- Create personal server -->
       <v-list-item
+          v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect"
           :nav="true"
           density="compact"
           class="opacity-80"
@@ -125,10 +141,12 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
+import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   data(){
     return{
+      AppName,
       isCheckForUpdate: false,
     }
   },
