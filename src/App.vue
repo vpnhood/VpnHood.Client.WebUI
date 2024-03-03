@@ -80,7 +80,7 @@ export default defineComponent({
 /*** App is the VpnHoodConnect ***/
 /*noinspection CssUnusedSymbol*/
 #mainBg.VpnHoodConnect:before {
-  opacity: .3;
+  opacity: .5;
 }
 
 </style>

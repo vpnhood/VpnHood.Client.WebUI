@@ -6,7 +6,8 @@ import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import './assets/css/general.css'
 import './assets/css/override.css'
-
+import './assets/css/vpn-hood.css'
+import './assets/css/vpn-hood-connect.css'
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
 import {AppName, ComponentName} from "@/UiConstants";
@@ -24,17 +25,8 @@ async function main(): Promise<void> {
         // Set app theme
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
 
-
-        // Add css based on ui name
-        if (vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
-            require('@/assets/css/vpn-hood-connect.css');
-
-        else
-            require('@/assets/css/vpn-hood.css');
-
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);
-
 
         // init Vue
         app.use(i18n)

@@ -9,7 +9,7 @@
       size="small"
       height="40"
       @click="onOpenDialog"
-      class="ps-1 pe-3"
+      class="ps-1 pe-3 text-capitalize"
   >
     <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
 <!--    <v-img src="../assets/images/ad-icon-minimize.png" width="35px" alt="Premium Server Ad icon" class="me-2"/>-->
@@ -44,7 +44,6 @@
           <v-btn
               @click="onSignIn"
               rounded="pill"
-              size="large"
               color="white"
               :flat="true"
               class="font-weight-bold text-capitalize my-4"
@@ -286,8 +285,15 @@ export default defineComponent({
     },
 
     async showProducts(){
-      const billingClient = ClientApiFactory.instance.createBillingClient();
-      this.subscriptionPlans = await billingClient.getSubscriptionPlans();
+      try {
+        const billingClient = ClientApiFactory.instance.createBillingClient();
+        this.subscriptionPlans = await billingClient.getSubscriptionPlans();
+      }
+      catch (err: any){
+        this.$emit('update:modelValue',false);
+        throw err;
+      }
+
     },
 
     openPlanNoticeDialog(planId: string){
