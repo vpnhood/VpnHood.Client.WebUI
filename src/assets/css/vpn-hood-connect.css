@@ -1,15 +1,16 @@
-.VpnHoodConnect .master-btn {
-    /*noinspection CssUnresolvedCustomProperty*/
+/*noinspection CssUnresolvedCustomProperty*/
+.master-btn.solid {
     background: rgb(var(--v-theme-tertiary)) !important;
+    color: rgb(var(--v-theme-primary));
 }
-.VpnHoodConnect .secondary-btn {
+.secondary-btn.solid {
     transition: all 0.4s ease;
     /*noinspection CssUnresolvedCustomProperty*/
     background-color: rgb(var(--v-theme-secondary)) !important;
     color: white;
 }
-.VpnHoodConnect .master-btn.v-btn--disabled,
-.VpnHoodConnect .secondary-btn.v-btn--disabled{
+.master-btn.v-btn--disabled.solid,
+.secondary-btn.v-btn--disabled.solid{
     color: rgba(255, 255, 255, 0.7);
 }
 /** --------------------Home Circle Section-------------------- **/

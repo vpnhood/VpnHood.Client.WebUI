@@ -30,7 +30,8 @@
       <div class="text-white ms-3">
 
         <!-- App name -->
-        <h3>{{ $t("VPN_HOOD_APP_NAME") }}</h3>
+        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect">{{$t('VPN_HOOD_CONNECT_APP_NAME')}}</h4>
+        <h3 v-else>{{$t('VPN_HOOD_APP_NAME')}}</h3>
 
         <!-- App full version -->
         <div class="text-secondary-lighten-1 text-caption">
@@ -47,7 +48,7 @@
       <!-- Settings -->
       <v-list-item class="border-b" @click="$router.replace({path: '/settings'})">
         <v-list-item-title>
-          <v-icon class="opacity-80">mdi-cog</v-icon>
+          <v-icon>mdi-cog</v-icon>
           <span class="ms-3">{{$t('SETTINGS')}}</span>
         </v-list-item-title>
       </v-list-item>
@@ -69,10 +70,22 @@
         </v-list-item-title>
       </v-list-item>
 
+      <!-- Change subscription -->
+      <v-list-item
+          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
+          class="border-b"
+          @click="ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog);$emit('update:modelValue',false)"
+      >
+        <v-list-item-title>
+          <v-icon>mdi-arrow-decision</v-icon>
+          <span class="ms-3">{{$t('CHANGE_SUBSCRIPTION')}}</span>
+        </v-list-item-title>
+      </v-list-item>
+
       <!-- Sign in button -->
       <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignIn">
         <v-list-item-title>
-          <v-icon>mdi-login</v-icon>
+          <v-icon>mdi-account</v-icon>
           <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
         </v-list-item-title>
       </v-list-item>
@@ -141,12 +154,15 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {AppName} from "@/UiConstants";
+import {AppName, ComponentName} from "@/UiConstants";
+import {ComponentRouteController} from "@/services/ComponentRouteController";
 
 export default defineComponent({
   data(){
     return{
       AppName,
+      ComponentName,
+      ComponentRouteController,
       isCheckForUpdate: false,
     }
   },

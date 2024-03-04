@@ -137,6 +137,7 @@
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Your order has been processed and your subscription has been activated.",
   "SHOW_SERVERS": "Show servers",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete order process...",
-  "PREMIUM_USER": "Premium User",
-  "YOUR_PREMIUM_SERVERS": "Your premium servers"
+  "YOU_ARE_PREMIUM": "You are premium",
+  "YOUR_PREMIUM_SERVERS": "Your premium servers",
+  "CHANGE_SUBSCRIPTION": "Change subscription"
 }

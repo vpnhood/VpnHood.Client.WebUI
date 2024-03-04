@@ -98,8 +98,15 @@
               height="40px"
               width="180px"
               rounded="pill"
-              :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting || $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
-              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected ? 'secondary-btn' : 'master-btn', 'text-button mt-5']"
+              :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting ||
+              $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
+              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected
+              ? 'secondary-btn'
+              : 'master-btn',
+              'text-button mt-5',
+              $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
+              ? 'solid'
+              : '']"
               @click="onConnectButtonClick"
           >
             {{ connectButtonText() }}

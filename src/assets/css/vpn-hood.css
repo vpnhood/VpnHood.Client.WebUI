@@ -1,16 +1,16 @@
-.master-btn {
+.master-btn:not(.solid) {
     /*noinspection CssUnresolvedCustomProperty*/
     background-image: linear-gradient(to right, rgb(var(--v-theme-tertiary)),
     rgb(var(--v-theme-secondary-lighten-1)) 90%) !important;
 }
-.secondary-btn {
+.secondary-btn:not(.solid) {
     transition: all 0.4s ease;
     /*noinspection CssUnresolvedCustomProperty*/
     background-color: rgb(var(--v-theme-tertiary)) !important;
     color: white;
 }
-.master-btn.v-btn--disabled,
-.secondary-btn.v-btn--disabled{
+.master-btn.v-btn--disabled:not(.solid),
+.secondary-btn.v-btn--disabled:not(.solid){
     color: rgba(255, 255, 255, 0.7);
 }
 /** --------------------Home Circle Section-------------------- **/
