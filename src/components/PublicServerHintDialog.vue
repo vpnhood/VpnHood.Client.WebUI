@@ -3,41 +3,31 @@
       :modelValue="modelValue"
       @update:modelValue="$emit('update:modelValue',$event)"
       :close-on-back="true"
-      max-width="600"
+      :fullscreen="true"
+      :scrollable="true"
+      :persistent="true"
   >
-    <v-card>
-      <v-card-title class="bg-grey-lighten-3">{{$t("PUBLIC_SERVER_WARNING_TITLE")}}</v-card-title>
+    <v-card color="primary-darken-2" class="pa-5">
+      <v-card-title class="text-center text-white text-h5 pb-5">{{$t("PUBLIC_SERVER_WARNING_TITLE")}}</v-card-title>
+      <v-divider/>
 
       <v-card-text class="text-body-2">
         <p class="pb-4 color-muted" v-html="$t('PUBLIC_SERVER_WARNING')"></p>
-        <p><strong>{{$t("WARNING")}}!</strong> {{$t("PRIVACY_WARNING")}}</p>
-        <a class="text-info" href="https://www.vpnhood.com/privacy-policy" target="_blank">{{ $t("READ_PRIVACY_POLICY") }}</a>
+        <p><strong class="text-secondary">{{$t("WARNING")}}!</strong> {{$t("PRIVACY_WARNING")}}</p>
+        <a class="text-secondary" href="https://www.vpnhood.com/privacy-policy" target="_blank">{{ $t("READ_PRIVACY_POLICY") }}</a>
       </v-card-text>
 
-      <v-divider></v-divider>
-
-      <!-- Dont show this message again checkbox -->
-      <v-checkbox
-          v-model="isDontShowMessage"
-          :label="$t('DONT_SHOW_MESSAGE')"
-          color="info"
-          hide-details
-      >
-      </v-checkbox>
-
       <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <!-- Cancel button -->
-        <v-btn color="blue darken-1" variant="text" @click="cancel">
-          {{ $t("CANCEL") }}
-        </v-btn>
-
         <!-- Accept button -->
-        <v-btn color="blue darken-1" variant="text" @click="acceptAndConnect">
-          {{ $t("ACCEPT") }}
-        </v-btn>
-
+        <v-btn
+            color="tertiary"
+            :block="true"
+            rounded="pill"
+            variant="flat"
+            :text="$t('ACCEPT')"
+            @click="accept"
+            class="text-primary-darken-2"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -45,7 +35,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {AppConnectionState} from "@/services/VpnHood.Client.Api";
+
 export default defineComponent({
   name: "PublicServerHintDialog",
   props:{
@@ -53,25 +43,14 @@ export default defineComponent({
   },
   emits: [
     "update:modelValue",
+    "acceptPrivacyPolicy"
   ],
-  data(){
-    return{
-      isDontShowMessage: false,
-    }
-  },
   methods:{
-    async acceptAndConnect(): Promise<void>{
-       localStorage.setItem("vh:DontShowPublicServerHint", this.isDontShowMessage.toString());
+    async accept(): Promise<void>{
+       localStorage.setItem("vh:DontShowPublicServerHint", "true");
+      this.$emit('acceptPrivacyPolicy');
       this.$emit('update:modelValue',false);
-      await this.$vpnHoodApp.connect()
     },
-    async cancel(){
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected) {
-        this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = this.$vpnHoodApp.data.state.lastActiveClientProfileId;
-        await this.$vpnHoodApp.saveUserSetting();
-      }
-      this.$emit('update:modelValue',false);
-    }
   }
 })
 </script>

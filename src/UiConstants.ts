@@ -7,7 +7,6 @@ export class UiConstants {
 
 export enum ComponentName {
     PremiumServerAdDialog = "PremiumServerAdDialog",
-    PublicServerHintDialog = "PublicServerHintDialog",
     TunnelClientCountryDialog = "TunnelClientCountryDialog",
     NavigationDrawer = "NavigationDrawer",
     ProtocolDialog = "ProtocolDialog",

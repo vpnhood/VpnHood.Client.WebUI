@@ -110,23 +110,9 @@ export class VpnHoodApp {
     }
 
     public async connect(): Promise<void> {
-        if (!this.data.settings.userSettings.defaultClientProfileId) {
+        if (!this.data.settings.userSettings.defaultClientProfileId)
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
-        }
 
-        // Find default client profile
-        const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
-            x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
-
-        // If selected server is VpnHood public server
-        if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
-
-            // Show public server hint
-            if (localStorage.getItem("vh:DontShowPublicServerHint") !=="true"){
-                await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
-                return;
-            }
-        }
         await this.apiClient.connect();
     }
 

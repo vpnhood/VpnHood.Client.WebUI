@@ -45,6 +45,25 @@
     <!-- Menu items -->
     <v-list dense class="pt-0">
 
+      <!-- Sign in button -->
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignIn">
+        <v-list-item-title>
+          <v-icon>mdi-account</v-icon>
+          <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Sign out button -->
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignOut">
+        <v-list-item-title class="d-flex align-center">
+          <v-icon>mdi-logout</v-icon>
+          <div class="d-inline-flex flex-column ms-3">
+            <span>{{$t('SIGN_OUT')}}</span>
+            <span class="text-caption opacity-50">{{$vpnHoodApp.data.userState.userAccount.email}}</span>
+          </div>
+        </v-list-item-title>
+      </v-list-item>
+
       <!-- Settings -->
       <v-list-item class="border-b" @click="$router.replace({path: '/settings'})">
         <v-list-item-title>
@@ -79,25 +98,6 @@
         <v-list-item-title>
           <v-icon>mdi-arrow-decision</v-icon>
           <span class="ms-3">{{$t('CHANGE_SUBSCRIPTION')}}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Sign in button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignIn">
-        <v-list-item-title>
-          <v-icon>mdi-account</v-icon>
-          <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Sign out button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignOut">
-        <v-list-item-title class="d-flex align-center">
-          <v-icon>mdi-logout</v-icon>
-          <div class="d-inline-flex flex-column ms-3">
-            <span>{{$t('SIGN_OUT')}}</span>
-            <span class="text-caption opacity-50">{{$vpnHoodApp.data.userState.userAccount.email}}</span>
-          </div>
         </v-list-item-title>
       </v-list-item>
 

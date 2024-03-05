@@ -1,10 +1,12 @@
 <template>
   <v-app id="mainBg" :class="$vpnHoodApp.data.features.uiName">
     <v-main>
-      <router-view />
+      <router-view v-if="!isShowPrivacyPolicyDialog"/>
+
+      <PublicServerHintDialog v-model="isShowPrivacyPolicyDialog" @accept-privacy-policy="vpnHoodConnectProcessAccount()"/>
 
       <!-- Loading dialog before each api call -->
-      <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog"/>
+      <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Global alert dialog -->
       <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
@@ -19,25 +21,27 @@ import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import LoadingDialog from "@/components/LoadingDialog.vue";
+import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
+import {AppName} from "@/UiConstants";
 export default defineComponent({
   name: 'App',
-  components: {LoadingDialog, AlertDialog },
-  async created() {
-    const accountClient = ClientApiFactory.instance.createAccountClient();
-    this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
-
-    // App is the VpnHoodConnect
-    if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
-      try {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-        await this.$vpnHoodApp.processUserAccount();
-      }
-      finally {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
-      }
-    }
+  components: {PublicServerHintDialog, LoadingDialog, AlertDialog },
+  data(){
+    return{
+      AppName,
+      isShowPrivacyPolicyDialog: false,
+    };
   },
+  async created() {
+    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem("vh:DontShowPublicServerHint") !=="true"){
+      this.isShowPrivacyPolicyDialog = true;
+      return;
+    }
 
+    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
+      await this.vpnHoodConnectProcessAccount();
+
+  },
   computed: {
     isAlertDialogVisible: {
       get(): boolean {
@@ -50,7 +54,24 @@ export default defineComponent({
       }
     }
   },
+  methods:{
+    // App is the VpnHoodConnect
+    async vpnHoodConnectProcessAccount(){
+      this.isShowPrivacyPolicyDialog = false;
+      const accountClient = ClientApiFactory.instance.createAccountClient();
+      this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
 
+      if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
+        try {
+          this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
+          await this.$vpnHoodApp.processUserAccount();
+        }
+        finally {
+          this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
+        }
+      }
+    }
+  }
 });
 </script>
 
@@ -82,5 +103,4 @@ export default defineComponent({
 #mainBg.VpnHoodConnect:before {
   opacity: .5;
 }
-
 </style>

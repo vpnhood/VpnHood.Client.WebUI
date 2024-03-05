@@ -195,7 +195,6 @@
     <!-- Components -->
     <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar"/>
     <SuppressSnackbar v-model="$vpnHoodApp.data.uiState.showSuppressSnackbar"/>
-    <PublicServerHintDialog v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
     <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
     <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
@@ -210,7 +209,6 @@ import ProtocolDialog from "@/components/ProtocolDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import PremiumServerAdDialog from "@/components/PremiumServerAdDialog.vue";
 import AppBar from "@/components/AppBar.vue";
-import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
@@ -222,7 +220,6 @@ export default defineComponent({
     ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
-    PublicServerHintDialog,
     AppBar,
     PremiumServerAdDialog,
     NavigationDrawer,
