@@ -65,10 +65,9 @@
 
         <!-- Menu -->
         <template v-slot:append>
-          <v-btn icon size="large" variant="plain">
+          <v-btn :icon="true" size="large" variant="plain">
             <v-icon>mdi-dots-vertical</v-icon>
             <v-menu activator="parent">
-
               <!-- Menu items -->
               <v-list>
 
@@ -141,8 +140,7 @@
     </v-dialog>
 
     <!-- Confirm delete server dialog -->
-    <v-dialog v-model="ComponentRouteController.create($componentName.ConfirmDeleteServerDialog).isShow"
-              max-width="600">
+    <v-dialog v-model="ComponentRouteController.create($componentName.ConfirmDeleteServerDialog).isShow" max-width="600">
       <v-card>
 
         <v-card-title class="text-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>

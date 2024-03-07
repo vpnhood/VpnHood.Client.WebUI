@@ -1,6 +1,5 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
-import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {createVuetify} from 'vuetify'
 export default createVuetify({
     defaults:{
@@ -10,9 +9,7 @@ export default createVuetify({
             class: 'pa-4',
         },
     },
-        components: {
-            VBottomSheet,
-        },
+
         theme: {
             defaultTheme: 'VpnHood',
             themes: {

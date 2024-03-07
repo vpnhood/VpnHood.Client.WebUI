@@ -133,7 +133,7 @@
   </v-dialog>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog v-model="showPendingProcessDialog" :persistent="true" max-width="600">
+  <v-dialog v-model="showPendingProcessDialog" :persistent="true"  max-width="600">
     <v-card rounded="lg" color="secondary">
       <v-card-text class="px-3">
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
@@ -143,7 +143,7 @@
   </v-dialog>
 
   <!-- Purchase complete dialog -->
-  <v-dialog v-model="showPurchaseCompleteDialog" :persistent="true" max-width="600">
+  <v-dialog v-model="showPurchaseCompleteDialog" max-width="600">
     <v-card rounded="lg" color="secondary">
       <v-card-title class="text-center">
         <v-icon class="text-h2">mdi-party-popper</v-icon>
