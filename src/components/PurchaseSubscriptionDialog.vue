@@ -210,7 +210,7 @@ import {SubscriptionPlan} from "@/services/VpnHood.Client.Api";
 import {SubscriptionPlansId} from "@/UiConstants";
 
 export default defineComponent({
-  name: "PremiumServerAdDialog",
+  name: "PurchaseSubscriptionDialog",
   props: {
     modelValue: Boolean,
   },

@@ -3,7 +3,7 @@
     <v-main>
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
 
-      <PublicServerHintDialog v-model="isShowPrivacyPolicyDialog" @accept-privacy-policy="vpnHoodConnectProcessAccount()"/>
+      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" @accept-privacy-policy="vpnHoodConnectProcessAccount()"/>
 
       <!-- Loading dialog before each api call -->
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
@@ -21,11 +21,11 @@ import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import LoadingDialog from "@/components/LoadingDialog.vue";
-import PublicServerHintDialog from "@/components/PublicServerHintDialog.vue";
-import {AppName} from "@/UiConstants";
+import {AppName, LocalStorage} from "@/UiConstants";
+import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 export default defineComponent({
   name: 'App',
-  components: {PublicServerHintDialog, LoadingDialog, AlertDialog },
+  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog },
   data(){
     return{
       AppName,
@@ -33,7 +33,7 @@ export default defineComponent({
     };
   },
   async created() {
-    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem("vh:DontShowPublicServerHint") !=="true"){
+    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem(LocalStorage.acceptedPrivacyPolicy) !=="true"){
       this.isShowPrivacyPolicyDialog = true;
       return;
     }

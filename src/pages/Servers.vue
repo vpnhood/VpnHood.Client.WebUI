@@ -145,7 +145,7 @@
               max-width="600">
       <v-card>
 
-        <v-card-title class="color-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
+        <v-card-title class="text-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
 
         <v-card-text>
           <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>

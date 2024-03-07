@@ -6,27 +6,6 @@
       :modelValue="modelValue"
   >
 
-    <!-- Add Test Server -->
-    <v-alert
-        v-if="testServerVisible"
-        color="warning"
-        :closable="true"
-        rounded="0"
-        class="text-caption"
-    >
-      <p>{{ $t('ADD_TEST_SERVER_SUBTITLE') }}</p>
-
-      <v-btn
-          class="mt-3"
-          variant="tonal"
-          @click="addTestServer()"
-          size="small"
-      >
-        {{ $t("ADD_TEST_SERVER") }}
-      </v-btn>
-
-    </v-alert>
-
     <!-- Add Private Server -->
     <v-card class="mx-auto pb-3" width="100%" variant="flat">
       <v-card-title>
@@ -80,13 +59,6 @@ export default defineComponent({
     }
   },
 
-  computed: {
-    testServerVisible(): boolean {
-      return !this.$vpnHoodApp.data.clientProfileInfos.find(
-          x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-    }
-  },
-
   methods: {
     async addAccessKey(): Promise<void> {
 
@@ -125,18 +97,6 @@ export default defineComponent({
 
       // Connect to server
       await this.$vpnHoodApp.connect();
-    },
-
-    async addTestServer() {
-
-      // Add public server
-      await this.$vpnHoodApp.addTestServer();
-
-      // Connect to the server
-      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-      if (clientProfileInfo?.clientProfileId) {
-        await this.connect(clientProfileInfo.clientProfileId);
-      }
     },
   }
 })

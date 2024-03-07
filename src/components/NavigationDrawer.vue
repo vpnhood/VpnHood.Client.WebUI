@@ -54,13 +54,25 @@
       </v-list-item>
 
       <!-- Sign out button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignOut">
+      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="showConfirmDelete = true">
         <v-list-item-title class="d-flex align-center">
           <v-icon>mdi-logout</v-icon>
           <div class="d-inline-flex flex-column ms-3">
             <span>{{$t('SIGN_OUT')}}</span>
             <span class="text-caption opacity-50">{{$vpnHoodApp.data.userState.userAccount.email}}</span>
           </div>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Change subscription -->
+      <v-list-item
+          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
+          class="border-b"
+          @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
+      >
+        <v-list-item-title>
+          <v-icon>mdi-arrow-decision</v-icon>
+          <span class="ms-3">{{$t('CHANGE_SUBSCRIPTION')}}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -86,18 +98,6 @@
           <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary"/>
           <v-icon v-else>mdi-update</v-icon>
           <span class="ms-3">{{$t('CHECK_FOR_UPDATE')}}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Change subscription -->
-      <v-list-item
-          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
-          class="border-b"
-          @click="ComponentRouteController.showComponent(ComponentName.PremiumServerAdDialog);$emit('update:modelValue',false)"
-      >
-        <v-list-item-title>
-          <v-icon>mdi-arrow-decision</v-icon>
-          <span class="ms-3">{{$t('CHANGE_SUBSCRIPTION')}}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -150,6 +150,43 @@
     </v-list>
 
   </v-navigation-drawer>
+
+  <!-- Confirm delete server dialog -->
+  <v-dialog v-model="showConfirmDelete" max-width="600" :persistent="true">
+
+    <v-card rounded="lg" color="white">
+
+      <v-card-title class="text-white bg-secondary">{{ $t('CONFIRM_SIGN_OUT_TITLE') }}</v-card-title>
+
+      <v-card-text>
+        {{ $t("CONFIRM_SIGN_OUT_DESC") }}
+      </v-card-text>
+
+      <!-- Dialog buttons -->
+      <v-card-actions>
+        <v-spacer/>
+
+        <!-- Confirm button -->
+        <v-btn
+            rounded="pill"
+            variant="text"
+            color="secondary"
+            :text="$t('YES')"
+            @click="onSignOut"
+        />
+
+        <!-- Cancel button -->
+        <v-btn
+            rounded="pill"
+            variant="flat"
+            color="secondary"
+            :text="$t('NO')"
+            @click="showConfirmDelete = false"
+        />
+
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -164,6 +201,7 @@ export default defineComponent({
       ComponentName,
       ComponentRouteController,
       isCheckForUpdate: false,
+      showConfirmDelete: false,
     }
   },
   props: {
@@ -216,6 +254,7 @@ export default defineComponent({
     },
 
     onSignOut(){
+      this.showConfirmDelete = false;
       this.$vpnHoodApp.signOut();
       this.$emit('update:modelValue', false);
     }

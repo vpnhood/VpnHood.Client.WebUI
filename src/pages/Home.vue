@@ -11,9 +11,9 @@
 
         <!-- Go Premium Store Ad -->
         <v-col  cols="12" class="text-center pt-0">
-          <PremiumServerAdDialog
+          <PurchaseSubscriptionDialog
               v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
-              v-model="ComponentRouteController.create($componentName.PremiumServerAdDialog).isShow"
+              v-model="ComponentRouteController.create($componentName.PurchaseSubscriptionDialog).isShow"
           />
         </v-col>
 
@@ -207,7 +207,7 @@ import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
 import ProtocolDialog from "@/components/ProtocolDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import PremiumServerAdDialog from "@/components/PremiumServerAdDialog.vue";
+import PurchaseSubscriptionDialog from "@/components/PurchaseSubscriptionDialog.vue";
 import AppBar from "@/components/AppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
@@ -221,7 +221,7 @@ export default defineComponent({
     UpdateSnackbar,
     SuppressSnackbar,
     AppBar,
-    PremiumServerAdDialog,
+    PurchaseSubscriptionDialog,
     NavigationDrawer,
     ProtocolDialog,
     TunnelClientCountryDialog
