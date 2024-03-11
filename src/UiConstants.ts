@@ -17,6 +17,7 @@ export enum ComponentName {
     RenameServerDialog = "RenameServerDialog",
     ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",
     ServersDialogForVpnHoodConnect = "ServersDialogForVpnHoodConnect",
+    PublicServerHintDialog = "PublicServerHintDialog"
 }
 
 export enum SubscriptionPlansId {

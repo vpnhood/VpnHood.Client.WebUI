@@ -13,7 +13,7 @@ import {
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UserState} from "@/services/UserState";
-import {ComponentName, LocalStorage} from "@/UiConstants";
+import {AppName, ComponentName, LocalStorage} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
@@ -112,6 +112,20 @@ export class VpnHoodApp {
     public async connect(): Promise<void> {
         if (!this.data.settings.userSettings.defaultClientProfileId)
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
+
+
+        if (this.data.features.uiName !== AppName.VpnHoodConnect){
+            // Find default client profile
+            const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
+                x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
+
+            // If selected server is VpnHood public server
+            if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
+                // Show public server hint
+                await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
+                return;
+            }
+        }
 
         await this.apiClient.connect();
     }

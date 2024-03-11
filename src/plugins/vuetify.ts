@@ -1,15 +1,15 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {createVuetify} from 'vuetify'
-export default createVuetify({
-    defaults:{
-        VSheet: {
-            color: '#eaeaea',
-            height: '100%',
-            class: 'pa-4',
-        },
-    },
 
+export default createVuetify({
+        defaults: {
+            VSheet: {
+                color: '#eaeaea',
+                height: '100%',
+                class: 'pa-4',
+            },
+        },
         theme: {
             defaultTheme: 'VpnHood',
             themes: {
@@ -44,7 +44,7 @@ export default createVuetify({
                     },
                     variables: {
                         'medium-emphasis-opacity': '0.8',
-                        'border-color':'#000000',
+                        'border-color': '#000000',
 
                     },
                 },
@@ -79,7 +79,7 @@ export default createVuetify({
                     },
                     variables: {
                         'medium-emphasis-opacity': '0.8',
-                        'border-color':'#000000',
+                        'border-color': '#000000',
                     },
                 },
             },

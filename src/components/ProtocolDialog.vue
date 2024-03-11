@@ -26,6 +26,7 @@
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_OFF") }}</span>
+              <span class="text-caption ms-2 text-gray-lighten-2">{{ $t('MORE_RELIABLE') }}</span>
               <v-chip class="ms-2" size="small" color="secondary" :text="$t('DEFAULT')"></v-chip>
             </template>
           </v-radio>

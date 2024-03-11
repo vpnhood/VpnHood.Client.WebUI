@@ -63,6 +63,7 @@
   "PROTOCOL_DESC": "UDP is much faster for apps that heavily use it, such as torrents, but it may not work with some firewalls and proxies. If you disable UDP, all apps still work, but they may get much slower.",
   "PROTOCOL_UDP_ON": "Use UDP",
   "PROTOCOL_UDP_OFF": "No UDP",
+  "MORE_RELIABLE":"More reliable",
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
   "changelog": "What's New?",

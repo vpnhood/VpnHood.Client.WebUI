@@ -9,7 +9,7 @@
     <v-container class="h-100 pt-0">
       <v-row align-content="space-between" justify="center" class="h-100 my-0">
 
-        <!-- Go Premium Store Ad -->
+        <!-- Go Premium button Only for VpnHoodConnect -->
         <v-col  cols="12" class="text-center pt-0">
           <PurchaseSubscriptionDialog
               v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
@@ -59,8 +59,6 @@
                 {{ stateIcon() }}
               </v-icon>
 
-              <!-- Access Key expire date -->
-              <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
             </div>
           </div>
 
@@ -198,6 +196,7 @@
     <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
     <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
+    <MigratePublicServerDialog v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect" v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
   </div>
 </template>
 
@@ -214,9 +213,11 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {UiConstants, AppName} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
+import MigratePublicServerDialog from "@/components/MigratePublicServerDialog.vue";
 export default defineComponent({
   name: 'HomePage',
   components: {
+    MigratePublicServerDialog,
     ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
