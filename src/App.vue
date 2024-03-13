@@ -33,6 +33,7 @@ export default defineComponent({
     };
   },
   async created() {
+    // Show privacy policy if app is VpnHoodCONNECT
     if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem(LocalStorage.acceptedPrivacyPolicy) !=="true"){
       this.isShowPrivacyPolicyDialog = true;
       return;
@@ -60,16 +61,7 @@ export default defineComponent({
       this.isShowPrivacyPolicyDialog = false;
       const accountClient = ClientApiFactory.instance.createAccountClient();
       this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
-
-      if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported){
-        try {
-          this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-          await this.$vpnHoodApp.processUserAccount();
-        }
-        finally {
-          this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
-        }
-      }
+      this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
     }
   }
 });

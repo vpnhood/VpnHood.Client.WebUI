@@ -1,5 +1,4 @@
 export class LocalStorage {
-    public static readonly userAccount: string = "VhConnectUserAccount";
     public static readonly acceptedPrivacyPolicy: string = "VhAcceptedPrivacyPolicy";
 }
 export class UiConstants {

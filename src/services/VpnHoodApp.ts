@@ -1,6 +1,5 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
-    AppAccount,
     AppConnectionState,
     AppFeatures,
     AppSettings,
@@ -13,7 +12,7 @@ import {
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UserState} from "@/services/UserState";
-import {AppName, ComponentName, LocalStorage} from "@/UiConstants";
+import {AppName, ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
@@ -115,10 +114,22 @@ export class VpnHoodApp {
 
 
         if (this.data.features.uiName !== AppName.VpnHoodConnect){
+            // Get current UTC date
+            const currentDate = new Date();
+            const currentUTCDate = Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
+
+            // Define the comparison date
+            const publicServerExpireDate = new Date("2024-04-10");
+            const publicServerExpireUTCDate = Date.UTC(publicServerExpireDate.getUTCFullYear(), publicServerExpireDate.getUTCMonth(), publicServerExpireDate.getUTCDate());
+
             // Find default client profile
             const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
                 x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
+            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.testServerTokenId){
+                await this.deleteClientProfile(defaultClientProfile?.clientProfileId!);
+                throw new Error("The VpnHood public server has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
+            }
             // If selected server is VpnHood public server
             if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
                 // Show public server hint
@@ -220,7 +231,7 @@ export class VpnHoodApp {
     public async signIn(): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signInWithGoogle();
-        await this.processUserAccount();
+        await this.processUserAccount(false);
     }
 
     public async signOut(): Promise<void>{
@@ -230,66 +241,29 @@ export class VpnHoodApp {
         this.data.userState.userAccount = null;
     }
 
-    // Get user account info from the browser local storage
-    getLocalUserAccount(): AppAccount | null{
-        const localUserAccountInfo = localStorage.getItem(LocalStorage.userAccount);
-        return localUserAccountInfo ? JSON.parse(localUserAccountInfo) : null;
-    }
-
-    // Save user account info to the browser local storage
-    setLocalUserAccount(appAccount: AppAccount){
-        localStorage.setItem(LocalStorage.userAccount, JSON.stringify(appAccount));
-    }
-
-    // Compare local user account info with store server user account info
-    syncUserAccount(appAccount: AppAccount): boolean{
-        const localUserAccountInfo = this.getLocalUserAccount();
-        if (!localUserAccountInfo){
-            this.setLocalUserAccount(appAccount);
-            return false;
-        }
-        return localUserAccountInfo.subscriptionId === appAccount.subscriptionId
-            && localUserAccountInfo.providerPlanId === appAccount.providerPlanId;
-    }
-
     // Always call after launch app or sign-in
-    async processUserAccount(): Promise<void>{
+    async processUserAccount(refresh: boolean): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
-        this.data.userState.userAccount = await accountClient.get();
+        if (refresh)
+            await accountClient.refresh();
 
-        // User is guest
-        if (!this.data.userState.userAccount){
-            console.log("User is guest");
-            return;
-        }
+        this.data.userState.userAccount = await accountClient.get();
 
         // User does not have an active subscription
         if (!this.data.userState.userAccount.subscriptionId){
             console.log("User does not have an active subscription");
-            await this.disconnectFromPremiumServer();
             await this.removePremiumClientProfile();
             return;
         }
-
-        const isUserAccountSynced =  this.syncUserAccount(this.data.userState.userAccount);
-
-        // User has an active subscription and synced with previous local state
-        if (isUserAccountSynced){
-            console.log("User has active and synced subscription");
-            return;
-        }
-
         // User purchase a subscription or change previous subscription
-        else {
-            console.log("User purchase a subscription or change previous subscription");
-            this.setLocalUserAccount(this.data.userState.userAccount);
-            if (this.data.state.connectionState === AppConnectionState.Connected)
-                await this.disconnect();
+        console.log("User purchase a subscription or change previous subscription");
 
-            await this.removePremiumClientProfile();
-            await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
-            await this.setPremiumClientProfileAsDefault();
-        }
+        if (this.data.state.connectionState === AppConnectionState.Connected)
+            await this.disconnect();
+
+        await this.removePremiumClientProfile();
+        await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
+        await this.setPremiumClientProfileAsDefault();
     }
 
     // Remove all user premium client profile
@@ -319,18 +293,5 @@ export class VpnHoodApp {
 
         this.data.settings.userSettings.defaultClientProfileId = premiumServer.clientProfileId;
         await this.saveUserSetting();
-    }
-
-    // Disconnect Vpn if is connected with premium server
-    async disconnectFromPremiumServer(): Promise<void>{
-        if (this.data.state.connectionState === AppConnectionState.Connected){
-
-            // Find default client profile
-            const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
-                x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
-
-            if (defaultClientProfile?.tokenId !== this.data.features.testServerTokenId)
-                await this.disconnect();
-        }
     }
 }

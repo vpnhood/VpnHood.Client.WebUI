@@ -47,7 +47,7 @@
 
       <v-card-actions class="bg-background">
         <v-spacer/>
-        <!-- Accept button -->
+
         <v-btn
             variant="flat"
             size="small"
@@ -56,6 +56,7 @@
             target="_blank"
             class="text-capitalize"
             color="secondary"
+            @click="$emit('update:modelValue',false)"
         />
         <v-btn
             variant="tonal"
