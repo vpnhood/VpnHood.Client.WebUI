@@ -26,6 +26,7 @@ export class VpnHoodAppData {
     public settings: AppSettings;
     public features: AppFeatures;
     public clientProfileInfos: ClientProfileInfo[];
+
     public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileInfos: ClientProfileInfo[]) {
         this.state = state;
         this.settings = setting;
@@ -103,7 +104,7 @@ export class VpnHoodApp {
 
         // Hide 'suppress' message
         if (this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None &&
-            this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None){
+            this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None) {
             this.data.uiState.showSuppressSnackbar = false;
         }
     }
@@ -113,7 +114,7 @@ export class VpnHoodApp {
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
 
 
-        if (this.data.features.uiName !== AppName.VpnHoodConnect){
+        if (this.data.features.uiName !== AppName.VpnHoodConnect) {
             // Get current UTC date
             const currentDate = new Date();
             const currentUTCDate = Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
@@ -126,7 +127,7 @@ export class VpnHoodApp {
             const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
                 x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
 
-            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.testServerTokenId){
+            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.testServerTokenId) {
                 await this.deleteClientProfile(defaultClientProfile?.clientProfileId!);
                 throw new Error("The VpnHood public server has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
             }
@@ -172,10 +173,11 @@ export class VpnHoodApp {
         return clientProfileInfo;
     }
 
-    public async deleteClientProfile(clientProfileId: string): Promise<void>{
+    public async deleteClientProfile(clientProfileId: string): Promise<void> {
         await this.apiClient.deleteClientProfile(clientProfileId);
         await this.reloadSettings();
     }
+
     public async addTestServer(): Promise<void> {
         await this.apiClient.addTestServer();
         await this.reloadSettings();
@@ -197,12 +199,10 @@ export class VpnHoodApp {
         console.error(err);
 
         // Just for VpnHoodConnect
-        if (err.statusCode === 401 && !this.data.userState.userAccount){
+        if (err.statusCode === 401 && !this.data.userState.userAccount) {
             await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
-        }
-
-        else
+        } else
             await this.showMessage(err.message ?? err);
     }
 
@@ -217,24 +217,24 @@ export class VpnHoodApp {
         return this.apiClient.getInstalledApps();
     }
 
-    public async postPoneUpdate(): Promise<void>{
+    public async postPoneUpdate(): Promise<void> {
         await this.apiClient.versionCheckPostpone();
     }
 
-    public async checkForUpdate(): Promise<void>{
+    public async checkForUpdate(): Promise<void> {
         await this.apiClient.versionCheck();
     }
 
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
-    public async signIn(): Promise<void>{
+    public async signIn(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signInWithGoogle();
         await this.processUserAccount(false);
     }
 
-    public async signOut(): Promise<void>{
+    public async signOut(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signOut();
         await this.removePremiumClientProfile();
@@ -242,22 +242,23 @@ export class VpnHoodApp {
     }
 
     // Always call after launch app or sign-in
-    async processUserAccount(refresh: boolean): Promise<void>{
+    async processUserAccount(refresh: boolean): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
+
         if (refresh)
             await accountClient.refresh();
 
         this.data.userState.userAccount = await accountClient.get();
 
         // User does not have an active subscription
-        if (!this.data.userState.userAccount.subscriptionId){
+        if (!this.data.userState.userAccount.subscriptionId) {
             console.log("User does not have an active subscription");
             await this.removePremiumClientProfile();
             return;
         }
-        // User purchase a subscription or change previous subscription
-        console.log("User purchase a subscription or change previous subscription");
 
+        // User purchase has an active subscription
+        console.log("User purchase has an active subscription");
         if (this.data.state.connectionState === AppConnectionState.Connected)
             await this.disconnect();
 
@@ -269,24 +270,24 @@ export class VpnHoodApp {
     // Remove all user premium client profile
     public async removePremiumClientProfile(): Promise<void> {
         const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.testServerTokenId);
-        for (const clientProfile of premiumClientProfiles){
+        for (const clientProfile of premiumClientProfiles) {
             await this.deleteClientProfile(clientProfile.clientProfileId);
         }
     }
 
     // Get subscription accessKey(s) and save as client profile
-    async getAndSaveSubscriptionAccessKeys(subscriptionId: string): Promise<void>{
+    async getAndSaveSubscriptionAccessKeys(subscriptionId: string): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         const accessKeyList = await accountClient.getAccessKeys(subscriptionId);
         if (!accessKeyList) throw new Error("Could not found any access key for this subscription id. SubscriptionId: " + subscriptionId);
 
-        for (const accessKey of accessKeyList){
+        for (const accessKey of accessKeyList) {
             await this.addAccessKey(accessKey);
         }
     }
 
     // Set one of the premium client profile as default
-    async setPremiumClientProfileAsDefault(): Promise<void>{
+    async setPremiumClientProfileAsDefault(): Promise<void> {
         const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.testServerTokenId);
         if (!premiumServer)
             throw new Error("Could not set premium server as default profile. Premium server is undefined");

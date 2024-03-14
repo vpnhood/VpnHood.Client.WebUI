@@ -53,7 +53,7 @@ export default defineComponent({
   ],
   methods:{
     async accept(): Promise<void>{
-       localStorage.setItem(LocalStorage.acceptedPrivacyPolicy, "true");
+      localStorage.setItem(LocalStorage.acceptedPrivacyPolicy, "true");
       this.$emit('acceptPrivacyPolicy');
       this.$emit('update:modelValue',false);
     },
