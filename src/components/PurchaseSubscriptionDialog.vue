@@ -316,7 +316,8 @@ export default defineComponent({
       const accountClient = ClientApiFactory.instance.createAccountClient();
       const isOrderProcessed: boolean = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
       if (isOrderProcessed){
-        await this.$vpnHoodApp.processUserAccount(true);
+        await this.$vpnHoodApp.refreshAccount();
+        await this.$vpnHoodApp.processUserAccount();
         this.showPurchaseCompleteDialog = true;
       }
       else

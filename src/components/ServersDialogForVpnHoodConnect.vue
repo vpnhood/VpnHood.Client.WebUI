@@ -33,6 +33,7 @@
 
             <!-- Profile name -->
             <v-list-item-title class="title">{{ item.clientProfileName }}</v-list-item-title>
+            <v-list-item-subtitle class="text-caption text-disabled">{{$t("SUPPORT_ID")}}: {{item.supportId}}</v-list-item-subtitle>
 
           </v-list-item>
         </v-list>

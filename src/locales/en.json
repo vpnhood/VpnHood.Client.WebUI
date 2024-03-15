@@ -141,5 +141,7 @@
   "BUY": "Buy",
   "SUBSCRIPTION": "Subscription",
   "CONFIRM_SIGN_OUT_TITLE": "Confirm sign out",
-  "CONFIRM_SIGN_OUT_DESC": "Are you sure to sign out of your account?"
+  "CONFIRM_SIGN_OUT_DESC": "Are you sure to sign out of your account?",
+  "SUPPORT_ID": "Support ID",
+  "COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE": "Could not found public server profile."
 }

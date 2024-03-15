@@ -167,7 +167,6 @@
 
           <!-- Servers button -->
           <v-btn
-              v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect || $vpnHoodApp.data.clientProfileInfos.length > 2"
               depressed
               :block="true"
               variant="text"
@@ -179,6 +178,10 @@
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
             <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
+
+            <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
+              <v-icon class="button-premium-icon">mdi-crown</v-icon>
+            </template>
           </v-btn>
 
         </v-col>
@@ -235,6 +238,7 @@ export default defineComponent({
     }
   },
   async created() {
+    await this.$vpnHoodApp.refreshAccount();
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
@@ -257,8 +261,8 @@ export default defineComponent({
           // Always set public server as default profile if user does not have a premium server or default selected server.
           if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
             const testServerProfile = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-            if (!testServerProfile) throw new Error("Could not found public server profile.");
-            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile?.clientProfileId;
+            if (!testServerProfile) throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
+            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile.clientProfileId;
             await this.$vpnHoodApp.saveUserSetting();
           }
 
@@ -387,8 +391,11 @@ export default defineComponent({
     },
 
     showServers(): void{
-      if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
-        this.ComponentRouteController.showComponent(this.$componentName.ServersDialogForVpnHoodConnect);
+      if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
+        this.$vpnHoodApp.data.userState.userAccount?.subscriptionId
+            ? this.ComponentRouteController.showComponent(this.$componentName.ServersDialogForVpnHoodConnect)
+            : this.ComponentRouteController.showComponent(this.$componentName.PurchaseSubscriptionDialog);
+      }
       else
         this.$router.push('/servers');
     }
@@ -408,5 +415,9 @@ export default defineComponent({
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+.button-premium-icon{
+  position: absolute;
+  right: 10px;
 }
 </style>

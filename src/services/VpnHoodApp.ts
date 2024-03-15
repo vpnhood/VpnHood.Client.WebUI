@@ -178,11 +178,6 @@ export class VpnHoodApp {
         await this.reloadSettings();
     }
 
-    public async addTestServer(): Promise<void> {
-        await this.apiClient.addTestServer();
-        await this.reloadSettings();
-    }
-
     public async diagnose(): Promise<void> {
         if (!this.data.settings.userSettings.defaultClientProfileId) {
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
@@ -199,7 +194,13 @@ export class VpnHoodApp {
         console.error(err);
 
         // Just for VpnHoodConnect
-        if (err.statusCode === 401 && !this.data.userState.userAccount) {
+        if (this.data.features.uiName === AppName.VpnHoodConnect && err === "Access Expired!"){
+            await this.refreshAccount();
+            await this.processUserAccount();
+        }
+
+        // Just for VpnHoodConnect
+        if (this.data.features.uiName === AppName.VpnHoodConnect && err.statusCode === 401 && !this.data.userState.userAccount) {
             await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
         } else
@@ -231,7 +232,8 @@ export class VpnHoodApp {
     public async signIn(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signInWithGoogle();
-        await this.processUserAccount(false);
+        await this.refreshAccount();
+        await this.processUserAccount();
     }
 
     public async signOut(): Promise<void> {
@@ -241,13 +243,14 @@ export class VpnHoodApp {
         this.data.userState.userAccount = null;
     }
 
-    // Always call after launch app or sign-in
-    async processUserAccount(refresh: boolean): Promise<void> {
+    async refreshAccount(): Promise<void>{
         const accountClient = ClientApiFactory.instance.createAccountClient();
+        await accountClient.refresh();
+    }
 
-        if (refresh)
-            await accountClient.refresh();
-
+    // Process user account and server key(s) status
+    async processUserAccount(): Promise<void> {
+        const accountClient = ClientApiFactory.instance.createAccountClient();
         this.data.userState.userAccount = await accountClient.get();
 
         // User does not have an active subscription
@@ -258,13 +261,21 @@ export class VpnHoodApp {
         }
 
         // User purchase has an active subscription
-        console.log("User purchase has an active subscription");
+        console.log("User has an active subscription");
         if (this.data.state.connectionState === AppConnectionState.Connected)
             await this.disconnect();
 
         await this.removePremiumClientProfile();
         await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
-        await this.setPremiumClientProfileAsDefault();
+        try {
+            await this.setPremiumClientProfileAsDefault();
+        }
+        catch (err){
+            console.error(err);
+            await this.refreshAccount();
+            await this.processUserAccount();
+        }
+
     }
 
     // Remove all user premium client profile
@@ -273,6 +284,10 @@ export class VpnHoodApp {
         for (const clientProfile of premiumClientProfiles) {
             await this.deleteClientProfile(clientProfile.clientProfileId);
         }
+        const testServerProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.testServerTokenId);
+        if (!testServerProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
+        this.data.settings.userSettings.defaultClientProfileId = testServerProfile.clientProfileId;
+        await this.saveUserSetting();
     }
 
     // Get subscription accessKey(s) and save as client profile
@@ -290,9 +305,13 @@ export class VpnHoodApp {
     async setPremiumClientProfileAsDefault(): Promise<void> {
         const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.testServerTokenId);
         if (!premiumServer)
-            throw new Error("Could not set premium server as default profile. Premium server is undefined");
+            throw new Error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
 
         this.data.settings.userSettings.defaultClientProfileId = premiumServer.clientProfileId;
         await this.saveUserSetting();
+    }
+
+    checkPremium(): boolean{
+        return !!(this.data.features.uiName === AppName.VpnHoodConnect && this.data.userState.userAccount?.subscriptionId);
     }
 }
