@@ -71,8 +71,8 @@
           @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
       >
         <v-list-item-title>
-          <v-icon>mdi-arrow-decision</v-icon>
-          <span class="ms-3">{{$t('CHANGE_SUBSCRIPTION')}}</span>
+          <v-icon>{{$vpnHoodApp.data.userState.userAccount.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'}}</v-icon>
+          <span class="ms-3">{{$vpnHoodApp.data.userState.userAccount.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE')}}</span>
         </v-list-item-title>
       </v-list-item>
 

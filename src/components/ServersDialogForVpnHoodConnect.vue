@@ -9,7 +9,7 @@
           <!-- Server item -->
           <v-list-item
               v-model="defaultClientProfileId"
-              v-show="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId"
+              v-show="!(item.tokenId === $vpnHoodApp.data.features.testServerTokenId && ($vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.GlobalServer || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers))"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
               rounded="15"
@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {SubscriptionPlansId} from "@/UiConstants";
 
 export default defineComponent({
   name: 'ServersDialogForVpnHoodConnect',
@@ -61,6 +62,9 @@ export default defineComponent({
     "update:modelValue",
   ],
   computed: {
+    SubscriptionPlansId() {
+      return SubscriptionPlansId
+    },
     defaultClientProfileId:
         {
           get() {

@@ -172,7 +172,7 @@
               variant="text"
               size="small"
               prepend-icon="mdi-dns"
-              class="config-item"
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item']"
               @click="showServers()"
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
@@ -238,7 +238,6 @@ export default defineComponent({
     }
   },
   async created() {
-    await this.$vpnHoodApp.refreshAccount();
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
@@ -415,6 +414,10 @@ export default defineComponent({
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+.config-item.active-subscription{
+  /*noinspection CssUnresolvedCustomProperty*/
+  border-color: rgba(var(--v-theme-tertiary), 1);
 }
 .button-premium-icon{
   position: absolute;
