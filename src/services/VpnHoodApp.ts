@@ -120,7 +120,7 @@ export class VpnHoodApp {
             const currentUTCDate = Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
 
             // Define the comparison date
-            const publicServerExpireDate = new Date("2024-04-10");
+            const publicServerExpireDate = new Date("2024-05-01");
             const publicServerExpireUTCDate = Date.UTC(publicServerExpireDate.getUTCFullYear(), publicServerExpireDate.getUTCMonth(), publicServerExpireDate.getUTCDate());
 
             // Find default client profile

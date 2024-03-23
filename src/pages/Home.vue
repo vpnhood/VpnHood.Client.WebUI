@@ -177,7 +177,7 @@
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon>mdi-chevron-right</v-icon>
-            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() ?? $t("NO_SERVER_SELECTED") }}</span>
 
             <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
               <v-icon class="button-premium-icon">mdi-crown</v-icon>
@@ -214,9 +214,10 @@ import AppBar from "@/components/AppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import {UiConstants, AppName} from "@/UiConstants";
+import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 import MigratePublicServerDialog from "@/components/MigratePublicServerDialog.vue";
+
 export default defineComponent({
   name: 'HomePage',
   components: {
@@ -247,15 +248,15 @@ export default defineComponent({
 
   methods: {
     async onConnectButtonClick() {
+      const currentState = this.$vpnHoodApp.data.state.connectionState;
+
       // If user has no selected server and want to connect
-      if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None) {
+      if (currentState === AppConnectionState.None) {
 
-        // Find selected server
-        const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(
-            x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
+        // Change state to prevent double click on the connect button
+        this.$vpnHoodApp.data.state.connectionState = AppConnectionState.Initializing;
 
-        if (!clientProfileInfo || !clientProfileInfo.clientProfileName) {
-
+        if (!this.getDefaultClientProfileName()) {
           // Just for VpnHoodConnect
           // Always set public server as default profile if user does not have a premium server or default selected server.
           if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
@@ -273,7 +274,7 @@ export default defineComponent({
         }
       }
 
-      this.$vpnHoodApp.data.state.connectionState === AppConnectionState.None
+      currentState === AppConnectionState.None
           ? await this.$vpnHoodApp.connect()
           : await this.$vpnHoodApp.disconnect();
     },
@@ -343,10 +344,10 @@ export default defineComponent({
     },
 
     // Return current active server name
-    getDefaultClientProfileName(): string {
+    getDefaultClientProfileName(): string | null {
       const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
       if (!clientProfileInfo || !clientProfileInfo.clientProfileName)
-        return this.$t("NO_SERVER_SELECTED");
+        return null;
 
       return clientProfileInfo.clientProfileName;
     },

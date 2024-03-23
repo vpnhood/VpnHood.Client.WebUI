@@ -9,7 +9,7 @@
   >
     <v-card>
 
-      <v-card-title class="text-center pt-0 pb-2 text-primary" style="background-color: #f2f2f2;">
+      <v-card-title class="text-center pt-0 pb-2 bg-background">
         <v-btn icon="mdi-window-close" variant="tonal"  size="small" class="d-block mx-auto my-4" @click="$emit('update:modelValue',false)"/>
        <span>Migration of the VpnHood public server</span>
       </v-card-title>
@@ -45,12 +45,11 @@
         </p>
       </v-card-text>
 
-      <v-card-actions class="bg-background">
+      <v-card-actions class="bg-background py-3">
         <v-spacer/>
 
         <v-btn
             variant="flat"
-            size="small"
             text="Download VpnHood! Connect"
             href="https://play.google.com/store/apps/details?id=com.vpnhood.connect.android"
             target="_blank"
@@ -60,7 +59,6 @@
         />
         <v-btn
             variant="tonal"
-            size="small"
             text="Continue"
             @click="continueConnect"
             class="text-capitalize"
