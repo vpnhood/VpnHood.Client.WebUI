@@ -4,6 +4,11 @@ import {createVuetify} from 'vuetify'
 
 export default createVuetify({
         defaults: {
+            locale: {
+                rtl: {
+                    fa: true,
+                },
+            },
             VSheet: {
                 color: '#eaeaea',
                 height: '100%',

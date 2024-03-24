@@ -71,7 +71,6 @@
   "EXCLUDE_LOCAL_NETWORK_DESC": "Do not send my local network packets to VPN servers. I need to access the other computers and devices on my local network.",
   "PRIVACY_POLICY": "Privacy Policy",
   "READ_PRIVACY_POLICY": "Please read our",
-  "PRIVACY_WARNING": "These servers keep logs of IP activities for 30 days. To use these servers you must follow United States laws, especially when using torrent.",
   "createServer": "Create a Personal Server",
   "ACCEPT": "Accept and continue",
   "TUNNEL_MY_COUNTRY": "Tunnel My Country",

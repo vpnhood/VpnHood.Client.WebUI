@@ -240,6 +240,8 @@ export default defineComponent({
   },
   async created() {
     // Reload 'state' every 1 second if app window is focused.
+    this.$vuetify.locale.current = "fa";
+    this.$i18n.locale = "fa";
     setInterval(async () => {
       if (!document.hidden)
         await this.$vpnHoodApp.reloadState();
