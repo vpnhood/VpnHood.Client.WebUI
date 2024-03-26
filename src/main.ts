@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import './assets/css/general.css'
 import './assets/css/override.css'
+import './assets/css/rtl.css'
 import './assets/css/vpn-hood.css'
 import './assets/css/vpn-hood-connect.css'
 import "./services/Firebase";
@@ -26,9 +27,9 @@ async function main(): Promise<void> {
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
 
         // Set default UI language
-        /*const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.settings.userSettings.cultureCode);
-        i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.settings.userSettings.cultureCode : 'en';*/
-        //vuetify.locale.current.value = i18n.global.locale.value;
+        const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.settings.userSettings.cultureCode);
+        i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.settings.userSettings.cultureCode : 'en';
+        vuetify.locale.current.value = i18n.global.locale.value;
 
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);

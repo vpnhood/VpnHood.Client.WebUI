@@ -1,5 +1,5 @@
 <template>
-  <v-app id="mainBg" :class="$vpnHoodApp.data.features.uiName">
+  <v-app id="mainBg" :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode]">
     <v-main>
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
 

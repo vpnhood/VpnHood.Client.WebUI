@@ -15,12 +15,6 @@
               v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
               v-model="ComponentRouteController.create($componentName.PurchaseSubscriptionDialog).isShow"
           />
-
-          <div class="locale-changer">
-            <select v-model="$i18n.locale">
-              <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ $t(`${$t('name')}`) }}</option>
-            </select>
-          </div>
         </v-col>
 
         <!-- Speed & Circle & Connect button -->
@@ -223,6 +217,7 @@ import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 import MigratePublicServerDialog from "@/components/MigratePublicServerDialog.vue";
+import vuetify from "@/plugins/vuetify";
 
 export default defineComponent({
   name: 'HomePage',
@@ -245,7 +240,6 @@ export default defineComponent({
     }
   },
   async created() {
-    //console.log(this.$i18n.availableLocales);
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)

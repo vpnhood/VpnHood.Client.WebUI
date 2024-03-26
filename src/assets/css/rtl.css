@@ -1,0 +1,38 @@
+/** * ---------------------- Import font ------------------------ * **/
+@font-face {
+    font-family: 'IranSans-Regular';
+    src: url('../fonts/IRANSansMobile(FaNum).ttf') format('truetype');
+}
+@font-face {
+    font-family: 'IranSans-Bold';
+    src: url('../fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
+}
+
+.v-locale--is-rtl *{
+    letter-spacing: 0 !important;
+    font-family: "IranSans-Regular", sans-serif !important;
+}
+.v-locale--is-rtl{font-size: 14px;}
+
+.v-locale--is-rtl h1,
+.v-locale--is-rtl .h1,
+.v-locale--is-rtl h2,
+.v-locale--is-rtl .h2,
+.v-locale--is-rtl h3,
+.v-locale--is-rtl .h3,
+.v-locale--is-rtl h4,
+.v-locale--is-rtl .h4,
+.v-locale--is-rtl h5,
+.v-locale--is-rtl .h5,
+.v-locale--is-rtl h6,
+.v-locale--is-rtl .h6,
+.v-locale--is-rtl .title{
+    font-family: "IranSans-Bold", sans-serif !important;
+}
+
+.v-locale--is-rtl .v-label {
+    font-size: 0.9rem;
+}
+.v-locale--is-rtl .v-messages__message {
+    line-height: 20px;
+}
