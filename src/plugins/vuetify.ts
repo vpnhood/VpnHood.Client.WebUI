@@ -1,14 +1,18 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import {createVuetify} from 'vuetify'
+import {en, fa} from "vuetify/locale";
 
 export default createVuetify({
+    locale: {
+        locale: 'en',
+        fallback: 'en',
+        messages: { en, fa },
+        rtl: {
+            fa: true,
+        },
+    },
         defaults: {
-            locale: {
-                rtl: {
-                    fa: true,
-                },
-            },
             VSheet: {
                 color: '#eaeaea',
                 height: '100%',

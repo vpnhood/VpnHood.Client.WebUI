@@ -101,6 +101,14 @@
         </v-list-item-title>
       </v-list-item>
 
+      <!-- Settings -->
+<!--      <v-list-item class="border-b" @click="$router.replace({path: '/languages'})">
+        <v-list-item-title>
+          <v-icon>mdi-translate</v-icon>
+          <span class="ms-3">{{$t('LANGUAGE')}}</span>
+        </v-list-item-title>
+      </v-list-item>-->
+
       <!-- Whats new -->
       <v-list-item
           :nav="true"
