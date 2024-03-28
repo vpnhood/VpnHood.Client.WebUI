@@ -10,8 +10,8 @@
 
 /** -------------------- Default Style ------------------- **/
 html {overflow-y: auto;}
-.v-application:not(.v-locale--is-rtl){font-family: "Roboto-Regular", sans-serif !important; font-size: 15px;}
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", sans-serif !important;}
+.v-application:not(.v-locale--is-rtl){font-family: "Roboto-Regular", "IranSans-Regular", sans-serif !important; font-size: 15px;}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", "IranSans-Bold", sans-serif !important;}
 
 /*noinspection CssUnresolvedCustomProperty*/
 .rounded-15{border-radius: 15px;}

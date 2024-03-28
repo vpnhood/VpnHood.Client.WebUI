@@ -1,38 +1,33 @@
 <template>
-  <v-app-bar color="transparent" elevation="0">
+  <!-- Page header -->
+  <v-app-bar
+      :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'secondary'"
+      :flat="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
+      density="compact"
+  >
 
-    <!-- Navigation drawer button -->
-    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent($componentName.NavigationDrawer)" class="ms-0"/>
+    <!-- Close button -->
+    <v-app-bar-nav-icon icon="mdi-chevron-left" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
 
-    <!-- App name -->
-    <v-spacer></v-spacer>
-      <h3>
-        {{ $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME')}}
-      </h3>
-    <v-spacer></v-spacer>
-
-    <!-- App mini version -->
-    <span class="text-disabled text-caption me-3">v{{ $vpnHoodApp.getAppVersion(false) }}</span>
+    <!-- Page title -->
+    <v-app-bar-title class="text-body-1 text-white">{{pageTitle}}</v-app-bar-title>
 
   </v-app-bar>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   name: "AppBar",
-  computed: {
-    AppName() {
-      return AppName
-    }
+  data() {
+      return{
+        AppName
+      }
   },
-  data(){
-    return{
-      ComponentRouteController
-    }
-  },
+  props: {
+    pageTitle: String,
+  }
 })
 </script>

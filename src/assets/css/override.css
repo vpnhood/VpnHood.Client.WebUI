@@ -24,3 +24,6 @@
 .v-list-item-title{
     font-size: 0.9rem;
 }
+.v-messages__message{
+    line-height: 16px;
+}

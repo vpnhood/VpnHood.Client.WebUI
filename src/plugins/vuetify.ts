@@ -14,9 +14,8 @@ export default createVuetify({
     },
         defaults: {
             VSheet: {
-                color: '#eaeaea',
-                height: '100%',
                 class: 'pa-4',
+                height: '100%',
             },
         },
         theme: {
@@ -45,6 +44,7 @@ export default createVuetify({
                         'gray': '#3f3f3f',
                         'gray-lighten-1': '#888888ff',
                         'gray-lighten-2': '#929292',
+                        'gray-lighten-3': '#eaeaea',
                         error: '#ff5252',
                         info: '#2196F3',
                         success: '#4caf50',
@@ -54,7 +54,6 @@ export default createVuetify({
                     variables: {
                         'medium-emphasis-opacity': '0.8',
                         'border-color': '#000000',
-
                     },
                 },
                 VpnHoodConnect: {

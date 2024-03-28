@@ -4,7 +4,7 @@
     <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
 
     <!-- App bar -->
-    <AppBar/>
+    <HomeAppBar/>
 
     <v-container class="h-100 pt-0">
       <v-row align-content="space-between" justify="center" class="h-100 my-0">
@@ -210,14 +210,13 @@ import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vu
 import ProtocolDialog from "@/components/ProtocolDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import PurchaseSubscriptionDialog from "@/components/PurchaseSubscriptionDialog.vue";
-import AppBar from "@/components/AppBar.vue";
+import HomeAppBar from "@/components/HomeAppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 import MigratePublicServerDialog from "@/components/MigratePublicServerDialog.vue";
-import vuetify from "@/plugins/vuetify";
 
 export default defineComponent({
   name: 'HomePage',
@@ -226,7 +225,7 @@ export default defineComponent({
     ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
-    AppBar,
+    HomeAppBar,
     PurchaseSubscriptionDialog,
     NavigationDrawer,
     ProtocolDialog,

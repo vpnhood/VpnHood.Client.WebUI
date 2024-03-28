@@ -19,7 +19,7 @@
 
   </v-app-bar>
 
-  <v-sheet>
+  <v-sheet class="pa-4">
 
     <!-- Show alert, if user does not have any server -->
     <v-alert

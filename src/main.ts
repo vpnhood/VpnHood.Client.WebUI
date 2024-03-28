@@ -26,9 +26,12 @@ async function main(): Promise<void> {
         // Set app theme
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
 
+        // Set available languages
+        await vpnHoodApp.apiClient.setCultures(i18n.global.availableLocales);
+
         // Set default UI language
-        const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.settings.userSettings.cultureCode);
-        i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.settings.userSettings.cultureCode : 'en';
+        const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.state.cultureCode);
+        i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.state.cultureCode : 'en';
         vuetify.locale.current.value = i18n.global.locale.value;
 
         // Global catch exception
@@ -39,7 +42,8 @@ async function main(): Promise<void> {
             .use(router)
             .use(vuetify)
             .mount('#app')
-    } catch (ex: any) {
+    }
+    catch (ex: any) {
         console.error("Could not create client app.", ex);
 
         // show error page

@@ -1,23 +1,16 @@
 <template>
 
   <!-- Page header -->
-  <v-app-bar color="secondary" density="compact" elevation="3">
+  <AppBar :page-title="$t('SETTINGS')"/>
 
-    <!-- Close button -->
-    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
-
-    <!-- Page title -->
-    <v-app-bar-title class="text-body-1 text-white">{{$t('SETTINGS')}}</v-app-bar-title>
-
-  </v-app-bar>
-
-  <v-sheet>
+  <v-sheet class="pa-4"
+           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
 
     <!-- Disconnecting alert -->
     <v-alert class="mb-3" type="warning" :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
     <!-- Exclude local network option -->
-    <v-card>
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
       <v-card-item>
         <v-checkbox
             v-model="excludeLocalNetwork"
@@ -35,27 +28,30 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import AppBar from "@/components/AppBar.vue";
+import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   name: "SettingsPage",
+  components: {AppBar},
+  data() {
+    return {
+      AppName
+    }
+  },
   computed: {
-    excludeLocalNetwork:
-        {
-          get() {
-            return this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork;
-          },
-          async set(value: boolean) {
-            if (this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork !== value) {
-              this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork = value;
-              await this.$vpnHoodApp.saveUserSetting();
-              this.$vpnHoodApp.disconnect();
-            }
-          }
-        },
+    excludeLocalNetwork: {
+      get() {
+        return this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork;
+      },
+      async set(value: boolean) {
+        if (this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork !== value) {
+          this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork = value;
+          await this.$vpnHoodApp.saveUserSetting();
+          this.$vpnHoodApp.disconnect();
+        }
+      }
+    },
   },
 })
 </script>
-
-<style scoped>
-
-</style>

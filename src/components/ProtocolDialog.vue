@@ -1,8 +1,11 @@
 <template>
 
   <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
-    <v-card>
-      <v-card-title class="bg-secondary">{{ $t("PROTOCOL") }}</v-card-title>
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'white'">
+      <v-card-title
+          :class="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-secondary' : 'bg-secondary'">
+        {{ $t("PROTOCOL") }}
+      </v-card-title>
       <v-card-text>
         <p class="pb-4">{{ $t("PROTOCOL_DESC") }}</p>
 
@@ -33,12 +36,12 @@
 
         </v-radio-group>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" variant="text" @click="$emit('update:modelValue',false)">
-          {{ $t("CLOSE") }}
-        </v-btn>
+        <v-btn color="secondary" variant="text" :text="$t('CLOSE')" @click="$emit('update:modelValue',false)"/>
       </v-card-actions>
+
     </v-card>
   </v-dialog>
 </template>
@@ -46,9 +49,15 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {AppConnectionState} from "@/services/VpnHood.Client.Api";
+import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   name: 'ProtocolDialog',
+  data() {
+    return {
+      AppName
+    }
+  },
   props: {
     modelValue: Boolean,
   },
@@ -56,23 +65,22 @@ export default defineComponent({
     "update:modelValue",
   ],
   computed: {
-    useUdpChannel:
-        {
-          get() {
-            if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected &&
+    useUdpChannel: {
+      get() {
+        if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected &&
             this.$vpnHoodApp.data.state.isUdpChannelSupported === false)
-              return false;
+          return false;
 
-            return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel;
-          },
-          async set(value: boolean) {
-            this.$vpnHoodApp.data.settings.userSettings.useUdpChannel = value;
-            await this.$vpnHoodApp.saveUserSetting();
-          }
-        },
+        return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel;
+      },
+      async set(value: boolean) {
+        this.$vpnHoodApp.data.settings.userSettings.useUdpChannel = value;
+        await this.$vpnHoodApp.saveUserSetting();
+      }
+    },
   },
-  methods:{
-    isUdpUnsupported(): boolean{
+  methods: {
+    isUdpUnsupported(): boolean {
       return this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected &&
           this.$vpnHoodApp.data.state.isUdpChannelSupported === false;
     }

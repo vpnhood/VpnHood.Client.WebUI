@@ -1,23 +1,14 @@
 <template>
 
-  <!-- Page header -->
-  <v-app-bar color="secondary" density="compact" elevation="3">
+  <AppBar :page-title="$t('APP_FILTER')"/>
 
-    <!-- Close button -->
-    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
-
-    <!-- Page title -->
-    <v-app-bar-title class="text-body-1 text-white">{{$t('APP_FILTER')}}</v-app-bar-title>
-
-  </v-app-bar>
-
-  <v-sheet >
+  <v-sheet :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
 
     <!-- Disconnecting alert -->
     <v-alert class="mb-3" type="warning" :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
     <!-- Exclude local network option -->
-    <v-card>
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : ''">
       <v-card-item>
 
         <!-- Which app can use vpn -->
@@ -30,6 +21,7 @@
             class="my-5"
             color="secondary"
             hide-details
+            :list-props="{class: $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-background':'white'}"
         ></v-select>
 
         <!-- Choose apps -->
@@ -47,6 +39,7 @@
             :closable-chips="true"
             :multiple="true"
             hide-details
+            :list-props="{class: $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-background':'white'}"
         >
           <!-- Selected apps -->
           <template v-slot:chip="{props, item}">
@@ -71,20 +64,21 @@
             >
             </v-list-item>
           </template>
-
         </v-autocomplete>
       </v-card-item>
     </v-card>
-
   </v-sheet>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import {DeviceAppInfo, FilterMode} from "@/services/VpnHood.Client.Api";
+import AppBar from "@/components/AppBar.vue";
+import {AppName} from "@/UiConstants";
 
 export default defineComponent({
   name: 'AppsFilter',
+  components: {AppBar},
   props: {
     modelValue: Boolean,
   },
@@ -95,7 +89,8 @@ export default defineComponent({
     return {
       isUpdating: true,
       installedApps: [] as DeviceAppInfo[],
-      FilterMode
+      FilterMode,
+      AppName
     }
   },
   async created() {
@@ -106,29 +101,27 @@ export default defineComponent({
     }
   },
   computed: {
-    appFiltersMode:
-        {
-          get() {
-            return this.$vpnHoodApp.data.settings.userSettings.appFiltersMode;
-          },
-          async set(value: FilterMode) {
-            this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = value;
-            await this.$vpnHoodApp.saveUserSetting();
-            await this.$vpnHoodApp.disconnect();
-          }
-        },
+    appFiltersMode: {
+      get() {
+        return this.$vpnHoodApp.data.settings.userSettings.appFiltersMode;
+      },
+      async set(value: FilterMode) {
+        this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = value;
+        await this.$vpnHoodApp.saveUserSetting();
+        await this.$vpnHoodApp.disconnect();
+      }
+    },
 
-    appFilters:
-        {
-          get() {
-            return this.$vpnHoodApp.data.settings.userSettings.appFilters;
-          },
-          async set(value: string[] | null) {
-            this.$vpnHoodApp.data.settings.userSettings.appFilters = value;
-            await this.$vpnHoodApp.saveUserSetting();
-            await this.$vpnHoodApp.disconnect();
-          }
-        },
+    appFilters: {
+      get() {
+        return this.$vpnHoodApp.data.settings.userSettings.appFilters;
+      },
+      async set(value: string[] | null) {
+        this.$vpnHoodApp.data.settings.userSettings.appFilters = value;
+        await this.$vpnHoodApp.saveUserSetting();
+        await this.$vpnHoodApp.disconnect();
+      }
+    },
   },
   methods: {
     async getInstalledApp(): Promise<DeviceAppInfo[]> {
