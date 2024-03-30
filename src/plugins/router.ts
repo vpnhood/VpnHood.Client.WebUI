@@ -21,11 +21,6 @@ const routes = [
         path: '/servers',
         name: 'Servers',
         component: () => import(/* webpackChunkName: "Servers" */ '@/pages/Servers.vue'),
-    },
-    {
-        path: '/languages',
-        name: 'Languages',
-        component: () => import(/* webpackChunkName: "Languages" */ '@/pages/Languages.vue'),
     }
 ];
 

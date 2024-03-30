@@ -1,25 +1,22 @@
 <template>
 
   <!-- Page header -->
-  <v-app-bar color="secondary" density="compact" elevation="3">
-
-    <!-- Close button -->
-    <v-app-bar-nav-icon icon="mdi-close" color="white" @click="$router.replace('/')" />
-
-    <!-- Page title -->
-    <v-app-bar-title :text="$t('SERVERS')" class="text-body-1 text-white"/>
-
-    <!-- Add server button -->
-    <template v-slot:append v-if="$vpnHoodApp.data.features.isAddServerSupported">
-      <v-btn rounded variant="tonal" @click="ComponentRouteController.showComponent($componentName.AddServerDialog)">
-        <v-icon size="25" class="mr-1">mdi-plus-circle</v-icon>
-        {{ $t("ADD_SERVER") }}
-      </v-btn>
-    </template>
-
-  </v-app-bar>
+  <AppBar :page-title="$t('SERVERS')"/>
 
   <v-sheet class="pa-4">
+
+    <!-- Add server button -->
+    <v-btn
+        v-if="$vpnHoodApp.data.features.isAddServerSupported"
+        block
+        variant="outlined"
+        border="dashed"
+        color="purple"
+        class="mb-5 py-5"
+        prepend-icon="mdi-plus-circle"
+        :text="$t('ADD_SERVER')"
+        @click="ComponentRouteController.showComponent($componentName.AddServerDialog)"
+    />
 
     <!-- Show alert, if user does not have any server -->
     <v-alert
@@ -31,14 +28,17 @@
     />
 
 
+
     <!-- Servers list -->
     <v-list v-else bg-color="transparent">
+
       <!-- Server item -->
       <v-list-item
           v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
           :key="index"
           rounded="lg"
           lines="two"
+          density="compact"
           variant="elevated"
           @click="connect(item.clientProfileId)"
           class="mb-3"
@@ -179,10 +179,11 @@ import AddServerDialog from "@/components/AddServerDialog.vue";
 import {ClientProfileInfo, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName} from "@/UiConstants";
+import AppBar from "@/components/AppBar.vue";
 
 export default defineComponent({
   name: 'ServersPage',
-  components: {AddServerDialog},
+  components: {AppBar, AddServerDialog},
   props: {
     modelValue: Boolean,
   },

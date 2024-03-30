@@ -113,10 +113,11 @@
                     <span>{{ plan.planPrice }}</span>
                     <span>{{ $t("PER_MONTH") }}</span>
                   </div>
+                  <!--suppress NestedConditionalExpressionJS -->
                   <v-icon
                       :icon="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
-                      : 'mdi-chevron-right'"
+                      : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
 
                       :color="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
                       ? 'secondary-lighten-1'
@@ -167,23 +168,23 @@
 
   <!-- Notice dialog on purchase subscription -->
   <v-dialog v-model="showPlanNoticeDialog" :persistent="true" max-width="600">
-    <v-card rounded="lg" color="white">
-      <v-card-title class="text-white bg-secondary">
+    <v-card color="primary-darken-2">
+      <v-card-title class="text-secondary">
         <span v-if="planNoticeType === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS")}}</span>
         <span v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t("HIDDEN_SERVER")}}</span>
         <span v-if="planNoticeType === SubscriptionPlansId.BundleServers">{{$t("BUNDLE_SERVERS")}}</span>
         <span class="ms-1">{{$t("SUBSCRIPTION")}}</span>
       </v-card-title>
-      <v-divider/>
+
       <v-card-text>
         <p v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t('HIDDEN_SERVER_NOTICE')}}</p>
         <p v-if="planNoticeType === SubscriptionPlansId.GlobalServer">{{$t('GLOBAL_SERVERS_NOTICE')}}</p>
         <p v-if="planNoticeType === SubscriptionPlansId.BundleServers">{{$t('BUNDLE_SERVERS_NOTICE')}}</p>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer/>
         <v-btn
-            rounded="pill"
             variant="text"
             color="secondary"
             :text="$t('CLOSE')"
@@ -191,10 +192,9 @@
         />
         <v-btn
             v-if="showContinueInNotice"
-            rounded="pill"
-            variant="flat"
+            variant="tonal"
             color="secondary"
-            class="px-8"
+            class="px-6"
             :text="$t('BUY')"
             @click="googlePlayPurchaseProduct()"
         />

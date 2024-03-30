@@ -40,9 +40,6 @@
           The VpnHood Team
         </p>
 
-        <p class="text-gray-lighten-2 text-caption font-italic">
-          This message aims to inform users about the migration, introduce the concept of ads as a necessity for a free service, and guide them through the transition process, all while maintaining a positive tone about the changes.
-        </p>
       </v-card-text>
 
       <v-card-actions class="bg-background py-3">

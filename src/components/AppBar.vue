@@ -6,8 +6,8 @@
       density="compact"
   >
 
-    <!-- Close button -->
-    <v-app-bar-nav-icon icon="mdi-chevron-left" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
+    <!-- Back button -->
+    <v-app-bar-nav-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-right' : 'mdi-chevron-left'" color="white" @click="$router.replace('/')"></v-app-bar-nav-icon>
 
     <!-- Page title -->
     <v-app-bar-title class="text-body-1 text-white">{{pageTitle}}</v-app-bar-title>

@@ -12,7 +12,8 @@
         <!-- UDP not supported alert -->
         <v-alert
             v-if="isUdpUnsupported()"
-            class="mb-3"
+            class="mb-3 text-caption"
+            :icon="false"
             type="warning"
             :text="$t('UDP_NOT_SUPPORTED_MESSAGE')"
         />

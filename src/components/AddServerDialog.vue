@@ -22,6 +22,7 @@
             append-inner-icon="mdi-key"
             spellcheck="false"
             autocomplete="off"
+            dir="ltr"
             :autofocus="true"
             density="compact"
             color="secondary"

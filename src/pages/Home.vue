@@ -23,15 +23,15 @@
           <!-- Speed -->
           <v-row id="speedSection" align-content="center" justify="center"
                  :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
-            <v-col cols="auto">
+            <v-col cols="auto d-inline-flex">
               <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
               <span class="text-white opacity-50 text-caption">Mbps</span>
             </v-col>
-            <v-col cols="auto">
+            <v-col cols="auto d-inline-flex">
               <span class="text-ui-tertiary text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
               <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
-              <span class="text-white opacity-50 text-caption">Mbps</span>
+              <span class="text-white opacity-50 text-caption order-last">Mbps</span>
             </v-col>
           </v-row>
 
@@ -43,7 +43,7 @@
             <div class="d-flex flex-column align-center justify-center">
 
               <!-- Connection state text -->
-              <span class="text-body-1">{{
+              <span class="text-body-2">{{
                   $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
                 }}
               </span>
@@ -125,7 +125,7 @@
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
             <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
             <span class="text-capitalize text-caption text-white opacity-50">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
               }}</span>
@@ -147,7 +147,7 @@
               to="/apps-filter"
           >
             <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
 
@@ -161,7 +161,7 @@
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
             <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
           </v-btn>
 
@@ -172,15 +172,15 @@
               variant="text"
               size="small"
               prepend-icon="mdi-dns"
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item']"
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
               @click="showServers()"
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
             <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() ?? $t("NO_SERVER_SELECTED") }}</span>
 
             <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
-              <v-icon class="button-premium-icon">mdi-crown</v-icon>
+              <v-icon class="button-premium-icon" icon="mdi-crown" />
             </template>
           </v-btn>
 
@@ -423,5 +423,9 @@ export default defineComponent({
 .button-premium-icon{
   position: absolute;
   right: 10px;
+}
+.v-locale--is-rtl .button-premium-icon{
+  right: unset;
+  left: 10px;
 }
 </style>

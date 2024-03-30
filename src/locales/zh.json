@@ -1,11 +1,13 @@
 {
   "LANGUAGE": "语言",
+  "auto": "自动（系统）",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "设置",
   "ADD": "添加",
   "help": "帮助",
   "VERSION": "版本",
+  "ABBREVIATION_VERSION": "版本",
   "CONNECT": "连接",
   "INITIALIZING": "初始化中...",
   "CONNECTING": "正在连接...",
@@ -68,6 +70,7 @@
   "SELECTED_APPS": "选定的应用程序",
   "NEW_SERVER_ADDED": "已添加新服务器。",
   "changelog": "有什么新特性？",
+  "LOCAL_NETWORK": "本地网络",
   "EXCLUDE_LOCAL_NETWORK": "排除本地网络（LAN）",
   "EXCLUDE_LOCAL_NETWORK_DESC": "不要将我的本地网络数据包发送到VPN服务器。我需要访问我本地网络上的其他计算机和设备。",
   "PRIVACY_POLICY": "隐私政策",
@@ -143,5 +146,6 @@
   "CONFIRM_SIGN_OUT_TITLE": "确认登出",
   "CONFIRM_SIGN_OUT_DESC": "您确定要登出您的帐户吗？",
   "SUPPORT_ID": "支持ID",
-  "COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE": "找不到公共服务器配置文件。"
+  "COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE": "找不到公共服务器配置文件。",
+  "WARNING": "警告"
 }

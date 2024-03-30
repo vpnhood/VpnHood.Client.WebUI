@@ -6,13 +6,13 @@
 
     <!-- App name -->
     <v-spacer></v-spacer>
-      <h3>
+      <h3 dir="ltr">
         {{ $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME')}}
       </h3>
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
-    <span class="text-disabled text-caption me-3">v{{ $vpnHoodApp.getAppVersion(false) }}</span>
+    <span class="text-disabled text-caption me-3">{{$t("ABBREVIATION_VERSION")}}{{ $vpnHoodApp.getAppVersion(false) }}</span>
 
   </v-app-bar>
 </template>

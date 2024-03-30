@@ -10,6 +10,7 @@
   "ADD": "Add",
   "help": "Help",
   "VERSION": "Version",
+  "ABBREVIATION_VERSION": "v",
   "CONNECT": "Connect",
   "INITIALIZING": "Initializing...", 
   "CONNECTING": "Connecting...",
@@ -72,6 +73,7 @@
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
   "changelog": "What's New?",
+  "LOCAL_NETWORK": "Local network",
   "EXCLUDE_LOCAL_NETWORK": "Exclude Local Network (LAN)",
   "EXCLUDE_LOCAL_NETWORK_DESC": "Do not send my local network packets to VPN servers. I need to access the other computers and devices on my local network.",
   "PRIVACY_POLICY": "Privacy Policy",
@@ -108,7 +110,7 @@
   "OF": "of",
   "ENTER_NEW_NAME_FOR": "Enter new name for ",
   "ERROR": "Error",
-  "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately after changing the options to apply the changes",
+  "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately to apply the changes",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",
@@ -147,5 +149,6 @@
   "CONFIRM_SIGN_OUT_TITLE": "Confirm sign out",
   "CONFIRM_SIGN_OUT_DESC": "Are you sure to sign out of your account?",
   "SUPPORT_ID": "Support ID",
-  "COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE": "Could not found public server profile."
+  "COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE": "Could not found public server profile.",
+  "WARNING": "Warning"
 }

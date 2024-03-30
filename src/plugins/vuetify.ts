@@ -10,6 +10,7 @@ export default createVuetify({
         messages: { en, fa },
         rtl: {
             fa: true,
+            isRtl: true,
         },
     },
         defaults: {

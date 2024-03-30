@@ -2,12 +2,14 @@
   <v-navigation-drawer
       @update:modelValue="$emit('update:modelValue', $event)"
       :modelValue="modelValue"
-      location="left"
+      :location="$vuetify.locale.isRtl? 'right' : 'left'"
+      :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
       :temporary="true"
       :disable-route-watcher="true"
       :floating="true">
+
     <!-- Header -->
-    <div class="d-flex align-center bg-primary-darken-1 pa-4">
+    <div :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
 
       <!-- VpnHoodConnect logo -->
       <v-img v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" :eager="true"
@@ -30,8 +32,10 @@
       <div class="text-white ms-3">
 
         <!-- App name -->
-        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect">{{$t('VPN_HOOD_CONNECT_APP_NAME')}}</h4>
-        <h3 v-else>{{$t('VPN_HOOD_APP_NAME')}}</h3>
+        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">
+          {{ $t('VPN_HOOD_CONNECT_APP_NAME') }}
+        </h4>
+        <h3 v-else dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">{{ $t('VPN_HOOD_APP_NAME') }}</h3>
 
         <!-- App full version -->
         <div class="text-secondary-lighten-1 text-caption">
@@ -45,67 +49,79 @@
     <!-- Menu items -->
     <v-list dense class="pt-0">
 
-      <!-- Sign in button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount" class="border-b" @click="onSignIn">
+      <!-- Go premium or Change subscription -->
+      <v-list-item
+          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
+          class="bg-secondary"
+          @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
+      >
         <v-list-item-title>
-          <v-icon>mdi-account</v-icon>
-          <span class="ms-3">{{$t('SIGN_IN_WITH_GOOGLE')}}</span>
+          <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'" />
+          <span class="ms-3">
+            {{ $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE') }}
+          </span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Sign in button -->
+      <v-list-item
+          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount"
+          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          @click="onSignIn"
+      >
+        <v-list-item-title>
+          <v-icon icon="mdi-account" />
+          <span class="ms-3">{{ $t('SIGN_IN_WITH_GOOGLE') }}</span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Sign out button -->
-      <v-list-item v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount" class="border-b" @click="showConfirmDelete = true">
+      <v-list-item
+          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
+          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          @click="showConfirmSignOut = true"
+      >
         <v-list-item-title class="d-flex align-center">
-          <v-icon>mdi-logout</v-icon>
+          <v-icon icon="mdi-logout" />
           <div class="d-inline-flex flex-column ms-3">
-            <span>{{$t('SIGN_OUT')}}</span>
-            <span class="text-caption opacity-50">{{$vpnHoodApp.data.userState.userAccount.email}}</span>
+            <span>{{ $t('SIGN_OUT') }}</span>
+            <span class="text-caption opacity-50">{{ $vpnHoodApp.data.userState.userAccount.email }}</span>
           </div>
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Change subscription -->
+      <!-- Settings -->
       <v-list-item
-          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
-          class="border-b"
-          @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
+          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          @click="$router.replace({path: '/settings'})"
       >
         <v-list-item-title>
-          <v-icon>{{$vpnHoodApp.data.userState.userAccount.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'}}</v-icon>
-          <span class="ms-3">{{$vpnHoodApp.data.userState.userAccount.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE')}}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Settings -->
-      <v-list-item class="border-b" @click="$router.replace({path: '/settings'})">
-        <v-list-item-title>
-          <v-icon>mdi-cog</v-icon>
-          <span class="ms-3">{{$t('SETTINGS')}}</span>
+          <v-icon icon="mdi-cog" />
+          <span class="ms-3">{{ $t('SETTINGS') }}</span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Diagnose -->
-      <v-list-item class="border-b" :disabled="!$vpnHoodApp.canDiagnose()" @click="diagnose">
+      <v-list-item
+          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          :disabled="!$vpnHoodApp.canDiagnose()"
+          @click="diagnose"
+      >
         <v-list-item-title>
-          <v-icon>mdi-stethoscope</v-icon>
-          <span class="ms-3">{{$t('DIAGNOSE')}}</span>
+          <v-icon icon="mdi-stethoscope" />
+          <span class="ms-3">{{ $t('DIAGNOSE') }}</span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Check for update -->
-      <v-list-item class="border-b" @click="checkForUpdate">
+      <v-list-item
+          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          @click="checkForUpdate"
+      >
         <v-list-item-title>
           <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary"/>
-          <v-icon v-else>mdi-update</v-icon>
-          <span class="ms-3">{{$t('CHECK_FOR_UPDATE')}}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Settings -->
-      <v-list-item class="border-b" @click="$router.replace({path: '/languages'})">
-        <v-list-item-title>
-          <v-icon>mdi-translate</v-icon>
-          <span class="ms-3">{{$t('LANGUAGE')}}</span>
+          <v-icon v-else icon="mdi-update" />
+          <span class="ms-3">{{ $t('CHECK_FOR_UPDATE') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -119,8 +135,8 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon>mdi-bullhorn</v-icon>
-          <span class="ms-3 text-caption">{{$t('WHATS_NEW')}}</span>
+          <v-icon icon="mdi-bullhorn" />
+          <span class="ms-3 text-caption">{{ $t('WHATS_NEW') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -134,8 +150,8 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon>mdi-message-alert</v-icon>
-          <span class="ms-3 text-caption">{{$t('SEND_FEEDBACK')}}</span>
+          <v-icon icon="mdi-message-alert" />
+          <span class="ms-3 text-caption">{{ $t('SEND_FEEDBACK') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -150,8 +166,8 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon>mdi-server</v-icon>
-          <span class="ms-3 text-caption">{{$t('CREATE_PERSONAL_SERVER')}}</span>
+          <v-icon icon="mdi-server" />
+          <span class="ms-3 text-caption">{{ $t('CREATE_PERSONAL_SERVER') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -159,16 +175,13 @@
 
   </v-navigation-drawer>
 
-  <!-- Confirm delete server dialog -->
-  <v-dialog v-model="showConfirmDelete" max-width="600" :persistent="true">
+  <!-- Confirm sign-out dialog -->
+  <v-dialog v-model="showConfirmSignOut" max-width="600" :persistent="true">
 
-    <v-card rounded="lg" color="white">
+    <v-card color="primary-darken-2">
 
-      <v-card-title class="text-white bg-secondary">{{ $t('CONFIRM_SIGN_OUT_TITLE') }}</v-card-title>
-
-      <v-card-text>
-        {{ $t("CONFIRM_SIGN_OUT_DESC") }}
-      </v-card-text>
+      <v-card-title class="text-secondary">{{ $t('CONFIRM_SIGN_OUT_TITLE') }}</v-card-title>
+      <v-card-text>{{ $t("CONFIRM_SIGN_OUT_DESC") }}</v-card-text>
 
       <!-- Dialog buttons -->
       <v-card-actions>
@@ -176,7 +189,6 @@
 
         <!-- Confirm button -->
         <v-btn
-            rounded="pill"
             variant="text"
             color="secondary"
             :text="$t('YES')"
@@ -185,11 +197,10 @@
 
         <!-- Cancel button -->
         <v-btn
-            rounded="pill"
-            variant="flat"
+            variant="tonal"
             color="secondary"
             :text="$t('NO')"
-            @click="showConfirmDelete = false"
+            @click="showConfirmSignOut = false"
         />
 
       </v-card-actions>
@@ -203,13 +214,13 @@ import {AppName, ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 
 export default defineComponent({
-  data(){
-    return{
+  data() {
+    return {
       AppName,
       ComponentName,
       ComponentRouteController,
       isCheckForUpdate: false,
-      showConfirmDelete: false,
+      showConfirmSignOut: false,
     }
   },
   props: {
@@ -236,33 +247,30 @@ export default defineComponent({
       }
     },
 
-    async checkForUpdate(){
+    async checkForUpdate() {
       try {
         this.isCheckForUpdate = true;
         await this.$vpnHoodApp.checkForUpdate();
-      }
-      catch (err: any){
+      } catch (err: any) {
         throw new Error(err);
-      }
-      finally {
+      } finally {
         this.isCheckForUpdate = false;
         this.$emit('update:modelValue', false);
       }
     },
 
-    async onSignIn(){
+    async onSignIn() {
       try {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
         await this.$vpnHoodApp.signIn();
         this.$emit('update:modelValue', false);
-      }
-      finally {
+      } finally {
         this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
       }
     },
 
-    onSignOut(){
-      this.showConfirmDelete = false;
+    onSignOut() {
+      this.showConfirmSignOut = false;
       this.$vpnHoodApp.signOut();
       this.$emit('update:modelValue', false);
     }
