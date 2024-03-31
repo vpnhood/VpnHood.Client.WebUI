@@ -118,7 +118,7 @@
           <!-- Exclude country button -->
           <v-btn
               depressed
-              :block="true"
+              block
               variant="outlined"
               size="small"
               prepend-icon="mdi-earth"
@@ -139,7 +139,7 @@
           <v-btn
               v-if="$vpnHoodApp.data.features.isExcludeAppsSupported || $vpnHoodApp.data.features.isIncludeAppsSupported"
               depressed
-              :block="true"
+              block
               variant="text"
               size="small"
               prepend-icon="mdi-apps"
@@ -154,7 +154,7 @@
           <!-- Protocol button -->
           <v-btn
               depressed
-              :block="true"
+              block
               variant="text"
               size="small"
               prepend-icon="mdi-transit-connection-variant"
@@ -168,7 +168,7 @@
           <!-- Servers button -->
           <v-btn
               depressed
-              :block="true"
+              block
               variant="text"
               size="small"
               prepend-icon="mdi-dns"
@@ -416,6 +416,8 @@ export default defineComponent({
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+/*noinspection CssUnusedSymbol*/
 .config-item.active-subscription{
   /*noinspection CssUnresolvedCustomProperty*/
   border-color: rgba(var(--v-theme-tertiary), 1);

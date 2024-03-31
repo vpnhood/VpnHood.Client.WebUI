@@ -18,6 +18,14 @@ export enum ComponentName {
     ServersDialogForVpnHoodConnect = "ServersDialogForVpnHoodConnect",
     PublicServerHintDialog = "PublicServerHintDialog"
 }
+
+export enum LanguagesCode {
+    SystemDefault = "SYSTEM_DEFAULT",
+    English = "en",
+    Persian = "fa",
+    Chinese = "zh",
+}
+
 export enum SubscriptionPlansId {
     HiddenServer = "hidden-server",
     GlobalServer = "global-servers",

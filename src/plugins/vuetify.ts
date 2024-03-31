@@ -23,7 +23,7 @@ export default createVuetify({
             defaultTheme: 'VpnHood',
             themes: {
                 VpnHood: {
-                    dark: true,
+                    dark: false,
                     colors: {
                         'ui-tertiary': '#16a3fe',
                         background: '#122272',
@@ -46,7 +46,6 @@ export default createVuetify({
                         'gray-lighten-1': '#888888ff',
                         'gray-lighten-2': '#929292',
                         'gray-lighten-3': '#eaeaea',
-                        disabled: '#929292',
                         error: '#ff5252',
                         info: '#2196F3',
                         success: '#4caf50',

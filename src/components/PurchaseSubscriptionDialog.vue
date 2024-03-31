@@ -169,11 +169,11 @@
   <!-- Notice dialog on purchase subscription -->
   <v-dialog v-model="showPlanNoticeDialog" :persistent="true" max-width="600">
     <v-card color="primary-darken-2">
-      <v-card-title class="text-secondary">
+      <v-card-title class="text-secondary d-flex">
+        <span :class="[$vuetify.locale.isRtl? 'me-1' : 'order-1 ms-1']">{{$t("SUBSCRIPTION")}}</span>
         <span v-if="planNoticeType === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS")}}</span>
         <span v-if="planNoticeType === SubscriptionPlansId.HiddenServer">{{$t("HIDDEN_SERVER")}}</span>
         <span v-if="planNoticeType === SubscriptionPlansId.BundleServers">{{$t("BUNDLE_SERVERS")}}</span>
-        <span class="ms-1">{{$t("SUBSCRIPTION")}}</span>
       </v-card-title>
 
       <v-card-text>
@@ -188,10 +188,9 @@
             variant="text"
             color="secondary"
             :text="$t('CLOSE')"
-            @click="closePlanNoticeDialog"
+            @click="showPlanNoticeDialog = false"
         />
         <v-btn
-            v-if="showContinueInNotice"
             variant="tonal"
             color="secondary"
             class="px-6"
@@ -225,7 +224,6 @@ export default defineComponent({
       showPendingProcessDialog: false,
       showPurchaseCompleteDialog: false,
       showPlanNoticeDialog: false,
-      showContinueInNotice: false,
       planNoticeType: "",
     }
   },
@@ -280,23 +278,17 @@ export default defineComponent({
       }
     },
 
-    closePlanNoticeDialog(): void{
-      this.showContinueInNotice = false;
-      this.showPlanNoticeDialog = false;
-    },
-
     onContinuePurchase(planId: string): void{
       if (this.$vpnHoodApp.data.userState.userAccount?.providerPlanId === planId)
         return;
 
       this.selectedPlanId = planId;
       this.planNoticeType = planId;
-      this.showContinueInNotice = true;
       this.showPlanNoticeDialog = true;
     },
 
     async googlePlayPurchaseProduct(): Promise<void>{
-      this.closePlanNoticeDialog();
+      this.showPlanNoticeDialog = false;
       try {
         const billingClient = ClientApiFactory.instance.createBillingClient();
         const orderId = await billingClient.purchase(this.selectedPlanId);
@@ -305,7 +297,7 @@ export default defineComponent({
       }
       catch (err: any){
         if(err.message === "A task was canceled.")
-          console.error(err);
+          console.log(err);
       }
       finally {
         this.showPendingProcessDialog = false;

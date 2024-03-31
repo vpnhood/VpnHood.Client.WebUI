@@ -13,7 +13,7 @@
 .secondary-btn.v-btn--disabled.solid{
     color: rgba(255, 255, 255, 0.7);
 }
-/** --------------------Home Circle Section-------------------- **/
+/*** --------------------Home Circle Section-------------------- ***/
 #connectionCircleIndicator{
     position: relative;
     width: 150px;
@@ -145,4 +145,4 @@
         border-color: white;
     }
 }
-/** --------------------End of Home Circle Section-------------------- **/
+/*** --------------------End of Home Circle Section-------------------- ***/

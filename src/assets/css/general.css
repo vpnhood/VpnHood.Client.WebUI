@@ -1,4 +1,4 @@
-/** * ---------------------- Import font ------------------------ * **/
+/*** ---------------------- Import font ------------------------ ***/
 @font-face {
     font-family: 'Roboto-Regular';
     src: url('../fonts/Roboto-Regular.ttf') format('truetype');
@@ -8,7 +8,7 @@
     src: url('../fonts/Roboto-Bold.ttf') format('truetype');
 }
 
-/** -------------------- Default Style ------------------- **/
+/*** -------------------- Default Style ------------------- ***/
 html {overflow-y: auto;}
 .v-application:not(.v-locale--is-rtl){font-family: "Roboto-Regular", "IranSans-Regular", sans-serif !important; font-size: 15px;}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", "IranSans-Bold", sans-serif !important;}
@@ -21,3 +21,4 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 .opacity-80 {opacity: 0.8; transition: opacity 1.4s ease;}
 .opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
 .list-unstyled{list-style: none;}
+.text-transform-none{text-transform: none;}

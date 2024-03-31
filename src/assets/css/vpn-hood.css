@@ -13,7 +13,7 @@
 .secondary-btn.v-btn--disabled:not(.solid){
     color: rgba(255, 255, 255, 0.7);
 }
-/** --------------------Home Circle Section-------------------- **/
+/*** --------------------Home Circle Section-------------------- ***/
 #circleOuter {
     width: 180px;
     height: 180px;
@@ -80,4 +80,4 @@
     -10px 0 30px green,
     10px 0 30px green;
 }
-/** --------------------End of Home Circle Section-------------------- **/
+/*** --------------------End of Home Circle Section-------------------- ***/

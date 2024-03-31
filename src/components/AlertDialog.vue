@@ -21,7 +21,7 @@
             v-if="!$vpnHoodApp.data.state.logExists && $vpnHoodApp.data.state.hasProblemDetected"
             rounded="pill"
             variant="flat"
-            :block="true"
+            block
             class="text-center mb-4 text-secondary"
             :text="$t('DIAGNOSE')"
             @click="diagnose"
@@ -32,7 +32,7 @@
             v-if="$vpnHoodApp.data.state.logExists"
             rounded="pill"
             variant="flat"
-            :block="true"
+            block
             prepend-icon="mdi-open-in-new"
             class="text-center mb-4 text-secondary"
             :href="$vpnHoodApp.data.serverUrl + logFileLocation"
@@ -45,7 +45,7 @@
             v-if="$vpnHoodApp.data.state.logExists"
             rounded="pill"
             variant="flat"
-            :block="true"
+            block
             prepend-icon="mdi-send-outline"
             class="text-center mb-4 text-secondary"
             target="_blank"
@@ -57,7 +57,7 @@
         <v-btn
             rounded="pill"
             variant="flat"
-            :block="true"
+            block
             class="text-center text-secondary"
             :text="$t('CLOSE')"
             @click="$emit('update:modelValue',false)"

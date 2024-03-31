@@ -1,4 +1,4 @@
-/** * ---------------------- Import font ------------------------ * **/
+/*** ---------------------- Import font ------------------------ ***/
 @font-face {
     font-family: 'IranSans-Regular';
     src: url('../fonts/IRANSansMobile(FaNum).ttf') format('truetype');
@@ -8,6 +8,13 @@
     src: url('../fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
 }
 
+/*** ---------------------- Override ------------------------ ***/
+.v-locale--is-rtl .v-label {font-size: 0.9rem;}
+.v-locale--is-rtl .v-messages__message {line-height: 20px;}
+.v-locale--is-rtl .v-btn--size-small {--v-btn-size: 0.85rem;}
+.v-locale--is-rtl .text-caption {font-size: 0.80rem !important;}
+
+/*** ---------------------- Custom style ------------------------ ***/
 .v-locale--is-rtl *{
     letter-spacing: 0 !important;
     font-family: "IranSans-Regular", sans-serif !important;
@@ -28,11 +35,4 @@
 .v-locale--is-rtl .h6,
 .v-locale--is-rtl .title{
     font-family: "IranSans-Bold", sans-serif !important;
-}
-
-.v-locale--is-rtl .v-label {
-    font-size: 0.9rem;
-}
-.v-locale--is-rtl .v-messages__message {
-    line-height: 20px;
 }

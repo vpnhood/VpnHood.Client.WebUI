@@ -19,7 +19,7 @@
         :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
         color="primary"
         class="text-capitalize"
-        :block="true"
+        block
         target="_blank"
         :text="$t('UPDATE_FROM_DIRECT_LINK')"
     >
@@ -31,7 +31,7 @@
         :href="$vpnHoodApp.data.state.lastPublishInfo?.googlePlayUrl"
         color="primary"
         class="text-capitalize"
-        :block="true"
+        block
         target="_blank"
         :text="$t('UPDATE_FROM_GOOGLE_PLAY')"
     >
@@ -43,7 +43,7 @@
         class="mt-2 text-lowercase text-caption color-light-blue"
         @click="showAlternativeDownloadLink = true"
         variant="text"
-        :block="true"
+        block
         :text="$t('DO_NOT_HAVE_ACCESS_TO_GOOGLE_PLAY')"
     >
     </v-btn>
@@ -54,7 +54,7 @@
           class="mt-2 text-capitalize"
           :href="$vpnHoodApp.data.state.lastPublishInfo?.installationPageUrl"
           variant="tonal"
-          :block="true"
+          block
           target="_blank"
           :text="$t('UPDATE_FROM_ALTERNATIVE_LINK')"
       >

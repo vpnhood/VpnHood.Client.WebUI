@@ -38,7 +38,7 @@
           :key="index"
           rounded="lg"
           lines="two"
-          density="compact"
+
           variant="elevated"
           @click="connect(item.clientProfileId)"
           class="mb-3"
@@ -53,8 +53,8 @@
         </template>
 
         <!-- Profile name -->
-        <v-list-item-title class="mb-2">
-          <span class="title">{{ item.clientProfileName }} </span>
+        <v-list-item-title>
+          <h4>{{ item.clientProfileName }} </h4>
         </v-list-item-title>
 
         <!-- Support ID and Host name -->

@@ -8,9 +8,11 @@
 
 
     <!-- Exclude local network option -->
-    <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
-            class="pa-4 mb-5">
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4 mb-5">
+
+      <!-- Section title -->
+      <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
+
       <!-- Disconnecting alert -->
       <v-alert class="mb-2 text-caption" type="warning" density="compact" :icon="false"
                :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
@@ -28,15 +30,17 @@
           />
         </v-col>
       </v-row>
-      <p class="text-disabled text-caption mt-1">
+      <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-1']">
         {{ $t('EXCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
 
     <!-- Change language -->
-    <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
-      <v-card-text>
+
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4">
+
+      <!-- Section title -->
+      <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
 
         <v-btn
             variant="tonal"
@@ -45,21 +49,21 @@
             class="justify-space-between px-2"
             @click="$router.push({path: '/languages'})"
         >
-          <span class="text-black">{{$t('APP_LANGUAGE')}}</span>
-          <span class="text-disabled text-caption ms-1">({{ $t($i18n.locale) }})</span>
+          <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']">{{$t('APP_LANGUAGE')}}</span>
           <template v-slot:append>
-            <v-icon color="black" :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+            <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption me-1']">{{ $t($i18n.locale) }}</span>
+            <v-icon :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'" :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
           </template>
         </v-btn>
 
-        <p v-if="$i18n.locale !== 'en'" class="text-disabled text-caption mt-4 mb-1">
+        <p v-if="$i18n.locale !== LanguagesCode.English" :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}</p>
-        <a class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
+        <a v-if="$i18n.locale !== LanguagesCode.English" class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
            target="_blank">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
           <v-icon icon="mdi-open-in-new"/>
         </a>
-      </v-card-text>
+
     </v-card>
 
   </v-sheet>
@@ -68,13 +72,14 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
-import {AppName} from "@/UiConstants";
+import {AppName, LanguagesCode} from "@/UiConstants";
 
 export default defineComponent({
   name: "SettingsPage",
   components: {AppBar},
   data() {
     return {
+      LanguagesCode,
       AppName
     }
   },

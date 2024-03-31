@@ -6,7 +6,7 @@
   <v-sheet class="pa-4" :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
 
     <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
-      <v-list bg-color="transparent">
+      <v-list bg-color="transparent" class="py-0">
         <v-list-item
             v-for="(locale, index) in myLocales"
             :key="index"
@@ -15,8 +15,8 @@
             :class="[
                 $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
                 ? 'border-primary-darken-2 border-opacity-50'
-                : 'border-surface border-opacity-50',
-                locale.length === index - 1 ? '' : 'border-b '
+                : 'border-gray-lighten-3 border-opacity-100',
+                locale.length === index - 1 ? '' : 'border-b'
                 ]"
             active-class="text-secondary"
             :active="locale === defaultLanguage"
@@ -27,6 +27,8 @@
             <v-radio
                 v-model="defaultLanguage"
                 density="compact"
+                true-icon="mdi-check-all"
+                false-icon=""
                 :value="locale"
                 :color="locale === defaultLanguage ? 'secondary' : 'gray'"
                 :class="[locale === defaultLanguage ? '' : 'opacity-30', 'me-3' ]"
@@ -44,14 +46,14 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
-import {AppName} from "@/UiConstants";
+import {AppName, LanguagesCode} from "@/UiConstants";
 
 export default defineComponent({
-  name: "LanguagesPage",
+  name: "AppLanguages",
   components: {AppBar},
   data() {
     return {
-      myLocales: ['auto'],
+      myLocales: [LanguagesCode.SystemDefault as string],
       AppName
     }
   },
@@ -62,11 +64,11 @@ export default defineComponent({
     defaultLanguage: {
       get() {
         return this.$vpnHoodApp.data.settings.userSettings.cultureCode === null
-            ? 'auto'
+            ? LanguagesCode.SystemDefault
             : this.$vpnHoodApp.data.settings.userSettings.cultureCode;
       },
       async set(value: string) {
-        this.$vpnHoodApp.data.settings.userSettings.cultureCode = value === 'auto' ? null : value;
+        this.$vpnHoodApp.data.settings.userSettings.cultureCode = value === LanguagesCode.SystemDefault ? null : value;
         await this.$vpnHoodApp.saveUserSetting();
         this.$router.go(0);
       }
