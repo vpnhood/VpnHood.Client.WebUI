@@ -3,7 +3,7 @@
   <!-- Page header -->
   <AppBar :page-title="$t('SERVERS')"/>
 
-  <v-sheet class="pa-4">
+  <v-sheet color="gray-lighten-3" class="pa-4">
 
     <!-- Add server button -->
     <v-btn
@@ -11,7 +11,7 @@
         block
         variant="outlined"
         border="dashed"
-        color="purple"
+        color="secondary"
         class="mb-5 py-5"
         prepend-icon="mdi-plus-circle"
         :text="$t('ADD_SERVER')"
@@ -30,7 +30,7 @@
 
 
     <!-- Servers list -->
-    <v-list v-else bg-color="transparent">
+    <v-list v-else bg-color="transparent" dir="ltr">
 
       <!-- Server item -->
       <v-list-item

@@ -26,7 +26,7 @@
         <!-- Accept button -->
         <v-btn
             color="tertiary"
-            :block="true"
+            block
             rounded="pill"
             variant="flat"
             :text="$t('ACCEPT')"

@@ -8,14 +8,16 @@
 
 
     <!-- Exclude local network option -->
-    <p class="mb-2">{{$t("LOCAL_NETWORK")}}</p>
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4 mb-5">
+    <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
+            class="pa-4 mb-5">
       <!-- Disconnecting alert -->
-      <v-alert class="mb-2 text-caption" type="warning" density="compact" :icon="false"  :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
+      <v-alert class="mb-2 text-caption" type="warning" density="compact" :icon="false"
+               :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
       <v-row class="align-center justify-space-between">
-        <v-col>{{$t('EXCLUDE_LOCAL_NETWORK')}}</v-col>
-        <v-col cols="auto" >
+        <v-col>{{ $t('EXCLUDE_LOCAL_NETWORK') }}</v-col>
+        <v-col cols="auto">
           <v-switch
               v-model="excludeLocalNetwork"
               color="secondary"
@@ -26,43 +28,38 @@
           />
         </v-col>
       </v-row>
-      <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2' ,'text-caption mt-1']">
-        {{$t('EXCLUDE_LOCAL_NETWORK_DESC')}}
+      <p class="text-disabled text-caption mt-1">
+        {{ $t('EXCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
 
-    <p class="mb-2">{{$t('LANGUAGE')}}</p>
+    <!-- Change language -->
+    <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
     <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
-      <v-list bg-color="transparent">
-        <v-list-item
-            v-for="(locale, index) in myLocales"
-            :key="index"
-            :value="locale"
-            v-model="defaultLanguage"
-            :class="[
-                $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
-                ? 'border-primary-darken-2 border-opacity-50'
-                : 'border-surface border-opacity-50',
-                locale.length === index - 1 ? '' : 'border-b '
-                ]"
-            active-class="text-secondary"
-            :active="locale === defaultLanguage"
-            @click="defaultLanguage = locale"
-        >
-          <!-- َActive item icon -->
-          <template v-slot:prepend>
-            <v-radio
-                v-model="defaultLanguage"
-                density="compact"
-                :value="locale"
-                :color="locale === defaultLanguage ? 'secondary' : 'gray'"
-                :class="[locale === defaultLanguage ? '' : 'opacity-30', 'me-3' ]"
-            />
-          </template>
-          <v-list-item-title>{{ $t(locale) }}</v-list-item-title>
+      <v-card-text>
 
-        </v-list-item>
-      </v-list>
+        <v-btn
+            variant="tonal"
+            block
+            color="gray-lighten-2"
+            class="justify-space-between px-2"
+            @click="$router.push({path: '/languages'})"
+        >
+          <span class="text-black">{{$t('APP_LANGUAGE')}}</span>
+          <span class="text-disabled text-caption ms-1">({{ $t($i18n.locale) }})</span>
+          <template v-slot:append>
+            <v-icon color="black" :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+          </template>
+        </v-btn>
+
+        <p v-if="$i18n.locale !== 'en'" class="text-disabled text-caption mt-4 mb-1">
+          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}</p>
+        <a class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
+           target="_blank">
+          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
+          <v-icon icon="mdi-open-in-new"/>
+        </a>
+      </v-card-text>
     </v-card>
 
   </v-sheet>
@@ -78,12 +75,8 @@ export default defineComponent({
   components: {AppBar},
   data() {
     return {
-      myLocales: ['auto'],
       AppName
     }
-  },
-  created() {
-    this.myLocales.push(...this.$i18n.availableLocales);
   },
   computed: {
     excludeLocalNetwork: {
@@ -96,18 +89,6 @@ export default defineComponent({
           await this.$vpnHoodApp.saveUserSetting();
           this.$vpnHoodApp.disconnect();
         }
-      }
-    },
-    defaultLanguage: {
-      get() {
-        return this.$vpnHoodApp.data.settings.userSettings.cultureCode === null
-            ? 'auto'
-            : this.$vpnHoodApp.data.settings.userSettings.cultureCode;
-      },
-      async set(value: string) {
-        this.$vpnHoodApp.data.settings.userSettings.cultureCode = value === 'auto' ? null : value;
-        await this.$vpnHoodApp.saveUserSetting();
-        window.location.href = '/';
       }
     },
   },

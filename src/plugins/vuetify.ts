@@ -46,6 +46,7 @@ export default createVuetify({
                         'gray-lighten-1': '#888888ff',
                         'gray-lighten-2': '#929292',
                         'gray-lighten-3': '#eaeaea',
+                        disabled: '#929292',
                         error: '#ff5252',
                         info: '#2196F3',
                         success: '#4caf50',
