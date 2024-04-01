@@ -1,13 +1,16 @@
 <template>
-
-  <v-dialog :modelValue="modelValue" @update:modelValue="$emit('update:modelValue',$event)" max-width="600">
+  <v-dialog
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue',$event)"
+      max-width="600"
+  >
     <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'white'">
-      <v-card-title
-          :class="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-secondary' : 'bg-secondary'">
+      <v-card-title :class="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-secondary' : 'bg-secondary'">
         {{ $t("PROTOCOL") }}
       </v-card-title>
+
       <v-card-text>
-        <p class="pb-4">{{ $t("PROTOCOL_DESC") }}</p>
+        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">{{ $t("PROTOCOL_DESC") }}</p>
 
         <!-- UDP not supported alert -->
         <v-alert
@@ -18,19 +21,19 @@
             :text="$t('UDP_NOT_SUPPORTED_MESSAGE')"
         />
 
-        <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()">
+        <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()" class="mx-n3">
 
           <v-radio :value="true" color="secondary">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
-              <span class="text-caption ms-2 text-gray-lighten-2">{{ $t('LESS_LATENCY') }}</span>
+              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">{{ $t('LESS_LATENCY') }}</span>
             </template>
           </v-radio>
 
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_OFF") }}</span>
-              <span class="text-caption ms-2 text-gray-lighten-2">{{ $t('MORE_RELIABLE') }}</span>
+              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">{{ $t('MORE_RELIABLE') }}</span>
               <v-chip class="ms-2" size="small" color="secondary" :text="$t('DEFAULT')"></v-chip>
             </template>
           </v-radio>

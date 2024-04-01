@@ -16,7 +16,7 @@
                 $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
                 ? 'border-primary-darken-2 border-opacity-50'
                 : 'border-gray-lighten-3 border-opacity-100',
-                locale.length === index - 1 ? '' : 'border-b'
+                'border-b'
                 ]"
             active-class="text-secondary"
             :active="locale === defaultLanguage"

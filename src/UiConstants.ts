@@ -20,10 +20,8 @@ export enum ComponentName {
 }
 
 export enum LanguagesCode {
-    SystemDefault = "SYSTEM_DEFAULT",
+    SystemDefault = "sys",
     English = "en",
-    Persian = "fa",
-    Chinese = "zh",
 }
 
 export enum SubscriptionPlansId {

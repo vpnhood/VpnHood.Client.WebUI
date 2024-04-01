@@ -16,4 +16,5 @@ module.exports = defineConfig({
     }
   },
 
-})
+  assetsDir: 'src/assets'
+});

@@ -9,6 +9,7 @@ export default createVuetify({
         fallback: 'en',
         messages: { en, fa },
         rtl: {
+            ar: true,
             fa: true,
             isRtl: true,
         },

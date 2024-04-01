@@ -10,15 +10,22 @@
       </v-card-title>
 
       <v-card-text>
-        <p class="pb-4 color-muted">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
+        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
 
-        <v-radio-group v-model="tunnelClientCountry" hide-details>
+        <v-radio-group v-model="tunnelClientCountry" hide-details class="mx-n3">
 
-          <v-radio :label="$t('TUNNEL_MY_COUNTRY_ON')" :value="true" color="secondary"/>
+          <v-radio :value="true" color="secondary">
+            <template v-slot:label>
+              <span>{{ $t("TUNNEL_MY_COUNTRY_ON") }}</span>
+              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">{{ $t("TUNNEL_MY_COUNTRY_ON_DESC") }}</span>
+            </template>
+          </v-radio>
+
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
               <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
-              <v-chip class="ms-2" color="secondary" :text="$t('RECOMMENDED')"/>
+              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">{{ $t("TUNNEL_MY_COUNTRY_OFF_DESC") }}</span>
+              <v-chip class="ms-2" size="small" color="secondary" :text="$t('RECOMMENDED')"/>
             </template>
           </v-radio>
 

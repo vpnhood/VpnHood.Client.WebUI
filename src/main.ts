@@ -34,6 +34,8 @@ async function main(): Promise<void> {
         i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.state.cultureCode : LanguagesCode.English;
         vuetify.locale.current.value = i18n.global.locale.value;
 
+        window.document.body.classList.add(i18n.global.locale.value);
+
         // Global catch exception
         app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);
 

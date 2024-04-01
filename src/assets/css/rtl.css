@@ -7,6 +7,14 @@
     font-family: 'IranSans-Bold';
     src: url('../fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'Noto-Regular';
+    src: url('../fonts/NotoSansArabic-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Noto-Bold';
+    src: url('../fonts/NotoSansArabic-Bold.ttf') format('truetype');
+}
 
 /*** ---------------------- Override ------------------------ ***/
 .v-locale--is-rtl .v-label {font-size: 0.9rem;}
@@ -17,7 +25,7 @@
 /*** ---------------------- Custom style ------------------------ ***/
 .v-locale--is-rtl *{
     letter-spacing: 0 !important;
-    font-family: "IranSans-Regular", sans-serif !important;
+    font-family: "IranSans-Regular", "Noto-Regular", sans-serif !important;
 }
 .v-locale--is-rtl{font-size: 14px;}
 
@@ -34,5 +42,5 @@
 .v-locale--is-rtl h6,
 .v-locale--is-rtl .h6,
 .v-locale--is-rtl .title{
-    font-family: "IranSans-Bold", sans-serif !important;
+    font-family: "IranSans-Bold", "Noto-Bold", sans-serif !important;
 }
