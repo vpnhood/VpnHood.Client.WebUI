@@ -5,9 +5,9 @@ import {
     AppSettings,
     AppState,
     ClientProfileInfo,
-    ClientProfileUpdateParams,
+    ClientProfileUpdateParams, ConfigParams,
     DeviceAppInfo,
-    SessionSuppressType,
+    SessionSuppressType, UiCultureInfo,
 } from "@/services/VpnHood.Client.Api";
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
@@ -26,12 +26,14 @@ export class VpnHoodAppData {
     public settings: AppSettings;
     public features: AppFeatures;
     public clientProfileInfos: ClientProfileInfo[];
+    public cultureInfos: UiCultureInfo[];
 
-    public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileInfos: ClientProfileInfo[]) {
+    public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileInfos: ClientProfileInfo[], cultureInfos: UiCultureInfo[]) {
         this.state = state;
         this.settings = setting;
         this.features = features;
         this.clientProfileInfos = clientProfileInfos;
+        this.cultureInfos = cultureInfos;
     }
 }
 
@@ -47,8 +49,8 @@ export class VpnHoodApp {
 
     public static async create(): Promise<VpnHoodApp> {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
-        const config = await apiClient.getConfig();
-        return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos));
+        const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
+        return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos));
     }
 
     private async reloadSettings(): Promise<void> {
@@ -129,7 +131,7 @@ export class VpnHoodApp {
 
             if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.testServerTokenId) {
                 await this.deleteClientProfile(defaultClientProfile?.clientProfileId!);
-                throw new Error("The VpnHood public server has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
+                throw new Error("The VpnHood public servers has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
             }
             // If selected server is VpnHood public server
             if (defaultClientProfile?.tokenId === this.data.features.testServerTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {

@@ -6,9 +6,9 @@ import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import './assets/css/general.css'
 import './assets/css/override.css'
-import './assets/css/rtl.css'
 import './assets/css/vpn-hood.css'
 import './assets/css/vpn-hood-connect.css'
+import './assets/css/rtl.css'
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
 import {AppName, ComponentName, LanguagesCode} from "@/UiConstants";
@@ -25,9 +25,6 @@ async function main(): Promise<void> {
 
         // Set app theme
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
-
-        // Set available languages
-        await vpnHoodApp.apiClient.setCultures(i18n.global.availableLocales);
 
         // Set default UI language
         const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.state.cultureCode);
