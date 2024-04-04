@@ -1,3 +1,9 @@
+/*** ------------------- Vuetify override ------------------- ***/
+.v-navigation-drawer__scrim,
+.v-overlay__scrim{
+    background-color: black;
+}
+
 /*noinspection CssUnresolvedCustomProperty*/
 .master-btn.solid {
     background: rgb(var(--v-theme-tertiary)) !important;

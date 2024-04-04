@@ -13,7 +13,7 @@
 }
 @font-face {
     font-family: 'Noto-Bold';
-    src: url('../fonts/NotoSansArabic-Bold.ttf') format('truetype');
+    src: url('../fonts/NotoSansArabic-Medium.ttf') format('truetype');
 }
 
 /*** ---------------------- Override ------------------------ ***/
@@ -49,7 +49,7 @@ body.fa .h6,
 body.fa .title,
 body.fa .v-application [class*="text-h"],
 body.fa .v-card-title{
-    font-family: "IranSans-Bold", "Roboto-Regular", sans-serif !important;
+    font-family: "IranSans-Bold", "Roboto-Bold", sans-serif !important;
 }
 
 /*** ---------------------- Arabic language ------------------------ ***/
@@ -73,5 +73,5 @@ body.ar .h6,
 body.ar .title,
 body.ar .v-application [class*="text-h"],
 body.ar .v-card-title{
-    font-family: "Noto-Bold", "Roboto-Regular", sans-serif !important;
+    font-family: "Noto-Bold", "Roboto-Bold", sans-serif !important;
 }

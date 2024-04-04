@@ -1,6 +1,6 @@
 {
   "SYSTEM_DEFAULT_LANGUAGE": "System default",
-  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device’s language is not supported and will be replaced by English by default.",
+  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "Language",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",

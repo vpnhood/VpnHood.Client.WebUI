@@ -49,16 +49,39 @@
             class="justify-space-between px-2"
             @click="$router.push({path: '/languages'})"
         >
-          <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']">{{$t('APP_LANGUAGE')}}</span>
+
+          <span
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']"
+          >
+            {{$t('APP_LANGUAGE')}}
+          </span>
+
           <template v-slot:append>
-            <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption me-1']">{{ $t($i18n.locale) }}</span>
-            <v-icon :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'" :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+            <!-- Active language name -->
+            <span
+                :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption text-capitalize me-1']"
+            >
+              {{ $vpnHoodApp.data.state.currentUiCultureInfo.nativeName }}
+            </span>
+
+            <!-- Button icon -->
+            <v-icon
+                :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'"
+                :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
+            />
           </template>
+
         </v-btn>
 
+      <!-- Language contribute link -->
       <div v-if="$i18n.locale !== LanguagesCode.English">
+
+        <!-- Description -->
         <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
-          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}</p>
+          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}
+        </p>
+
+        <!-- Link -->
         <a class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
            target="_blank">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
@@ -84,6 +107,9 @@ export default defineComponent({
       LanguagesCode,
       AppName
     }
+  },
+  created() {
+      console.log(this.$vpnHoodApp.data.state.currentUiCultureInfo.nativeName);
   },
   computed: {
     excludeLocalNetwork: {

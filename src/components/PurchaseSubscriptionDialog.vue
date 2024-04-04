@@ -34,102 +34,103 @@
       :fullscreen="true"
   >
       <v-card color="primary-darken-2" :flat="true" class="pa-5 justify-center align-center">
+        <div style="width: 100%;max-width: 600px;">
+          <!-- Close button -->
+          <v-btn icon="mdi-window-close" variant="tonal" color="white" size="small" class="d-block mx-auto mb-4" @click="$emit('update:modelValue',false)"/>
 
-        <!-- Close button -->
-        <v-btn icon="mdi-window-close" variant="tonal" color="white" size="small" class="d-block mx-auto mb-4" @click="$emit('update:modelValue',false)"/>
-
-        <!-- Sign in with google button -->
-        <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl text-center pa-5 mb-3">
-          <p class="text-white border-b border-tertiary border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
-          <v-btn
-              @click="onSignIn"
-              rounded="pill"
-              color="white"
-              :flat="true"
-              class="font-weight-bold text-capitalize my-4"
-          >
-            <v-img
-                src="../assets/images/google-logo.png"
-                alt="login with google"
-                width="30px"
-                class="me-4"
-            />
-            {{ $t("SIGN_IN_WITH_GOOGLE") }}
-          </v-btn>
-        </v-card-item>
-
-        <!-- Products list -->
-        <template v-else-if="subscriptionPlans.length > 0">
-          <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-5 mb-3">
-            <!-- Image -->
-            <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
-
-            <!-- Title -->
-            <h3 id="adTitle" class="title-bold border-b border-tertiary border-opacity-25 text-tertiary text-uppercase text-center pb-2 mb-2">
-              {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
-
-            <!-- Description -->
-            <ul id="adDesc" class="list-unstyled text-white text-body-2">
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_1")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_2")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_3")}}</li>
-              <li><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_4")}}</li>
-            </ul>
+          <!-- Sign in with google button -->
+          <v-card-item v-if="!$vpnHoodApp.data.userState.userAccount" class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl text-center pa-5 mb-3">
+            <p class="text-white border-b border-tertiary border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
+            <v-btn
+                @click="onSignIn"
+                rounded="pill"
+                color="white"
+                :flat="true"
+                class="font-weight-bold text-capitalize my-4"
+            >
+              <v-img
+                  src="../assets/images/google-logo.png"
+                  alt="login with google"
+                  width="30px"
+                  class="me-4"
+              />
+              {{ $t("SIGN_IN_WITH_GOOGLE") }}
+            </v-btn>
           </v-card-item>
 
-          <!-- Plans list -->
-          <v-card-item  class="pa-0 w-100">
-            <v-list v-if="subscriptionPlans" bg-color="transparent">
-              <!-- Plan item -->
-              <v-list-item
-                  v-for="plan in subscriptionPlans"
-                  :key="plan.subscriptionPlanId"
-                  color="white"
-                  rounded="lg"
-                  base-color="primary-darken-2"
-                  variant="flat"
-                  :class="[$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100' : 'border-secondary border-opacity-25', 'mb-2 pe-2 border']"
-                  @click="onContinuePurchase(plan.subscriptionPlanId)"
-              >
+          <!-- Products list -->
+          <template v-else-if="subscriptionPlans.length > 0">
+            <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-5 mb-3 w-100">
+              <!-- Image -->
+              <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
 
-                <!-- Plan title -->
-                <v-list-item-title class="d-flex align-center">
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</h4>
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</h4>
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</h4>
-                </v-list-item-title>
+              <!-- Title -->
+              <h3 class="title-bold border-b border-tertiary border-opacity-25 text-tertiary text-uppercase text-center pb-2 mb-2">
+                {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
 
-                <!-- Already subscribed -->
-                <v-list-item-subtitle
-                    v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId"
-                    class="text-caption text-secondary-lighten-1"
+              <!-- Description -->
+              <ul class="list-unstyled text-white text-body-2">
+                <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_1")}}</li>
+                <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_2")}}</li>
+                <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_3")}}</li>
+                <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_4")}}</li>
+              </ul>
+            </v-card-item>
+
+            <!-- Plans list -->
+            <v-card-item  class="pa-0 w-100">
+              <v-list v-if="subscriptionPlans" bg-color="transparent">
+                <!-- Plan item -->
+                <v-list-item
+                    v-for="plan in subscriptionPlans"
+                    :key="plan.subscriptionPlanId"
+                    color="white"
+                    rounded="lg"
+                    base-color="primary-darken-2"
+                    variant="flat"
+                    :class="[$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100' : 'border-secondary border-opacity-25', 'mb-2 pe-2 border']"
+                    @click="onContinuePurchase(plan.subscriptionPlanId)"
                 >
-                  {{$t('ALREADY_SUBSCRIBED')}}
-                </v-list-item-subtitle>
 
-                <!-- Plan price -->
-                <template v-slot:append>
-                  <div class="text-end text-subtitle-2 text-secondary">
-                    <span>{{ plan.planPrice }}</span>
-                    <span>{{ $t("PER_MONTH") }}</span>
-                  </div>
-                  <!--suppress NestedConditionalExpressionJS -->
-                  <v-icon
-                      :icon="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
+                  <!-- Plan title -->
+                  <v-list-item-title class="d-flex align-center">
+                    <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</h4>
+                    <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</h4>
+                    <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</h4>
+                  </v-list-item-title>
+
+                  <!-- Already subscribed -->
+                  <v-list-item-subtitle
+                      v-if="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId"
+                      class="text-caption text-secondary-lighten-1"
+                  >
+                    {{$t('ALREADY_SUBSCRIBED')}}
+                  </v-list-item-subtitle>
+
+                  <!-- Plan price -->
+                  <template v-slot:append>
+                    <div class="text-end text-subtitle-2 text-secondary">
+                      <span>{{ plan.planPrice }}</span>
+                      <span>{{ $t("PER_MONTH") }}</span>
+                    </div>
+                    <!--suppress NestedConditionalExpressionJS -->
+                    <v-icon
+                        :icon="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
                       : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
 
-                      :color="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
+                        :color="$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId
                       ? 'secondary-lighten-1'
                       : 'tertiary'"
 
-                      class="ms-2"
-                  />
-                </template>
-              </v-list-item>
-            </v-list>
-          </v-card-item>
-        </template>
+                        class="ms-2"
+                    />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card-item>
+          </template>
+        </div>
       </v-card>
   </v-dialog>
 
@@ -318,20 +319,3 @@ export default defineComponent({
   }
 })
 </script>
-
-
-<style scoped>
-#adTitle {font-size: 130%;}
-#adDesc {line-height: 26px;}
-
-/*noinspection ALL*/
-.v-card-item {
-  width: 100%;
-  max-width: 500px;
-}
-</style>
-
-<!--suppress CssUnusedSymbol -->
-<style>
-.v-list-item__overlay{display: none !important;}
-</style>

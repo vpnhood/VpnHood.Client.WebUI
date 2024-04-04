@@ -3,7 +3,8 @@
   <!-- Page header -->
   <AppBar :page-title="$t('LANGUAGE')"/>
 
-  <v-sheet class="pa-4" :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
+  <v-sheet class="pa-4"
+           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
 
     <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
       <v-list bg-color="transparent" class="py-0">
@@ -40,15 +41,22 @@
             {{ locale.nativeName }}
 
             <!-- System default language name -->
-            <span v-if="locale.code === LanguagesCode.SystemDefault" class="text-caption text-gray-lighten-2 ms-1">
-              ({{$vpnHoodApp.data.state.systemCultureNativeName.nativeName}})
+            <span
+                v-if="locale.code === LanguagesCode.SystemDefault"
+                :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption ms-1']"
+            >
+              ({{ $vpnHoodApp.data.state.systemUiCultureInfo.nativeName }})
             </span>
           </v-list-item-title>
 
           <!-- Show message if the system language does not supported -->
-          <v-list-item-subtitle v-if="!myLocales.find(x => x.code === $vpnHoodApp.data.state.systemCultureNativeName.code)">
-            {{$t("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC")}}
-          </v-list-item-subtitle>
+          <p
+              dir="ltr"
+              v-if="locale.code === LanguagesCode.SystemDefault && !myLocales.find(x => x.code === $vpnHoodApp.data.state.systemUiCultureInfo.code)"
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption']"
+          >
+            {{ $t("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC") }}
+          </p>
 
         </v-list-item>
       </v-list>
@@ -70,20 +78,19 @@ export default defineComponent({
   components: {AppBar},
   data() {
     return {
-      myLocales: [{code: LanguagesCode.SystemDefault, nativeName: this.$t("SYSTEM_DEFAULT_LANGUAGE", this.$i18n.locale)}] as UiCultureInfo[],
       AppName,
-      LanguagesCode
+      LanguagesCode,
+      myLocales: [
+        {
+          code: LanguagesCode.SystemDefault,
+          nativeName: this.$t("SYSTEM_DEFAULT_LANGUAGE", this.$i18n.locale)
+        }
+      ] as UiCultureInfo[]
     }
   },
   created() {
     const sortedCultureInfos = this.$vpnHoodApp.data.cultureInfos.sort((a, b) => a.nativeName.localeCompare(b.nativeName));
     this.myLocales.push(...sortedCultureInfos);
-
-    /*const languageDictionary: { [code: string]: string } = {};
-    sortedCultureInfos.forEach((language) => {
-      languageDictionary[language.code] = language.nativeName;
-    });*/
-
   },
   computed: {
     defaultLanguage: {
