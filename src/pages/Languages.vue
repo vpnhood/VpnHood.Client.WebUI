@@ -10,7 +10,7 @@
         <v-list-item
             v-for="(locale, index) in myLocales"
             :key="index"
-            :value="locale"
+            :value="locale.code"
             v-model="defaultLanguage"
             :class="[
                 $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
@@ -19,22 +19,36 @@
                 'border-b'
                 ]"
             active-class="text-secondary"
-            :active="locale === defaultLanguage"
-            @click="defaultLanguage = locale"
+            :active="locale.code === defaultLanguage"
+            @click="defaultLanguage = locale.code"
         >
-          <!-- َActive item icon -->
+          <!-- َActive language icon -->
           <template v-slot:prepend>
             <v-radio
                 v-model="defaultLanguage"
                 density="compact"
                 true-icon="mdi-check-all"
                 false-icon=""
-                :value="locale"
-                :color="locale === defaultLanguage ? 'secondary' : 'gray'"
-                :class="[locale === defaultLanguage ? '' : 'opacity-30', 'me-3' ]"
+                :value="locale.code"
+                :color="locale.code === defaultLanguage ? 'secondary' : 'gray'"
+                :class="[locale.code === defaultLanguage ? '' : 'opacity-30', 'me-3' ]"
             />
           </template>
-          <v-list-item-title>{{ $t(locale) }}</v-list-item-title>
+
+          <!-- Language name -->
+          <v-list-item-title class="text-capitalize">
+            {{ locale.nativeName }}
+
+            <!-- System default language name -->
+            <span v-if="locale.code === LanguagesCode.SystemDefault" class="text-caption text-gray-lighten-2 ms-1">
+              ({{$vpnHoodApp.data.state.systemCultureNativeName.nativeName}})
+            </span>
+          </v-list-item-title>
+
+          <!-- Show message if the system language does not supported -->
+          <v-list-item-subtitle v-if="!myLocales.find(x => x.code === $vpnHoodApp.data.state.systemCultureNativeName.code)">
+            {{$t("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC")}}
+          </v-list-item-subtitle>
 
         </v-list-item>
       </v-list>
@@ -47,18 +61,29 @@
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
 import {AppName, LanguagesCode} from "@/UiConstants";
+import {string} from "postcss-selector-parser";
+import {UiCultureInfo} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
   name: "AppLanguages",
+  methods: {string},
   components: {AppBar},
   data() {
     return {
-      myLocales: [LanguagesCode.SystemDefault as string],
-      AppName
+      myLocales: [{code: LanguagesCode.SystemDefault, nativeName: this.$t("SYSTEM_DEFAULT_LANGUAGE", this.$i18n.locale)}] as UiCultureInfo[],
+      AppName,
+      LanguagesCode
     }
   },
   created() {
-    this.myLocales.push(...this.$i18n.availableLocales);
+    const sortedCultureInfos = this.$vpnHoodApp.data.cultureInfos.sort((a, b) => a.nativeName.localeCompare(b.nativeName));
+    this.myLocales.push(...sortedCultureInfos);
+
+    /*const languageDictionary: { [code: string]: string } = {};
+    sortedCultureInfos.forEach((language) => {
+      languageDictionary[language.code] = language.nativeName;
+    });*/
+
   },
   computed: {
     defaultLanguage: {

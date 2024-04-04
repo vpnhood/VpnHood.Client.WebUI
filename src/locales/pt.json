@@ -1,5 +1,5 @@
 {
-  "sys": "Padrão do sistema",
+  "SYSTEM_DEFAULT_LANGUAGE": "Padrão do sistema",
   "LANGUAGE": "Idioma",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",

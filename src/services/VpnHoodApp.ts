@@ -50,6 +50,7 @@ export class VpnHoodApp {
     public static async create(): Promise<VpnHoodApp> {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
+        console.log(config);
         return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos));
     }
 

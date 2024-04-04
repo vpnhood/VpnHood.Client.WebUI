@@ -1,6 +1,6 @@
 {
   "LANGUAGE": "زبان",
-  "sys": "پیش فرض دستگاه",
+  "SYSTEM_DEFAULT_LANGUAGE": "پیش فرض دستگاه",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "تنظیمات",

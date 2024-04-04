@@ -56,13 +56,15 @@
           </template>
         </v-btn>
 
-        <p v-if="$i18n.locale !== LanguagesCode.English" :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
+      <div v-if="$i18n.locale !== LanguagesCode.English">
+        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}</p>
-        <a v-if="$i18n.locale !== LanguagesCode.English" class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
+        <a class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
            target="_blank">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
           <v-icon icon="mdi-open-in-new"/>
         </a>
+      </div>
 
     </v-card>
 

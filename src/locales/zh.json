@@ -1,6 +1,6 @@
 {
   "LANGUAGE": "语言",
-  "sys": "系统默认",
+  "SYSTEM_DEFAULT_LANGUAGE": "系统默认",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "设置",

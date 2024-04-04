@@ -11,7 +11,7 @@ import './assets/css/vpn-hood-connect.css'
 import './assets/css/rtl.css'
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
-import {AppName, ComponentName, LanguagesCode} from "@/UiConstants";
+import {AppName, ComponentName} from "@/UiConstants";
 
 async function main(): Promise<void> {
     try {
@@ -19,7 +19,7 @@ async function main(): Promise<void> {
         const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
         const app = createApp(App);
 
-        // Global property
+        // Global properties
         app.config.globalProperties.$vpnHoodApp = vpnHoodApp;
         app.config.globalProperties.$componentName = ComponentName;
 
@@ -27,10 +27,13 @@ async function main(): Promise<void> {
         vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;
 
         // Set default UI language
-        const isDefaultLanguageAvailable = i18n.global.availableLocales.includes(vpnHoodApp.data.state.cultureCode);
-        i18n.global.locale.value = isDefaultLanguageAvailable ? vpnHoodApp.data.state.cultureCode : LanguagesCode.English;
+        const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.cultureCode);
+        if (isUserSetDefaultLanguage) i18n.global.locale.value = vpnHoodApp.data.state.cultureCode;
+
+        // Set Vuetify current language
         vuetify.locale.current.value = i18n.global.locale.value;
 
+        // Add language code as class to the body element
         window.document.body.classList.add(i18n.global.locale.value);
 
         // Global catch exception
