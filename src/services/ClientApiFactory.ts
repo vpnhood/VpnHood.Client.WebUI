@@ -4,7 +4,7 @@ import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string = process.env["VUE_APP_HOOD_ANDROID_API_BASE_URL"] ?? window.location.origin;
+    private readonly baseUrl: string = process.env["VUE_APP_CONNECT_API_BASE_URL"] ?? window.location.origin;
 
     constructor() {
         //Define the axios default config
@@ -36,5 +36,4 @@ export class ClientApiFactory {
     public createBillingClient(): BillingClient {
         return new BillingClient(this.baseUrl, this.axiosInstance);
     }
-
 }

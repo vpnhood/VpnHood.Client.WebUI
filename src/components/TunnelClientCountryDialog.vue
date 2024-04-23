@@ -14,7 +14,7 @@
 
         <v-radio-group v-model="tunnelClientCountry" hide-details class="mx-n3">
 
-          <v-radio :value="true" color="secondary">
+          <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>
               <span>{{ $t("TUNNEL_MY_COUNTRY_ON") }}</span>
               <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">({{ $t("TUNNEL_MY_COUNTRY_ON_DESC") }})</span>

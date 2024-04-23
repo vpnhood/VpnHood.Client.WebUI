@@ -23,7 +23,7 @@
 
         <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()" class="mx-n3">
 
-          <v-radio :value="true" color="secondary">
+          <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
               <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">({{ $t('LESS_LATENCY') }})</span>

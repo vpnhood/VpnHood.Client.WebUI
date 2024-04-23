@@ -4,6 +4,7 @@
       :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'secondary'"
       :flat="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
       density="compact"
+      absolute
   >
 
     <!-- Back button -->
@@ -17,13 +18,14 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {AppName} from "@/UiConstants";
+import {AppName, UiConstants} from "@/UiConstants";
 
 export default defineComponent({
   name: "AppBar",
   data() {
       return{
-        AppName
+        AppName,
+        UiConstants
       }
   },
   props: {

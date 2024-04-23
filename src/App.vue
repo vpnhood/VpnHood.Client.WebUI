@@ -1,8 +1,18 @@
 <template>
-  <v-app id="mainBg" :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode]">
-    <v-main>
+  <v-app :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2']">
+
+    <!-- Navigation drawer -->
+    <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
+
+    <v-main
+        id="mainBg"
+        :class="[$vuetify.display.mdAndUp? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
+        :style="[$vuetify.display.mdAndUp ? 'max-width:850px;' : '']"
+    >
+
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
 
+      <!-- Only for VpnHoodCONNECT -->
       <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" @accept-privacy-policy="vpnHoodConnectProcessAccount()"/>
 
       <!-- Loading dialog before each api call -->
@@ -10,8 +20,8 @@
 
       <!-- Global alert dialog -->
       <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
-    </v-main>
 
+    </v-main>
   </v-app>
 </template>
 
@@ -21,14 +31,18 @@ import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import LoadingDialog from "@/components/LoadingDialog.vue";
-import {AppName, LocalStorage} from "@/UiConstants";
+import {AppName, LocalStorage, UiConstants} from "@/UiConstants";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
+
 export default defineComponent({
   name: 'App',
-  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog },
+  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer },
   data(){
     return{
       AppName,
+      UiConstants,
+      ComponentRouteController,
       isShowPrivacyPolicyDialog: false,
     };
   },
@@ -84,6 +98,19 @@ export default defineComponent({
   background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
 }
+
+/*noinspection CssUnusedSymbol*/
+#mainBg.not-mobile{
+  /*noinspection CssUnresolvedCustomProperty*/
+  border: 1px rgba(var(--v-theme-secondary), .5) solid;
+  box-shadow: 0 0 20px 9px #00000047;
+}
+
+/*noinspection CssUnusedSymbol*/
+#mainBg.not-mobile:before{
+  border-radius: 8px;
+}
+
 @media (max-width: 425px) {
   #mainBg:before {
     background-image: url("/src/assets/images/body-bg-mobile.png");
@@ -92,7 +119,7 @@ export default defineComponent({
 
 /*** App is the VpnHoodConnect ***/
 /*noinspection CssUnusedSymbol*/
-#mainBg.VpnHoodConnect:before {
+.VpnHoodConnect #mainBg:before {
   opacity: .5;
 }
 </style>

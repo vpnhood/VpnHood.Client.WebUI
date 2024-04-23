@@ -45,6 +45,7 @@
                 @click="onSignIn"
                 rounded="pill"
                 color="white"
+                size="large"
                 :flat="true"
                 class="font-weight-bold text-capitalize my-4"
             >
@@ -88,7 +89,7 @@
                     rounded="lg"
                     base-color="primary-darken-2"
                     variant="flat"
-                    :class="[$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100' : 'border-secondary border-opacity-25', 'mb-2 pe-2 border']"
+                    :class="[$vpnHoodApp.data.userState.userAccount.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-4', 'mb-3 pe-2 border']"
                     @click="onContinuePurchase(plan.subscriptionPlanId)"
                 >
 
@@ -168,7 +169,7 @@
   </v-dialog>
 
   <!-- Notice dialog on purchase subscription -->
-  <v-dialog v-model="showPlanNoticeDialog" :persistent="true" max-width="600">
+  <v-dialog v-model="showPlanNoticeDialog" max-width="600">
     <v-card color="primary-darken-2">
       <v-card-title class="text-secondary d-flex">
         <span :class="[$vuetify.locale.isRtl? 'me-1' : 'order-1 ms-1']">{{$t("SUBSCRIPTION")}}</span>

@@ -16,7 +16,7 @@ export default createVuetify({
     },
         defaults: {
             VSheet: {
-                class: 'pa-4',
+                class: 'pa-4 position-relative',
                 height: '100%',
             },
         },

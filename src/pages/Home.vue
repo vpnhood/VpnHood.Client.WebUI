@@ -1,13 +1,9 @@
 <template>
-  <div class="h-100">
-    <!-- Navigation drawer -->
-    <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
 
     <!-- App bar -->
     <HomeAppBar/>
 
-    <v-container class="h-100 pt-0">
-      <v-row align-content="space-between" justify="center" class="h-100 my-0">
+    <v-row align-content="space-between" justify="center" class="h-100 px-md-2 pb-3 ma-0">
 
         <!-- Go Premium button Only for VpnHoodConnect -->
         <v-col  cols="12" class="text-center pt-0">
@@ -113,80 +109,89 @@
         </v-col>
 
         <!-- Config buttons -->
-        <v-col cols="12" md="8" lg="6" class="text-truncate pb-0">
+        <v-col cols="12" class="text-truncate">
+          <v-row>
 
-          <!-- Exclude country button -->
-          <v-btn
-              depressed
-              block
-              variant="outlined"
-              size="small"
-              prepend-icon="mdi-earth"
-              class="config-item mb-1"
-              @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
-            <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
-            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{
-                $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
-              }}</span>
-            <img
-                v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId"
-                :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
-                alt="country flag" width="24" class="ms-2"/>
-          </v-btn>
+            <!-- Exclude country button -->
+            <v-col cols="12" md="6" class="py-0 pa-md-1">
+              <v-btn
+                  depressed
+                  block
+                  variant="outlined"
+                  size="small"
+                  prepend-icon="mdi-earth"
+                  class="config-item mb-1"
+                  @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
+                <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
+                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+                <span class="text-capitalize text-caption text-white opacity-50">{{
+                    $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+                  }}</span>
+                <img
+                    v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId"
+                    :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
+                    alt="country flag" width="24" class="ms-2"/>
+              </v-btn>
+            </v-col>
 
-          <!-- App filter button -->
-          <v-btn
-              v-if="$vpnHoodApp.data.features.isExcludeAppsSupported || $vpnHoodApp.data.features.isIncludeAppsSupported"
-              depressed
-              block
-              variant="text"
-              size="small"
-              prepend-icon="mdi-apps"
-              class="config-item mb-1"
-              to="/apps-filter"
-          >
-            <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
-            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
-          </v-btn>
+            <!-- App filter button -->
+            <v-col cols="12" md="6" class="py-0 pa-md-1">
+              <v-btn
+                  v-if="$vpnHoodApp.data.features.isExcludeAppsSupported || $vpnHoodApp.data.features.isIncludeAppsSupported"
+                  depressed
+                  block
+                  variant="text"
+                  size="small"
+                  prepend-icon="mdi-apps"
+                  class="config-item mb-1"
+                  to="/apps-filter"
+              >
+                <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
+                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+                <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
+              </v-btn>
+            </v-col>
 
-          <!-- Protocol button -->
-          <v-btn
-              depressed
-              block
-              variant="text"
-              size="small"
-              prepend-icon="mdi-transit-connection-variant"
-              class="config-item mb-1"
-              @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
-            <span>{{ $t("PROTOCOL_TITLE") }}</span>
-            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
-          </v-btn>
+            <!-- Protocol button -->
+            <v-col cols="12" md="6" class="py-0 pa-md-1">
+              <v-btn
+                  depressed
+                  block
+                  variant="text"
+                  size="small"
+                  prepend-icon="mdi-transit-connection-variant"
+                  class="config-item mb-1"
+                  @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
+                <span>{{ $t("PROTOCOL_TITLE") }}</span>
+                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+                <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
+              </v-btn>
+            </v-col>
 
-          <!-- Servers button -->
-          <v-btn
-              depressed
-              block
-              variant="text"
-              size="small"
-              prepend-icon="mdi-dns"
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
-              @click="showServers()"
-          >
-            <span>{{ $t("SELECTED_SERVER") }}</span>
-            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() ?? $t("NO_SERVER_SELECTED") }}</span>
+            <!-- Servers button -->
+            <v-col cols="12" md="6" class="py-0 pa-md-1">
+              <v-btn
+                  depressed
+                  block
+                  variant="text"
+                  size="small"
+                  prepend-icon="mdi-dns"
+                  :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
+                  @click="showServers()"
+              >
+                <span>{{ $t("SELECTED_SERVER") }}</span>
+                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
+                <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() ?? $t("NO_SERVER_SELECTED") }}</span>
 
-            <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
-              <v-icon class="button-premium-icon" icon="mdi-crown" />
-            </template>
-          </v-btn>
+                <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
+                  <v-icon class="button-premium-icon" icon="mdi-crown" />
+                </template>
+              </v-btn>
+            </v-col>
 
+          </v-row>
         </v-col>
       </v-row>
-    </v-container>
 
     <!-- New server added toast -->
     <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="secondary">
@@ -200,7 +205,7 @@
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
     <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
     <MigratePublicServerDialog v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect" v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
-  </div>
+
 </template>
 
 <script lang="ts">
@@ -208,7 +213,6 @@ import {defineComponent} from 'vue';
 import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
 import ProtocolDialog from "@/components/ProtocolDialog.vue";
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import PurchaseSubscriptionDialog from "@/components/PurchaseSubscriptionDialog.vue";
 import HomeAppBar from "@/components/HomeAppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
@@ -227,7 +231,6 @@ export default defineComponent({
     SuppressSnackbar,
     HomeAppBar,
     PurchaseSubscriptionDialog,
-    NavigationDrawer,
     ProtocolDialog,
     TunnelClientCountryDialog
   },

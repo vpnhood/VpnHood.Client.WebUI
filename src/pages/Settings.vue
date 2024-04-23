@@ -82,7 +82,7 @@
         </p>
 
         <!-- Link -->
-        <a class="text-secondary text-decoration-none text-caption" href="https://github.com/vpnhood/VpnHood/issues/496"
+        <a class="text-secondary text-decoration-none text-caption" href="https://explore.transifex.com/vpnhood/vpnhood-client"
            target="_blank">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
           <v-icon icon="mdi-open-in-new"/>
