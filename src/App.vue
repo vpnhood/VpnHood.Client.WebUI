@@ -76,6 +76,10 @@ export default defineComponent({
       const accountClient = ClientApiFactory.instance.createAccountClient();
       this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
       this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
+
+      if(this.$vpnHoodApp.data.userState.userAccount?.subscriptionId){
+        await this.$vpnHoodApp.refreshAccount();
+      }
     }
   }
 });

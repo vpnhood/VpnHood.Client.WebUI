@@ -293,13 +293,14 @@ export default defineComponent({
       this.showPlanNoticeDialog = false;
       try {
         const billingClient = ClientApiFactory.instance.createBillingClient();
-        const orderId = await billingClient.purchase(this.selectedPlanId);
+        const orderId: string = await billingClient.purchase(this.selectedPlanId);
         this.showPendingProcessDialog = true;
         await this.processPendingOrder(orderId);
       }
       catch (err: any){
         if(err.message === "A task was canceled.")
           console.log(err);
+        else throw err;
       }
       finally {
         this.showPendingProcessDialog = false;
@@ -311,7 +312,6 @@ export default defineComponent({
       const isOrderProcessed: boolean = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
       if (isOrderProcessed){
         await this.$vpnHoodApp.refreshAccount();
-        await this.$vpnHoodApp.processUserAccount();
         this.showPurchaseCompleteDialog = true;
       }
       else

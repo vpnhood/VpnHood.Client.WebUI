@@ -181,7 +181,7 @@
               >
                 <span>{{ $t("SELECTED_SERVER") }}</span>
                 <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() ?? $t("NO_SERVER_SELECTED") }}</span>
+                <span class="text-capitalize text-caption text-white opacity-50">{{ defaultClientProfileName }}</span>
 
                 <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
                   <v-icon class="button-premium-icon" icon="mdi-crown" />
@@ -239,9 +239,11 @@ export default defineComponent({
       AppName,
       AppConnectionState,
       ComponentRouteController,
+      defaultClientProfileName: "",
     }
   },
   async created() {
+    this.defaultClientProfileName = await this.$vpnHoodApp.getDefaultClientProfileName();
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
@@ -250,36 +252,24 @@ export default defineComponent({
   },
 
   methods: {
-    async onConnectButtonClick() {
+    async onConnectButtonClick(): Promise<void> {
       const currentState = this.$vpnHoodApp.data.state.connectionState;
 
-      // If user has no selected server and want to connect
       if (currentState === AppConnectionState.None) {
-
         // Change state to prevent double click on the connect button
         this.$vpnHoodApp.data.state.connectionState = AppConnectionState.Initializing;
 
-        if (!this.getDefaultClientProfileName()) {
-          // Just for VpnHoodConnect
-          // Always set public server as default profile if user does not have a premium server or default selected server.
-          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
-            const testServerProfile = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.tokenId === this.$vpnHoodApp.data.features.testServerTokenId);
-            if (!testServerProfile) throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
-            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = testServerProfile.clientProfileId;
-            await this.$vpnHoodApp.saveUserSetting();
-          }
-
-          // Just for VpnHood
-          else {
+        // If user has no selected server and want to connect
+        if (!this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId) {
+          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHood){
             this.$router.push("/servers");
             return;
           }
+          else throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
         }
       }
 
-      currentState === AppConnectionState.None
-          ? await this.$vpnHoodApp.connect()
-          : await this.$vpnHoodApp.disconnect();
+      currentState === AppConnectionState.None ? await this.$vpnHoodApp.connect() : await this.$vpnHoodApp.disconnect();
     },
 
     // Return text for connect button based on connection state
@@ -344,15 +334,6 @@ export default defineComponent({
 
     isConnected(): boolean {
       return this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected;
-    },
-
-    // Return current active server name
-    getDefaultClientProfileName(): string | null {
-      const clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(x => x.clientProfileId === this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId);
-      if (!clientProfileInfo || !clientProfileInfo.clientProfileName)
-        return null;
-
-      return clientProfileInfo.clientProfileName;
     },
 
     // Return status of filtered apps by user (Only in mobile)

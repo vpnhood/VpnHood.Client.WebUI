@@ -6,10 +6,12 @@
       :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
       :temporary="true"
       :disable-route-watcher="true"
-      :floating="true">
+      :floating="true"
+  >
 
     <!-- Header -->
-    <div :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
+    <div
+        :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
 
       <!-- VpnHoodConnect logo -->
       <v-img v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" :eager="true"
@@ -32,10 +34,13 @@
       <div class="text-white ms-3">
 
         <!-- App name -->
-        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">
+        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" dir="ltr"
+            :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">
           {{ $t('VPN_HOOD_CONNECT_APP_NAME') }}
         </h4>
-        <h3 v-else dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">{{ $t('VPN_HOOD_APP_NAME') }}</h3>
+        <h3 v-else dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">{{
+            $t('VPN_HOOD_APP_NAME')
+          }}</h3>
 
         <!-- App full version -->
         <div class="text-secondary-lighten-1 text-caption">
@@ -56,9 +61,11 @@
           @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
       >
         <v-list-item-title>
-          <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'" />
+          <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'"/>
           <span class="ms-3">
-            {{ $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE') }}
+            {{
+              $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE')
+            }}
           </span>
         </v-list-item-title>
       </v-list-item>
@@ -70,7 +77,7 @@
           @click="onSignIn"
       >
         <v-list-item-title>
-          <v-icon icon="mdi-account" />
+          <v-icon icon="mdi-account"/>
           <span class="ms-3">{{ $t('SIGN_IN_WITH_GOOGLE') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -82,7 +89,7 @@
           @click="showConfirmSignOut = true"
       >
         <v-list-item-title class="d-flex align-center">
-          <v-icon icon="mdi-logout" />
+          <v-icon icon="mdi-logout"/>
           <div class="d-inline-flex flex-column ms-3">
             <span>{{ $t('SIGN_OUT') }}</span>
             <span class="text-caption opacity-50">{{ $vpnHoodApp.data.userState.userAccount.email }}</span>
@@ -96,7 +103,7 @@
           @click="$router.replace({path: '/settings'})"
       >
         <v-list-item-title>
-          <v-icon icon="mdi-cog" />
+          <v-icon icon="mdi-cog"/>
           <span class="ms-3">{{ $t('SETTINGS') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -108,7 +115,7 @@
           @click="diagnose"
       >
         <v-list-item-title>
-          <v-icon icon="mdi-stethoscope" />
+          <v-icon icon="mdi-stethoscope"/>
           <span class="ms-3">{{ $t('DIAGNOSE') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -119,8 +126,9 @@
           @click="checkForUpdate"
       >
         <v-list-item-title>
-          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary"/>
-          <v-icon v-else icon="mdi-update" />
+          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true"
+                               color="secondary"/>
+          <v-icon v-else icon="mdi-update"/>
           <span class="ms-3">{{ $t('CHECK_FOR_UPDATE') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -135,7 +143,7 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon icon="mdi-bullhorn" />
+          <v-icon icon="mdi-bullhorn"/>
           <span class="ms-3 text-caption">{{ $t('WHATS_NEW') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -150,7 +158,7 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon icon="mdi-message-alert" />
+          <v-icon icon="mdi-message-alert"/>
           <span class="ms-3 text-caption">{{ $t('SEND_FEEDBACK') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -166,7 +174,7 @@
           target="_blank">
 
         <v-list-item-title>
-          <v-icon icon="mdi-server" />
+          <v-icon icon="mdi-server"/>
           <span class="ms-3 text-caption">{{ $t('CREATE_PERSONAL_SERVER') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -229,8 +237,17 @@ export default defineComponent({
   emits: [
     "update:modelValue"
   ],
-  methods: {
 
+  watch: {
+    modelValue(newVal) {
+      if (newVal)
+        window.addEventListener('keydown', this.closeByKeyboardEscape);
+      else
+        window.removeEventListener('keydown', this.closeByKeyboardEscape);
+    }
+  },
+
+  methods: {
     async diagnose(): Promise<void> {
       this.$emit('update:modelValue', false);
       await this.$vpnHoodApp.diagnose();
@@ -273,7 +290,13 @@ export default defineComponent({
       this.showConfirmSignOut = false;
       this.$vpnHoodApp.signOut();
       this.$emit('update:modelValue', false);
+    },
+
+    closeByKeyboardEscape(event: any) {
+      if (event.code === 'Escape')
+        this.$emit('update:modelValue', false);
     }
+
   }
 });
 </script>

@@ -7,7 +7,7 @@
 
     <!-- Add server button -->
     <v-btn
-        v-if="$vpnHoodApp.data.features.isAddServerSupported"
+        v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"
         block
         variant="outlined"
         border="dashed"
@@ -38,7 +38,6 @@
           :key="index"
           rounded="lg"
           lines="two"
-
           variant="elevated"
           @click="connect(item.clientProfileId)"
           class="mb-3"
@@ -72,8 +71,8 @@
               <v-list>
 
                 <!-- Rename item -->
-                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
-                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.testServerTokenId" />
+                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.defaultAccessTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
+                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.defaultAccessTokenId" />
 
                 <!-- Diagnose item -->
                 <v-list-item
@@ -82,10 +81,10 @@
                     prepend-icon="mdi-speedometer"
                     @click="diagnose(item.clientProfileId)">
                 </v-list-item>
-                <v-divider v-if="$vpnHoodApp.data.features.isAddServerSupported"/>
+                <v-divider v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"/>
 
                 <!-- Delete item -->
-                <v-list-item v-if="$vpnHoodApp.data.features.isAddServerSupported" :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
+                <v-list-item v-if="$vpnHoodApp.data.features.isAddAccessKeySupported" :title="$t('REMOVE')" prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
 
               </v-list>
             </v-menu>
