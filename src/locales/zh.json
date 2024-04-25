@@ -106,6 +106,7 @@
   "LOAD_APP_ERROR_DESC": "运行应用程序时出现问题",
   "RELOAD_APP": "重新加载应用程序",
   "NO_SERVER_AVAILABLE": "当前没有可用的服务器。请点击“添加服务器”按钮添加服务器。",
+  "GET_SERVER_KEY_METHODS_DESC": "<h3 class=\"mb-3\">没有服务器密钥？</h3><p class=\"mb-2\">如果您需要一个免费的 VPN 用于个人使用，可以考虑安装 \"VpnHood! CONNECT\" 应用。如果这不符合您的需求，您可以通过以下方法获取服务器密钥：</p><ul class=\"ps-3\"><li class=\"mb-2\">从朋友、分发它们的社区或第三方卖家那里获取服务器密钥。</li><li>在服务器托管上设置您自己的 VpnHood 服务器，并自己创建服务器密钥。</li></ul>",
   "CHECK_FOR_UPDATE": "检查更新",
   "EXPIRE": "过期",
   "LESS_LATENCY": "延迟较小",
@@ -147,5 +148,6 @@
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "如果您发现翻译有问题或有任何建议，请通过下面的按钮告诉我们。",
   "DOWNLOAD_VPN_HOOD_CONNECT": "下载 VpnHood! CONNECT",
   "MIGRATION_TITLE": "VpnHood公共服务器的迁移",
-  "MIGRATION_DESC": "<p><strong>亲爱的VpnHood用户，</strong></p>\n<p class=\"mb-3\">\n我们很高兴地宣布，我们的免费公共服务器正在进行升级！为了为您提供更好，更强大的VPN体验，我们正在将我们的免费服务从VpnHood转移到一个新的，专用的应用程序：“VpnHood! CONNECT”。\n</p>\n<h2>有什么新的？</h2>\n<ul style=\"list-style: disc;\" class=\"ps-5 mb-3\">\n<li><strong>增强性能：</strong>享受更快，更可靠的连接。</li>\n<li><strong>简化访问：</strong>更容易的导航和用户界面。</li>\n<li><strong>广告支持的服务：</strong>为了保持您的VPN服务免费，VpnHood! CONNECT将偶尔显示广告，确保我们可以继续提供顶级的安全性，而无需价格标签。</li>\n</ul>\n\n<h2>我需要做什么？</h2>\n<p class=\"mb-3\">从Google Play下载<strong>VpnHood! CONNECT</strong>。</p>\n\n<h2>谁不会受到影响？</h2>\n<p>不使用VpnHood公共服务器的用户无需采取任何额外行动； VpnHood将继续像以前一样运行。</p>\n<p class=\"my-3\">\n我们理解变化可能会带来不便，但我们在这里，以使这个过渡尽可能顺利。我们的支持团队随时准备回答您可能需要的任何问题或帮助。\n</p>\n<p class=\"mb-3\">\n感谢您对VpnHood的信任。我们期待继续使用VpnHood! CONNECT保护您的在线隐私和安全。\n</p>\n<p class=\"mb-3\">\n温馨的问候，<br/>\nVpnHood\n</p>\n"
+  "MIGRATION_DESC": "<p><strong>亲爱的VpnHood用户，</strong></p>\n<p class=\"mb-3\">\n我们很高兴地宣布，我们的免费公共服务器正在进行升级！为了为您提供更好，更强大的VPN体验，我们正在将我们的免费服务从VpnHood转移到一个新的，专用的应用程序：“VpnHood! CONNECT”。\n</p>\n<h2>有什么新的？</h2>\n<ul style=\"list-style: disc;\" class=\"ps-5 mb-3\">\n<li><strong>增强性能：</strong>享受更快，更可靠的连接。</li>\n<li><strong>简化访问：</strong>更容易的导航和用户界面。</li>\n<li><strong>广告支持的服务：</strong>为了保持您的VPN服务免费，VpnHood! CONNECT将偶尔显示广告，确保我们可以继续提供顶级的安全性，而无需价格标签。</li>\n</ul>\n\n<h2>我需要做什么？</h2>\n<p class=\"mb-3\">从Google Play下载<strong>VpnHood! CONNECT</strong>。</p>\n\n<h2>谁不会受到影响？</h2>\n<p>不使用VpnHood公共服务器的用户无需采取任何额外行动； VpnHood将继续像以前一样运行。</p>\n<p class=\"my-3\">\n我们理解变化可能会带来不便，但我们在这里，以使这个过渡尽可能顺利。我们的支持团队随时准备回答您可能需要的任何问题或帮助。\n</p>\n<p class=\"mb-3\">\n感谢您对VpnHood的信任。我们期待继续使用VpnHood! CONNECT保护您的在线隐私和安全。\n</p>\n<p class=\"mb-3\">\n温馨的问候，<br/>\nVpnHood\n</p>\n",
+  "ORDER_PROCESSING_FAILED": "无法处理您的订单。如果您的订单已在 Google Play 上注册并激活，请联系我们的支持团队。如果没有，请随时尝试再次购买。"
 }

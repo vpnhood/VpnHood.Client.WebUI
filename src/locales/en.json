@@ -111,6 +111,7 @@
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",
   "NO_SERVER_AVAILABLE": "Currently, there are no servers available. Please add a server by clicking on the \"Add Server\" button.",
+  "GET_SERVER_KEY_METHODS_DESC": "<h3 class=\"mb-3\">Don’t have a Server Key?</h3><p class=\"mb-2\">If you need a free VPN for personal use, consider installing the \"VpnHood! CONNECT\" app. If that doesn't suit your needs, you can acquire a server key through the following methods:</p><ul class=\"ps-3\"><li class=\"mb-2\">Obtain server keys from friends, communities that distribute them, or third-party sellers.</li><li>Set up your own VpnHood server on a server hosting and create server keys yourself.</li></ul>",
   "CHECK_FOR_UPDATE": "Check for update",
   "EXPIRE": "Exp",
   "LESS_LATENCY": "Less latency",

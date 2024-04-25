@@ -1,5 +1,5 @@
 <template>
-  <v-app :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2']">
+  <v-app id="appContainer" :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2 position-relative']">
 
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
@@ -121,9 +121,22 @@ export default defineComponent({
   }
 }
 
+#appContainer:before{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(14px);
+}
+
 /*** App is the VpnHoodConnect ***/
 /*noinspection CssUnusedSymbol*/
-.VpnHoodConnect #mainBg:before {
+.VpnHoodConnect #mainBg:before,
+.VpnHoodConnect #appContainer:before {
   opacity: .5;
 }
 </style>

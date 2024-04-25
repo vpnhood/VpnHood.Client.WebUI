@@ -108,9 +108,6 @@ export default defineComponent({
       AppName
     }
   },
-  created() {
-      console.log(this.$vpnHoodApp.data.state.currentUiCultureInfo.nativeName);
-  },
   computed: {
     excludeLocalNetwork: {
       get() {

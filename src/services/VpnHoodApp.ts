@@ -325,8 +325,4 @@ export class VpnHoodApp {
         await accountClient.refresh();
         await this.processUserAccount();
     }
-
-    checkPremium(): boolean {
-        return !!(this.data.features.uiName === AppName.VpnHoodConnect && this.data.userState.userAccount?.subscriptionId);
-    }
 }

@@ -135,6 +135,7 @@
 
       <!-- Whats new -->
       <v-list-item
+          v-if="$vuetify.display.mobile || $vuetify.display.platform.win"
           :nav="true"
           density="compact"
           class="opacity-80 mt-4"
@@ -150,6 +151,7 @@
 
       <!-- Send feedback -->
       <v-list-item
+          v-if="$vuetify.display.mobile || $vuetify.display.platform.win"
           :nav="true"
           density="compact"
           class="opacity-80"
@@ -165,7 +167,7 @@
 
       <!-- Create personal server -->
       <v-list-item
-          v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect"
+          v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect && ($vuetify.display.mobile || $vuetify.display.platform.win)"
           :nav="true"
           density="compact"
           class="opacity-80"

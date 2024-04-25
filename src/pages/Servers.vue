@@ -9,24 +9,27 @@
     <v-btn
         v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"
         block
-        variant="outlined"
-        border="dashed"
+        variant="elevated"
         color="secondary"
-        class="mb-5 py-5"
+        class="mt-2 mb-4 py-5"
         prepend-icon="mdi-plus-circle"
         :text="$t('ADD_SERVER')"
         @click="ComponentRouteController.showComponent($componentName.AddServerDialog)"
     />
 
     <!-- Show alert, if user does not have any server -->
+    <div v-if="$vpnHoodApp.data.clientProfileInfos.length === 0">
     <v-alert
-        v-if="$vpnHoodApp.data.clientProfileInfos.length === 0"
         :text="$t('NO_SERVER_AVAILABLE')"
         density="compact"
         type="warning"
-        class="mb-5"
+        class="mb-4"
     />
-
+    <div
+        v-html="$t('GET_SERVER_KEY_METHODS_DESC')"
+        class="get-server-key-alert pa-4 text-subtitle-2"
+    ></div>
+    </div>
 
 
     <!-- Servers list -->
@@ -243,3 +246,10 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.get-server-key-alert{
+  background-color: #e4e4e4;
+  border-radius: 5px;
+  border: 1px #c8c8c8 dashed;
+}
+</style>
