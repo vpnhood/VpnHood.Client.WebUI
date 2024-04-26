@@ -4,17 +4,18 @@ import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
 export class ClientApiFactory {
 
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string = process.env["VUE_APP_HOOD_ANDROID_API_BASE_URL"] ?? window.location.origin;
+    private readonly baseUrl: string = process.env["VUE_APP_CLIENT_API_BASE_URL"] ?? window.location.origin;
 
     constructor() {
         //Define the axios default config
-        this.axiosInstance = axios.create({
+        const axiosConfig = {
             baseURL: this.baseUrl,
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
-        });
+        };
+        this.axiosInstance = axios.create(axiosConfig);
     }
 
     // noinspection LocalVariableNamingConventionJS

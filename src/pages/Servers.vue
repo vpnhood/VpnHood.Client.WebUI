@@ -109,8 +109,8 @@
         <v-card-text>
           <!-- Name text field -->
           <v-text-field
-              v-model="newClientProfileName"
-              :label="$t('ENTER_NEW_NAME_FOR') + (actionOnCurrentClientProfileInfo.clientProfileName)"
+              v-model="currentClientProfileInfo.clientProfileName"
+              :label="$t('ENTER_NEW_NAME_FOR') + (currentClientProfileInfo.clientProfileName)"
               spellcheck="false"
               autocomplete="off"
               color="primary"
@@ -134,7 +134,7 @@
               color="primary"
               variant="text"
               :text="$t('SAVE')"
-              @click="saveNewClientProfileName(actionOnCurrentClientProfileInfo)"
+              @click="saveNewClientProfileName(currentClientProfileInfo)"
           />
 
         </v-card-actions>
@@ -149,7 +149,7 @@
 
         <v-card-text>
           <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
-          <strong>{{ actionOnCurrentClientProfileInfo.clientProfileName }}</strong>
+          <strong>{{ currentClientProfileInfo.clientProfileName }}</strong>
         </v-card-text>
 
         <!-- Dialog buttons -->
@@ -159,7 +159,7 @@
           <v-btn
               variant="text"
               :text="$t('YES')"
-              @click="removeServer(actionOnCurrentClientProfileInfo.clientProfileId)"
+              @click="removeServer(currentClientProfileInfo.clientProfileId)"
           />
 
           <!-- Cancel delete button -->
@@ -178,7 +178,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
-import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
+import {ClientProfileInfo, ClientProfileUpdateParams, PatchOfString} from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName} from "@/UiConstants";
 import AppBar from "@/components/AppBar.vue";
@@ -196,8 +196,7 @@ export default defineComponent({
     return {
       AppName,
       ComponentRouteController,
-      newClientProfileName: "",
-      actionOnCurrentClientProfileInfo: {} as ClientProfileInfo,
+      currentClientProfileInfo: {} as ClientProfileInfo,
     }
   },
 
@@ -218,7 +217,7 @@ export default defineComponent({
 
     // Show confirm dialog for delete server
     async showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
-      this.actionOnCurrentClientProfileInfo = clientProfileInfo;
+      this.currentClientProfileInfo = clientProfileInfo;
       await ComponentRouteController.showComponent(this.$componentName.ConfirmDeleteServerDialog);
     },
 
@@ -230,7 +229,7 @@ export default defineComponent({
 
     // Show rename server dialog
     async showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
-      this.actionOnCurrentClientProfileInfo = clientProfileInfo;
+      this.currentClientProfileInfo = clientProfileInfo;
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog);
     },
 
@@ -239,9 +238,12 @@ export default defineComponent({
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog, false);
       await this.$vpnHoodApp.updateClientProfile(
           renamedClientProfile.clientProfileId,
-          {clientProfileName:{value: this.newClientProfileName}}
+          new ClientProfileUpdateParams({
+            clientProfileName: new PatchOfString({
+              value: this.currentClientProfileInfo.clientProfileName
+            })
+          })
       );
-      this.newClientProfileName = "";
     }
   }
 })

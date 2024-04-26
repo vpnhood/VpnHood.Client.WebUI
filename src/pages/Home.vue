@@ -240,6 +240,7 @@ export default defineComponent({
       AppConnectionState,
       ComponentRouteController,
       defaultClientProfileName: "",
+      lastConnectPressedTime: Date.now() - 1000,
     }
   },
   async created() {
@@ -253,23 +254,22 @@ export default defineComponent({
 
   methods: {
     async onConnectButtonClick(): Promise<void> {
-      const currentState = this.$vpnHoodApp.data.state.connectionState;
+      if (this.lastConnectPressedTime >= (Date.now() - 1000))
+        return;
+      this.lastConnectPressedTime = Date.now();
 
-      if (currentState === AppConnectionState.None) {
-        // Change state to prevent double click on the connect button
-        this.$vpnHoodApp.data.state.connectionState = AppConnectionState.Initializing;
-
-        console.log(this.$vpnHoodApp.data.features.uiName);
-        // If user has no selected server and want to connect
-        if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId) {
-          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
-            throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
-          }
-          else this.$router.push("/servers");
-        }
+      if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.None){
+        await this.$vpnHoodApp.disconnect();
+        return;
       }
 
-      currentState === AppConnectionState.None ? await this.$vpnHoodApp.connect() : await this.$vpnHoodApp.disconnect();
+      // If user has no selected server and want to connect
+      if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId && this.$vpnHoodApp.data.features.isAddAccessKeySupported) {
+          this.$router.push("/servers");
+          return;
+      }
+
+      await this.$vpnHoodApp.connect();
     },
 
     // Return text for connect button based on connection state

@@ -111,35 +111,6 @@ export class VpnHoodApp {
     }
 
     public async connect(): Promise<void> {
-        if (!this.data.settings.userSettings.clientProfileId)
-            throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
-
-
-        if (this.data.features.uiName !== AppName.VpnHoodConnect) {
-            // Get current UTC date
-            const currentDate = new Date();
-            const currentUTCDate = Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate());
-
-            // Define the comparison date
-            const publicServerExpireDate = new Date("2024-05-01");
-            const publicServerExpireUTCDate = Date.UTC(publicServerExpireDate.getUTCFullYear(), publicServerExpireDate.getUTCMonth(), publicServerExpireDate.getUTCDate());
-
-            // Find default client profile
-            const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
-                x => x.clientProfileId === this.data.settings.userSettings.clientProfileId);
-
-            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.builtInAccessTokenId) {
-                await this.deleteClientProfile(defaultClientProfile?.clientProfileId!);
-                throw new Error("The VpnHood public servers has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
-            }
-            // If selected server is VpnHood public server
-            if (defaultClientProfile?.tokenId === this.data.features.builtInAccessTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
-                // Show public server hint
-                await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
-                return;
-            }
-        }
-
         await this.apiClient.connect();
     }
 

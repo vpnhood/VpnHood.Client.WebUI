@@ -62,7 +62,7 @@ export class AccountClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = AppAccount.fromJS(resultData200);
             return Promise.resolve<AppAccount>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -154,7 +154,8 @@ export class AccountClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -293,7 +294,8 @@ export class AccountClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -344,7 +346,14 @@ export class AccountClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
             return Promise.resolve<string[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -410,7 +419,7 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = AppConfig.fromJS(resultData200);
             return Promise.resolve<AppConfig>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -458,7 +467,7 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = AppConfig.fromJS(resultData200);
             return Promise.resolve<AppConfig>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -506,7 +515,7 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = AppState.fromJS(resultData200);
             return Promise.resolve<AppState>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -782,7 +791,8 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -830,7 +840,14 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DeviceAppInfo.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return Promise.resolve<DeviceAppInfo[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -878,7 +895,14 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(IpGroup.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return Promise.resolve<IpGroup[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1018,7 +1042,7 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = ClientProfileInfo.fromJS(resultData200);
             return Promise.resolve<ClientProfileInfo>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1073,7 +1097,7 @@ export class AppClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            result200 = ClientProfileInfo.fromJS(resultData200);
             return Promise.resolve<ClientProfileInfo>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1182,7 +1206,14 @@ export class BillingClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SubscriptionPlan.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return Promise.resolve<SubscriptionPlan[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1234,7 +1265,8 @@ export class BillingClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = JSON.parse(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1245,7 +1277,51 @@ export class BillingClient {
     }
 }
 
-export interface AppAccount {
+export class AppAccount implements IAppAccount {
+    userId!: string;
+    name?: string | null;
+    email?: string | null;
+    subscriptionId?: string | null;
+    providerPlanId?: string | null;
+
+    constructor(data?: IAppAccount) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"] !== undefined ? _data["userId"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
+            this.subscriptionId = _data["subscriptionId"] !== undefined ? _data["subscriptionId"] : <any>null;
+            this.providerPlanId = _data["providerPlanId"] !== undefined ? _data["providerPlanId"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppAccount {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppAccount();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId !== undefined ? this.userId : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["email"] = this.email !== undefined ? this.email : <any>null;
+        data["subscriptionId"] = this.subscriptionId !== undefined ? this.subscriptionId : <any>null;
+        data["providerPlanId"] = this.providerPlanId !== undefined ? this.providerPlanId : <any>null;
+        return data;
+    }
+}
+
+export interface IAppAccount {
     userId: string;
     name?: string | null;
     email?: string | null;
@@ -1253,7 +1329,80 @@ export interface AppAccount {
     providerPlanId?: string | null;
 }
 
-export interface AppConfig {
+export class AppConfig implements IAppConfig {
+    features!: AppFeatures;
+    settings!: AppSettings;
+    state!: AppState;
+    clientProfileInfos!: ClientProfileInfo[];
+    availableCultureInfos!: UiCultureInfo[];
+
+    constructor(data?: IAppConfig) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.features = new AppFeatures();
+            this.settings = new AppSettings();
+            this.state = new AppState();
+            this.clientProfileInfos = [];
+            this.availableCultureInfos = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.features = _data["features"] ? AppFeatures.fromJS(_data["features"]) : new AppFeatures();
+            this.settings = _data["settings"] ? AppSettings.fromJS(_data["settings"]) : new AppSettings();
+            this.state = _data["state"] ? AppState.fromJS(_data["state"]) : new AppState();
+            if (Array.isArray(_data["clientProfileInfos"])) {
+                this.clientProfileInfos = [] as any;
+                for (let item of _data["clientProfileInfos"])
+                    this.clientProfileInfos!.push(ClientProfileInfo.fromJS(item));
+            }
+            else {
+                this.clientProfileInfos = <any>null;
+            }
+            if (Array.isArray(_data["availableCultureInfos"])) {
+                this.availableCultureInfos = [] as any;
+                for (let item of _data["availableCultureInfos"])
+                    this.availableCultureInfos!.push(UiCultureInfo.fromJS(item));
+            }
+            else {
+                this.availableCultureInfos = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): AppConfig {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppConfig();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["features"] = this.features ? this.features.toJSON() : <any>null;
+        data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
+        data["state"] = this.state ? this.state.toJSON() : <any>null;
+        if (Array.isArray(this.clientProfileInfos)) {
+            data["clientProfileInfos"] = [];
+            for (let item of this.clientProfileInfos)
+                data["clientProfileInfos"].push(item.toJSON());
+        }
+        if (Array.isArray(this.availableCultureInfos)) {
+            data["availableCultureInfos"] = [];
+            for (let item of this.availableCultureInfos)
+                data["availableCultureInfos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IAppConfig {
     features: AppFeatures;
     settings: AppSettings;
     state: AppState;
@@ -1261,7 +1410,57 @@ export interface AppConfig {
     availableCultureInfos: UiCultureInfo[];
 }
 
-export interface AppFeatures {
+export class AppFeatures implements IAppFeatures {
+    version!: string;
+    isExcludeAppsSupported!: boolean;
+    isIncludeAppsSupported!: boolean;
+    updateInfoUrl?: string | null;
+    uiName?: string | null;
+    isAddAccessKeySupported!: boolean;
+    builtInAccessTokenId?: string | null;
+
+    constructor(data?: IAppFeatures) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
+            this.isExcludeAppsSupported = _data["isExcludeAppsSupported"] !== undefined ? _data["isExcludeAppsSupported"] : <any>null;
+            this.isIncludeAppsSupported = _data["isIncludeAppsSupported"] !== undefined ? _data["isIncludeAppsSupported"] : <any>null;
+            this.updateInfoUrl = _data["updateInfoUrl"] !== undefined ? _data["updateInfoUrl"] : <any>null;
+            this.uiName = _data["uiName"] !== undefined ? _data["uiName"] : <any>null;
+            this.isAddAccessKeySupported = _data["isAddAccessKeySupported"] !== undefined ? _data["isAddAccessKeySupported"] : <any>null;
+            this.builtInAccessTokenId = _data["builtInAccessTokenId"] !== undefined ? _data["builtInAccessTokenId"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppFeatures {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppFeatures();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["version"] = this.version !== undefined ? this.version : <any>null;
+        data["isExcludeAppsSupported"] = this.isExcludeAppsSupported !== undefined ? this.isExcludeAppsSupported : <any>null;
+        data["isIncludeAppsSupported"] = this.isIncludeAppsSupported !== undefined ? this.isIncludeAppsSupported : <any>null;
+        data["updateInfoUrl"] = this.updateInfoUrl !== undefined ? this.updateInfoUrl : <any>null;
+        data["uiName"] = this.uiName !== undefined ? this.uiName : <any>null;
+        data["isAddAccessKeySupported"] = this.isAddAccessKeySupported !== undefined ? this.isAddAccessKeySupported : <any>null;
+        data["builtInAccessTokenId"] = this.builtInAccessTokenId !== undefined ? this.builtInAccessTokenId : <any>null;
+        return data;
+    }
+}
+
+export interface IAppFeatures {
     version: string;
     isExcludeAppsSupported: boolean;
     isIncludeAppsSupported: boolean;
@@ -1271,7 +1470,63 @@ export interface AppFeatures {
     builtInAccessTokenId?: string | null;
 }
 
-export interface AppSettings {
+export class AppSettings implements IAppSettings {
+    version!: number;
+    isQuickLaunchAdded!: boolean;
+    isQuickLaunchRequested!: boolean;
+    configTime!: Date;
+    userSettings!: UserSettings;
+    clientId!: string;
+    lastCountryIpGroupId?: string | null;
+    lastUpdateCheckTime?: Date | null;
+
+    constructor(data?: IAppSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.userSettings = new UserSettings();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
+            this.isQuickLaunchAdded = _data["isQuickLaunchAdded"] !== undefined ? _data["isQuickLaunchAdded"] : <any>null;
+            this.isQuickLaunchRequested = _data["isQuickLaunchRequested"] !== undefined ? _data["isQuickLaunchRequested"] : <any>null;
+            this.configTime = _data["configTime"] ? new Date(_data["configTime"].toString()) : <any>null;
+            this.userSettings = _data["userSettings"] ? UserSettings.fromJS(_data["userSettings"]) : new UserSettings();
+            this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
+            this.lastCountryIpGroupId = _data["lastCountryIpGroupId"] !== undefined ? _data["lastCountryIpGroupId"] : <any>null;
+            this.lastUpdateCheckTime = _data["lastUpdateCheckTime"] ? new Date(_data["lastUpdateCheckTime"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["version"] = this.version !== undefined ? this.version : <any>null;
+        data["isQuickLaunchAdded"] = this.isQuickLaunchAdded !== undefined ? this.isQuickLaunchAdded : <any>null;
+        data["isQuickLaunchRequested"] = this.isQuickLaunchRequested !== undefined ? this.isQuickLaunchRequested : <any>null;
+        data["configTime"] = this.configTime ? this.configTime.toISOString() : <any>null;
+        data["userSettings"] = this.userSettings ? this.userSettings.toJSON() : <any>null;
+        data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
+        data["lastCountryIpGroupId"] = this.lastCountryIpGroupId !== undefined ? this.lastCountryIpGroupId : <any>null;
+        data["lastUpdateCheckTime"] = this.lastUpdateCheckTime ? this.lastUpdateCheckTime.toISOString() : <any>null;
+        return data;
+    }
+}
+
+export interface IAppSettings {
     version: number;
     isQuickLaunchAdded: boolean;
     isQuickLaunchRequested: boolean;
@@ -1282,7 +1537,160 @@ export interface AppSettings {
     lastUpdateCheckTime?: Date | null;
 }
 
-export interface UserSettings {
+export class UserSettings implements IUserSettings {
+    logging!: AppLogSettings;
+    cultureCode?: string | null;
+    clientProfileId?: string | null;
+    maxReconnectCount!: number;
+    maxDatagramChannelCount!: number;
+    tunnelClientCountry!: boolean;
+    ipGroupFilters?: string[] | null;
+    ipGroupFiltersMode!: FilterMode;
+    customIpRanges?: string[] | null;
+    appFilters?: string[] | null;
+    appFiltersMode!: FilterMode;
+    useUdpChannel!: boolean;
+    dropUdpPackets!: boolean;
+    excludeLocalNetwork!: boolean;
+    packetCaptureIncludeIpRanges!: string[];
+    packetCaptureExcludeIpRanges?: string[] | null;
+    allowAnonymousTracker!: boolean;
+    dnsServers?: string[] | null;
+
+    constructor(data?: IUserSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.logging = new AppLogSettings();
+            this.packetCaptureIncludeIpRanges = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.logging = _data["logging"] ? AppLogSettings.fromJS(_data["logging"]) : new AppLogSettings();
+            this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
+            this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
+            this.maxReconnectCount = _data["maxReconnectCount"] !== undefined ? _data["maxReconnectCount"] : <any>null;
+            this.maxDatagramChannelCount = _data["maxDatagramChannelCount"] !== undefined ? _data["maxDatagramChannelCount"] : <any>null;
+            this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : <any>null;
+            if (Array.isArray(_data["ipGroupFilters"])) {
+                this.ipGroupFilters = [] as any;
+                for (let item of _data["ipGroupFilters"])
+                    this.ipGroupFilters!.push(item);
+            }
+            else {
+                this.ipGroupFilters = <any>null;
+            }
+            this.ipGroupFiltersMode = _data["ipGroupFiltersMode"] !== undefined ? _data["ipGroupFiltersMode"] : <any>null;
+            if (Array.isArray(_data["customIpRanges"])) {
+                this.customIpRanges = [] as any;
+                for (let item of _data["customIpRanges"])
+                    this.customIpRanges!.push(item);
+            }
+            else {
+                this.customIpRanges = <any>null;
+            }
+            if (Array.isArray(_data["appFilters"])) {
+                this.appFilters = [] as any;
+                for (let item of _data["appFilters"])
+                    this.appFilters!.push(item);
+            }
+            else {
+                this.appFilters = <any>null;
+            }
+            this.appFiltersMode = _data["appFiltersMode"] !== undefined ? _data["appFiltersMode"] : <any>null;
+            this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
+            this.dropUdpPackets = _data["dropUdpPackets"] !== undefined ? _data["dropUdpPackets"] : <any>null;
+            this.excludeLocalNetwork = _data["excludeLocalNetwork"] !== undefined ? _data["excludeLocalNetwork"] : <any>null;
+            if (Array.isArray(_data["packetCaptureIncludeIpRanges"])) {
+                this.packetCaptureIncludeIpRanges = [] as any;
+                for (let item of _data["packetCaptureIncludeIpRanges"])
+                    this.packetCaptureIncludeIpRanges!.push(item);
+            }
+            else {
+                this.packetCaptureIncludeIpRanges = <any>null;
+            }
+            if (Array.isArray(_data["packetCaptureExcludeIpRanges"])) {
+                this.packetCaptureExcludeIpRanges = [] as any;
+                for (let item of _data["packetCaptureExcludeIpRanges"])
+                    this.packetCaptureExcludeIpRanges!.push(item);
+            }
+            else {
+                this.packetCaptureExcludeIpRanges = <any>null;
+            }
+            this.allowAnonymousTracker = _data["allowAnonymousTracker"] !== undefined ? _data["allowAnonymousTracker"] : <any>null;
+            if (Array.isArray(_data["dnsServers"])) {
+                this.dnsServers = [] as any;
+                for (let item of _data["dnsServers"])
+                    this.dnsServers!.push(item);
+            }
+            else {
+                this.dnsServers = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): UserSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["logging"] = this.logging ? this.logging.toJSON() : <any>null;
+        data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
+        data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
+        data["maxReconnectCount"] = this.maxReconnectCount !== undefined ? this.maxReconnectCount : <any>null;
+        data["maxDatagramChannelCount"] = this.maxDatagramChannelCount !== undefined ? this.maxDatagramChannelCount : <any>null;
+        data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : <any>null;
+        if (Array.isArray(this.ipGroupFilters)) {
+            data["ipGroupFilters"] = [];
+            for (let item of this.ipGroupFilters)
+                data["ipGroupFilters"].push(item);
+        }
+        data["ipGroupFiltersMode"] = this.ipGroupFiltersMode !== undefined ? this.ipGroupFiltersMode : <any>null;
+        if (Array.isArray(this.customIpRanges)) {
+            data["customIpRanges"] = [];
+            for (let item of this.customIpRanges)
+                data["customIpRanges"].push(item);
+        }
+        if (Array.isArray(this.appFilters)) {
+            data["appFilters"] = [];
+            for (let item of this.appFilters)
+                data["appFilters"].push(item);
+        }
+        data["appFiltersMode"] = this.appFiltersMode !== undefined ? this.appFiltersMode : <any>null;
+        data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
+        data["dropUdpPackets"] = this.dropUdpPackets !== undefined ? this.dropUdpPackets : <any>null;
+        data["excludeLocalNetwork"] = this.excludeLocalNetwork !== undefined ? this.excludeLocalNetwork : <any>null;
+        if (Array.isArray(this.packetCaptureIncludeIpRanges)) {
+            data["packetCaptureIncludeIpRanges"] = [];
+            for (let item of this.packetCaptureIncludeIpRanges)
+                data["packetCaptureIncludeIpRanges"].push(item);
+        }
+        if (Array.isArray(this.packetCaptureExcludeIpRanges)) {
+            data["packetCaptureExcludeIpRanges"] = [];
+            for (let item of this.packetCaptureExcludeIpRanges)
+                data["packetCaptureExcludeIpRanges"].push(item);
+        }
+        data["allowAnonymousTracker"] = this.allowAnonymousTracker !== undefined ? this.allowAnonymousTracker : <any>null;
+        if (Array.isArray(this.dnsServers)) {
+            data["dnsServers"] = [];
+            for (let item of this.dnsServers)
+                data["dnsServers"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IUserSettings {
     logging: AppLogSettings;
     cultureCode?: string | null;
     clientProfileId?: string | null;
@@ -1303,7 +1711,48 @@ export interface UserSettings {
     dnsServers?: string[] | null;
 }
 
-export interface AppLogSettings {
+export class AppLogSettings implements IAppLogSettings {
+    logToConsole!: boolean;
+    logToFile!: boolean;
+    logVerbose!: boolean;
+    logAnonymous!: boolean;
+
+    constructor(data?: IAppLogSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.logToConsole = _data["logToConsole"] !== undefined ? _data["logToConsole"] : <any>null;
+            this.logToFile = _data["logToFile"] !== undefined ? _data["logToFile"] : <any>null;
+            this.logVerbose = _data["logVerbose"] !== undefined ? _data["logVerbose"] : <any>null;
+            this.logAnonymous = _data["logAnonymous"] !== undefined ? _data["logAnonymous"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppLogSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppLogSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["logToConsole"] = this.logToConsole !== undefined ? this.logToConsole : <any>null;
+        data["logToFile"] = this.logToFile !== undefined ? this.logToFile : <any>null;
+        data["logVerbose"] = this.logVerbose !== undefined ? this.logVerbose : <any>null;
+        data["logAnonymous"] = this.logAnonymous !== undefined ? this.logAnonymous : <any>null;
+        return data;
+    }
+}
+
+export interface IAppLogSettings {
     logToConsole: boolean;
     logToFile: boolean;
     logVerbose: boolean;
@@ -1316,7 +1765,112 @@ export enum FilterMode {
     Include = "Include",
 }
 
-export interface AppState {
+export class AppState implements IAppState {
+    configTime!: Date;
+    connectRequestTime?: Date | null;
+    connectionState!: AppConnectionState;
+    lastError?: string | null;
+    clientProfileId?: string | null;
+    isIdle!: boolean;
+    logExists!: boolean;
+    hasDiagnoseStarted!: boolean;
+    hasDisconnectedByUser!: boolean;
+    hasProblemDetected!: boolean;
+    sessionStatus?: SessionStatus | null;
+    speed!: Traffic;
+    sessionTraffic!: Traffic;
+    accountTraffic!: Traffic;
+    clientIpGroup?: IpGroup | null;
+    isWaitingForAd!: boolean;
+    versionStatus!: VersionStatus;
+    lastPublishInfo?: PublishInfo | null;
+    isUdpChannelSupported?: boolean | null;
+    canDisconnect!: boolean;
+    canConnect!: boolean;
+    currentUiCultureInfo!: UiCultureInfo;
+    systemUiCultureInfo!: UiCultureInfo;
+
+    constructor(data?: IAppState) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.speed = new Traffic();
+            this.sessionTraffic = new Traffic();
+            this.accountTraffic = new Traffic();
+            this.currentUiCultureInfo = new UiCultureInfo();
+            this.systemUiCultureInfo = new UiCultureInfo();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.configTime = _data["configTime"] ? new Date(_data["configTime"].toString()) : <any>null;
+            this.connectRequestTime = _data["connectRequestTime"] ? new Date(_data["connectRequestTime"].toString()) : <any>null;
+            this.connectionState = _data["connectionState"] !== undefined ? _data["connectionState"] : <any>null;
+            this.lastError = _data["lastError"] !== undefined ? _data["lastError"] : <any>null;
+            this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
+            this.isIdle = _data["isIdle"] !== undefined ? _data["isIdle"] : <any>null;
+            this.logExists = _data["logExists"] !== undefined ? _data["logExists"] : <any>null;
+            this.hasDiagnoseStarted = _data["hasDiagnoseStarted"] !== undefined ? _data["hasDiagnoseStarted"] : <any>null;
+            this.hasDisconnectedByUser = _data["hasDisconnectedByUser"] !== undefined ? _data["hasDisconnectedByUser"] : <any>null;
+            this.hasProblemDetected = _data["hasProblemDetected"] !== undefined ? _data["hasProblemDetected"] : <any>null;
+            this.sessionStatus = _data["sessionStatus"] ? SessionStatus.fromJS(_data["sessionStatus"]) : <any>null;
+            this.speed = _data["speed"] ? Traffic.fromJS(_data["speed"]) : new Traffic();
+            this.sessionTraffic = _data["sessionTraffic"] ? Traffic.fromJS(_data["sessionTraffic"]) : new Traffic();
+            this.accountTraffic = _data["accountTraffic"] ? Traffic.fromJS(_data["accountTraffic"]) : new Traffic();
+            this.clientIpGroup = _data["clientIpGroup"] ? IpGroup.fromJS(_data["clientIpGroup"]) : <any>null;
+            this.isWaitingForAd = _data["isWaitingForAd"] !== undefined ? _data["isWaitingForAd"] : <any>null;
+            this.versionStatus = _data["versionStatus"] !== undefined ? _data["versionStatus"] : <any>null;
+            this.lastPublishInfo = _data["lastPublishInfo"] ? PublishInfo.fromJS(_data["lastPublishInfo"]) : <any>null;
+            this.isUdpChannelSupported = _data["isUdpChannelSupported"] !== undefined ? _data["isUdpChannelSupported"] : <any>null;
+            this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : <any>null;
+            this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : <any>null;
+            this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
+            this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
+        }
+    }
+
+    static fromJS(data: any): AppState {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppState();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["configTime"] = this.configTime ? this.configTime.toISOString() : <any>null;
+        data["connectRequestTime"] = this.connectRequestTime ? this.connectRequestTime.toISOString() : <any>null;
+        data["connectionState"] = this.connectionState !== undefined ? this.connectionState : <any>null;
+        data["lastError"] = this.lastError !== undefined ? this.lastError : <any>null;
+        data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
+        data["isIdle"] = this.isIdle !== undefined ? this.isIdle : <any>null;
+        data["logExists"] = this.logExists !== undefined ? this.logExists : <any>null;
+        data["hasDiagnoseStarted"] = this.hasDiagnoseStarted !== undefined ? this.hasDiagnoseStarted : <any>null;
+        data["hasDisconnectedByUser"] = this.hasDisconnectedByUser !== undefined ? this.hasDisconnectedByUser : <any>null;
+        data["hasProblemDetected"] = this.hasProblemDetected !== undefined ? this.hasProblemDetected : <any>null;
+        data["sessionStatus"] = this.sessionStatus ? this.sessionStatus.toJSON() : <any>null;
+        data["speed"] = this.speed ? this.speed.toJSON() : <any>null;
+        data["sessionTraffic"] = this.sessionTraffic ? this.sessionTraffic.toJSON() : <any>null;
+        data["accountTraffic"] = this.accountTraffic ? this.accountTraffic.toJSON() : <any>null;
+        data["clientIpGroup"] = this.clientIpGroup ? this.clientIpGroup.toJSON() : <any>null;
+        data["isWaitingForAd"] = this.isWaitingForAd !== undefined ? this.isWaitingForAd : <any>null;
+        data["versionStatus"] = this.versionStatus !== undefined ? this.versionStatus : <any>null;
+        data["lastPublishInfo"] = this.lastPublishInfo ? this.lastPublishInfo.toJSON() : <any>null;
+        data["isUdpChannelSupported"] = this.isUdpChannelSupported !== undefined ? this.isUdpChannelSupported : <any>null;
+        data["canDisconnect"] = this.canDisconnect !== undefined ? this.canDisconnect : <any>null;
+        data["canConnect"] = this.canConnect !== undefined ? this.canConnect : <any>null;
+        data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
+        data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IAppState {
     configTime: Date;
     connectRequestTime?: Date | null;
     connectionState: AppConnectionState;
@@ -1352,7 +1906,54 @@ export enum AppConnectionState {
     Disconnecting = "Disconnecting",
 }
 
-export interface SessionStatus {
+export class SessionStatus implements ISessionStatus {
+    errorCode!: SessionErrorCode;
+    accessUsage?: AccessUsage | null;
+    suppressedTo!: SessionSuppressType;
+    suppressedBy!: SessionSuppressType;
+    errorMessage?: string | null;
+    isAdRequired!: boolean;
+
+    constructor(data?: ISessionStatus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.errorCode = _data["errorCode"] !== undefined ? _data["errorCode"] : <any>null;
+            this.accessUsage = _data["accessUsage"] ? AccessUsage.fromJS(_data["accessUsage"]) : <any>null;
+            this.suppressedTo = _data["suppressedTo"] !== undefined ? _data["suppressedTo"] : <any>null;
+            this.suppressedBy = _data["suppressedBy"] !== undefined ? _data["suppressedBy"] : <any>null;
+            this.errorMessage = _data["errorMessage"] !== undefined ? _data["errorMessage"] : <any>null;
+            this.isAdRequired = _data["isAdRequired"] !== undefined ? _data["isAdRequired"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SessionStatus {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionStatus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["errorCode"] = this.errorCode !== undefined ? this.errorCode : <any>null;
+        data["accessUsage"] = this.accessUsage ? this.accessUsage.toJSON() : <any>null;
+        data["suppressedTo"] = this.suppressedTo !== undefined ? this.suppressedTo : <any>null;
+        data["suppressedBy"] = this.suppressedBy !== undefined ? this.suppressedBy : <any>null;
+        data["errorMessage"] = this.errorMessage !== undefined ? this.errorMessage : <any>null;
+        data["isAdRequired"] = this.isAdRequired !== undefined ? this.isAdRequired : <any>null;
+        return data;
+    }
+}
+
+export interface ISessionStatus {
     errorCode: SessionErrorCode;
     accessUsage?: AccessUsage | null;
     suppressedTo: SessionSuppressType;
@@ -1378,7 +1979,54 @@ export enum SessionErrorCode {
     UnsupportedServer = "UnsupportedServer",
 }
 
-export interface AccessUsage {
+export class AccessUsage implements IAccessUsage {
+    traffic!: Traffic;
+    maxTraffic!: number;
+    expirationTime?: Date | null;
+    maxClientCount!: number;
+    activeClientCount?: number | null;
+
+    constructor(data?: IAccessUsage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.traffic = new Traffic();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.traffic = _data["traffic"] ? Traffic.fromJS(_data["traffic"]) : new Traffic();
+            this.maxTraffic = _data["maxTraffic"] !== undefined ? _data["maxTraffic"] : <any>null;
+            this.expirationTime = _data["expirationTime"] ? new Date(_data["expirationTime"].toString()) : <any>null;
+            this.maxClientCount = _data["maxClientCount"] !== undefined ? _data["maxClientCount"] : <any>null;
+            this.activeClientCount = _data["activeClientCount"] !== undefined ? _data["activeClientCount"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AccessUsage {
+        data = typeof data === 'object' ? data : {};
+        let result = new AccessUsage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["traffic"] = this.traffic ? this.traffic.toJSON() : <any>null;
+        data["maxTraffic"] = this.maxTraffic !== undefined ? this.maxTraffic : <any>null;
+        data["expirationTime"] = this.expirationTime ? this.expirationTime.toISOString() : <any>null;
+        data["maxClientCount"] = this.maxClientCount !== undefined ? this.maxClientCount : <any>null;
+        data["activeClientCount"] = this.activeClientCount !== undefined ? this.activeClientCount : <any>null;
+        return data;
+    }
+}
+
+export interface IAccessUsage {
     traffic: Traffic;
     maxTraffic: number;
     expirationTime?: Date | null;
@@ -1386,7 +2034,48 @@ export interface AccessUsage {
     activeClientCount?: number | null;
 }
 
-export interface Traffic {
+export class Traffic implements ITraffic {
+    sentTraffic!: number;
+    receivedTraffic!: number;
+    sent!: number;
+    received!: number;
+
+    constructor(data?: ITraffic) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.sentTraffic = _data["sentTraffic"] !== undefined ? _data["sentTraffic"] : <any>null;
+            this.receivedTraffic = _data["receivedTraffic"] !== undefined ? _data["receivedTraffic"] : <any>null;
+            this.sent = _data["sent"] !== undefined ? _data["sent"] : <any>null;
+            this.received = _data["received"] !== undefined ? _data["received"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Traffic {
+        data = typeof data === 'object' ? data : {};
+        let result = new Traffic();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sentTraffic"] = this.sentTraffic !== undefined ? this.sentTraffic : <any>null;
+        data["receivedTraffic"] = this.receivedTraffic !== undefined ? this.receivedTraffic : <any>null;
+        data["sent"] = this.sent !== undefined ? this.sent : <any>null;
+        data["received"] = this.received !== undefined ? this.received : <any>null;
+        return data;
+    }
+}
+
+export interface ITraffic {
     sentTraffic: number;
     receivedTraffic: number;
     sent: number;
@@ -1399,7 +2088,42 @@ export enum SessionSuppressType {
     Other = "Other",
 }
 
-export interface IpGroup {
+export class IpGroup implements IIpGroup {
+    ipGroupId!: string;
+    ipGroupName!: string;
+
+    constructor(data?: IIpGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ipGroupId = _data["ipGroupId"] !== undefined ? _data["ipGroupId"] : <any>null;
+            this.ipGroupName = _data["ipGroupName"] !== undefined ? _data["ipGroupName"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): IpGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new IpGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ipGroupId"] = this.ipGroupId !== undefined ? this.ipGroupId : <any>null;
+        data["ipGroupName"] = this.ipGroupName !== undefined ? this.ipGroupName : <any>null;
+        return data;
+    }
+}
+
+export interface IIpGroup {
     ipGroupId: string;
     ipGroupName: string;
 }
@@ -1411,7 +2135,60 @@ export enum VersionStatus {
     Deprecated = "Deprecated",
 }
 
-export interface PublishInfo {
+export class PublishInfo implements IPublishInfo {
+    version!: string;
+    updateInfoUrl!: string;
+    packageUrl!: string;
+    googlePlayUrl?: string | null;
+    installationPageUrl!: string;
+    releaseDate!: Date;
+    deprecatedVersion!: string;
+    notificationDelay!: string;
+
+    constructor(data?: IPublishInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
+            this.updateInfoUrl = _data["updateInfoUrl"] !== undefined ? _data["updateInfoUrl"] : <any>null;
+            this.packageUrl = _data["packageUrl"] !== undefined ? _data["packageUrl"] : <any>null;
+            this.googlePlayUrl = _data["googlePlayUrl"] !== undefined ? _data["googlePlayUrl"] : <any>null;
+            this.installationPageUrl = _data["installationPageUrl"] !== undefined ? _data["installationPageUrl"] : <any>null;
+            this.releaseDate = _data["releaseDate"] ? new Date(_data["releaseDate"].toString()) : <any>null;
+            this.deprecatedVersion = _data["deprecatedVersion"] !== undefined ? _data["deprecatedVersion"] : <any>null;
+            this.notificationDelay = _data["notificationDelay"] !== undefined ? _data["notificationDelay"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PublishInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublishInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["version"] = this.version !== undefined ? this.version : <any>null;
+        data["updateInfoUrl"] = this.updateInfoUrl !== undefined ? this.updateInfoUrl : <any>null;
+        data["packageUrl"] = this.packageUrl !== undefined ? this.packageUrl : <any>null;
+        data["googlePlayUrl"] = this.googlePlayUrl !== undefined ? this.googlePlayUrl : <any>null;
+        data["installationPageUrl"] = this.installationPageUrl !== undefined ? this.installationPageUrl : <any>null;
+        data["releaseDate"] = this.releaseDate ? this.releaseDate.toISOString() : <any>null;
+        data["deprecatedVersion"] = this.deprecatedVersion !== undefined ? this.deprecatedVersion : <any>null;
+        data["notificationDelay"] = this.notificationDelay !== undefined ? this.notificationDelay : <any>null;
+        return data;
+    }
+}
+
+export interface IPublishInfo {
     version: string;
     updateInfoUrl: string;
     packageUrl: string;
@@ -1422,12 +2199,123 @@ export interface PublishInfo {
     notificationDelay: string;
 }
 
-export interface UiCultureInfo {
+export class UiCultureInfo implements IUiCultureInfo {
+    code!: string;
+    nativeName!: string;
+
+    constructor(data?: IUiCultureInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"] !== undefined ? _data["code"] : <any>null;
+            this.nativeName = _data["nativeName"] !== undefined ? _data["nativeName"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UiCultureInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new UiCultureInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code !== undefined ? this.code : <any>null;
+        data["nativeName"] = this.nativeName !== undefined ? this.nativeName : <any>null;
+        return data;
+    }
+}
+
+export interface IUiCultureInfo {
     code: string;
     nativeName: string;
 }
 
-export interface ClientProfileInfo {
+export class ClientProfileInfo implements IClientProfileInfo {
+    clientProfileId!: string;
+    clientProfileName!: string;
+    tokenId!: string;
+    supportId?: string | null;
+    hostNames!: string[];
+    isValidHostName!: boolean;
+    regions!: HostRegion[];
+
+    constructor(data?: IClientProfileInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.hostNames = [];
+            this.regions = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
+            this.clientProfileName = _data["clientProfileName"] !== undefined ? _data["clientProfileName"] : <any>null;
+            this.tokenId = _data["tokenId"] !== undefined ? _data["tokenId"] : <any>null;
+            this.supportId = _data["supportId"] !== undefined ? _data["supportId"] : <any>null;
+            if (Array.isArray(_data["hostNames"])) {
+                this.hostNames = [] as any;
+                for (let item of _data["hostNames"])
+                    this.hostNames!.push(item);
+            }
+            else {
+                this.hostNames = <any>null;
+            }
+            this.isValidHostName = _data["isValidHostName"] !== undefined ? _data["isValidHostName"] : <any>null;
+            if (Array.isArray(_data["regions"])) {
+                this.regions = [] as any;
+                for (let item of _data["regions"])
+                    this.regions!.push(HostRegion.fromJS(item));
+            }
+            else {
+                this.regions = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): ClientProfileInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClientProfileInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
+        data["clientProfileName"] = this.clientProfileName !== undefined ? this.clientProfileName : <any>null;
+        data["tokenId"] = this.tokenId !== undefined ? this.tokenId : <any>null;
+        data["supportId"] = this.supportId !== undefined ? this.supportId : <any>null;
+        if (Array.isArray(this.hostNames)) {
+            data["hostNames"] = [];
+            for (let item of this.hostNames)
+                data["hostNames"].push(item);
+        }
+        data["isValidHostName"] = this.isValidHostName !== undefined ? this.isValidHostName : <any>null;
+        if (Array.isArray(this.regions)) {
+            data["regions"] = [];
+            for (let item of this.regions)
+                data["regions"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IClientProfileInfo {
     clientProfileId: string;
     clientProfileName: string;
     tokenId: string;
@@ -1437,18 +2325,173 @@ export interface ClientProfileInfo {
     regions: HostRegion[];
 }
 
-export interface HostRegion {
+export class HostRegion implements IHostRegion {
+    regionId!: string;
+    regionName?: string | null;
+    countryCode?: string | null;
+
+    constructor(data?: IHostRegion) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
+            this.regionName = _data["regionName"] !== undefined ? _data["regionName"] : <any>null;
+            this.countryCode = _data["countryCode"] !== undefined ? _data["countryCode"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): HostRegion {
+        data = typeof data === 'object' ? data : {};
+        let result = new HostRegion();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
+        data["regionName"] = this.regionName !== undefined ? this.regionName : <any>null;
+        data["countryCode"] = this.countryCode !== undefined ? this.countryCode : <any>null;
+        return data;
+    }
+}
+
+export interface IHostRegion {
     regionId: string;
     regionName?: string | null;
     countryCode?: string | null;
 }
 
-export interface ConfigParams {
+export class ConfigParams implements IConfigParams {
+    availableCultures!: string[];
+    strings?: AppStrings | null;
+
+    constructor(data?: IConfigParams) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.availableCultures = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["availableCultures"])) {
+                this.availableCultures = [] as any;
+                for (let item of _data["availableCultures"])
+                    this.availableCultures!.push(item);
+            }
+            else {
+                this.availableCultures = <any>null;
+            }
+            this.strings = _data["strings"] ? AppStrings.fromJS(_data["strings"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ConfigParams {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConfigParams();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.availableCultures)) {
+            data["availableCultures"] = [];
+            for (let item of this.availableCultures)
+                data["availableCultures"].push(item);
+        }
+        data["strings"] = this.strings ? this.strings.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IConfigParams {
     availableCultures: string[];
     strings?: AppStrings | null;
 }
 
-export interface AppStrings {
+export class AppStrings implements IAppStrings {
+    appName!: string;
+    disconnect!: string;
+    connect!: string;
+    disconnected!: string;
+    exit!: string;
+    manage!: string;
+    msgAccessKeyAdded!: string;
+    msgAccessKeyUpdated!: string;
+    msgCantReadAccessKey!: string;
+    msgUnsupportedContent!: string;
+    msgCantShowAd!: string;
+    open!: string;
+    openInBrowser!: string;
+
+    constructor(data?: IAppStrings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.appName = _data["appName"] !== undefined ? _data["appName"] : <any>null;
+            this.disconnect = _data["disconnect"] !== undefined ? _data["disconnect"] : <any>null;
+            this.connect = _data["connect"] !== undefined ? _data["connect"] : <any>null;
+            this.disconnected = _data["disconnected"] !== undefined ? _data["disconnected"] : <any>null;
+            this.exit = _data["exit"] !== undefined ? _data["exit"] : <any>null;
+            this.manage = _data["manage"] !== undefined ? _data["manage"] : <any>null;
+            this.msgAccessKeyAdded = _data["msgAccessKeyAdded"] !== undefined ? _data["msgAccessKeyAdded"] : <any>null;
+            this.msgAccessKeyUpdated = _data["msgAccessKeyUpdated"] !== undefined ? _data["msgAccessKeyUpdated"] : <any>null;
+            this.msgCantReadAccessKey = _data["msgCantReadAccessKey"] !== undefined ? _data["msgCantReadAccessKey"] : <any>null;
+            this.msgUnsupportedContent = _data["msgUnsupportedContent"] !== undefined ? _data["msgUnsupportedContent"] : <any>null;
+            this.msgCantShowAd = _data["msgCantShowAd"] !== undefined ? _data["msgCantShowAd"] : <any>null;
+            this.open = _data["open"] !== undefined ? _data["open"] : <any>null;
+            this.openInBrowser = _data["openInBrowser"] !== undefined ? _data["openInBrowser"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppStrings {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppStrings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["appName"] = this.appName !== undefined ? this.appName : <any>null;
+        data["disconnect"] = this.disconnect !== undefined ? this.disconnect : <any>null;
+        data["connect"] = this.connect !== undefined ? this.connect : <any>null;
+        data["disconnected"] = this.disconnected !== undefined ? this.disconnected : <any>null;
+        data["exit"] = this.exit !== undefined ? this.exit : <any>null;
+        data["manage"] = this.manage !== undefined ? this.manage : <any>null;
+        data["msgAccessKeyAdded"] = this.msgAccessKeyAdded !== undefined ? this.msgAccessKeyAdded : <any>null;
+        data["msgAccessKeyUpdated"] = this.msgAccessKeyUpdated !== undefined ? this.msgAccessKeyUpdated : <any>null;
+        data["msgCantReadAccessKey"] = this.msgCantReadAccessKey !== undefined ? this.msgCantReadAccessKey : <any>null;
+        data["msgUnsupportedContent"] = this.msgUnsupportedContent !== undefined ? this.msgUnsupportedContent : <any>null;
+        data["msgCantShowAd"] = this.msgCantShowAd !== undefined ? this.msgCantShowAd : <any>null;
+        data["open"] = this.open !== undefined ? this.open : <any>null;
+        data["openInBrowser"] = this.openInBrowser !== undefined ? this.openInBrowser : <any>null;
+        return data;
+    }
+}
+
+export interface IAppStrings {
     appName: string;
     disconnect: string;
     connect: string;
@@ -1464,22 +2507,162 @@ export interface AppStrings {
     openInBrowser: string;
 }
 
-export interface DeviceAppInfo {
+export class DeviceAppInfo implements IDeviceAppInfo {
+    appId!: string;
+    appName!: string;
+    iconPng!: string;
+
+    constructor(data?: IDeviceAppInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.appId = _data["appId"] !== undefined ? _data["appId"] : <any>null;
+            this.appName = _data["appName"] !== undefined ? _data["appName"] : <any>null;
+            this.iconPng = _data["iconPng"] !== undefined ? _data["iconPng"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DeviceAppInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceAppInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["appId"] = this.appId !== undefined ? this.appId : <any>null;
+        data["appName"] = this.appName !== undefined ? this.appName : <any>null;
+        data["iconPng"] = this.iconPng !== undefined ? this.iconPng : <any>null;
+        return data;
+    }
+}
+
+export interface IDeviceAppInfo {
     appId: string;
     appName: string;
     iconPng: string;
 }
 
-export interface ClientProfileUpdateParams {
+export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
+    clientProfileName?: PatchOfString | null;
+    regionId?: PatchOfString | null;
+
+    constructor(data?: IClientProfileUpdateParams) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.clientProfileName = _data["clientProfileName"] ? PatchOfString.fromJS(_data["clientProfileName"]) : <any>null;
+            this.regionId = _data["regionId"] ? PatchOfString.fromJS(_data["regionId"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ClientProfileUpdateParams {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClientProfileUpdateParams();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientProfileName"] = this.clientProfileName ? this.clientProfileName.toJSON() : <any>null;
+        data["regionId"] = this.regionId ? this.regionId.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IClientProfileUpdateParams {
     clientProfileName?: PatchOfString | null;
     regionId?: PatchOfString | null;
 }
 
-export interface PatchOfString {
+export class PatchOfString implements IPatchOfString {
+    value?: string | null;
+
+    constructor(data?: IPatchOfString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PatchOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new PatchOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        return data;
+    }
+}
+
+export interface IPatchOfString {
     value?: string | null;
 }
 
-export interface SubscriptionPlan {
+export class SubscriptionPlan implements ISubscriptionPlan {
+    subscriptionPlanId!: string;
+    planPrice!: string;
+
+    constructor(data?: ISubscriptionPlan) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.subscriptionPlanId = _data["subscriptionPlanId"] !== undefined ? _data["subscriptionPlanId"] : <any>null;
+            this.planPrice = _data["planPrice"] !== undefined ? _data["planPrice"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SubscriptionPlan {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubscriptionPlan();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["subscriptionPlanId"] = this.subscriptionPlanId !== undefined ? this.subscriptionPlanId : <any>null;
+        data["planPrice"] = this.planPrice !== undefined ? this.planPrice : <any>null;
+        return data;
+    }
+}
+
+export interface ISubscriptionPlan {
     subscriptionPlanId: string;
     planPrice: string;
 }
