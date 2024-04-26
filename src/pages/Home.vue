@@ -204,7 +204,6 @@
     <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
     <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
     <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
-    <MigratePublicServerDialog v-if="$vpnHoodApp.data.features.uiName !== AppName.VpnHoodConnect" v-model="ComponentRouteController.create($componentName.PublicServerHintDialog).isShow"/>
 
 </template>
 
@@ -220,12 +219,10 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
-import MigratePublicServerDialog from "@/components/MigratePublicServerDialog.vue";
 
 export default defineComponent({
   name: 'HomePage',
   components: {
-    MigratePublicServerDialog,
     ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
