@@ -9,7 +9,7 @@
           <!-- Server item -->
           <v-list-item
               v-model="defaultClientProfileId"
-              v-show="!(item.tokenId === $vpnHoodApp.data.features.defaultAccessTokenId && ($vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.GlobalServer || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers))"
+              v-show="!(item.tokenId === $vpnHoodApp.data.features.builtInAccessTokenId && ($vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.GlobalServer || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers))"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
               rounded="15"
@@ -68,10 +68,10 @@ export default defineComponent({
     defaultClientProfileId:
         {
           get() {
-            return this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId;
+            return this.$vpnHoodApp.data.settings.userSettings.clientProfileId;
           },
           async set(value: string) {
-            this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = value;
+            this.$vpnHoodApp.data.settings.userSettings.clientProfileId = value;
             await this.$vpnHoodApp.saveUserSetting();
             this.$router.replace('/');
             await this.$vpnHoodApp.connect();

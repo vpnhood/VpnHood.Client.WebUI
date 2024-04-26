@@ -44,11 +44,11 @@
           variant="elevated"
           @click="connect(item.clientProfileId)"
           class="mb-3"
-          :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId ? 'border: solid rgb(var(--v-theme-secondary)) 2px' : ''"
+          :style="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.clientProfileId ? 'border: solid rgb(var(--v-theme-secondary)) 2px' : ''"
       >
         <!-- َActive item icon -->
         <template v-slot:prepend
-                  v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.defaultClientProfileId">
+                  v-if="item.clientProfileId === $vpnHoodApp.data.settings.userSettings.clientProfileId">
           <v-avatar size="25" color="rgba(var(--v-theme-secondary), .3)">
             <v-icon size="25" color="secondary">mdi-check-all</v-icon>
           </v-avatar>
@@ -74,8 +74,8 @@
               <v-list>
 
                 <!-- Rename item -->
-                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.defaultAccessTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
-                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.defaultAccessTokenId" />
+                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.builtInAccessTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
+                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.builtInAccessTokenId" />
 
                 <!-- Diagnose item -->
                 <v-list-item
@@ -178,7 +178,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import AddServerDialog from "@/components/AddServerDialog.vue";
-import {ClientProfileInfo, ClientProfileUpdateParams,} from "@/services/VpnHood.Client.Api";
+import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName} from "@/UiConstants";
 import AppBar from "@/components/AppBar.vue";
@@ -204,14 +204,14 @@ export default defineComponent({
   methods: {
     async connect(clientProfileId: string): Promise<void> {
       this.$router.replace('/');
-      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.connect();
     },
 
     async diagnose(clientProfileId: string): Promise<void> {
       this.$router.replace('/');
-      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
       await this.$vpnHoodApp.diagnose();
     },
@@ -239,7 +239,7 @@ export default defineComponent({
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog, false);
       await this.$vpnHoodApp.updateClientProfile(
           renamedClientProfile.clientProfileId,
-          new ClientProfileUpdateParams({name: this.newClientProfileName})
+          {clientProfileName:{value: this.newClientProfileName}}
       );
       this.newClientProfileName = "";
     }

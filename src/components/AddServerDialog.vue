@@ -82,7 +82,7 @@ export default defineComponent({
     },
 
     async connect(clientProfileId: string) {
-      this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
       await this.$vpnHoodApp.saveUserSetting();
 
       // Close current sheet

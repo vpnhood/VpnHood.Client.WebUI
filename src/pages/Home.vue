@@ -259,13 +259,13 @@ export default defineComponent({
         // Change state to prevent double click on the connect button
         this.$vpnHoodApp.data.state.connectionState = AppConnectionState.Initializing;
 
+        console.log(this.$vpnHoodApp.data.features.uiName);
         // If user has no selected server and want to connect
-        if (!this.$vpnHoodApp.data.settings.userSettings.defaultClientProfileId) {
-          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHood){
-            this.$router.push("/servers");
-            return;
+        if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId) {
+          if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
+            throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
           }
-          else throw new Error(this.$t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
+          else this.$router.push("/servers");
         }
       }
 

@@ -60,14 +60,13 @@ export class VpnHoodApp {
         this.data.settings = config.settings;
         this.data.clientProfileInfos = config.clientProfileInfos;
         if (config.clientProfileInfos.length === 0) {
-            this.data.settings.userSettings.defaultClientProfileId = null;
+            this.data.settings.userSettings.clientProfileId = null;
         }
     }
 
     public async reloadState(): Promise<void> {
 
         this.data.state = await this.apiClient.getState();
-
         // Setting has change and must reload
         if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()) {
             this.data.uiState.configTime = this.data.state.configTime;
@@ -112,7 +111,7 @@ export class VpnHoodApp {
     }
 
     public async connect(): Promise<void> {
-        if (!this.data.settings.userSettings.defaultClientProfileId)
+        if (!this.data.settings.userSettings.clientProfileId)
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
 
 
@@ -127,14 +126,14 @@ export class VpnHoodApp {
 
             // Find default client profile
             const defaultClientProfile: ClientProfileInfo | undefined = this.data.clientProfileInfos.find(
-                x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
+                x => x.clientProfileId === this.data.settings.userSettings.clientProfileId);
 
-            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.defaultAccessTokenId) {
+            if (currentUTCDate >= publicServerExpireUTCDate && defaultClientProfile?.tokenId === this.data.features.builtInAccessTokenId) {
                 await this.deleteClientProfile(defaultClientProfile?.clientProfileId!);
                 throw new Error("The VpnHood public servers has been migrated to the VpnHood CONNECT app.  Please install it to use VpnHood Public Servers.")
             }
             // If selected server is VpnHood public server
-            if (defaultClientProfile?.tokenId === this.data.features.defaultAccessTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
+            if (defaultClientProfile?.tokenId === this.data.features.builtInAccessTokenId && !ComponentRouteController.isShowComponent(ComponentName.PublicServerHintDialog)) {
                 // Show public server hint
                 await ComponentRouteController.showComponent(ComponentName.PublicServerHintDialog);
                 return;
@@ -181,10 +180,10 @@ export class VpnHoodApp {
     }
 
     public async diagnose(): Promise<void> {
-        if (!this.data.settings.userSettings.defaultClientProfileId) {
+        if (!this.data.settings.userSettings.clientProfileId) {
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
         }
-        await this.apiClient.diagnose(this.data.settings.userSettings.defaultClientProfileId);
+        await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
     }
 
     public canDiagnose(): boolean {
@@ -230,7 +229,7 @@ export class VpnHoodApp {
     // Return current active server name
     public async getDefaultClientProfileName(): Promise<string> {
         let clientProfileInfo = this.data.clientProfileInfos.find(
-            x => x.clientProfileId === this.data.settings.userSettings.defaultClientProfileId);
+            x => x.clientProfileId === this.data.settings.userSettings.clientProfileId);
 
         // Just for VpnHoodConnect
         // Always set public server as default profile if user does not have a premium server or default selected server.
@@ -244,9 +243,9 @@ export class VpnHoodApp {
     // Just for VpnHoodConnect
     //------------------------------------------
     private async setDefaultClientProfile(): Promise<ClientProfileInfo> {
-        const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.defaultAccessTokenId);
+        const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.builtInAccessTokenId);
         if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
-        this.data.settings.userSettings.defaultClientProfileId = defaultServerClientProfile.clientProfileId;
+        this.data.settings.userSettings.clientProfileId = defaultServerClientProfile.clientProfileId;
         await this.saveUserSetting();
         return defaultServerClientProfile;
     }
@@ -275,13 +274,13 @@ export class VpnHoodApp {
 
     // Remove all user premium client profile
     private async removePremiumClientProfile(): Promise<void> {
-        const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.defaultAccessTokenId);
+        const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.builtInAccessTokenId);
         for (const clientProfile of premiumClientProfiles) {
             await this.deleteClientProfile(clientProfile.clientProfileId);
         }
-        const defaultServerProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.defaultAccessTokenId);
+        const defaultServerProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.builtInAccessTokenId);
         if (!defaultServerProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
-        this.data.settings.userSettings.defaultClientProfileId = defaultServerProfile.clientProfileId;
+        this.data.settings.userSettings.clientProfileId = defaultServerProfile.clientProfileId;
         await this.saveUserSetting();
     }
 
@@ -298,12 +297,12 @@ export class VpnHoodApp {
 
     // Set one of the premium client profile as default
     private async setPremiumClientProfileAsDefault(): Promise<void> {
-        const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.defaultAccessTokenId);
+        const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.builtInAccessTokenId);
         if (!premiumServer) {
             console.error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
             throw new Error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
         }
-        this.data.settings.userSettings.defaultClientProfileId = premiumServer.clientProfileId;
+        this.data.settings.userSettings.clientProfileId = premiumServer.clientProfileId;
         await this.saveUserSetting();
     }
 
