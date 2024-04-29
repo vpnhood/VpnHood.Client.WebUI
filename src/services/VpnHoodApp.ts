@@ -1,5 +1,6 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
+    AppAccount,
     AppConnectionState,
     AppFeatures,
     AppSettings,
@@ -16,6 +17,7 @@ import {AppName, ComponentName} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
+import router from '@/plugins/router'
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -151,6 +153,10 @@ export class VpnHoodApp {
     }
 
     public async diagnose(): Promise<void> {
+        if (!this.data.settings.userSettings.clientProfileId && this.data.features.isAddAccessKeySupported) {
+            await router.replace("/servers");
+            return;
+        }
         if (!this.data.settings.userSettings.clientProfileId) {
             throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
         }
@@ -214,45 +220,44 @@ export class VpnHoodApp {
     // Just for VpnHoodConnect
     //------------------------------------------
     private async setDefaultClientProfile(): Promise<ClientProfileInfo> {
-        const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.builtInAccessTokenId);
-        if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
+        const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.clientProfileId === this.data.features.builtInClientProfileId);
+        if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE"));
         this.data.settings.userSettings.clientProfileId = defaultServerClientProfile.clientProfileId;
         await this.saveUserSetting();
         return defaultServerClientProfile;
     }
 
     // Process user account and server key(s) status
-    private async processUserAccount(): Promise<void> {
+    private async processUserAccount(): Promise<AppAccount> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
-        this.data.userState.userAccount = await accountClient.get();
+        const appAccount = await accountClient.get();
+        this.data.userState.userAccount = appAccount;
 
         // User does not have an active subscription
-        if (!this.data.userState.userAccount.subscriptionId) {
+        if (!appAccount.subscriptionId) {
             console.log("User does not have an active subscription");
             await this.removePremiumClientProfile();
-            return;
         }
+        else {
+            // User purchase has an active subscription
+            console.log("User has an active subscription");
+            if (this.data.state.connectionState === AppConnectionState.Connected)
+                await this.disconnect();
 
-        // User purchase has an active subscription
-        console.log("User has an active subscription");
-        if (this.data.state.connectionState === AppConnectionState.Connected)
-            await this.disconnect();
-
-        await this.removePremiumClientProfile();
-        await this.getAndSaveSubscriptionAccessKeys(this.data.userState.userAccount.subscriptionId);
-        await this.setPremiumClientProfileAsDefault();
+            await this.removePremiumClientProfile();
+            await this.getAndSaveSubscriptionAccessKeys(appAccount.subscriptionId);
+            await this.setPremiumClientProfileAsDefault();
+        }
+        return appAccount;
     }
 
     // Remove all user premium client profile
     private async removePremiumClientProfile(): Promise<void> {
-        const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.tokenId !== this.data.features.builtInAccessTokenId);
+        const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
         for (const clientProfile of premiumClientProfiles) {
             await this.deleteClientProfile(clientProfile.clientProfileId);
         }
-        const defaultServerProfile = this.data.clientProfileInfos.find(x => x.tokenId === this.data.features.builtInAccessTokenId);
-        if (!defaultServerProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_PUBLIC_SERVER_PROFILE"));
-        this.data.settings.userSettings.clientProfileId = defaultServerProfile.clientProfileId;
-        await this.saveUserSetting();
+        await this.setDefaultClientProfile();
     }
 
     // Get subscription accessKey(s) and save as client profile
@@ -268,19 +273,25 @@ export class VpnHoodApp {
 
     // Set one of the premium client profile as default
     private async setPremiumClientProfileAsDefault(): Promise<void> {
-        const premiumServer = this.data.clientProfileInfos.find(x => x.tokenId !== this.data.features.builtInAccessTokenId);
-        if (!premiumServer) {
-            console.error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
+        const premiumServer = this.data.clientProfileInfos.find(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
+        if (!premiumServer)
             throw new Error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
-        }
+
         this.data.settings.userSettings.clientProfileId = premiumServer.clientProfileId;
         await this.saveUserSetting();
     }
 
-    public async signIn(): Promise<void> {
+    public async signIn(): Promise<AppAccount> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
-        await accountClient.signInWithGoogle();
-        await this.refreshAccount();
+        try {
+            await accountClient.signInWithGoogle();
+            return await this.refreshAccount();
+        }
+        catch (err: any){
+            if (err.message === "The operation was canceled.")
+                throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
+            throw err;
+        }
     }
 
     public async signOut(): Promise<void> {
@@ -290,9 +301,9 @@ export class VpnHoodApp {
         this.data.userState.userAccount = null;
     }
 
-    public async refreshAccount(): Promise<void> {
+    public async refreshAccount(): Promise<AppAccount> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.refresh();
-        await this.processUserAccount();
+        return await this.processUserAccount();
     }
 }

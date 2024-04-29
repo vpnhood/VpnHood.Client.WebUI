@@ -74,8 +74,8 @@
               <v-list>
 
                 <!-- Rename item -->
-                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.builtInAccessTokenId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
-                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.builtInAccessTokenId" />
+                <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId" :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
+                <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId" />
 
                 <!-- Diagnose item -->
                 <v-list-item
@@ -110,7 +110,6 @@
           <!-- Name text field -->
           <v-text-field
               v-model="currentClientProfileInfo.clientProfileName"
-              :label="$t('ENTER_NEW_NAME_FOR') + (currentClientProfileInfo.clientProfileName)"
               spellcheck="false"
               autocomplete="off"
               color="primary"

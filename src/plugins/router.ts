@@ -26,6 +26,11 @@ const routes = [
         path: '/languages',
         name: 'Languages',
         component: () => import(/* webpackChunkName: "Languages" */ '@/pages/Languages.vue'),
+    },
+    {
+        path: '/purchase-subscription',
+        name: 'Purchase Subscription',
+        component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/PurchaseSubscription.vue'),
     }
 ];
 

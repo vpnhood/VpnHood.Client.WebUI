@@ -7,7 +7,6 @@ export class UiConstants {
 
 export enum ComponentName {
     // noinspection JSUnusedGlobalSymbols
-    PurchaseSubscriptionDialog = "PurchaseSubscriptionDialog",
     TunnelClientCountryDialog = "TunnelClientCountryDialog",
     NavigationDrawer = "NavigationDrawer",
     ProtocolDialog = "ProtocolDialog",
@@ -16,7 +15,7 @@ export enum ComponentName {
     RenameServerDialog = "RenameServerDialog",
     ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",
     ServersDialogForVpnHoodConnect = "ServersDialogForVpnHoodConnect",
-    PublicServerHintDialog = "PublicServerHintDialog"
+    PrivacyPolicyDialog = "PrivacyPolicyDialog"
 }
 
 export enum LanguagesCode {

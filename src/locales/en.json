@@ -150,5 +150,8 @@
   "APP_LANGUAGE": "App language",
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "Contribute edit languages",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "If you see a problem with the translation or have a suggestion, please let us know through the link below.",
-  "ORDER_PROCESSING_FAILED": "Your order could not be processed. If your order has been registered and activated on Google Play, please reach out to our support team. If not, feel free to attempt your purchase again."
+  "ORDER_PROCESSING_FAILED": "Your order could not be processed. If your order has been registered and activated on Google Play, please reach out to our support team. If not, feel free to attempt your purchase again.",
+  "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
+  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
 }

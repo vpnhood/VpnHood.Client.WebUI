@@ -9,7 +9,7 @@
           <!-- Server item -->
           <v-list-item
               v-model="defaultClientProfileId"
-              v-show="!(item.tokenId === $vpnHoodApp.data.features.builtInAccessTokenId && ($vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.GlobalServer || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers))"
+              v-show="!(item.tokenId === $vpnHoodApp.data.features.builtInClientProfileId && ($vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.GlobalServer || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers))"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
               rounded="15"

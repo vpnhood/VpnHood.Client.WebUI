@@ -6,10 +6,33 @@
     <v-row align-content="space-between" justify="center" class="h-100 px-md-2 pb-3 ma-0">
 
         <!-- Go Premium button Only for VpnHoodConnect -->
-        <v-col  cols="12" class="text-center pt-0">
-          <PurchaseSubscriptionDialog
-              v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"
-              v-model="ComponentRouteController.create($componentName.PurchaseSubscriptionDialog).isShow"
+        <v-col v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"  cols="12" class="text-center pt-0">
+
+          <!-- Go Premium button for guest and normal user -->
+          <v-btn
+              v-if="!$vpnHoodApp.data.userState.userAccount?.subscriptionId"
+              :flat="true"
+              variant="outlined"
+              color="tertiary"
+              rounded="pill"
+              size="small"
+              height="40"
+              @click="$router.push('/purchase-subscription')"
+              class="ps-1 pe-3 text-capitalize"
+          >
+            <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
+            {{$t("PREMIUM_SERVER_AD_TITLE")}}
+          </v-btn>
+
+          <!-- Go Premium Server button for premium user -->
+          <v-chip
+              v-else
+              prepend-icon="mdi-crown"
+              :text="$t('YOU_ARE_PREMIUM')"
+              color="secondary-lighten-1"
+              variant="tonal"
+              tag="h6"
+              @click="$router.push('/purchase-subscription')"
           />
         </v-col>
 
@@ -21,12 +44,12 @@
                  :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
             <v-col cols="auto d-inline-flex">
               <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
-              <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
+              <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
               <span class="text-white opacity-50 text-caption">Mbps</span>
             </v-col>
             <v-col cols="auto d-inline-flex">
               <span class="text-ui-tertiary text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
-              <span class="px-2 text-body-2">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
+              <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
               <span class="text-white opacity-50 text-caption order-last">Mbps</span>
             </v-col>
           </v-row>
@@ -212,7 +235,6 @@ import {defineComponent} from 'vue';
 import {AppConnectionState, FilterMode} from "@/services/VpnHood.Client.Api";
 import TunnelClientCountryDialog from "@/components/TunnelClientCountryDialog.vue";
 import ProtocolDialog from "@/components/ProtocolDialog.vue";
-import PurchaseSubscriptionDialog from "@/components/PurchaseSubscriptionDialog.vue";
 import HomeAppBar from "@/components/HomeAppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
@@ -227,7 +249,6 @@ export default defineComponent({
     UpdateSnackbar,
     SuppressSnackbar,
     HomeAppBar,
-    PurchaseSubscriptionDialog,
     ProtocolDialog,
     TunnelClientCountryDialog
   },

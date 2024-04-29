@@ -47,13 +47,15 @@ export default defineComponent({
     };
   },
   async created() {
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
     // Show privacy policy if app is VpnHoodCONNECT
     if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem(LocalStorage.acceptedPrivacyPolicy) !=="true"){
       this.isShowPrivacyPolicyDialog = true;
       return;
     }
 
-    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect)
+    if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported)
       await this.vpnHoodConnectProcessAccount();
 
   },
@@ -74,7 +76,6 @@ export default defineComponent({
     async vpnHoodConnectProcessAccount(){
       this.isShowPrivacyPolicyDialog = false;
       const accountClient = ClientApiFactory.instance.createAccountClient();
-      this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
       this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
 
       if(this.$vpnHoodApp.data.userState.userAccount?.subscriptionId){
