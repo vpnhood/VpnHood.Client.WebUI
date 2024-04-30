@@ -204,7 +204,7 @@
               >
                 <span>{{ $t("SELECTED_SERVER") }}</span>
                 <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{ defaultClientProfileName }}</span>
+                <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
 
                 <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
                   <v-icon class="button-premium-icon" icon="mdi-crown" />
@@ -241,6 +241,7 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
+import i18n from "@/locales/i18n";
 
 export default defineComponent({
   name: 'HomePage',
@@ -257,12 +258,11 @@ export default defineComponent({
       AppName,
       AppConnectionState,
       ComponentRouteController,
-      defaultClientProfileName: "",
       lastConnectPressedTime: Date.now() - 1000,
     }
   },
+
   async created() {
-    this.defaultClientProfileName = await this.$vpnHoodApp.getDefaultClientProfileName();
     // Reload 'state' every 1 second if app window is focused.
     setInterval(async () => {
       if (!document.hidden)
@@ -271,6 +271,13 @@ export default defineComponent({
   },
 
   methods: {
+    getDefaultClientProfileName(): string{
+      let clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(
+          x => x.clientProfileId === this.$vpnHoodApp.data.state.clientProfileId);
+
+      return clientProfileInfo === undefined ? i18n.global.t("NO_SERVER_SELECTED") : clientProfileInfo.clientProfileName;
+    },
+
     async onConnectButtonClick(): Promise<void> {
       if (this.lastConnectPressedTime >= (Date.now() - 1000))
         return;
@@ -393,13 +400,12 @@ export default defineComponent({
     },
 
     showServers(): void{
-      if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect){
+      if (this.$vpnHoodApp.data.features.isAddAccessKeySupported)
+        this.$router.push('/servers');
+      else
         this.$vpnHoodApp.data.userState.userAccount?.subscriptionId
             ? this.ComponentRouteController.showComponent(this.$componentName.ServersDialogForVpnHoodConnect)
-            : this.ComponentRouteController.showComponent(this.$componentName.PurchaseSubscriptionDialog);
-      }
-      else
-        this.$router.push('/servers');
+            : this.$router.push("/purchase-subscription");
     }
   }
 });

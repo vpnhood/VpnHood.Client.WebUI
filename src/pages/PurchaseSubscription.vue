@@ -68,11 +68,9 @@
                       :icon="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
                       : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
-
                       :color="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'secondary-lighten-1'
                       : 'tertiary'"
-
                       class="ms-2"
                   />
                 </template>
@@ -152,8 +150,6 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-
-
 
   <!-- Login dialog -->
   <v-dialog v-model="showLoginDialog" max-width="600">
@@ -293,7 +289,7 @@ export default defineComponent({
         await this.processPendingOrder(providerOrderId);
       }
       catch (err: any){
-        if(err === "Task Canceled Exception.")
+        if (err.exceptionTypeName === "OperationCanceledException")
           console.log(err);
         else throw err;
       }

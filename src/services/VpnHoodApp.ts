@@ -204,27 +204,26 @@ export class VpnHoodApp {
     }
 
     // Return current active server name
-    public async getDefaultClientProfileName(): Promise<string> {
+   /* public async getDefaultClientProfileName(): Promise<string> {
         let clientProfileInfo = this.data.clientProfileInfos.find(
-            x => x.clientProfileId === this.data.settings.userSettings.clientProfileId);
+            x => x.clientProfileId === this.data.state.clientProfileId);
 
         // Just for VpnHoodConnect
         // Always set public server as default profile if user does not have a premium server or default selected server.
-        if (!clientProfileInfo && this.data.features.uiName === AppName.VpnHoodConnect)
+        if (!clientProfileInfo && !this.data.features.isAddAccessKeySupported)
            clientProfileInfo = await this.setDefaultClientProfile();
 
         return clientProfileInfo === undefined ? i18n.global.t("NO_SERVER_SELECTED") : clientProfileInfo.clientProfileName;
-    }
+    }*/
 
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
-    private async setDefaultClientProfile(): Promise<ClientProfileInfo> {
+    private async setDefaultClientProfile(): Promise<void> {
         const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.clientProfileId === this.data.features.builtInClientProfileId);
         if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE"));
         this.data.settings.userSettings.clientProfileId = defaultServerClientProfile.clientProfileId;
         await this.saveUserSetting();
-        return defaultServerClientProfile;
     }
 
     // Process user account and server key(s) status
@@ -288,7 +287,7 @@ export class VpnHoodApp {
             return await this.refreshAccount();
         }
         catch (err: any){
-            if (err.message === "The operation was canceled.")
+            if (err.exceptionTypeName === "OperationCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
             throw err;
         }
