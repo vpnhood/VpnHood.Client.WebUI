@@ -1,6 +1,9 @@
 {
   "SYSTEM_DEFAULT_LANGUAGE": "الإعدادات الافتراضية للنظام",
+  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "اللغة",
+  "VPN_HOOD_APP_NAME": "VpnHood!",
+  "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "الإعدادات",
   "ADD": "أضف",
   "VERSION": "الإصدار",
@@ -41,6 +44,10 @@
   "INVALID_ACCESS_KEY_FORMAT": "مفتاح الخادم لديه تنسيق غير صالح.",
   "INVALID_ACCESS_KEY_PREFIX": "يجب أن يبدأ مفتاح الخادم بـ",
   "SERVERS": "الخوادم",
+  "PRIVACY_POLICY": "Privacy Policy",
+  "READ_PRIVACY_POLICY": "Please read our",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_TITLE": "VpnHood! CONNECT Privacy Policy",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_DESC": "Welcome to VpnHood! CONNECT, Your privacy is of utmost importance to us. Before you proceed, we strongly encourage you to take a few moments to read through our Privacy Policy. This policy outlines the types of personal information we collect, how we use this information, and the measures we take to safeguard your data.<br/><br/>Understanding our Privacy Policy will help you make informed decisions about your use of our app. If you have any questions or concerns about our policy, please don’t hesitate to contact us.<br/><br/>Once you’ve read and understood our Privacy Policy, please click on the ‘Accept and Continue’ button to proceed with using our app. By clicking ‘Accept and Continue’, you acknowledge that you accept the terms outlined in our Privacy Policy.",
   "APP_FILTER": "تصفية التطبيقات",
   "APP_FILTER_DESC": "أي التطبيقات يمكنها استخدام VPN؟",
   "APP_FILTER_STATUS_TITLE": "التطبيقات",
@@ -97,7 +104,6 @@
   "YES": "نعم",
   "RECOMMENDED": "موصى به",
   "OF": "من",
-  "ENTER_NEW_NAME_FOR": "أدخل اسمًا جديدًا لـ ",
   "ERROR": "خطأ",
   "APP_FILTER_DISCONNECTING_NOTE": "ملاحظة: سيتم قطع الاتصال فورًا لتطبيق التغييرات",
   "OOPS": "عفوًا!",
@@ -144,5 +150,8 @@
   "APP_LANGUAGE": "لغة التطبيق",
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "ساهم في تحرير اللغات",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "إذا رأيت مشكلة في الترجمة أو لديك اقتراح، يرجى إعلامنا من خلال الرابط أدناه.",
-  "ORDER_PROCESSING_FAILED": "لم يتمكن من معالجة طلبك. إذا تم تسجيل طلبك وتنشيطه على Google Play، فيرجى الاتصال بفريق الدعم الخاص بنا. إذا لم يكن الأمر كذلك، فلا تتردد في محاولة الشراء مرة أخرى."
+  "ORDER_PROCESSING_FAILED": "لم يتمكن من معالجة طلبك. إذا تم تسجيل طلبك وتنشيطه على Google Play، فيرجى الاتصال بفريق الدعم الخاص بنا. إذا لم يكن الأمر كذلك، فلا تتردد في محاولة الشراء مرة أخرى.",
+  "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
+  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
 }
