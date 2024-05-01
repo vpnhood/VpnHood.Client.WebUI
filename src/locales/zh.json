@@ -39,7 +39,6 @@
   "ADD_ACCESS_KEY_TITLE": "添加服务器密钥",
   "ADD_ACCESS_KEY_SUBTITLE": "复制并粘贴服务器密钥以添加服务器。",
   "INVALID_ACCESS_KEY_FORMAT": "服务器密钥格式无效。",
-  "INVALID_ACCESS_KEY_PREFIX": "服务器密钥必须以此开头",
   "SERVERS": "服务器",
   "APP_FILTER": "应用程序过滤器",
   "APP_FILTER_DESC": "哪些应用程序可以使用VPN？",
