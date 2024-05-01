@@ -150,7 +150,7 @@
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "贡献编辑语言",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "如果您发现翻译有问题或有任何建议，请通过下面的按钮告诉我们。",
   "ORDER_PROCESSING_FAILED": "无法处理您的订单。如果您的订单已在 Google Play 上注册并激活，请联系我们的支持团队。如果没有，请随时尝试再次购买。",
-  "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
-  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
-  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
+  "PURCHASE_SUBSCRIPTION": "购买订阅",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "您选择的计划已经订阅。您可以选择另一个计划来更改当前的订阅。",
+  "SIGN_IN_CANCELED_BY_USER": "要购买订阅，您需要使用 Google 登录。如果您愿意，请再次进行。"
 }
