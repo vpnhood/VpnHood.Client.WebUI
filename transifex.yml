@@ -6,4 +6,4 @@ filters:
     translation_files_expression: 'src/locales/<lang>.json'
 settings:
   language_mapping:
-    zh: zh-Hans
+    zh-Hans: zh
