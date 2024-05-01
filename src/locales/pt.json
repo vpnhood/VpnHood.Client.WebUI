@@ -1,6 +1,6 @@
 {
   "SYSTEM_DEFAULT_LANGUAGE": "Padrão do sistema",
-  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
+  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "",
   "LANGUAGE": "Idioma",
   "VPN_HOOD_APP_NAME": "VpnHood!",
   "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
@@ -42,12 +42,11 @@
   "ADD_ACCESS_KEY_TITLE": "Adicionar chave do servidor",
   "ADD_ACCESS_KEY_SUBTITLE": "Copie e cole uma chave do servidor para adicionar um servidor.",
   "INVALID_ACCESS_KEY_FORMAT": "A chave do servidor tem formato inválido.",
-  "INVALID_ACCESS_KEY_PREFIX": "A chave do servidor deve começar com",
   "SERVERS": "Servidores",
-  "PRIVACY_POLICY": "Privacy Policy",
-  "READ_PRIVACY_POLICY": "Please read our",
-  "VPNHOOD_CONNECT_PRIVACY_POLICY_TITLE": "VpnHood! CONNECT Privacy Policy",
-  "VPNHOOD_CONNECT_PRIVACY_POLICY_DESC": "Welcome to VpnHood! CONNECT, Your privacy is of utmost importance to us. Before you proceed, we strongly encourage you to take a few moments to read through our Privacy Policy. This policy outlines the types of personal information we collect, how we use this information, and the measures we take to safeguard your data.<br/><br/>Understanding our Privacy Policy will help you make informed decisions about your use of our app. If you have any questions or concerns about our policy, please don’t hesitate to contact us.<br/><br/>Once you’ve read and understood our Privacy Policy, please click on the ‘Accept and Continue’ button to proceed with using our app. By clicking ‘Accept and Continue’, you acknowledge that you accept the terms outlined in our Privacy Policy.",
+  "PRIVACY_POLICY": "",
+  "READ_PRIVACY_POLICY": "",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_TITLE": "",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_DESC": "",
   "APP_FILTER": "Filtro de Apps",
   "APP_FILTER_DESC": "Quais apps podem usar VPN?",
   "APP_FILTER_STATUS_TITLE": "Apps",
@@ -151,7 +150,7 @@
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "Contribuir editando idiomas",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "Se você vê um problema com a tradução ou tem uma sugestão, por favor nos informe através do link abaixo.",
   "ORDER_PROCESSING_FAILED": "Seu pedido não pôde ser processado. Se o seu pedido foi registrado e ativado no Google Play, entre em contato com nossa equipe de suporte. Caso contrário, sinta-se à vontade para tentar fazer sua compra novamente.",
-  "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
-  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
-  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
+  "PURCHASE_SUBSCRIPTION": "Comprar Assinatura",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "O plano selecionado já está assinado. Você pode escolher outro plano para alterar sua assinatura atual.",
+  "SIGN_IN_CANCELED_BY_USER": "Para comprar uma assinatura, você precisa fazer login com o Google. Se desejar, por favor, prossiga novamente."
 }
