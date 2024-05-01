@@ -110,7 +110,7 @@
   "LOAD_APP_ERROR_DESC": "مشکلی در اجرای برنامه وجود دارد",
   "RELOAD_APP": "اجرای دوباره برنامه",
   "NO_SERVER_AVAILABLE": "در حال حاظر هیچ سرور فعالی وجود ندارد، لطفا با استفاده از دکمه 'افزودن سرور' یک سرور جدید اضافه کنید.",
-  "GET_SERVER_KEY_METHODS_DESC": "\n\n<h3 class=\"mb-3\">کلید سرور ندارید؟</h3><p class=\"mb-2\">اگر برای استفاده شخصی به VPN رایگان نیاز دارید، <a href=\"https://play.google.com/store/apps/details?id=com.vpnhood.connect.android\" target=\"_blank\">برنامه \"VpnHood! CONNECT\" را نصب کنید</a>. در غیر این صورت می توانید از طریق روش های زیر یک کلید سرور به دست آورید:</p><ul class=\"ps-3\"><li class=\"mb-2\">کلیدهای سرور را از دوستان، جوامعی که آنها را توزیع می کنند، یا فروشندگان ثالث تهیه کنید.</li><li>سرور VpnHood خود را روی یک میزبان سرور راه اندازی کنید و خودتان کلید سرور ایجاد کنید.</li></ul>",
+  "GET_SERVER_KEY_METHODS_DESC": "کلید سرور ندارید؟</h3><p class=\"mb-2\">اگر برای استفاده شخصی به VPN رایگان نیاز دارید، <a href=\"https://play.google.com/store/apps/details?id=com.vpnhood.connect.android\" target=\"_blank\">برنامه \"VpnHood! CONNECT\" را نصب کنید</a>. در غیر این صورت می توانید از طریق روش های زیر یک کلید سرور به دست آورید:</p><ul class=\"ps-3\"><li class=\"mb-2\">کلیدهای سرور را از دوستان، جوامعی که آنها را توزیع می کنند، یا فروشندگان ثالث تهیه کنید.</li><li>سرور VpnHood خود را روی یک میزبان سرور راه اندازی کنید و خودتان کلید سرور ایجاد کنید.</li></ul>",
   "CHECK_FOR_UPDATE": "بررسی نسخه جدید",
   "EXPIRE": "انقضاء",
   "LESS_LATENCY": "تاخیر کمتر",
