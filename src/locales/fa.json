@@ -1,6 +1,9 @@
 {
-  "LANGUAGE": "زبان",
   "SYSTEM_DEFAULT_LANGUAGE": "پیش فرض دستگاه",
+  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
+  "LANGUAGE": "زبان",
+  "VPN_HOOD_APP_NAME": "VpnHood!",
+  "VPN_HOOD_CONNECT_APP_NAME": "VpnHood! CONNECT",
   "SETTINGS": "تنظیمات",
   "ADD": "افزودن",
   "VERSION": "نسخه",
@@ -41,6 +44,10 @@
   "INVALID_ACCESS_KEY_FORMAT": "کلید سرور نامعتبر است.",
   "INVALID_ACCESS_KEY_PREFIX": "کلید سرور باید با {x} شروع شود.",
   "SERVERS": "سرورها",
+  "PRIVACY_POLICY": "Privacy Policy",
+  "READ_PRIVACY_POLICY": "Please read our",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_TITLE": "VpnHood! CONNECT Privacy Policy",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_DESC": "Welcome to VpnHood! CONNECT, Your privacy is of utmost importance to us. Before you proceed, we strongly encourage you to take a few moments to read through our Privacy Policy. This policy outlines the types of personal information we collect, how we use this information, and the measures we take to safeguard your data.<br/><br/>Understanding our Privacy Policy will help you make informed decisions about your use of our app. If you have any questions or concerns about our policy, please don’t hesitate to contact us.<br/><br/>Once you’ve read and understood our Privacy Policy, please click on the ‘Accept and Continue’ button to proceed with using our app. By clicking ‘Accept and Continue’, you acknowledge that you accept the terms outlined in our Privacy Policy.",
   "APP_FILTER": "فیلتر برنامه‌ها",
   "APP_FILTER_DESC": "کدام برنامه‌ها می‌توانند از فیلترشکن استفاده کنند؟",
   "APP_FILTER_STATUS_TITLE": "برنامه‌ها",
@@ -97,7 +104,6 @@
   "YES": "بله",
   "RECOMMENDED": "پیشنهادی",
   "OF": "از",
-  "ENTER_NEW_NAME_FOR": "ورود نام جدید برای ",
   "ERROR": "خطا",
   "APP_FILTER_DISCONNECTING_NOTE": "توجه: ارتباط شما بلافاصله قطع خواهد شد تا تغییرات اعمال شود.",
   "OOPS": "اوووه!",
@@ -144,5 +150,8 @@
   "APP_LANGUAGE": "زبان برنامه",
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "کمک به ویرایش زبان‌ها",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "لطفا چنانچه مشکلی در ترجمه مشاهده می‌کنید یا پیشنهادی دارید، از طریق لینک زیر با ما درمیان بگذارید.",
-  "ORDER_PROCESSING_FAILED": "سفارش شما قابل پردازش نبود. اگر سفارش شما در Google Play ثبت و فعال شده است، لطفاً با تیم پشتیبانی ما تماس بگیرید. در غیر این صورت، لطفاً دوباره تلاش کنید تا خرید خود را انجام دهید."
+  "ORDER_PROCESSING_FAILED": "سفارش شما قابل پردازش نبود. اگر سفارش شما در Google Play ثبت و فعال شده است، لطفاً با تیم پشتیبانی ما تماس بگیرید. در غیر این صورت، لطفاً دوباره تلاش کنید تا خرید خود را انجام دهید.",
+  "PURCHASE_SUBSCRIPTION": "خرید اشتراک",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "اشتراک انتخاب شده در حال حاضر برای شما فعال است، برای تغییر اشتراک می‌توانید سایر گزینه‌ها را انتخاب کنید.",
+  "SIGN_IN_CANCELED_BY_USER": "برای خرید اشتراک لازم است تا با حساب گوگل وارد شوید. در صورت تمایل می‌توانید دوباره اقدام نمایید."
 }
