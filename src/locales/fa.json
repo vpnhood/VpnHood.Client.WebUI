@@ -42,7 +42,6 @@
   "ADD_ACCESS_KEY_TITLE": "افزودن کلید سرور",
   "ADD_ACCESS_KEY_SUBTITLE": "کلید سرور خود را وارد کنید تا اضافه شود.",
   "INVALID_ACCESS_KEY_FORMAT": "کلید سرور نامعتبر است.",
-  "INVALID_ACCESS_KEY_PREFIX": "کلید سرور باید با {x} شروع شود.",
   "SERVERS": "سرورها",
   "PRIVACY_POLICY": "",
   "READ_PRIVACY_POLICY": "",
