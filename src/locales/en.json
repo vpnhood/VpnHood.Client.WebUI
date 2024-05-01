@@ -42,7 +42,6 @@
   "ADD_ACCESS_KEY_TITLE": "Add server key",
   "ADD_ACCESS_KEY_SUBTITLE": "Copy and paste an server key to add a server.",
   "INVALID_ACCESS_KEY_FORMAT": "The serverKey has invalid format.",
-  "INVALID_ACCESS_KEY_PREFIX": "The serverKey must starts with ",
   "SERVERS": "Servers",
   "PRIVACY_POLICY": "Privacy Policy",
   "READ_PRIVACY_POLICY": "Please read our",
