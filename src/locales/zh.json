@@ -1,6 +1,9 @@
 {
   "SYSTEM_DEFAULT_LANGUAGE": "系统默认",
+  "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "",
   "LANGUAGE": "语言",
+  "VPN_HOOD_APP_NAME": "",
+  "VPN_HOOD_CONNECT_APP_NAME": "",
   "SETTINGS": "设置",
   "ADD": "添加",
   "VERSION": "版本",
@@ -40,6 +43,10 @@
   "ADD_ACCESS_KEY_SUBTITLE": "复制并粘贴服务器密钥以添加服务器。",
   "INVALID_ACCESS_KEY_FORMAT": "服务器密钥格式无效。",
   "SERVERS": "服务器",
+  "PRIVACY_POLICY": "",
+  "READ_PRIVACY_POLICY": "",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_TITLE": "",
+  "VPNHOOD_CONNECT_PRIVACY_POLICY_DESC": "",
   "APP_FILTER": "应用程序过滤器",
   "APP_FILTER_DESC": "哪些应用程序可以使用VPN？",
   "APP_FILTER_STATUS_TITLE": "应用程序",
@@ -142,5 +149,8 @@
   "APP_LANGUAGE": "应用语言",
   "CONTRIBUTE_EDIT_LANGUAGES_Title": "贡献编辑语言",
   "CONTRIBUTE_EDIT_LANGUAGES_DESC": "如果您发现翻译有问题或有任何建议，请通过下面的按钮告诉我们。",
-  "ORDER_PROCESSING_FAILED": "无法处理您的订单。如果您的订单已在 Google Play 上注册并激活，请联系我们的支持团队。如果没有，请随时尝试再次购买。"
+  "ORDER_PROCESSING_FAILED": "无法处理您的订单。如果您的订单已在 Google Play 上注册并激活，请联系我们的支持团队。如果没有，请随时尝试再次购买。",
+  "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
+  "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
+  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
 }
