@@ -94,10 +94,6 @@
   "CURRENT_VERSION": "Sua versão:",
   "NEW_VERSION": "Nova versão:",
   "PREMIUM_SERVER_AD_TITLE": "Torne-se premium e remova os anúncios",
-  "PREMIUM_FEATURE_1": "Remover anúncios",
-  "PREMIUM_FEATURE_2": "Renovação automática mensal",
-  "PREMIUM_FEATURE_3": "Largura de banda ilimitada",
-  "PREMIUM_FEATURE_4": "Cancelar a qualquer momento no Google Play",
   "CONTINUE": "Continuar",
   "NO": "Não",
   "YES": "Sim",
@@ -152,5 +148,15 @@
   "ORDER_PROCESSING_FAILED": "Seu pedido não pôde ser processado. Se o seu pedido foi registrado e ativado no Google Play, entre em contato com nossa equipe de suporte. Caso contrário, sinta-se à vontade para tentar fazer sua compra novamente.",
   "PURCHASE_SUBSCRIPTION": "Comprar Assinatura",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "O plano selecionado já está assinado. Você pode escolher outro plano para alterar sua assinatura atual.",
-  "SIGN_IN_CANCELED_BY_USER": "Para comprar uma assinatura, você precisa fazer login com o Google. Se desejar, por favor, prossiga novamente."
+  "SIGN_IN_CANCELED_BY_USER": "Para comprar uma assinatura, você precisa fazer login com o Google. Se desejar, por favor, prossiga novamente.",
+  "PLANS_ARE_AUTOMATICALLY_RENEWED": "Todos os planos são renovados automaticamente todos os meses.",
+  "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Você pode cancelar a qualquer momento no Google Play.",
+  "FREE": "GRÁTIS",
+  "PREMIUM": "PREMIUM",
+  "SPEED": "Velocidade",
+  "UNLIMITED": "Ilimitado",
+  "TRAFFIC": "Tráfego",
+  "NO_ADS": "Sem anúncios",
+  "ALWAYS_ON": "Sempre ligado",
+  "SUPPORT": "Suporte"
 }

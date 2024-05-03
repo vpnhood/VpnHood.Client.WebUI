@@ -94,10 +94,6 @@
   "CURRENT_VERSION": "الإصدار الحالي:",
   "NEW_VERSION": "الإصدار الجديد:",
   "PREMIUM_SERVER_AD_TITLE": "تحول إلى النسخة المميزة وإزالة الإعلانات",
-  "PREMIUM_FEATURE_1": "إزالة الإعلانات",
-  "PREMIUM_FEATURE_2": "تجديد تلقائي شهري",
-  "PREMIUM_FEATURE_3": "نطاق بيانات غير محدود",
-  "PREMIUM_FEATURE_4": "إلغاء في أي وقت على Google Play",
   "CONTINUE": "استمر",
   "NO": "لا",
   "YES": "نعم",
@@ -152,5 +148,15 @@
   "ORDER_PROCESSING_FAILED": "لم يتمكن من معالجة طلبك. إذا تم تسجيل طلبك وتنشيطه على Google Play، فيرجى الاتصال بفريق الدعم الخاص بنا. إذا لم يكن الأمر كذلك، فلا تتردد في محاولة الشراء مرة أخرى.",
   "PURCHASE_SUBSCRIPTION": "شراء الاشتراك",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "الخطة المحددة مشترك فيها بالفعل. يمكنك اختيار خطة أخرى لتغيير اشتراكك الحالي.",
-  "SIGN_IN_CANCELED_BY_USER": "لشراء اشتراك، تحتاج إلى تسجيل الدخول باستخدام Google. إذا كنت ترغب في ذلك، يرجى المتابعة مرة أخرى."
+  "SIGN_IN_CANCELED_BY_USER": "لشراء اشتراك، تحتاج إلى تسجيل الدخول باستخدام Google. إذا كنت ترغب في ذلك، يرجى المتابعة مرة أخرى.",
+  "PLANS_ARE_AUTOMATICALLY_RENEWED": "جميع الخطط تتجدد تلقائيًا كل شهر.",
+  "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "يمكنك الإلغاء في أي وقت على Google Play.",
+  "FREE": "مجانا",
+  "PREMIUM": "ممتاز",
+  "SPEED": "السرعة",
+  "UNLIMITED": "غير محدود",
+  "TRAFFIC": "المرور",
+  "NO_ADS": "بدون إعلانات",
+  "ALWAYS_ON": "دائما متصل",
+  "SUPPORT": "الدعم"
 }

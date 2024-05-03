@@ -94,10 +94,6 @@
   "CURRENT_VERSION": "您的版本：",
   "NEW_VERSION": "新版本：",
   "PREMIUM_SERVER_AD_TITLE": "升级为高级版并移除广告",
-  "PREMIUM_FEATURE_1": "移除广告",
-  "PREMIUM_FEATURE_2": "每月自动续订",
-  "PREMIUM_FEATURE_3": "无限带宽",
-  "PREMIUM_FEATURE_4": "随时在Google Play取消",
   "CONTINUE": "继续",
   "NO": "否",
   "YES": "是",
@@ -152,5 +148,15 @@
   "ORDER_PROCESSING_FAILED": "无法处理您的订单。如果您的订单已在 Google Play 上注册并激活，请联系我们的支持团队。如果没有，请随时尝试再次购买。",
   "PURCHASE_SUBSCRIPTION": "购买订阅",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "您选择的计划已经订阅。您可以选择另一个计划来更改当前的订阅。",
-  "SIGN_IN_CANCELED_BY_USER": "要购买订阅，您需要使用 Google 登录。如果您愿意，请再次进行。"
+  "SIGN_IN_CANCELED_BY_USER": "要购买订阅，您需要使用 Google 登录。如果您愿意，请再次进行。",
+  "PLANS_ARE_AUTOMATICALLY_RENEWED": "所有计划每月自动续订。",
+  "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "您可以随时在Google Play上取消。",
+  "FREE": "免费",
+  "PREMIUM": "高级",
+  "SPEED": "速度",
+  "UNLIMITED": "无限",
+  "TRAFFIC": "流量",
+  "NO_ADS": "无广告",
+  "ALWAYS_ON": "始终开启",
+  "SUPPORT": "支持"
 }
