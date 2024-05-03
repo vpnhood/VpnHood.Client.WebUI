@@ -93,7 +93,7 @@
   "UPDATE_FROM_ALTERNATIVE_LINK_NOTICE": "Use only if you do not have access to Google Play",
   "CURRENT_VERSION": "Your Version:",
   "NEW_VERSION": "New Version:",
-  "PREMIUM_SERVER_AD_TITLE": "Go premium & Remove Ads",
+  "PREMIUM_SERVER_AD_TITLE": "Go Premium, Go Beyond!",
   "PREMIUM_FEATURE_1": "Remove Ads",
   "PREMIUM_FEATURE_2": "Auto renewed monthly",
   "PREMIUM_FEATURE_3": "Unlimited bandwidth",
@@ -152,5 +152,15 @@
   "ORDER_PROCESSING_FAILED": "Your order could not be processed. If your order has been registered and activated on Google Play, please reach out to our support team. If not, feel free to attempt your purchase again.",
   "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
-  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again."
+  "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again.",
+  "PLANS_ARE_AUTOMATICALLY_RENEWED": "All plans are automatically renewed monthly.",
+  "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "You can cancel anytime on Google Play.",
+  "FREE": "FREE",
+  "PREMIUM": "PREMIUM",
+  "SPEED": "Speed",
+  "UNLIMITED": "Unlimited",
+  "TRAFFIC": "Traffic",
+  "NO_ADS": "No Ads",
+  "ALWAYS_ON": "Always On",
+  "SUPPORT": "Support"
 }

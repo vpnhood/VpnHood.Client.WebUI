@@ -10,20 +10,46 @@
 
         <!-- Products list -->
         <template v-if="subscriptionPlans.length > 0">
-          <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-5 mb-3 w-100">
+          <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
             <!-- Image -->
-            <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="200px" class="mx-auto"/>
+            <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="150px" class="mx-auto"/>
 
             <!-- Title -->
-            <h3 class="title-bold border-b border-tertiary border-opacity-25 text-tertiary text-uppercase text-center pb-2 mb-2">
+            <h3 class="title-bold text-tertiary text-uppercase text-center pb-2 mb-2">
               {{$t("PREMIUM_SERVER_AD_TITLE")}}</h3>
 
             <!-- Description -->
-            <ul class="list-unstyled text-white text-body-2">
-              <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_1")}}</li>
-              <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_2")}}</li>
-              <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_3")}}</li>
-              <li class="py-1"><v-icon class="me-3" icon="mdi-check-decagram-outline" color="tertiary"/>{{$t("PREMIUM_FEATURE_4")}}</li>
+            <ul id="subscriptionFeaturesList">
+              <li>
+                <span class="feature-title"></span>
+                <h4 class="text-center text-white opacity-60">{{$t("FREE")}}</h4>
+                <h4 class="text-center text-secondary-lighten-1">{{$t("PREMIUM")}}</h4>
+              </li>
+              <li>
+                <span class="feature-title">{{$t("SPEED")}}</span>
+                <span class="free-feature">{{$t("UNLIMITED")}}</span>
+                <span class="free-feature">{{$t("UNLIMITED")}}</span>
+              </li>
+              <li>
+                <span class="feature-title">{{$t("TRAFFIC")}}</span>
+                <span class="free-feature">{{$t("UNLIMITED")}}</span>
+                <span class="free-feature">{{$t("UNLIMITED")}}</span>
+              </li>
+              <li>
+                <span class="feature-title">{{$t("NO_ADS")}}</span>
+                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+              </li>
+              <li>
+                <span class="feature-title">{{$t("ALWAYS_ON")}}</span>
+                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+              </li>
+              <li>
+                <span class="feature-title">{{$t("SUPPORT")}}</span>
+                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+              </li>
             </ul>
           </v-card-item>
 
@@ -38,15 +64,15 @@
                   rounded="lg"
                   base-color="primary-darken-2"
                   variant="flat"
-                  :class="[$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-4', 'mb-3 pe-2 border']"
+                  :class="[$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
                   @click="showPlanDetails(plan.subscriptionPlanId)"
               >
 
                 <!-- Plan title -->
                 <v-list-item-title class="d-flex align-center">
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</h4>
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</h4>
-                  <h4 v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</h4>
+                  <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{ $t("GLOBAL_SERVERS") }}</span>
+                  <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</span>
+                  <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{ $t("BUNDLE_SERVERS") }}</span>
                 </v-list-item-title>
 
                 <!-- Already subscribed -->
@@ -79,6 +105,10 @@
           </v-card-item>
         </template>
 
+      <ul class="text-white opacity-30 text-caption ps-4">
+        <li>{{$t("PLANS_ARE_AUTOMATICALLY_RENEWED")}}</li>
+        <li>{{$t("CANCEL_ANYTIME_ON_GOOGLE_PLAY")}}</li>
+      </ul>
     </v-card>
 
   </v-sheet>
@@ -312,3 +342,39 @@ export default defineComponent({
 
 })
 </script>
+<style scoped>
+#subscriptionFeaturesList>li{
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 5px;
+}
+#subscriptionFeaturesList>li:not(:first-child){
+  font-size: 12px;
+}
+#subscriptionFeaturesList>li:nth-child(even){
+  /*noinspection CssUnresolvedCustomProperty*/
+  background-color: rgba(var(--v-theme-primary),50%);
+  border-radius: 3px;
+}
+#subscriptionFeaturesList>li>*:first-child{
+  width: 44%;
+}
+#subscriptionFeaturesList>li>*:not(:first-child){
+  width: 28%;
+}
+.feature-title{
+  /*noinspection CssUnresolvedCustomProperty*/
+  color: rgb(var(--v-theme-secondary));
+  min-width: 50px;
+  font-size: 14px;
+}
+.free-feature{
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+.premium-feature{
+  /*noinspection CssUnresolvedCustomProperty*/
+  color: rgb(var(--v-theme-secondary-lighten-1));
+  text-align: center;
+}
+</style>

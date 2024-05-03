@@ -58,7 +58,7 @@
       <v-list-item
           v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
           class="bg-secondary"
-          @click="ComponentRouteController.showComponent(ComponentName.PurchaseSubscriptionDialog);$emit('update:modelValue',false)"
+          @click="goPremium"
       >
         <v-list-item-title>
           <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'"/>
@@ -250,6 +250,10 @@ export default defineComponent({
   },
 
   methods: {
+    goPremium(){
+      this.$router.replace("/purchase-subscription");
+      this.$emit('update:modelValue', false);
+    },
     async diagnose(): Promise<void> {
       this.$emit('update:modelValue', false);
       await this.$vpnHoodApp.diagnose();
