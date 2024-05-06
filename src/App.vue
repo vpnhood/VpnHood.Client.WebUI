@@ -13,7 +13,7 @@
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Only for VpnHoodCONNECT -->
-      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" @accept-privacy-policy="vpnHoodConnectProcessAccount()"/>
+      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog"/>
 
       <!-- Loading dialog before each api call -->
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
@@ -29,7 +29,6 @@
 import { defineComponent } from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
 import { ComponentRouteController } from './services/ComponentRouteController';
-import {ClientApiFactory} from "@/services/ClientApiFactory";
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import {AppName, LocalStorage, UiConstants} from "@/UiConstants";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
@@ -47,16 +46,15 @@ export default defineComponent({
     };
   },
   async created() {
-    const accountClient = ClientApiFactory.instance.createAccountClient();
-    this.$vpnHoodApp.data.uiState.isGoogleSignInSupported = await accountClient.isSigninWithGoogleSupported();
+
     // Show privacy policy if app is VpnHoodCONNECT
-    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && localStorage.getItem(LocalStorage.acceptedPrivacyPolicy) !=="true"){
+    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)){
       this.isShowPrivacyPolicyDialog = true;
       return;
     }
 
-    if (this.$vpnHoodApp.data.uiState.isGoogleSignInSupported)
-      await this.vpnHoodConnectProcessAccount();
+    if (this.$vpnHoodApp.data.features.isAccountSupported)
+      await this.$vpnHoodApp.loadAccount();
 
   },
   computed: {
@@ -71,18 +69,6 @@ export default defineComponent({
       }
     }
   },
-  methods:{
-    // App is the VpnHoodConnect
-    async vpnHoodConnectProcessAccount(){
-      this.isShowPrivacyPolicyDialog = false;
-      const accountClient = ClientApiFactory.instance.createAccountClient();
-      this.$vpnHoodApp.data.userState.userAccount = await accountClient.get();
-
-      if(this.$vpnHoodApp.data.userState.userAccount?.subscriptionId){
-        await this.$vpnHoodApp.refreshAccount();
-      }
-    }
-  }
 });
 </script>
 

@@ -1,6 +1,5 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
-    AppAccount,
     AppConnectionState,
     AppFeatures,
     AppSettings,
@@ -173,8 +172,7 @@ export class VpnHoodApp {
 
         // Just for VpnHoodConnect
         if (this.data.features.uiName === AppName.VpnHoodConnect && err === "Access Expired!")
-            await this.refreshAccount();
-
+            await this.loadAccount();
 
         // Just for VpnHoodConnect
         if (this.data.features.uiName === AppName.VpnHoodConnect && err.statusCode === 401 && !this.data.userState.userAccount) {
@@ -203,106 +201,43 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
-    // Return current active server name
-   /* public async getDefaultClientProfileName(): Promise<string> {
-        let clientProfileInfo = this.data.clientProfileInfos.find(
-            x => x.clientProfileId === this.data.state.clientProfileId);
-
-        // Just for VpnHoodConnect
-        // Always set public server as default profile if user does not have a premium server or default selected server.
-        if (!clientProfileInfo && !this.data.features.isAddAccessKeySupported)
-           clientProfileInfo = await this.setDefaultClientProfile();
-
-        return clientProfileInfo === undefined ? i18n.global.t("NO_SERVER_SELECTED") : clientProfileInfo.clientProfileName;
-    }*/
-
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
-    private async setDefaultClientProfile(): Promise<void> {
+    /*private async setDefaultClientProfile(): Promise<void> {
         const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.clientProfileId === this.data.features.builtInClientProfileId);
         if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE"));
         this.data.settings.userSettings.clientProfileId = defaultServerClientProfile.clientProfileId;
         await this.saveUserSetting();
-    }
+    }*/
 
-    // Process user account and server key(s) status
-    private async processUserAccount(): Promise<AppAccount> {
-        const accountClient = ClientApiFactory.instance.createAccountClient();
-        const appAccount = await accountClient.get();
-        this.data.userState.userAccount = appAccount;
+    public async signIn(showLoading: boolean = true): Promise<void> {
+        if(showLoading)
+            this.data.uiState.showLoadingDialog = true;
 
-        // User does not have an active subscription
-        if (!appAccount.subscriptionId) {
-            console.log("User does not have an active subscription");
-            await this.removePremiumClientProfile();
-        }
-        else {
-            // User purchase has an active subscription
-            console.log("User has an active subscription");
-            if (this.data.state.connectionState === AppConnectionState.Connected)
-                await this.disconnect();
-
-            await this.removePremiumClientProfile();
-            await this.getAndSaveSubscriptionAccessKeys(appAccount.subscriptionId);
-            await this.setPremiumClientProfileAsDefault();
-        }
-        return appAccount;
-    }
-
-    // Remove all user premium client profile
-    private async removePremiumClientProfile(): Promise<void> {
-        const premiumClientProfiles = this.data.clientProfileInfos.filter(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
-        for (const clientProfile of premiumClientProfiles) {
-            await this.deleteClientProfile(clientProfile.clientProfileId);
-        }
-        await this.setDefaultClientProfile();
-    }
-
-    // Get subscription accessKey(s) and save as client profile
-    private async getAndSaveSubscriptionAccessKeys(subscriptionId: string): Promise<void> {
-        const accountClient = ClientApiFactory.instance.createAccountClient();
-        const accessKeyList = await accountClient.getAccessKeys(subscriptionId);
-        if (!accessKeyList) throw new Error("Could not found any access key for this subscription id. SubscriptionId: " + subscriptionId);
-
-        for (const accessKey of accessKeyList) {
-            await this.addAccessKey(accessKey);
-        }
-    }
-
-    // Set one of the premium client profile as default
-    private async setPremiumClientProfileAsDefault(): Promise<void> {
-        const premiumServer = this.data.clientProfileInfos.find(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
-        if (!premiumServer)
-            throw new Error(i18n.global.t("COULD_NOT_SET_PREMIUM_SERVER"));
-
-        this.data.settings.userSettings.clientProfileId = premiumServer.clientProfileId;
-        await this.saveUserSetting();
-    }
-
-    public async signIn(): Promise<AppAccount> {
-        const accountClient = ClientApiFactory.instance.createAccountClient();
         try {
+            const accountClient = ClientApiFactory.instance.createAccountClient();
             await accountClient.signInWithGoogle();
-            return await this.refreshAccount();
-        }
-        catch (err: any){
+            await this.loadAccount();
+        } catch (err: any) {
             if (err.exceptionTypeName === "OperationCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
             throw err;
+        }
+        finally {
+            if (showLoading)
+                this.data.uiState.showLoadingDialog = false;
         }
     }
 
     public async signOut(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signOut();
-        await this.removePremiumClientProfile();
         this.data.userState.userAccount = null;
     }
 
-    public async refreshAccount(): Promise<AppAccount> {
+    public async loadAccount(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
-        await accountClient.refresh();
-        return await this.processUserAccount();
+        this.data.userState.userAccount = await accountClient.get();
     }
 }

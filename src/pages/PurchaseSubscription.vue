@@ -6,10 +6,9 @@
   <v-sheet class="pa-4" color="primary-darken-2">
 
     <!-- Exclude local network option -->
-    <v-card color="transparent" flat>
+    <v-card color="transparent" flat v-if="subscriptionPlans.length > 0">
 
         <!-- Products list -->
-        <template v-if="subscriptionPlans.length > 0">
           <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
             <!-- Image -->
             <v-img :eager="true" src="../assets/images/ad-icon.png" max-width="150px" class="mx-auto"/>
@@ -103,14 +102,13 @@
               </v-list-item>
             </v-list>
           </v-card-item>
-        </template>
 
       <ul class="text-white opacity-30 text-caption ps-4">
         <li>{{$t("PLANS_ARE_AUTOMATICALLY_RENEWED")}}</li>
         <li>{{$t("CANCEL_ANYTIME_ON_GOOGLE_PLAY")}}</li>
       </ul>
-    </v-card>
 
+    </v-card>
   </v-sheet>
 
   <!-- Plan details dialog on purchase subscription -->
@@ -142,7 +140,7 @@
             color="secondary"
             class="px-6"
             :text="$t('BUY')"
-            @click="onContinuePurchase"
+            @click="onBuyClick"
         />
       </v-card-actions>
     </v-card>
@@ -188,7 +186,7 @@
     <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl text-center pa-5 mb-3">
       <p class="text-white border-b border-tertiary border-opacity-50 mb-5 pb-5">{{$t("SIGN_IN_TO_CONTINUE")}}</p>
       <v-btn
-          @click="onContinuePurchase"
+          @click="onBuyClick"
           rounded="pill"
           color="white"
           size="large"
@@ -222,7 +220,7 @@
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
 import {SubscriptionPlansId} from "@/UiConstants";
-import {AppAccount, SubscriptionPlan} from "@/services/VpnHood.Client.Api";
+import {SubscriptionPlan} from "@/services/VpnHood.Client.Api";
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 
 export default defineComponent({
@@ -284,59 +282,36 @@ export default defineComponent({
 
       // Save user selected plan id for continue purchase
       this.selectedPlanId = planId;
-
       this.showPlanDetailsDialog = true;
     },
 
-    async GetOrSetUserAccount(): Promise<AppAccount>{
-      // User is signed in
-      if(this.$vpnHoodApp.data.userState.userAccount)
-        return this.$vpnHoodApp.data.userState.userAccount;
-
-      // Show google play sign in dialog
-      try {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-        return await this.$vpnHoodApp.signIn();
-      }
-      finally {
-        this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
-      }
-    },
-
-    async onContinuePurchase(): Promise<void>{
+    async onBuyClick(): Promise<void>{
       this.showPlanDetailsDialog = false;
-      const userAccount: AppAccount = await this.GetOrSetUserAccount();
-      if(userAccount.providerPlanId === this.selectedPlanId)
+      if(!this.$vpnHoodApp.data.userState.userAccount)
+        await this.$vpnHoodApp.signIn();
+
+      if(this.$vpnHoodApp.data.userState.userAccount?.providerPlanId === this.selectedPlanId)
           throw new Error(this.$t("SELECTED_PLAN_ALREADY_SUBSCRIBED"));
-      await this.googlePlayPurchaseProduct();
+
+      await this.purchase(this.selectedPlanId);
     },
 
-    async googlePlayPurchaseProduct(): Promise<void>{
+    async purchase(planId: string): Promise<void>{
       try {
-        const billingClient = ClientApiFactory.instance.createBillingClient();
-        const providerOrderId: string = await billingClient.purchase(this.selectedPlanId);
         this.showPendingProcessDialog = true;
-        await this.processPendingOrder(providerOrderId);
+        const billingClient = ClientApiFactory.instance.createBillingClient();
+        await billingClient.purchase(planId);
+        this.showPurchaseCompleteDialog = true;
       }
       catch (err: any){
         if (err.exceptionTypeName === "OperationCanceledException")
           console.log(err);
-        else throw err;
+        else
+          throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
       }
       finally {
         this.showPendingProcessDialog = false;
       }
-    },
-
-    async processPendingOrder(providerOrderId: string): Promise<void> {
-      const accountClient = ClientApiFactory.instance.createAccountClient();
-      const isOrderProcessed: boolean = await accountClient.isSubscriptionOrderProcessed(providerOrderId);
-      if (isOrderProcessed){
-        await this.$vpnHoodApp.refreshAccount();
-        this.showPurchaseCompleteDialog = true;
-      }
-      else
-        throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
     },
   }
 

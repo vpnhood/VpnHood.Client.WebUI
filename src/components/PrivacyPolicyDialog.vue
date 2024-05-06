@@ -49,12 +49,11 @@ export default defineComponent({
   },
   emits: [
     "update:modelValue",
-    "acceptPrivacyPolicy"
   ],
   methods:{
     async accept(): Promise<void>{
       localStorage.setItem(LocalStorage.acceptedPrivacyPolicy, "true");
-      this.$emit('acceptPrivacyPolicy');
+      await this.$vpnHoodApp.loadAccount();
       this.$emit('update:modelValue',false);
     },
   }

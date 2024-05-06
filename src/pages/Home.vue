@@ -1,232 +1,241 @@
 <template>
 
-    <!-- App bar -->
-    <HomeAppBar/>
+  <!-- App bar -->
+  <HomeAppBar/>
 
-    <v-row align-content="space-between" justify="center" class="h-100 px-md-2 pb-3 ma-0">
+  <v-row align-content="space-between" justify="center" class="h-100 px-md-2 pb-3 ma-0">
 
-        <!-- Go Premium button Only for VpnHoodConnect -->
-        <v-col v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect"  cols="12" class="text-center pt-0">
+    <v-col cols="12" class="text-center pt-0">
 
-          <!-- Go Premium button for guest and normal user -->
-          <v-btn
-              v-if="!$vpnHoodApp.data.userState.userAccount?.subscriptionId"
-              :flat="true"
-              variant="outlined"
-              color="tertiary"
-              rounded="pill"
-              size="small"
-              height="40"
-              @click="$router.push('/purchase-subscription')"
-              class="ps-1 pe-3 text-capitalize"
-          >
-            <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
-            {{$t("PREMIUM_SERVER_AD_TITLE")}}
-          </v-btn>
+      <!-- Go Premium button Only for VpnHoodConnect -->
+      <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect">
+        <!-- Go Premium button for guest and normal user -->
+        <v-btn
+            v-if="!$vpnHoodApp.data.userState.userAccount?.subscriptionId"
+            :flat="true"
+            variant="outlined"
+            color="tertiary"
+            rounded="pill"
+            size="small"
+            height="40"
+            @click="$router.push('/purchase-subscription')"
+            class="ps-1 pe-3 text-capitalize"
+        >
+          <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
+          {{ $t("PREMIUM_SERVER_AD_TITLE") }}
+        </v-btn>
 
-          <!-- Go Premium Server button for premium user -->
-          <v-chip
-              v-else
-              prepend-icon="mdi-crown"
-              :text="$t('YOU_ARE_PREMIUM')"
-              color="secondary-lighten-1"
-              variant="tonal"
-              tag="h6"
-              @click="$router.push('/purchase-subscription')"
-          />
+        <!-- Go Premium Server button for premium user -->
+        <v-chip
+            v-else
+            prepend-icon="mdi-crown"
+            :text="$t('YOU_ARE_PREMIUM')"
+            color="secondary-lighten-1"
+            variant="tonal"
+            tag="h6"
+            @click="$router.push('/purchase-subscription')"
+        />
+      </div>
+
+    </v-col>
+
+    <!-- Speed & Circle & Connect button -->
+    <v-col cols="12" :class="'py-0 text-center state-' + [$vpnHoodApp.data.state.connectionState.toLowerCase()]">
+
+      <!-- Speed -->
+      <v-row id="speedSection" align-content="center" justify="center"
+             :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
+        <v-col cols="auto d-inline-flex">
+          <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
+          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
+          <span class="text-white opacity-50 text-caption">Mbps</span>
         </v-col>
+        <v-col cols="auto d-inline-flex">
+          <span class="text-ui-tertiary text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
+          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
+          <span class="text-white opacity-50 text-caption order-last">Mbps</span>
+        </v-col>
+      </v-row>
 
-        <!-- Speed & Circle & Connect button -->
-        <v-col cols="12" :class="'py-0 text-center state-' + [$vpnHoodApp.data.state.connectionState.toLowerCase()]">
+      <!--VpnHoodConnect Circle -->
+      <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" id="connectionCircleIndicator"
+           :class="[$vpnHoodApp.data.state.connectionState.toLowerCase(), 'my-3']">
+        <div class="position-absolute w-100 h-100">
+          <div id="rotateCircle"></div>
+        </div>
+        <div class="d-flex flex-column align-center justify-center">
 
-          <!-- Speed -->
-          <v-row id="speedSection" align-content="center" justify="center"
-                 :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
-            <v-col cols="auto d-inline-flex">
-              <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
-              <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
-              <span class="text-white opacity-50 text-caption">Mbps</span>
-            </v-col>
-            <v-col cols="auto d-inline-flex">
-              <span class="text-ui-tertiary text-body-2">{{ $t("UPLOAD_SPEED") }}:</span>
-              <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.sent) }}</span>
-              <span class="text-white opacity-50 text-caption order-last">Mbps</span>
-            </v-col>
-          </v-row>
-
-          <!--VpnHoodConnect Circle -->
-          <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" id="connectionCircleIndicator" :class="[$vpnHoodApp.data.state.connectionState.toLowerCase(), 'my-3']">
-            <div class="position-absolute w-100 h-100">
-              <div id="rotateCircle"></div>
-            </div>
-            <div class="d-flex flex-column align-center justify-center">
-
-              <!-- Connection state text -->
-              <span class="text-body-2">{{
-                  $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
-                }}
+          <!-- Connection state text -->
+          <span class="text-body-2">{{
+              $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
+            }}
               </span>
 
-              <!-- Usage -->
-              <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-                <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
-                <span class="text-secondary">{{ bandwidthUsage()?.Total }}</span>
-              </div>
-
-              <!-- Check -->
-              <v-icon v-if="stateIcon()" size="50" color="white">
-                {{ stateIcon() }}
-              </v-icon>
-
-            </div>
+          <!-- Usage -->
+          <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+            <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
+            <span class="text-secondary">{{ bandwidthUsage()?.Total }}</span>
           </div>
 
-          <!--VpnHood Circle -->
-          <div v-else id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
-            <div id="circle">
-              <div class="d-flex flex-column align-center justify-center">
+          <!-- Check -->
+          <v-icon v-if="stateIcon()" size="50" color="white">
+            {{ stateIcon() }}
+          </v-icon>
 
-                <!-- Connection state text -->
-                <span class="text-body-1">{{
-                    $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
-                  }}
+        </div>
+      </div>
+
+      <!--VpnHood Circle -->
+      <div v-else id="circleOuter" :class="[isConnected() ? 'opacity-100' : 'opacity-30']">
+        <div id="circle">
+          <div class="d-flex flex-column align-center justify-center">
+
+            <!-- Connection state text -->
+            <span class="text-body-1">{{
+                $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
+              }}
               </span>
 
-                <!-- Usage -->
-                <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
-                  <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
-                  <span class="text-tertiary">{{ bandwidthUsage()?.Total }}</span>
-                </div>
-
-                <!-- Check -->
-                <v-icon v-if="stateIcon()" size="50" color="white">
-                  {{ stateIcon() }}
-                </v-icon>
-
-                <!-- Access Key expire date -->
-                <p v-if="getExpireDate()" :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">{{$t("EXPIRE") + ": " + getExpireDate()}}</p>
-              </div>
+            <!-- Usage -->
+            <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
+              <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ $t("OF") }}</span>
+              <span class="text-tertiary">{{ bandwidthUsage()?.Total }}</span>
             </div>
+
+            <!-- Check -->
+            <v-icon v-if="stateIcon()" size="50" color="white">
+              {{ stateIcon() }}
+            </v-icon>
+
+            <!-- Access Key expire date -->
+            <p v-if="getExpireDate()"
+               :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">
+              {{ $t("EXPIRE") + ": " + getExpireDate() }}</p>
           </div>
+        </div>
+      </div>
 
 
-          <!-- Connect button -->
-          <v-btn
-              height="40px"
-              width="180px"
-              rounded="pill"
-              :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting ||
+      <!-- Connect button -->
+      <v-btn
+          height="40px"
+          width="180px"
+          rounded="pill"
+          :disabled="$vpnHoodApp.data.state.connectionState === AppConnectionState.Disconnecting ||
               $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing"
-              :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected
+          :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected
               ? 'secondary-btn'
               : 'master-btn',
               'text-button mt-5',
               $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
               ? 'solid'
               : '']"
-              @click="onConnectButtonClick"
-          >
-            {{ connectButtonText() }}
+          @click="onConnectButtonClick"
+      >
+        {{ connectButtonText() }}
+      </v-btn>
+
+    </v-col>
+
+    <!-- Config buttons -->
+    <v-col cols="12" class="text-truncate">
+      <v-row>
+
+        <!-- Exclude country button -->
+        <v-col cols="12" md="6" class="py-0 pa-md-1">
+          <v-btn
+              depressed
+              block
+              variant="outlined"
+              size="small"
+              prepend-icon="mdi-earth"
+              class="config-item mb-1"
+              @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
+            <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
+            <span class="text-capitalize text-caption text-white opacity-50">{{
+                $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
+              }}</span>
+            <img
+                v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId"
+                :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
+                alt="country flag" width="24" class="ms-2"/>
           </v-btn>
-
         </v-col>
 
-        <!-- Config buttons -->
-        <v-col cols="12" class="text-truncate">
-          <v-row>
-
-            <!-- Exclude country button -->
-            <v-col cols="12" md="6" class="py-0 pa-md-1">
-              <v-btn
-                  depressed
-                  block
-                  variant="outlined"
-                  size="small"
-                  prepend-icon="mdi-earth"
-                  class="config-item mb-1"
-                  @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
-                <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
-                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{
-                    $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
-                  }}</span>
-                <img
-                    v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId"
-                    :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
-                    alt="country flag" width="24" class="ms-2"/>
-              </v-btn>
-            </v-col>
-
-            <!-- App filter button -->
-            <v-col cols="12" md="6" class="py-0 pa-md-1">
-              <v-btn
-                  v-if="$vpnHoodApp.data.features.isExcludeAppsSupported || $vpnHoodApp.data.features.isIncludeAppsSupported"
-                  depressed
-                  block
-                  variant="text"
-                  size="small"
-                  prepend-icon="mdi-apps"
-                  class="config-item mb-1"
-                  to="/apps-filter"
-              >
-                <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
-                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
-              </v-btn>
-            </v-col>
-
-            <!-- Protocol button -->
-            <v-col cols="12" md="6" class="py-0 pa-md-1">
-              <v-btn
-                  depressed
-                  block
-                  variant="text"
-                  size="small"
-                  prepend-icon="mdi-transit-connection-variant"
-                  class="config-item mb-1"
-                  @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
-                <span>{{ $t("PROTOCOL_TITLE") }}</span>
-                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
-              </v-btn>
-            </v-col>
-
-            <!-- Servers button -->
-            <v-col cols="12" md="6" class="py-0 pa-md-1">
-              <v-btn
-                  depressed
-                  block
-                  variant="text"
-                  size="small"
-                  prepend-icon="mdi-dns"
-                  :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
-                  @click="showServers()"
-              >
-                <span>{{ $t("SELECTED_SERVER") }}</span>
-                <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'" />
-                <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
-
-                <template v-slot:append v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
-                  <v-icon class="button-premium-icon" icon="mdi-crown" />
-                </template>
-              </v-btn>
-            </v-col>
-
-          </v-row>
+        <!-- App filter button -->
+        <v-col cols="12" md="6" class="py-0 pa-md-1">
+          <v-btn
+              v-if="$vpnHoodApp.data.features.isExcludeAppsSupported || $vpnHoodApp.data.features.isIncludeAppsSupported"
+              depressed
+              block
+              variant="text"
+              size="small"
+              prepend-icon="mdi-apps"
+              class="config-item mb-1"
+              to="/apps-filter"
+          >
+            <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
+          </v-btn>
         </v-col>
+
+        <!-- Protocol button -->
+        <v-col cols="12" md="6" class="py-0 pa-md-1">
+          <v-btn
+              depressed
+              block
+              variant="text"
+              size="small"
+              prepend-icon="mdi-transit-connection-variant"
+              class="config-item mb-1"
+              @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
+            <span>{{ $t("PROTOCOL_TITLE") }}</span>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
+          </v-btn>
+        </v-col>
+
+        <!-- Servers button -->
+        <v-col cols="12" md="6" class="py-0 pa-md-1">
+          <v-btn
+              depressed
+              block
+              variant="text"
+              size="small"
+              prepend-icon="mdi-dns"
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
+              @click="showServers()"
+          >
+            <span>{{ $t("SELECTED_SERVER") }}</span>
+            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
+
+            <template v-slot:append
+                      v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
+              <v-icon class="button-premium-icon" icon="mdi-crown"/>
+            </template>
+          </v-btn>
+        </v-col>
+
       </v-row>
+    </v-col>
+  </v-row>
 
-    <!-- New server added toast -->
-    <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="secondary">
-      {{ $t("NEW_SERVER_ADDED") }}
-    </v-snackbar>
+  <!-- New server added toast -->
+  <v-snackbar v-model="$vpnHoodApp.data.uiState.showNewServerAdded" location="top" :timeout="3000" color="secondary">
+    {{ $t("NEW_SERVER_ADDED") }}
+  </v-snackbar>
 
-    <!-- Components -->
-    <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar"/>
-    <SuppressSnackbar v-model="$vpnHoodApp.data.uiState.showSuppressSnackbar"/>
-    <TunnelClientCountryDialog v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
-    <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
-    <ServersDialogForVpnHoodConnect  v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
+  <!-- Components -->
+  <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar"/>
+  <SuppressSnackbar v-model="$vpnHoodApp.data.uiState.showSuppressSnackbar"/>
+  <TunnelClientCountryDialog
+      v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
+  <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
+  <ServersDialogForVpnHoodConnect
+      v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
 
 </template>
 
@@ -271,7 +280,7 @@ export default defineComponent({
   },
 
   methods: {
-    getDefaultClientProfileName(): string{
+    getDefaultClientProfileName(): string {
       let clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(
           x => x.clientProfileId === this.$vpnHoodApp.data.state.clientProfileId);
 
@@ -283,15 +292,15 @@ export default defineComponent({
         return;
       this.lastConnectPressedTime = Date.now();
 
-      if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.None){
+      if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.None) {
         await this.$vpnHoodApp.disconnect();
         return;
       }
 
       // If user has no selected server and want to connect
       if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId && this.$vpnHoodApp.data.features.isAddAccessKeySupported) {
-          this.$router.push("/servers");
-          return;
+        this.$router.push("/servers");
+        return;
       }
 
       await this.$vpnHoodApp.connect();
@@ -381,7 +390,7 @@ export default defineComponent({
       return expDate.toLocaleString("locales", options).replace(',', '');
     },
 
-    alertForExpire(): boolean{
+    alertForExpire(): boolean {
       if (!this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
         return false;
 
@@ -392,14 +401,14 @@ export default defineComponent({
       return diffDays <= 3;
     },
 
-    udpProtocolButtonText(): string{
+    udpProtocolButtonText(): string {
       if (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected && this.$vpnHoodApp.data.state.isUdpChannelSupported === false)
         return this.$t('PROTOCOL_UDP_OFF');
 
       return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel ? this.$t('PROTOCOL_UDP_ON') : this.$t('PROTOCOL_UDP_OFF')
     },
 
-    showServers(): void{
+    showServers(): void {
       if (this.$vpnHoodApp.data.features.isAddAccessKeySupported)
         this.$router.push('/servers');
       else
@@ -426,15 +435,17 @@ export default defineComponent({
 }
 
 /*noinspection CssUnusedSymbol*/
-.config-item.active-subscription{
+.config-item.active-subscription {
   /*noinspection CssUnresolvedCustomProperty*/
   border-color: rgba(var(--v-theme-tertiary), 1);
 }
-.button-premium-icon{
+
+.button-premium-icon {
   position: absolute;
   right: 10px;
 }
-.v-locale--is-rtl .button-premium-icon{
+
+.v-locale--is-rtl .button-premium-icon {
   right: unset;
   left: 10px;
 }

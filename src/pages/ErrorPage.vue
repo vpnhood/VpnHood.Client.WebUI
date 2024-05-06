@@ -3,7 +3,7 @@
     <v-container class="h-screen text-center text-white">
     <!-- App name -->
     <h3>{{
-        $vpnHoodApp.data.uiState.isGoogleSignInSupported ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME')
+        $vpnHoodApp.data.features.isAccountSupported ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME')
       }}</h3>
 
     <v-row align-content="center" justify="center" class="h-100">

@@ -56,7 +56,7 @@
 
       <!-- Go premium or Change subscription -->
       <v-list-item
-          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported"
+          v-if="$vpnHoodApp.data.features.isAccountSupported"
           class="bg-secondary"
           @click="goPremium"
       >
@@ -72,7 +72,7 @@
 
       <!-- Sign in button -->
       <v-list-item
-          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && !$vpnHoodApp.data.userState.userAccount"
+          v-if="$vpnHoodApp.data.features.isAccountSupported && !$vpnHoodApp.data.userState.userAccount"
           :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
           @click="onSignIn"
       >
@@ -84,7 +84,7 @@
 
       <!-- Sign out button -->
       <v-list-item
-          v-if="$vpnHoodApp.data.uiState.isGoogleSignInSupported && $vpnHoodApp.data.userState.userAccount"
+          v-if="$vpnHoodApp.data.features.isAccountSupported && $vpnHoodApp.data.userState.userAccount"
           :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
           @click="showConfirmSignOut = true"
       >
