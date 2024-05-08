@@ -75,16 +75,12 @@ export class VpnHoodApp {
         }
 
         // Show last error message if the user has not ignored
-        if (this.data.state.lastError &&
-            this.data.userState.userIgnoreLastErrorTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-            this.data.userState.userIgnoreLastErrorTime = this.data.state.connectRequestTime;
+        if (this.data.state.lastError)
             await this.showError(this.data.state.lastError);
-        }
 
         // Show update message if the user has not ignored or more than 24 hours have passed
-        if (this.data.state.lastPublishInfo?.packageUrl !== undefined) {
+        if (this.data.state.lastPublishInfo?.packageUrl !== undefined)
             this.data.uiState.showUpdateSnackbar = true;
-        }
 
         // Show 'suppress by' message
         // noinspection OverlyComplexBooleanExpressionJS
@@ -186,6 +182,7 @@ export class VpnHoodApp {
     public async showMessage(text: string): Promise<void> {
         this.data.uiState.alertDialogText = text;
         await ComponentRouteController.showComponent(ComponentName.AlertDialog);
+        await this.apiClient.clearLastError();
     }
 
     // Get installed apps list on the user device
@@ -236,8 +233,10 @@ export class VpnHoodApp {
         this.data.userState.userAccount = null;
     }
 
-    public async loadAccount(): Promise<void> {
+    public async loadAccount(isRefresh: boolean = false): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
+        if (isRefresh)
+            await accountClient.refresh();
         this.data.userState.userAccount = await accountClient.get();
     }
 }

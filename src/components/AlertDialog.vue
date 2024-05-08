@@ -92,7 +92,7 @@ export default defineComponent({
       await this.$vpnHoodApp.diagnose();
     },
 
-    async sendReport() {
+    async sendReport(): Promise<void>{
       try {
         this.$emit('update:modelValue', false);
         const reportId: string =
