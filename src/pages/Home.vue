@@ -17,12 +17,12 @@
             color="tertiary"
             rounded="pill"
             size="small"
-            height="40"
+            height="35"
             @click="$router.push('/purchase-subscription')"
             class="ps-1 pe-3 text-capitalize"
         >
-          <v-icon icon="mdi-crown" color="primary" size="30" class="bg-tertiary rounded-circle me-2"/>
-          {{ $t("PREMIUM_SERVER_AD_TITLE") }}
+          <v-icon icon="mdi-crown" color="primary" size="25" class="bg-tertiary rounded-circle me-2"/>
+          {{ $t("GO_PREMIUM") }}
         </v-btn>
 
         <!-- Go Premium Server button for premium user -->
@@ -210,7 +210,7 @@
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
-            <span class="text-capitalize text-caption text-white opacity-50">{{ getDefaultClientProfileName() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ $vpnHoodApp.data.state.clientProfileName ?? $t("NO_SERVER_SELECTED") }}</span>
 
             <template v-slot:append
                       v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
@@ -250,7 +250,6 @@ import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
-import i18n from "@/locales/i18n";
 
 export default defineComponent({
   name: 'HomePage',
@@ -280,13 +279,6 @@ export default defineComponent({
   },
 
   methods: {
-    getDefaultClientProfileName(): string {
-      let clientProfileInfo = this.$vpnHoodApp.data.clientProfileInfos.find(
-          x => x.clientProfileId === this.$vpnHoodApp.data.state.clientProfileId);
-
-      return clientProfileInfo === undefined ? i18n.global.t("NO_SERVER_SELECTED") : clientProfileInfo.clientProfileName;
-    },
-
     async onConnectButtonClick(): Promise<void> {
       if (this.lastConnectPressedTime >= (Date.now() - 1000))
         return;

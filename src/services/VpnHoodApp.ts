@@ -201,12 +201,6 @@ export class VpnHoodApp {
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
-    /*private async setDefaultClientProfile(): Promise<void> {
-        const defaultServerClientProfile = this.data.clientProfileInfos.find(x => x.clientProfileId === this.data.features.builtInClientProfileId);
-        if (!defaultServerClientProfile) throw new Error(i18n.global.t("COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE"));
-        this.data.settings.userSettings.clientProfileId = defaultServerClientProfile.clientProfileId;
-        await this.saveUserSetting();
-    }*/
 
     public async signIn(showLoading: boolean = true): Promise<void> {
         if(showLoading)
@@ -216,6 +210,7 @@ export class VpnHoodApp {
             const accountClient = ClientApiFactory.instance.createAccountClient();
             await accountClient.signInWithGoogle();
             await this.loadAccount();
+
         } catch (err: any) {
             if (err.exceptionTypeName === "OperationCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
@@ -230,7 +225,7 @@ export class VpnHoodApp {
     public async signOut(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
         await accountClient.signOut();
-        this.data.userState.userAccount = null;
+        await this.loadAccount();
     }
 
     public async loadAccount(isRefresh: boolean = false): Promise<void> {

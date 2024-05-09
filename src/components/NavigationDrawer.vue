@@ -64,7 +64,7 @@
           <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'"/>
           <span class="ms-3">
             {{
-              $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('PREMIUM_SERVER_AD_TITLE')
+              $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('GO_PREMIUM')
             }}
           </span>
         </v-list-item-title>

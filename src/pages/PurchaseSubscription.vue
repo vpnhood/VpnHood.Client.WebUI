@@ -147,7 +147,7 @@
   </v-dialog>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog v-model="showPendingProcessDialog" :persistent="true" max-width="600">
+  <v-dialog :model-value="$vpnHoodApp.data.state.purchaseState === BillingPurchaseState.Processing" :persistent="true" max-width="600">
     <v-card rounded="lg" color="secondary">
       <v-card-text class="px-3">
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
@@ -232,7 +232,6 @@ export default defineComponent({
       BillingPurchaseState,
       subscriptionPlans: [] as SubscriptionPlan[],
       selectedPlanId: SubscriptionPlansId.HiddenServer as string,
-      showPendingProcessDialog: this.$vpnHoodApp.data.state.purchaseState === BillingPurchaseState.Processing,
       showPurchaseCompleteDialog: false,
       showPlanDetailsDialog: false,
       showLoginDialog: false,
@@ -301,10 +300,11 @@ export default defineComponent({
       try {
         const billingClient = ClientApiFactory.instance.createBillingClient();
         await billingClient.purchase(planId);
-        await this.$vpnHoodApp.loadAccount(true);
         this.showPurchaseCompleteDialog = true;
+        await this.$vpnHoodApp.loadAccount();
       }
       catch (err: any){
+        this.showPurchaseCompleteDialog = false;
         if (err.exceptionTypeName === "OperationCanceledException")
           console.log(err);
         else
