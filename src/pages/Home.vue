@@ -198,7 +198,7 @@
         </v-col>
 
         <!-- Servers button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
+        <v-col cols="12" md="6" class="py-0 pa-md-1" v-if="$vpnHoodApp.data.features.isAddAccessKeySupported || $vpnHoodApp.data.userState.userAccount?.providerPlanId === SubscriptionPlansId.BundleServers">
           <v-btn
               depressed
               block
@@ -211,11 +211,6 @@
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ $vpnHoodApp.data.state.clientProfileName ?? $t("NO_SERVER_SELECTED") }}</span>
-
-            <template v-slot:append
-                      v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
-              <v-icon class="button-premium-icon" icon="mdi-crown"/>
-            </template>
           </v-btn>
         </v-col>
 
@@ -248,7 +243,7 @@ import HomeAppBar from "@/components/HomeAppBar.vue";
 import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import {AppName, UiConstants} from "@/UiConstants";
+import {AppName, UiConstants, SubscriptionPlansId} from "@/UiConstants";
 import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 
 export default defineComponent({
@@ -266,6 +261,7 @@ export default defineComponent({
       AppName,
       AppConnectionState,
       ComponentRouteController,
+      SubscriptionPlansId,
       lastConnectPressedTime: Date.now() - 1000,
     }
   },
@@ -413,7 +409,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 /*noinspection CssUnresolvedCustomProperty*/
 .config-item {
   color: rgb(var(--v-theme-tertiary));
@@ -426,19 +421,8 @@ export default defineComponent({
   text-overflow: ellipsis !important;
 }
 
-/*noinspection CssUnusedSymbol*/
 .config-item.active-subscription {
   /*noinspection CssUnresolvedCustomProperty*/
   border-color: rgba(var(--v-theme-tertiary), 1);
-}
-
-.button-premium-icon {
-  position: absolute;
-  right: 10px;
-}
-
-.v-locale--is-rtl .button-premium-icon {
-  right: unset;
-  left: 10px;
 }
 </style>
