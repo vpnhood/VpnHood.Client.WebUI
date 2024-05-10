@@ -108,7 +108,7 @@ export class VpnHoodApp {
     }
 
     public async connect(): Promise<void> {
-        console.log("Connecting to " + this.data.state.clientProfileName);
+        console.log("Connecting to " + this.data.state.clientProfile?.clientProfileName);
         await this.apiClient.connect();
     }
 

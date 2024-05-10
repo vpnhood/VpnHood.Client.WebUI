@@ -210,7 +210,7 @@
           >
             <span>{{ $t("SELECTED_SERVER") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
-            <span class="text-capitalize text-caption text-white opacity-50">{{ $vpnHoodApp.data.state.clientProfileName ?? $t("NO_SERVER_SELECTED") }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50">{{ $vpnHoodApp.data.state.clientProfile?.clientProfileName ?? $t("NO_SERVER_SELECTED") }}</span>
           </v-btn>
         </v-col>
 

@@ -18,10 +18,10 @@
                :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
 
       <v-row class="align-center justify-space-between">
-        <v-col>{{ $t('EXCLUDE_LOCAL_NETWORK') }}</v-col>
+        <v-col>{{ $t('INCLUDE_LOCAL_NETWORK') }}</v-col>
         <v-col cols="auto">
           <v-switch
-              v-model="excludeLocalNetwork"
+              v-model="includeLocalNetwork"
               color="secondary"
               class="px-2"
               density="compact"
@@ -31,7 +31,7 @@
         </v-col>
       </v-row>
       <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-1']">
-        {{ $t('EXCLUDE_LOCAL_NETWORK_DESC') }}
+        {{ $t('INCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
 
@@ -109,13 +109,13 @@ export default defineComponent({
     }
   },
   computed: {
-    excludeLocalNetwork: {
+    includeLocalNetwork: {
       get() {
-        return this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork;
+        return this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork;
       },
       async set(value: boolean) {
-        if (this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork !== value) {
-          this.$vpnHoodApp.data.settings.userSettings.excludeLocalNetwork = value;
+        if (this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork !== value) {
+          this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork = value;
           await this.$vpnHoodApp.saveUserSetting();
           this.$vpnHoodApp.disconnect();
         }
