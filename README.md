@@ -1,4 +1,4 @@
-# vpnhood.client.webui2
+# vpnhood.client.webui
 
 ## Project setup
 ```
