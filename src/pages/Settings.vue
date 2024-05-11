@@ -6,9 +6,63 @@
   <v-sheet class="pa-4"
            :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
 
+    <!-- Change language -->
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4 mb-5">
+
+      <!-- Section title -->
+      <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
+
+      <v-btn
+          variant="tonal"
+          block
+          color="gray-lighten-2"
+          class="justify-space-between px-2"
+          @click="$router.push({path: '/languages'})"
+      >
+
+          <span
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']"
+          >
+            {{$t('APP_LANGUAGE')}}
+          </span>
+
+        <template v-slot:append>
+          <!-- Active language name -->
+          <span
+              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption text-capitalize me-1']"
+          >
+              {{ $vpnHoodApp.data.state.currentUiCultureInfo.nativeName }}
+            </span>
+
+          <!-- Button icon -->
+          <v-icon
+              :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'"
+              :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
+          />
+        </template>
+
+      </v-btn>
+
+      <!-- Language contribute link -->
+      <div v-if="$i18n.locale !== LanguagesCode.English">
+
+        <!-- Description -->
+        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
+          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}
+        </p>
+
+        <!-- Link -->
+        <a class="text-secondary text-decoration-none text-caption" href="https://explore.transifex.com/vpnhood/vpnhood-client"
+           target="_blank">
+          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
+          <v-icon icon="mdi-open-in-new"/>
+        </a>
+      </div>
+
+    </v-card>
 
     <!-- Exclude local network option -->
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4 mb-5">
+    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4">
 
       <!-- Section title -->
       <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
@@ -35,62 +89,6 @@
       </p>
     </v-card>
 
-    <!-- Change language -->
-
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4">
-
-      <!-- Section title -->
-      <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
-
-        <v-btn
-            variant="tonal"
-            block
-            color="gray-lighten-2"
-            class="justify-space-between px-2"
-            @click="$router.push({path: '/languages'})"
-        >
-
-          <span
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']"
-          >
-            {{$t('APP_LANGUAGE')}}
-          </span>
-
-          <template v-slot:append>
-            <!-- Active language name -->
-            <span
-                :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption text-capitalize me-1']"
-            >
-              {{ $vpnHoodApp.data.state.currentUiCultureInfo.nativeName }}
-            </span>
-
-            <!-- Button icon -->
-            <v-icon
-                :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'"
-                :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
-            />
-          </template>
-
-        </v-btn>
-
-      <!-- Language contribute link -->
-      <div v-if="$i18n.locale !== LanguagesCode.English">
-
-        <!-- Description -->
-        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
-          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}
-        </p>
-
-        <!-- Link -->
-        <a class="text-secondary text-decoration-none text-caption" href="https://explore.transifex.com/vpnhood/vpnhood-client"
-           target="_blank">
-          {{ $t("CONTRIBUTE_EDIT_LANGUAGES_Title") }}
-          <v-icon icon="mdi-open-in-new"/>
-        </a>
-      </div>
-
-    </v-card>
-
   </v-sheet>
 </template>
 
@@ -114,11 +112,8 @@ export default defineComponent({
         return this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork;
       },
       async set(value: boolean) {
-        if (this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork !== value) {
-          this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork = value;
-          await this.$vpnHoodApp.saveUserSetting();
-          this.$vpnHoodApp.disconnect();
-        }
+        this.$vpnHoodApp.data.settings.userSettings.includeLocalNetwork = value;
+        await this.$vpnHoodApp.saveUserSetting();
       }
     },
   },

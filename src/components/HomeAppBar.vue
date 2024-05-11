@@ -12,9 +12,13 @@
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
-    <span @click="openDebugDialog" class="text-disabled text-caption me-3">{{ $t("ABBREVIATION_VERSION") }}{{
-        $vpnHoodApp.getAppVersion(false)
-      }}</span>
+    <span @click="openDebugDialog"
+          :class="[$vpnHoodApp.data.settings.userSettings.debugData1 !== null || $vpnHoodApp.data.settings.userSettings.debugData2 !== null
+          ? 'bg-warning border border-on-warning  text-black rounded-pill px-1' : 'text-disabled','text-caption me-3']"
+    >
+      {{ $t("ABBREVIATION_VERSION") }}
+      {{$vpnHoodApp.getAppVersion(false) }}
+    </span>
 
   </v-app-bar>
 
@@ -36,7 +40,7 @@
             variant="text"
             class="px-4"
             text="Ok"
-            @click="saveAndClose()"
+            @click="saveDebugData()"
         />
 
         <!-- Cancel -->
@@ -82,12 +86,12 @@ export default defineComponent({
       // reset counter if no click within 1 second
       setTimeout(()=>{
         this.openDebugDialogCounter = 0;
-      },1000)
+      },3000)
     },
 
-    async saveAndClose() {
-      this.$vpnHoodApp.data.settings.userSettings.debugData1 = this.debugData1;
-      this.$vpnHoodApp.data.settings.userSettings.debugData2 = this.debugData2;
+    async saveDebugData() {
+      this.$vpnHoodApp.data.settings.userSettings.debugData1 = this.debugData1 === "" ? null : this.debugData1;
+      this.$vpnHoodApp.data.settings.userSettings.debugData2 = this.debugData2 === "" ? null : this.debugData2;
       await this.$vpnHoodApp.saveUserSetting();
       this.isShowDebugDialog = false;
     }

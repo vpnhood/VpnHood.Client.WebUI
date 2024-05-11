@@ -168,8 +168,8 @@ export class VpnHoodApp {
         console.error(err);
 
         // Just for VpnHoodConnect
-        if (this.data.features.uiName === AppName.VpnHoodConnect && err === "Access Expired!")
-            await this.loadAccount();
+        if (this.data.features.uiName === AppName.VpnHoodConnect && err === "Session has been closed.")
+            await this.signOut();
 
         // Just for VpnHoodConnect
         if (this.data.features.uiName === AppName.VpnHoodConnect && err.statusCode === 401 && !this.data.userState.userAccount) {

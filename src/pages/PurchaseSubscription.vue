@@ -304,6 +304,7 @@ export default defineComponent({
         await this.$vpnHoodApp.loadAccount();
       }
       catch (err: any){
+        // TODO handel network error
         this.showPurchaseCompleteDialog = false;
         if (err.exceptionTypeName === "OperationCanceledException")
           console.log(err);
