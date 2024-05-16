@@ -15,11 +15,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Robot
 
 /*noinspection CssUnresolvedCustomProperty*/
 .rounded-15{border-radius: 15px;}
-.opacity-0 {opacity: 0; transition: opacity 1.4s ease;}
-.opacity-30 {opacity: 0.3; transition: opacity 1.4s ease;}
-.opacity-50 {opacity: 0.5; transition: opacity 1.4s ease;}
-.opacity-60 {opacity: 0.6; transition: opacity 1.4s ease;}
-.opacity-80 {opacity: 0.8; transition: opacity 1.4s ease;}
-.opacity-100 {opacity: 1; transition: opacity 1.4s ease;}
+.opacity-0 {transition: opacity 1.4s ease;}
+.opacity-30 {transition: opacity 1.4s ease;}
+.opacity-50 {transition: opacity 1.4s ease;}
+.opacity-60 {transition: opacity 1.4s ease;}
+.opacity-80 {transition: opacity 1.4s ease;}
+.opacity-100 {transition: opacity 1.4s ease;}
 .list-unstyled{list-style: none;}
 .text-transform-none{text-transform: none;}

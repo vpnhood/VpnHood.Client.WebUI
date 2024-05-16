@@ -173,7 +173,7 @@
             variant="text"
             color="primary"
             :text="$t('CLOSE')"
-            @click="showPurchaseCompleteDialog = false"
+            @click="closeOnPurchaseComplete"
         />
       </v-card-actions>
     </v-card>
@@ -312,6 +312,11 @@ export default defineComponent({
           throw new Error(this.$t("ORDER_PROCESSING_FAILED"));
       }
     },
+
+    closeOnPurchaseComplete(){
+      this.showPurchaseCompleteDialog = false;
+      this.$router.replace("/");
+    }
   }
 
 })

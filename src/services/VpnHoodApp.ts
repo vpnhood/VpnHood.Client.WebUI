@@ -229,10 +229,8 @@ export class VpnHoodApp {
         await this.loadAccount();
     }
 
-    public async loadAccount(isRefresh: boolean = false): Promise<void> {
+    public async loadAccount(): Promise<void> {
         const accountClient = ClientApiFactory.instance.createAccountClient();
-        if (isRefresh)
-            await accountClient.refresh();
         this.data.userState.userAccount = await accountClient.get();
     }
 }

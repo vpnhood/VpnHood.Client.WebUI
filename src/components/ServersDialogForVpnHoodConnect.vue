@@ -9,7 +9,6 @@
           <!-- Server item -->
           <v-list-item
               v-model="defaultClientProfileId"
-              v-show="item.clientProfileId !== $vpnHoodApp.data.features.builtInClientProfileId"
               v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
               :key="index"
               rounded="15"
