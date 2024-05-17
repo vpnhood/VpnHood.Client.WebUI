@@ -35,35 +35,39 @@
     <!-- Server items -->
     <v-expansion-panels
         v-else
-        v-for="(item, index) in myClientProfilesInfo"
+        v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
         :key="index"
         v-model="expandedPanels[index]"
         flat
-        :ripple="item.regions.length < 2"
+        :ripple="isSingleLocation(item.serverLocationInfos.length)"
         rounded="xl"
         bg-color="white"
         class="myExpansionPanel mb-4"
     >
       <v-expansion-panel
-          :readonly="item.regions.length < 2"
+          :readonly="isSingleLocation(item.serverLocationInfos.length)"
           hide-actions
           class="text-primary-darken-1"
       >
 
         <!-- Country flag on collapse state -->
         <div
-            v-if="item.regions.length > 1 && expandedPanels[index] !== 0"
+            v-if="!isSingleLocation(item.serverLocationInfos.length) && isCollapsed(expandedPanels[index])"
             class="bg-gray-lighten-5 mx-4 mb-4 pt-3 pb-2 px-4 text-truncate"
             style="border-radius: 14px; max-width: 311px;"
             @click="expandedPanels[index] = 0"
         >
           <span
-              v-for="(region) in item.regions"
-              :key="region.regionId"
+              v-for="(region, index) in item.serverLocationInfos"
+              :key="index"
               class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
               style="width: 23px; height: 23px;"
           >
-            <img :src="require(`../assets/images/country_flags/${region.countryCode}.png`)" height="100%" alt="country flag"/>
+            <!-- Auto select icon -->
+            <v-icon v-if="isAutoSelect(region.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+
+            <!-- Country flag -->
+            <img v-else :src="require(`../assets/images/country_flags/${region.countryCode.toLowerCase()}.png`)" height="100%" alt="country flag"/>
           </span>
         </div>
 
@@ -74,14 +78,14 @@
             <!-- Radio button -->
             <v-col cols="auto pt-2 ps-1">
               <div
-                  :class="[item.clientProfileId === $vpnHoodApp.data.state.clientProfile?.clientProfileId
-              ? 'border-secondary'
-              : 'border-gray-lighten-4'
-              , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
-                  style="width: 25px; height: 25px; border-width: 3px !important;"
+                :class="[isActiveClientProfile(item.clientProfileId)
+                ? 'border-secondary'
+                : 'border-gray-lighten-4'
+                , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
+                style="width: 25px; height: 25px; border-width: 3px !important;"
               >
-                <v-icon v-if="item.clientProfileId === $vpnHoodApp.data.state.clientProfile?.clientProfileId"
-                        icon="mdi-check-bold" size="15"/>
+                <!-- Check icon if is active client profile -->
+                <v-icon v-if="isActiveClientProfile(item.clientProfileId)" icon="mdi-check-bold" size="15"/>
               </div>
             </v-col>
 
@@ -89,30 +93,17 @@
             <v-col class="px-0">
 
               <!-- Profile name -->
-              <h4 class="text-primary-darken-1 text-truncate"
-                  :style="[item.regions.length > 1 ? 'max-width: 208px;' : 'max-width: 245px;']">
-                {{ item.clientProfileName }}</h4>
+              <h4 class="text-primary-darken-1 text-truncate" style="max-width: 245px;">
+                {{ item.clientProfileName }}
+              </h4>
 
               <!-- Support id -->
               <p class="text-gray-lighten-3 text-caption opacity-100">SID:{{ item.supportId }}</p>
 
             </v-col>
 
-            <!-- Region count and menu button -->
+            <!-- Menu button -->
             <v-col cols="auto" class="px-0">
-
-              <!-- Region count -->
-<!--              <v-chip
-                  v-if="item.regions.length > 1"
-                  color="gray-lighten-4"
-                  variant="flat"
-                  density="compact"
-                  size="small"
-                  class="text-primary-darken-1 px-2"
-              >
-                <v-icon icon="mdi-map-marker"/>
-                <span>{{ '+' + item.regions.length }}</span>
-              </v-chip>-->
 
               <!-- Menu button -->
               <v-btn :icon="true" density="compact" variant="plain" color="gray-lighten-3">
@@ -151,36 +142,50 @@
         <!-- Profile region -->
         <template v-slot:text>
           <v-list
-              v-if="item.regions.length > 0"
+              v-if="item.serverLocationInfos.length > 0"
               bg-color="gray-lighten-5"
               class="py-0 mt-n2 mx-n2"
               style="border-radius: 14px;"
           >
             <!-- Region item -->
             <v-list-item
-                v-for="(region, index) in item.regions"
-                :key="region.regionId"
-                :value="region.regionId"
-                :class="[item.regions.length > 1 && index !== (item.regions.length - 1) ? 'border-b border-gray-lighten-3' : '','py-3']"
+                v-for="(region, index) in item.serverLocationInfos"
+                :key="index"
+                :value="region.serverLocation"
+                :class="[!isSingleLocation(item.serverLocationInfos.length) && index !== (item.serverLocationInfos.length - 1)
+                ? 'border-b border-gray-lighten-3' : '','py-3']"
+                :active="isActiveServer(region.serverLocation)"
+                active-color="secondary"
+
             >
               <v-list-item-title class="d-flex align-center">
 
-                <!-- Country flag -->
+                <!-- Auto select icon and Country flag -->
                 <span class="rounded-circle overflow-hidden d-inline-flex align-center justify-center me-2"
                       style="width: 23px; height: 23px;">
-                  <img :src="require(`../assets/images/country_flags/${region.countryCode}.png`)" height="100%"
+
+                  <!-- Auto select icon -->
+                  <v-icon v-if="isAutoSelect(region.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+
+                  <!-- Country flag -->
+                  <img v-else :src="require(`../assets/images/country_flags/${region.countryCode.toLowerCase()}.png`)" height="100%"
                        alt="country flag"/>
                 </span>
 
-                <!-- Region name -->
-                <span class="text-caption">{{ region.regionName }}</span>
+                <!-- Country name -->
+                <span class="text-caption">{{ isAutoSelect(region.countryCode) ? $t('AUTO_SELECT') : region.countryName}}</span>
 
                 <!-- State name -->
-                <!--                <span v-if="region.stateName?">{{region.regionName}}</span>-->
+                <span
+                    v-if="!isAutoSelect(region.countryCode) && region.regionName"
+                    class="text-caption text-primary-darken-1 ms-2"
+                >
+                  ({{isAutoSelect(region.regionName) ? $t('AUTO_SELECT') : region.regionName}})
+                </span>
                 <v-spacer/>
 
                 <!-- Status -->
-                <v-chip color="secondary" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
+                <v-chip v-if="isActiveServer(region.serverLocation)" color="secondary" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
 
               </v-list-item-title>
             </v-list-item>
@@ -277,7 +282,6 @@ import AddServerDialog from "@/components/AddServerDialog.vue";
 import {
   ClientProfileInfo,
   ClientProfileUpdateParams,
-  HostRegionInfo,
   PatchOfString
 } from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
@@ -298,30 +302,13 @@ export default defineComponent({
       AppName,
       ComponentRouteController,
       currentClientProfileInfo: {} as ClientProfileInfo,
-      myClientProfilesInfo: {} as ClientProfileInfo[],
       expandedPanels: [] as number[],
     }
   },
 
   created() {
-    let clientProfileInfos = this.$vpnHoodApp.data.clientProfileInfos;
-    clientProfileInfos.forEach(item => {
-      if (item.clientProfileName === "Hesam.M") {
-        item.regions.push(
-            new HostRegionInfo({regionId: "123", regionName: "United States (Virginia)", countryCode: "us"}),
-            new HostRegionInfo({regionId: "345", regionName: "United Kingdom (London)", countryCode: "gb"}),
-            new HostRegionInfo({regionId: "346", regionName: "Iran (Tehran)", countryCode: "ir"}),
-            new HostRegionInfo({regionId: "347", regionName: "France (Paris)", countryCode: "fr"}),
-            new HostRegionInfo({regionId: "348", regionName: "Australia (Sidney)", countryCode: "au"}),
-        )
-      } else {
-        item.regions.push(
-            new HostRegionInfo({regionId: "123", regionName: "Iran (Tehran)", countryCode: "ir"}),
-        )
-      }
-    });
-    this.myClientProfilesInfo = clientProfileInfos;
-    this.expandedPanels = this.myClientProfilesInfo.map(() => 0);
+    console.log(this.$vpnHoodApp.data.clientProfileInfos);
+    this.expandedPanels = this.$vpnHoodApp.data.clientProfileInfos.map(() => 0);
   },
   methods: {
     async connect(clientProfileId: string): Promise<void> {
@@ -367,6 +354,21 @@ export default defineComponent({
             })
           })
       );
+    },
+    isActiveClientProfile(clientProfileId: string): boolean {
+      return clientProfileId === this.$vpnHoodApp.data.state.clientProfile?.clientProfileId;
+    },
+    isActiveServer(serverLocation: string): boolean {
+      return serverLocation === this.$vpnHoodApp.data.state.clientProfile?.serverLocationInfo.serverLocation;
+    },
+    isAutoSelect(countryCode: string): boolean {
+      return countryCode === '*';
+    },
+    isSingleLocation(locationCount: number): boolean {
+      return locationCount < 2;
+    },
+    isCollapsed(expandState: number): boolean {
+      return expandState !== 0;
     }
   }
 })
