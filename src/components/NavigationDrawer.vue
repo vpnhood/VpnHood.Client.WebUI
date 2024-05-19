@@ -111,7 +111,7 @@
       <!-- Diagnose -->
       <v-list-item
           :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
-          :disabled="!$vpnHoodApp.canDiagnose()"
+          :disabled="!$vpnHoodApp.data.state.canDiagnose"
           @click="diagnose"
       >
         <v-list-item-title>

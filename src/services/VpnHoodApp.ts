@@ -159,10 +159,6 @@ export class VpnHoodApp {
         await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
     }
 
-    public canDiagnose(): boolean {
-        return this.data.state.connectionState === AppConnectionState.None || !this.data.state.hasDiagnoseStarted;
-    }
-
     // Get error message
     public async showError(err: any): Promise<void> {
         console.error(err);

@@ -157,8 +157,8 @@
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
               }}</span>
             <img
-                v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientIpGroup?.ipGroupId"
-                :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientIpGroup.ipGroupId}.png`)"
+                v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientCountryCode"
+                :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientCountryCode}.png`)"
                 alt="country flag" width="24" class="ms-2"/>
           </v-btn>
         </v-col>
@@ -285,23 +285,24 @@ export default defineComponent({
         return;
       this.lastConnectPressedTime = Date.now();
 
-      if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.None) {
+      if (this.$vpnHoodApp.data.state.canDisconnect) {
         await this.$vpnHoodApp.disconnect();
         return;
       }
 
       // If user has no selected server and want to connect
-      if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId && this.$vpnHoodApp.data.features.isAddAccessKeySupported) {
+      if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId) {
         this.showServers();
         return;
       }
 
-      await this.$vpnHoodApp.connect();
+      if (this.$vpnHoodApp.data.state.canConnect)
+        await this.$vpnHoodApp.connect();
     },
 
     // Return text for connect button based on connection state
     connectButtonText(): string {
-      if (!this.$vpnHoodApp.canDiagnose() &&
+      if (!this.$vpnHoodApp.data.state.canDiagnose &&
           (this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected ||
               this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connecting))
         return this.$t("STOP_DIAGNOSING");

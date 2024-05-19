@@ -27,3 +27,6 @@
 .v-messages__message{
     line-height: 16px;
 }
+.v-expansion-panel-title{
+    line-height: 1.5 !important;
+}

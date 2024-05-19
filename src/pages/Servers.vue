@@ -3,19 +3,22 @@
   <!-- Page header -->
   <AppBar :page-title="$t('SERVERS')"/>
 
-  <v-sheet color="gray-lighten-5" class="pa-4">
+  <v-sheet color="gray-lighten-5" class="text-center pa-4">
 
     <!-- Add server button -->
     <v-btn
         v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"
-        block
-        variant="elevated"
-        color="secondary"
-        class="mt-2 mb-4 py-5"
-        prepend-icon="mdi-plus-circle"
+        variant="flat"
+        color="white"
+        class="text-primary-darken-1 mt-1 mb-5 text-capitalize"
+        rounded="pill"
         :text="$t('ADD_SERVER')"
         @click="ComponentRouteController.showComponent($componentName.AddServerDialog)"
-    />
+    >
+      <template v-slot:prepend>
+        <v-icon icon="mdi-plus-circle" size="30"/>
+      </template>
+    </v-btn>
 
     <!-- Show alert, if user does not have any server -->
     <div v-if="$vpnHoodApp.data.clientProfileInfos.length === 0">
@@ -35,39 +38,40 @@
     <!-- Server items -->
     <v-expansion-panels
         v-else
-        v-for="(item, index) in $vpnHoodApp.data.clientProfileInfos"
+        v-for="(clientProfileInfo, index) in $vpnHoodApp.data.clientProfileInfos"
         :key="index"
         v-model="expandedPanels[index]"
         flat
-        :ripple="isSingleLocation(item.serverLocationInfos.length)"
+        :ripple="isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
         rounded="xl"
         bg-color="white"
         class="myExpansionPanel mb-4"
+        @click="isSingleLocation(clientProfileInfo.serverLocationInfos.length) ? connect(clientProfileInfo.clientProfileId,'') : '';"
     >
       <v-expansion-panel
-          :readonly="isSingleLocation(item.serverLocationInfos.length)"
+          :readonly="isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
           hide-actions
           class="text-primary-darken-1"
       >
 
         <!-- Country flag on collapse state -->
         <div
-            v-if="!isSingleLocation(item.serverLocationInfos.length) && isCollapsed(expandedPanels[index])"
+            v-if="!isSingleLocation(clientProfileInfo.serverLocationInfos.length) && isCollapsed(expandedPanels[index])"
             class="bg-gray-lighten-5 mx-4 mb-4 pt-3 pb-2 px-4 text-truncate"
             style="border-radius: 14px; max-width: 311px;"
             @click="expandedPanels[index] = 0"
         >
           <span
-              v-for="(region, index) in item.serverLocationInfos"
+              v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos"
               :key="index"
               class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
               style="width: 23px; height: 23px;"
           >
             <!-- Auto select icon -->
-            <v-icon v-if="isAutoSelect(region.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+            <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
 
             <!-- Country flag -->
-            <img v-else :src="require(`../assets/images/country_flags/${region.countryCode.toLowerCase()}.png`)" height="100%" alt="country flag"/>
+            <img v-else-if="!serverLocationInfo.isNestedCountry"  :src="require(`../assets/images/country_flags/${serverLocationInfo.countryCode.toLowerCase()}.png`)" height="100%" alt="country flag"/>
           </span>
         </div>
 
@@ -76,34 +80,34 @@
           <v-row class="align-center">
 
             <!-- Radio button -->
-            <v-col cols="auto pt-2 ps-1">
+            <v-col cols="auto py-0 ps-1">
               <div
-                :class="[isActiveClientProfile(item.clientProfileId)
+                :class="[isActiveClientProfile(clientProfileInfo.clientProfileId)
                 ? 'border-secondary'
                 : 'border-gray-lighten-4'
                 , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
                 style="width: 25px; height: 25px; border-width: 3px !important;"
               >
                 <!-- Check icon if is active client profile -->
-                <v-icon v-if="isActiveClientProfile(item.clientProfileId)" icon="mdi-check-bold" size="15"/>
+                <v-icon v-if="isActiveClientProfile(clientProfileInfo.clientProfileId)" icon="mdi-check-bold" size="15"/>
               </div>
             </v-col>
 
             <!-- Profile name and support id-->
-            <v-col class="px-0">
+            <v-col class="px-0 py-0">
 
               <!-- Profile name -->
               <h4 class="text-primary-darken-1 text-truncate" style="max-width: 245px;">
-                {{ item.clientProfileName }}
+                {{ clientProfileInfo.clientProfileName }}
               </h4>
 
               <!-- Support id -->
-              <p class="text-gray-lighten-3 text-caption opacity-100">SID:{{ item.supportId }}</p>
+              <p class="text-gray-lighten-3 text-caption opacity-100">SID:{{ clientProfileInfo.supportId }}</p>
 
             </v-col>
 
             <!-- Menu button -->
-            <v-col cols="auto" class="px-0">
+            <v-col cols="auto" class="px-0 py-0">
 
               <!-- Menu button -->
               <v-btn :icon="true" density="compact" variant="plain" color="gray-lighten-3">
@@ -113,22 +117,22 @@
                   <v-list>
 
                     <!-- Rename item -->
-                    <v-list-item v-if="item.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId"
-                                 :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(item)"/>
-                    <v-divider v-if="item.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId"/>
+                    <v-list-item v-if="clientProfileInfo.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId"
+                                 :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
+                    <v-divider v-if="clientProfileInfo.tokenId !== $vpnHoodApp.data.features.builtInClientProfileId"/>
 
                     <!-- Diagnose item -->
                     <v-list-item
                         :title="$t('DIAGNOSE')"
-                        :disabled="!$vpnHoodApp.canDiagnose()"
+                        :disabled="!$vpnHoodApp.data.state.canDiagnose"
                         prepend-icon="mdi-speedometer"
-                        @click="diagnose(item.clientProfileId)">
+                        @click="connect(clientProfileInfo.clientProfileId, '', true)">
                     </v-list-item>
                     <v-divider v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"/>
 
                     <!-- Delete item -->
                     <v-list-item v-if="$vpnHoodApp.data.features.isAddAccessKeySupported" :title="$t('REMOVE')"
-                                 prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(item)"/>
+                                 prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(clientProfileInfo)"/>
 
                   </v-list>
                 </v-menu>
@@ -140,23 +144,22 @@
         </template>
 
         <!-- Profile region -->
-        <template v-slot:text>
+        <template v-slot:text v-if="clientProfileInfo.serverLocationInfos.length > 0">
           <v-list
-              v-if="item.serverLocationInfos.length > 0"
               bg-color="gray-lighten-5"
               class="py-0 mt-n2 mx-n2"
               style="border-radius: 14px;"
           >
             <!-- Region item -->
             <v-list-item
-                v-for="(region, index) in item.serverLocationInfos"
+                v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos"
                 :key="index"
-                :value="region.serverLocation"
-                :class="[!isSingleLocation(item.serverLocationInfos.length) && index !== (item.serverLocationInfos.length - 1)
+                :value="serverLocationInfo.serverLocation"
+                :class="[!isSingleLocation(clientProfileInfo.serverLocationInfos.length) && index !== (clientProfileInfo.serverLocationInfos.length - 1)
                 ? 'border-b border-gray-lighten-3' : '','py-3']"
-                :active="isActiveServer(region.serverLocation)"
+                :active="isActiveServer(serverLocationInfo.serverLocation)"
                 active-color="secondary"
-
+                @click="connect(clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
             >
               <v-list-item-title class="d-flex align-center">
 
@@ -165,27 +168,27 @@
                       style="width: 23px; height: 23px;">
 
                   <!-- Auto select icon -->
-                  <v-icon v-if="isAutoSelect(region.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+                  <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
 
                   <!-- Country flag -->
-                  <img v-else :src="require(`../assets/images/country_flags/${region.countryCode.toLowerCase()}.png`)" height="100%"
+                  <img v-else :src="require(`../assets/images/country_flags/${serverLocationInfo.countryCode.toLowerCase()}.png`)" height="100%"
                        alt="country flag"/>
                 </span>
 
                 <!-- Country name -->
-                <span class="text-caption">{{ isAutoSelect(region.countryCode) ? $t('AUTO_SELECT') : region.countryName}}</span>
+                <span class="text-caption">{{ isAutoSelect(serverLocationInfo.countryCode) ? $t('AUTO_SELECT') : serverLocationInfo.countryName}}</span>
 
                 <!-- State name -->
                 <span
-                    v-if="!isAutoSelect(region.countryCode) && region.regionName"
+                    v-if="!isAutoSelect(serverLocationInfo.countryCode) && serverLocationInfo.regionName"
                     class="text-caption text-primary-darken-1 ms-2"
                 >
-                  ({{isAutoSelect(region.regionName) ? $t('AUTO_SELECT') : region.regionName}})
+                  ({{isAutoSelect(serverLocationInfo.regionName) ? $t('AUTO_SELECT') : serverLocationInfo.regionName}})
                 </span>
                 <v-spacer/>
 
                 <!-- Status -->
-                <v-chip v-if="isActiveServer(region.serverLocation)" color="secondary" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
+                <v-chip v-if="isActiveServer(serverLocationInfo.serverLocation)" color="secondary" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
 
               </v-list-item-title>
             </v-list-item>
@@ -307,22 +310,15 @@ export default defineComponent({
   },
 
   created() {
-    console.log(this.$vpnHoodApp.data.clientProfileInfos);
     this.expandedPanels = this.$vpnHoodApp.data.clientProfileInfos.map(() => 0);
   },
   methods: {
-    async connect(clientProfileId: string): Promise<void> {
+    async connect(clientProfileId: string, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
       this.$router.replace('/');
       this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.serverLocation = serverLocationInfo === "" ? null : serverLocationInfo;
       await this.$vpnHoodApp.saveUserSetting();
-      await this.$vpnHoodApp.connect();
-    },
-
-    async diagnose(clientProfileId: string): Promise<void> {
-      this.$router.replace('/');
-      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
-      await this.$vpnHoodApp.saveUserSetting();
-      await this.$vpnHoodApp.diagnose();
+      isDiagnose ? await this.$vpnHoodApp.diagnose() : await this.$vpnHoodApp.connect();
     },
 
     // Show confirm dialog for delete server
@@ -356,10 +352,10 @@ export default defineComponent({
       );
     },
     isActiveClientProfile(clientProfileId: string): boolean {
-      return clientProfileId === this.$vpnHoodApp.data.state.clientProfile?.clientProfileId;
+      return clientProfileId === this.$vpnHoodApp.data.settings.userSettings.clientProfileId;
     },
     isActiveServer(serverLocation: string): boolean {
-      return serverLocation === this.$vpnHoodApp.data.state.clientProfile?.serverLocationInfo.serverLocation;
+      return serverLocation === this.$vpnHoodApp.data.settings.userSettings.serverLocation;
     },
     isAutoSelect(countryCode: string): boolean {
       return countryCode === '*';
