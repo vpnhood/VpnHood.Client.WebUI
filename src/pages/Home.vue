@@ -158,7 +158,7 @@
               }}</span>
             <img
                 v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientCountryCode"
-                :src="require(`../assets/images/country_flags/${$vpnHoodApp.data.state.clientCountryCode}.png`)"
+                :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.clientCountryCode)"
                 alt="country flag" width="24" class="ms-2"/>
           </v-btn>
         </v-col>

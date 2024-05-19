@@ -3,7 +3,7 @@
   <!-- Page header -->
   <AppBar :page-title="$t('SERVERS')"/>
 
-  <v-sheet color="gray-lighten-5" class="text-center pa-4">
+  <v-sheet color="gray-lighten-6" class="text-center pa-4">
 
     <!-- Add server button -->
     <v-btn
@@ -57,21 +57,28 @@
         <!-- Country flag on collapse state -->
         <div
             v-if="!isSingleLocation(clientProfileInfo.serverLocationInfos.length) && isCollapsed(expandedPanels[index])"
-            class="bg-gray-lighten-5 mx-4 mb-4 pt-3 pb-2 px-4 text-truncate"
+            class="d-flex align-center bg-gray-lighten-6 mx-4 mb-4 pt-3 pb-2 px-4 text-start text-truncate"
             style="border-radius: 14px; max-width: 311px;"
             @click="expandedPanels[index] = 0"
         >
-          <span
-              v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos"
-              :key="index"
-              class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
-              style="width: 23px; height: 23px;"
-          >
-            <!-- Auto select icon -->
-            <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+          <template v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos">
+            <span
+                v-if="!serverLocationInfo.isNestedCountry
+                && !isAutoSelect(serverLocationInfo.countryCode)
+                && index <= maximumLocationOnCollapsed"
+                :key="index"
+                class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
+                style="width: 23px; height: 23px;"
+            >
+              <!-- Auto select icon -->
+              <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
 
-            <!-- Country flag -->
-            <img v-else-if="!serverLocationInfo.isNestedCountry"  :src="require(`../assets/images/country_flags/${serverLocationInfo.countryCode.toLowerCase()}.png`)" height="100%" alt="country flag"/>
+                <!-- Country flag -->
+              <img v-else  :src="$vpnHoodApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
+            </span>
+          </template>
+          <span v-if="calcLocationCount(clientProfileInfo) > maximumLocationOnCollapsed" class="text-caption text-lowercase">
+            +{{calcLocationCount(clientProfileInfo) - maximumLocationOnCollapsed}}
           </span>
         </div>
 
@@ -146,8 +153,8 @@
         <!-- Profile region -->
         <template v-slot:text v-if="clientProfileInfo.serverLocationInfos.length > 0">
           <v-list
-              bg-color="gray-lighten-5"
-              class="py-0 mt-n2 mx-n2"
+              bg-color="gray-lighten-6"
+              class="py-0 mt-n2 mx-n2 zebra"
               style="border-radius: 14px;"
           >
             <!-- Region item -->
@@ -158,25 +165,30 @@
                 :class="[!isSingleLocation(clientProfileInfo.serverLocationInfos.length) && index !== (clientProfileInfo.serverLocationInfos.length - 1)
                 ? 'border-b border-gray-lighten-3' : '','py-3']"
                 :active="isActiveServer(serverLocationInfo.serverLocation)"
-                active-color="secondary"
+                color="secondary"
                 @click="connect(clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
             >
-              <v-list-item-title class="d-flex align-center">
+              <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-3' : '' ,'d-flex align-center']">
 
-                <!-- Auto select icon and Country flag -->
-                <span class="rounded-circle overflow-hidden d-inline-flex align-center justify-center me-2"
-                      style="width: 23px; height: 23px;">
+                <!-- Auto select icon -->
+                <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27" class="me-2"></v-icon>
 
-                  <!-- Auto select icon -->
-                  <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
-
-                  <!-- Country flag -->
-                  <img v-else :src="require(`../assets/images/country_flags/${serverLocationInfo.countryCode.toLowerCase()}.png`)" height="100%"
-                       alt="country flag"/>
+                <!-- Country flag -->
+                <span
+                    v-else
+                    class="overflow-hidden d-inline-flex align-center justify-center me-2"
+                    :style="[serverLocationInfo.isNestedCountry
+                    ? 'width: 21px; height: 15px'
+                    : 'width: 23px; height: 17px;'
+                    , 'border-radius: 3px;']"
+                >
+                  <img :src="$vpnHoodApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
                 </span>
 
                 <!-- Country name -->
-                <span class="text-caption">{{ isAutoSelect(serverLocationInfo.countryCode) ? $t('AUTO_SELECT') : serverLocationInfo.countryName}}</span>
+                <span class="text-caption">
+                  {{ isAutoSelect(serverLocationInfo.countryCode) ? $t('AUTO_SELECT') : serverLocationInfo.countryName}}
+                </span>
 
                 <!-- State name -->
                 <span
@@ -306,6 +318,7 @@ export default defineComponent({
       ComponentRouteController,
       currentClientProfileInfo: {} as ClientProfileInfo,
       expandedPanels: [] as number[],
+      maximumLocationOnCollapsed: 8,
     }
   },
 
@@ -365,6 +378,12 @@ export default defineComponent({
     },
     isCollapsed(expandState: number): boolean {
       return expandState !== 0;
+    },
+    calcLocationCount(clientProfileInfo: ClientProfileInfo): number {
+      const excludeAutoSelect = clientProfileInfo.serverLocationInfos.filter(
+          x => x.countryCode !== '*' && !x.isNestedCountry
+      );
+      return excludeAutoSelect.length;
     }
   }
 })
@@ -381,5 +400,11 @@ export default defineComponent({
 /*noinspection CssUnusedSymbol*/
 .v-expansion-panel-title__overlay {
   display: none !important;
+}
+
+/*noinspection CssUnusedSymbol*/
+.zebra>div:not(.v-list-item--active):nth-child(even) {
+  /*noinspection CssUnresolvedCustomProperty*/
+  background-color: rgb(var(--v-theme-gray-lighten-5));
 }
 </style>

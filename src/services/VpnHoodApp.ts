@@ -195,6 +195,16 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
+    public getCountryFlag(countryCode: string): any{
+        try {
+            return require(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`);
+        }
+        catch (error: any) {
+            console.error(error);
+            return require(`../assets/images/country_flags/no-flag.png`);
+        }
+    }
+
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
