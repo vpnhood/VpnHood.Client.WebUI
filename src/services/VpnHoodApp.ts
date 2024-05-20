@@ -195,14 +195,17 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
-    public getCountryFlag(countryCode: string): any{
+    public getCountryFlag(countryCode: string): string{
         try {
             return require(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`);
         }
         catch (error: any) {
-            console.error(error);
             return require(`../assets/images/country_flags/no-flag.png`);
         }
+    }
+
+    public isLocationAutoSelected(countryCode: string): boolean {
+        return countryCode === '*';
     }
 
     //------------------------------------------

@@ -141,6 +141,42 @@
     <v-col cols="12" class="text-truncate">
       <v-row>
 
+        <!-- Servers button -->
+        <v-col cols="12" md="6" class="py-0 pa-md-1">
+          <v-btn
+              depressed
+              block
+              id="serverButton"
+              variant="text"
+              size="small"
+              prepend-icon="mdi-earth"
+              class="config-item align-center mb-1"
+              @click="$router.push('/servers')"
+          >
+              <span>{{ $t("SERVER") }}</span>
+              <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
+              <span class="text-capitalize text-caption text-white opacity-50 text-truncate" style="max-width: 195px;">
+                {{ $vpnHoodApp.data.state.clientProfile?.clientProfileName ?? $t("NO_SERVER_SELECTED") }}
+              </span>
+
+            <template v-slot:append v-if="$vpnHoodApp.data.state.serverLocationInfo">
+              <v-chip
+                  v-if="$vpnHoodApp.isLocationAutoSelected($vpnHoodApp.data.state.serverLocationInfo.countryCode)"
+                  :text="$t('AUTO')"
+                  size="small"
+                  density="compact"
+                  variant="tonal"
+                  color="gray-lighten-3"
+                  class="text-caption px-2"
+              />
+              <span v-else class="overflow-hidden d-inline-flex align-center justify-center ms-1" style="width: 23px; height: 15px;border-radius: 3px;">
+                  <img :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
+              </span>
+            </template>
+
+          </v-btn>
+        </v-col>
+
         <!-- Exclude country button -->
         <v-col cols="12" md="6" class="py-0 pa-md-1">
           <v-btn
@@ -148,18 +184,14 @@
               block
               variant="outlined"
               size="small"
-              prepend-icon="mdi-earth"
+              prepend-icon="mdi-call-split"
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
-            <span>{{ $t("IP_FILTER_STATUS_TITLE") }}</span>
+            <span>{{ $t("SPLIT_COUNTRY") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
               }}</span>
-            <img
-                v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientCountryCode"
-                :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.clientCountryCode)"
-                alt="country flag" width="24" class="ms-2"/>
           </v-btn>
         </v-col>
 
@@ -175,7 +207,7 @@
               class="config-item mb-1"
               to="/apps-filter"
           >
-            <span>{{ $t("APP_FILTER_STATUS_TITLE") }}</span>
+            <span>{{ $t("SPLIT_APP") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
@@ -189,33 +221,11 @@
               variant="text"
               size="small"
               prepend-icon="mdi-transit-connection-variant"
-              class="config-item mb-1"
+              class="config-item"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
-          </v-btn>
-        </v-col>
-
-        <!-- Servers button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
-          <v-btn
-              depressed
-              block
-              variant="text"
-              size="small"
-              prepend-icon="mdi-dns"
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && $vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'active-subscription' : '','config-item align-center']"
-              @click="showServers()"
-          >
-            <span>{{ $t("SELECTED_SERVER") }}</span>
-            <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
-            <span class="text-capitalize text-caption text-white opacity-50">{{ $vpnHoodApp.data.state.clientProfile?.clientProfileName ?? $t("NO_SERVER_SELECTED") }}</span>
-
-            <template v-slot:append
-                      v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !$vpnHoodApp.data.userState.userAccount?.subscriptionId">
-              <v-icon class="button-premium-icon" icon="mdi-crown"/>
-            </template>
           </v-btn>
         </v-col>
 
@@ -292,7 +302,7 @@ export default defineComponent({
 
       // If user has no selected server and want to connect
       if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId) {
-        this.showServers();
+        this.$router.push('/servers');
         return;
       }
 
@@ -401,15 +411,6 @@ export default defineComponent({
 
       return this.$vpnHoodApp.data.settings.userSettings.useUdpChannel ? this.$t('PROTOCOL_UDP_ON') : this.$t('PROTOCOL_UDP_OFF')
     },
-
-    showServers(): void {
-      if (this.$vpnHoodApp.data.features.isAddAccessKeySupported)
-        this.$router.push('/servers');
-      else
-        this.$vpnHoodApp.data.userState.userAccount?.subscriptionId
-            ? this.ComponentRouteController.showComponent(this.$componentName.ServersDialogForVpnHoodConnect)
-            : this.$router.push("/purchase-subscription");
-    }
   }
 });
 </script>
@@ -426,20 +427,10 @@ export default defineComponent({
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
-
-/*noinspection CssUnusedSymbol*/
-.config-item.active-subscription {
-  /*noinspection CssUnresolvedCustomProperty*/
-  border-color: rgba(var(--v-theme-tertiary), 1);
-}
-
-.button-premium-icon {
-  position: absolute;
-  right: 10px;
-}
-
-.v-locale--is-rtl .button-premium-icon {
-  right: unset;
-  left: 10px;
+</style>
+<style>
+#serverButton .v-btn__content{
+  flex-grow: 1;
+  justify-content: start;
 }
 </style>

@@ -3,7 +3,12 @@
   <!-- Page header -->
   <AppBar :page-title="$t('SERVERS')"/>
 
-  <v-sheet color="gray-lighten-6" class="text-center pa-4">
+  <v-sheet
+      :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
+      ? 'primary-darken-2'
+      : 'gray-lighten-6'"
+      class="text-center pa-4"
+  >
 
     <!-- Add server button -->
     <v-btn
@@ -21,7 +26,7 @@
     </v-btn>
 
     <!-- Show alert, if user does not have any server -->
-    <div v-if="$vpnHoodApp.data.clientProfileInfos.length === 0">
+    <div v-if="$vpnHoodApp.data.features.isAddAccessKeySupported && $vpnHoodApp.data.clientProfileInfos.length === 0">
       <v-alert
           :text="$t('NO_SERVER_AVAILABLE')"
           density="compact"
@@ -44,7 +49,7 @@
         flat
         :ripple="isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
         rounded="xl"
-        bg-color="white"
+        :bg-color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary' : 'white'"
         class="myExpansionPanel mb-4"
         @click="isSingleLocation(clientProfileInfo.serverLocationInfos.length) ? connect(clientProfileInfo.clientProfileId,'') : '';"
     >
@@ -64,14 +69,14 @@
           <template v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos">
             <span
                 v-if="!serverLocationInfo.isNestedCountry
-                && !isAutoSelect(serverLocationInfo.countryCode)
+                && !$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)
                 && index <= maximumLocationOnCollapsed"
                 :key="index"
-                class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
+                class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-n2"
                 style="width: 23px; height: 23px;"
             >
               <!-- Auto select icon -->
-              <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+              <v-icon v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
 
                 <!-- Country flag -->
               <img v-else  :src="$vpnHoodApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
@@ -171,7 +176,7 @@
               <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-3' : '' ,'d-flex align-center']">
 
                 <!-- Auto select icon -->
-                <v-icon v-if="isAutoSelect(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27" class="me-2"></v-icon>
+                <v-icon v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27" class="me-2"></v-icon>
 
                 <!-- Country flag -->
                 <span
@@ -187,15 +192,15 @@
 
                 <!-- Country name -->
                 <span class="text-caption">
-                  {{ isAutoSelect(serverLocationInfo.countryCode) ? $t('AUTO_SELECT') : serverLocationInfo.countryName}}
+                  {{ $vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode) ? $t('AUTO_SELECT') : serverLocationInfo.countryName }}
                 </span>
 
                 <!-- State name -->
                 <span
-                    v-if="!isAutoSelect(serverLocationInfo.countryCode) && serverLocationInfo.regionName"
+                    v-if="!$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode) && serverLocationInfo.regionName"
                     class="text-caption text-primary-darken-1 ms-2"
                 >
-                  ({{isAutoSelect(serverLocationInfo.regionName) ? $t('AUTO_SELECT') : serverLocationInfo.regionName}})
+                  ({{ $vpnHoodApp.isLocationAutoSelected(serverLocationInfo.regionName) ? $t('AUTO_SELECT') : serverLocationInfo.regionName }})
                 </span>
                 <v-spacer/>
 
@@ -318,7 +323,7 @@ export default defineComponent({
       ComponentRouteController,
       currentClientProfileInfo: {} as ClientProfileInfo,
       expandedPanels: [] as number[],
-      maximumLocationOnCollapsed: 8,
+      maximumLocationOnCollapsed: 12,
     }
   },
 
@@ -369,9 +374,6 @@ export default defineComponent({
     },
     isActiveServer(serverLocation: string): boolean {
       return serverLocation === this.$vpnHoodApp.data.settings.userSettings.serverLocation;
-    },
-    isAutoSelect(countryCode: string): boolean {
-      return countryCode === '*';
     },
     isSingleLocation(locationCount: number): boolean {
       return locationCount < 2;
