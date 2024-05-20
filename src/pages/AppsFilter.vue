@@ -2,7 +2,7 @@
 
   <AppBar :page-title="$t('APP_FILTER')"/>
 
-  <v-sheet :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
+  <v-sheet :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <!-- Disconnecting alert -->
     <v-alert class="mb-3 text-caption" density="compact" :icon="false" type="warning" :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>

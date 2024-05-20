@@ -4,7 +4,7 @@
   <AppBar :page-title="$t('LANGUAGE')"/>
 
   <v-sheet class="pa-4"
-           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-3'">
+           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
       <v-list bg-color="transparent" class="py-0">
@@ -16,7 +16,7 @@
             :class="[
                 $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
                 ? 'border-primary-darken-2 border-opacity-50'
-                : 'border-gray-lighten-3 border-opacity-100',
+                : 'border-gray-lighten-5 border-opacity-100',
                 'border-b'
                 ]"
             active-class="text-secondary"
