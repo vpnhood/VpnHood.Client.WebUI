@@ -208,6 +208,18 @@ export class VpnHoodApp {
         return countryCode === '*';
     }
 
+    public isActiveClientProfile(clientProfileId: string): boolean {
+        return clientProfileId === this.data.settings.userSettings.clientProfileId;
+    }
+
+    public isActiveServer(serverLocation: string): boolean {
+        return serverLocation === this.data.settings.userSettings.serverLocation;
+    }
+
+    public isConnectApp(): boolean{
+        return this.data.features.uiName === AppName.VpnHoodConnect
+    }
+
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
