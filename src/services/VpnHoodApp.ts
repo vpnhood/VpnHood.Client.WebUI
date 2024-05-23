@@ -12,7 +12,7 @@ import {
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UserState} from "@/services/UserState";
-import {AppName, ComponentName} from "@/UiConstants";
+import {AppName, ComponentName, SubscriptionPlansId} from "@/UiConstants";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
@@ -195,11 +195,10 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
-    public getCountryFlag(countryCode: string): string{
+    public getCountryFlag(countryCode: string): string {
         try {
             return require(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`);
-        }
-        catch (error: any) {
+        } catch (error: any) {
             return require(`../assets/images/country_flags/no-flag.png`);
         }
     }
@@ -216,8 +215,26 @@ export class VpnHoodApp {
         return serverLocation === this.data.settings.userSettings.serverLocation;
     }
 
-    public isConnectApp(): boolean{
-        return this.data.features.uiName === AppName.VpnHoodConnect
+    public isConnectApp(): boolean {
+        return this.data.features.uiName === AppName.VpnHoodConnect;
+    }
+
+    public isSingleServerMode(): boolean {
+        return this.isConnectApp() && this.data.clientProfileInfos.length === 1;
+    }
+
+    public getClientProfileInfos(): ClientProfileInfo[] {
+        if (!this.isConnectApp())
+            return this.data.clientProfileInfos;
+
+        if (this.data.userState.userAccount === null)
+            return this.data.clientProfileInfos;
+
+        if (this.data.userState.userAccount.providerPlanId === SubscriptionPlansId.GlobalServer ||
+            this.data.userState.userAccount.providerPlanId === SubscriptionPlansId.BundleServers)
+            return  this.data.clientProfileInfos.filter(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
+
+        return this.data.clientProfileInfos;
     }
 
     //------------------------------------------
@@ -225,7 +242,7 @@ export class VpnHoodApp {
     //------------------------------------------
 
     public async signIn(showLoading: boolean = true): Promise<void> {
-        if(showLoading)
+        if (showLoading)
             this.data.uiState.showLoadingDialog = true;
 
         try {
@@ -237,8 +254,7 @@ export class VpnHoodApp {
             if (err.exceptionTypeName === "OperationCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
             throw err;
-        }
-        finally {
+        } finally {
             if (showLoading)
                 this.data.uiState.showLoadingDialog = false;
         }

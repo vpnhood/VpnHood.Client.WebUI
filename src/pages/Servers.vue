@@ -39,16 +39,18 @@
       ></div>
     </div>
 
-
     <!-- Server items -->
-    <template v-else-if="$vpnHoodApp.isConnectApp() && $vpnHoodApp.data.clientProfileInfos.length === 1">
-      <ServerLocationList :client-profile-info="$vpnHoodApp.data.clientProfileInfos[0]"/>
+    <template v-else-if="$vpnHoodApp.isSingleServerMode()">
+      <ServerLocationList
+          :client-profile-info="myClientProfileInfos[0]"
+          :is-single-item="true"
+          @connect="connect"
+      />
     </template>
-
 
     <v-expansion-panels
         v-else
-        v-for="(clientProfileInfo, index) in $vpnHoodApp.data.clientProfileInfos"
+        v-for="(clientProfileInfo, index) in myClientProfileInfos"
         :key="index"
         v-model="expandedPanels[index]"
         flat
@@ -83,14 +85,17 @@
                 style="width: 23px; height: 23px;"
             >
               <!-- Auto select icon -->
-              <v-icon v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth" color="primary-darken-1" size="27"></v-icon>
+              <v-icon v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
+                      color="primary-darken-1" size="27"></v-icon>
 
-                <!-- Country flag -->
-              <img v-else  :src="$vpnHoodApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
+              <!-- Country flag -->
+              <img v-else :src="$vpnHoodApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%"
+                   alt="country flag"/>
             </span>
           </template>
-          <span v-if="Util.calcLocationCount(clientProfileInfo) > maximumLocationOnCollapsed" class="text-caption text-lowercase">
-            +{{Util.calcLocationCount(clientProfileInfo) - maximumLocationOnCollapsed}}
+          <span v-if="Util.calcLocationCount(clientProfileInfo) > maximumLocationOnCollapsed"
+                class="text-caption text-lowercase">
+            +{{ Util.calcLocationCount(clientProfileInfo) - maximumLocationOnCollapsed }}
           </span>
         </div>
 
@@ -101,14 +106,15 @@
             <!-- Radio button -->
             <v-col cols="auto py-0 ps-1">
               <div
-                :class="[$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
+                  :class="[$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
                 ? 'border-secondary'
                 : 'border-gray-lighten-4'
                 , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
-                style="width: 25px; height: 25px; border-width: 3px !important;"
+                  style="width: 25px; height: 25px; border-width: 3px !important;"
               >
                 <!-- Check icon if is active client profile -->
-                <v-icon v-if="$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)" icon="mdi-check-bold" size="15"/>
+                <v-icon v-if="$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
+                        icon="mdi-check-bold" size="15"/>
               </div>
             </v-col>
 
@@ -116,7 +122,8 @@
             <v-col class="px-0 py-0">
 
               <!-- Profile name -->
-              <h4 :class="[$vpnHoodApp.isConnectApp() ? 'text-white' : 'text-primary-darken-1' ,'text-truncate']" style="max-width: 245px;">
+              <h4 :class="[$vpnHoodApp.isConnectApp() ? 'text-white' : 'text-primary-darken-1' ,'text-truncate']"
+                  style="max-width: 245px;">
                 {{ clientProfileInfo.clientProfileName }}
               </h4>
 
@@ -136,9 +143,11 @@
                   <v-list>
 
                     <!-- Rename item -->
-                    <v-list-item v-if="clientProfileInfo.clientProfileId !== $vpnHoodApp.data.features.builtInClientProfileId"
-                                 :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
-                    <v-divider v-if="clientProfileInfo.clientProfileId !== $vpnHoodApp.data.features.builtInClientProfileId"/>
+                    <v-list-item
+                        v-if="clientProfileInfo.clientProfileId !== $vpnHoodApp.data.features.builtInClientProfileId"
+                        :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
+                    <v-divider
+                        v-if="clientProfileInfo.clientProfileId !== $vpnHoodApp.data.features.builtInClientProfileId"/>
 
                     <!-- Diagnose item -->
                     <v-list-item
@@ -164,7 +173,11 @@
 
         <!-- Profile region -->
         <template v-slot:text v-if="clientProfileInfo.serverLocationInfos.length > 0">
-          <ServerLocationList :client-profile-info="clientProfileInfo"/>
+          <ServerLocationList
+              :client-profile-info="clientProfileInfo"
+              :is-single-item="false"
+              @connect="connect"
+          />
         </template>
 
       </v-expansion-panel>
@@ -259,33 +272,34 @@ import {
   PatchOfString
 } from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import {AppName} from "@/UiConstants";
+import {AppName, SubscriptionPlansId} from "@/UiConstants";
 import AppBar from "@/components/AppBar.vue";
 import ServerLocationList from "@/components/ServerLocationList.vue";
 import {Util} from "@/services/Util";
 
 export default defineComponent({
   name: 'ServersPage',
-  components: {ServerLocationList, AppBar, AddServerDialog},
-  props: {
-    modelValue: Boolean,
+  computed: {
+    SubscriptionPlansId() {
+      return SubscriptionPlansId
+    }
   },
-  emits: [
-    "update:modelValue",
-  ],
+  components: {ServerLocationList, AppBar, AddServerDialog},
   data() {
     return {
       Util,
       AppName,
       ComponentRouteController,
       currentClientProfileInfo: {} as ClientProfileInfo,
+      myClientProfileInfos: [] as ClientProfileInfo[],
       expandedPanels: [] as number[],
       maximumLocationOnCollapsed: 8,
     }
   },
 
   created() {
-    this.expandedPanels = this.$vpnHoodApp.data.clientProfileInfos.map(() => 0);
+    this.myClientProfileInfos = this.$vpnHoodApp.getClientProfileInfos();
+    this.expandedPanels = this.myClientProfileInfos.map(() => 0);
   },
   methods: {
     async connect(clientProfileId: string, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
@@ -344,13 +358,13 @@ export default defineComponent({
 }
 
 /*noinspection CssUnusedSymbol*/
-.zebra>div:not(.v-list-item--active):nth-child(even) {
+.zebra > div:not(.v-list-item--active):nth-child(even) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(var(--v-theme-gray-lighten-5));
 }
 
 /*noinspection CssUnusedSymbol*/
-.connect-zebra>div:not(.v-list-item--active):nth-child(even) {
+.connect-zebra > div:not(.v-list-item--active):nth-child(even) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(20 13 60);
 }

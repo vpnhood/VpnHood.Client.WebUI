@@ -187,7 +187,7 @@
               prepend-icon="mdi-call-split"
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
-            <span>{{ $t("SPLIT_COUNTRY") }}</span>
+            <span>{{ $t("INCLUDE_COUNTRIES") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
@@ -207,7 +207,7 @@
               class="config-item mb-1"
               to="/apps-filter"
           >
-            <span>{{ $t("SPLIT_APP") }}</span>
+            <span>{{ $t("INCLUDE_APPS") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
@@ -244,8 +244,6 @@
   <TunnelClientCountryDialog
       v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow"/>
   <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow"/>
-  <ServersDialogForVpnHoodConnect
-      v-model="ComponentRouteController.create($componentName.ServersDialogForVpnHoodConnect).isShow"/>
 
 </template>
 
@@ -259,12 +257,10 @@ import SuppressSnackbar from "@/components/SuppressSnackbar.vue";
 import UpdateSnackbar from "@/components/UpdateSnackbar.vue";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants, SubscriptionPlansId} from "@/UiConstants";
-import ServersDialogForVpnHoodConnect from "@/components/ServersDialogForVpnHoodConnect.vue";
 
 export default defineComponent({
   name: 'HomePage',
   components: {
-    ServersDialogForVpnHoodConnect,
     UpdateSnackbar,
     SuppressSnackbar,
     HomeAppBar,
@@ -428,7 +424,9 @@ export default defineComponent({
   text-overflow: ellipsis !important;
 }
 </style>
+
 <style>
+/*noinspection CssUnusedSymbol*/
 #serverButton .v-btn__content{
   flex-grow: 1;
   justify-content: start;

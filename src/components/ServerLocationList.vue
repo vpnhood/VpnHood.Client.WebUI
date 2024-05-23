@@ -3,7 +3,7 @@
       v-if="clientProfileInfo"
       :bg-color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
       :class="[$vpnHoodApp.isConnectApp() ? 'connect-zebra' : 'zebra' ,'py-0 mt-n2 mx-n2']"
-      style="border-radius: 14px;"
+      :style="$vpnHoodApp.isConnectApp() && isSingleItem ? '' : 'border-radius: 14px;'"
   >
     <!-- Region item -->
     <v-list-item
@@ -18,8 +18,8 @@
           $vpnHoodApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3'
           ,'py-3']"
         :active="$vpnHoodApp.isActiveServer(serverLocationInfo.serverLocation)"
-        color="secondary"
-        @click="connect(clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
+        :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
+        @click="$emit('connect',clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
     >
       <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-3' : '' ,'d-flex align-center']">
 
@@ -53,7 +53,7 @@
         <v-spacer/>
 
         <!-- Status -->
-        <v-chip v-if="$vpnHoodApp.isActiveServer(serverLocationInfo.serverLocation)" color="secondary" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
+        <v-chip v-if="$vpnHoodApp.isActiveServer(serverLocationInfo.serverLocation)" :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
 
       </v-list-item-title>
     </v-list-item>
@@ -71,21 +71,17 @@ export default defineComponent({
   name: "ServerLocationList",
   props: {
     clientProfileInfo: ClientProfileInfo,
+    isSingleItem: Boolean,
   },
   emits: [
     "update:clientProfileInfo",
-    "connect",
+    "update:isSingleItem",
+    "connect"
   ],
   data() {
     return {
       Util,
       AppName,
-    }
-  },
-
-  methods: {
-    connect(clientProfileId: string, serverLocation: string){
-      this.$emit("connect", clientProfileId, serverLocation);
     }
   },
 })

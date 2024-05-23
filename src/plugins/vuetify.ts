@@ -74,6 +74,7 @@ export default createVuetify({
                         secondary: '#7b7afe',
                         'on-secondary': '#ffffff',
                         'secondary-lighten-1': '#15f5ba',
+                        'secondary-lighten-2': '#23c99d',
                         'on-secondary-lighten-1': '#ffffff',
                         'tertiary': '#e7b481',
                         'on-tertiary': '#ffffff',
