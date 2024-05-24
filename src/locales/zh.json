@@ -127,7 +127,6 @@
   "GLOBAL_SERVERS_NOTICE": "从全球服务器移除广告。",
   "HIDDEN_SERVER_NOTICE": "您可以连接到一个仅对限制用户组可用且不显示广告的服务器。如果您无法访问全球服务器，这将降低被封锁的可能性。",
   "BUNDLE_SERVERS_NOTICE": "从全球服务器移除广告，并获得访问隐藏服务器的权限。",
-  "EMPTY_DEFAULT_CLIENT_PROFILE": "找不到默认客户端配置文件ID。",
   "UDP_NOT_SUPPORTED_MESSAGE": "此服务器不支持UDP协议。",
   "CONGRATULATIONS": "恭喜",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "您的订单已处理，您的订阅已激活。",
