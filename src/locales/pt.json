@@ -127,7 +127,6 @@
   "GLOBAL_SERVERS_NOTICE": "Remover anúncios dos servidores globais.",
   "HIDDEN_SERVER_NOTICE": "Você pode se conectar a um servidor cujo endereço IP está disponível apenas para um grupo limitado de usuários e que não exibe anúncios. Isso reduz a probabilidade de ser bloqueado se você não tiver acesso aos servidores globais.",
   "BUNDLE_SERVERS_NOTICE": "Remova os anúncios dos servidores globais e ganhe acesso a um servidor oculto também.",
-  "EMPTY_DEFAULT_CLIENT_PROFILE": "Não foi possível encontrar o ID do perfil de cliente padrão.",
   "UDP_NOT_SUPPORTED_MESSAGE": "Este servidor não suporta o protocolo UDP.",
   "CONGRATULATIONS": "Parabéns",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Seu pedido foi processado e sua assinatura foi ativada.",
