@@ -7,7 +7,7 @@
       :color="$vpnHoodApp.isConnectApp()
       ? 'primary-darken-2'
       : 'gray-lighten-6'"
-      class="text-center pa-4"
+      :class="[$vpnHoodApp.isSingleServerMode() ? 'py-2 px-0' : 'pa-4','text-center']"
   >
 
     <!-- Add server button -->
@@ -44,6 +44,7 @@
       <ServerLocationList
           :client-profile-info="myClientProfileInfos[0]"
           :is-single-item="true"
+          :is-active-profile="true"
           @connect="connect"
       />
     </template>
@@ -176,6 +177,7 @@
           <ServerLocationList
               :client-profile-info="clientProfileInfo"
               :is-single-item="false"
+              :is-active-profile="$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
               @connect="connect"
           />
         </template>
@@ -298,10 +300,14 @@ export default defineComponent({
   },
 
   created() {
+    // Get modified clientProfileInfos
     this.myClientProfileInfos = this.$vpnHoodApp.getClientProfileInfos();
+
+    // Create open state for each clientProfileInfo item
     this.expandedPanels = this.myClientProfileInfos.map(() => 0);
   },
   methods: {
+    // Connect or diagnose selected client profile
     async connect(clientProfileId: string, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
       this.$router.replace('/');
       this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;

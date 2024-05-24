@@ -60,7 +60,7 @@
             block
             class="text-center text-secondary"
             :text="$t('CLOSE')"
-            @click="$emit('update:modelValue',false)"
+            @click="closeDialog"
         />
       </v-card-actions>
     </v-card>
@@ -121,6 +121,11 @@ export default defineComponent({
         console.error('Oops! Could not even send the report details!', ex);
       }
     },
+
+    async closeDialog(): Promise<void> {
+      await this.$vpnHoodApp.apiClient.clearLastError();
+      this.$emit('update:modelValue',false);
+    }
   }
 })
 </script>

@@ -58,7 +58,7 @@
       </v-row>
 
       <!--VpnHoodConnect Circle -->
-      <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" id="connectionCircleIndicator"
+      <div v-if="$vpnHoodApp.isConnectApp()" id="connectionCircleIndicator"
            :class="[$vpnHoodApp.data.state.connectionState.toLowerCase(), 'my-3']">
         <div class="position-absolute w-100 h-100">
           <div id="rotateCircle"></div>
@@ -66,10 +66,7 @@
         <div class="d-flex flex-column align-center justify-center">
 
           <!-- Connection state text -->
-          <span class="text-body-2">{{
-              $vpnHoodApp.data.state.connectionState === AppConnectionState.None ? $t("DISCONNECTED") : $t($vpnHoodApp.data.state.connectionState.toUpperCase())
-            }}
-              </span>
+          <span class="text-body-2">{{$vpnHoodApp.getConnectionState()}}</span>
 
           <!-- Usage -->
           <div class="d-flex flex-column align-center" v-if="isConnected() && bandwidthUsage()">
@@ -153,10 +150,10 @@
               class="config-item align-center mb-1"
               @click="$router.push('/servers')"
           >
-              <span>{{ $t("SERVER") }}</span>
+              <span>{{ $vpnHoodApp.isSingleServerMode() ? $t("LOCATION") : $t("SERVER") }}</span>
               <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
               <span class="text-capitalize text-caption text-white opacity-50 text-truncate" style="max-width: 195px;">
-                {{ $vpnHoodApp.data.state.clientProfile?.clientProfileName ?? $t("NO_SERVER_SELECTED") }}
+                {{ $vpnHoodApp.getActiveServerNameOrLocation() }}
               </span>
 
             <template v-slot:append v-if="$vpnHoodApp.data.state.serverLocationInfo">
@@ -173,7 +170,6 @@
                   <img :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
               </span>
             </template>
-
           </v-btn>
         </v-col>
 
@@ -187,7 +183,7 @@
               prepend-icon="mdi-call-split"
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
-            <span>{{ $t("INCLUDE_COUNTRIES") }}</span>
+            <span>{{ $t("COUNTRIES") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{
                 $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t("IP_FILTER_ALL") : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")
@@ -203,11 +199,11 @@
               block
               variant="text"
               size="small"
-              prepend-icon="mdi-apps"
+              prepend-icon="mdi-call-split"
               class="config-item mb-1"
               to="/apps-filter"
           >
-            <span>{{ $t("INCLUDE_APPS") }}</span>
+            <span>{{ $t("APPS") }}</span>
             <v-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>

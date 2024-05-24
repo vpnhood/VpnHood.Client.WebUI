@@ -75,7 +75,7 @@ export class VpnHoodApp {
         }
 
         // Show last error message if the user has not ignored
-        if (this.data.state.lastError)
+        if (this.data.state.lastError && !ComponentRouteController.isShowComponent(ComponentName.AlertDialog))
             await this.showError(this.data.state.lastError);
 
         // Show update message if the user has not ignored or more than 24 hours have passed
@@ -179,7 +179,6 @@ export class VpnHoodApp {
     public async showMessage(text: string): Promise<void> {
         this.data.uiState.alertDialogText = text;
         await ComponentRouteController.showComponent(ComponentName.AlertDialog);
-        await this.apiClient.clearLastError();
     }
 
     // Get installed apps list on the user device
@@ -211,7 +210,7 @@ export class VpnHoodApp {
         return clientProfileId === this.data.settings.userSettings.clientProfileId;
     }
 
-    public isActiveServer(serverLocation: string): boolean {
+    public isActiveLocation(serverLocation: string): boolean {
         return serverLocation === this.data.settings.userSettings.serverLocation;
     }
 
@@ -235,6 +234,24 @@ export class VpnHoodApp {
             return  this.data.clientProfileInfos.filter(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
 
         return this.data.clientProfileInfos;
+    }
+
+    public getActiveServerNameOrLocation(): string{
+        if (this.isSingleServerMode() && this.data.state.serverLocationInfo){
+            return this.isLocationAutoSelected(this.data.state.serverLocationInfo.regionName)
+                ? i18n.global.t('AUTO_SELECT')
+                : this.data.state.serverLocationInfo.regionName
+        }
+        return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
+    }
+
+    public getConnectionState(): string{
+        if (this.data.state.isWaitingForAd)
+            return i18n.global.t("LOADING_AD");
+
+        return this.data.state.connectionState === AppConnectionState.None
+            ? i18n.global.t("DISCONNECTED")
+            : i18n.global.t(this.data.state.connectionState.toUpperCase());
     }
 
     //------------------------------------------

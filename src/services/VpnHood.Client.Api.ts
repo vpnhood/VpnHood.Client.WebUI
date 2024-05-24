@@ -1638,7 +1638,6 @@ export class UserSettings implements IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     serverLocation?: string | null;
-    maxReconnectCount!: number;
     maxDatagramChannelCount!: number;
     tunnelClientCountry!: boolean;
     appFilters?: string[] | null;
@@ -1673,7 +1672,6 @@ export class UserSettings implements IUserSettings {
             this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
             this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
             this.serverLocation = _data["serverLocation"] !== undefined ? _data["serverLocation"] : <any>null;
-            this.maxReconnectCount = _data["maxReconnectCount"] !== undefined ? _data["maxReconnectCount"] : <any>null;
             this.maxDatagramChannelCount = _data["maxDatagramChannelCount"] !== undefined ? _data["maxDatagramChannelCount"] : <any>null;
             this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : <any>null;
             if (Array.isArray(_data["appFilters"])) {
@@ -1747,7 +1745,6 @@ export class UserSettings implements IUserSettings {
         data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
         data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
         data["serverLocation"] = this.serverLocation !== undefined ? this.serverLocation : <any>null;
-        data["maxReconnectCount"] = this.maxReconnectCount !== undefined ? this.maxReconnectCount : <any>null;
         data["maxDatagramChannelCount"] = this.maxDatagramChannelCount !== undefined ? this.maxDatagramChannelCount : <any>null;
         data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : <any>null;
         if (Array.isArray(this.appFilters)) {
@@ -1796,7 +1793,6 @@ export interface IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     serverLocation?: string | null;
-    maxReconnectCount: number;
     maxDatagramChannelCount: number;
     tunnelClientCountry: boolean;
     appFilters?: string[] | null;
@@ -2740,6 +2736,7 @@ export interface IIpGroup {
 
 export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
     clientProfileName?: PatchOfString | null;
+    isFavorite?: PatchOfBoolean | null;
 
     constructor(data?: IClientProfileUpdateParams) {
         if (data) {
@@ -2753,6 +2750,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
     init(_data?: any) {
         if (_data) {
             this.clientProfileName = _data["clientProfileName"] ? PatchOfString.fromJS(_data["clientProfileName"]) : <any>null;
+            this.isFavorite = _data["isFavorite"] ? PatchOfBoolean.fromJS(_data["isFavorite"]) : <any>null;
         }
     }
 
@@ -2766,12 +2764,14 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["clientProfileName"] = this.clientProfileName ? this.clientProfileName.toJSON() : <any>null;
+        data["isFavorite"] = this.isFavorite ? this.isFavorite.toJSON() : <any>null;
         return data;
     }
 }
 
 export interface IClientProfileUpdateParams {
     clientProfileName?: PatchOfString | null;
+    isFavorite?: PatchOfBoolean | null;
 }
 
 export class PatchOfString implements IPatchOfString {
@@ -2808,6 +2808,42 @@ export class PatchOfString implements IPatchOfString {
 
 export interface IPatchOfString {
     value?: string | null;
+}
+
+export class PatchOfBoolean implements IPatchOfBoolean {
+    value!: boolean;
+
+    constructor(data?: IPatchOfBoolean) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PatchOfBoolean {
+        data = typeof data === 'object' ? data : {};
+        let result = new PatchOfBoolean();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        return data;
+    }
+}
+
+export interface IPatchOfBoolean {
+    value: boolean;
 }
 
 export class SubscriptionPlan implements ISubscriptionPlan {

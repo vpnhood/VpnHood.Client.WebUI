@@ -17,7 +17,7 @@
           : '',
           $vpnHoodApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3'
           ,'py-3']"
-        :active="$vpnHoodApp.isActiveServer(serverLocationInfo.serverLocation)"
+        :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation)"
         :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
         @click="$emit('connect',clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
     >
@@ -53,7 +53,7 @@
         <v-spacer/>
 
         <!-- Status -->
-        <v-chip v-if="$vpnHoodApp.isActiveServer(serverLocationInfo.serverLocation)" :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
+        <v-chip v-if="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation)" :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'" variant="flat" size="x-small" :text="$t('ACTIVE')"/>
 
       </v-list-item-title>
     </v-list-item>
@@ -72,10 +72,12 @@ export default defineComponent({
   props: {
     clientProfileInfo: ClientProfileInfo,
     isSingleItem: Boolean,
+    isActiveProfile: Boolean,
   },
   emits: [
     "update:clientProfileInfo",
     "update:isSingleItem",
+    "update:isActiveProfile",
     "connect"
   ],
   data() {
