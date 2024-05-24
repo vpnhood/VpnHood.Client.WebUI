@@ -11,14 +11,14 @@
         class="pt-0 pb-3 notice position-relative text-white">
       <v-card-text>
         <v-icon class="pe-3">mdi-alert-circle-outline</v-icon>
-        <span>{{ dialogText }}</span>
+        <span>{{ dialogData.message }}</span>
       </v-card-text>
       <v-divider class="mb-3 border-opacity-25"></v-divider>
       <v-card-actions class="flex-column px-5">
 
         <!-- Diagnose -->
         <v-btn
-            v-if="!$vpnHoodApp.data.state.logExists && $vpnHoodApp.data.state.hasProblemDetected"
+            v-if="dialogData.canDiagnose"
             rounded="pill"
             variant="flat"
             block
@@ -29,7 +29,7 @@
 
         <!-- OpenReport -->
         <v-btn
-            v-if="$vpnHoodApp.data.state.logExists"
+            v-if="dialogData.logExists"
             rounded="pill"
             variant="flat"
             block
@@ -42,7 +42,7 @@
 
         <!-- SendReport -->
         <v-btn
-            v-if="$vpnHoodApp.data.state.logExists"
+            v-if="dialogData.logExists"
             rounded="pill"
             variant="flat"
             block
@@ -50,7 +50,7 @@
             class="text-center mb-4 text-secondary"
             target="_blank"
             :text="$t('SEND_REPORT')"
-            @click="sendReport()"
+            @click="sendReport"
         />
 
         <!-- Close -->
@@ -75,7 +75,6 @@ export default defineComponent({
   name: "AlertDialog",
   props: {
     modelValue: Boolean,
-    dialogText: String,
   },
   data() {
     return {
@@ -84,21 +83,21 @@ export default defineComponent({
   },
   emits: [
     "update:modelValue",
-    "update:dialogText",
   ],
   methods: {
     async diagnose(): Promise<void> {
       this.$emit('update:modelValue', false);
+      await this.$vpnHoodApp.clearLastError();
       await this.$vpnHoodApp.diagnose();
     },
 
-    async sendReport(): Promise<void>{
+    async sendReport(): Promise<void> {
       try {
         this.$emit('update:modelValue', false);
         const reportId: string =
             this.$vpnHoodApp.data.settings.clientId.substring(0, 8) + "@" +
             new Date().toISOString().substring(0, 19).replace(/:/g, "").replace(/-/g, "") + "-" +
-            Math.random().toString().substring(2,10);
+            Math.random().toString().substring(2, 10);
 
         const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
         window.open(link, "VpnHood-BugReport");
@@ -123,9 +122,13 @@ export default defineComponent({
     },
 
     async closeDialog(): Promise<void> {
-      await this.$vpnHoodApp.apiClient.clearLastError();
-      this.$emit('update:modelValue',false);
+      this.$emit('update:modelValue', false);
     }
-  }
+  },
+  computed: {
+    dialogData() {
+        return this.$vpnHoodApp.data.uiState.errorDialogData;
+    }
+  },
 })
 </script>

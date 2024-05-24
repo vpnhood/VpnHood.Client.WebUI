@@ -37,7 +37,7 @@ async function main(): Promise<void> {
         window.document.body.classList.add(i18n.global.locale.value);
 
         // Global catch exception
-        app.config.errorHandler = (err: any) => vpnHoodApp.showError(err);
+        app.config.errorHandler = (err: any) => vpnHoodApp.processError(err);
 
         // init Vue
         app.use(i18n)

@@ -127,7 +127,6 @@
   "GLOBAL_SERVERS_NOTICE": "Remove ads from global servers.",
   "HIDDEN_SERVER_NOTICE": "You can connect to a server whose IP address is available only to a limit group of users and which does not display ads. This reduces the likelihood of being blocked if you do not have access to global servers.",
   "BUNDLE_SERVERS_NOTICE": "Remove ads from the global servers, and gain access to a hidden server as well.",
-  "EMPTY_DEFAULT_CLIENT_PROFILE": "Could not find default client profile id.",
   "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol.",
   "CONGRATULATIONS": "Congratulations",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Your order has been processed and your subscription has been activated.",

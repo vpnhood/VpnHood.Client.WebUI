@@ -1,5 +1,6 @@
 <template>
-  <v-app id="appContainer" :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2 position-relative']">
+  <v-app id="appContainer"
+         :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2 position-relative']">
 
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
@@ -19,16 +20,16 @@
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Global alert dialog -->
-      <alert-dialog v-model="isAlertDialogVisible" :dialog-text="$vpnHoodApp.data.uiState.alertDialogText" />
+      <alert-dialog v-model="isAlertDialogVisible"/>
 
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import AlertDialog from "@/components/AlertDialog.vue";
-import { ComponentRouteController } from './services/ComponentRouteController';
+import {ComponentRouteController} from './services/ComponentRouteController';
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import {AppName, LocalStorage, UiConstants} from "@/UiConstants";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
@@ -36,9 +37,9 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 
 export default defineComponent({
   name: 'App',
-  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer },
-  data(){
-    return{
+  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer},
+  data() {
+    return {
       AppName,
       UiConstants,
       ComponentRouteController,
@@ -47,7 +48,7 @@ export default defineComponent({
   },
   async created() {
     // Show privacy policy if app is VpnHoodCONNECT
-    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)){
+    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
       this.isShowPrivacyPolicyDialog = true;
       return;
     }
@@ -59,12 +60,13 @@ export default defineComponent({
   computed: {
     isAlertDialogVisible: {
       get(): boolean {
-        return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog);
+        return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog) &&
+            this.$vpnHoodApp.data.uiState.errorDialogData.isVisible;
       },
       async set(value: boolean) {
-        if (!value)
-          await this.$vpnHoodApp.apiClient.clearLastError();
+        if (value) return; // Already is Open
         await ComponentRouteController.showComponent(this.$componentName.AlertDialog, value);
+        await this.$vpnHoodApp.clearLastError();
       }
     }
   },
@@ -90,14 +92,14 @@ export default defineComponent({
 }
 
 /*noinspection CssUnusedSymbol*/
-#mainBg.not-mobile{
+#mainBg.not-mobile {
   /*noinspection CssUnresolvedCustomProperty*/
   border: 1px rgba(var(--v-theme-secondary), .5) solid;
   box-shadow: 0 0 20px 9px #00000047;
 }
 
 /*noinspection CssUnusedSymbol*/
-#mainBg.not-mobile:before{
+#mainBg.not-mobile:before {
   border-radius: 8px;
 }
 
@@ -107,7 +109,7 @@ export default defineComponent({
   }
 }
 
-#appContainer:before{
+#appContainer:before {
   content: "";
   position: absolute;
   bottom: 0;

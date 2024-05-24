@@ -1,8 +1,6 @@
 export class UiState {
 
-    // General custom alert dialog property
-    public alertDialogText: string = "";
-
+    public errorDialogData: ErrorDialogData = new ErrorDialogData();
     // Suppress message state
     public showSuppressSnackbar: boolean = false;
     public userIgnoreSuppressToTime: Date | null = null;
@@ -18,4 +16,14 @@ export class UiState {
     public configTime: Date = new Date();
 
     public showLoadingDialog: boolean = false;
+
+    public stateLastError: string | null = null;
+}
+
+// General custom alert dialog property
+export class ErrorDialogData {
+    public isVisible: boolean = false;
+    public message: string = "";
+    public canDiagnose: boolean = false;
+    public logExists: boolean = false;
 }

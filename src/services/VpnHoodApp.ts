@@ -75,8 +75,10 @@ export class VpnHoodApp {
         }
 
         // Show last error message if the user has not ignored
-        if (this.data.state.lastError && !ComponentRouteController.isShowComponent(ComponentName.AlertDialog))
-            await this.showError(this.data.state.lastError);
+        if (this.data.state.lastError && this.data.uiState.stateLastError !== this.data.state.lastError){
+            this.data.uiState.stateLastError = this.data.state.lastError;
+            await this.processError(this.data.state.lastError);
+        }
 
         // Show update message if the user has not ignored or more than 24 hours have passed
         if (this.data.state.lastPublishInfo?.packageUrl !== undefined)
@@ -149,35 +151,37 @@ export class VpnHoodApp {
     }
 
     public async diagnose(): Promise<void> {
-        if (!this.data.settings.userSettings.clientProfileId && this.data.features.isAddAccessKeySupported) {
+        if (!this.data.settings.userSettings.clientProfileId) {
             await router.replace("/servers");
             return;
-        }
-        if (!this.data.settings.userSettings.clientProfileId) {
-            throw new Error(i18n.global.t("EMPTY_DEFAULT_CLIENT_PROFILE"));
         }
         await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
     }
 
     // Get error message
-    public async showError(err: any): Promise<void> {
+    public async processError(err: any): Promise<void> {
         console.error(err);
 
         // Just for VpnHoodConnect
-        if (this.data.features.uiName === AppName.VpnHoodConnect && err === "Session has been closed.")
+        if (this.isConnectApp() && err === "Session has been closed.")
             await this.signOut();
 
         // Just for VpnHoodConnect
-        if (this.data.features.uiName === AppName.VpnHoodConnect && err.statusCode === 401 && !this.data.userState.userAccount) {
-            await this.showMessage(i18n.global.t("AUTHENTICATION_ERROR"));
+        if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
+            await this.showErrorMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
         } else
-            await this.showMessage(err.message ?? err);
+            await this.showErrorMessage(err.message ?? err);
     }
 
     // Show error dialog
-    public async showMessage(text: string): Promise<void> {
-        this.data.uiState.alertDialogText = text;
+    private async showErrorMessage(text: string): Promise<void> {
+        const errorDialogData = this.data.uiState.errorDialogData;
+        errorDialogData.message = text;
+        errorDialogData.canDiagnose = this.data.state.canDiagnose;
+        errorDialogData.logExists = this.data.state.logExists;
+        errorDialogData.isVisible = true;
+
         await ComponentRouteController.showComponent(ComponentName.AlertDialog);
     }
 
@@ -254,6 +258,12 @@ export class VpnHoodApp {
             : i18n.global.t(this.data.state.connectionState.toUpperCase());
     }
 
+    public async clearLastError(): Promise<void>{
+        this.data.uiState.stateLastError = null;
+        this.data.uiState.errorDialogData.isVisible = false;
+        await this.apiClient.clearLastError();
+        await this.reloadState();
+    }
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------
