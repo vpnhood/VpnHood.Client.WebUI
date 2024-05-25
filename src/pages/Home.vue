@@ -283,17 +283,19 @@ export default defineComponent({
 
   methods: {
     async onConnectButtonClick(): Promise<void> {
+      // Prevent double click
       if (this.lastConnectPressedTime >= (Date.now() - 1000))
         return;
       this.lastConnectPressedTime = Date.now();
 
+      // Disconnect
       if (this.$vpnHoodApp.data.state.canDisconnect) {
         await this.$vpnHoodApp.disconnect();
         return;
       }
 
-      // If user has no selected server and want to connect
-      if (!this.$vpnHoodApp.data.settings.userSettings.clientProfileId) {
+      // Show servers list if user has no selected server and want to connect
+      if (!this.$vpnHoodApp.data.state.clientProfile) {
         this.$router.push('/servers');
         return;
       }

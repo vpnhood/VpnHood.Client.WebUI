@@ -19,7 +19,7 @@
           ,'py-3']"
         :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation)"
         :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
-        @click="$emit('connect',clientProfileInfo.clientProfileId, serverLocationInfo.serverLocation)"
+        @click="$emit('connect',clientProfileInfo, serverLocationInfo.serverLocation)"
     >
       <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-3' : '' ,'d-flex align-center']">
 

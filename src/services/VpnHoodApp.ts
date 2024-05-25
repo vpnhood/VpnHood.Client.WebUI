@@ -1,5 +1,6 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
+    AppAccount,
     AppConnectionState,
     AppFeatures,
     AppSettings,
@@ -56,13 +57,31 @@ export class VpnHoodApp {
 
     private async reloadSettings(): Promise<void> {
         const config = await this.apiClient.getConfig();
-
         this.data.features = config.features;
         this.data.settings = config.settings;
-        this.data.clientProfileInfos = config.clientProfileInfos;
-        if (config.clientProfileInfos.length === 0) {
+
+        // Reload and calc available client profiles
+        this.data.clientProfileInfos = VpnHoodApp.getClientProfileInfos(this.isConnectApp(), config.clientProfileInfos,
+            config.features.builtInClientProfileId, this.data.userState.userAccount);
+
+        if (config.clientProfileInfos.length === 0)
             this.data.settings.userSettings.clientProfileId = null;
-        }
+    }
+
+    // Return available client profiles based on app name and user state
+    private static getClientProfileInfos(isConnectApp: boolean, clientProfileInfos: ClientProfileInfo[],
+                                         builtInClientProfileId: string | null = null, userAccount: AppAccount | null): ClientProfileInfo[] {
+        // App is VpnHoodClient
+        if (!isConnectApp) return clientProfileInfos;
+
+        // App is VpnHoodCONNECT and user is guest or does not have active subscription
+        if (userAccount === null || userAccount.subscriptionId === null) return clientProfileInfos;
+
+        // App is VpnHoodCONNECT and user have active subscription
+        if (userAccount.providerPlanId === SubscriptionPlansId.GlobalServer || userAccount.providerPlanId === SubscriptionPlansId.BundleServers)
+            return clientProfileInfos.filter(x => x.clientProfileId !== builtInClientProfileId);
+
+        return clientProfileInfos;
     }
 
     public async reloadState(): Promise<void> {
@@ -75,7 +94,7 @@ export class VpnHoodApp {
         }
 
         // Show last error message if the user has not ignored
-        if (this.data.state.lastError && this.data.uiState.stateLastError !== this.data.state.lastError){
+        if (this.data.state.lastError && this.data.uiState.stateLastError !== this.data.state.lastError) {
             this.data.uiState.stateLastError = this.data.state.lastError;
             await this.processError(this.data.state.lastError);
         }
@@ -111,7 +130,14 @@ export class VpnHoodApp {
 
     public async connect(): Promise<void> {
         console.log("Connecting to " + this.data.state.clientProfile?.clientProfileName);
-        await this.apiClient.connect();
+        try {
+            await this.apiClient.connect();
+        }
+        catch (err: any){
+            // TODO show snackbar message if already connected to the selected profile
+            console.log(err);
+            throw err;
+        }
     }
 
     public async disconnect(): Promise<void> {
@@ -226,22 +252,8 @@ export class VpnHoodApp {
         return this.isConnectApp() && this.data.clientProfileInfos.length === 1;
     }
 
-    public getClientProfileInfos(): ClientProfileInfo[] {
-        if (!this.isConnectApp())
-            return this.data.clientProfileInfos;
-
-        if (this.data.userState.userAccount === null)
-            return this.data.clientProfileInfos;
-
-        if (this.data.userState.userAccount.providerPlanId === SubscriptionPlansId.GlobalServer ||
-            this.data.userState.userAccount.providerPlanId === SubscriptionPlansId.BundleServers)
-            return  this.data.clientProfileInfos.filter(x => x.clientProfileId !== this.data.features.builtInClientProfileId);
-
-        return this.data.clientProfileInfos;
-    }
-
-    public getActiveServerNameOrLocation(): string{
-        if (this.isSingleServerMode() && this.data.state.serverLocationInfo){
+    public getActiveServerNameOrLocation(): string {
+        if (this.isSingleServerMode() && this.data.state.serverLocationInfo) {
             return this.isLocationAutoSelected(this.data.state.serverLocationInfo.regionName)
                 ? i18n.global.t('AUTO_SELECT')
                 : this.data.state.serverLocationInfo.regionName
@@ -249,7 +261,7 @@ export class VpnHoodApp {
         return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
     }
 
-    public getConnectionState(): string{
+    public getConnectionState(): string {
         if (this.data.state.isWaitingForAd)
             return i18n.global.t("LOADING_AD");
 
@@ -258,12 +270,13 @@ export class VpnHoodApp {
             : i18n.global.t(this.data.state.connectionState.toUpperCase());
     }
 
-    public async clearLastError(): Promise<void>{
+    public async clearLastError(): Promise<void> {
         this.data.uiState.stateLastError = null;
         this.data.uiState.errorDialogData.isVisible = false;
         await this.apiClient.clearLastError();
         await this.reloadState();
     }
+
     //------------------------------------------
     // Just for VpnHoodConnect
     //------------------------------------------

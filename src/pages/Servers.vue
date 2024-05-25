@@ -4,9 +4,7 @@
   <AppBar :page-title="$t('SERVERS')"/>
 
   <v-sheet
-      :color="$vpnHoodApp.isConnectApp()
-      ? 'primary-darken-2'
-      : 'gray-lighten-6'"
+      :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
       :class="[$vpnHoodApp.isSingleServerMode() ? 'py-2 px-0' : 'pa-4','text-center']"
   >
 
@@ -39,27 +37,29 @@
       ></div>
     </div>
 
-    <!-- Server items -->
+
+    <!-- Only for VpnHoodCONNECT -->
+    <!-- Single mode server item -->
     <template v-else-if="$vpnHoodApp.isSingleServerMode()">
       <ServerLocationList
-          :client-profile-info="myClientProfileInfos[0]"
+          :client-profile-info="$vpnHoodApp.data.clientProfileInfos[0]"
           :is-single-item="true"
           :is-active-profile="true"
           @connect="connect"
       />
     </template>
 
+    <!-- Multi server items -->
     <v-expansion-panels
         v-else
-        v-for="(clientProfileInfo, index) in myClientProfileInfos"
+        v-for="(clientProfileInfo, index) in $vpnHoodApp.data.clientProfileInfos"
         :key="index"
         v-model="expandedPanels[index]"
         flat
-        :ripple="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
         rounded="xl"
         :bg-color="$vpnHoodApp.isConnectApp() ? 'primary' : 'white'"
         class="mb-4"
-        @click="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) ? connect(clientProfileInfo.clientProfileId,'') : '';"
+        @click="connect(clientProfileInfo,'')"
     >
       <v-expansion-panel
           :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) || $vpnHoodApp.isConnectApp()"
@@ -123,7 +123,7 @@
             <v-col class="px-0 py-0">
 
               <!-- Profile name -->
-              <h4 :class="[$vpnHoodApp.isConnectApp() ? 'text-white' : 'text-primary-darken-1' ,'text-truncate']"
+              <h4 :class="[$vpnHoodApp.isConnectApp() ? 'text-white' : 'text-primary-darken-1' ,'text-truncate text-capitalize']"
                   style="max-width: 245px;">
                 {{ clientProfileInfo.clientProfileName }}
               </h4>
@@ -155,7 +155,7 @@
                         :title="$t('DIAGNOSE')"
                         :disabled="!$vpnHoodApp.data.state.canDiagnose"
                         prepend-icon="mdi-speedometer"
-                        @click="connect(clientProfileInfo.clientProfileId, '', true)">
+                        @click="connect(clientProfileInfo, '', true)">
                     </v-list-item>
                     <v-divider v-if="$vpnHoodApp.data.features.isAddAccessKeySupported"/>
 
@@ -173,7 +173,7 @@
         </template>
 
         <!-- Profile region -->
-        <template v-slot:text v-if="clientProfileInfo.serverLocationInfos.length > 0">
+        <template v-slot:text v-if="Util.isServerHaveLocation(clientProfileInfo.serverLocationInfos)">
           <ServerLocationList
               :client-profile-info="clientProfileInfo"
               :is-single-item="false"
@@ -184,7 +184,6 @@
 
       </v-expansion-panel>
     </v-expansion-panels>
-
 
     <!-- Add server sheet -->
     <AddServerDialog
@@ -199,10 +198,12 @@
         <v-card-text>
           <!-- Name text field -->
           <v-text-field
-              v-model="currentClientProfileInfo.clientProfileName"
+              v-model="newClientProfileName"
               spellcheck="false"
               autocomplete="off"
               color="primary"
+              :hint="$t('SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME')"
+              persistent-hint
               :clearable="true">
           </v-text-field>
         </v-card-text>
@@ -223,7 +224,7 @@
               color="primary"
               variant="text"
               :text="$t('SAVE')"
-              @click="saveNewClientProfileName(currentClientProfileInfo)"
+              @click="saveNewClientProfileName"
           />
 
         </v-card-actions>
@@ -281,36 +282,42 @@ import {Util} from "@/services/Util";
 
 export default defineComponent({
   name: 'ServersPage',
-  computed: {
-    SubscriptionPlansId() {
-      return SubscriptionPlansId
-    }
-  },
   components: {ServerLocationList, AppBar, AddServerDialog},
   data() {
     return {
       Util,
       AppName,
+      SubscriptionPlansId,
       ComponentRouteController,
       currentClientProfileInfo: {} as ClientProfileInfo,
-      myClientProfileInfos: [] as ClientProfileInfo[],
       expandedPanels: [] as number[],
       maximumLocationOnCollapsed: 8,
+      newClientProfileName: "",
     }
   },
-
   created() {
-    // Get modified clientProfileInfos
-    this.myClientProfileInfos = this.$vpnHoodApp.getClientProfileInfos();
-
     // Create open state for each clientProfileInfo item
-    this.expandedPanels = this.myClientProfileInfos.map(() => 0);
+    this.expandedPanels = this.$vpnHoodApp.data.clientProfileInfos.map(() => 0);
   },
   methods: {
     // Connect or diagnose selected client profile
-    async connect(clientProfileId: string, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
+    async connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
+
+      // App is VpnHoodCONNECT and client profile have multi location, but user select server card instead location
+      // Show snackbar message
+      if (this.$vpnHoodApp.isConnectApp() && serverLocationInfo === "" && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)){
+        // TODO show snackbar message
+        console.log("not implemented");
+      }
+
+      // App is VpnHoodClient and Client profile have multi location, but user select server card instead location
+      // Do nothing because expansion panel has action collapse/expand
+      if (serverLocationInfo === "" && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
+        return;
+
       this.$router.replace('/');
-      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileId;
+      this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
+      // If the serverLocation is empty, it will be connected to Auto
       this.$vpnHoodApp.data.settings.userSettings.serverLocation = serverLocationInfo === "" ? null : serverLocationInfo;
       await this.$vpnHoodApp.saveUserSetting();
       isDiagnose ? await this.$vpnHoodApp.diagnose() : await this.$vpnHoodApp.connect();
@@ -331,17 +338,18 @@ export default defineComponent({
     // Show rename server dialog
     async showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
       this.currentClientProfileInfo = clientProfileInfo;
+      this.newClientProfileName = clientProfileInfo.clientProfileName;
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog);
     },
 
     // Rename server by user
-    async saveNewClientProfileName(renamedClientProfile: ClientProfileInfo): Promise<void> {
+    async saveNewClientProfileName(): Promise<void> {
       await ComponentRouteController.showComponent(this.$componentName.RenameServerDialog, false);
       await this.$vpnHoodApp.updateClientProfile(
-          renamedClientProfile.clientProfileId,
+          this.currentClientProfileInfo.clientProfileId,
           new ClientProfileUpdateParams({
             clientProfileName: new PatchOfString({
-              value: this.currentClientProfileInfo.clientProfileName
+              value: this.newClientProfileName,
             })
           })
       );
