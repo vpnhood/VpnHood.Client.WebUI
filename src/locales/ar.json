@@ -163,5 +163,6 @@
   "AUTO_SELECT": "تحديد تلقائي",
   "AUTO": "تلقائي",
   "LOCATION": "الموقع",
-  "LOADING_AD": "تحميل الإعلان"
+  "LOADING_AD": "تحميل الإعلان",
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "اتركه فارغًا لعرض الاسم الافتراضي."
 }
