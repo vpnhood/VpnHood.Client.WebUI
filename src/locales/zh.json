@@ -163,5 +163,6 @@
   "AUTO_SELECT": "自动选择",
   "AUTO": "自动",
   "LOCATION": "位置",
-  "LOADING_AD": "加载广告"
+  "LOADING_AD": "加载广告",
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "将其留空以显示默认名称。"
 }
