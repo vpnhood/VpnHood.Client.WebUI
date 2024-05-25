@@ -163,5 +163,6 @@
   "AUTO_SELECT": "Seleção automática",
   "AUTO": "Automático",
   "LOCATION": "Localização",
-  "LOADING_AD": "Carregando Anúncio"
+  "LOADING_AD": "Carregando Anúncio",
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Deixe em branco para exibir o nome padrão."
 }
