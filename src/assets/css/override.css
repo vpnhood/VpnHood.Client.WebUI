@@ -30,3 +30,7 @@
 .v-expansion-panel-title{
     line-height: 1.5 !important;
 }
+.v-expansion-panel-text__wrapper{
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}

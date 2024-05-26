@@ -72,7 +72,7 @@
             v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)
             && Util.isCollapsed(expandedPanels[index])
             && !$vpnHoodApp.isConnectApp()"
-            class="d-flex align-center bg-gray-lighten-6 mx-4 mb-4 pt-3 pb-2 px-4 text-start text-truncate"
+            class="d-flex align-center bg-gray-lighten-6 mx-3 mb-4 pt-3 pb-2 px-4 text-start text-truncate"
             style="border-radius: 14px; max-width: 311px;"
             @click="expandedPanels[index] = 0"
         >

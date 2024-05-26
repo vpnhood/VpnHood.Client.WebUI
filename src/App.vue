@@ -123,6 +123,10 @@ export default defineComponent({
 
 /*** App is the VpnHoodConnect ***/
 /*noinspection CssUnusedSymbol*/
+.VpnHoodConnect #mainBg {
+  /*noinspection CssUnresolvedCustomProperty*/
+  background-image: linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
+}
 .VpnHoodConnect #mainBg:before,
 .VpnHoodConnect #appContainer:before {
   opacity: .5;

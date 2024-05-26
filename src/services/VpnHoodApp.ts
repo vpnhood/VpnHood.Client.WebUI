@@ -261,7 +261,7 @@ export class VpnHoodApp {
         return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
     }
 
-    public getConnectionState(): string {
+    public getConnectionStateText(): string {
         if (this.data.state.isWaitingForAd)
             return i18n.global.t("LOADING_AD");
 
