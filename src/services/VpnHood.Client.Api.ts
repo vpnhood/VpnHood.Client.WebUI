@@ -2115,6 +2115,7 @@ export interface IServerLocationInfo {
 
 export class ClientServerLocationInfo extends ServerLocationInfo implements IClientServerLocationInfo {
     isNestedCountry!: boolean;
+    isDefault!: boolean;
 
     constructor(data?: IClientServerLocationInfo) {
         super(data);
@@ -2124,6 +2125,7 @@ export class ClientServerLocationInfo extends ServerLocationInfo implements ICli
         super.init(_data);
         if (_data) {
             this.isNestedCountry = _data["isNestedCountry"] !== undefined ? _data["isNestedCountry"] : <any>null;
+            this.isDefault = _data["isDefault"] !== undefined ? _data["isDefault"] : <any>null;
         }
     }
 
@@ -2137,6 +2139,7 @@ export class ClientServerLocationInfo extends ServerLocationInfo implements ICli
     override toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["isNestedCountry"] = this.isNestedCountry !== undefined ? this.isNestedCountry : <any>null;
+        data["isDefault"] = this.isDefault !== undefined ? this.isDefault : <any>null;
         super.toJSON(data);
         return data;
     }
@@ -2144,6 +2147,7 @@ export class ClientServerLocationInfo extends ServerLocationInfo implements ICli
 
 export interface IClientServerLocationInfo extends IServerLocationInfo {
     isNestedCountry: boolean;
+    isDefault: boolean;
 }
 
 export class SessionStatus implements ISessionStatus {

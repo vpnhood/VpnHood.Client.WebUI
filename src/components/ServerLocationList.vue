@@ -2,7 +2,7 @@
   <v-list
       v-if="clientProfileInfo"
       :bg-color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-      :class="[$vpnHoodApp.isConnectApp() ? 'connect-zebra' : 'zebra' ,'py-0 mt-n2 mx-n2']"
+      :class="[$vpnHoodApp.isConnectApp() ? 'connect-zebra' : 'zebra' ,'py-0 mt-n2']"
       :style="$vpnHoodApp.isConnectApp() && isSingleItem ? '' : 'border-radius: 14px;'"
   >
     <!-- Region item -->
@@ -17,7 +17,7 @@
           : '',
           $vpnHoodApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3 px-2'
           ,'py-3']"
-        :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation)"
+        :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo)"
         :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
         @click="$emit('connect',clientProfileInfo, serverLocationInfo.serverLocation)"
     >
@@ -29,13 +29,13 @@
             icon="mdi-earth"
             :color="$vpnHoodApp.isConnectApp() ? 'white' : 'primary-darken-1'"
             :size="$vpnHoodApp.isConnectApp() ? 29 : 27"
-            :class="[$vpnHoodApp.isConnectApp() ? 'ms-2 me-5' : 'me-2']"/>
+            :class="[$vpnHoodApp.isConnectApp() ? 'me-5' : 'me-2']"/>
 
         <!-- Country flag -->
         <span
             v-else
             :class="[$vpnHoodApp.isConnectApp()
-                    ? 'border-secondary ms-2 me-5'
+                    ? 'border-secondary me-5'
                     : 'border-gray-lighten-5 me-2'
                     , 'overflow-hidden d-inline-flex align-center justify-center border-md item-flag'
                     , serverLocationInfo.isNestedCountry ? 'nested-item' : '']"
@@ -59,7 +59,7 @@
             <!-- Only for auto select server -->
             <span
                 v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)"
-                :class="[$vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation) ? '' : 'flasher']">
+                :class="[$vpnHoodApp.isActiveLocation(serverLocationInfo) ? '' : 'flasher']">
               {{ $t('RECOMMENDED') }}
             </span>)
           </span>
@@ -72,7 +72,7 @@
         <v-spacer/>
 
         <!-- Status -->
-        <v-chip v-if="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo.serverLocation)"
+        <v-chip v-if="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo)"
                 :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'" variant="flat" size="x-small"
                 :text="$t('ACTIVE')"/>
 

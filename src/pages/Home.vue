@@ -58,12 +58,12 @@
       <!-- Circle -->
       <HomeConnectionInfo
           :is-connect-app="$vpnHoodApp.isConnectApp()"
-          :is-connected="isConnected"
-          :alert-for-expire="alertForExpire"
+          :is-connected="isConnected()"
+          :alert-for-expire="alertForExpire()"
           :connection-state="$vpnHoodApp.data.state.connectionState"
           :connection-state-text="$vpnHoodApp.getConnectionStateText()"
-          :state-icon="stateIcon"
-          :expire-date="getExpireDate"
+          :state-icon="stateIcon()"
+          :expire-date="getExpireDate()"
           :bandwidth-used="bandwidthUsage()?.Used"
           :bandwidth-total="bandwidthUsage()?.Total"
       />
@@ -106,7 +106,7 @@
               @click="$router.push('/servers')"
           >
               <span>{{ $vpnHoodApp.isSingleServerMode() ? $t("LOCATION") : $t("SERVER") }}</span>
-            <v-icon :icon="chevronIcon"/>
+            <v-icon :icon="getChevronIcon()"/>
               <span class="text-capitalize text-caption text-white opacity-50 text-truncate" style="max-width: 195px;">
                 {{ $vpnHoodApp.getActiveServerNameOrLocation() }}
               </span>
@@ -139,7 +139,7 @@
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
             <span>{{ $t("COUNTRIES") }}</span>
-            <v-icon :icon="chevronIcon"/>
+            <v-icon :icon="getChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">
               {{$vpnHoodApp.data.settings.userSettings.tunnelClientCountry
                     ? $t("IP_FILTER_ALL")
@@ -161,7 +161,7 @@
               to="/apps-filter"
           >
             <span>{{ $t("APPS") }}</span>
-            <v-icon :icon="chevronIcon"/>
+            <v-icon :icon="getChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
         </v-col>
@@ -177,7 +177,7 @@
               class="config-item"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
-            <v-icon :icon="chevronIcon"/>
+            <v-icon :icon="getChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
           </v-btn>
         </v-col>
@@ -228,7 +228,6 @@ export default defineComponent({
       ComponentRouteController,
       SubscriptionPlansId,
       lastConnectPressedTime: Date.now() - 1000,
-      chevronIcon: this.$vuetify.locale.isRtl ? 'mdi-chevron-left' : 'mdi-chevron-right',
     }
   },
 
@@ -367,6 +366,10 @@ export default defineComponent({
           ? this.$t('PROTOCOL_UDP_ON')
           : this.$t('PROTOCOL_UDP_OFF')
     },
+
+    getChevronIcon(): string{
+      return this.$vuetify.locale.isRtl ? 'mdi-chevron-left' : 'mdi-chevron-right';
+    }
   }
 });
 </script>

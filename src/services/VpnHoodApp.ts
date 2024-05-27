@@ -6,7 +6,7 @@ import {
     AppSettings,
     AppState,
     ClientProfileInfo,
-    ClientProfileUpdateParams, ConfigParams,
+    ClientProfileUpdateParams, ClientServerLocationInfo, ConfigParams,
     DeviceAppInfo,
     SessionSuppressType, UiCultureInfo,
 } from "@/services/VpnHood.Client.Api";
@@ -240,8 +240,10 @@ export class VpnHoodApp {
         return clientProfileId === this.data.settings.userSettings.clientProfileId;
     }
 
-    public isActiveLocation(serverLocation: string): boolean {
-        return serverLocation === this.data.settings.userSettings.serverLocation;
+    public isActiveLocation(serverLocationInfo: ClientServerLocationInfo): boolean {
+        return this.data.settings.userSettings.serverLocation
+            ? serverLocationInfo.serverLocation === this.data.settings.userSettings.serverLocation
+            : serverLocationInfo.isDefault;
     }
 
     public isConnectApp(): boolean {
@@ -254,9 +256,13 @@ export class VpnHoodApp {
 
     public getActiveServerNameOrLocation(): string {
         if (this.isSingleServerMode() && this.data.state.serverLocationInfo) {
-            return this.isLocationAutoSelected(this.data.state.serverLocationInfo.regionName)
-                ? i18n.global.t('AUTO_SELECT')
-                : this.data.state.serverLocationInfo.regionName
+            if (this.isLocationAutoSelected(this.data.state.serverLocationInfo.regionName))
+                return  i18n.global.t('AUTO_SELECT');
+
+            if (this.data.state.serverLocationInfo.isNestedCountry && this.data.state.serverLocationInfo.countryCode === "US")
+                return  "USA (" + this.data.state.serverLocationInfo.regionName + ")";
+
+            return this.data.state.serverLocationInfo.regionName;
         }
         return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
     }

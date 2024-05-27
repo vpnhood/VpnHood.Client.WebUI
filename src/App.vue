@@ -48,7 +48,7 @@ export default defineComponent({
   },
   async created() {
     // Show privacy policy if app is VpnHoodCONNECT
-    if (this.$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
+    if (this.$vpnHoodApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
       this.isShowPrivacyPolicyDialog = true;
       return;
     }

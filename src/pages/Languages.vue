@@ -4,9 +4,9 @@
   <AppBar :page-title="$t('LANGUAGE')"/>
 
   <v-sheet class="pa-4"
-           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-6'">
+           :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
 
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'">
+    <v-card :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'">
       <v-list bg-color="transparent" class="py-0">
         <v-list-item
             v-for="(locale, index) in myLocales"
@@ -14,7 +14,7 @@
             :value="locale.code"
             v-model="defaultLanguage"
             :class="[
-                $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect
+                $vpnHoodApp.isConnectApp()
                 ? 'border-primary-darken-2 border-opacity-50'
                 : 'border-gray-lighten-5 border-opacity-100',
                 'border-b'
@@ -43,7 +43,7 @@
             <!-- System default language name -->
             <span
                 v-if="locale.code === LanguagesCode.SystemDefault"
-                :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption ms-1']"
+                :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption ms-1']"
             >
               ({{ $vpnHoodApp.data.state.systemUiCultureInfo.nativeName }})
             </span>
@@ -53,7 +53,7 @@
           <p
               dir="ltr"
               v-if="locale.code === LanguagesCode.SystemDefault && !myLocales.find(x => x.code === $vpnHoodApp.data.state.systemUiCultureInfo.code)"
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption']"
+              :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption']"
           >
             {{ $t("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC") }}
           </p>

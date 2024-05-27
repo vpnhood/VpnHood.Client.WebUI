@@ -1,7 +1,7 @@
 <template>
   <div
       :id="isConnectApp ? 'connectionCircleIndicator' : 'circleOuter'"
-      :class="[(isConnectApp ? connectionState?.toLowerCase() + 'my-3' : ''), (!isConnectApp && isConnected ? 'opacity-100' : 'opacity-30')]"
+      :class="determineClass()"
   >
 
     <div v-if="isConnectApp" class="position-absolute w-100 h-100"><div id="rotateCircle"></div></div>
@@ -57,5 +57,13 @@ export default defineComponent({
     "update:bandwidthUsed",
     "update:bandwidthTotal",
   ],
+  methods:{
+    determineClass(){
+      if (this.isConnectApp)
+        return  this.connectionState?.toLowerCase() + ' my-3';
+      else
+        return this.isConnected ? 'opacity-100' : 'opacity-30';
+    }
+  }
 })
 </script>

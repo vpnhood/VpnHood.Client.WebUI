@@ -4,10 +4,10 @@
   <AppBar :page-title="$t('SETTINGS')"/>
 
   <v-sheet class="pa-4"
-           :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-6'">
+           :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <!-- Change language -->
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4 mb-5">
+    <v-card :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'" class="pa-4 mb-5">
 
       <!-- Section title -->
       <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
@@ -21,7 +21,7 @@
       >
 
           <span
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'text-white' : 'text-black', 'text-transform-none']"
+              :class="[$vpnHoodApp.isConnectApp()? 'text-white' : 'text-black', 'text-transform-none']"
           >
             {{$t('APP_LANGUAGE')}}
           </span>
@@ -29,14 +29,14 @@
         <template v-slot:append>
           <!-- Active language name -->
           <span
-              :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption text-capitalize me-1']"
+              :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption text-capitalize me-1']"
           >
               {{ $vpnHoodApp.data.state.currentUiCultureInfo.nativeName }}
             </span>
 
           <!-- Button icon -->
           <v-icon
-              :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect? 'white' : 'black'"
+              :color="$vpnHoodApp.isConnectApp()? 'white' : 'black'"
               :icon="$vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
           />
         </template>
@@ -47,7 +47,7 @@
       <div v-if="$i18n.locale !== LanguagesCode.English">
 
         <!-- Description -->
-        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
+        <p :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-4 mb-1']">
           {{ $t("CONTRIBUTE_EDIT_LANGUAGES_DESC") }}
         </p>
 
@@ -62,7 +62,7 @@
     </v-card>
 
     <!-- Exclude local network option -->
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'" class="pa-4">
+    <v-card :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'" class="pa-4">
 
       <!-- Section title -->
       <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
@@ -84,7 +84,7 @@
           />
         </v-col>
       </v-row>
-      <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-1']">
+      <p :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-1']">
         {{ $t('INCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
