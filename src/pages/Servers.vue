@@ -5,7 +5,7 @@
 
   <v-sheet
       :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-      :class="[$vpnHoodApp.isSingleServerMode() ? 'py-2 px-0' : 'pa-4','text-center']"
+      :class="[$vpnHoodApp.isSingleServerMode() ? 'py-0 px-0' : 'pa-4','text-center']"
   >
 
     <!-- Add server button -->
@@ -64,7 +64,7 @@
       <v-expansion-panel
           :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) || $vpnHoodApp.isConnectApp()"
           hide-actions
-          class="text-primary-darken-1"
+          class="text-primary-darken-1 pa-4"
       >
 
         <!-- Country flag on collapse state -->
@@ -72,7 +72,7 @@
             v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)
             && Util.isCollapsed(expandedPanels[index])
             && !$vpnHoodApp.isConnectApp()"
-            class="d-flex align-center bg-gray-lighten-6 mx-3 mb-4 pt-3 pb-2 px-4 text-start text-truncate"
+            class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start text-truncate"
             style="border-radius: 14px; max-width: 311px;"
             @click="expandedPanels[index] = 0"
         >
@@ -105,7 +105,7 @@
           <v-row class="align-center">
 
             <!-- Radio button -->
-            <v-col cols="auto py-0 ps-1">
+            <v-col cols="auto py-0">
               <div
                   :class="[$vpnHoodApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
                 ? 'border-secondary'
@@ -119,7 +119,6 @@
               </div>
             </v-col>
 
-            <!-- Profile name and support id-->
             <v-col class="px-0 py-0">
 
               <!-- Profile name -->
@@ -128,14 +127,10 @@
                 {{ clientProfileInfo.clientProfileName }}
               </h4>
 
-              <!-- Support id -->
-              <p class="text-gray-lighten-3 text-caption opacity-100">SID:{{ clientProfileInfo.supportId }}</p>
-
             </v-col>
 
-            <!-- Menu button -->
-            <v-col cols="auto" class="px-0 py-0">
-
+            <!-- Menu button and Expand/Collapse button -->
+            <v-col cols="auto" class="py-0">
               <!-- Menu button -->
               <v-btn :icon="true" density="compact" variant="plain" color="gray-lighten-3">
                 <v-icon>mdi-dots-vertical</v-icon>
@@ -167,6 +162,11 @@
                 </v-menu>
               </v-btn>
 
+              <!-- Expand/Collapse button -->
+              <template v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)">
+                <v-icon v-if="expandedPanels[index] === 0" size="28" icon="mdi-minus-circle-outline" />
+                <v-icon v-else icon="mdi-plus-circle-outline" size="28" />
+              </template>
             </v-col>
 
           </v-row>
@@ -182,10 +182,15 @@
           />
         </template>
 
+        <!-- Support id &  -->
+        <div class="d-flex align-center justify-space-between text-gray-lighten-3 text-caption px-1 mt-2">
+          <span>SID:{{ clientProfileInfo.supportId }}</span>
+          <span>{{ clientProfileInfo.hostNames[0] }}</span>
+        </div>
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <!-- Add server sheet -->
+    <!-- Add server dialog -->
     <AddServerDialog
         v-model="ComponentRouteController.create($componentName.AddServerDialog).isShow"
         @new-access-key-added="$router.replace('/')">

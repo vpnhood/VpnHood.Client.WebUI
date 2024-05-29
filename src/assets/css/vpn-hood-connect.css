@@ -41,11 +41,13 @@
 }
 
 /*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator.connected{
+#connectionCircleIndicator.connected.animation-true{
     animation: shine-border .2s ease forwards;
     animation-delay: .6s;
 }
-
+#connectionCircleIndicator.connected.animation-false{
+    border-color: white;
+}
 
 #rotateCircle{
     width: 100%;
@@ -92,14 +94,26 @@
 #connectionCircleIndicator.connected #rotateCircle:before{
     bottom: 68px;
     left: 68px;
-    animation: resize-and-shine .8s ease forwards;
-    animation-delay: .4s;
 }
 #connectionCircleIndicator.connected #rotateCircle:after{
     top: 66px;
     right: 66px;
+}
+#connectionCircleIndicator.connected.animation-true #rotateCircle:before{
+    animation: resize-and-shine .8s ease forwards;
+    animation-delay: .4s;
+}
+#connectionCircleIndicator.connected.animation-true #rotateCircle:after{
     animation: resize-and-hide .8s ease forwards;
     animation-delay: .4s;
+}
+#connectionCircleIndicator.connected.animation-false #rotateCircle:before{
+    animation: resize-and-shine 0s forwards;
+    animation-delay: 0s;
+}
+#connectionCircleIndicator.connected.animation-false #rotateCircle:after{
+    animation: resize-and-hide 0s forwards;
+    animation-delay: 0s;
 }
 
 @keyframes rotate {

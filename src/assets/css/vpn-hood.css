@@ -24,17 +24,15 @@
 }
 
 #circle {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    border: 1px white solid;
+    transition: all 1.5s ease;
 }
 
-#circleOuter:before,
-#circle:before {
+#circleOuter:before{
     content: "";
     position: absolute;
     top: 0;
@@ -47,20 +45,20 @@
 }
 
 .state-initializing #circleOuter:before,
-.state-initializing #circle:before,
+.state-initializing #circle,
 .state-diagnosing #circleOuter:before,
-.state-diagnosing #circle:before,
+.state-diagnosing #circle,
 .state-connecting #circleOuter:before,
-.state-connecting #circle:before,
+.state-connecting #circle,
 .state-disconnecting #circleOuter:before,
-.state-disconnecting #circle:before {
+.state-disconnecting #circle {
     animation: circle-anim 2s infinite;
 }
 
-.state-initializing #circle:before,
-.state-diagnosing #circle:before,
-.state-disconnecting #circle:before,
-.state-connecting #circle:before {
+.state-initializing #circle,
+.state-diagnosing #circle,
+.state-disconnecting #circle,
+.state-connecting #circle {
     animation-delay: 1s;
 }
 

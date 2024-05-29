@@ -224,6 +224,12 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
+    getActiveServerCountryFlag(): string | null{
+        const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
+         return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
+             ? this.getCountryFlag(serverLocationInfo.countryCode) : null;
+    }
+
     public getCountryFlag(countryCode: string): string {
         try {
             return require(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`);
@@ -232,8 +238,8 @@ export class VpnHoodApp {
         }
     }
 
-    public isLocationAutoSelected(countryCode: string): boolean {
-        return countryCode === '*';
+    public isLocationAutoSelected(value: string): boolean {
+        return value === '*';
     }
 
     public isActiveClientProfile(clientProfileId: string): boolean {
@@ -255,16 +261,20 @@ export class VpnHoodApp {
     }
 
     public getActiveServerNameOrLocation(): string {
-        if (this.isSingleServerMode() && this.data.state.serverLocationInfo) {
-            if (this.isLocationAutoSelected(this.data.state.serverLocationInfo.regionName))
-                return  i18n.global.t('AUTO_SELECT');
+        // App is VpnHoodClient
+        if (!this.isSingleServerMode())
+            return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
 
-            if (this.data.state.serverLocationInfo.isNestedCountry && this.data.state.serverLocationInfo.countryCode === "US")
-                return  "USA (" + this.data.state.serverLocationInfo.regionName + ")";
+        // App is VpnHoodCONNECT
+        const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
+        if (!serverLocationInfo || this.isLocationAutoSelected(serverLocationInfo.countryCode))
+            return  i18n.global.t('AUTO_SELECT');
 
-            return this.data.state.serverLocationInfo.regionName;
-        }
-        return this.data.state.clientProfile?.clientProfileName ?? i18n.global.t("NO_SERVER_SELECTED");
+        const text = this.isLocationAutoSelected(serverLocationInfo.regionName)
+            ? serverLocationInfo.countryName
+            : serverLocationInfo.countryName + " (" + serverLocationInfo.regionName + ")";
+
+        return text.replace("United States (", "USA (" );
     }
 
     public getConnectionStateText(): string {

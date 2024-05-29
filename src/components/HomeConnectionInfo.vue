@@ -7,7 +7,7 @@
     <div v-if="isConnectApp" class="position-absolute w-100 h-100"><div id="rotateCircle"></div></div>
     <div v-else id="circle"></div>
 
-    <div class="d-flex flex-column align-center justify-center">
+    <div class="d-flex flex-column align-center justify-center position-relative h-100">
 
       <!-- Connection state text -->
       <span :class="[isConnectApp ? 'text-body-2' : 'text-body-1']">{{ connectionStateText }}</span>
@@ -15,7 +15,7 @@
       <!-- Usage -->
       <div class="d-flex flex-column align-center" v-if="isConnected && bandwidthTotal">
         <span class="text-body-1">{{ bandwidthUsed }} {{ $t("OF") }}</span>
-        <span class="text-secondary">{{ bandwidthTotal }}</span>
+        <span class="text-ui-tertiary">{{ bandwidthTotal }}</span>
       </div>
 
       <!-- Check -->
@@ -60,9 +60,13 @@ export default defineComponent({
   methods:{
     determineClass(){
       if (this.isConnectApp)
-        return  this.connectionState?.toLowerCase() + ' my-3';
+        return  this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + this.isShowConnectAnimation();
       else
         return this.isConnected ? 'opacity-100' : 'opacity-30';
+    },
+    isShowConnectAnimation(): boolean{
+      return this.isConnected && this.$vpnHoodApp.data.state.connectRequestTime
+          ? (Date.now() - this.$vpnHoodApp.data.state.connectRequestTime.getTime()) < 3000 : true;
     }
   }
 })

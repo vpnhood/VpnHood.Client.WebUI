@@ -106,14 +106,19 @@
               @click="$router.push('/servers')"
           >
               <span>{{ $vpnHoodApp.isSingleServerMode() ? $t("LOCATION") : $t("SERVER") }}</span>
-            <v-icon :icon="getChevronIcon()"/>
+            <v-icon :icon="getLocaleChevronIcon()"/>
               <span class="text-capitalize text-caption text-white opacity-50 text-truncate" style="max-width: 195px;">
                 {{ $vpnHoodApp.getActiveServerNameOrLocation() }}
               </span>
 
-            <template v-slot:append v-if="$vpnHoodApp.data.state.serverLocationInfo">
+            <template v-slot:append>
+              <span
+                  v-if="$vpnHoodApp.getActiveServerCountryFlag()"
+                  class="overflow-hidden d-inline-flex align-center justify-center ms-1" style="width: 23px; height: 15px;border-radius: 3px;">
+                  <img :src="$vpnHoodApp.getActiveServerCountryFlag()!" height="100%" alt="country flag"/>
+              </span>
               <v-chip
-                  v-if="$vpnHoodApp.isLocationAutoSelected($vpnHoodApp.data.state.serverLocationInfo.countryCode)"
+                  v-else
                   :text="$t('AUTO')"
                   size="small"
                   density="compact"
@@ -121,9 +126,6 @@
                   color="gray-lighten-3"
                   class="text-caption px-2"
               />
-              <span v-else class="overflow-hidden d-inline-flex align-center justify-center ms-1" style="width: 23px; height: 15px;border-radius: 3px;">
-                  <img :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.serverLocationInfo.countryCode)" height="100%" alt="country flag"/>
-              </span>
             </template>
           </v-btn>
         </v-col>
@@ -139,7 +141,7 @@
               class="config-item mb-1"
               @click="ComponentRouteController.showComponent($componentName.TunnelClientCountryDialog)">
             <span>{{ $t("COUNTRIES") }}</span>
-            <v-icon :icon="getChevronIcon()"/>
+            <v-icon :icon="getLocaleChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">
               {{$vpnHoodApp.data.settings.userSettings.tunnelClientCountry
                     ? $t("IP_FILTER_ALL")
@@ -161,7 +163,7 @@
               to="/apps-filter"
           >
             <span>{{ $t("APPS") }}</span>
-            <v-icon :icon="getChevronIcon()"/>
+            <v-icon :icon="getLocaleChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
           </v-btn>
         </v-col>
@@ -177,7 +179,7 @@
               class="config-item"
               @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)">
             <span>{{ $t("PROTOCOL_TITLE") }}</span>
-            <v-icon :icon="getChevronIcon()"/>
+            <v-icon :icon="getLocaleChevronIcon()"/>
             <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
           </v-btn>
         </v-col>
@@ -367,7 +369,7 @@ export default defineComponent({
           : this.$t('PROTOCOL_UDP_OFF')
     },
 
-    getChevronIcon(): string{
+    getLocaleChevronIcon(): string{
       return this.$vuetify.locale.isRtl ? 'mdi-chevron-left' : 'mdi-chevron-right';
     }
   }

@@ -2,7 +2,7 @@
   <v-list
       v-if="clientProfileInfo"
       :bg-color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-      :class="[$vpnHoodApp.isConnectApp() ? 'connect-zebra' : 'zebra' ,'py-0 mt-n2']"
+      :class="[$vpnHoodApp.isConnectApp() ? 'connect-zebra' : 'zebra' ,'py-0']"
       :style="$vpnHoodApp.isConnectApp() && isSingleItem ? '' : 'border-radius: 14px;'"
   >
     <!-- Region item -->
@@ -116,6 +116,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 
+/*noinspection CssUnusedSymbol*/
 .item-flag.nested-item {
   width: 25px;
   height: 18px;
@@ -128,6 +129,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 
+/*noinspection CssUnusedSymbol*/
 .VpnHoodConnect .item-flag.nested-item {
   width: 29px;
   height: 22px;
