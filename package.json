@@ -1,6 +1,6 @@
 {
   "name": "vpnhood.client.webui2",
-  "version": "1.0.141",
+  "version": "1.0.142",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
