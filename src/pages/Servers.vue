@@ -119,14 +119,12 @@
               </div>
             </v-col>
 
+            <!-- Profile name -->
             <v-col class="px-0 py-0">
-
-              <!-- Profile name -->
               <h4 :class="[$vpnHoodApp.isConnectApp() ? 'text-white' : 'text-primary-darken-1' ,'text-truncate text-capitalize']"
-                  style="max-width: 245px;">
+                  style="max-width: 190px;">
                 {{ clientProfileInfo.clientProfileName }}
               </h4>
-
             </v-col>
 
             <!-- Menu button and Expand/Collapse button -->
