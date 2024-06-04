@@ -66,7 +66,7 @@ export default defineComponent({
     },
     isShowConnectAnimation(): boolean{
       return this.isConnected && this.$vpnHoodApp.data.state.connectRequestTime
-          ? (Date.now() - this.$vpnHoodApp.data.state.connectRequestTime.getTime()) < 3000 : true;
+          ? (Date.now() - this.$vpnHoodApp.data.state.connectRequestTime.getTime()) < 6000 : true;
     }
   }
 })
