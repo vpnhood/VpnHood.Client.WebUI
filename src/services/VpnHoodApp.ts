@@ -277,6 +277,10 @@ export class VpnHoodApp {
         return text.replace("United States (", "USA (" );
     }
 
+    public isConnected(): boolean {
+        return this.data.state.connectionState === AppConnectionState.Connected;
+    }
+
     public getConnectionStateText(): string {
         if (this.data.state.isWaitingForAd)
             return i18n.global.t("LOADING_AD");

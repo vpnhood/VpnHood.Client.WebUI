@@ -42,7 +42,7 @@
 
       <!-- Speed -->
       <v-row id="speedSection" align-content="center" justify="center"
-             :class="[isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
+             :class="[$vpnHoodApp.isConnected() ? 'opacity-100' : 'opacity-0', 'mb-2']">
         <v-col cols="auto d-inline-flex">
           <span class="text-ui-tertiary text-body-2">{{ $t("DOWNLOAD_SPEED") }}:</span>
           <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed($vpnHoodApp.data.state.speed.received) }}</span>
@@ -58,7 +58,7 @@
       <!-- Circle -->
       <HomeConnectionInfo
           :is-connect-app="$vpnHoodApp.isConnectApp()"
-          :is-connected="isConnected()"
+          :is-connected="$vpnHoodApp.isConnected()"
           :alert-for-expire="alertForExpire()"
           :connection-state="$vpnHoodApp.data.state.connectionState"
           :connection-state-text="$vpnHoodApp.getConnectionStateText()"
@@ -322,10 +322,6 @@ export default defineComponent({
     // Return connection download and upload speed based on Mbps
     formatSpeed(speed: number): string {
       return (speed * 10 / 1000000).toFixed(2);
-    },
-
-    isConnected(): boolean {
-      return this.$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected;
     },
 
     // Return status of filtered apps by user (Only in mobile)

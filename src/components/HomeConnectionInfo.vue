@@ -35,6 +35,11 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "HomeConnectionInfo",
+  data(){
+    return{
+      showConnectedAnimation: null as boolean | null,
+    }
+  },
   props: {
     isConnectApp: Boolean,
     isConnected: Boolean,
@@ -59,14 +64,22 @@ export default defineComponent({
   ],
   methods:{
     determineClass(){
-      if (this.isConnectApp)
-        return  this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + this.isShowConnectAnimation();
-      else
-        return this.isConnected ? 'opacity-100' : 'opacity-30';
+      // VpnHoodCONNECT
+      if (this.isConnectApp){
+        this.processConnectedAnimation();
+        return  this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + (this.showConnectedAnimation === true ).toString();
+      }
+      // VpnHoodClient
+      return this.isConnected ? 'opacity-100' : 'opacity-30';
     },
-    isShowConnectAnimation(): boolean{
-      return this.isConnected && this.$vpnHoodApp.data.state.connectRequestTime
-          ? (Date.now() - this.$vpnHoodApp.data.state.connectRequestTime.getTime()) < 6000 : true;
+
+    // Process connect animation state for VpnHoodCONNECT
+    processConnectedAnimation(): void{
+      if (this.$vpnHoodApp.isConnected())
+        this.showConnectedAnimation = false;
+
+      else if (this.showConnectedAnimation !== null && !this.showConnectedAnimation)
+        this.showConnectedAnimation = true;
     }
   }
 })

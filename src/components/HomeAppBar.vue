@@ -68,10 +68,26 @@ export default defineComponent({
       AppName,
       ComponentRouteController,
       UiConstants,
-      debugData1: "",
-      debugData2: "",
       isShowDebugDialog: false,
       openDebugDialogCounter: 0,
+    }
+  },
+  computed:{
+    debugData1:{
+      get(): string | null | undefined{
+        return this.$vpnHoodApp.data.settings.userSettings.debugData1;
+      },
+      set(value: string | null) {
+        this.$vpnHoodApp.data.settings.userSettings.debugData1 = value === "" ? null : value;
+      }
+    },
+    debugData2:{
+      get(): string | null | undefined{
+        return this.$vpnHoodApp.data.settings.userSettings.debugData2;
+      },
+      set(value: string | null) {
+        this.$vpnHoodApp.data.settings.userSettings.debugData2 = value === "" ? null : value;
+      }
     }
   },
   methods: {
@@ -90,8 +106,6 @@ export default defineComponent({
     },
 
     async saveDebugData() {
-      this.$vpnHoodApp.data.settings.userSettings.debugData1 = this.debugData1 === "" ? null : this.debugData1;
-      this.$vpnHoodApp.data.settings.userSettings.debugData2 = this.debugData2 === "" ? null : this.debugData2;
       await this.$vpnHoodApp.saveUserSetting();
       this.isShowDebugDialog = false;
     }
