@@ -135,6 +135,7 @@
           <v-btn
               depressed
               block
+              id="excludeCountryButton"
               variant="outlined"
               size="small"
               prepend-icon="mdi-call-split"
@@ -147,6 +148,12 @@
                     ? $t("IP_FILTER_ALL")
                     : $t("IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY")}}
             </span>
+            <template v-slot:append v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry && $vpnHoodApp.data.state.clientCountryCode">
+              <span
+                  class="overflow-hidden d-inline-flex align-center justify-center ms-1" style="width: 23px; height: 15px;border-radius: 3px;">
+                  <img :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.clientCountryCode)" height="100%" alt="country flag"/>
+              </span>
+            </template>
           </v-btn>
         </v-col>
 
@@ -392,7 +399,8 @@ export default defineComponent({
 
 <style>
 /*noinspection CssUnusedSymbol*/
-#serverButton .v-btn__content{
+#serverButton .v-btn__content,
+#excludeCountryButton .v-btn__content{
   flex-grow: 1;
   justify-content: start;
 }

@@ -17,7 +17,7 @@ export class UiState {
 
     public showLoadingDialog: boolean = false;
 
-    public stateLastError: string | null = null;
+    public stateLastErrorMessage: string | null = null;
 }
 
 // General custom alert dialog property

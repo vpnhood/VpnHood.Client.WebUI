@@ -94,8 +94,8 @@ export class VpnHoodApp {
         }
 
         // Show last error message if the user has not ignored
-        if (this.data.state.lastError && this.data.uiState.stateLastError !== this.data.state.lastError) {
-            this.data.uiState.stateLastError = this.data.state.lastError;
+        if (this.data.state.lastError && this.data.uiState.stateLastErrorMessage !== this.data.state.lastError?.message) {
+            this.data.uiState.stateLastErrorMessage = this.data.state.lastError.message;
             await this.processError(this.data.state.lastError);
         }
 
@@ -291,7 +291,7 @@ export class VpnHoodApp {
     }
 
     public async clearLastError(): Promise<void> {
-        this.data.uiState.stateLastError = null;
+        this.data.uiState.stateLastErrorMessage = null;
         this.data.uiState.errorDialogData.isVisible = false;
         await this.apiClient.clearLastError();
         await this.reloadState();

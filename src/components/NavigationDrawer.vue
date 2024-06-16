@@ -183,6 +183,18 @@
 
     </v-list>
 
+    <!-- Powered by button -->
+    <v-btn
+        text="Powered by VpnHood Engine"
+        variant="text"
+        position="fixed"
+        block
+        append-icon="mdi-open-in-new"
+        :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'primary-darken-2'"
+        class="text-center mb-2 text-caption position-fixed bottom-0"
+        href="https://vpnhood.com"
+        target="_blank"
+    ></v-btn>
   </v-navigation-drawer>
 
   <!-- Confirm sign-out dialog -->

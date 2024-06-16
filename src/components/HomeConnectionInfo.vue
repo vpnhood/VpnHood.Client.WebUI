@@ -4,7 +4,9 @@
       :class="determineClass()"
   >
 
-    <div v-if="isConnectApp" class="position-absolute w-100 h-100"><div id="rotateCircle"></div></div>
+    <div v-if="isConnectApp" class="position-absolute w-100 h-100">
+      <div id="rotateCircle"></div>
+    </div>
     <div v-else id="circle"></div>
 
     <div class="d-flex flex-column align-center justify-center position-relative h-100">
@@ -35,8 +37,8 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "HomeConnectionInfo",
-  data(){
-    return{
+  data() {
+    return {
       showConnectedAnimation: null as boolean | null,
     }
   },
@@ -62,23 +64,27 @@ export default defineComponent({
     "update:bandwidthUsed",
     "update:bandwidthTotal",
   ],
-  methods:{
-    determineClass(){
+  methods: {
+    determineClass() {
       // VpnHoodCONNECT
-      if (this.isConnectApp){
+      if (this.isConnectApp) {
         this.processConnectedAnimation();
-        return  this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + (this.showConnectedAnimation === true ).toString();
+        return this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + (this.showConnectedAnimation === true).toString();
       }
       // VpnHoodClient
       return this.isConnected ? 'opacity-100' : 'opacity-30';
     },
 
     // Process connect animation state for VpnHoodCONNECT
-    processConnectedAnimation(): void{
-      if (this.$vpnHoodApp.isConnected())
+    processConnectedAnimation(): void {
+      if (!this.$vpnHoodApp.isConnected()) {
         this.showConnectedAnimation = false;
+        return;
+      }
 
-      else if (this.showConnectedAnimation !== null && !this.showConnectedAnimation)
+      // It should not show animation if the previous state is null
+      // If State is null, that means the page has been refreshed
+      if (this.showConnectedAnimation === false)
         this.showConnectedAnimation = true;
     }
   }
