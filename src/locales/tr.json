@@ -164,5 +164,6 @@
   "AUTO": "Oto",
   "LOCATION": "Konum",
   "LOADING_AD": "Reklam Yükleniyor",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Varsayılan adı görüntülemek için boş bırakın."
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Varsayılan adı görüntülemek için boş bırakın.",
+  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine tarafından desteklenmektedir"
 }
