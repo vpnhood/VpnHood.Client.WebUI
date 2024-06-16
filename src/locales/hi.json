@@ -164,5 +164,6 @@
   "AUTO": "स्वचालित",
   "LOCATION": "स्थान",
   "LOADING_AD": "विज्ञापन लोड हो रहा है",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "डिफ़ॉल्ट नाम प्रदर्शित करने के लिए इसे खाली छोड़ दें।"
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "डिफ़ॉल्ट नाम प्रदर्शित करने के लिए इसे खाली छोड़ दें।",
+  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine द्वारा संचालित"
 }
