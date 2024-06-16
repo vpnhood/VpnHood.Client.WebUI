@@ -164,5 +164,6 @@
   "AUTO": "Auto",
   "LOCATION": "Ubicación",
   "LOADING_AD": "Cargando Anuncio",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Dejarlo vacío para mostrar el nombre predeterminado."
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Dejarlo vacío para mostrar el nombre predeterminado.",
+  "POWERED_BY_VPNHOOD_ENGINE": "Impulsado por VpnHood Engine"
 }
