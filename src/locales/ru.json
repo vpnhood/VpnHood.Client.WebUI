@@ -164,5 +164,6 @@
   "AUTO": "Авто",
   "LOCATION": "Местоположение",
   "LOADING_AD": "Загрузка Рекламы",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Оставьте пустым, чтобы отобразить имя по умолчанию."
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Оставьте пустым, чтобы отобразить имя по умолчанию.",
+  "POWERED_BY_VPNHOOD_ENGINE": "Под управлением VpnHood Engine"
 }
