@@ -184,17 +184,15 @@
     </v-list>
 
     <!-- Powered by button -->
-    <v-btn
-        :text="$t('POWERED_BY_VPNHOOD_ENGINE')"
-        variant="text"
-        position="fixed"
-        block
-        append-icon="mdi-open-in-new"
-        :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'primary-darken-2'"
-        class="text-center mb-2 text-caption position-fixed bottom-0"
+    <a
+        :class="[$vpnHoodApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2',
+         'text-center mb-4 text-caption position-fixed bottom-0 position-fixed w-100 text-decoration-none']"
         href="https://vpnhood.com"
         target="_blank"
-    ></v-btn>
+    >
+      <span>{{$t('POWERED_BY_VPNHOOD_ENGINE')}}</span>
+      <v-icon icon="mdi-open-in-new" class="ms-2"/>
+    </a>
   </v-navigation-drawer>
 
   <!-- Confirm sign-out dialog -->
