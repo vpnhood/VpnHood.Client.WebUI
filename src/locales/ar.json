@@ -164,5 +164,6 @@
   "AUTO": "تلقائي",
   "LOCATION": "الموقع",
   "LOADING_AD": "تحميل الإعلان",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "اتركه فارغًا لعرض الاسم الافتراضي."
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "اتركه فارغًا لعرض الاسم الافتراضي.",
+  "POWERED_BY_VPNHOOD_ENGINE": "مدعوم من VpnHood Engine"
 }
