@@ -185,7 +185,7 @@
 
     <!-- Powered by button -->
     <v-btn
-        text="Powered by VpnHood Engine"
+        :text="$t('POWERED_BY_VPNHOOD_ENGINE')"
         variant="text"
         position="fixed"
         block
