@@ -164,5 +164,6 @@
   "AUTO": "自动",
   "LOCATION": "位置",
   "LOADING_AD": "加载广告",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "将其留空以显示默认名称。"
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "将其留空以显示默认名称。",
+  "POWERED_BY_VPNHOOD_ENGINE": "由 VpnHood Engine 驱动"
 }
