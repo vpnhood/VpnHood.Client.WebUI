@@ -164,5 +164,6 @@
   "AUTO": "خودکار",
   "LOCATION": "مکان",
   "LOADING_AD": "آماده سازی تبلیغ",
-  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "در صورت خالی بودن، نام پیش فرض نمایش داده می‌شود."
+  "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "در صورت خالی بودن، نام پیش فرض نمایش داده می‌شود.",
+  "POWERED_BY_VPNHOOD_ENGINE": "قدرت گرفته از VpnHood Engine"
 }
