@@ -1640,15 +1640,15 @@ export class UserSettings implements IUserSettings {
     serverLocation?: string | null;
     maxDatagramChannelCount!: number;
     tunnelClientCountry!: boolean;
-    appFilters?: string[] | null;
+    appFilters!: string[];
     appFiltersMode!: FilterMode;
     useUdpChannel!: boolean;
     dropUdpPackets!: boolean;
     includeLocalNetwork!: boolean;
-    includeIpRanges?: string[] | null;
-    excludeIpRanges?: string[] | null;
-    packetCaptureIncludeIpRanges?: string[] | null;
-    packetCaptureExcludeIpRanges?: string[] | null;
+    includeIpRanges!: string[];
+    excludeIpRanges!: string[];
+    packetCaptureIncludeIpRanges!: string[];
+    packetCaptureExcludeIpRanges!: string[];
     allowAnonymousTracker!: boolean;
     dnsServers?: string[] | null;
     debugData1?: string | null;
@@ -1663,6 +1663,11 @@ export class UserSettings implements IUserSettings {
         }
         if (!data) {
             this.logging = new AppLogSettings();
+            this.appFilters = [];
+            this.includeIpRanges = [];
+            this.excludeIpRanges = [];
+            this.packetCaptureIncludeIpRanges = [];
+            this.packetCaptureExcludeIpRanges = [];
         }
     }
 
@@ -1795,15 +1800,15 @@ export interface IUserSettings {
     serverLocation?: string | null;
     maxDatagramChannelCount: number;
     tunnelClientCountry: boolean;
-    appFilters?: string[] | null;
+    appFilters: string[];
     appFiltersMode: FilterMode;
     useUdpChannel: boolean;
     dropUdpPackets: boolean;
     includeLocalNetwork: boolean;
-    includeIpRanges?: string[] | null;
-    excludeIpRanges?: string[] | null;
-    packetCaptureIncludeIpRanges?: string[] | null;
-    packetCaptureExcludeIpRanges?: string[] | null;
+    includeIpRanges: string[];
+    excludeIpRanges: string[];
+    packetCaptureIncludeIpRanges: string[];
+    packetCaptureExcludeIpRanges: string[];
     allowAnonymousTracker: boolean;
     dnsServers?: string[] | null;
     debugData1?: string | null;

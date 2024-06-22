@@ -165,5 +165,8 @@
   "LOCATION": "Location",
   "LOADING_AD": "Loading Ad",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Leave it empty to display the default name.",
-  "POWERED_BY_VPNHOOD_ENGINE": "Powered by VpnHood Engine"
+  "POWERED_BY_VPNHOOD_ENGINE": "Powered by VpnHood Engine",
+  "FUTURE_INSTALLED_APPS": "Future Installed Apps",
+  "SELECT_ALL": "Select All",
+  "CLEAR_ALL": "Clear All"
 }

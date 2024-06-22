@@ -7,37 +7,36 @@
            :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <v-card :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'">
-      <v-list bg-color="transparent" class="py-0">
+      <v-list
+          v-model="defaultLanguage"
+          select-strategy="classic"
+          bg-color="transparent"
+          class="py-0"
+          active-class="text-secondary"
+      >
         <v-list-item
             v-for="(locale, index) in myLocales"
             :key="index"
             :value="locale.code"
-            v-model="defaultLanguage"
             :class="[
                 $vpnHoodApp.isConnectApp()
                 ? 'border-primary-darken-2 border-opacity-50'
                 : 'border-gray-lighten-5 border-opacity-100',
                 'border-b'
                 ]"
-            active-class="text-secondary"
             :active="locale.code === defaultLanguage"
             @click="defaultLanguage = locale.code"
         >
-          <!-- َActive language icon -->
-          <template v-slot:prepend>
-            <v-radio
-                v-model="defaultLanguage"
-                density="compact"
-                true-icon="mdi-check-all"
-                false-icon=""
-                :value="locale.code"
-                :color="locale.code === defaultLanguage ? 'secondary' : 'gray'"
-                :class="[locale.code === defaultLanguage ? '' : 'opacity-30', 'me-3' ]"
-            />
-          </template>
 
           <!-- Language name -->
           <v-list-item-title class="text-capitalize">
+
+            <!-- Radio button icon -->
+            <span class="me-2">
+              <v-icon v-if="locale.code === defaultLanguage" icon="mdi-radiobox-marked"/>
+              <v-icon v-else icon="mdi-radiobox-blank" class="text-gray"/>
+            </span>
+
             {{ locale.nativeName }}
 
             <!-- System default language name -->
