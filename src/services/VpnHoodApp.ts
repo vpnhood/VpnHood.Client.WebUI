@@ -18,6 +18,7 @@ import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {reactive} from "vue";
 import i18n from "@/locales/i18n";
 import router from '@/plugins/router'
+import {DialogConfig} from "@/components/ConfirmDialog/DialogConfig";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -29,6 +30,7 @@ export class VpnHoodAppData {
     public features: AppFeatures;
     public clientProfileInfos: ClientProfileInfo[];
     public cultureInfos: UiCultureInfo[];
+    public confirmDialog: DialogConfig = new DialogConfig();
 
     public constructor(state: AppState, setting: AppSettings, features: AppFeatures, clientProfileInfos: ClientProfileInfo[], cultureInfos: UiCultureInfo[]) {
         this.state = state;

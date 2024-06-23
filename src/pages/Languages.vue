@@ -34,7 +34,7 @@
             <!-- Radio button icon -->
             <span class="me-2">
               <v-icon v-if="locale.code === defaultLanguage" icon="mdi-radiobox-marked"/>
-              <v-icon v-else icon="mdi-radiobox-blank" class="text-gray"/>
+              <v-icon v-else icon="mdi-radiobox-blank" class="text-gray-lighten-1"/>
             </span>
 
             {{ locale.nativeName }}

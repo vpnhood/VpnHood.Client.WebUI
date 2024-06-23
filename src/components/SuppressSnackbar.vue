@@ -27,7 +27,7 @@
 
     <template v-slot:actions>
       <v-btn
-          icon="mdi-close"
+          icon="mdi-closeDialog"
           size="small"
           @click="onCloseButton"
       >

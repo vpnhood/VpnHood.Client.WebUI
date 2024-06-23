@@ -22,22 +22,26 @@
       <!-- Global alert dialog -->
       <alert-dialog v-model="isAlertDialogVisible"/>
 
+      <!-- Global async confirm dialog -->
+      <ConfirmDialog/>
+
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import AlertDialog from "@/components/AlertDialog.vue";
 import {ComponentRouteController} from './services/ComponentRouteController';
-import LoadingDialog from "@/components/LoadingDialog.vue";
 import {AppName, LocalStorage, UiConstants} from "@/UiConstants";
+import AlertDialog from "@/components/AlertDialog.vue";
+import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import ConfirmDialog from "@/components/ConfirmDialog/DialogComponent.vue";
 
 export default defineComponent({
   name: 'App',
-  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer},
+  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer, ConfirmDialog},
   data() {
     return {
       AppName,

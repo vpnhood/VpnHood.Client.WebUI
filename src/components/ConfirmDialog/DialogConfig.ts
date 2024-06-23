@@ -1,23 +1,23 @@
-export class Config {
-    isOpenField: boolean = false;
-    openPromise: string = "";
-    resolve!: (value: (PromiseLike<string> | string)) => void;
+export class DialogConfig {
+    isOpenDialog: boolean = false;
+    title: string = "";
+    message: string = "";
+    resolve!: (value: (PromiseLike<boolean> | boolean)) => void;
 
-    get isOpen(): boolean{
-        return this.isOpenField;
-    }
-    set isOpen(value: boolean){
-        this.isOpenField = value;
-    }
-    showDialog(): Promise<string>{
+    get isOpen(): boolean{return this.isOpenDialog;}
+    set isOpen(value: boolean){this.isOpenDialog = value;}
+
+    showDialog(title: string, message: string): Promise<boolean>{
+        this.title = title;
+        this.message = message;
         this.isOpen = true;
-        return new Promise<string>((resolve) => {
+        return new Promise<boolean>((resolve) => {
             this.resolve = resolve;
         });
     }
-    close(result: string){
+    closeDialog(result: boolean){
         this.isOpen = false;
-        this.resolve(result)
-
+        this.resolve(result);
+        console.log("Confirm Dialog Task = " + result);
     }
 }

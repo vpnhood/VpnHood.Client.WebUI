@@ -36,17 +36,17 @@
               </li>
               <li>
                 <span class="feature-title">{{$t("NO_ADS")}}</span>
-                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
                 <span class="premium-feature"><v-icon icon="mdi-check"/></span>
               </li>
               <li>
                 <span class="feature-title">{{$t("ALWAYS_ON")}}</span>
-                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
                 <span class="premium-feature"><v-icon icon="mdi-check"/></span>
               </li>
               <li>
                 <span class="feature-title">{{$t("SUPPORT")}}</span>
-                <span class="free-feature"><v-icon icon="mdi-close"/></span>
+                <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
                 <span class="premium-feature"><v-icon icon="mdi-check"/></span>
               </li>
             </ul>

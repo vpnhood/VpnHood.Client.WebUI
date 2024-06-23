@@ -2,7 +2,7 @@
 
   <AppBar :page-title="$t('APP_FILTER')"/>
 
-  <v-sheet :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'gray-lighten-6'">
+  <v-sheet :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <!-- Disconnecting alert -->
     <v-alert class="mb-5 text-caption" density="compact" :icon="false" type="warning"
@@ -15,7 +15,7 @@
         density="comfortable"
         class="text-caption me-3"
         :text="$t('SELECT_ALL')"
-        @click="selectAllApps"
+        @click="showDialog(ConfirmDialogAction.SelectAll, $t('SELECT_ALL_APPS_TITLE'), $t('ARE_YOU_SURE'))"
     />
 
     <v-btn
@@ -25,22 +25,23 @@
         density="comfortable"
         class="text-caption"
         :text="$t('CLEAR_ALL')"
-        @click="deselectApps"
+        @click="showDialog(ConfirmDialogAction.ClearAll, $t('CLEAR_ALL_APPS_TITLE'), $t('ARE_YOU_SURE'))"
     />
 
     <!-- Filter apps option -->
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : ''" class="mt-3">
+    <v-card :color="$vpnHoodApp.isConnectApp() ? 'background' : ''" class="mt-3">
 
       <!-- Apps list -->
       <v-card-item class="px-0 pb-0">
 
         <!-- Loading list -->
         <v-progress-linear
-            v-if="myInstalledApps.length < 2"
+            v-if="myInstalledApps.length < 1"
             color="secondary"
             indeterminate
         ></v-progress-linear>
 
+        <!-- Apps list -->
         <v-list
             v-else
             id="appFilterList"
@@ -54,19 +55,19 @@
               :key="app.appId"
               :value="app.appId"
               :title="app.appName"
-
+              ripple
               :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
               :class="[
                 $vpnHoodApp.isConnectApp()
                 ? 'border-primary-darken-2 border-opacity-50'
                 : 'border-gray-lighten-5 border-opacity-100',
-                'border-b text-caption',
-
+                'border-b text-caption'
                 ]"
               @click="app.isSelected = !app.isSelected; saveChange()"
           >
             <template v-slot:append>
               <v-switch
+                  tabindex="-1"
                   :model-value="app.isSelected"
                   hide-details
                   readonly
@@ -79,19 +80,26 @@
       </v-card-item>
     </v-card>
   </v-sheet>
+
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import {FilterMode} from "@/services/VpnHood.Client.Api";
 import AppBar from "@/components/AppBar.vue";
-import {AppName} from "@/UiConstants";
+import {AppName, UiConstants} from "@/UiConstants";
+
+//import {ref} from "firebase/storage";
 
 interface IMyInstalledApps {
   appId: string;
   appName: string;
   iconPng: string;
   isSelected: boolean;
+}
+enum ConfirmDialogAction {
+  SelectAll,
+  ClearAll
 }
 
 export default defineComponent({
@@ -105,10 +113,10 @@ export default defineComponent({
   ],
   data() {
     return {
-      isUpdating: true,
       myInstalledApps: [] as IMyInstalledApps[],
+      ConfirmDialogAction,
       FilterMode,
-      AppName
+      AppName,
     }
   },
 
@@ -133,8 +141,8 @@ export default defineComponent({
 
       const futureInstalledAppInfo: IMyInstalledApps = {
         appId: "$",
-        appName: this.$t('FUTURE_INSTALLED_APPS'),
-        iconPng: "",
+        appName: this.$t('ALL_FUTURE_APPS'),
+        iconPng: this.$vpnHoodApp.isConnectApp() ? UiConstants.futureAppsIconConnect : UiConstants.futureAppsIconClient,
         isSelected: filterMode === FilterMode.All || filterMode === FilterMode.Exclude
       };
       this.myInstalledApps.push(futureInstalledAppInfo);
@@ -146,28 +154,35 @@ export default defineComponent({
     sortApps(installedApps: IMyInstalledApps[]) {
       const isFutureAppSelected = this.myInstalledApps.some(x => x.appId === "$" && x.isSelected);
       installedApps.sort((a, b) => {
+        // First condition displays first the enabled apps
+        // Second condition displays first the disabled apps
         if (a.isSelected !== b.isSelected) return isFutureAppSelected
             ? Number(a.isSelected) - Number(b.isSelected)
             : Number(b.isSelected) - Number(a.isSelected);
+        // Display first the "All Future Apps" option
         if (a.appId === "$") return -1;
         if (b.appId === "$") return +1;
+        // Alphabetic sort
         return a.appName.localeCompare(b.appName);
       });
     },
 
-    selectAllApps() {
+    selectAll() {
       this.myInstalledApps.forEach(app => {app.isSelected = true});
       this.sortApps(this.myInstalledApps);
       this.saveChange();
     },
 
-    deselectApps() {
+    clearAll() {
       this.myInstalledApps.forEach(app => {app.isSelected = false});
       this.sortApps(this.myInstalledApps);
       this.saveChange();
     },
 
+    // Called after change each selection
     async saveChange(){
+
+      // All apps
       const isAllSelectedApp = this.myInstalledApps.every(x => x.isSelected);
       if (isAllSelectedApp) {
         this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = FilterMode.All;
@@ -176,6 +191,7 @@ export default defineComponent({
         return;
       }
 
+      // All apps except selected
       const isFutureAppSelected = this.myInstalledApps.some(x => x.appId === "$" && x.isSelected);
       if (isFutureAppSelected) {
         this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = FilterMode.Exclude;
@@ -186,12 +202,20 @@ export default defineComponent({
         return;
       }
 
+      // Only selected apps
       this.$vpnHoodApp.data.settings.userSettings.appFiltersMode = FilterMode.Include;
       this.$vpnHoodApp.data.settings.userSettings.appFilters = this.myInstalledApps
           .filter(x => x.isSelected && x.appId !== "$")
           .map(x => x.appId);
       await this.$vpnHoodApp.saveUserSetting();
-    }
+    },
+
+    async showDialog(confirmAction: ConfirmDialogAction, title: string, message: string) {
+      let confirmResult = await this.$vpnHoodApp.data.confirmDialog.showDialog(title, message);
+      if (confirmResult)
+        confirmAction === ConfirmDialogAction.SelectAll ? this.selectAll() : this.clearAll();
+    },
+
   }
 })
 </script>
@@ -201,5 +225,10 @@ export default defineComponent({
 #appFilterList .v-avatar.v-avatar--density-default {
   width: 30px;
   height: 30px;
+}
+
+/*noinspection CssUnusedSymbol*/
+#appFilterList .v-list-item__overlay{
+  opacity: 0;
 }
 </style>

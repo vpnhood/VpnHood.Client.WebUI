@@ -89,7 +89,7 @@
 
     </v-col>
 
-    <!-- Config buttons -->
+    <!-- DialogConfig buttons -->
     <v-col cols="12" class="text-truncate">
       <v-row>
 
@@ -105,9 +105,9 @@
               class="config-item align-center mb-1"
               @click="$router.push('/servers')"
           >
-              <span>{{ $vpnHoodApp.isSingleServerMode() ? $t("LOCATION") : $t("SERVER") }}</span>
+              <span tabindex="-1">{{ $vpnHoodApp.isSingleServerMode() ? $t("LOCATION") : $t("SERVER") }}</span>
             <v-icon :icon="getLocaleChevronIcon()"/>
-              <span class="text-capitalize text-caption text-white opacity-50 text-truncate" style="max-width: 195px;">
+              <span class="text-capitalize text-caption text-white opacity-50 text-truncate" tabindex="-1" style="max-width: 195px;">
                 {{ $vpnHoodApp.getActiveServerNameOrLocation() }}
               </span>
 

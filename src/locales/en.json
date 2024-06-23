@@ -166,7 +166,10 @@
   "LOADING_AD": "Loading Ad",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Leave it empty to display the default name.",
   "POWERED_BY_VPNHOOD_ENGINE": "Powered by VpnHood Engine",
-  "FUTURE_INSTALLED_APPS": "Future Installed Apps",
+  "ALL_FUTURE_APPS": "All Future Apps",
   "SELECT_ALL": "Select All",
-  "CLEAR_ALL": "Clear All"
+  "CLEAR_ALL": "Clear All",
+  "SELECT_ALL_APPS_TITLE": "Select all apps",
+  "CLEAR_ALL_APPS_TITLE": "Clear all selected apps",
+  "ARE_YOU_SURE": "Are you sure?"
 }

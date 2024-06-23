@@ -12,9 +12,11 @@
     <v-spacer></v-spacer>
 
     <!-- App mini version -->
-    <span @click="openDebugDialog"
-          :class="[$vpnHoodApp.data.settings.userSettings.debugData1 !== null || $vpnHoodApp.data.settings.userSettings.debugData2 !== null
-          ? 'bg-warning border border-on-warning  text-black rounded-pill px-1' : 'text-disabled','text-caption me-3']"
+    <span
+        @click="openDebugDialog"
+        tabindex="-1"
+        :class="[$vpnHoodApp.data.settings.userSettings.debugData1 !== null || $vpnHoodApp.data.settings.userSettings.debugData2 !== null
+         ? 'bg-warning border border-on-warning  text-black rounded-pill px-1' : 'text-disabled','text-caption me-3']"
     >
       {{ $t("ABBREVIATION_VERSION") }}
       {{$vpnHoodApp.getAppVersion(false) }}
@@ -34,7 +36,7 @@
       <v-divider class="border-opacity-25"></v-divider>
       <v-card-actions>
         <v-spacer/>
-        <!-- Save and close -->
+        <!-- Save and closeDialog -->
         <v-btn
             rounded="pill"
             variant="text"

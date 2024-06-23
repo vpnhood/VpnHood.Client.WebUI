@@ -4,13 +4,13 @@
       @update:modelValue="$emit('update:modelValue',$event)"
       max-width="600"
   >
-    <v-card :color="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'primary-darken-2' : 'white'">
-      <v-card-title :class="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-secondary' : 'bg-secondary'">
+    <v-card :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'white'">
+      <v-card-title :class="$vpnHoodApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
         {{ $t("PROTOCOL") }}
       </v-card-title>
 
       <v-card-text>
-        <p :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">{{ $t("PROTOCOL_DESC") }}</p>
+        <p :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">{{ $t("PROTOCOL_DESC") }}</p>
 
         <!-- UDP not supported alert -->
         <v-alert
@@ -26,14 +26,16 @@
           <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_ON") }}</span>
-              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">({{ $t('LESS_LATENCY') }})</span>
+              <span :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
+                ({{ $t('LESS_LATENCY') }})
+              </span>
             </template>
           </v-radio>
 
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
               <span>{{ $t("PROTOCOL_UDP_OFF") }}</span>
-              <span :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">({{ $t('MORE_RELIABLE') }})</span>
+              <span :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">({{ $t('MORE_RELIABLE') }})</span>
               <v-chip class="ms-2" size="small" color="secondary" :text="$t('DEFAULT')"></v-chip>
             </template>
           </v-radio>
