@@ -165,5 +165,11 @@
   "LOCATION": "Konum",
   "LOADING_AD": "Reklam Yükleniyor",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Varsayılan adı görüntülemek için boş bırakın.",
-  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine tarafından desteklenmektedir"
+  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine tarafından desteklenmektedir",
+  "ALL_FUTURE_APPS": "Tüm Gelecek Uygulamalar",
+  "SELECT_ALL": "Hepsini Seç",
+  "CLEAR_ALL": "Tümünü Temizle",
+  "SELECT_ALL_APPS_TITLE": "Tüm uygulamaları seç",
+  "CLEAR_ALL_APPS_TITLE": "Seçili tüm uygulamaları temizle",
+  "ARE_YOU_SURE": "Emin misiniz?"
 }
