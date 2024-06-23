@@ -165,5 +165,11 @@
   "LOCATION": "Standort",
   "LOADING_AD": "Werbung wird geladen",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Lassen Sie es leer, um den Standardnamen anzuzeigen.",
-  "POWERED_BY_VPNHOOD_ENGINE": "Angetrieben von VpnHood Engine"
+  "POWERED_BY_VPNHOOD_ENGINE": "Angetrieben von VpnHood Engine",
+  "ALL_FUTURE_APPS": "Alle zukünftigen Apps",
+  "SELECT_ALL": "Alles auswählen",
+  "CLEAR_ALL": "Alles löschen",
+  "SELECT_ALL_APPS_TITLE": "Wählen Sie alle Apps aus",
+  "CLEAR_ALL_APPS_TITLE": "Löschen Sie alle ausgewählten Apps",
+  "ARE_YOU_SURE": "Bist du sicher?"
 }
