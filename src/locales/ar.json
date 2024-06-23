@@ -165,5 +165,11 @@
   "LOCATION": "الموقع",
   "LOADING_AD": "تحميل الإعلان",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "اتركه فارغًا لعرض الاسم الافتراضي.",
-  "POWERED_BY_VPNHOOD_ENGINE": "مدعوم من VpnHood Engine"
+  "POWERED_BY_VPNHOOD_ENGINE": "مدعوم من VpnHood Engine",
+  "ALL_FUTURE_APPS": "جميع التطبيقات المستقبلية",
+  "SELECT_ALL": "اختر الكل",
+  "CLEAR_ALL": "امسح الكل",
+  "SELECT_ALL_APPS_TITLE": "حدد جميع التطبيقات",
+  "CLEAR_ALL_APPS_TITLE": "امسح جميع التطبيقات المحددة",
+  "ARE_YOU_SURE": "هل أنت متأكد؟"
 }
