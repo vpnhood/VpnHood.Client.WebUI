@@ -165,5 +165,11 @@
   "LOCATION": "Местоположение",
   "LOADING_AD": "Загрузка Рекламы",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Оставьте пустым, чтобы отобразить имя по умолчанию.",
-  "POWERED_BY_VPNHOOD_ENGINE": "Под управлением VpnHood Engine"
+  "POWERED_BY_VPNHOOD_ENGINE": "Под управлением VpnHood Engine",
+  "ALL_FUTURE_APPS": "Все будущие приложения",
+  "SELECT_ALL": "Выбрать все",
+  "CLEAR_ALL": "Очистить все",
+  "SELECT_ALL_APPS_TITLE": "Выбрать все приложения",
+  "CLEAR_ALL_APPS_TITLE": "Очистить все выбранные приложения",
+  "ARE_YOU_SURE": "Вы уверены?"
 }
