@@ -12,6 +12,7 @@ import './assets/css/rtl.css'
 import "./services/Firebase";
 import {VpnHoodApp} from "@/services/VpnHoodApp";
 import {AppName, ComponentName} from "@/UiConstants";
+import VueGtag from "vue-gtag";
 
 async function main(): Promise<void> {
     try {
@@ -41,8 +42,21 @@ async function main(): Promise<void> {
         // init Vue
         app.use(i18n)
             .use(router)
-            .use(vuetify)
-            .mount('#app')
+            .use(vuetify);
+
+        // TODO Check
+        if (!vpnHoodApp.isConnectApp()){
+            app.use(VueGtag, {
+                appName: AppName.VpnHood,
+                pageTrackerEnabled: true,
+                pageTrackerScreenviewEnabled: true,
+                config: {
+                    id: "G-MRY8BVVKZF",
+                },
+            }, router);
+        }
+
+        app.mount('#app')
     }
     catch (ex: any) {
         console.error("Could not create client app.", ex);

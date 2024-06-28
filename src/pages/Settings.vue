@@ -68,8 +68,8 @@
       <h4 class="mb-2">{{ $t("LOCAL_NETWORK") }}</h4>
 
       <!-- Disconnecting alert -->
-      <v-alert class="mb-2 text-caption" type="warning" density="compact" :icon="false"
-               :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
+      <v-alert v-if="$vpnHoodApp.isConnected()" class="mb-2 text-caption" type="warning" density="compact" :icon="false"
+               :text="$t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"></v-alert>
 
       <v-row class="align-center justify-space-between">
         <v-col>{{ $t('INCLUDE_LOCAL_NETWORK') }}</v-col>
@@ -77,6 +77,7 @@
           <v-switch
               v-model="includeLocalNetwork"
               color="secondary"
+              :disabled="$vpnHoodApp.isConnected()"
               class="px-2"
               density="compact"
               :inline="true"

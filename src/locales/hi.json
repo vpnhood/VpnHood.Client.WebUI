@@ -101,7 +101,7 @@
   "RECOMMENDED": "अनुशंसित",
   "OF": "का",
   "ERROR": "त्रुटि",
-  "APP_FILTER_DISCONNECTING_NOTE": "नोट: परिवर्तन लागू करने के लिए आपको तुरंत डिस्कनेक्ट कर दिया जाएगा",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "नोट: परिवर्तन लागू करने के लिए आपको तुरंत डिस्कनेक्ट कर दिया जाएगा",
   "OOPS": "ओह!",
   "LOAD_APP_ERROR_DESC": "ऐप चलाने में एक समस्या थी",
   "RELOAD_APP": "ऐप पुनः लोड करें",

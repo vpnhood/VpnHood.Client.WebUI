@@ -101,7 +101,7 @@
   "RECOMMENDED": "推荐",
   "OF": "的",
   "ERROR": "错误",
-  "APP_FILTER_DISCONNECTING_NOTE": "注意：更改选项后将立即断开连接以应用更改",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "注意：更改选项后将立即断开连接以应用更改",
   "OOPS": "哎呀！",
   "LOAD_APP_ERROR_DESC": "运行应用程序时出现问题",
   "RELOAD_APP": "重新加载应用程序",

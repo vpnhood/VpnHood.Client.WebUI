@@ -5,13 +5,14 @@
   <v-sheet :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
 
     <!-- Disconnecting alert -->
-    <v-alert class="mb-5 text-caption" density="compact" :icon="false" type="warning"
-             :text="$t('APP_FILTER_DISCONNECTING_NOTE')"></v-alert>
+    <v-alert v-if="$vpnHoodApp.isConnected()" class="mb-5 text-caption" density="compact" :icon="false" type="warning"
+             :text="$t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"></v-alert>
 
     <v-btn
         prepend-icon="mdi-select-all"
         variant="tonal"
         rounded="pill"
+        :disabled="$vpnHoodApp.isConnected()"
         density="comfortable"
         class="text-caption me-3"
         :text="$t('SELECT_ALL')"
@@ -22,6 +23,7 @@
         prepend-icon="mdi-select-remove"
         variant="tonal"
         rounded="pill"
+        :disabled="$vpnHoodApp.isConnected()"
         density="comfortable"
         class="text-caption"
         :text="$t('CLEAR_ALL')"
@@ -47,6 +49,7 @@
             id="appFilterList"
             select-strategy="classic"
             bg-color="transparent"
+            :disabled="$vpnHoodApp.isConnected()"
             class="py-0"
             selectable
         >

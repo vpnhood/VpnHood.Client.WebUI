@@ -101,7 +101,7 @@
   "RECOMMENDED": "Recommended",
   "OF": "of",
   "ERROR": "Error",
-  "APP_FILTER_DISCONNECTING_NOTE": "Note: You will be disconnected immediately to apply the changes",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "You must disconnect to change settings",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",

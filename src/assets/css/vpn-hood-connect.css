@@ -63,7 +63,7 @@
 }
 
 /*noinspection CssUnusedSymbol*/
-#connectionCircleIndicator:not(.disconnect,.none,.connected) #rotateCircle{
+#connectionCircleIndicator:not(.disconnect,.none,.connected, .waiting) #rotateCircle{
     animation-play-state: running;
 }
 #rotateCircle:before,

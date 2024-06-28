@@ -101,7 +101,7 @@
   "RECOMMENDED": "پیشنهادی",
   "OF": "از",
   "ERROR": "خطا",
-  "APP_FILTER_DISCONNECTING_NOTE": "توجه: ارتباط شما بلافاصله قطع خواهد شد تا تغییرات اعمال شود.",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "توجه: ارتباط شما بلافاصله قطع خواهد شد تا تغییرات اعمال شود.",
   "OOPS": "اوووه!",
   "LOAD_APP_ERROR_DESC": "مشکلی در اجرای برنامه وجود دارد",
   "RELOAD_APP": "اجرای دوباره برنامه",

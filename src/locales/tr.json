@@ -101,7 +101,7 @@
   "RECOMMENDED": "Önerilen",
   "OF": "nın",
   "ERROR": "Hata",
-  "APP_FILTER_DISCONNECTING_NOTE": "Not: Değişiklikleri uygulamak için hemen bağlantınız kesilecek",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Not: Değişiklikleri uygulamak için hemen bağlantınız kesilecek",
   "OOPS": "Hata!",
   "LOAD_APP_ERROR_DESC": "Uygulamanın çalıştırılmasında bir sorun oldu",
   "RELOAD_APP": "Uygulamayı Yeniden Yükle",

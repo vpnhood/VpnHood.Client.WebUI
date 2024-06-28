@@ -101,7 +101,7 @@
   "RECOMMENDED": "موصى به",
   "OF": "من",
   "ERROR": "خطأ",
-  "APP_FILTER_DISCONNECTING_NOTE": "ملاحظة: سيتم قطع الاتصال فورًا لتطبيق التغييرات",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "ملاحظة: سيتم قطع الاتصال فورًا لتطبيق التغييرات",
   "OOPS": "عفوًا!",
   "LOAD_APP_ERROR_DESC": "كانت هناك مشكلة في تشغيل التطبيق",
   "RELOAD_APP": "إعادة تحميل التطبيق",
