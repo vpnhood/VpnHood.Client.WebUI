@@ -109,7 +109,7 @@ export default defineComponent({
 
         // Create a root reference
         const storage = getStorage();
-        const spacePath = `logs/client/${reportId}.txt`;
+        const spacePath = `logs/${reportId}.txt`;
         const storageRef = ref(storage, spacePath);
 
         // Send report
