@@ -1,6 +1,6 @@
 {
-  "name": "vpnhood.client.webui2",
-  "version": "1.0.165",
+  "name": "vpnhood.spa",
+  "version": "1.0.166",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -18,7 +18,6 @@
     "ts-node": "^10.9.2",
     "vue": "^3.4.29",
     "vue-class-component": "^7.2.6",
-    "vue-gtag": "^2.0.1",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.3",
     "vuetify": "^3.6.9",
