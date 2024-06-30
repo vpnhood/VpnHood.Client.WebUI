@@ -101,7 +101,7 @@
   "RECOMMENDED": "अनुशंसित",
   "OF": "का",
   "ERROR": "त्रुटि",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "नोट: परिवर्तन लागू करने के लिए आपको तुरंत डिस्कनेक्ट कर दिया जाएगा",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "सेटिंग्स बदलने के लिए आपको डिस्कनेक्ट होना होगा",
   "OOPS": "ओह!",
   "LOAD_APP_ERROR_DESC": "ऐप चलाने में एक समस्या थी",
   "RELOAD_APP": "ऐप पुनः लोड करें",
@@ -165,5 +165,11 @@
   "LOCATION": "स्थान",
   "LOADING_AD": "विज्ञापन लोड हो रहा है",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "डिफ़ॉल्ट नाम प्रदर्शित करने के लिए इसे खाली छोड़ दें।",
-  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine द्वारा संचालित"
+  "POWERED_BY_VPNHOOD_ENGINE": "VpnHood Engine द्वारा संचालित",
+  "ALL_FUTURE_APPS": "सभी भविष्य के ऐप्स",
+  "SELECT_ALL": "सभी का चयन करें",
+  "CLEAR_ALL": "सभी हटाएं",
+  "SELECT_ALL_APPS_TITLE": "सभी ऐप्स का चयन करें",
+  "CLEAR_ALL_APPS_TITLE": "सभी चयनित ऐप्स हटाएं",
+  "ARE_YOU_SURE": "क्या आप सुनिश्चित हैं?"
 }
