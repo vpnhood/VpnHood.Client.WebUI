@@ -101,7 +101,7 @@
   "RECOMMENDED": "Empfohlen",
   "OF": "von",
   "ERROR": "Fehler",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Hinweis: Sie werden sofort getrennt, um die Änderungen anzuwenden",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Sie müssen die Verbindung trennen, um die Einstellungen zu ändern",
   "OOPS": "Ups!",
   "LOAD_APP_ERROR_DESC": "Es gab ein Problem beim Ausführen der App",
   "RELOAD_APP": "App neu laden",
