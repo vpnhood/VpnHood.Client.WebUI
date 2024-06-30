@@ -101,7 +101,7 @@
   "RECOMMENDED": "Recomendado",
   "OF": "de",
   "ERROR": "Erro",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Nota: Você será desconectado imediatamente para aplicar as alterações",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Você deve desconectar para alterar as configurações",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "Houve um problema ao executar o aplicativo",
   "RELOAD_APP": "Recarregar aplicativo",

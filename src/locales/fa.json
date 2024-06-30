@@ -101,7 +101,7 @@
   "RECOMMENDED": "پیشنهادی",
   "OF": "از",
   "ERROR": "خطا",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "توجه: ارتباط شما بلافاصله قطع خواهد شد تا تغییرات اعمال شود.",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "برای تغییر تنظیمات، باید ارتباط خود را قطع کنید",
   "OOPS": "اوووه!",
   "LOAD_APP_ERROR_DESC": "مشکلی در اجرای برنامه وجود دارد",
   "RELOAD_APP": "اجرای دوباره برنامه",
@@ -165,5 +165,11 @@
   "LOCATION": "مکان",
   "LOADING_AD": "آماده سازی تبلیغ",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "در صورت خالی بودن، نام پیش فرض نمایش داده می‌شود.",
-  "POWERED_BY_VPNHOOD_ENGINE": "قدرت گرفته از VpnHood Engine"
+  "POWERED_BY_VPNHOOD_ENGINE": "قدرت گرفته از VpnHood Engine",
+  "ALL_FUTURE_APPS": "همه برنامه‌های آینده",
+  "SELECT_ALL": "انتخاب همه",
+  "CLEAR_ALL": "غیر فعال کردن همه",
+  "SELECT_ALL_APPS_TITLE": "انتخاب همه برنامه‌ها",
+  "CLEAR_ALL_APPS_TITLE": "غیر فعال کردن همه برنامه‌ها",
+  "ARE_YOU_SURE": "آیا از اقدام خود مطمئن هستید؟"
 }
