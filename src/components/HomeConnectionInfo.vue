@@ -36,7 +36,6 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "HomeConnectionInfo",
   data() {
     return {
       showConnectedAnimation: null as boolean | null,

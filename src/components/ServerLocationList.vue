@@ -94,7 +94,6 @@ import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
 import {Util} from "@/services/Util";
 
 export default defineComponent({
-  name: "ServerLocationList",
   props: {
     clientProfileInfo: ClientProfileInfo,
     isSingleItem: Boolean,

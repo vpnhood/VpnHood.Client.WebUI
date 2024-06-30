@@ -43,7 +43,6 @@ import {defineComponent} from "vue";
 import {LocalStorage} from "@/UiConstants";
 
 export default defineComponent({
-  name: "PrivacyPolicyDialog",
   props:{
     modelValue:Boolean,
   },

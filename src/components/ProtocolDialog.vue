@@ -58,7 +58,6 @@ import {AppConnectionState} from "@/services/VpnHood.Client.Api";
 import {AppName} from "@/UiConstants";
 
 export default defineComponent({
-  name: 'ProtocolDialog',
   data() {
     return {
       AppName

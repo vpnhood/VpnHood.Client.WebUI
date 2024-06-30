@@ -21,7 +21,6 @@ import {defineComponent} from "vue";
 import {AppName, UiConstants} from "@/UiConstants";
 
 export default defineComponent({
-  name: "AppBar",
   data() {
       return{
         AppName,

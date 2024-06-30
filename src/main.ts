@@ -6,7 +6,6 @@ import {FirebaseApp} from "@/services/Firebase";
 import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import router from './plugins/router'
-import VueGtag from "vue-gtag";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import './assets/css/general.css'
 import './assets/css/override.css'
@@ -20,7 +19,7 @@ async function main(): Promise<void> {
         const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
         const app = createApp(App);
 
-        // Init firebase based on app name
+        // Init firebase and analytics based on app name
         FirebaseApp.initialize(vpnHoodApp.isConnectApp());
 
         // Global properties
@@ -45,21 +44,8 @@ async function main(): Promise<void> {
         // Init Vue
         app.use(i18n)
             .use(router)
-            .use(vuetify);
-
-        // Initialize analytics for VpnHood Client only
-        if (!vpnHoodApp.isConnectApp()){
-            app.use(VueGtag, {
-                appName: AppName.VpnHood,
-                pageTrackerEnabled: true,
-                pageTrackerScreenviewEnabled: true,
-                config: {
-                    id: "G-H4S5747LBT",
-                },
-            }, router);
-        }
-
-        app.mount('#app')
+            .use(vuetify)
+            .mount('#app');
     }
     catch (ex: any) {
         console.error("Could not create client app.", ex);

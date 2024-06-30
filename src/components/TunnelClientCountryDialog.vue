@@ -54,7 +54,6 @@ import {defineComponent} from "vue";
 import {AppName} from "@/UiConstants";
 
 export default defineComponent({
-  name: "TunnelClientCountryDialog",
   data() {
     return {
       AppName

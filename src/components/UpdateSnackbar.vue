@@ -92,7 +92,6 @@ import {defineComponent} from "vue";
 import {VersionStatus} from "@/services/VpnHood.Client.Api";
 
 export default defineComponent({
-  name: "UpdateSnackbar",
   data() {
     return {
       VersionStatus,

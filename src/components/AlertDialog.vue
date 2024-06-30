@@ -72,7 +72,6 @@ import {defineComponent} from "vue";
 import {getStorage, ref, uploadBytes} from "firebase/storage";
 
 export default defineComponent({
-  name: "AlertDialog",
   props: {
     modelValue: Boolean,
   },

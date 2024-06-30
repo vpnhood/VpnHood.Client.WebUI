@@ -1,4 +1,5 @@
 import {initializeApp, FirebaseOptions} from 'firebase/app'
+import { getAnalytics } from "firebase/analytics";
 
 export class FirebaseApp {
     // VpnHood Connect
@@ -14,17 +15,17 @@ export class FirebaseApp {
 
     // VpnHood Client
     private static clientAppFirebaseConfig: FirebaseOptions = {
-        apiKey: "AIzaSyB2Br41jN32DmXyH-HqdcsOXVnaGON1ay0",
-        authDomain: "client-d2460.firebaseapp.com",
-        databaseURL: "https://client-d2460.firebaseio.com",
-        projectId: "client-d2460",
-        storageBucket: "client-d2460.appspot.com",
-        messagingSenderId: "216585339900",
-        appId: "1:216585339900:web:17299300c94bfddc172879",
-        measurementId: "G-ZG1R4RF8V5"
+        apiKey: "AIzaSyCcgEuqO3eNZXetNtrap0Wm3mcvrqLcC3c",
+        authDomain: "vpnhood-client.firebaseapp.com",
+        projectId: "vpnhood-client",
+        storageBucket: "vpnhood-client.appspot.com",
+        messagingSenderId: "394312577363",
+        appId: "1:394312577363:web:bb45a00044ce6bf02471a6",
+        measurementId: "G-ZF424EEVF4"
     };
 
     public static initialize(isConnectApp: boolean): void{
-        initializeApp(isConnectApp ? this.connectAppFirebaseConfig : this.clientAppFirebaseConfig);
+        const app = initializeApp(isConnectApp ? this.connectAppFirebaseConfig : this.clientAppFirebaseConfig);
+        getAnalytics(app);
     }
 }

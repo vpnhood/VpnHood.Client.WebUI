@@ -64,7 +64,6 @@ import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, UiConstants} from "@/UiConstants";
 
 export default defineComponent({
-  name: "HomeAppBar",
   data() {
     return {
       AppName,

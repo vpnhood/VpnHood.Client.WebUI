@@ -40,7 +40,6 @@
 import {defineComponent} from "vue";
 import {SessionSuppressType} from "@/services/VpnHood.Client.Api";
 export default defineComponent({
-  name: "SuppressSnackbar",
   data(){
     return{
       SessionSuppressType
