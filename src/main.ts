@@ -1,8 +1,8 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 import {VpnHoodApp} from "@/services/VpnHoodApp";
+import { setUserId } from "firebase/analytics";
 import {AppName, ComponentName} from "@/UiConstants";
-import {FirebaseApp} from "@/services/Firebase";
 import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import router from './plugins/router'
@@ -17,10 +17,11 @@ async function main(): Promise<void> {
     try {
         // Init app
         const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
-        const app = createApp(App);
 
-        // Init firebase and analytics based on app name
-        FirebaseApp.initialize(vpnHoodApp.isConnectApp());
+        // Set clientId as user id for analytics
+        setUserId(vpnHoodApp.analytics, vpnHoodApp.data.settings.clientId);
+
+        const app = createApp(App);
 
         // Global properties
         app.config.globalProperties.$vpnHoodApp = vpnHoodApp;

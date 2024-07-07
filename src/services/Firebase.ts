@@ -1,5 +1,5 @@
 import {initializeApp, FirebaseOptions} from 'firebase/app'
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, Analytics } from "firebase/analytics";
 
 export class FirebaseApp {
     // VpnHood Connect
@@ -24,8 +24,12 @@ export class FirebaseApp {
         measurementId: "G-ZF424EEVF4"
     };
 
-    public static initialize(isConnectApp: boolean): void{
+    public static initialize(isConnectApp: boolean): Analytics{
         const app = initializeApp(isConnectApp ? this.connectAppFirebaseConfig : this.clientAppFirebaseConfig);
-        getAnalytics(app);
+        return getAnalytics(app);
     }
+}
+
+export enum AnalyticsCustomEventNames {
+    AlertDialogMessage = "alert_dialog_message"
 }

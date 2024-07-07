@@ -19,6 +19,8 @@ import {reactive} from "vue";
 import i18n from "@/locales/i18n";
 import router from '@/plugins/router'
 import {DialogConfig} from "@/components/ConfirmDialog/DialogConfig";
+import {Analytics, logEvent} from "firebase/analytics";
+import {AnalyticsCustomEventNames, FirebaseApp} from "@/services/Firebase";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -44,17 +46,23 @@ export class VpnHoodAppData {
 export class VpnHoodApp {
     public data: VpnHoodAppData;
     public apiClient: AppClient;
+    public analytics: Analytics;
 
-    private constructor(apiClient: AppClient, appData: VpnHoodAppData) {
+    private constructor(apiClient: AppClient, appData: VpnHoodAppData, analytics: Analytics) {
         this.data = reactive(appData);
         this.apiClient = apiClient;
+        this.analytics = analytics;
         this.data.uiState.configTime = this.data.state.configTime;
     }
 
     public static async create(): Promise<VpnHoodApp> {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
-        return new VpnHoodApp(apiClient, new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos));
+        return new VpnHoodApp(
+            apiClient,
+            new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos),
+            FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect) // Init firebase and analytics based on app name
+        );
     }
 
     private async reloadSettings(): Promise<void> {
@@ -196,6 +204,12 @@ export class VpnHoodApp {
 
         // Just for VpnHoodConnect
         if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
+
+            // Send error message to analytics
+            logEvent(this.analytics, AnalyticsCustomEventNames.AlertDialogMessage, {
+                description: i18n.global.t("AUTHENTICATION_ERROR", 'en')
+            });
+            
             await this.showErrorMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
         } else
@@ -204,6 +218,12 @@ export class VpnHoodApp {
 
     // Show error dialog
     private async showErrorMessage(text: string): Promise<void> {
+
+        // Send error message to analytics
+        logEvent(this.analytics, AnalyticsCustomEventNames.AlertDialogMessage, {
+            description: text
+        });
+
         const errorDialogData = this.data.uiState.errorDialogData;
         errorDialogData.message = text;
         errorDialogData.canDiagnose = this.data.state.canDiagnose;
