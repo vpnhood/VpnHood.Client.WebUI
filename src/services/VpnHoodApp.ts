@@ -19,7 +19,7 @@ import {reactive} from "vue";
 import i18n from "@/locales/i18n";
 import router from '@/plugins/router'
 import {DialogConfig} from "@/components/ConfirmDialog/DialogConfig";
-import {Analytics, logEvent} from "firebase/analytics";
+import {Analytics, logEvent, setUserId} from "firebase/analytics";
 import {AnalyticsCustomEventNames, FirebaseApp} from "@/services/Firebase";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
@@ -58,11 +58,13 @@ export class VpnHoodApp {
     public static async create(): Promise<VpnHoodApp> {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
-        return new VpnHoodApp(
-            apiClient,
-            new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos),
-            FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect) // Init firebase and analytics based on app name
-        );
+        const appData = new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos);
+
+        // Init firebase and analytics based on app name
+        const analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
+        setUserId(analytics, config.settings.clientId);
+
+        return new VpnHoodApp(apiClient, appData, analytics);
     }
 
     private async reloadSettings(): Promise<void> {
