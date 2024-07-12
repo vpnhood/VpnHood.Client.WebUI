@@ -20,7 +20,7 @@ import i18n from "@/locales/i18n";
 import router from '@/plugins/router'
 import {DialogConfig} from "@/components/ConfirmDialog/DialogConfig";
 import {Analytics, logEvent, setUserId} from "firebase/analytics";
-import {AnalyticsCustomEventNames, FirebaseApp} from "@/services/Firebase";
+import {AnalyticsCustomEvent, FirebaseApp} from "@/services/Firebase";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -208,13 +208,15 @@ export class VpnHoodApp {
         if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
 
             // Send error message to analytics
-            logEvent(this.analytics, AnalyticsCustomEventNames.AlertDialogMessage, {
-                description: i18n.global.t("AUTHENTICATION_ERROR", 'en')
+            logEvent(this.analytics, AnalyticsCustomEvent.AlertDialogEventName, {
+             message: i18n.global.t("AUTHENTICATION_ERROR", 'en')
             });
             
             await this.showErrorMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
-        } else
+        }
+
+        else
             await this.showErrorMessage(err.message ?? err);
     }
 
@@ -222,8 +224,8 @@ export class VpnHoodApp {
     private async showErrorMessage(text: string): Promise<void> {
 
         // Send error message to analytics
-        logEvent(this.analytics, AnalyticsCustomEventNames.AlertDialogMessage, {
-            description: text
+        logEvent(this.analytics, AnalyticsCustomEvent.AlertDialogEventName, {
+            message: text
         });
 
         const errorDialogData = this.data.uiState.errorDialogData;

@@ -30,6 +30,8 @@ export class FirebaseApp {
     }
 }
 
-export enum AnalyticsCustomEventNames {
-    AlertDialogMessage = "alert_dialog_message"
+export enum AnalyticsCustomEvent {
+    AlertDialogEventName = "vh_alert_dialog_message",
+    // TODO check with trudy
+    AlertDialogParameterName = "message"
 }
