@@ -240,14 +240,6 @@ export default defineComponent({
     }
   },
 
-  async created() {
-    // Reload 'state' every 1 second if app window is focused.
-    setInterval(async () => {
-      if (!document.hidden)
-        await this.$vpnHoodApp.reloadState();
-    }, 1000);
-  },
-
   methods: {
     async onConnectButtonClick(): Promise<void> {
       // Prevent double click

@@ -16,6 +16,17 @@
       <v-divider class="mb-3 border-opacity-25"></v-divider>
       <v-card-actions class="flex-column px-5">
 
+        <!-- Change location to auto -->
+        <v-btn
+            v-if="dialogData.showChangeServerToAutoButton"
+            rounded="pill"
+            variant="flat"
+            block
+            class="text-center mb-4 text-secondary"
+            :text="$t('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
+            @click="changeLocationToAuto"
+        />
+
         <!-- Diagnose -->
         <v-btn
             v-if="dialogData.canDiagnose"
@@ -60,7 +71,7 @@
             block
             class="text-center text-secondary"
             :text="$t('CLOSE')"
-            @click="closeDialog"
+            @click="$emit('update:modelValue', false)"
         />
       </v-card-actions>
     </v-card>
@@ -83,7 +94,19 @@ export default defineComponent({
   emits: [
     "update:modelValue",
   ],
+  computed: {
+    dialogData() {
+      return this.$vpnHoodApp.data.uiState.errorDialogData;
+    }
+  },
   methods: {
+    async changeLocationToAuto(){
+      this.$emit('update:modelValue', false);
+      this.$vpnHoodApp.data.settings.userSettings.serverLocation = null;
+      await this.$vpnHoodApp.saveUserSetting();
+      await this.$vpnHoodApp.connect();
+    },
+
     async diagnose(): Promise<void> {
       this.$emit('update:modelValue', false);
       await this.$vpnHoodApp.clearLastError();
@@ -119,15 +142,6 @@ export default defineComponent({
         console.error('Oops! Could not even send the report details!', ex);
       }
     },
-
-    async closeDialog(): Promise<void> {
-      this.$emit('update:modelValue', false);
-    }
-  },
-  computed: {
-    dialogData() {
-        return this.$vpnHoodApp.data.uiState.errorDialogData;
-    }
   },
 })
 </script>

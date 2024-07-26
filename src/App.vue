@@ -50,7 +50,14 @@ export default defineComponent({
       isShowPrivacyPolicyDialog: false,
     };
   },
+
   async created() {
+    // Reload 'state' every 1 second if app window is focused.
+    setInterval(async () => {
+      if (!document.hidden)
+        await this.$vpnHoodApp.reloadState();
+    }, 1000);
+
     // Show privacy policy if app is VpnHoodCONNECT
     if (this.$vpnHoodApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
       this.isShowPrivacyPolicyDialog = true;
@@ -59,8 +66,8 @@ export default defineComponent({
 
     if (this.$vpnHoodApp.data.features.isAccountSupported)
       await this.$vpnHoodApp.loadAccount();
-
   },
+
   computed: {
     isAlertDialogVisible: {
       get(): boolean {
@@ -74,6 +81,7 @@ export default defineComponent({
       }
     }
   },
+
 });
 </script>
 

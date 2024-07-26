@@ -46,9 +46,9 @@ export class VpnHoodAppData {
 export class VpnHoodApp {
     public data: VpnHoodAppData;
     public apiClient: AppClient;
-    public analytics: Analytics;
+    public analytics: Analytics | null;
 
-    private constructor(apiClient: AppClient, appData: VpnHoodAppData, analytics: Analytics) {
+    private constructor(apiClient: AppClient, appData: VpnHoodAppData, analytics: Analytics | null) {
         this.data = reactive(appData);
         this.apiClient = apiClient;
         this.analytics = analytics;
@@ -59,10 +59,16 @@ export class VpnHoodApp {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
         const appData = new VpnHoodAppData(config.state, config.settings, config.features, config.clientProfileInfos, config.availableCultureInfos);
+        let analytics: Analytics | null = null;
 
         // Init firebase and analytics based on app name
-        const analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
-        setUserId(analytics, config.settings.clientId);
+        if (process.env.NODE_ENV !== "development" || process.env["VUE_APP_IS_INIT_FIREBASE"] !== "false") {
+            analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
+            setUserId(analytics, config.settings.clientId);
+        }
+
+        if (!analytics)
+            console.log("Firebase does not initialized because the current mode is development and 'env.IS_INIT_FIREBASE' is set to false, if you want to enable it on development, please refer to '.env.development' file");
 
         return new VpnHoodApp(apiClient, appData, analytics);
     }
@@ -142,14 +148,7 @@ export class VpnHoodApp {
 
     public async connect(): Promise<void> {
         console.log("Connecting to " + this.data.state.clientProfile?.clientProfileName);
-        try {
-            await this.apiClient.connect();
-        }
-        catch (err: any){
-            // TODO show snackbar message if already connected to the selected profile
-            console.log(err);
-            throw err;
-        }
+        await this.apiClient.connect();
     }
 
     public async disconnect(): Promise<void> {
@@ -196,9 +195,23 @@ export class VpnHoodApp {
         await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
     }
 
+    public analyticsLogEvent(eventName: string, eventParams: {}) {
+        if (!this.analytics)
+            return;
+        logEvent(this.analytics, eventName, eventParams);
+    }
+
     // Get error message
     public async processError(err: any): Promise<void> {
         console.error(err);
+
+        // TODO show snackbar message if already connected to the selected profile
+        // Show a message that the user can connect to the VPN but not to the selected server
+        if (err.typeName === "UnreachableServerLocation" && !this.data.state.hasDiagnoseStarted &&
+            this.data.settings.userSettings.serverLocation){
+            await this.showErrorMessage(i18n.global.t("UNREACHABLE_SERVER_LOCATION_MESSAGE"), true);
+            return;
+        }
 
         // Just for VpnHoodConnect
         if (this.isConnectApp() && err === "Session has been closed.")
@@ -208,31 +221,29 @@ export class VpnHoodApp {
         if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
 
             // Send error message to analytics
-            logEvent(this.analytics, AnalyticsCustomEvent.AlertDialogEventName, {
-             message: i18n.global.t("AUTHENTICATION_ERROR", 'en')
-            });
-            
+            this.analyticsLogEvent(
+                AnalyticsCustomEvent.AlertDialogEventName,
+                {message: i18n.global.t("AUTHENTICATION_ERROR", 'en')}
+            );
+
             await this.showErrorMessage(i18n.global.t("AUTHENTICATION_ERROR"));
             await this.signOut();
-        }
-
-        else
+        } else
             await this.showErrorMessage(err.message ?? err);
     }
 
     // Show error dialog
-    private async showErrorMessage(text: string): Promise<void> {
+    private async showErrorMessage(text: string, showChangeServerToAuto: boolean = false): Promise<void> {
 
         // Send error message to analytics
-        logEvent(this.analytics, AnalyticsCustomEvent.AlertDialogEventName, {
-            message: text
-        });
+        this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {message: text});
 
         const errorDialogData = this.data.uiState.errorDialogData;
         errorDialogData.message = text;
         errorDialogData.canDiagnose = this.data.state.canDiagnose;
         errorDialogData.logExists = this.data.state.logExists;
         errorDialogData.isVisible = true;
+        errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto;
 
         await ComponentRouteController.showComponent(ComponentName.AlertDialog);
     }
@@ -250,10 +261,10 @@ export class VpnHoodApp {
         await this.apiClient.versionCheck();
     }
 
-    getActiveServerCountryFlag(): string | null{
+    getActiveServerCountryFlag(): string | null {
         const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
-         return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
-             ? this.getCountryFlag(serverLocationInfo.countryCode) : null;
+        return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
+            ? this.getCountryFlag(serverLocationInfo.countryCode) : null;
     }
 
     public getCountryFlag(countryCode: string): string {
@@ -294,13 +305,13 @@ export class VpnHoodApp {
         // App is VpnHoodCONNECT
         const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
         if (!serverLocationInfo || this.isLocationAutoSelected(serverLocationInfo.countryCode))
-            return  i18n.global.t('AUTO_SELECT');
+            return i18n.global.t('AUTO_SELECT');
 
         const text = this.isLocationAutoSelected(serverLocationInfo.regionName)
             ? serverLocationInfo.countryName
             : serverLocationInfo.countryName + " (" + serverLocationInfo.regionName + ")";
 
-        return text.replace("United States (", "USA (" );
+        return text.replace("United States (", "USA (");
     }
 
     public isConnected(): boolean {
