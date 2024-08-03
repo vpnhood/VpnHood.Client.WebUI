@@ -171,5 +171,7 @@
   "CLEAR_ALL": "全部清除",
   "SELECT_ALL_APPS_TITLE": "选择所有应用",
   "CLEAR_ALL_APPS_TITLE": "清除所有选定的应用",
-  "ARE_YOU_SURE": "你确定吗？"
+  "ARE_YOU_SURE": "你确定吗？",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "您已连接到VPN网络，但您选择位置的所有服务器在您的区域内都无法访问。您是否要将位置切换为自动并连接到可访问的服务器？",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "是的，自动连接。"
 }
