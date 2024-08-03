@@ -171,5 +171,7 @@
   "CLEAR_ALL": "Limpar tudo",
   "SELECT_ALL_APPS_TITLE": "Selecionar todos os aplicativos",
   "CLEAR_ALL_APPS_TITLE": "Limpar todos os aplicativos selecionados",
-  "ARE_YOU_SURE": "Você tem certeza?"
+  "ARE_YOU_SURE": "Você tem certeza?",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região. Deseja mudar o local para automático e conectar-se a um servidor acessível?",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sim, conectar automaticamente."
 }
