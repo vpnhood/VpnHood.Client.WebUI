@@ -171,5 +171,7 @@
   "CLEAR_ALL": "Tümünü Temizle",
   "SELECT_ALL_APPS_TITLE": "Tüm uygulamaları seç",
   "CLEAR_ALL_APPS_TITLE": "Seçili tüm uygulamaları temizle",
-  "ARE_YOU_SURE": "Emin misiniz?"
+  "ARE_YOU_SURE": "Emin misiniz?",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "VPN ağına bağlandınız, ancak seçtiğiniz konumdaki tüm sunucular bölgenizden erişilemez durumda. Konumu otomatik olarak değiştirmek ve erişilebilir bir sunucuya bağlanmak ister misiniz?",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Evet, otomatik olarak bağlan."
 }
