@@ -171,5 +171,7 @@
   "CLEAR_ALL": "Alles löschen",
   "SELECT_ALL_APPS_TITLE": "Wählen Sie alle Apps aus",
   "CLEAR_ALL_APPS_TITLE": "Löschen Sie alle ausgewählten Apps",
-  "ARE_YOU_SURE": "Bist du sicher?"
+  "ARE_YOU_SURE": "Bist du sicher?",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Sie haben sich mit dem VPN-Netzwerk verbunden, aber alle Server an Ihrem ausgewählten Standort sind von Ihrer Region aus nicht erreichbar. Möchten Sie den Standort auf automatisch umschalten und eine Verbindung zu einem erreichbaren Server herstellen?",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Ja, automatisch verbinden."
 }
