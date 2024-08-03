@@ -171,5 +171,7 @@
   "CLEAR_ALL": "Borrar todo",
   "SELECT_ALL_APPS_TITLE": "Seleccionar todas las aplicaciones",
   "CLEAR_ALL_APPS_TITLE": "Borrar todas las aplicaciones seleccionadas",
-  "ARE_YOU_SURE": "¿Estás seguro?"
+  "ARE_YOU_SURE": "¿Estás seguro?",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Te has conectado a la red VPN, pero todos los servidores en la ubicación seleccionada no son accesibles desde tu región. ¿Quieres cambiar la ubicación a automática y conectarte a un servidor accesible?",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sí, conectar automáticamente."
 }
