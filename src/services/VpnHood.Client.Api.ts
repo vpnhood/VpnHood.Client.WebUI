@@ -809,61 +809,6 @@ export class AppClient {
         return Promise.resolve<DeviceAppInfo[]>(null as any);
     }
 
-    getIpGroups( cancelToken?: CancelToken): Promise<IpGroupInfo[]> {
-        let url_ = this.baseUrl + "/api/app/ip-groups";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGetIpGroups(_response);
-        });
-    }
-
-    protected processGetIpGroups(response: AxiosResponse): Promise<IpGroupInfo[]> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(IpGroupInfo.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<IpGroupInfo[]>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<IpGroupInfo[]>(null as any);
-    }
-
     versionCheck( cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/version-check";
         url_ = url_.replace(/[?&]$/, "");
@@ -2898,46 +2843,6 @@ export interface IDeviceAppInfo {
     appId: string;
     appName: string;
     iconPng: string;
-}
-
-export class IpGroupInfo implements IIpGroupInfo {
-    ipGroupId!: string;
-    ipGroupName!: string;
-
-    constructor(data?: IIpGroupInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.ipGroupId = _data["ipGroupId"] !== undefined ? _data["ipGroupId"] : <any>null;
-            this.ipGroupName = _data["ipGroupName"] !== undefined ? _data["ipGroupName"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): IpGroupInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new IpGroupInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ipGroupId"] = this.ipGroupId !== undefined ? this.ipGroupId : <any>null;
-        data["ipGroupName"] = this.ipGroupName !== undefined ? this.ipGroupName : <any>null;
-        return data;
-    }
-}
-
-export interface IIpGroupInfo {
-    ipGroupId: string;
-    ipGroupName: string;
 }
 
 export class ClientProfileUpdateParams implements IClientProfileUpdateParams {

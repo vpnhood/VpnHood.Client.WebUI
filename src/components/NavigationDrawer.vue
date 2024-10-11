@@ -187,7 +187,7 @@
     <a
         :class="[$vpnHoodApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2',
          'text-center mb-4 text-caption position-fixed bottom-0 position-fixed w-100 text-decoration-none']"
-        href="https://www.vpnhood.com/home"
+        href="https://www.vpnhood.com"
         target="_blank"
     >
       <span>{{$t('POWERED_BY_VPNHOOD_ENGINE')}}</span>

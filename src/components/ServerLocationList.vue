@@ -19,7 +19,7 @@
           ,'py-3']"
         :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo)"
         :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
-        @click="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) ? '' : $emit('connect',clientProfileInfo, serverLocationInfo.serverLocation)"
+        @click="onClickLocation(clientProfileInfo, serverLocationInfo.serverLocation)"
     >
       <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-4' : '' ,'d-flex align-center']">
 
@@ -111,6 +111,18 @@ export default defineComponent({
       AppName,
     }
   },
+  methods:{
+    onClickLocation(clientProfileInfo: ClientProfileInfo, serverLocation: string): void {
+      console.log(clientProfileInfo);
+      console.log(serverLocation);
+      // If app is VpnHood Client and selected server is single location, do nothing.
+      // Because the parent have the connect function.
+      if(!this.$vpnHoodApp.isConnectApp() && this.Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
+        return;
+
+      this.$emit('connect',clientProfileInfo, serverLocation)
+    }
+  }
 })
 </script>
 <style scoped>
