@@ -348,9 +348,10 @@ export class VpnHoodApp {
             await this.loadAccount();
 
         } catch (err: any) {
-            if (err.exceptionTypeName === "OperationCanceledException")
+            if (err.exceptionTypeName === "TaskCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
-            throw err;
+            else
+                throw err;
         } finally {
             if (showLoading)
                 this.data.uiState.showLoadingDialog = false;
