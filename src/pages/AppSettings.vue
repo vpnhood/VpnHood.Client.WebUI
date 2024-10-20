@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import AppBar from '@/components/AppBar.vue'
 import { LanguagesCode } from '@/UiConstants'
 import { computed } from 'vue'
@@ -6,23 +6,22 @@ import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
 
 const $vpnHoodApp = VpnHoodApp.instance
-const includeLocalNetwork = computed(
-  (): boolean =>
-    VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork,
-  async (value: boolean) => {
+const includeLocalNetwork = computed({
+  get: () => VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork,
+  set: async (value: boolean) => {
     VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork = value
     await VpnHoodApp.instance.saveUserSetting()
   },
-)
+});
 </script>
 
 <template>
   <!-- Page header -->
-  <AppBar :page-title="$tt('SETTINGS')" />
+  <AppBar :page-title="$t('SETTINGS')" />
 
   <v-sheet
-    class="pa-4"
     :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
+    class="pa-4"
   >
     <!-- Change language -->
     <v-card
@@ -33,10 +32,10 @@ const includeLocalNetwork = computed(
       <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
 
       <v-btn
-        variant="tonal"
         block
-        color="gray-lighten-2"
         class="justify-space-between px-2"
+        color="gray-lighten-2"
+        variant="tonal"
         @click="$router.push({ path: '/languages' })"
       >
         <span
@@ -72,7 +71,7 @@ const includeLocalNetwork = computed(
       </v-btn>
 
       <!-- Language contribute link -->
-      <div v-if="i18n.global.locale !== LanguagesCode.English">
+      <div v-if="i18n.global.locale.value !== LanguagesCode.English">
         <!-- Description -->
         <p
           :class="[
@@ -108,11 +107,11 @@ const includeLocalNetwork = computed(
       <!-- Disconnecting alert -->
       <v-alert
         v-if="$vpnHoodApp.isConnected()"
-        class="mb-2 text-caption"
-        type="warning"
-        density="compact"
         :icon="false"
         :text="$t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
+        class="mb-2 text-caption"
+        density="compact"
+        type="warning"
       ></v-alert>
 
       <v-row class="align-center justify-space-between">
@@ -120,12 +119,12 @@ const includeLocalNetwork = computed(
         <v-col cols="auto">
           <v-switch
             v-model="includeLocalNetwork"
-            color="secondary"
             :disabled="$vpnHoodApp.isConnected()"
-            class="px-2"
-            density="compact"
-            :inline="true"
             :hide-details="true"
+            :inline="true"
+            class="px-2"
+            color="secondary"
+            density="compact"
           />
         </v-col>
       </v-row>
@@ -140,5 +139,3 @@ const includeLocalNetwork = computed(
     </v-card>
   </v-sheet>
 </template>
-
-<style scoped></style>

@@ -10,12 +10,11 @@
   >
 
     <!-- Header -->
-    <div
-        :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
+    <div :class="[$vpnHoodApp.isConnectApp() ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
 
       <!-- VpnHoodConnect logo -->
-      <v-img v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" :eager="true"
-             src="../assets/images/logo-connect.png"
+      <v-img v-if="$vpnHoodApp.isConnectApp()" :eager="true"
+             src="src/assets/images/logo-connect.png"
              alt="logo"
              max-width="60"
              width="60"
@@ -24,7 +23,7 @@
 
       <!-- VpnHood logo -->
       <v-img v-else :eager="true"
-             src="../assets/images/logo.png"
+             src="src/assets/images/logo.png"
              alt="logo"
              max-width="60"
              width="60"
@@ -34,13 +33,9 @@
       <div class="text-white ms-3">
 
         <!-- App name -->
-        <h4 v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect" dir="ltr"
-            :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">
-          {{ $t('VPN_HOOD_CONNECT_APP_NAME') }}
+        <h4 dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">
+          {{ $vpnHoodApp.isConnectApp() ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME') }}
         </h4>
-        <h3 v-else dir="ltr" :class="$vuetify.locale.isRtl? 'text-end' : 'text-start'">{{
-            $t('VPN_HOOD_APP_NAME')
-          }}</h3>
 
         <!-- App full version -->
         <div class="text-secondary-lighten-1 text-caption">
@@ -285,7 +280,7 @@ export default defineComponent({
         this.isCheckForUpdate = true;
         await this.$vpnHoodApp.checkForUpdate();
       } catch (err: unknown) {
-        throw new Error(err);
+        throw err;
       } finally {
         this.isCheckForUpdate = false;
         this.$emit('update:modelValue', false);
@@ -308,7 +303,7 @@ export default defineComponent({
       this.$emit('update:modelValue', false);
     },
 
-    closeByKeyboardEscape(event: unknown) {
+    closeByKeyboardEscape(event: KeyboardEvent) {
       if (event.code === 'Escape')
         this.$emit('update:modelValue', false);
     }

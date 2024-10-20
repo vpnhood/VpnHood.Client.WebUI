@@ -1,9 +1,13 @@
 import { createI18n } from 'vue-i18n';
-import type { LocaleMessageObject, LocaleMessageDictionary } from 'vue-i18n';
+import type { I18nOptions } from 'vue-i18n';
 
-function loadLocaleMessages(): { [x: string]: LocaleMessageDictionary<LocaleMessageObject> } {
-  const locales = import.meta.glob('./*.json', { eager: true });
-  const messages: { [x: string]: LocaleMessageDictionary<LocaleMessageObject> } = {};
+interface MessageModule {
+  default: Record<string, string>;
+}
+
+function loadLocaleMessages(): I18nOptions['messages'] {
+  const locales = import.meta.glob<MessageModule>('./*.json', { eager: true });
+  const messages: I18nOptions['messages'] = {};
 
   for (const path in locales) {
     const matched = path.match(/([A-Za-z0-9-_]+)\./i);
@@ -12,7 +16,6 @@ function loadLocaleMessages(): { [x: string]: LocaleMessageDictionary<LocaleMess
       messages[locale] = locales[path].default;
     }
   }
-
   return messages;
 }
 
