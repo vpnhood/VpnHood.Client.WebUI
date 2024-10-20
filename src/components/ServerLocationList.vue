@@ -16,18 +16,21 @@
           ? 'border-b'
           : '',
           $vpnHoodApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3 px-2'
-          ,'py-3']"
+          ,'py-3 pe-2']"
         :active="isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo)"
+        :disabled = "serverLocationInfo.serverLocationAccess?.premiumByPurchase"
         :color="$vpnHoodApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
         @click="onClickLocation(clientProfileInfo, serverLocationInfo.serverLocation)"
     >
-      <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-4' : '' ,'d-flex align-center']">
+      <v-list-item-title :class="[serverLocationInfo.isNestedCountry ? 'ps-4' : '' ,'d-flex align-center text-body-1']">
 
         <!-- Auto select icon -->
         <v-icon
             v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)"
-            icon="mdi-earth"
-            :color="$vpnHoodApp.isConnectApp() ? 'white' : 'primary-darken-1'"
+            icon="mdi-lightning-bolt-outline"
+            :color="[(isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo))
+            ? $vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'
+            : $vpnHoodApp.isConnectApp() ? 'white' : 'primary-darken-1']"
             :size="$vpnHoodApp.isConnectApp() ? 29 : 27"
             :class="[$vpnHoodApp.isConnectApp() ? 'me-5' : 'me-2']"/>
 
@@ -46,12 +49,28 @@
         <!-- Country name & State name -->
         <template v-if="!serverLocationInfo.isNestedCountry">
 
+          <!-- Country name only for auto select server -->
+          <div v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)" class="d-flex flex-column align-start">
+            <span>{{ $t('FASTEST') }}</span>
+            <span :class="[$vpnHoodApp.isConnectApp() ? 'text-gray-lighten-1' : 'text-primary-darken-1' ,'text-caption']">
+              {{ $t('RECOMMENDED') }}
+            </span>
+          </div>
+
           <!-- Country name -->
-          <span>
-            {{$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)
-              ? $t('AUTO_SELECT')
-              : serverLocationInfo.countryName }}
-          </span>
+          <span v-else>{{ serverLocationInfo.countryName }}</span>
+
+
+          <!-- Fastest info -->
+          <v-btn
+              v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)"
+              icon="mdi-information"
+              size="30"
+              flat
+              variant="plain"
+              color="gray-lighten-1"
+              class="ms-4 text-caption"
+          />
 
           <!-- Auto Select only if server has nested item -->
           <span v-if="!$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)
@@ -59,14 +78,6 @@
                 :class="[$vpnHoodApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1' ,'text-caption ms-2']"
           >
             ({{ $t('AUTO_SELECT') }})
-          </span>
-
-          <!-- Recommended only for auto select server -->
-          <span v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)"
-                :class="[$vpnHoodApp.isActiveLocation(serverLocationInfo) ? '' : 'flasher',
-                $vpnHoodApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1' ,'text-caption ms-2']"
-          >
-            ({{ $t('RECOMMENDED') }})
           </span>
 
         </template>
@@ -129,13 +140,7 @@ export default defineComponent({
 .item-flag {
   width: 27px;
   height: 20px;
-  border-radius: 5px;
-}
-
-.VpnHoodConnect .item-flag {
-  width: 31px;
-  height: 24px;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 /*noinspection CssUnusedSymbol*/
@@ -145,10 +150,4 @@ export default defineComponent({
   border-radius: 4px;
 }
 
-/*noinspection CssUnusedSymbol*/
-/*.VpnHoodConnect .item-flag.nested-item {
-  width: 29px;
-  height: 22px;
-  border-radius: 3px;
-}*/
 </style>

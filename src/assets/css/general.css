@@ -14,15 +14,17 @@ html {overflow-y: auto;}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", "IranSans-Bold", "Noto-Bold", sans-serif !important;}
 
 /*noinspection CssUnresolvedCustomProperty*/
-.rounded-15{border-radius: 15px;}
 .opacity-0 {transition: opacity 1.4s ease;}
 .opacity-30 {transition: opacity 1.4s ease;}
 .opacity-50 {transition: opacity 1.4s ease;}
 .opacity-60 {transition: opacity 1.4s ease;}
 .opacity-80 {transition: opacity 1.4s ease;}
+
+/*noinspection CssUnusedSymbol*/
 .opacity-100 {transition: opacity 1.4s ease;}
-.list-unstyled{list-style: none;}
 .text-transform-none{text-transform: none;}
+
+/*noinspection CssUnusedSymbol*/
 .flasher{animation: pulseOpacity 1s infinite;}
 @keyframes pulseOpacity
 {

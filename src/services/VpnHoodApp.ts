@@ -1,15 +1,16 @@
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {
-    AppAccount,
-    AppConnectionState,
-    AppFeatures,
-    AppSettings,
-    AppState,
-    ClientProfileInfo,
-    ClientProfileUpdateParams, ClientServerLocationInfo, ConfigParams,
-    DeviceAppInfo,
-    SessionSuppressType, UiCultureInfo,
-} from "@/services/VpnHood.Client.Api";
+  ApiException,
+  AppAccount,
+  AppConnectionState,
+  AppFeatures,
+  AppSettings,
+  AppState,
+  ClientProfileInfo,
+  ClientProfileUpdateParams, ClientServerLocationInfo, ConfigParams,
+  DeviceAppInfo,
+  SessionSuppressType, UiCultureInfo
+} from '@/services/VpnHood.Client.Api'
 import {AppClient} from "./VpnHood.Client.Api";
 import {UiState} from "@/services/UiState";
 import {UserState} from "@/services/UserState";
@@ -19,12 +20,13 @@ import {reactive} from "vue";
 import i18n from "@/locales/i18n";
 import router from '@/plugins/router'
 import {DialogConfig} from "@/components/ConfirmDialog/DialogConfig";
-import {Analytics, logEvent, setUserId} from "firebase/analytics";
+import {logEvent, setUserId} from "firebase/analytics";
+import type {Analytics} from "firebase/analytics";
 import {AnalyticsCustomEvent, FirebaseApp} from "@/services/Firebase";
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
-    public readonly serverUrl: string | undefined = process.env["VUE_APP_CLIENT_API_BASE_URL"];
+    public readonly serverUrl: string | undefined = import.meta.env.VITE_CLIENT_API_BASE_URL;
     public uiState: UiState = new UiState();
     public userState: UserState = new UserState();
     public state: AppState;
@@ -49,12 +51,23 @@ export class VpnHoodApp {
     public analytics: Analytics | null;
 
     private constructor(apiClient: AppClient, appData: VpnHoodAppData, analytics: Analytics | null) {
+      if (VpnHoodApp._instance)
+        throw new Error("VpnHoodApp has been already initialized.")
+
         this.data = reactive(appData);
         this.apiClient = apiClient;
         this.analytics = analytics;
         this.data.uiState.configTime = this.data.state.configTime;
+        VpnHoodApp._instance = this;
     }
 
+    public static get instance(): VpnHoodApp{
+      if (VpnHoodApp._instance == null)
+        throw new Error("VpnHoodApp has not been initialized.");
+      return VpnHoodApp._instance;
+    }
+
+    private static _instance: VpnHoodApp | null;
     public static async create(): Promise<VpnHoodApp> {
         const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
         const config = await apiClient.configure(new ConfigParams({availableCultures: i18n.global.availableLocales}));
@@ -62,7 +75,7 @@ export class VpnHoodApp {
         let analytics: Analytics | null = null;
 
         // Init firebase and analytics based on app name
-        if (process.env.NODE_ENV !== "development" || process.env["VUE_APP_IS_INIT_FIREBASE"] !== "false") {
+        if (import.meta.env.MODE !== "development" || import.meta.env.VITE_CLIENT_IS_INIT_FIREBASE !== "false") {
             analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
             setUserId(analytics, config.settings.clientId);
         }
@@ -96,7 +109,7 @@ export class VpnHoodApp {
         if (userAccount === null || userAccount.subscriptionId === null) return clientProfileInfos;
 
         // App is VpnHoodCONNECT and user have active subscription
-        if (userAccount.providerPlanId === SubscriptionPlansId.GlobalServer || userAccount.providerPlanId === SubscriptionPlansId.BundleServers)
+        if (userAccount.providerPlanId === SubscriptionPlansId.GlobalServer)
             return clientProfileInfos.filter(x => x.clientProfileId !== builtInClientProfileId);
 
         return clientProfileInfos;
@@ -195,22 +208,24 @@ export class VpnHoodApp {
         await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
     }
 
-    public analyticsLogEvent(eventName: string, eventParams: {}) {
+    public analyticsLogEvent(eventName: string, eventParams: object) {
         if (!this.analytics)
             return;
         logEvent(this.analytics, eventName, eventParams);
     }
 
     // Get error message
-    public async processError(err: any): Promise<void> {
+    public async processError(err: unknown): Promise<void> {
         console.error(err);
+        //TODO improve error handling
 
-        // TODO show snackbar message if already connected to the selected profile
-        // Show a message that the user can connect to the VPN but not to the selected server
-        if (err.typeName === "UnreachableServerLocation" && !this.data.state.hasDiagnoseStarted &&
+        if (typeof err === ApiException){
+          // TODO show snackbar message if already connected to the selected profile
+          // Show a message that the user can connect to the VPN but not to the selected server
+          if (err.typeName === "UnreachableServerLocation" && !this.data.state.hasDiagnoseStarted &&
             this.data.settings.userSettings.serverLocation){
             await this.showErrorMessage(i18n.global.t("UNREACHABLE_SERVER_LOCATION_MESSAGE"), true);
-            return;
+          }
         }
 
         // Just for VpnHoodConnect
@@ -269,9 +284,10 @@ export class VpnHoodApp {
 
     public getCountryFlag(countryCode: string): string {
         try {
-            return require(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`);
-        } catch (error: any) {
-            return require(`../assets/images/country_flags/no-flag.png`);
+            return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href;
+        } catch (error: unknown) {
+          console.log(error);
+          return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href;
         }
     }
 
@@ -347,7 +363,7 @@ export class VpnHoodApp {
             await accountClient.signInWithGoogle();
             await this.loadAccount();
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             if (err.exceptionTypeName === "TaskCanceledException")
                 throw new Error(i18n.global.t("SIGN_IN_CANCELED_BY_USER"));
             else

@@ -2,63 +2,42 @@
   "name": "vpnhood.spa",
   "version": "1.0.174",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "yarn version --patch && vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src \\\"./src/**/*.?(js|vue)\\\" --locales \\\"src/locales/**/*.json\\\""
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@mdi/font": "7.3.67",
     "async-lock": "^1.4.1",
-    "axios": "^1.7.2",
-    "core-js": "^3.37.1",
-    "firebase": "^10.12.2",
+    "axios": "^1.7.7",
+    "firebase": "^10.14.1",
     "roboto-fontface": "*",
-    "ts-node": "^10.9.2",
-    "vue": "^3.4.29",
-    "vue-class-component": "^7.2.6",
-    "vue-i18n": "^9.13.1",
-    "vue-router": "^4.3.3",
-    "vuetify": "^3.6.9",
-    "webfontloader": "^1.0.0"
+    "vue": "^3.5.12",
+    "vue-i18n": "^10.0.4",
+    "vue-router": "^4.4.5",
+    "vuetify": "^3.7.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7",
-    "@babel/eslint-parser": "^7.24.7",
-    "@intlify/vue-i18n-loader": "^4.2.0",
-    "@types/async-lock": "^1.4.2",
-    "@types/node": "^20.14.5",
-    "@types/webfontloader": "^1.6.38",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-router": "^5.0.8",
-    "@vue/cli-plugin-typescript": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-typescript": "^12.0.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.26.0",
-    "typescript": "^5.4.5",
-    "vue-cli-plugin-i18n": "^2.3.2",
-    "vue-cli-plugin-vuetify": "^2.5.8",
-    "webpack-plugin-vuetify": "^3.0.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    },
-    "rules": {}
+    "@intlify/unplugin-vue-i18n": "^5.2.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/eslint-config-prettier": "^10.0.0",
+    "@vue/eslint-config-typescript": "^14.0.1",
+    "@vue/tsconfig": "^0.5.1",
+    "eslint": "^9.12.0",
+    "eslint-plugin-vue": "^9.29.0",
+    "npm-run-all2": "^6.2.3",
+    "prettier": "^3.3.3",
+    "typescript": "~5.5.4",
+    "vite": "^5.4.8",
+    "vite-plugin-vue-devtools": "^7.4.6",
+    "vue-tsc": "^2.1.6"
   },
   "browserslist": [
     "chrome >= 69",

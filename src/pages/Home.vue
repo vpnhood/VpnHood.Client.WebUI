@@ -240,6 +240,7 @@ export default defineComponent({
     }
   },
 
+
   methods: {
     async onConnectButtonClick(): Promise<void> {
       // Prevent double click
@@ -255,7 +256,7 @@ export default defineComponent({
 
       // Show servers list if user has no selected server and want to connect
       if (!this.$vpnHoodApp.data.state.clientProfile) {
-        this.$router.push('/servers');
+        await this.$router.push('/servers');
         return;
       }
 
@@ -304,15 +305,15 @@ export default defineComponent({
       if (!this.$vpnHoodApp.data.state || !this.$vpnHoodApp.data.state.sessionStatus || !this.$vpnHoodApp.data.state.sessionStatus.accessUsage)
         return null;
 
-      let accessUsage = this.$vpnHoodApp.data.state.sessionStatus.accessUsage;
+      const accessUsage = this.$vpnHoodApp.data.state.sessionStatus.accessUsage;
       if (accessUsage.maxTraffic === 0)
         return null;
 
-      let mb = 1000000;
-      let gb = 1000 * mb;
-      let traffic = this.$vpnHoodApp.data.state.accountTraffic;
+      const mb = 1000000;
+      const gb = 1000 * mb;
+      const traffic = this.$vpnHoodApp.data.state.accountTraffic;
 
-      let ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
+      const ret = {used: traffic.sent + traffic.received, total: accessUsage.maxTraffic};
       const total = ret.total >= gb ? Number((ret.total / gb).toFixed(1)).toString() + "GB" : Number((ret.total / mb).toFixed(0)).toString() + "MB";
       const used = ret.used >= gb ? Number((ret.used / gb).toFixed(1)).toString() + "GB" : Number((ret.used / mb).toFixed(0)).toString() + "MB";
       return {Used: used, Total: total};
@@ -337,8 +338,8 @@ export default defineComponent({
       if (this.$vpnHoodApp.data.state.connectionState !== AppConnectionState.Connected || !this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
         return null;
 
-      const expDate: any = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
-      const options = {year: 'numeric', month: '2-digit', day: '2-digit'};
+      const expDate: Date = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
+      const options: Intl.DateTimeFormatOptions = {year: 'numeric', month: '2-digit', day: '2-digit'};
       // noinspection TypeScriptValidateJSTypes
       return expDate.toLocaleString("locales", options).replace(',', '');
     },
@@ -347,10 +348,10 @@ export default defineComponent({
       if (!this.$vpnHoodApp.data.state.sessionStatus?.accessUsage?.expirationTime)
         return false;
 
-      const expDate: any = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
-      const currentDate = new Date().getTime();
-      const diffTime = Math.abs(expDate - currentDate);
-      const diffDays = Math.ceil(diffTime / UiConstants.daysOfDate);
+      const expDate: Date = this.$vpnHoodApp.data.state.sessionStatus.accessUsage.expirationTime;
+      const currentDate: number = new Date().getTime();
+      const diffTime: number = Math.abs(expDate - currentDate);
+      const diffDays: number = Math.ceil(diffTime / UiConstants.daysOfDate);
       return diffDays <= 3;
     },
 
@@ -389,8 +390,8 @@ export default defineComponent({
 }
 </style>
 
+<!--suppress CssUnusedSymbol -->
 <style>
-/*noinspection CssUnusedSymbol*/
 #serverButton .v-btn__content,
 #excludeCountryButton .v-btn__content{
   flex-grow: 1;

@@ -271,7 +271,7 @@ export default defineComponent({
 
     mergedAppAndUiVersion(): string {
       const appVersion = this.$vpnHoodApp.data.features.version.split('.');
-      const uiVersion = process.env["VUE_APP_VERSION"]?.split('.');
+      const uiVersion = import.meta.env.PACKAGE_VERSION?.split('.');
       if (uiVersion) {
         appVersion[appVersion.length - 1] = uiVersion[2];
         return appVersion.join('.');
@@ -284,7 +284,7 @@ export default defineComponent({
       try {
         this.isCheckForUpdate = true;
         await this.$vpnHoodApp.checkForUpdate();
-      } catch (err: any) {
+      } catch (err: unknown) {
         throw new Error(err);
       } finally {
         this.isCheckForUpdate = false;
@@ -308,7 +308,7 @@ export default defineComponent({
       this.$emit('update:modelValue', false);
     },
 
-    closeByKeyboardEscape(event: any) {
+    closeByKeyboardEscape(event: unknown) {
       if (event.code === 'Escape')
         this.$emit('update:modelValue', false);
     }

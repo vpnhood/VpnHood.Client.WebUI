@@ -6,9 +6,9 @@
     <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
 
     <v-main
-        id="mainBg"
-        :class="[$vuetify.display.mdAndUp? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
-        :style="[$vuetify.display.mdAndUp ? 'max-width:850px;' : '']"
+      id="mainBg"
+      :class="[$vuetify.display.mdAndUp? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
+      :style="[$vuetify.display.mdAndUp ? 'max-width:850px;' : '']"
     >
 
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
@@ -72,7 +72,7 @@ export default defineComponent({
     isAlertDialogVisible: {
       get(): boolean {
         return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog) &&
-            this.$vpnHoodApp.data.uiState.errorDialogData.isVisible;
+          this.$vpnHoodApp.data.uiState.errorDialogData.isVisible;
       },
       async set(value: boolean) {
         if (value) return; // Already is Open

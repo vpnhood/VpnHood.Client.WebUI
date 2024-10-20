@@ -21,7 +21,7 @@
             :text="$t('UDP_NOT_SUPPORTED_MESSAGE')"
         />
 
-        <v-radio-group hide-details v-model="useUdpChannel" :disabled="isUdpUnsupported()" class="mx-n3">
+        <v-radio-group :hide-details="true" v-model="useUdpChannel" :disabled="isUdpUnsupported()" class="mx-n3">
 
           <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>

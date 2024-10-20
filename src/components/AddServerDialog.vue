@@ -63,18 +63,11 @@ export default defineComponent({
     async addAccessKey(): Promise<void> {
 
       try {
-
         // Add accessKey
         const clientProfileInfo = await this.$vpnHoodApp.addAccessKey(this.accessKey);
-
-        // Connect to the server if new client profile is added
-        if (clientProfileInfo)
-          await this.connect(clientProfileInfo.clientProfileId);
-
-        else throw Error;
+        await this.connect(clientProfileInfo.clientProfileId);
 
       } catch (err) {
-        // If accessKey is not valid base64 format or invalid
         console.error(err);
         this.accessKeyErrorMessage = this.$t("INVALID_ACCESS_KEY_FORMAT");
       }

@@ -58,7 +58,7 @@
               :key="app.appId"
               :value="app.appId"
               :title="app.appName"
-              ripple
+              :ripple="true"
               :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
               :class="[
                 $vpnHoodApp.isConnectApp()
@@ -72,7 +72,7 @@
               <v-switch
                   tabindex="-1"
                   :model-value="app.isSelected"
-                  hide-details
+                  :hide-details="true"
                   readonly
                   density="compact"
                   color="secondary"
@@ -91,8 +91,6 @@ import {defineComponent} from "vue";
 import {FilterMode} from "@/services/VpnHood.Client.Api";
 import AppBar from "@/components/AppBar.vue";
 import {AppName, UiConstants} from "@/UiConstants";
-
-//import {ref} from "firebase/storage";
 
 interface IMyInstalledApps {
   appId: string;
@@ -125,13 +123,13 @@ export default defineComponent({
 
   async created() {
     if (this.$vpnHoodApp.data.features.isExcludeAppsSupported || this.$vpnHoodApp.data.features.isIncludeAppsSupported) {
-      let installedApps = await this.$vpnHoodApp.getInstalledApps();
+      const installedApps = await this.$vpnHoodApp.getInstalledApps();
       const filterMode = this.$vpnHoodApp.data.settings.userSettings.appFiltersMode;
 
       // Add isSelected to all apps item
       this.myInstalledApps = installedApps.map(app => {
         // noinspection OverlyComplexBooleanExpressionJS
-        let myApp: IMyInstalledApps = {
+        const myApp: IMyInstalledApps = {
           appId: app.appId,
           appName: app.appName,
           iconPng: app.iconPng,
@@ -214,23 +212,28 @@ export default defineComponent({
     },
 
     async showDialog(confirmAction: ConfirmDialogAction, title: string, message: string) {
-      let confirmResult = await this.$vpnHoodApp.data.confirmDialog.showDialog(title, message);
-      if (confirmResult)
-        confirmAction === ConfirmDialogAction.SelectAll ? this.selectAll() : this.clearAll();
+      const confirmResult = await this.$vpnHoodApp.data.confirmDialog.showDialog(title, message);
+      if (!confirmResult)
+        return;
+
+      if (confirmAction === ConfirmDialogAction.SelectAll)
+         this.selectAll();
+      else
+        this.clearAll();
     },
 
   }
 })
 </script>
 
+
+<!--suppress CssUnusedSymbol -->
 <style>
-/*noinspection CssUnusedSymbol*/
 #appFilterList .v-avatar.v-avatar--density-default {
   width: 30px;
   height: 30px;
 }
 
-/*noinspection CssUnusedSymbol*/
 #appFilterList .v-list-item__overlay{
   opacity: 0;
 }

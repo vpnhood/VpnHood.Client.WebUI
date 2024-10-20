@@ -1,4 +1,5 @@
 export enum GooglePlayBillingResponseCode {
+    // noinspection JSUnusedGlobalSymbols
     ServiceTimeout = "ServiceTimeout",
     FeatureNotSupported = "FeatureNotSupported",
     ServiceDisconnected = "ServiceDisconnected",

@@ -5,9 +5,11 @@
 
   <v-sheet class="pa-4" color="primary-darken-2">
 
-    <!-- Exclude local network option -->
-    <v-card color="transparent" flat v-if="subscriptionPlans.length > 0">
+    <button onclick="$router.replace('/')" >
+      {{$t('TEST')}}
+    </button>
 
+    <v-card color="transparent" flat v-if="subscriptionPlans.length > 0">
       <!-- Products list -->
       <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
         <!-- Image -->
@@ -54,7 +56,9 @@
 
       <!-- Plans list -->
       <v-card-item class="pa-0 w-100">
-        <v-list v-if="subscriptionPlans" bg-color="transparent">
+
+        <!-- Multi Plans -->
+        <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
           <!-- Plan item -->
           <v-list-item
               v-for="plan in subscriptionPlans"
@@ -69,13 +73,7 @@
 
             <!-- Plan title -->
             <v-list-item-title class="d-flex align-center">
-              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{
-                  $t("GLOBAL_SERVERS")
-                }}</span>
-              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.HiddenServer">{{ $t("HIDDEN_SERVER") }}</span>
-              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.BundleServers">{{
-                  $t("BUNDLE_SERVERS")
-                }}</span>
+              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS") }}</span>
             </v-list-item-title>
 
             <!-- Already subscribed -->
@@ -105,14 +103,63 @@
             </template>
           </v-list-item>
         </v-list>
+
+        <!-- Single Plan -->
+        <v-list v-else bg-color="transparent">
+
+          <v-list-item
+              v-for="plan in subscriptionPlans"
+              :key="plan.subscriptionPlanId"
+              color="white"
+              rounded="lg"
+              base-color="primary-darken-2"
+              variant="flat"
+              :class="[$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
+              @click="showPlanDetails(plan.subscriptionPlanId)"
+          >
+
+            <!-- Plan title -->
+            <v-list-item-title class="d-flex align-center">
+              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS") }}</span>
+            </v-list-item-title>
+
+            <!-- Already subscribed -->
+            <v-list-item-subtitle
+                v-if="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
+                class="text-caption text-secondary-lighten-1"
+            >
+              {{ $t('ALREADY_SUBSCRIBED') }}
+            </v-list-item-subtitle>
+
+            <!-- Plan price -->
+            <template v-slot:append>
+              <div class="text-end text-subtitle-2 text-secondary">
+                <span>{{ plan.planPrice }}</span>
+                <span>{{ $t("PER_MONTH") }}</span>
+              </div>
+              <!--suppress NestedConditionalExpressionJS -->
+              <v-icon
+                  :icon="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                      ? 'mdi-check-decagram'
+                      : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                  :color="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                      ? 'secondary-lighten-1'
+                      : 'tertiary'"
+                  class="ms-2"
+              />
+            </template>
+          </v-list-item>
+        </v-list>
+
       </v-card-item>
+
 
       <ul class="text-white opacity-30 text-caption ps-4">
         <li>{{ $t("PLANS_ARE_AUTOMATICALLY_RENEWED") }}</li>
         <li>{{ $t("CANCEL_ANYTIME_ON_GOOGLE_PLAY") }}</li>
       </ul>
-
     </v-card>
+
   </v-sheet>
 
   <!-- Plan details dialog on purchase subscription -->
@@ -156,7 +203,7 @@
     <v-card rounded="lg" color="secondary">
       <v-card-text class="px-3">
         {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
-        <v-progress-linear :indeterminate="true" rounded class="mt-3 mb-4"/>
+        <v-progress-linear :indeterminate="true" rounded="true" class="mt-3 mb-4"/>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -226,7 +273,7 @@
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
 import {SubscriptionPlansId} from "@/UiConstants";
-import {BillingPurchaseState, SubscriptionPlan} from "@/services/VpnHood.Client.Api";
+import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api'
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {GooglePlayBillingPurchaseState} from "@/googlePlayBilling/GooglePlayBillingPurchaseState";
 import {GooglePlayBillingResponseCode} from "@/googlePlayBilling/GooglePlayBillingResponseCode";
@@ -239,7 +286,7 @@ export default defineComponent({
       SubscriptionPlansId,
       BillingPurchaseState,
       subscriptionPlans: [] as SubscriptionPlan[],
-      selectedPlanId: SubscriptionPlansId.HiddenServer as string,
+      selectedPlanId: "",
       showPurchaseCompleteDialog: false,
       showPlanDetailsDialog: false,
       showLoginDialog: false,
@@ -253,13 +300,13 @@ export default defineComponent({
     // Get products list from Google and sort based on plan prices
     try {
       const billingClient = ClientApiFactory.instance.createBillingClient();
-      let cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
+      const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
       cloneSubscriptionPlans.sort(
           (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
               Number((b.planPrice).replace(/\D/g, '')));
       this.subscriptionPlans = cloneSubscriptionPlans;
-    } catch (err: any) {
-      this.$router.replace("/");
+    } catch (err: unknown) {
+      await this.$router.replace("/");
       this.googleBillingException(err);
     } finally {
       this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
@@ -275,14 +322,6 @@ export default defineComponent({
         case SubscriptionPlansId.GlobalServer:
           this.planTitle = "GLOBAL_SERVERS";
           this.planDetails = "GLOBAL_SERVERS_NOTICE";
-          break;
-        case SubscriptionPlansId.HiddenServer:
-          this.planTitle = "HIDDEN_SERVER";
-          this.planDetails = "HIDDEN_SERVER_NOTICE";
-          break;
-        case SubscriptionPlansId.BundleServers:
-          this.planTitle = "BUNDLE_SERVERS";
-          this.planDetails = "BUNDLE_SERVERS_NOTICE";
           break;
       }
 
@@ -308,7 +347,7 @@ export default defineComponent({
         await billingClient.purchase(planId);
         this.showPurchaseCompleteDialog = true;
         await this.$vpnHoodApp.loadAccount();
-      } catch (err: any) {
+      } catch (err: unknown) {
         this.showPurchaseCompleteDialog = false;
         this.googleBillingException(err);
       }
@@ -319,7 +358,7 @@ export default defineComponent({
       this.$router.replace("/");
     },
 
-    googleBillingException(exception: any) {
+    googleBillingException(exception: unknown) {
       if (exception.exceptionTypeName !== "GoogleBillingException") {
         throw exception;
       } else {

@@ -42,7 +42,7 @@
     <!-- Single mode server item -->
     <template v-else-if="$vpnHoodApp.isSingleServerMode()">
       <ServerLocationList
-          :client-profile-info="$vpnHoodApp.data.clientProfileInfos[0]"
+          :client-profile-info="createMockClientProfileInfo($vpnHoodApp.data.clientProfileInfos[0])"
           :is-single-item="true"
           :is-active-profile="true"
           @connect="connect"
@@ -275,16 +275,22 @@ import AddServerDialog from "@/components/AddServerDialog.vue";
 import {
   ClientProfileInfo,
   ClientProfileUpdateParams,
-  PatchOfString
+  PatchOfString, ServerLocationAccess
 } from "@/services/VpnHood.Client.Api";
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import {AppName, SubscriptionPlansId} from "@/UiConstants";
 import AppBar from "@/components/AppBar.vue";
 import ServerLocationList from "@/components/ServerLocationList.vue";
 import {Util} from "@/services/Util";
+import { th } from 'vuetify/locale'
 
 export default defineComponent({
   name: 'ServersPage',
+  computed: {
+    th() {
+      return th
+    }
+  },
   components: {ServerLocationList, AppBar, AddServerDialog},
   data() {
     return {
@@ -303,6 +309,35 @@ export default defineComponent({
     this.expandedPanels = this.$vpnHoodApp.data.clientProfileInfos.map(() => 0);
   },
   methods: {
+    createMockClientProfileInfo(clientProfileInfo: ClientProfileInfo): ClientProfileInfo {
+      const locationInfo = clientProfileInfo.serverLocationInfos;
+
+      for (let x = 0; x < 4; x++) {
+        const randomNumber = Math.floor(Math.random() * (locationInfo.length - 1)) + 1;
+        if (x < 2){
+          locationInfo[randomNumber].serverLocationAccess = new ServerLocationAccess({
+            normal: 0,
+            premiumByPurchase: true,
+            premiumByRewardedAd: 0,
+            premiumByTrial: 0,
+            prompt: false
+          });
+        }
+        else {
+          locationInfo[randomNumber].serverLocationAccess = new ServerLocationAccess({
+            normal: 0,
+            premiumByPurchase: false,
+            premiumByRewardedAd: 0,
+            premiumByTrial: 1,
+            prompt: false
+          });
+        }
+
+      }
+
+      return clientProfileInfo;
+    },
+
     // Connect or diagnose selected client profile
     async connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean = false): Promise<void> {
 
@@ -318,12 +353,16 @@ export default defineComponent({
       if (serverLocationInfo === "" && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
         return;
 
-      this.$router.replace('/');
+      await this.$router.replace('/');
       this.$vpnHoodApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
       // If the serverLocation is empty, it will be connected to Auto
       this.$vpnHoodApp.data.settings.userSettings.serverLocation = serverLocationInfo === "" ? null : serverLocationInfo;
       await this.$vpnHoodApp.saveUserSetting();
-      isDiagnose ? await this.$vpnHoodApp.diagnose() : await this.$vpnHoodApp.connect();
+
+      if (isDiagnose)
+        await this.$vpnHoodApp.diagnose();
+      else
+        await this.$vpnHoodApp.connect();
     },
 
     // Show confirm dialog for delete server
@@ -368,6 +407,7 @@ export default defineComponent({
 }
 </style>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 /*noinspection CssUnusedSymbol*/
 .v-expansion-panel-title__overlay {

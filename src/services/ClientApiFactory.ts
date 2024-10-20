@@ -1,10 +1,10 @@
-import axios, {AxiosInstance} from "axios";
+import axios from "axios";
+import type {AxiosInstance} from 'axios';
 import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
 
 export class ClientApiFactory {
-
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string = process.env["VUE_APP_CLIENT_API_BASE_URL"] ?? window.location.origin;
+    private readonly baseUrl: string = import.meta.env.VITE_CLIENT_API_BASE_URL ?? window.location.origin;
 
     constructor() {
         //Define the axios default config

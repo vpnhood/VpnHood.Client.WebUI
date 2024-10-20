@@ -1,21 +1,24 @@
-import { createI18n, LocaleMessages, VueMessageType } from 'vue-i18n'
+import { createI18n } from 'vue-i18n';
+import type { LocaleMessageObject, LocaleMessageDictionary } from 'vue-i18n';
 
-function loadLocaleMessages(): { [x: string]: LocaleMessages<VueMessageType> } {
-  const locales = require.context('./', true, /[A-Za-z0-9-_,\s]+\.json$/i);
-  const messages: { [x: string]: LocaleMessages<VueMessageType> } = {};
-  locales.keys().forEach(key => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
+function loadLocaleMessages(): { [x: string]: LocaleMessageDictionary<LocaleMessageObject> } {
+  const locales = import.meta.glob('./*.json', { eager: true });
+  const messages: { [x: string]: LocaleMessageDictionary<LocaleMessageObject> } = {};
+
+  for (const path in locales) {
+    const matched = path.match(/([A-Za-z0-9-_]+)\./i);
     if (matched && matched.length > 1) {
       const locale = matched[1];
-      messages[locale] = locales(key).default
+      messages[locale] = locales[path].default;
     }
-  });
-  return messages
+  }
+
+  return messages;
 }
 
 export default createI18n({
   legacy: false,
-  locale: process.env["VUE_APP_I18N_LOCALE"] || 'en',
-  fallbackLocale: process.env["VUE_APP_I18N_FALLBACK_LOCALE"] || 'en',
+  locale: 'en',
+  fallbackLocale: 'en',
   messages: loadLocaleMessages()
-})
+});

@@ -1,5 +1,7 @@
-const { defineConfig } = require('@vue/cli-service');
-process.env.VUE_APP_VERSION = require('./package.json').version;
+import {defineConfig} from "@vue/cli-service";
+import {version} from "./package.json";
+
+process.env.VUE_APP_VERSION = version.version;
 module.exports = defineConfig({
   transpileDependencies: true,
 

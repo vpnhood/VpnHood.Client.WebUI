@@ -1,5 +1,7 @@
-import {initializeApp, FirebaseOptions} from 'firebase/app'
-import { getAnalytics, Analytics } from "firebase/analytics";
+import {initializeApp} from 'firebase/app'
+import type {FirebaseOptions} from 'firebase/app'
+import { getAnalytics } from "firebase/analytics";
+import type {Analytics} from 'firebase/analytics'
 
 export class FirebaseApp {
     // VpnHood Connect
@@ -32,6 +34,4 @@ export class FirebaseApp {
 
 export enum AnalyticsCustomEvent {
     AlertDialogEventName = "vh_alert_dialog_message",
-    // TODO check with trudy
-    AlertDialogParameterName = "message"
 }

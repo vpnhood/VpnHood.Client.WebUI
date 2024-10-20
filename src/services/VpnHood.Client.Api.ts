@@ -2215,7 +2215,9 @@ export interface IClientProfileBaseInfo {
 export class ServerLocationInfo implements IServerLocationInfo {
     countryCode!: string;
     regionName!: string;
+    tags!: string[];
     serverLocation!: string;
+    serverLocationAccess?: ServerLocationAccess | null;
     countryName!: string;
 
     constructor(data?: IServerLocationInfo) {
@@ -2225,13 +2227,25 @@ export class ServerLocationInfo implements IServerLocationInfo {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        if (!data) {
+            this.tags = [];
+        }
     }
 
     init(_data?: any) {
         if (_data) {
             this.countryCode = _data["countryCode"] !== undefined ? _data["countryCode"] : <any>null;
             this.regionName = _data["regionName"] !== undefined ? _data["regionName"] : <any>null;
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
+            else {
+                this.tags = <any>null;
+            }
             this.serverLocation = _data["serverLocation"] !== undefined ? _data["serverLocation"] : <any>null;
+            this.serverLocationAccess = _data["serverLocationAccess"] ? ServerLocationAccess.fromJS(_data["serverLocationAccess"]) : <any>null;
             this.countryName = _data["countryName"] !== undefined ? _data["countryName"] : <any>null;
         }
     }
@@ -2247,7 +2261,13 @@ export class ServerLocationInfo implements IServerLocationInfo {
         data = typeof data === 'object' ? data : {};
         data["countryCode"] = this.countryCode !== undefined ? this.countryCode : <any>null;
         data["regionName"] = this.regionName !== undefined ? this.regionName : <any>null;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         data["serverLocation"] = this.serverLocation !== undefined ? this.serverLocation : <any>null;
+        data["serverLocationAccess"] = this.serverLocationAccess ? this.serverLocationAccess.toJSON() : <any>null;
         data["countryName"] = this.countryName !== undefined ? this.countryName : <any>null;
         return data;
     }
@@ -2256,7 +2276,9 @@ export class ServerLocationInfo implements IServerLocationInfo {
 export interface IServerLocationInfo {
     countryCode: string;
     regionName: string;
+    tags: string[];
     serverLocation: string;
+    serverLocationAccess?: ServerLocationAccess | null;
     countryName: string;
 }
 
@@ -2295,6 +2317,58 @@ export class ClientServerLocationInfo extends ServerLocationInfo implements ICli
 export interface IClientServerLocationInfo extends IServerLocationInfo {
     isNestedCountry: boolean;
     isDefault: boolean;
+}
+
+export class ServerLocationAccess implements IServerLocationAccess {
+    normal?: number | null;
+    premiumByTrial?: number | null;
+    premiumByRewardedAd?: number | null;
+    premiumByPurchase!: boolean;
+    prompt!: boolean;
+
+    constructor(data?: IServerLocationAccess) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.normal = _data["normal"] !== undefined ? _data["normal"] : <any>null;
+            this.premiumByTrial = _data["premiumByTrial"] !== undefined ? _data["premiumByTrial"] : <any>null;
+            this.premiumByRewardedAd = _data["premiumByRewardedAd"] !== undefined ? _data["premiumByRewardedAd"] : <any>null;
+            this.premiumByPurchase = _data["premiumByPurchase"] !== undefined ? _data["premiumByPurchase"] : <any>null;
+            this.prompt = _data["prompt"] !== undefined ? _data["prompt"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ServerLocationAccess {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServerLocationAccess();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["normal"] = this.normal !== undefined ? this.normal : <any>null;
+        data["premiumByTrial"] = this.premiumByTrial !== undefined ? this.premiumByTrial : <any>null;
+        data["premiumByRewardedAd"] = this.premiumByRewardedAd !== undefined ? this.premiumByRewardedAd : <any>null;
+        data["premiumByPurchase"] = this.premiumByPurchase !== undefined ? this.premiumByPurchase : <any>null;
+        data["prompt"] = this.prompt !== undefined ? this.prompt : <any>null;
+        return data;
+    }
+}
+
+export interface IServerLocationAccess {
+    normal?: number | null;
+    premiumByTrial?: number | null;
+    premiumByRewardedAd?: number | null;
+    premiumByPurchase: boolean;
+    prompt: boolean;
 }
 
 export class SessionStatus implements ISessionStatus {
