@@ -421,18 +421,17 @@ export default defineComponent({
         day: '2-digit'
       }
       // noinspection TypeScriptValidateJSTypes
-      return expDate.toLocaleString('locales', options).replace(',', '')
+      return expDate.toLocaleString('locales', options).replace(',', '');
     },
 
     alertForExpire(): boolean {
-      const expDate: Date | null | undefined = VpnHoodApp.instance.data.state.sessionStatus?.accessUsage?.expirationTime
-      if (expDate) {
-        const currentDate: number = new Date().getTime()
-        const diffTime: number = Math.abs(expDate - currentDate)
-        const diffDays: number = Math.ceil(diffTime / UiConstants.millisecondPerDay)
-        return diffDays <= 3
-      }
-      return false
+      const expDate: Date | null | undefined = VpnHoodApp.instance.data.state.sessionStatus?.accessUsage?.expirationTime;
+      if (!expDate) return false;
+
+      const currentDate: Date = new Date();
+      const diffTime = expDate.getTime() - currentDate.getTime();
+      const diffDays: number = Math.ceil(diffTime / UiConstants.millisecondPerDay);
+      return diffDays <= 3;
     },
 
     udpProtocolButtonText(): string {

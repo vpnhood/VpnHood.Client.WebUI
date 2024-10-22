@@ -29,7 +29,7 @@ const routes = [
   {
     path: '/servers',
     name: 'Servers',
-    component: () => import(/* webpackChunkName: "Servers" */ '@/pages/Servers.vue'),
+    component: () => import(/* webpackChunkName: "Servers" */ '@/pages/ServersList.vue'),
     meta: {
       title: 'Servers',
     }

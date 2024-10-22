@@ -28,9 +28,9 @@
         <v-icon
             v-if="$vpnHoodApp.isLocationAutoSelected(serverLocationInfo.countryCode)"
             icon="mdi-lightning-bolt-outline"
-            :color="[(isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo))
+            :color="(isActiveProfile && $vpnHoodApp.isActiveLocation(serverLocationInfo))
             ? $vpnHoodApp.isConnectApp() ? 'secondary-lighten-2' : 'secondary'
-            : $vpnHoodApp.isConnectApp() ? 'white' : 'primary-darken-1']"
+            : $vpnHoodApp.isConnectApp() ? 'white' : 'primary-darken-1'"
             :size="$vpnHoodApp.isConnectApp() ? 29 : 27"
             :class="[$vpnHoodApp.isConnectApp() ? 'me-5' : 'me-2']"/>
 
@@ -100,7 +100,6 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {AppName} from "@/UiConstants";
 import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
 import {Util} from "@/services/Util";
 
@@ -119,7 +118,6 @@ export default defineComponent({
   data() {
     return {
       Util,
-      AppName,
     }
   },
   methods:{

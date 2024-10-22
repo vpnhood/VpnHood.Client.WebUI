@@ -11,8 +11,8 @@ const includeLocalNetwork = computed({
   set: async (value: boolean) => {
     VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork = value
     await VpnHoodApp.instance.saveUserSetting()
-  },
-});
+  }
+})
 </script>
 
 <template>

@@ -59,25 +59,21 @@ export class VpnHoodApp {
   public apiClient: AppClient
   public analytics: Analytics | null
 
-  private constructor(
-    apiClient: AppClient,
-    appData: VpnHoodAppData,
-    analytics: Analytics | null,
-  ) {
+  private constructor(apiClient: AppClient, appData: VpnHoodAppData, analytics: Analytics | null) {
     if (VpnHoodApp._instance)
-      throw new Error('VpnHoodApp has been already initialized.')
+      throw new Error('VpnHoodApp has been already initialized.');
 
-    this.data = reactive(appData)
-    this.apiClient = apiClient
-    this.analytics = analytics
-    this.data.uiState.configTime = this.data.state.configTime
-    VpnHoodApp._instance = this
+    this.data = reactive(appData);
+    this.apiClient = apiClient;
+    this.analytics = analytics;
+    this.data.uiState.configTime = this.data.state.configTime;
+    VpnHoodApp._instance = this;
   }
 
   public static get instance(): VpnHoodApp {
     if (VpnHoodApp._instance == null)
-      throw new Error('VpnHoodApp has not been initialized.')
-    return VpnHoodApp._instance
+      throw new Error('VpnHoodApp has not been initialized.');
+    return VpnHoodApp._instance;
   }
 
   private static _instance: VpnHoodApp | null
@@ -85,8 +81,7 @@ export class VpnHoodApp {
   public static async create(): Promise<VpnHoodApp> {
     const apiClient: AppClient = ClientApiFactory.instance.createAppClient()
     const config = await apiClient.configure(
-      new ConfigParams({ availableCultures: i18n.global.availableLocales }),
-    )
+      new ConfigParams({ availableCultures: i18n.global.availableLocales }),)
     const appData = new VpnHoodAppData(
       config.state,
       config.settings,
@@ -97,28 +92,21 @@ export class VpnHoodApp {
     let analytics: Analytics | null = null
 
     // Init firebase and analytics based on app name
-    if (
-      import.meta.env.MODE !== 'development' ||
-      import.meta.env.VITE_CLIENT_IS_INIT_FIREBASE !== 'false'
-    ) {
-      analytics = FirebaseApp.initialize(
-        config.features.uiName === AppName.VpnHoodConnect,
-      )
-      setUserId(analytics, config.settings.clientId)
+    if (import.meta.env.MODE !== 'development' || import.meta.env.VITE_CLIENT_IS_INIT_FIREBASE !== 'false') {
+      analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
+      setUserId(analytics, config.settings.clientId);
     }
 
     if (!analytics)
-      console.log(
-        "Firebase does not initialized because the current mode is development and 'env.IS_INIT_FIREBASE' is set to false, if you want to enable it on development, please refer to '.env.development' file",
-      )
+      console.log("Firebase does not initialized because the current mode is development and 'env.IS_INIT_FIREBASE' is set to false, if you want to enable it on development, please refer to '.env.development' file",)
 
     return new VpnHoodApp(apiClient, appData, analytics)
   }
 
   private async reloadSettings(): Promise<void> {
-    const config = await this.apiClient.getConfig()
-    this.data.features = config.features
-    this.data.settings = config.settings
+    const config = await this.apiClient.getConfig();
+    this.data.features = config.features;
+    this.data.settings = config.settings;
 
     // Reload and calc available client profiles
     this.data.clientProfileInfos = VpnHoodApp.getClientProfileInfos(
@@ -126,55 +114,41 @@ export class VpnHoodApp {
       config.clientProfileInfos,
       config.features.builtInClientProfileId,
       this.data.userState.userAccount,
-    )
+    );
 
     if (config.clientProfileInfos.length === 0)
-      this.data.settings.userSettings.clientProfileId = null
+      this.data.settings.userSettings.clientProfileId = null;
   }
 
   // Return available client profiles based on app name and user state
-  private static getClientProfileInfos(
-    isConnectApp: boolean,
-    clientProfileInfos: ClientProfileInfo[],
-    builtInClientProfileId: string | null = null,
-    userAccount: AppAccount | null,
-  ): ClientProfileInfo[] {
+  private static getClientProfileInfos(isConnectApp: boolean, clientProfileInfos: ClientProfileInfo[],
+    builtInClientProfileId: string | null = null, userAccount: AppAccount | null): ClientProfileInfo[] {
     // App is VpnHoodClient
-    if (!isConnectApp) return clientProfileInfos
+    if (!isConnectApp) return clientProfileInfos;
 
     // App is VpnHoodCONNECT and user is guest or does not have active subscription
     if (userAccount === null || userAccount.subscriptionId === null)
-      return clientProfileInfos
+      return clientProfileInfos;
 
     // App is VpnHoodCONNECT and user have active subscription
     if (userAccount.providerPlanId === SubscriptionPlansId.GlobalServer)
-      return clientProfileInfos.filter(
-        x => x.clientProfileId !== builtInClientProfileId,
-      )
+      return clientProfileInfos.filter(x => x.clientProfileId !== builtInClientProfileId);
 
-    return clientProfileInfos
+    return clientProfileInfos;
   }
 
   public async reloadState(): Promise<void> {
     this.data.state = await this.apiClient.getState()
     // Setting has change and must reload
-    if (
-      this.data.uiState.configTime.getTime() !==
-      this.data.state.configTime.getTime()
-    ) {
+    if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()) {
       this.data.uiState.configTime = this.data.state.configTime
       await this.reloadSettings()
     }
 
     // Show last error message if the user has not ignored
-    if (
-      this.data.state.lastError &&
-      this.data.uiState.stateLastErrorMessage !==
-        this.data.state.lastError?.message
-    ) {
-      this.data.uiState.stateLastErrorMessage =
-        this.data.state.lastError.message
-      await this.processError(this.data.state.lastError)
+    if (this.data.state.lastError && this.data.uiState.stateLastErrorMessage !== this.data.state.lastError?.message) {
+      this.data.uiState.stateLastErrorMessage = this.data.state.lastError.message;
+      await this.processError(this.data.state.lastError);
     }
 
     // Show update message if the user has not ignored or more than 24 hours have passed
@@ -183,57 +157,38 @@ export class VpnHoodApp {
 
     // Show 'suppress by' message
     // noinspection OverlyComplexBooleanExpressionJS
-    if (
-      this.data.state.connectionState === AppConnectionState.None &&
-      this.data.state.sessionStatus?.suppressedBy &&
-      this.data.state.sessionStatus?.suppressedBy !==
-        SessionSuppressType.None &&
-      this.data.uiState.userIgnoreSuppressByTime?.toString() !==
-        this.data.state.connectRequestTime?.toString()
-    ) {
-      this.data.uiState.showSuppressSnackbar = true
+    if (this.data.state.connectionState === AppConnectionState.None && this.data.state.sessionStatus?.suppressedBy &&
+      this.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None &&
+      this.data.uiState.userIgnoreSuppressByTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
+      this.data.uiState.showSuppressSnackbar = true;
     }
 
     // Show 'suppress to' message
     // noinspection OverlyComplexBooleanExpressionJS
-    if (
-      this.data.state.connectionState === AppConnectionState.Connected &&
-      this.data.state.sessionStatus?.suppressedTo &&
-      this.data.state.sessionStatus?.suppressedTo ===
-        SessionSuppressType.Other &&
-      this.data.uiState.userIgnoreSuppressToTime?.toString() !==
-        this.data.state.connectRequestTime?.toString()
-    ) {
+    if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionStatus?.suppressedTo &&
+      this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.Other &&
+      this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
       this.data.uiState.showSuppressSnackbar = true
     }
 
     // Hide 'suppress' message
-    if (
-      this.data.state.sessionStatus?.suppressedBy ===
-        SessionSuppressType.None &&
-      this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None
-    ) {
+    if (this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None &&
+      this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None) {
       this.data.uiState.showSuppressSnackbar = false
     }
   }
 
   public async connect(): Promise<void> {
-    console.log(
-      'Connecting to ' + this.data.state.clientProfile?.clientProfileName,
-    )
-    await this.apiClient.connect()
+    console.log('Connecting to ' + this.data.state.clientProfile?.clientProfileName);
+    await this.apiClient.connect();
   }
 
   public async disconnect(): Promise<void> {
     await this.apiClient.disconnect()
-    if (
-      this.data.state.sessionStatus?.suppressedTo &&
-      this.data.state.sessionStatus?.suppressedTo !==
-        SessionSuppressType.None &&
-      this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None
-    ) {
+    if (this.data.state.sessionStatus?.suppressedTo
+      && this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None
+      && this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None)
       this.data.uiState.showSuppressSnackbar = false
-    }
   }
 
   public getAppVersion(isFull: boolean): string {
@@ -249,14 +204,8 @@ export class VpnHoodApp {
   }
 
   // Select profile by user
-  public async updateClientProfile(
-    clientProfileId: string,
-    clientProfileUpdateParam: ClientProfileUpdateParams,
-  ): Promise<void> {
-    await this.apiClient.updateClientProfile(
-      clientProfileId,
-      clientProfileUpdateParam,
-    )
+  public async updateClientProfile(clientProfileId: string, clientProfileUpdateParam: ClientProfileUpdateParams): Promise<void> {
+    await this.apiClient.updateClientProfile(clientProfileId, clientProfileUpdateParam)
     await this.reloadSettings()
   }
 
@@ -291,125 +240,101 @@ export class VpnHoodApp {
     console.error(err)
 
     //TODO Check the errors again
-    if (typeof err === 'string') return await this.showErrorMessage(err)
+    if (typeof err === 'string')
+      return await this.showErrorMessage(err);
 
     if (!(err instanceof Error))
-      return await this.showErrorMessage('Unknown Error.')
+      return await this.showErrorMessage('Unknown Error.');
 
     if (!(err instanceof ApiException))
-      return await this.showErrorMessage(err.message ?? err)
+      return await this.showErrorMessage(err.message ?? err);
 
     // TODO show snackbar message if already connected to the selected profile
     // Show a message that the user can connect to the VPN but not to the selected server
-    if (
-      err.exceptionTypeName === 'UnreachableServerLocation' &&
-      !this.data.state.hasDiagnoseStarted &&
-      this.data.settings.userSettings.serverLocation
-    )
-      return await this.showErrorMessage(
-        i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE'),
-        true,
-      )
+    if (err.exceptionTypeName === 'UnreachableServerLocation' && !this.data.state.hasDiagnoseStarted &&
+      this.data.settings.userSettings.serverLocation)
+      return await this.showErrorMessage(i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE'), true);
 
     // Just for VpnHoodConnect
     //TODO Test error
     if (this.isConnectApp() && err.message === 'Session has been closed.')
-      return await this.signOut()
+      return await this.signOut();
 
     // Just for VpnHoodConnect
-    if (
-      this.isConnectApp() &&
-      err.statusCode === 401 &&
-      !this.data.userState.userAccount
-    ) {
+    if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
       // Send error message to analytics
       this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
         message: i18n.global.t('AUTHENTICATION_ERROR', 'en'),
-      })
+      });
 
-      await this.showErrorMessage(i18n.global.t('AUTHENTICATION_ERROR'))
-      await this.signOut()
-      return
-    } else await this.showErrorMessage(err.message ?? err)
+      await this.showErrorMessage(i18n.global.t('AUTHENTICATION_ERROR'));
+      await this.signOut();
+      return;
+    }
+    else await this.showErrorMessage(err.message ?? err)
   }
 
   // Show error dialog
-  private async showErrorMessage(
-    text: string,
-    showChangeServerToAuto: boolean = false,
-  ): Promise<void> {
+  private async showErrorMessage(text: string, showChangeServerToAuto: boolean = false,): Promise<void> {
     // Send error message to analytics
-    this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
-      message: text,
-    })
+    this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text, });
 
-    const errorDialogData = this.data.uiState.errorDialogData
-    errorDialogData.message = text
-    errorDialogData.canDiagnose = this.data.state.canDiagnose
-    errorDialogData.logExists = this.data.state.logExists
-    errorDialogData.isVisible = true
-    errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto
+    const errorDialogData = this.data.uiState.errorDialogData;
+    errorDialogData.message = text;
+    errorDialogData.canDiagnose = this.data.state.canDiagnose;
+    errorDialogData.logExists = this.data.state.logExists;
+    errorDialogData.isVisible = true;
+    errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto;
 
-    await ComponentRouteController.showComponent(ComponentName.AlertDialog)
+    await ComponentRouteController.showComponent(ComponentName.AlertDialog);
   }
 
   // Get installed apps list on the user device
   public getInstalledApps(): Promise<DeviceAppInfo[]> {
-    return this.apiClient.getInstalledApps()
+    return this.apiClient.getInstalledApps();
   }
 
   public async postPoneUpdate(): Promise<void> {
-    await this.apiClient.versionCheckPostpone()
+    await this.apiClient.versionCheckPostpone();
   }
 
   public async checkForUpdate(): Promise<void> {
-    await this.apiClient.versionCheck()
+    await this.apiClient.versionCheck();
   }
 
   getActiveServerCountryFlag(): string | null {
-    const serverLocationInfo =
-      this.data.state.serverLocationInfo ??
-      this.data.state.clientServerLocationInfo
-    return serverLocationInfo &&
-      !this.isLocationAutoSelected(serverLocationInfo.countryCode)
+    const serverLocationInfo = this.data.state.serverLocationInfo ??
+      this.data.state.clientServerLocationInfo;
+    return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
       : null
   }
 
   public getCountryFlag(countryCode: string): string {
     try {
-      return new URL(
-        `../assets/images/country_flags/${countryCode.toLowerCase()}.png`,
-        import.meta.url,
-      ).href
+      return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href
     } catch (error: unknown) {
       console.log(error)
-      return new URL(
-        `../assets/images/country_flags/no-flag.png`,
-        import.meta.url,
-      ).href
+      return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href
     }
   }
 
   public isLocationAutoSelected(value: string): boolean {
-    return value === '*'
+    return value === '*';
   }
 
   public isActiveClientProfile(clientProfileId: string): boolean {
-    return clientProfileId === this.data.settings.userSettings.clientProfileId
+    return clientProfileId === this.data.settings.userSettings.clientProfileId;
   }
 
-  public isActiveLocation(
-    serverLocationInfo: ClientServerLocationInfo,
-  ): boolean {
+  public isActiveLocation(serverLocationInfo: ClientServerLocationInfo,): boolean {
     return this.data.settings.userSettings.serverLocation
-      ? serverLocationInfo.serverLocation ===
-          this.data.settings.userSettings.serverLocation
-      : serverLocationInfo.isDefault
+      ? serverLocationInfo.serverLocation === this.data.settings.userSettings.serverLocation
+      : serverLocationInfo.isDefault;
   }
 
   public isConnectApp(): boolean {
-    return this.data.features.uiName === AppName.VpnHoodConnect
+    return this.data.features.uiName === AppName.VpnHoodConnect;
   }
 
   public isSingleServerMode(): boolean {
@@ -419,48 +344,37 @@ export class VpnHoodApp {
   public getActiveServerNameOrLocation(): string {
     // App is VpnHoodClient
     if (!this.isSingleServerMode())
-      return (
-        this.data.state.clientProfile?.clientProfileName ??
-        i18n.global.t('NO_SERVER_SELECTED')
-      )
+      return (this.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
 
     // App is VpnHoodCONNECT
-    const serverLocationInfo =
-      this.data.state.serverLocationInfo ??
-      this.data.state.clientServerLocationInfo
-    if (
-      !serverLocationInfo ||
-      this.isLocationAutoSelected(serverLocationInfo.countryCode)
-    )
-      return i18n.global.t('AUTO_SELECT')
+    const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo
+    if (!serverLocationInfo || this.isLocationAutoSelected(serverLocationInfo.countryCode))
+      return i18n.global.t('AUTO_SELECT');
 
     const text = this.isLocationAutoSelected(serverLocationInfo.regionName)
       ? serverLocationInfo.countryName
-      : serverLocationInfo.countryName +
-        ' (' +
-        serverLocationInfo.regionName +
-        ')'
+      : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
 
-    return text.replace('United States (', 'USA (')
+    return text.replace('United States (', 'USA (');
   }
 
   public isConnected(): boolean {
-    return this.data.state.connectionState === AppConnectionState.Connected
+    return this.data.state.connectionState === AppConnectionState.Connected;
   }
 
   public getConnectionStateText(): string {
-    if (this.data.state.isWaitingForAd) return i18n.global.t('LOADING_AD')
+    if (this.data.state.isWaitingForAd) return i18n.global.t('LOADING_AD');
 
     return this.data.state.connectionState === AppConnectionState.None
       ? i18n.global.t('DISCONNECTED')
-      : i18n.global.t(this.data.state.connectionState.toUpperCase())
+      : i18n.global.t(this.data.state.connectionState.toUpperCase());
   }
 
   public async clearLastError(): Promise<void> {
-    this.data.uiState.stateLastErrorMessage = null
-    this.data.uiState.errorDialogData.isVisible = false
-    await this.apiClient.clearLastError()
-    await this.reloadState()
+    this.data.uiState.stateLastErrorMessage = null;
+    this.data.uiState.errorDialogData.isVisible = false;
+    await this.apiClient.clearLastError();
+    await this.reloadState();
   }
 
   //------------------------------------------
@@ -468,33 +382,31 @@ export class VpnHoodApp {
   //------------------------------------------
 
   public async signIn(showLoading: boolean = true): Promise<void> {
-    if (showLoading) this.data.uiState.showLoadingDialog = true
+    if (showLoading) this.data.uiState.showLoadingDialog = true;
 
     try {
-      const accountClient = ClientApiFactory.instance.createAccountClient()
-      await accountClient.signInWithGoogle()
-      await this.loadAccount()
+      const accountClient = ClientApiFactory.instance.createAccountClient();
+      await accountClient.signInWithGoogle();
+      await this.loadAccount();
     } catch (err: unknown) {
-      if (
-        err instanceof ApiException &&
-        err.exceptionTypeName === 'TaskCanceledException'
-      )
-        throw new Error(i18n.global.t('SIGN_IN_CANCELED_BY_USER'))
+      if (err instanceof ApiException && err.exceptionTypeName === 'TaskCanceledException')
+        throw new Error(i18n.global.t('SIGN_IN_CANCELED_BY_USER'));
 
-      throw err
-    } finally {
-      if (showLoading) this.data.uiState.showLoadingDialog = false
+      throw err;
+    }
+    finally {
+      if (showLoading) this.data.uiState.showLoadingDialog = false;
     }
   }
 
   public async signOut(): Promise<void> {
-    const accountClient = ClientApiFactory.instance.createAccountClient()
-    await accountClient.signOut()
-    await this.loadAccount()
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    await accountClient.signOut();
+    await this.loadAccount();
   }
 
   public async loadAccount(): Promise<void> {
-    const accountClient = ClientApiFactory.instance.createAccountClient()
-    this.data.userState.userAccount = await accountClient.get()
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    this.data.userState.userAccount = await accountClient.get();
   }
 }
