@@ -148,7 +148,7 @@ export class VpnHoodApp {
     // Show last error message if the user has not ignored
     if (this.data.state.lastError && this.data.uiState.stateLastErrorMessage !== this.data.state.lastError?.message) {
       this.data.uiState.stateLastErrorMessage = this.data.state.lastError.message;
-      await this.processError(this.data.state.lastError);
+      await this.processError(ApiException.fromApiError(this.data.state.lastError));
     }
 
     // Show update message if the user has not ignored or more than 24 hours have passed
@@ -237,7 +237,7 @@ export class VpnHoodApp {
 
   // Get error message
   public async processError(err: unknown): Promise<void> {
-    console.error(err)
+    console.error(err);
 
     //TODO Check the errors again
     if (typeof err === 'string')

@@ -1,6 +1,6 @@
 {
   "name": "vpnhood.spa",
-  "version": "1.0.190",
+  "version": "1.0.197",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.3.67",
+    "@types/async-lock": "^1.4.2",
     "@volar/language-server": "2.4.0-alpha.18",
     "@vue/language-server": "2.0.28",
     "async-lock": "^1.4.1",

@@ -6,7 +6,7 @@ $spaZipFile= "$solutionDir\VpnHood.Client.App.Resources\Resources\SPA.zip";
 # build output
 try {
  Push-Location -Path $PSScriptRoot;
- vue build;
+ npm run build;
 }
 finally {
     Pop-Location;

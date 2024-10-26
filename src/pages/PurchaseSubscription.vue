@@ -269,7 +269,7 @@
 import {defineComponent} from "vue";
 import AppBar from "@/components/AppBar.vue";
 import {SubscriptionPlansId} from "@/UiConstants";
-import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api'
+import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api'
 import {ClientApiFactory} from "@/services/ClientApiFactory";
 import {GooglePlayBillingPurchaseState} from "@/googlePlayBilling/GooglePlayBillingPurchaseState";
 import {GooglePlayBillingResponseCode} from "@/googlePlayBilling/GooglePlayBillingResponseCode";
@@ -355,9 +355,10 @@ export default defineComponent({
     },
 
     googleBillingException(exception: unknown) {
-      if (exception.exceptionTypeName !== "GoogleBillingException") {
+      if (!(exception instanceof ApiException) || exception.exceptionTypeName !== "GoogleBillingException")
         throw exception;
-      } else {
+
+      else {
         const googleMessageTitle = this.$t("GOOGLE_EXCEPTION_MESSAGE");
         const billingMessage = exception.data.BillingMessage;
 

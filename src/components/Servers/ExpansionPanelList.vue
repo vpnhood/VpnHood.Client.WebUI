@@ -4,10 +4,10 @@ import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api'
 import { ref } from 'vue'
 import { ComponentRouteController } from '@/services/ComponentRouteController'
-import AddServerDialog from '@/components/AddServerDialog.vue'
+import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
 import { ComponentName } from '@/UiConstants'
 import i18n from '@/locales/i18n'
-import ClientServerLocationList from '@/components/ClientServerLocationList.vue'
+import LocationList from '@/components/Servers/LocationList.vue'
 
 const VhApp = VpnHoodApp.instance;
 const $t = i18n.global.t;
@@ -18,8 +18,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'expandedPanels', value: number[]): void;
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo?: string, isDiagnose?: boolean): void;
+  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean): void;
 }>();
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
@@ -55,6 +54,10 @@ async function saveNewClientProfileName(): Promise<void> {
       })
   );
 }
+
+function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean): void {
+  emits('connect', clientProfileInfo, serverLocationInfo, isDiagnose);
+}
 </script>
 
 <template>
@@ -66,7 +69,7 @@ async function saveNewClientProfileName(): Promise<void> {
     rounded="xl"
     bg-color="white"
     class="mb-4"
-    @click="emits('connect', clientProfileInfo)"
+    @click="connect(clientProfileInfo, '', false)"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
@@ -152,7 +155,7 @@ async function saveNewClientProfileName(): Promise<void> {
                     :title="$t('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="emits('connect', clientProfileInfo, '', true)">
+                    @click="connect(clientProfileInfo, '', true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 
@@ -176,10 +179,9 @@ async function saveNewClientProfileName(): Promise<void> {
 
       <!-- Profile region -->
       <template v-slot:text v-if="Util.isServerHaveLocation(clientProfileInfo.serverLocationInfos)">
-        <ClientServerLocationList
+        <LocationList
           :client-profile-info="clientProfileInfo"
-          :is-single-item="false"
-          :is-active-profile="VhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
+          @connect="connect"
         />
       </template>
 
@@ -269,6 +271,7 @@ async function saveNewClientProfileName(): Promise<void> {
       </v-card-actions>
     </v-card>
   </v-dialog>
+
 </template>
 
 <style>
