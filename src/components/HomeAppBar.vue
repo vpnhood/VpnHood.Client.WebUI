@@ -6,9 +6,9 @@
 
     <!-- App name -->
     <v-spacer></v-spacer>
-    <h3 dir="ltr">
+    <h4 dir="ltr">
       {{ $vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? $t('VPN_HOOD_CONNECT_APP_NAME') : $t('VPN_HOOD_APP_NAME') }}
-    </h3>
+    </h4>
     <v-spacer></v-spacer>
 
     <!-- App mini version -->

@@ -5,6 +5,8 @@ import { Util } from '@/services/Util'
 import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue'
+import { ComponentRouteController } from '@/services/ComponentRouteController';
+import { ComponentName } from '@/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const $t = i18n.global.t;
@@ -27,9 +29,11 @@ const premiumLocations = props.clientProfileInfo.serverLocationInfos.filter(x =>
 const openedListGroups = ref<string[]>([$t('FREE_LOCATIONS'), $t('PREMIUM_LOCATIONS')]);
 const listIds: string[] = hasGroup() ? ['freeLocations', 'premiumLocations'] : ['allLocations'];
 
-function onClickLocation(serverLocation: string, isDiagnose: boolean): void {
-  console.log("clientProfileInfo: ", props.clientProfileInfo);
-  console.log("serverLocation: ",serverLocation);
+async function onClickLocation(serverLocation: string, isDiagnose: boolean): Promise<void> {
+  vhApp.data.uiState.promoteDialogData.message = "my test";
+  vhApp.data.uiState.promoteDialogData.isVisible = true;
+  await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
+
   // If app is VpnHood Client and selected server is single location, do nothing.
   // Because the parent have the connect function.
   if(Util.isSingleLocation(props.clientProfileInfo.serverLocationInfos.length))

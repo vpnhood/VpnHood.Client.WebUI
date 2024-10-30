@@ -9,7 +9,7 @@
       <!-- Products list -->
       <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
         <!-- Image -->
-        <v-img :eager="true" src="src/assets/images/ad-icon.png" max-width="150px" class="mx-auto"/>
+        <v-img :eager="true" src="/images/ad-icon.png" max-width="150px" class="mx-auto"/>
 
         <!-- Title -->
         <h3 class="title-bold text-tertiary text-uppercase text-center pb-2 mb-2">
@@ -243,7 +243,7 @@
             class="font-weight-bold text-capitalize my-4"
         >
           <v-img
-              src="src/assets/images/google-logo.png"
+              src="/images/google-logo.png"
               alt="login with google"
               width="30px"
               class="me-4"

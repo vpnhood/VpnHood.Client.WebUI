@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean): void;
+  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: string | null, isDiagnose: boolean): void;
 }>();
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
@@ -55,7 +55,7 @@ async function saveNewClientProfileName(): Promise<void> {
   );
 }
 
-function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean): void {
+function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string | null, isDiagnose: boolean): void {
   emits('connect', clientProfileInfo, serverLocationInfo, isDiagnose);
 }
 </script>
@@ -69,7 +69,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: strin
     rounded="xl"
     bg-color="white"
     class="mb-4"
-    @click="connect(clientProfileInfo, '', false)"
+    @click="connect(clientProfileInfo, null, false)"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
@@ -155,7 +155,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: strin
                     :title="$t('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="connect(clientProfileInfo, '', true)">
+                    @click="connect(clientProfileInfo, null, true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 

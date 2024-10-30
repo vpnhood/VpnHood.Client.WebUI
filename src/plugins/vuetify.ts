@@ -72,9 +72,11 @@ export default createVuetify({
                         background: '#211951',
                         surface: '#ffffff',
                         'on-surface': '#212121',
+                        'primary-lighten-1': '#2f296e',
                         primary: '#211951',
                         'primary-darken-1': '#211951',
                         'primary-darken-2': '#150e3d',
+                        'primary-darken-4': '#070819',
                         secondary: '#7b7afe',
                         'on-secondary': '#ffffff',
                         'secondary-lighten-1': '#15f5ba',
@@ -104,6 +106,6 @@ export default createVuetify({
                     },
                 },
             },
-        }
+        },
     }
 )

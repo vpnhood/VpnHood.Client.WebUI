@@ -14,16 +14,16 @@
 
       <!-- VpnHoodConnect logo -->
       <v-img v-if="$vpnHoodApp.isConnectApp()" :eager="true"
-             src="src/assets/images/logo-connect.png"
+             src="/images/logo-connect.png"
              alt="logo"
-             max-width="60"
-             width="60"
-             height="60"
+             max-width="50"
+             width="50"
+             height="50"
       />
 
       <!-- VpnHood logo -->
       <v-img v-else :eager="true"
-             src="src/assets/images/logo.png"
+             src="/images/logo.png"
              alt="logo"
              max-width="60"
              width="60"
@@ -52,15 +52,13 @@
       <!-- Go premium or Change subscription -->
       <v-list-item
           v-if="$vpnHoodApp.data.features.isAccountSupported"
-          class="bg-secondary"
+          :class="[{'border-secondary': $vpnHoodApp.isConnectApp()}, 'border-b']"
           @click="goPremium"
       >
         <v-list-item-title>
           <v-icon :icon="$vpnHoodApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'"/>
           <span class="ms-3">
-            {{
-              $vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('GO_PREMIUM')
-            }}
+            {{$vpnHoodApp.data.userState.userAccount?.subscriptionId ? $t('CHANGE_SUBSCRIPTION') : $t('GO_PREMIUM') }}
           </span>
         </v-list-item-title>
       </v-list-item>
@@ -68,7 +66,7 @@
       <!-- Sign in button -->
       <v-list-item
           v-if="$vpnHoodApp.data.features.isAccountSupported && !$vpnHoodApp.data.userState.userAccount"
-          :class="[$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+          :class="[{'border-secondary': $vpnHoodApp.isConnectApp()}, 'border-b']"
           @click="onSignIn"
       >
         <v-list-item-title>

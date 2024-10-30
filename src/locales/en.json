@@ -182,5 +182,14 @@
   "UNREACHABLE_SERVER_LOCATION_MESSAGE": "You connected to the VPN network, but all servers in your selected location are unreachable from your region. Do you want to switch the location to auto and connect to a reachable server?",
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Yes, Connect to auto",
   "FREE_LOCATIONS": "Free Locations",
-  "PREMIUM_LOCATIONS": "Premium Locations"
+  "PREMIUM_LOCATIONS": "Premium Locations",
+  "SELECTED_LOCATION_IS_PREMIUM": "Selected Location is <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
+  "GO_BACK": "Go Back",
+  "WATCH_REWARDED_AD": "Watch Rewarded Ad",
+  "WATCH_REWARDED_AD_DESC": "Access a premium server in this location for 60 minutes.",
+  "TRY_PREMIUM": "Try Premium",
+  "TRY_PREMIUM_DESC": "Experience a premium server in this location for 10 minutes.",
+  "GO_PREMIUM_2": "Go Premium",
+  "GO_PREMIUM_DESC": "Upgrade to premium to remove ads and unlock more features.",
+  "UPGRADE": "Upgrade"
 }

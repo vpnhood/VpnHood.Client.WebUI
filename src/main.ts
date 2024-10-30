@@ -1,16 +1,17 @@
 import {createApp} from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { AppName, ComponentName } from '@/UiConstants'
-import vuetify from './plugins/vuetify'
-import i18n from './locales/i18n'
-import router from './plugins/router'
+import vuetify from '@/plugins/vuetify'
+import i18n from '@/locales/i18n'
+import router from '@/plugins/router'
 import ErrorPage from "@/pages/ErrorPage.vue";
-import './assets/css/general.css'
-import './assets/css/override.css'
-import './assets/css/vpn-hood.css'
-import './assets/css/vpn-hood-connect.css'
-import './assets/css/rtl.css'
+import '@/styles/general.css'
+import '@/styles/override.css'
+import '@/styles/vpn-hood.css'
+import '@/styles/vpn-hood-connect.css'
+import '@/styles/rtl.css'
+
 
 async function main(): Promise<void> {
   try {

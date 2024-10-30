@@ -11,7 +11,7 @@
     <v-app-bar-nav-icon :icon="$vuetify.locale.isRtl? 'mdi-chevron-right' : 'mdi-chevron-left'" color="white" @click="$router.go(-1)"></v-app-bar-nav-icon>
 
     <!-- Page title -->
-    <v-app-bar-title class="text-body-1 text-white">{{pageTitle}}</v-app-bar-title>
+    <v-app-bar-title class="text-body-1 text-white ms-0">{{pageTitle}}</v-app-bar-title>
 
   </v-app-bar>
 </template>

@@ -9,6 +9,7 @@ import router from '@/plugins/router';
 import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
+import { ComponentName } from '@/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const $t = i18n.global.t;
@@ -22,29 +23,23 @@ onMounted(() => {
 });
 
 // Connect or diagnose selected client profile
-async function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string,
-                       isDiagnose: boolean = false): Promise<void> {
+async function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string | null,
+                       isDiagnose: boolean): Promise<void> {
 
-  // App is VpnHoodCONNECT and client profile have multi location, but user select server card instead location
-  // Show snackbar message
-  if (vhApp.isConnectApp() && serverLocationInfo === "" && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)){
-    // TODO show snackbar message
-    console.log("not implemented");
-  }
-
+  await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
   // App is VpnHoodClient and Client profile have multi location, but user select server card instead location
   // Do nothing because expansion panel has action collapse/expand
-  if (serverLocationInfo === "" && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
+  if (!serverLocationInfo && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
     return;
 
   await router.replace('/');
   vhApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
   // If the serverLocation is empty, it will be connected to Auto
-  vhApp.data.settings.userSettings.serverLocation = serverLocationInfo === "" ? null : serverLocationInfo;
+  vhApp.data.settings.userSettings.serverLocation = serverLocationInfo;
   await vhApp.saveUserSetting();
 
   if (isDiagnose) await vhApp.diagnose();
-  else await vhApp.connect();
+  //else await vhApp.connect();
 }
 </script>
 

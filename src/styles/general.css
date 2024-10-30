@@ -1,17 +1,27 @@
-/*** ---------------------- Import font ------------------------ ***/
 @font-face {
-    font-family: 'Roboto-Regular';
-    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+    font-family: 'English-Regular';
+    src: url('/fonts/Poppins-Light.ttf') format('truetype');
 }
 @font-face {
-    font-family: 'Roboto-Bold';
-    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+    font-family: 'English-Bold';
+    src: url('/fonts/Poppins-Bold.ttf') format('truetype');
 }
-
 /*** -------------------- Default Style ------------------- ***/
 html {overflow-y: auto;}
-.v-application:not(.v-locale--is-rtl){font-family: "Roboto-Regular", "IranSans-Regular", "Noto-Regular", sans-serif !important; font-size: 15px;}
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{font-family: "Roboto-Bold", "IranSans-Bold", "Noto-Bold", sans-serif !important;}
+html,
+body,
+.v-application:not(.v-locale--is-rtl),
+.text-caption,
+.text-body-1,
+.text-body-2,
+.text-subtitle-1,
+.text-subtitle-2{
+    font-family: "English-Regular", "IranSans-Regular", "Noto-Regular", sans-serif !important;
+}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
+    font-family: "English-Bold", "IranSans-Bold", "Noto-Bold", sans-serif !important;
+}
+.v-application:not(.v-locale--is-rtl){font-size: 15px !important;}
 
 /*noinspection CssUnresolvedCustomProperty*/
 .opacity-0 {transition: opacity 1.4s ease;}

@@ -21,6 +21,7 @@
 
       <!-- Global alert dialog -->
       <alert-dialog v-model="isAlertDialogVisible"/>
+      <promote-dialog v-model="isPromoteDialogVisible"/>
 
       <!-- Global async confirm dialog -->
       <ConfirmDialog/>
@@ -38,10 +39,11 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/DialogComponent.vue";
+import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
 
 export default defineComponent({
   name: 'App',
-  components: {PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer, ConfirmDialog},
+  components: { PromoteDialog, PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer, ConfirmDialog},
   data() {
     return {
       AppName,
@@ -79,6 +81,16 @@ export default defineComponent({
         await ComponentRouteController.showComponent(this.$componentName.AlertDialog, value);
         await this.$vpnHoodApp.clearLastError();
       }
+    },
+    isPromoteDialogVisible: {
+      get(): boolean {
+        return ComponentRouteController.isShowComponent(this.$componentName.PromoteDialog) &&
+          this.$vpnHoodApp.data.uiState.promoteDialogData.isVisible;
+      },
+      async set(value: boolean) {
+        if (value) return; // Already is Open
+        await ComponentRouteController.showComponent(this.$componentName.PromoteDialog, value);
+      }
     }
   },
 
@@ -99,7 +111,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   left: 0;
-  background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
+  background: url("/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -117,7 +129,7 @@ export default defineComponent({
 
 @media (max-width: 425px) {
   #mainBg:before {
-    background-image: url("/src/assets/images/body-bg-mobile.png");
+    background-image: url("/images/body-bg-mobile.png");
   }
 }
 
@@ -128,7 +140,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   left: 0;
-  background: url("/src/assets/images/body-bg.png") no-repeat center center fixed;
+  background: url("/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
   filter: blur(14px);
 }

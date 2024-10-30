@@ -9,7 +9,7 @@
   >
     <v-col cols="12" class="text-center pt-0">
       <!-- Go Premium button Only for VpnHoodConnect -->
-      <div v-if="$vpnHoodApp.data.features.uiName === AppName.VpnHoodConnect">
+      <div v-if="$vpnHoodApp.isConnectApp()">
         <!-- Go Premium button for guest and normal user -->
         <v-btn
           v-if="!$vpnHoodApp.data.userState.userAccount?.subscriptionId"
@@ -103,10 +103,8 @@
           $vpnHoodApp.data.state.connectionState === AppConnectionState.Initializing
         "
         :class="[$vpnHoodApp.data.state.connectionState === AppConnectionState.Connected
-            ? 'secondary-btn'
-            : 'master-btn',
-          'text-button mt-5',
-          $vpnHoodApp.isConnectApp() ? 'solid' : '']"
+            ? 'secondary-btn' : 'master-btn','mt-5',
+          {'solid': $vpnHoodApp.isConnectApp() }]"
         @click="onConnectButtonClick"
       >
         {{ connectButtonText() }}

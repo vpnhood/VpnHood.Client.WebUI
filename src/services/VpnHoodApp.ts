@@ -179,7 +179,8 @@ export class VpnHoodApp {
   }
 
   public async connect(): Promise<void> {
-    console.log('Connecting to ' + this.data.state.clientProfile?.clientProfileName);
+    console.log("Connecting to " + this.data.state.clientProfile?.clientProfileName);
+    console.log("Server location: " + this.data.settings.userSettings.serverLocation);
     await this.apiClient.connect();
   }
 
@@ -312,10 +313,10 @@ export class VpnHoodApp {
 
   public getCountryFlag(countryCode: string): string {
     try {
-      return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href
+      return `/images/country_flags/${countryCode.toLowerCase()}.png`;
     } catch (error: unknown) {
       console.log(error)
-      return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href
+      return `/images/country_flags/no-flag.png`;
     }
   }
 

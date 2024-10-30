@@ -1,19 +1,19 @@
 /*** ---------------------- Import font ------------------------ ***/
 @font-face {
     font-family: 'IranSans-Regular';
-    src: url('../fonts/IRANSansMobile(FaNum).ttf') format('truetype');
+    src: url('/fonts/IRANSansMobile(FaNum).ttf') format('truetype');
 }
 @font-face {
     font-family: 'IranSans-Bold';
-    src: url('../fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
+    src: url('/fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Noto-Regular';
-    src: url('../fonts/NotoSansArabic-Regular.ttf') format('truetype');
+    src: url('/fonts/NotoSansArabic-Regular.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Noto-Bold';
-    src: url('../fonts/NotoSansArabic-Medium.ttf') format('truetype');
+    src: url('/fonts/NotoSansArabic-Medium.ttf') format('truetype');
 }
 
 /*** ---------------------- Override ------------------------ ***/
@@ -31,7 +31,7 @@
 /*** ---------------------- Persian language ------------------------ ***/
 body.fa,
 body.fa *{
-    font-family: "IranSans-Regular", "Roboto-Regular", sans-serif !important;
+    font-family: "IranSans-Regular", "English-Regular", sans-serif !important;
 }
 
 body.fa h1,
@@ -49,13 +49,13 @@ body.fa .h6,
 body.fa .title,
 body.fa .v-application [class*="text-h"],
 body.fa .v-card-title{
-    font-family: "IranSans-Bold", "Roboto-Bold", sans-serif !important;
+    font-family: "IranSans-Bold", "English-Bold", sans-serif !important;
 }
 
 /*** ---------------------- Arabic language ------------------------ ***/
 body.ar,
 body.ar *{
-    font-family: "Noto-Regular", "Roboto-Regular", sans-serif !important;
+    font-family: "Noto-Regular", "English-Regular", sans-serif !important;
 }
 
 body.ar h1,
@@ -73,5 +73,5 @@ body.ar .h6,
 body.ar .title,
 body.ar .v-application [class*="text-h"],
 body.ar .v-card-title{
-    font-family: "Noto-Bold", "Roboto-Bold", sans-serif !important;
+    font-family: "Noto-Bold", "English-Bold", sans-serif !important;
 }

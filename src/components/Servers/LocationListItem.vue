@@ -23,6 +23,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
   return vhApp.isActiveLocation(location);
 }
 
+
 </script>
 
 <template>

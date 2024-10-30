@@ -19,6 +19,11 @@
 .secondary-btn.v-btn--disabled.solid{
     color: rgba(255, 255, 255, 0.7);
 }
+/*** -------------------- General -------------------- ***/
+.primary-bg-grad{
+    /*noinspection CssUnresolvedCustomProperty*/
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary-darken-4)) 60%, rgb(var(--v-theme-primary-darken-2)));
+}
 /*** --------------------Home Circle Section-------------------- ***/
 #connectionCircleIndicator{
     position: relative;
