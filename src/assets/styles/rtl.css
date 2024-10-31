@@ -1,19 +1,19 @@
 /*** ---------------------- Import font ------------------------ ***/
 @font-face {
     font-family: 'IranSans-Regular';
-    src: url('/fonts/IRANSansMobile(FaNum).ttf') format('truetype');
+    src: url('../fonts/IRANSansMobile(FaNum).ttf') format('truetype');
 }
 @font-face {
     font-family: 'IranSans-Bold';
-    src: url('/fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
+    src: url('../fonts/IRANSansMobile(FaNum)_Bold.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Noto-Regular';
-    src: url('/fonts/NotoSansArabic-Regular.ttf') format('truetype');
+    src: url('../fonts/NotoSansArabic-Regular.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Noto-Bold';
-    src: url('/fonts/NotoSansArabic-Medium.ttf') format('truetype');
+    src: url('../fonts/NotoSansArabic-Medium.ttf') format('truetype');
 }
 
 /*** ---------------------- Override ------------------------ ***/

@@ -14,7 +14,7 @@
 
       <!-- VpnHoodConnect logo -->
       <v-img v-if="$vpnHoodApp.isConnectApp()" :eager="true"
-             src="/images/logo-connect.png"
+             :src="$vpnHoodApp.getImageUrl('logo-connect.png')"
              alt="logo"
              max-width="50"
              width="50"
@@ -23,7 +23,7 @@
 
       <!-- VpnHood logo -->
       <v-img v-else :eager="true"
-             src="/images/logo.png"
+             :src="$vpnHoodApp.getImageUrl('logo.png')"
              alt="logo"
              max-width="60"
              width="60"

@@ -111,7 +111,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   left: 0;
-  background: url("/images/body-bg.png") no-repeat center center fixed;
+  background: url("@/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -129,7 +129,7 @@ export default defineComponent({
 
 @media (max-width: 425px) {
   #mainBg:before {
-    background-image: url("/images/body-bg-mobile.png");
+    background-image: url('@/assets/images/body-bg-mobile.png');
   }
 }
 
@@ -140,7 +140,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   left: 0;
-  background: url("/images/body-bg.png") no-repeat center center fixed;
+  background: url('@/assets/images/body-bg.png') no-repeat center center fixed;
   background-size: cover;
   filter: blur(14px);
 }

@@ -23,7 +23,7 @@ const props = defineProps<{
       <div class="mb-10">
         <v-img
           :eager="true"
-          src="/images/premium-servers.webp"
+          :src="vhApp.getImageUrl('premium-servers.webp')"
           alt="Premium Servers Icon"
           width="80%"
           max-width="500px"

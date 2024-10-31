@@ -9,7 +9,8 @@
       <!-- Products list -->
       <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
         <!-- Image -->
-        <v-img :eager="true" src="/images/ad-icon.png" max-width="150px" class="mx-auto"/>
+        <v-img :eager="true" :src="$vpnHoodApp.getImageUrl('ad-icon.png')" :alt="$t('PREMIUM_SERVER_AD_TITLE')" max-width="150px"
+               class="mx-auto"/>
 
         <!-- Title -->
         <h3 class="title-bold text-tertiary text-uppercase text-center pb-2 mb-2">
@@ -227,42 +228,6 @@
     </v-card>
   </v-dialog>
 
-  <!-- Login dialog -->
-  <v-dialog v-model="showLoginDialog" max-width="600">
-    <v-card color="primary-darken-2">
-      <!-- Sign in with google button -->
-      <v-card-item
-          class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl text-center pa-5 mb-3">
-        <p class="text-white border-b border-tertiary border-opacity-50 mb-5 pb-5">{{ $t("SIGN_IN_TO_CONTINUE") }}</p>
-        <v-btn
-            @click="onBuyClick"
-            rounded="pill"
-            color="white"
-            size="large"
-            :flat="true"
-            class="font-weight-bold text-capitalize my-4"
-        >
-          <v-img
-              src="/images/google-logo.png"
-              alt="login with google"
-              width="30px"
-              class="me-4"
-          />
-          {{ $t("SIGN_IN_WITH_GOOGLE") }}
-        </v-btn>
-      </v-card-item>
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-            variant="text"
-            color="secondary"
-            :text="$t('CANCEL')"
-            @click="showLoginDialog = false"
-        />
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
 </template>
 
 <script lang="ts">
@@ -285,7 +250,6 @@ export default defineComponent({
       selectedPlanId: "",
       showPurchaseCompleteDialog: false,
       showPlanDetailsDialog: false,
-      showLoginDialog: false,
       planTitle: "",
       planDetails: "",
     }

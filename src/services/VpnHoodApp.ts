@@ -313,11 +313,15 @@ export class VpnHoodApp {
 
   public getCountryFlag(countryCode: string): string {
     try {
-      return `/images/country_flags/${countryCode.toLowerCase()}.png`;
+      return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href
     } catch (error: unknown) {
       console.log(error)
-      return `/images/country_flags/no-flag.png`;
+      return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href
     }
+  }
+
+  public getImageUrl(imageName: string): string{
+    return new URL(`../assets/images/${imageName}`, import.meta.url).href
   }
 
   public isLocationAutoSelected(value: string): boolean {
