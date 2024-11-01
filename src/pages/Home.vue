@@ -249,14 +249,11 @@
   </v-row>
 
   <!-- New server added toast -->
-  <v-snackbar
-    v-model="$vpnHoodApp.data.uiState.showNewServerAdded"
-    location="top"
-    :timeout="3000"
-    color="secondary"
-  >
-    {{ $t('NEW_SERVER_ADDED') }}
-  </v-snackbar>
+  <!-- TODO Test this -->
+  <general-snackbar
+    :model-value="$vpnHoodApp.data.uiState.showNewServerAdded"
+    :message="$t('NEW_SERVER_ADDED')"
+  />
 
   <!-- Components -->
   <UpdateSnackbar v-model="$vpnHoodApp.data.uiState.showUpdateSnackbar" />
@@ -277,10 +274,12 @@ import { ComponentRouteController } from '@/services/ComponentRouteController'
 import { AppName, UiConstants, SubscriptionPlansId } from '@/UiConstants'
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
+import GeneralSnackbar from '@/components/GeneralSnackbar.vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    GeneralSnackbar,
     HomeConnectionInfo,
     UpdateSnackbar,
     SuppressSnackbar,

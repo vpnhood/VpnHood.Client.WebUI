@@ -33,6 +33,8 @@ export class ErrorDialogData {
 
 // General custom alert dialog property
 export class PromoteDialogData {
-    public isVisible: boolean = false;
-    public message: string = "";
+    public isPremiumLocation: boolean = false;
+    public showGoPremium: boolean = false;
+    public showRewardedAd: number | null = null;
+    public showTryPremium: number | null = null;
 }

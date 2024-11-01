@@ -17,7 +17,7 @@ import {
 import { AppClient } from './VpnHood.Client.Api'
 import { UiState } from '@/services/UiState'
 import { UserState } from '@/services/UserState'
-import { AppName, ComponentName, SubscriptionPlansId } from '@/UiConstants'
+import { AppName, ComponentName, SubscriptionPlansId } from '@/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import { reactive } from 'vue'
 import i18n from '@/locales/i18n'
@@ -245,7 +245,7 @@ export class VpnHoodApp {
       return await this.showErrorMessage(err);
 
     if (!(err instanceof Error))
-      return await this.showErrorMessage('Unknown Error.');
+      return await this.showErrorMessage(i18n.global.t('UNKNOWN_ERROR'));
 
     if (!(err instanceof ApiException))
       return await this.showErrorMessage(err.message ?? err);
@@ -262,6 +262,8 @@ export class VpnHoodApp {
       return await this.signOut();
 
     // Just for VpnHoodConnect
+    // When the SPA is signed in but the app could not find the user account in the local storage.
+    // Invalid credential.
     if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
       // Send error message to analytics
       this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {

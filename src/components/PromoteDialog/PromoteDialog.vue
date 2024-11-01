@@ -2,13 +2,33 @@
 import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import PremiumConnectButton from '@/components/PromoteDialog/PremiumConnectButton.vue';
+import type { PromoteDialogData } from '@/services/UiState';
+import i18n from '@/locales/i18n';
+import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
-const dialogData = computed(() => vhApp.data.uiState.promoteDialogData);
+const locale = i18n.global.t;
+const dialogData = computed<PromoteDialogData>(() => vhApp.data.uiState.promoteDialogData);
+const dialogTitle = dialogData.value.isPremiumLocation
+  ? locale('SELECTED_LOCATION_IS_PREMIUM')
+  : locale('SELECTED_LOCATION_IS_FREE');
+const dialogDescription = dialogData.value.isPremiumLocation
+  ? locale('SELECTED_LOCATION_IS_PREMIUM_DESC')
+  : locale('SELECTED_LOCATION_IS_FREE_DESC');
 
 const props = defineProps<{
   modelValue: boolean,
 }>();
+
+function action(){
+  await VhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, new
+    ClientProfileUpdateParams(
+      { clientProfileName: new PatchOfString({ value: newClientProfileName.value }
+        )
+      })
+  );
+  await vhApp.saveUserSetting();
+}
 </script>
 
 <template>
@@ -29,31 +49,34 @@ const props = defineProps<{
           max-width="500px"
           class="mx-auto"
         />
-        <h3 class="text-center" v-html="$t('SELECTED_LOCATION_IS_PREMIUM')" />
-        <p class="px-5 text-disabled text-center text-caption">
-          For unlimited
-          access,
-          please upgrade
-          to premium.
-          Otherwise, limited access options are available based on your country</p>
+        <h3 class="text-center" v-html="dialogTitle" />
+        <p class="px-5 text-disabled text-center text-caption">{{dialogDescription}}</p>
       </div>
 
 
       <div class="px-3">
 
+        <!-- Watch rewarded ad -->
         <premium-connect-button
+          v-if="dialogData.showRewardedAd"
           icon="mdi-play-box-lock-open-outline"
           :title="$t('WATCH_REWARDED_AD')"
           :description="$t('WATCH_REWARDED_AD_DESC')"
           :button-text="$t('CONNECT')"
         />
+
+        <!-- Try premium -->
         <premium-connect-button
+          v-if="dialogData.showTryPremium"
           icon="mdi-timer-lock-open-outline"
           :title="$t('TRY_PREMIUM')"
           :description="$t('TRY_PREMIUM_DESC')"
           :button-text="$t('CONNECT')"
         />
+
+        <!-- Go premium -->
         <premium-connect-button
+          v-if="dialogData.showGoPremium"
           icon="mdi-crown-circle-outline"
           :title="$t('GO_PREMIUM_2')"
           :description="$t('GO_PREMIUM_DESC')"

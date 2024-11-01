@@ -9,12 +9,14 @@ const $t = i18n.global.t;
 
 const props = defineProps<{
   locationsList: ClientServerLocationInfo[],
+  hasGroup: boolean,
   isPremium: boolean,
   isActiveProfile: boolean,
 }>();
 
 const emits = defineEmits<{
-  (e: 'onClickLocation', serverLocationInfo: string, isDiagnose: boolean): void;
+  (e: 'onClickLocation', serverLocationInfo: ClientServerLocationInfo, isPremium: boolean,
+   isDiagnose: boolean): void;
 }>();
 
 function isActiveItem(location: ClientServerLocationInfo): boolean{
@@ -22,8 +24,6 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     return false;
   return vhApp.isActiveLocation(location);
 }
-
-
 </script>
 
 <template>
@@ -36,7 +36,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       'border-b' : ''), (vhApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3 px-2')]"
     :active="isActiveItem(location)"
     :color="vhApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
-    @click="emits('onClickLocation', location.serverLocation, false)"
+    @click="emits('onClickLocation', location, props.isPremium, false)"
   >
 
     <v-list-item-title class="d-flex align-center text-subtitle-1" :class="[location.isNestedCountry ? 'ps-4' : '']">

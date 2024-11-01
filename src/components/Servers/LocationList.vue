@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ClientProfileInfo } from '@/services/VpnHood.Client.Api'
+import { ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { Util } from '@/services/Util'
 import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue'
-import { ComponentRouteController } from '@/services/ComponentRouteController';
-import { ComponentName } from '@/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const $t = i18n.global.t;
@@ -16,7 +14,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: string, isDiagnose: boolean): void;
+  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
+   isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
 const isActiveClientProfile = vhApp.isActiveClientProfile(props.clientProfileInfo.clientProfileId);
@@ -29,18 +28,15 @@ const premiumLocations = props.clientProfileInfo.serverLocationInfos.filter(x =>
 const openedListGroups = ref<string[]>([$t('FREE_LOCATIONS'), $t('PREMIUM_LOCATIONS')]);
 const listIds: string[] = hasGroup() ? ['freeLocations', 'premiumLocations'] : ['allLocations'];
 
-async function onClickLocation(serverLocation: string, isDiagnose: boolean): Promise<void> {
-  vhApp.data.uiState.promoteDialogData.message = "my test";
-  vhApp.data.uiState.promoteDialogData.isVisible = true;
-  await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
-
+async function onClickLocation(serverLocationInfo: ClientServerLocationInfo, isPremium: boolean, isDiagnose: boolean):
+  Promise<void> {
   // If app is VpnHood Client and selected server is single location, do nothing.
   // Because the parent have the connect function.
   if(Util.isSingleLocation(props.clientProfileInfo.serverLocationInfos.length))
     return;
 
   // Call the parent component function
-  emits('connect', props.clientProfileInfo, serverLocation, isDiagnose);
+  emits('connect', props.clientProfileInfo, serverLocationInfo, isPremium, isDiagnose);
 }
 
 function hasGroup(): boolean{
@@ -90,6 +86,7 @@ function hasGroup(): boolean{
           :locations-list="index === 0 ? freeLocations : premiumLocations"
           :is-active-profile="isActiveClientProfile"
           :is-premium="index!==0"
+          :has-group="true"
           @on-click-location="onClickLocation"
         />
       </v-list-group>
@@ -101,6 +98,7 @@ function hasGroup(): boolean{
       :locations-list="props.clientProfileInfo.serverLocationInfos"
       :is-active-profile="isActiveClientProfile"
       :is-premium="false"
+      :has-group = "false"
       @on-click-location="onClickLocation"
     />
 

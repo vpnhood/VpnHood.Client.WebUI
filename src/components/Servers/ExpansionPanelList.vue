@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { Util } from '@/services/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api'
+import {
+  ClientProfileInfo,
+  ClientProfileUpdateParams,
+  ClientServerLocationInfo,
+  PatchOfString
+} from '@/services/VpnHood.Client.Api';
 import { ref } from 'vue'
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
-import { ComponentName } from '@/UiConstants'
+import { ComponentName, ServerLocationGroup } from '@/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
 
@@ -18,7 +23,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: string | null, isDiagnose: boolean): void;
+  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
+   group: ServerLocationGroup | null, isDiagnose: boolean): void;
 }>();
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
@@ -55,8 +61,9 @@ async function saveNewClientProfileName(): Promise<void> {
   );
 }
 
-function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: string | null, isDiagnose: boolean): void {
-  emits('connect', clientProfileInfo, serverLocationInfo, isDiagnose);
+function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
+                 group: ServerLocationGroup | null, isDiagnose: boolean): void {
+  emits('connect', clientProfileInfo, serverLocationInfo, group, isDiagnose);
 }
 </script>
 
@@ -69,7 +76,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: strin
     rounded="xl"
     bg-color="white"
     class="mb-4"
-    @click="connect(clientProfileInfo, null, false)"
+    @click="connect(clientProfileInfo, null, null, false)"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
@@ -155,7 +162,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: strin
                     :title="$t('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="connect(clientProfileInfo, null, true)">
+                    @click="connect(clientProfileInfo, null, null,true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 

@@ -168,7 +168,7 @@
   "ACTIVE": "Active",
   "AUTO_SELECT": "Auto Select",
   "AUTO": "Auto",
-  "FASTEST": "Fastest",
+  "FASTEST": "Fastest Server",
   "LOCATION": "Location",
   "LOADING_AD": "Loading Ad",
   "SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME": "Leave it empty to display the default name.",
@@ -184,6 +184,9 @@
   "FREE_LOCATIONS": "Free Locations",
   "PREMIUM_LOCATIONS": "Premium Locations",
   "SELECTED_LOCATION_IS_PREMIUM": "Selected Location is <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
+  "SELECTED_LOCATION_IS_PREMIUM_DESC": "For unlimited access, please upgrade to premium. Otherwise, limited access options are available based on your country",
+  "SELECTED_LOCATION_IS_FREE": "Selected Location is <span class=\"text-uppercase text-secondary\">FREE</span>",
+  "SELECTED_LOCATION_IS_FREE_DESC": "For unlimited access, please upgrade to premium. Otherwise, limited access options are available based on your country",
   "GO_BACK": "Go Back",
   "WATCH_REWARDED_AD": "Watch Rewarded Ad",
   "WATCH_REWARDED_AD_DESC": "Access a premium server in this location for 60 minutes.",
@@ -191,5 +194,7 @@
   "TRY_PREMIUM_DESC": "Experience a premium server in this location for 10 minutes.",
   "GO_PREMIUM_2": "Go Premium",
   "GO_PREMIUM_DESC": "Upgrade to premium to remove ads and unlock more features.",
-  "UPGRADE": "Upgrade"
+  "UPGRADE": "Upgrade",
+  "UNKNOWN_ERROR": "Unknown Error",
+  "ALREADY_CONNECTED_TO_LOCATION": "You are already connected to the selected location."
 }
