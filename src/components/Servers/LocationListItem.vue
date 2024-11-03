@@ -39,66 +39,66 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     @click="emits('onClickLocation', location, props.isPremium, false)"
   >
 
-    <v-list-item-title class="d-flex align-center text-subtitle-1" :class="[location.isNestedCountry ? 'ps-4' : '']">
+    <v-list-item-title class="d-flex align-center justify-space-between text-subtitle-1" :class="[location.isNestedCountry ? 'ps-4' : '']">
 
-      <!-- Fastest item -->
-      <template v-if="vhApp.isLocationAutoSelected(location.countryCode)">
-        <v-icon
-          icon="mdi-lightning-bolt-outline"
-          size="35"
-          class="me-2"
-          :class="{'flasher': !isActiveItem(location)}"
-          :color="isActiveItem(location)
-            ? ''
-            : (vhApp.isConnectApp() ? 'secondary' : 'primary-darken-1')"
-        />
+      <div class="d-flex align-center">
+        <!-- Fastest item -->
+        <template v-if="vhApp.isLocationAutoSelected(location.countryCode)">
+          <v-icon
+            icon="mdi-lightning-bolt-outline"
+            size="35"
+            class="me-2"
+            :color="isActiveItem(location)
+              ? ''
+              : (vhApp.isConnectApp() ? 'secondary' : 'primary-darken-1')"
+          />
 
-        <!-- Title and subtitle -->
-        <div class="d-flex align-center ga-1">
-          <span>{{ $t('FASTEST') }}</span>
-          <span :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1' ,'text-caption']">
-              ({{ $t('RECOMMENDED') }})
-          </span>
-        </div>
-
-        <!-- Descriptions -->
-      </template>
-
-      <!-- Location items -->
-      <template v-else>
-        <!-- Country flag -->
-        <span
-          class="overflow-hidden d-inline-flex align-center justify-center border-md item-flag me-4"
-          :class="[
-          (vhApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-5'),
-           (location.isNestedCountry ? 'nested-item' : '')
-           ]"
-        >
-        <img :src="vhApp.getCountryFlag(location.countryCode)" height="100%" alt="country flag"/>
-      </span>
-
-        <!-- Country name & State name -->
-        <template v-if="!location.isNestedCountry">
-
-          <!-- Country name -->
-          <span>{{ location.countryName }}</span>
-
-          <!-- Only if server has nested item -->
-          <span
-            v-if="vhApp.isLocationAutoSelected(location.regionName)"
-            class="text-caption ms-1"
-            :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1']"
-          >
-          ({{ $t('AUTO_SELECT') }})
-        </span>
-
+          <!-- Title and subtitle -->
+          <div :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width', 'text-truncate']">
+            <span>{{ $t('FASTEST') }}</span>
+            <span :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1'
+            ,'flasher text-caption ms-1']">
+                ({{ $t('RECOMMENDED') }})
+            </span>
+          </div>
         </template>
 
-        <!-- State name for nested items -->
-        <span v-else class="text-subtitle-2">{{ location.regionName }}</span>
-      </template>
+        <!-- Location items -->
+        <template v-else>
+          <!-- Country flag -->
+          <span
+            class="overflow-hidden d-inline-flex align-center justify-center border-md item-flag me-4"
+            :class="[
+            (vhApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-5'),
+             (location.isNestedCountry ? 'nested-item' : '')
+             ]"
+          >
+            <img :src="vhApp.getCountryFlag(location.countryCode)" height="100%" alt="country flag"/>
+          </span>
 
-      <v-spacer/>
+          <!-- Country name & State name -->
+          <template v-if="!location.isNestedCountry">
+            <div class="text-truncate" :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width']">
+              <!-- Country name -->
+              <span>{{ location.countryName }}</span>
+
+              <!-- Only if server has nested item -->
+              <span
+                v-if="vhApp.isLocationAutoSelected(location.regionName)"
+                class="text-caption ms-1"
+                :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1']"
+              >
+              ({{ $t('AUTO_SELECT') }})
+            </span>
+            </div>
+          </template>
+
+          <!-- State name for nested items -->
+          <span v-else class="text-subtitle-2 text-truncate" :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width']">
+            {{ location.regionName }}
+          </span>
+        </template>
+      </div>
 
       <!-- Status -->
       <v-chip
@@ -124,6 +124,16 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
   width: 27px;
   height: 20px;
   border-radius: 4px;
+}
+
+/*noinspection CssUnusedSymbol*/
+.limited-width{
+  max-width: calc(100vw - 110px);
+}
+
+/*noinspection CssUnusedSymbol*/
+.active-item-limited-width{
+  max-width: calc(100vw - 150px);
 }
 
 /*noinspection CssUnusedSymbol*/

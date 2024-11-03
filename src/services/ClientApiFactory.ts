@@ -1,6 +1,6 @@
 import axios from "axios";
 import type {AxiosInstance} from 'axios';
-import {AppClient, AccountClient, BillingClient} from './VpnHood.Client.Api';
+import {AppClient, AccountClient, BillingClient, ClientProfileClient} from './VpnHood.Client.Api';
 
 export class ClientApiFactory {
     private readonly axiosInstance: AxiosInstance;
@@ -29,6 +29,10 @@ export class ClientApiFactory {
 
     public createAppClient(): AppClient {
         return new AppClient(this.baseUrl, this.axiosInstance);
+    }
+
+    public createClientProfileClient(): ClientProfileClient {
+        return new ClientProfileClient(this.baseUrl, this.axiosInstance);
     }
 
     public createAccountClient(): AccountClient {

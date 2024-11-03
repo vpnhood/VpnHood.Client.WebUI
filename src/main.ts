@@ -5,7 +5,7 @@ import { AppName, ComponentName } from './UiConstants'
 import vuetify from './plugins/vuetify'
 import i18n from './locales/i18n'
 import router from './plugins/router'
-import ErrorPage from "./pages/ErrorPage.vue";
+import ErrorPage from "./pages/ErrorPage.vue"
 import './assets/styles/general.css'
 import './assets/styles/override.css'
 import './assets/styles/vpn-hood.css'

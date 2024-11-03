@@ -111,8 +111,8 @@
       </v-btn>
     </v-col>
 
-    <!-- DialogConfig buttons -->
-    <v-col cols="12" class="text-truncate">
+    <!-- Config buttons -->
+    <v-col cols="12">
       <v-row>
         <!-- Servers button -->
         <v-col cols="12" md="6" class="py-0 pa-md-1">
@@ -126,9 +126,7 @@
             class="config-item align-center mb-1"
             @click="$router.push('/servers')"
           >
-            <span tabindex="-1">{{
-                $vpnHoodApp.isSingleServerMode() ? $t('LOCATION') : $t('SERVER')
-              }}</span>
+            <span tabindex="-1">{{$vpnHoodApp.isSingleServerMode() ? $t('LOCATION') : $t('SERVER') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
             <span
               class="text-capitalize text-caption text-white opacity-50 text-truncate"
@@ -182,26 +180,19 @@
             <span>{{ $t('COUNTRIES') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
             <span class="text-capitalize text-caption text-white opacity-50">
-              {{ $vpnHoodApp.data.settings.userSettings.tunnelClientCountry ? $t('IP_FILTER_ALL') : $t('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')
-              }}
+              {{ $vpnHoodApp.data.settings.userSettings.tunnelClientCountry
+              ? $t('IP_FILTER_ALL') : $t('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
             </span>
             <template
               v-slot:append
-              v-if="
-                !$vpnHoodApp.data.settings.userSettings.tunnelClientCountry &&
-                $vpnHoodApp.data.state.clientCountryCode
-              "
+              v-if="!$vpnHoodApp.data.settings.userSettings.tunnelClientCountry &&
+                $vpnHoodApp.data.state.clientCountryCode"
             >
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
-                <img
-                  :src="
-                    $vpnHoodApp.getCountryFlag(
-                      $vpnHoodApp.data.state.clientCountryCode,
-                    )
-                  "
+                <img :src="$vpnHoodApp.getCountryFlag($vpnHoodApp.data.state.clientCountryCode)"
                   height="100%"
                   alt="country flag"
                 />
@@ -434,11 +425,11 @@ export default defineComponent({
     udpProtocolButtonText(): string {
       if (VpnHoodApp.instance.data.state.connectionState === AppConnectionState.Connected &&
         VpnHoodApp.instance.data.state.isUdpChannelSupported === false)
-        return this.$t('PROTOCOL_UDP_OFF');
+        return this.$t('PROTOCOL_TCP');
 
       return VpnHoodApp.instance.data.settings.userSettings.useUdpChannel
-        ? this.$t('PROTOCOL_UDP_ON')
-        : this.$t('PROTOCOL_UDP_OFF')
+        ? this.$t('PROTOCOL_UDP')
+        : this.$t('PROTOCOL_TCP')
     },
 
     getLocaleChevronIcon(): string {
@@ -469,6 +460,11 @@ export default defineComponent({
 
 <!--suppress CssUnusedSymbol -->
 <style>
+.config-item>.v-btn__content{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
 #serverButton .v-btn__content,
 #excludeCountryButton .v-btn__content {
   flex-grow: 1;

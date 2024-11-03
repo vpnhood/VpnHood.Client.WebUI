@@ -20,8 +20,8 @@
       <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Global alert dialog -->
-      <alert-dialog v-model="isAlertDialogVisible"/>
-      <promote-dialog v-model="isPromoteDialogVisible"/>
+      <alert-dialog v-model="isErrorDialogVisible" v-if="$vpnHoodApp.data.uiState.errorDialogData.isVisible"/>
+      <promote-dialog v-model="isPromoteDialogVisible" v-if="$vpnHoodApp.data.uiState.promoteDialogData.isVisible"/>
 
       <!-- Global async confirm dialog -->
       <ConfirmDialog/>
@@ -71,7 +71,7 @@ export default defineComponent({
   },
 
   computed: {
-    isAlertDialogVisible: {
+    isErrorDialogVisible: {
       get(): boolean {
         return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog) &&
           this.$vpnHoodApp.data.uiState.errorDialogData.isVisible;

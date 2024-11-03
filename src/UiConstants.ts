@@ -24,6 +24,17 @@ export enum ComponentName {
     PrivacyPolicyDialog = "PrivacyPolicyDialog"
 }
 
+export enum LocationType{
+  Premium = "Premium",
+  Free = "Free"
+}
+
+export enum Protocols{
+  UDP,
+  TCP,
+  TcpAndDropHTTP3
+}
+
 // noinspection JSUnusedGlobalSymbols
 export enum LanguagesCode {
     SystemDefault = "sys",

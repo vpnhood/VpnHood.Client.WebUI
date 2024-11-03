@@ -31,28 +31,33 @@ async function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo:
     return;
 
   // User select active item and already connected
-  if (vhApp.data.state.canDisconnect
+  // TODO Implement
+  /*if (vhApp.data.state.canDisconnect
     && clientProfileInfo.clientProfileId === vhApp.data.state.clientProfile?.clientProfileId
     && serverLocationInfo?.serverLocation === vhApp.data.state.serverLocationInfo?.serverLocation)
-    return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));
+    return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));*/
 
-  vhApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
-  // If the serverLocation is empty, it will be connected to Auto
-  vhApp.data.settings.userSettings.serverLocation = serverLocationInfo?.serverLocation;
-
-  if (serverLocationInfo?.options.prompt){
+  if (serverLocationInfo?.options.prompt || true){
     const options = serverLocationInfo.options;
     const promoteData = vhApp.data.uiState.promoteDialogData;
+    promoteData.clientProfileId = clientProfileInfo.clientProfileId;
+    promoteData.serverLocation = serverLocationInfo?.serverLocation;
     promoteData.showRewardedAd = options.premiumByRewardAd ?? null;
     promoteData.showTryPremium = options.premiumByTrial ?? null;
     promoteData.showGoPremium = options.premiumByPurchase ?? null;
     promoteData.isPremiumLocation = isPremium;
+    promoteData.isVisible = true;
     await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
     return;
   }
 
-  await router.replace('/');
+  // Save user settings
+  vhApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
+  // If the serverLocation is empty, it will be connected to Auto
+  vhApp.data.settings.userSettings.serverLocation = serverLocationInfo?.serverLocation;
   await vhApp.saveUserSetting();
+
+  await router.replace('/');
 
   if (isDiagnose) await vhApp.diagnose();
   else await vhApp.connect();

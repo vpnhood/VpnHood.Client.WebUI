@@ -52,6 +52,7 @@ function hasGroup(): boolean{
     :key="index"
     :id="id"
     v-model:opened="openedListGroups"
+    open-strategy="multiple"
     :bg-color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
     class="py-0"
     :class="[vhApp.isConnectApp() ? '' : 'zebra']"

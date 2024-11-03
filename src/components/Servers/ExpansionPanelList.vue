@@ -10,12 +10,12 @@ import {
 import { ref } from 'vue'
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
-import { ComponentName, ServerLocationGroup } from '@/UiConstants';
+import { ComponentName } from '@/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
 
 const VhApp = VpnHoodApp.instance;
-const $t = i18n.global.t;
+const locale = i18n.global.t;
 const maximumLocationOnCollapsed: number = 9;
 
 const props = defineProps<{
@@ -24,7 +24,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
-   group: ServerLocationGroup | null, isDiagnose: boolean): void;
+   isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
@@ -62,8 +62,8 @@ async function saveNewClientProfileName(): Promise<void> {
 }
 
 function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
-                 group: ServerLocationGroup | null, isDiagnose: boolean): void {
-  emits('connect', clientProfileInfo, serverLocationInfo, group, isDiagnose);
+                 isPremium: boolean, isDiagnose: boolean): void {
+  emits('connect', clientProfileInfo, serverLocationInfo, isPremium, isDiagnose);
 }
 </script>
 
@@ -76,7 +76,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
     rounded="xl"
     bg-color="white"
     class="mb-4"
-    @click="connect(clientProfileInfo, null, null, false)"
+    @click="connect(clientProfileInfo, null, false, false)"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
@@ -153,21 +153,21 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
                   <!-- Rename item -->
                   <v-list-item
                     v-if="clientProfileInfo.clientProfileId !== VhApp.data.features.builtInClientProfileId"
-                    :title="$t('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
+                    :title="locale('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
                   <v-divider
                     v-if="clientProfileInfo.clientProfileId !== VhApp.data.features.builtInClientProfileId"/>
 
                   <!-- Diagnose item -->
                   <v-list-item
-                    :title="$t('DIAGNOSE')"
+                    :title="locale('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="connect(clientProfileInfo, null, null,true)">
+                    @click="connect(clientProfileInfo, null, false,true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 
                   <!-- Delete item -->
-                  <v-list-item v-if="VhApp.data.features.isAddAccessKeySupported" :title="$t('REMOVE')"
+                  <v-list-item v-if="VhApp.data.features.isAddAccessKeySupported" :title="locale('REMOVE')"
                                prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(clientProfileInfo)"/>
 
                 </v-list>
@@ -208,7 +208,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
 
   <!-- Rename dialog -->
   <v-dialog v-model="ComponentRouteController.create($componentName.RenameServerDialog).isShow" max-width="600">
-    <v-card :title="$t('RENAME')">
+    <v-card :title="locale('RENAME')">
 
       <v-card-text>
         <!-- Name text field -->
@@ -217,7 +217,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
           spellcheck="false"
           autocomplete="off"
           color="primary"
-          :hint="$t('SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME')"
+          :hint="locale('SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME')"
           persistent-hint
           :clearable="true">
         </v-text-field>
@@ -230,7 +230,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
         <v-btn
           color="primary"
           variant="text"
-          :text="$t('CANCEL')"
+          :text="locale('CANCEL')"
           @click="ComponentRouteController.showComponent($componentName.RenameServerDialog, false)"
         />
 
@@ -238,7 +238,7 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
         <v-btn
           color="primary"
           variant="text"
-          :text="$t('SAVE')"
+          :text="locale('SAVE')"
           @click="saveNewClientProfileName"
         />
 
@@ -251,10 +251,10 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
             max-width="600">
     <v-card>
 
-      <v-card-title class="text-on-warning bg-warning">{{ $t('WARNING') }}</v-card-title>
+      <v-card-title class="text-on-warning bg-warning">{{ locale('WARNING') }}</v-card-title>
 
       <v-card-text>
-        <p class="color-muted">{{ $t("CONFIRM_REMOVE_SERVER") }}</p>
+        <p class="color-muted">{{ locale("CONFIRM_REMOVE_SERVER") }}</p>
         <strong>{{ currentClientProfileInfo.clientProfileName }}</strong>
       </v-card-text>
 
@@ -264,14 +264,14 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
         <!-- Confirm delete button -->
         <v-btn
           variant="text"
-          :text="$t('YES')"
+          :text="locale('YES')"
           @click="removeServer(currentClientProfileInfo.clientProfileId)"
         />
 
         <!-- Cancel delete button -->
         <v-btn
           variant="tonal"
-          :text="$t('NO')"
+          :text="locale('NO')"
           @click="ComponentRouteController.showComponent($componentName.ConfirmDeleteServerDialog, false)"
         />
 

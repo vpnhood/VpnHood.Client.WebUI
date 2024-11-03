@@ -155,7 +155,7 @@ export class AccountClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+
             return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -748,7 +748,7 @@ export class AppClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1145,7 +1145,7 @@ export class BillingClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -3221,7 +3221,7 @@ export class ApiException extends Error {
 
     // Try to convert an ApiError to an ApiException. it usually comes from unknown type
     public static fromApiError(apiError: unknown): ApiException {
-        if (apiError)
+        if (!apiError)
             throw new Error('apiError can not be null!');
 
         const apiErrorObj = this.getApiError(apiError);

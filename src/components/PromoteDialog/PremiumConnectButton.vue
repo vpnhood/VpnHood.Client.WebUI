@@ -1,9 +1,14 @@
 <script setup lang="ts">
+
 const props = defineProps<{
   icon: string,
   title: string,
   description: string,
   buttonText: string,
+  buttonActionPlan: string,
+}>();
+const emits = defineEmits<{
+  (e: 'actionByPlan', plan: string): void;
 }>();
 </script>
 
@@ -24,6 +29,7 @@ const props = defineProps<{
         size="small"
         rounded="pill"
         variant="flat"
+        @click="emits('actionByPlan', props.buttonActionPlan)"
       />
     </v-col>
   </v-row>
