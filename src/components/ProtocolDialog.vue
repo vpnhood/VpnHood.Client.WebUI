@@ -23,7 +23,7 @@ const activeProtocol = computed<Protocols>({
         ? Protocols.TcpAndDropHTTP3
         : Protocols.TCP;
   },
-  set: async (value) => {
+  set: async (value: Protocols) => {
     vhApp.data.settings.userSettings.useUdpChannel = (!(value === Protocols.TCP || value === Protocols.TcpAndDropHTTP3));
     vhApp.data.settings.userSettings.dropQuic = value === Protocols.TcpAndDropHTTP3;
     await vhApp.saveUserSetting();

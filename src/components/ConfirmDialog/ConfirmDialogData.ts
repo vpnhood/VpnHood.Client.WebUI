@@ -1,4 +1,4 @@
-export class DialogConfig {
+export class ConfirmDialogData {
     isOpenDialog: boolean = false;
     title: string = "";
     message: string = "";

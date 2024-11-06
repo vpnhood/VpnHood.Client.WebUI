@@ -1,10 +1,54 @@
+<script setup lang="ts">
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { ref } from 'vue';
+import i18n from '@/locales/i18n';
+
+const vhApp = VpnHoodApp.instance;
+const locale = i18n.global.t;
+
+const showConnectedAnimation = ref<boolean | null>(null);
+const props = defineProps<{
+  alertForExpire: boolean,
+  connectionState: string,
+  connectionStateText: string,
+  stateIcon: string | null,
+  expireDate: string | null,
+  bandwidthUsed: string | null,
+  bandwidthTotal: string | null,
+}>();
+
+function determineClass() {
+  // VpnHoodCONNECT
+  if (vhApp.isConnectApp()) {
+    processConnectedAnimation();
+    return props.connectionState.toLowerCase() + ' my-3' + ' animation-' +
+      (showConnectedAnimation.value === true).toString();
+  }
+  // VpnHoodClient
+  return vhApp.isConnected() ? 'opacity-100' : 'opacity-30';
+}
+
+// Process connect animation state for VpnHoodCONNECT
+function processConnectedAnimation(): void {
+  if (vhApp.isConnected()) {
+    showConnectedAnimation.value = false;
+    return;
+  }
+
+  // It should not show animation if the previous state is null
+  // If State is null, that means the page has been refreshed
+  if (showConnectedAnimation.value === false)
+    showConnectedAnimation.value = true;
+}
+</script>
+
 <template>
   <div
-      :id="isConnectApp ? 'connectionCircleIndicator' : 'circleOuter'"
-      :class="determineClass()"
+    :id="vhApp.isConnectApp() ? 'connectionCircleIndicator' : 'circleOuter'"
+    :class="determineClass()"
   >
 
-    <div v-if="isConnectApp" class="position-absolute w-100 h-100">
+    <div v-if="vhApp.isConnectApp()" class="position-absolute w-100 h-100">
       <div id="rotateCircle"></div>
     </div>
     <div v-else id="circle"></div>
@@ -12,80 +56,22 @@
     <div class="d-flex flex-column align-center justify-center position-relative h-100">
 
       <!-- Connection state text -->
-      <span :class="[isConnectApp ? 'text-body-2' : 'text-body-1']">{{ connectionStateText }}</span>
+      <span :class="[vhApp.isConnectApp() ? 'text-body-2' : 'text-body-1']">{{ props.connectionStateText }}</span>
 
       <!-- Usage -->
-      <div class="d-flex flex-column align-center" v-if="isConnected && bandwidthTotal">
-        <span class="text-body-1">{{ bandwidthUsed }} {{ $t("OF") }}</span>
-        <span class="text-ui-tertiary">{{ bandwidthTotal }}</span>
+      <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && props.bandwidthTotal">
+        <span class="text-body-1">{{ props.bandwidthUsed }} {{ locale('OF') }}</span>
+        <span class="text-ui-tertiary">{{ props.bandwidthTotal }}</span>
       </div>
 
       <!-- Check -->
-      <v-icon v-if="stateIcon" size="50" color="white">{{ stateIcon }}</v-icon>
+      <v-icon v-if="props.stateIcon" size="50" color="white">{{ props.stateIcon }}</v-icon>
 
       <!-- Access Key expire date -->
-      <p v-if="!isConnectApp && expireDate"
-         :class="[alertForExpire ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">
-        {{ $t("EXPIRE") + ": " + expireDate }}</p>
+      <p v-if="!vhApp.isConnectApp() && props.expireDate"
+         :class="[props.alertForExpire ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">
+        {{ locale('EXPIRE') + ': ' + props.expireDate }}</p>
 
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  data() {
-    return {
-      showConnectedAnimation: null as boolean | null,
-    }
-  },
-  props: {
-    isConnectApp: Boolean,
-    isConnected: Boolean,
-    alertForExpire: Boolean,
-    connectionState: String,
-    connectionStateText: String,
-    stateIcon: String as () => string | null,
-    expireDate: String as () => string | null,
-    bandwidthUsed: String as () => string | null,
-    bandwidthTotal: String as () => string | null,
-  },
-  emits: [
-    "isConnectApp",
-    "update:isConnected",
-    "update:alertForExpire",
-    "update:connectionState",
-    "update:connectionStateText",
-    "update:stateIcon",
-    "update:expireDate",
-    "update:bandwidthUsed",
-    "update:bandwidthTotal",
-  ],
-  methods: {
-    determineClass() {
-      // VpnHoodCONNECT
-      if (this.isConnectApp) {
-        this.processConnectedAnimation();
-        return this.connectionState?.toLowerCase() + ' my-3' + ' animation-' + (this.showConnectedAnimation === true).toString();
-      }
-      // VpnHoodClient
-      return this.isConnected ? 'opacity-100' : 'opacity-30';
-    },
-
-    // Process connect animation state for VpnHoodCONNECT
-    processConnectedAnimation(): void {
-      if (!this.$vpnHoodApp.isConnected()) {
-        this.showConnectedAnimation = false;
-        return;
-      }
-
-      // It should not show animation if the previous state is null
-      // If State is null, that means the page has been refreshed
-      if (this.showConnectedAnimation === false)
-        this.showConnectedAnimation = true;
-    }
-  }
-})
-</script>

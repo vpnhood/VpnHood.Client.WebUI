@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import { ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import AppBar from "@/components/AppBar.vue";
-import {Util} from "@/services/Util";
-import router from '@/plugins/router';
 import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
-import { ComponentName } from '@/UiConstants';
+import { ConnectManager } from '@/services/ConnectManager';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -22,45 +19,9 @@ onMounted(() => {
 });
 
 // Connect or diagnose selected client profile
-async function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
+async function connect(clientProfileId: string, serverLocation: string | null,
                        isPremium: boolean, isDiagnose: boolean): Promise<void> {
-
-  // App is VpnHoodClient and Client profile have multi location, but user select server card instead location
-  // Do nothing because expansion panel has action collapse/expand
-  if (!serverLocationInfo && !Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length))
-    return;
-
-  // User select active item and already connected
-  // TODO Implement
-  /*if (vhApp.data.state.canDisconnect
-    && clientProfileInfo.clientProfileId === vhApp.data.state.clientProfile?.clientProfileId
-    && serverLocationInfo?.serverLocation === vhApp.data.state.serverLocationInfo?.serverLocation)
-    return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));*/
-
-  if (serverLocationInfo?.options.prompt || true){
-    const options = serverLocationInfo.options;
-    const promoteData = vhApp.data.uiState.promoteDialogData;
-    promoteData.clientProfileId = clientProfileInfo.clientProfileId;
-    promoteData.serverLocation = serverLocationInfo?.serverLocation;
-    promoteData.showRewardedAd = options.premiumByRewardAd ?? null;
-    promoteData.showTryPremium = options.premiumByTrial ?? null;
-    promoteData.showGoPremium = options.premiumByPurchase ?? null;
-    promoteData.isPremiumLocation = isPremium;
-    promoteData.isVisible = true;
-    await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
-    return;
-  }
-
-  // Save user settings
-  vhApp.data.settings.userSettings.clientProfileId = clientProfileInfo.clientProfileId;
-  // If the serverLocation is empty, it will be connected to Auto
-  vhApp.data.settings.userSettings.serverLocation = serverLocationInfo?.serverLocation;
-  await vhApp.saveUserSetting();
-
-  await router.replace('/');
-
-  if (isDiagnose) await vhApp.diagnose();
-  else await vhApp.connect();
+  await ConnectManager.connect3(clientProfileId, serverLocation, isPremium, isDiagnose);
 }
 </script>
 

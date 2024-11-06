@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import { Util } from '@/services/Util'
 import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue'
@@ -14,8 +13,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
-   isPremium: boolean, isDiagnose: boolean): void;
+  (e: 'connect', clientProfileId: string, serverLocation: string, isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
 const isActiveClientProfile = vhApp.isActiveClientProfile(props.clientProfileInfo.clientProfileId);
@@ -28,15 +26,8 @@ const premiumLocations = props.clientProfileInfo.serverLocationInfos.filter(x =>
 const openedListGroups = ref<string[]>([$t('FREE_LOCATIONS'), $t('PREMIUM_LOCATIONS')]);
 const listIds: string[] = hasGroup() ? ['freeLocations', 'premiumLocations'] : ['allLocations'];
 
-async function onClickLocation(serverLocationInfo: ClientServerLocationInfo, isPremium: boolean, isDiagnose: boolean):
-  Promise<void> {
-  // If app is VpnHood Client and selected server is single location, do nothing.
-  // Because the parent have the connect function.
-  if(Util.isSingleLocation(props.clientProfileInfo.serverLocationInfos.length))
-    return;
-
-  // Call the parent component function
-  emits('connect', props.clientProfileInfo, serverLocationInfo, isPremium, isDiagnose);
+async function onClickLocation(serverLocation: string, isPremium: boolean, isDiagnose: boolean): Promise<void> {
+  emits('connect', props.clientProfileInfo.clientProfileId, serverLocation, isPremium, isDiagnose);
 }
 
 function hasGroup(): boolean{

@@ -15,8 +15,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'onClickLocation', serverLocationInfo: ClientServerLocationInfo, isPremium: boolean,
-   isDiagnose: boolean): void;
+  (e: 'onClickLocation', serverLocation: string, isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
 function isActiveItem(location: ClientServerLocationInfo): boolean{
@@ -36,7 +35,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       'border-b' : ''), (vhApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3 px-2')]"
     :active="isActiveItem(location)"
     :color="vhApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
-    @click="emits('onClickLocation', location, props.isPremium, false)"
+    @click="emits('onClickLocation', location.serverLocation, props.isPremium, false)"
   >
 
     <v-list-item-title class="d-flex align-center justify-space-between text-subtitle-1" :class="[location.isNestedCountry ? 'ps-4' : '']">
@@ -56,8 +55,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
           <!-- Title and subtitle -->
           <div :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width', 'text-truncate']">
             <span>{{ $t('FASTEST') }}</span>
-            <span :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1'
-            ,'flasher text-caption ms-1']">
+            <span :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1','flasher text-caption ms-1']">
                 ({{ $t('RECOMMENDED') }})
             </span>
           </div>

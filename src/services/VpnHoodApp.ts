@@ -12,21 +12,25 @@ import {
   ClientProfileUpdateParams,
   ClientServerLocationInfo,
   ConfigParams,
+  ConnectPlanId,
   DeviceAppInfo,
+  PatchOfString,
+  ServerLocationOptions,
   SessionSuppressType,
   UiCultureInfo
 } from '@/services/VpnHood.Client.Api';
 import { UiState } from '@/services/UiState';
 import { UserState } from '@/services/UserState';
-import { AppName, ComponentName, SubscriptionPlansId } from '@/UiConstants';
+import { AppName, ComponentName, LocationType, SubscriptionPlansId } from '@/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
 import router from '@/plugins/router';
-import { DialogConfig } from '@/components/ConfirmDialog/DialogConfig';
+import { ConfirmDialogData } from '@/components/ConfirmDialog/ConfirmDialogData';
 import type { Analytics } from 'firebase/analytics';
 import { logEvent, setUserId } from 'firebase/analytics';
 import { AnalyticsCustomEvent, FirebaseApp } from '@/services/Firebase';
+import { ErrorDialogData } from '@/components/ErrorDialog/ErrorDialogData';
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -38,7 +42,7 @@ export class VpnHoodAppData {
   public features: AppFeatures;
   public clientProfileInfos: ClientProfileInfo[];
   public cultureInfos: UiCultureInfo[];
-  public confirmDialog: DialogConfig = new DialogConfig();
+  public confirmDialog: ConfirmDialogData = new ConfirmDialogData();
 
   public constructor(
     state: AppState,
@@ -182,10 +186,42 @@ export class VpnHoodApp {
     }
   }
 
-  public async connect(planId?: string): Promise<void> {
+  public async showPurchasePremium(): Promise<void> {
+    await router.push('/purchase-subscription');
+  }
+
+  public async connect(clientProfileId: string, serverLocation: string,
+                       isPremium: boolean, planId: ConnectPlanId, isDiagnose: boolean = false): Promise<void> {
+
+    // User select active item and already connected
+    // TODO Implement
+    /*if (this.data.state.canDisconnect
+      && clientProfileId === this.data.state.clientProfile?.clientProfileId
+      && serverLocation === this.data.state.serverLocationInfo?.serverLocation)
+      return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));*/
+
+    const selectedLocationType: LocationType = isPremium ? LocationType.Premium : LocationType.Free;
+    await this.updateClientProfile(clientProfileId,
+      new ClientProfileUpdateParams({
+        customData: new PatchOfString({ value: selectedLocationType.toString() })
+      }));
+
+    // Set the selected server location
+    this.data.settings.userSettings.serverLocation = serverLocation;
+    // Set the selected client profile id
+    this.data.settings.userSettings.clientProfileId = clientProfileId;
+    // Save all user settings
+    await this.saveUserSetting();
+
+    // Just for Development info
     console.log('Connecting to ' + this.data.state.clientProfile?.clientProfileName);
     console.log('Server location: ' + this.data.settings.userSettings.serverLocation);
-    await this.apiClient.connect(undefined, undefined, planId);
+
+    // Navigate to home page
+    await router.replace('/');
+
+    if (isDiagnose) await this.diagnose();
+    else await this.apiClient.connect(clientProfileId, serverLocation, planId);
   }
 
   public async disconnect(): Promise<void> {
@@ -210,9 +246,9 @@ export class VpnHoodApp {
 
   // Select profile by user
   public async updateClientProfile(clientProfileId: string, clientProfileUpdateParam: ClientProfileUpdateParams): Promise<void> {
-    console.log("1");
+    console.log('1');
     await this.clientProfileClient.update(clientProfileId, clientProfileUpdateParam);
-    console.log("2");
+    console.log('2');
     await this.reloadSettings();
   }
 
@@ -256,7 +292,6 @@ export class VpnHoodApp {
     if (!(err instanceof ApiException))
       return await this.showErrorMessage(err.message ?? err);
 
-    // TODO show snackbar message if already connected to the selected profile
     // Show a message that the user can connect to the VPN but not to the selected server
     if (err.exceptionTypeName === 'UnreachableServerLocation' && !this.data.state.hasDiagnoseStarted &&
       this.data.settings.userSettings.serverLocation)
@@ -279,7 +314,8 @@ export class VpnHoodApp {
       await this.showErrorMessage(i18n.global.t('AUTHENTICATION_ERROR'));
       await this.signOut();
       return;
-    } else await this.showErrorMessage(err.message ?? err);
+    } else
+      await this.showErrorMessage(err.message ?? err);
   }
 
   // Show error dialog
@@ -287,14 +323,13 @@ export class VpnHoodApp {
     // Send error message to analytics
     this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
 
-    const errorDialogData = this.data.uiState.errorDialogData;
+    const errorDialogData = new ErrorDialogData();
     errorDialogData.message = text;
     errorDialogData.canDiagnose = this.data.state.canDiagnose;
     errorDialogData.logExists = this.data.state.logExists;
-    errorDialogData.isVisible = true;
     errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto;
 
-    await ComponentRouteController.showComponent(ComponentName.AlertDialog);
+    await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }
 
   // Get installed apps list on the user device

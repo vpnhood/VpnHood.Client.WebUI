@@ -1,14 +1,76 @@
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import Vuetify from '@/plugins/vuetify';
+import {ComponentRouteController} from './services/ComponentRouteController';
+import { ComponentName } from '@/UiConstants';
+import {LocalStorage} from "@/UiConstants";
+import AlertDialog from "@/components/ErrorDialog/ErrorDialog.vue";
+import LoadingDialog from "@/components/LoadingDialog.vue";
+import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import ConfirmDialog from "@/components/ConfirmDialog/ConfirmDialog.vue";
+import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
+
+const vhApp = VpnHoodApp.instance;
+
+let isShowPrivacyPolicyDialog: boolean = false;
+
+const isErrorDialogVisible = computed<boolean>({
+  get: () => {
+    return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog) &&
+      vhApp.data.uiState.errorDialogData.isVisible;
+  },
+  set: async (value: boolean) => {
+    if (value) return; // Already is Open
+    await ComponentRouteController.showComponent(ComponentName.ErrorDialog, value);
+    await vhApp.clearLastError();
+  }
+})
+
+const isPromoteDialogVisible = computed<boolean>({
+  get: () => {
+    return ComponentRouteController.isShowComponent(ComponentName.PromoteDialog) &&
+      vhApp.data.uiState.promoteDialogData.isVisible;
+  },
+  set: async (value: boolean) => {
+    if (value) return; // Already is Open
+    await ComponentRouteController.showComponent(ComponentName.PromoteDialog, value);
+  }
+})
+
+  onMounted(async () => {
+    // Reload 'state' every 1 second if app window is focused.
+    setInterval(async () => {
+      if (!document.hidden)
+        await vhApp.reloadState();
+    }, 1000);
+
+    // Show privacy policy if app is VpnHoodCONNECT
+    if (vhApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
+      isShowPrivacyPolicyDialog = true;
+      return;
+    }
+
+    if (vhApp.data.features.isAccountSupported)
+      await vhApp.loadAccount();
+  })
+
+</script>
+
 <template>
   <v-app id="appContainer"
-         :class="[$vpnHoodApp.data.features.uiName, $vpnHoodApp.data.settings.userSettings.cultureCode, 'bg-primary-darken-2 position-relative']">
+         :class="[vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode,
+         'bg-primary-darken-2 position-relative']"
+  >
 
     <!-- Navigation drawer -->
-    <NavigationDrawer v-model="ComponentRouteController.create($componentName.NavigationDrawer).isShow"/>
+    <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
     <v-main
       id="mainBg"
-      :class="[$vuetify.display.mdAndUp? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
-      :style="[$vuetify.display.mdAndUp ? 'max-width:850px;' : '']"
+      :class="[Vuetify.display.mdAndUp.value? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
+      :style="[Vuetify.display.mdAndUp.value ? 'max-width:850px;' : '']"
     >
 
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
@@ -17,11 +79,13 @@
       <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog"/>
 
       <!-- Loading dialog before each api call -->
-      <LoadingDialog v-model="$vpnHoodApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
+      <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Global alert dialog -->
-      <alert-dialog v-model="isErrorDialogVisible" v-if="$vpnHoodApp.data.uiState.errorDialogData.isVisible"/>
-      <promote-dialog v-model="isPromoteDialogVisible" v-if="$vpnHoodApp.data.uiState.promoteDialogData.isVisible"/>
+      <alert-dialog v-model="isErrorDialogVisible" v-if="vhApp.data.uiState.errorDialogData.isVisible"/>
+
+      <!-- Global promote dialog -->
+      <promote-dialog v-model="isPromoteDialogVisible" v-if="vhApp.data.uiState.promoteDialogData.isVisible"/>
 
       <!-- Global async confirm dialog -->
       <ConfirmDialog/>
@@ -29,73 +93,6 @@
     </v-main>
   </v-app>
 </template>
-
-<script lang="ts">
-import {defineComponent} from 'vue'
-import {ComponentRouteController} from './services/ComponentRouteController';
-import {AppName, LocalStorage, UiConstants} from "@/UiConstants";
-import AlertDialog from "@/components/AlertDialog.vue";
-import LoadingDialog from "@/components/LoadingDialog.vue";
-import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import ConfirmDialog from "@/components/ConfirmDialog/DialogComponent.vue";
-import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
-
-export default defineComponent({
-  name: 'App',
-  components: { PromoteDialog, PrivacyPolicyDialog, LoadingDialog, AlertDialog, NavigationDrawer, ConfirmDialog},
-  data() {
-    return {
-      AppName,
-      UiConstants,
-      ComponentRouteController,
-      isShowPrivacyPolicyDialog: false,
-    };
-  },
-
-  async created() {
-    // Reload 'state' every 1 second if app window is focused.
-    setInterval(async () => {
-      if (!document.hidden)
-        await this.$vpnHoodApp.reloadState();
-    }, 1000);
-
-    // Show privacy policy if app is VpnHoodCONNECT
-    if (this.$vpnHoodApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
-      this.isShowPrivacyPolicyDialog = true;
-      return;
-    }
-
-    if (this.$vpnHoodApp.data.features.isAccountSupported)
-      await this.$vpnHoodApp.loadAccount();
-  },
-
-  computed: {
-    isErrorDialogVisible: {
-      get(): boolean {
-        return ComponentRouteController.isShowComponent(this.$componentName.AlertDialog) &&
-          this.$vpnHoodApp.data.uiState.errorDialogData.isVisible;
-      },
-      async set(value: boolean) {
-        if (value) return; // Already is Open
-        await ComponentRouteController.showComponent(this.$componentName.AlertDialog, value);
-        await this.$vpnHoodApp.clearLastError();
-      }
-    },
-    isPromoteDialogVisible: {
-      get(): boolean {
-        return ComponentRouteController.isShowComponent(this.$componentName.PromoteDialog) &&
-          this.$vpnHoodApp.data.uiState.promoteDialogData.isVisible;
-      },
-      async set(value: boolean) {
-        if (value) return; // Already is Open
-        await ComponentRouteController.showComponent(this.$componentName.PromoteDialog, value);
-      }
-    }
-  },
-
-});
-</script>
 
 <style scoped>
 #mainBg {

@@ -1,3 +1,6 @@
+import { PromoteDialogData } from '@/components/PromoteDialog/PromoteDialogData';
+import { ErrorDialogData } from '@/components/ErrorDialog/ErrorDialogData';
+
 export class UiState {
 
   public errorDialogData: ErrorDialogData = new ErrorDialogData();
@@ -20,24 +23,4 @@ export class UiState {
   public showLoadingDialog: boolean = false;
 
   public stateLastErrorMessage: string | null = null;
-}
-
-// General custom alert dialog property
-export class ErrorDialogData {
-  public isVisible: boolean = false;
-  public message: string = '';
-  public canDiagnose: boolean = false;
-  public logExists: boolean = false;
-  public showChangeServerToAutoButton: boolean = false;
-}
-
-// General custom alert dialog property
-export class PromoteDialogData {
-  public isVisible: boolean = false;
-  public clientProfileId: string | null = null;
-  public serverLocation: string | null = null;
-  public isPremiumLocation: boolean = false;
-  public showGoPremium: boolean = false;
-  public showRewardedAd: number | null = null;
-  public showTryPremium: number | null = null;
 }

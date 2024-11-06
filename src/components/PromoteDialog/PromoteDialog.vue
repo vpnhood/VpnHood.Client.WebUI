@@ -2,10 +2,9 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import PremiumConnectButton from '@/components/PromoteDialog/PremiumConnectButton.vue';
 import i18n from '@/locales/i18n';
-import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
-import { LocationType } from '@/UiConstants';
-import router from '@/plugins/router';
 import { computed } from 'vue';
+import { PromoteDialogData } from '@/components/PromoteDialog/PromoteDialogData';
+import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 
 const props = defineProps<{
   modelValue: boolean,
@@ -13,39 +12,17 @@ const props = defineProps<{
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const dialogData = computed(() => vhApp.data.uiState.promoteDialogData);
+const dialogData = computed<PromoteDialogData>(() => vhApp.data.uiState.promoteDialogData);
 
-const dialogTitle = computed(() => dialogData.value.isPremiumLocation
+const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM') : locale('SELECTED_LOCATION_IS_FREE'));
 
-const dialogDescription = computed(() => dialogData.value.isPremiumLocation
+const dialogDescription = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM_DESC') : locale('SELECTED_LOCATION_IS_FREE_DESC'));
 
-async function actionByPlan(plan: string): Promise<void> {
-
-  // Show the PurchaseSubscription page and does not save the selected location in the user settings.
-  if (plan === "4") {
-    await router.push('/purchase-subscription');
-    return;
-  }
-
-  // We don't expect clientProfileId to be null because it must have been obtained in the previous step, otherwise something unexpected happened.
-  if (!dialogData.value.clientProfileId) throw new Error(locale('CLIENT_PROFILE_ID_NOT_FOUND_MESSAGE'));
-
-  // Save the selected location info in the user settings.
-  const selectedLocationType = dialogData.value.isPremiumLocation ? LocationType.Premium : LocationType.Free;
-  await vhApp.updateClientProfile(dialogData.value.clientProfileId,
-    new ClientProfileUpdateParams({ customData: new PatchOfString({ value: selectedLocationType.toString() }) }));
-
-  // Save user settings
-  vhApp.data.settings.userSettings.clientProfileId = dialogData.value.clientProfileId;
-  vhApp.data.settings.userSettings.serverLocation = dialogData.value.serverLocation;
-  await vhApp.saveUserSetting();
-
-  await router.replace('/');
-
-  // Try connecting by chosen plan.
-  await vhApp.connect(plan);
+async function actionByPlan(planId: ConnectPlanId): Promise<void> {
+  await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
+    dialogData.value.isPremiumLocation, planId);
 }
 </script>
 
@@ -108,7 +85,7 @@ async function actionByPlan(plan: string): Promise<void> {
           :title="locale('WATCH_REWARDED_AD')"
           :description="locale('WATCH_REWARDED_AD_DESC')"
           :button-text="locale('CONNECT')"
-          button-action-plan="2"
+          :button-action-plan="ConnectPlanId.PremiumByAdReward"
           @action-by-plan="actionByPlan"
         />
 
@@ -119,7 +96,7 @@ async function actionByPlan(plan: string): Promise<void> {
           :title="locale('TRY_PREMIUM')"
           :description="locale('TRY_PREMIUM_DESC')"
           :button-text="locale('CONNECT')"
-          button-action-plan="3"
+          :button-action-plan="ConnectPlanId.PremiumByTrial"
           @action-by-plan="actionByPlan"
         />
 
@@ -143,7 +120,7 @@ async function actionByPlan(plan: string): Promise<void> {
           prepend-icon="mdi-chevron-left"
           class="opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
-          @click="$emit('update:modelValue', false)"
+          @click="$emit('update:modelValue', false); dialogData.isVisible = false"
         />
 
       </div>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { Util } from '@/services/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import {
-  ClientProfileInfo,
-  ClientProfileUpdateParams,
-  ClientServerLocationInfo,
-  PatchOfString
-} from '@/services/VpnHood.Client.Api';
+import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { ref } from 'vue'
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
@@ -23,7 +18,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'connect', clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
+  (e: 'connect', clientProfileId: string, serverLocation: string | null,
    isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
@@ -60,10 +55,8 @@ async function saveNewClientProfileName(): Promise<void> {
       })
   );
 }
-
-function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: ClientServerLocationInfo | null,
-                 isPremium: boolean, isDiagnose: boolean): void {
-  emits('connect', clientProfileInfo, serverLocationInfo, isPremium, isDiagnose);
+function connect(clientProfileId: string, serverLocation: string | null, isPremium: boolean, isDiagnose: boolean): void {
+  emits('connect', clientProfileId, serverLocation, isPremium, isDiagnose);
 }
 </script>
 
@@ -76,7 +69,6 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
     rounded="xl"
     bg-color="white"
     class="mb-4"
-    @click="connect(clientProfileInfo, null, false, false)"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
@@ -162,14 +154,13 @@ function connect(clientProfileInfo: ClientProfileInfo, serverLocationInfo: Clien
                     :title="locale('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="connect(clientProfileInfo, null, false,true)">
+                    @click="connect(clientProfileInfo.clientProfileId, null, false,true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 
                   <!-- Delete item -->
                   <v-list-item v-if="VhApp.data.features.isAddAccessKeySupported" :title="locale('REMOVE')"
                                prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(clientProfileInfo)"/>
-
                 </v-list>
               </v-menu>
             </v-btn>

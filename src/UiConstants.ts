@@ -16,7 +16,7 @@ export enum ComponentName {
     TunnelClientCountryDialog = "TunnelClientCountryDialog",
     NavigationDrawer = "NavigationDrawer",
     ProtocolDialog = "ProtocolDialog",
-    AlertDialog = "AlertDialog",
+    ErrorDialog = "ErrorDialog",
     PromoteDialog = "PromoteDialog",
     AddServerDialog = "AddServerDialog",
     RenameServerDialog = "RenameServerDialog",

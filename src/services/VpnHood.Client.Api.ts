@@ -155,7 +155,7 @@ export class AccountClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-
+    
             return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -473,13 +473,15 @@ export class AppClient {
         return Promise.resolve<AppState>(null as any);
     }
 
-    connect(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: string | null | undefined, cancelToken?: CancelToken): Promise<void> {
+    connect(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: ConnectPlanId | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/connect?";
         if (clientProfileId !== undefined && clientProfileId !== null)
             url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
         if (serverLocation !== undefined && serverLocation !== null)
             url_ += "serverLocation=" + encodeURIComponent("" + serverLocation) + "&";
-        if (planId !== undefined && planId !== null)
+        if (planId === null)
+            throw new Error("The parameter 'planId' cannot be null.");
+        else if (planId !== undefined)
             url_ += "planId=" + encodeURIComponent("" + planId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -523,13 +525,15 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    diagnose(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: string | null | undefined, cancelToken?: CancelToken): Promise<void> {
+    diagnose(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: ConnectPlanId | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/diagnose?";
         if (clientProfileId !== undefined && clientProfileId !== null)
             url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
         if (serverLocation !== undefined && serverLocation !== null)
             url_ += "serverLocation=" + encodeURIComponent("" + serverLocation) + "&";
-        if (planId !== undefined && planId !== null)
+        if (planId === null)
+            throw new Error("The parameter 'planId' cannot be null.");
+        else if (planId !== undefined)
             url_ += "planId=" + encodeURIComponent("" + planId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -748,7 +752,7 @@ export class AppClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-
+    
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1145,7 +1149,7 @@ export class BillingClient {
             let result200: any = null;
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-
+    
             return Promise.resolve<string>(result200);
 
         } else if (status !== 200 && status !== 204) {
@@ -1221,21 +1225,17 @@ export class ClientProfileClient {
         return Promise.resolve<ClientProfileInfo>(null as any);
     }
 
-    get(clientProfileId: string, updateParams: ClientProfileUpdateParams, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
+    get(clientProfileId: string, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
         let url_ = this.baseUrl + "/api/app/{clientProfileId}";
         if (clientProfileId === undefined || clientProfileId === null)
             throw new Error("The parameter 'clientProfileId' must be defined.");
         url_ = url_.replace("{clientProfileId}", encodeURIComponent("" + clientProfileId));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(updateParams);
-
         let options_: AxiosRequestConfig = {
-            data: content_,
             method: "GET",
             url: url_,
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -2962,6 +2962,12 @@ export interface IAppStrings {
     msgUnsupportedContent: string;
     open: string;
     openInBrowser: string;
+}
+
+export enum ConnectPlanId {
+    Normal = "Normal",
+    PremiumByTrial = "PremiumByTrial",
+    PremiumByAdReward = "PremiumByAdReward",
 }
 
 export class DeviceAppInfo implements IDeviceAppInfo {
