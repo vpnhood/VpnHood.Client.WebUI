@@ -1,7 +1,153 @@
+<script setup lang="ts">
+import AppBar from '@/components/AppBar.vue';
+import { SubscriptionPlansId } from '@/helper/UiConstants';
+import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import { ClientApiFactory } from '@/services/ClientApiFactory';
+import { GooglePlayBillingPurchaseState } from '@/helper/googlePlayBilling/GooglePlayBillingPurchaseState';
+import { GooglePlayBillingResponseCode } from '@/helper/googlePlayBilling/GooglePlayBillingResponseCode';
+import { onMounted, ref } from 'vue';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import i18n from '@/locales/i18n';
+import router from '@/services/router';
+import vuetify from '@/services/vuetify';
+
+const vhApp = VpnHoodApp.instance;
+const locale = i18n.global.t;
+
+const subscriptionPlans = ref<SubscriptionPlan[]>([]);
+const selectedPlanId = ref<string>('');
+const planTitle = ref<string>('');
+const planDetails = ref<string>('');
+const showPurchaseCompleteDialog = ref<boolean>(false);
+const showPlanDetailsDialog = ref<boolean>(false);
+
+onMounted(async () => {
+  vhApp.data.uiState.showLoadingDialog = true;
+
+  // Get products list from Google and sort based on plan prices
+  try {
+    const billingClient = ClientApiFactory.instance.createBillingClient();
+    const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
+    cloneSubscriptionPlans.sort(
+      (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
+        Number((b.planPrice).replace(/\D/g, '')));
+    subscriptionPlans.value = cloneSubscriptionPlans;
+  } catch (err: unknown) {
+    await router.replace('/');
+    googleBillingException(err);
+  } finally {
+    vhApp.data.uiState.showLoadingDialog = false;
+  }
+});
+
+function showPlanDetails(planId: string): void {
+  if (vhApp.data.userState.userAccount?.providerPlanId === planId)
+    return;
+
+  // Defined plan title and details to show in the dialog
+  switch (planId) {
+    case SubscriptionPlansId.GlobalServer:
+      planTitle.value = 'GLOBAL_SERVERS';
+      planDetails.value = 'GLOBAL_SERVERS_NOTICE';
+      break;
+  }
+
+  // Save user selected plan id for continue purchase
+  selectedPlanId.value = planId;
+  showPlanDetailsDialog.value = true;
+}
+
+async function onBuyClick(): Promise<void> {
+  showPlanDetailsDialog.value = false;
+  if (!vhApp.data.userState.userAccount)
+    await vhApp.signIn();
+
+  if (vhApp.data.userState.userAccount?.providerPlanId === selectedPlanId.value)
+    throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
+
+  await purchase(selectedPlanId.value);
+}
+
+async function purchase(planId: string): Promise<void> {
+  try {
+    const billingClient = ClientApiFactory.instance.createBillingClient();
+    await billingClient.purchase(planId);
+    showPurchaseCompleteDialog.value = true;
+    await vhApp.loadAccount();
+  } catch (err: unknown) {
+    showPurchaseCompleteDialog.value = false;
+    googleBillingException(err);
+  }
+}
+
+async function closeOnPurchaseComplete(): Promise<void> {
+  showPurchaseCompleteDialog.value = false;
+  await router.replace('/');
+}
+
+function googleBillingException(exception: unknown) {
+  if (!(exception instanceof ApiException) || exception.exceptionTypeName !== 'GoogleBillingException')
+    throw exception;
+
+  else {
+    const googleMessageTitle = locale('GOOGLE_EXCEPTION_MESSAGE');
+    const billingMessage = exception.data.BillingMessage;
+
+    if (exception.data.PurchaseState === GooglePlayBillingPurchaseState.Pending)
+      throw new Error(locale('GOOGLE_BILLING_PENDING_PURCHASE'));
+
+    switch (exception.data.BillingResponseCode) {
+
+      case GooglePlayBillingResponseCode.BillingUnavailable:
+        throw new Error(locale('GOOGLE_BILLING_BILLING_UNAVAILABLE'));
+
+      case GooglePlayBillingResponseCode.ServiceDisconnected:
+        throw new Error(locale('GOOGLE_BILLING_SERVICE_DISCONNECTED'));
+
+      case GooglePlayBillingResponseCode.Error:
+        throw new Error(
+          `${locale('ORDER_PROCESSING_FAILED')}
+                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`);
+
+      case GooglePlayBillingResponseCode.DeveloperError:
+        throw new Error(
+          `${locale('GOOGLE_BILLING_DEVELOPER_ERROR')}
+                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`);
+
+      case GooglePlayBillingResponseCode.FeatureNotSupported:
+        throw new Error(locale('GOOGLE_BILLING_FEATURE_NOT_SUPPORTED'));
+
+      case GooglePlayBillingResponseCode.ItemAlreadyOwned:
+        throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
+
+      case GooglePlayBillingResponseCode.ItemUnavailable:
+        throw new Error(locale('GOOGLE_BILLING_ITEM_UNAVAILABLE'));
+
+      case GooglePlayBillingResponseCode.ItemNotOwned:
+        throw new Error(locale('GOOGLE_BILLING_ITEM_NOT_OWNED'));
+
+      case GooglePlayBillingResponseCode.NetworkError:
+        throw new Error(locale('GOOGLE_BILLING_NETWORK_ERROR'));
+
+      case GooglePlayBillingResponseCode.ServiceTimeout:
+        throw new Error(locale('GOOGLE_BILLING_SERVICE_TIMEOUT'));
+
+      case GooglePlayBillingResponseCode.ServiceUnavailable:
+        throw new Error(locale('GOOGLE_BILLING_SERVICE_UNAVAILABLE'));
+
+      case GooglePlayBillingResponseCode.UserCancelled:
+        console.log(locale('GOOGLE_BILLING_USER_CANCELED'));
+    }
+  }
+
+}
+
+</script>
+
 <template>
 
   <!-- Page header -->
-  <AppBar :page-title="$t('PURCHASE_SUBSCRIPTION')"/>
+  <AppBar :page-title="locale('PURCHASE_SUBSCRIPTION')" />
 
   <v-sheet class="pa-4" color="primary-darken-2">
 
@@ -9,44 +155,45 @@
       <!-- Products list -->
       <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
         <!-- Image -->
-        <v-img :eager="true" :src="$vpnHoodApp.getImageUrl('ad-icon.png')" :alt="$t('PREMIUM_SERVER_AD_TITLE')" max-width="150px"
-               class="mx-auto"/>
+        <v-img :eager="true" :src="vhApp.getImageUrl('ad-icon.png')" :alt="locale('PREMIUM_SERVER_AD_TITLE')"
+               max-width="150px"
+               class="mx-auto" />
 
         <!-- Title -->
         <h3 class="title-bold text-tertiary text-uppercase text-center pb-2 mb-2">
-          {{ $t("PREMIUM_SERVER_AD_TITLE") }}</h3>
+          {{ locale('PREMIUM_SERVER_AD_TITLE') }}</h3>
 
         <!-- Description -->
         <ul id="subscriptionFeaturesList">
           <li>
             <span class="feature-title"></span>
-            <h4 class="text-center text-white opacity-60">{{ $t("FREE") }}</h4>
-            <h4 class="text-center text-secondary-lighten-1">{{ $t("PREMIUM") }}</h4>
+            <h4 class="text-center text-white opacity-60">{{ locale('FREE') }}</h4>
+            <h4 class="text-center text-secondary-lighten-1">{{ locale('PREMIUM') }}</h4>
           </li>
           <li>
-            <span class="feature-title">{{ $t("SPEED") }}</span>
-            <span class="free-feature">{{ $t("UNLIMITED") }}</span>
-            <span class="free-feature">{{ $t("UNLIMITED") }}</span>
+            <span class="feature-title">{{ locale('SPEED') }}</span>
+            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
+            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
           </li>
           <li>
-            <span class="feature-title">{{ $t("TRAFFIC") }}</span>
-            <span class="free-feature">{{ $t("UNLIMITED") }}</span>
-            <span class="free-feature">{{ $t("UNLIMITED") }}</span>
+            <span class="feature-title">{{ locale('TRAFFIC') }}</span>
+            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
+            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
           </li>
           <li>
-            <span class="feature-title">{{ $t("NO_ADS") }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
-            <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+            <span class="feature-title">{{ locale('NO_ADS') }}</span>
+            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
+            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
           </li>
           <li>
-            <span class="feature-title">{{ $t("ALWAYS_ON") }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
-            <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+            <span class="feature-title">{{ locale('ALWAYS_ON') }}</span>
+            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
+            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
           </li>
           <li>
-            <span class="feature-title">{{ $t("SUPPORT") }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog"/></span>
-            <span class="premium-feature"><v-icon icon="mdi-check"/></span>
+            <span class="feature-title">{{ locale('SUPPORT') }}</span>
+            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
+            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
           </li>
         </ul>
       </v-card-item>
@@ -58,44 +205,48 @@
         <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
           <!-- Plan item -->
           <v-list-item
-              v-for="plan in subscriptionPlans"
-              :key="plan.subscriptionPlanId"
-              color="white"
-              rounded="lg"
-              base-color="primary-darken-2"
-              variant="flat"
-              :class="[$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
-              @click="showPlanDetails(plan.subscriptionPlanId)"
+            v-for="plan in subscriptionPlans"
+            :key="plan.subscriptionPlanId"
+            color="white"
+            rounded="lg"
+            base-color="primary-darken-2"
+            variant="flat"
+            :class="[vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+            ? 'border-secondary-lighten-1 border-opacity-100 py-2'
+            : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
+            @click="showPlanDetails(plan.subscriptionPlanId)"
           >
 
             <!-- Plan title -->
             <v-list-item-title class="d-flex align-center">
-              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS") }}</span>
+              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">
+                {{ locale('GLOBAL_SERVERS') }}
+              </span>
             </v-list-item-title>
 
             <!-- Already subscribed -->
             <v-list-item-subtitle
-                v-if="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
-                class="text-caption text-secondary-lighten-1"
+              v-if="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
+              class="text-caption text-secondary-lighten-1"
             >
-              {{ $t('ALREADY_SUBSCRIBED') }}
+              {{ locale('ALREADY_SUBSCRIBED') }}
             </v-list-item-subtitle>
 
             <!-- Plan price -->
             <template v-slot:append>
               <div class="text-end text-subtitle-2 text-secondary">
                 <span>{{ plan.planPrice }}</span>
-                <span>{{ $t("PER_MONTH") }}</span>
+                <span>{{ locale('PER_MONTH') }}</span>
               </div>
               <!--suppress NestedConditionalExpressionJS -->
               <v-icon
-                  :icon="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                :icon="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
-                      : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
-                  :color="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                      : vuetify.locale.isRtl.value? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                :color="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'secondary-lighten-1'
                       : 'tertiary'"
-                  class="ms-2"
+                class="ms-2"
               />
             </template>
           </v-list-item>
@@ -105,44 +256,48 @@
         <v-list v-else bg-color="transparent">
 
           <v-list-item
-              v-for="plan in subscriptionPlans"
-              :key="plan.subscriptionPlanId"
-              color="white"
-              rounded="lg"
-              base-color="primary-darken-2"
-              variant="flat"
-              :class="[$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId ? 'border-secondary-lighten-1 border-opacity-100 py-2' : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
-              @click="showPlanDetails(plan.subscriptionPlanId)"
+            v-for="plan in subscriptionPlans"
+            :key="plan.subscriptionPlanId"
+            color="white"
+            rounded="lg"
+            base-color="primary-darken-2"
+            variant="flat"
+            :class="[vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+            ? 'border-secondary-lighten-1 border-opacity-100 py-2'
+            : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
+            @click="showPlanDetails(plan.subscriptionPlanId)"
           >
 
             <!-- Plan title -->
             <v-list-item-title class="d-flex align-center">
-              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">{{$t("GLOBAL_SERVERS") }}</span>
+              <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">
+                {{ locale('GLOBAL_SERVERS') }}
+              </span>
             </v-list-item-title>
 
             <!-- Already subscribed -->
             <v-list-item-subtitle
-                v-if="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
-                class="text-caption text-secondary-lighten-1"
+              v-if="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
+              class="text-caption text-secondary-lighten-1"
             >
-              {{ $t('ALREADY_SUBSCRIBED') }}
+              {{ locale('ALREADY_SUBSCRIBED') }}
             </v-list-item-subtitle>
 
             <!-- Plan price -->
             <template v-slot:append>
               <div class="text-end text-subtitle-2 text-secondary">
                 <span>{{ plan.planPrice }}</span>
-                <span>{{ $t("PER_MONTH") }}</span>
+                <span>{{ locale('PER_MONTH') }}</span>
               </div>
               <!--suppress NestedConditionalExpressionJS -->
               <v-icon
-                  :icon="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                :icon="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
-                      : $vuetify.locale.isRtl? 'mdi-chevron-left' : 'mdi-chevron-right'"
-                  :color="$vpnHoodApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
+                      : vuetify.locale.isRtl.value? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                :color="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'secondary-lighten-1'
                       : 'tertiary'"
-                  class="ms-2"
+                class="ms-2"
               />
             </template>
           </v-list-item>
@@ -152,8 +307,8 @@
 
 
       <ul class="text-white opacity-30 text-caption ps-4">
-        <li>{{ $t("PLANS_ARE_AUTOMATICALLY_RENEWED") }}</li>
-        <li>{{ $t("CANCEL_ANYTIME_ON_GOOGLE_PLAY") }}</li>
+        <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
+        <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
       </ul>
     </v-card>
 
@@ -165,42 +320,45 @@
 
       <!-- Plan title -->
       <v-card-title class="text-secondary d-flex">
-        <span :class="[$vuetify.locale.isRtl? 'me-1' : 'order-1 ms-1']">{{ $t("SUBSCRIPTION") }}</span>
-        <span>{{ $t(planTitle) }}</span>
+        <span :class="[vuetify.locale.isRtl.value? 'me-1' : 'order-1 ms-1']">{{ locale('SUBSCRIPTION') }}</span>
+        <span>{{ locale(planTitle) }}</span>
       </v-card-title>
 
       <!-- Plan description -->
-      <v-card-text>{{ $t(planDetails) }}</v-card-text>
+      <v-card-text>{{ locale(planDetails) }}</v-card-text>
 
       <!-- Dialog buttons -->
       <v-card-actions>
-        <v-spacer/>
+        <v-spacer />
         <!-- Close button -->
         <v-btn
-            variant="text"
-            color="secondary"
-            :text="$t('CLOSE')"
-            @click="showPlanDetailsDialog = false"
+          variant="text"
+          color="secondary"
+          :text="locale('CLOSE')"
+          @click="showPlanDetailsDialog = false"
         />
         <!-- Buy button -->
         <v-btn
-            variant="tonal"
-            color="secondary"
-            class="px-6"
-            :text="$t('BUY')"
-            @click="onBuyClick"
+          variant="tonal"
+          color="secondary"
+          class="px-6"
+          :text="locale('BUY')"
+          @click="onBuyClick"
         />
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog :model-value="$vpnHoodApp.data.state.purchaseState === BillingPurchaseState.Processing" :persistent="true"
-            max-width="600">
+  <v-dialog
+    :model-value="vhApp.data.state.purchaseState === BillingPurchaseState.Processing"
+    :persistent="true"
+    max-width="600"
+  >
     <v-card rounded="lg" color="secondary">
       <v-card-text class="px-3">
-        {{ $t("WAITING_TO_COMPLETE_ORDER_PROCESS") }}
-        <v-progress-linear :indeterminate="true" rounded="true" class="mt-3 mb-4"/>
+        {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
+        <v-progress-linear :indeterminate="true" rounded="true" class="mt-3 mb-4" />
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -210,19 +368,19 @@
     <v-card rounded="lg" color="secondary">
       <v-card-title class="text-center">
         <v-icon class="text-h2">mdi-party-popper</v-icon>
-        <h2>{{ $t("CONGRATULATIONS") }}</h2>
+        <h2>{{ locale('CONGRATULATIONS') }}</h2>
       </v-card-title>
 
-      <v-card-text>{{ $t("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE") }}</v-card-text>
+      <v-card-text>{{ locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE') }}</v-card-text>
 
       <v-card-actions>
-        <v-spacer/>
+        <v-spacer />
         <v-btn
-            rounded="pill"
-            variant="text"
-            color="primary"
-            :text="$t('CLOSE')"
-            @click="closeOnPurchaseComplete"
+          rounded="pill"
+          variant="text"
+          color="primary"
+          :text="locale('CLOSE')"
+          @click="closeOnPurchaseComplete"
         />
       </v-card-actions>
     </v-card>
@@ -230,154 +388,6 @@
 
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-import AppBar from "@/components/AppBar.vue";
-import {SubscriptionPlansId} from "@/UiConstants";
-import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api'
-import {ClientApiFactory} from "@/services/ClientApiFactory";
-import {GooglePlayBillingPurchaseState} from "@/googlePlayBilling/GooglePlayBillingPurchaseState";
-import {GooglePlayBillingResponseCode} from "@/googlePlayBilling/GooglePlayBillingResponseCode";
-
-export default defineComponent({
-  name: "PurchaseSubscription",
-  components: {AppBar},
-  data() {
-    return {
-      SubscriptionPlansId,
-      BillingPurchaseState,
-      subscriptionPlans: [] as SubscriptionPlan[],
-      selectedPlanId: "",
-      showPurchaseCompleteDialog: false,
-      showPlanDetailsDialog: false,
-      planTitle: "",
-      planDetails: "",
-    }
-  },
-  async created() {
-    this.$vpnHoodApp.data.uiState.showLoadingDialog = true;
-
-    // Get products list from Google and sort based on plan prices
-    try {
-      const billingClient = ClientApiFactory.instance.createBillingClient();
-      const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
-      cloneSubscriptionPlans.sort(
-          (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
-              Number((b.planPrice).replace(/\D/g, '')));
-      this.subscriptionPlans = cloneSubscriptionPlans;
-    } catch (err: unknown) {
-      await this.$router.replace("/");
-      this.googleBillingException(err);
-    } finally {
-      this.$vpnHoodApp.data.uiState.showLoadingDialog = false;
-    }
-  },
-  methods: {
-    showPlanDetails(planId: string): void {
-      if (this.$vpnHoodApp.data.userState.userAccount?.providerPlanId === planId)
-        return;
-
-      // Defined plan title and details to show in the dialog
-      switch (planId) {
-        case SubscriptionPlansId.GlobalServer:
-          this.planTitle = "GLOBAL_SERVERS";
-          this.planDetails = "GLOBAL_SERVERS_NOTICE";
-          break;
-      }
-
-      // Save user selected plan id for continue purchase
-      this.selectedPlanId = planId;
-      this.showPlanDetailsDialog = true;
-    },
-
-    async onBuyClick(): Promise<void> {
-      this.showPlanDetailsDialog = false;
-      if (!this.$vpnHoodApp.data.userState.userAccount)
-        await this.$vpnHoodApp.signIn();
-
-      if (this.$vpnHoodApp.data.userState.userAccount?.providerPlanId === this.selectedPlanId)
-        throw new Error(this.$t("SELECTED_PLAN_ALREADY_SUBSCRIBED"));
-
-      await this.purchase(this.selectedPlanId);
-    },
-
-    async purchase(planId: string): Promise<void> {
-      try {
-        const billingClient = ClientApiFactory.instance.createBillingClient();
-        await billingClient.purchase(planId);
-        this.showPurchaseCompleteDialog = true;
-        await this.$vpnHoodApp.loadAccount();
-      } catch (err: unknown) {
-        this.showPurchaseCompleteDialog = false;
-        this.googleBillingException(err);
-      }
-    },
-
-    closeOnPurchaseComplete() {
-      this.showPurchaseCompleteDialog = false;
-      this.$router.replace("/");
-    },
-
-    googleBillingException(exception: unknown) {
-      if (!(exception instanceof ApiException) || exception.exceptionTypeName !== "GoogleBillingException")
-        throw exception;
-
-      else {
-        const googleMessageTitle = this.$t("GOOGLE_EXCEPTION_MESSAGE");
-        const billingMessage = exception.data.BillingMessage;
-
-        if (exception.data.PurchaseState === GooglePlayBillingPurchaseState.Pending)
-          throw new Error(this.$t("GOOGLE_BILLING_PENDING_PURCHASE"))
-
-        switch (exception.data.BillingResponseCode) {
-
-          case GooglePlayBillingResponseCode.BillingUnavailable:
-            throw new Error(this.$t("GOOGLE_BILLING_BILLING_UNAVAILABLE"));
-
-          case GooglePlayBillingResponseCode.ServiceDisconnected:
-            throw new Error(this.$t("GOOGLE_BILLING_SERVICE_DISCONNECTED"));
-
-          case GooglePlayBillingResponseCode.Error:
-            throw new Error(
-                `${this.$t("ORDER_PROCESSING_FAILED")}
-                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ""}`);
-
-          case GooglePlayBillingResponseCode.DeveloperError:
-            throw new Error(
-                `${this.$t("GOOGLE_BILLING_DEVELOPER_ERROR")}
-                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ""}`);
-
-          case GooglePlayBillingResponseCode.FeatureNotSupported:
-            throw new Error(this.$t("GOOGLE_BILLING_FEATURE_NOT_SUPPORTED"));
-
-          case GooglePlayBillingResponseCode.ItemAlreadyOwned:
-            throw new Error(this.$t("SELECTED_PLAN_ALREADY_SUBSCRIBED"));
-
-          case GooglePlayBillingResponseCode.ItemUnavailable:
-            throw new Error(this.$t("GOOGLE_BILLING_ITEM_UNAVAILABLE"));
-
-          case GooglePlayBillingResponseCode.ItemNotOwned:
-            throw new Error(this.$t("GOOGLE_BILLING_ITEM_NOT_OWNED"));
-
-          case GooglePlayBillingResponseCode.NetworkError:
-            throw new Error(this.$t("GOOGLE_BILLING_NETWORK_ERROR"));
-
-          case GooglePlayBillingResponseCode.ServiceTimeout:
-            throw new Error(this.$t("GOOGLE_BILLING_SERVICE_TIMEOUT"));
-
-          case GooglePlayBillingResponseCode.ServiceUnavailable:
-            throw new Error(this.$t("GOOGLE_BILLING_SERVICE_UNAVAILABLE"));
-
-          case GooglePlayBillingResponseCode.UserCancelled:
-            console.log(this.$t("GOOGLE_BILLING_USER_CANCELED"));
-        }
-      }
-
-    }
-  }
-
-})
-</script>
 <style scoped>
 #subscriptionFeaturesList > li {
   display: flex;

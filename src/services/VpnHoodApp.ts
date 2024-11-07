@@ -1,36 +1,19 @@
+import { ApiException, AppAccount, AppClient, AppConnectionState, AppFeatures, AppSettings, AppState, ConfigParams,
+  ClientProfileClient, ClientProfileInfo, ClientProfileUpdateParams, ClientServerLocationInfo, ConnectPlanId,
+  DeviceAppInfo, SessionSuppressType, UiCultureInfo } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import {
-  ApiException,
-  AppAccount,
-  AppClient,
-  AppConnectionState,
-  AppFeatures,
-  AppSettings,
-  AppState,
-  ClientProfileClient,
-  ClientProfileInfo,
-  ClientProfileUpdateParams,
-  ClientServerLocationInfo,
-  ConfigParams,
-  ConnectPlanId,
-  DeviceAppInfo,
-  PatchOfString,
-  ServerLocationOptions,
-  SessionSuppressType,
-  UiCultureInfo
-} from '@/services/VpnHood.Client.Api';
-import { UiState } from '@/services/UiState';
-import { UserState } from '@/services/UserState';
-import { AppName, ComponentName, LocationType, SubscriptionPlansId } from '@/UiConstants';
+import { UiState } from '@/helper/UiState';
+import { UserState } from '@/helper/UserState';
+import { AppName, ComponentName, SubscriptionPlansId } from '@/helper/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
-import router from '@/plugins/router';
+import router from '@/services/router';
 import { ConfirmDialogData } from '@/components/ConfirmDialog/ConfirmDialogData';
 import type { Analytics } from 'firebase/analytics';
 import { logEvent, setUserId } from 'firebase/analytics';
 import { AnalyticsCustomEvent, FirebaseApp } from '@/services/Firebase';
-import { ErrorDialogData } from '@/components/ErrorDialog/ErrorDialogData';
+import { ErrorHandler } from '@/helper/ErrorHandler';
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -186,10 +169,6 @@ export class VpnHoodApp {
     }
   }
 
-  public async showPurchasePremium(): Promise<void> {
-    await router.push('/purchase-subscription');
-  }
-
   public async connect(clientProfileId: string, serverLocation: string,
                        isPremium: boolean, planId: ConnectPlanId, isDiagnose: boolean = false): Promise<void> {
 
@@ -200,17 +179,10 @@ export class VpnHoodApp {
       && serverLocation === this.data.state.serverLocationInfo?.serverLocation)
       return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));*/
 
-    const selectedLocationType: LocationType = isPremium ? LocationType.Premium : LocationType.Free;
-    await this.updateClientProfile(clientProfileId,
-      new ClientProfileUpdateParams({
-        customData: new PatchOfString({ value: selectedLocationType.toString() })
-      }));
-
-    // Set the selected server location
+    const clientProfileInfo: ClientProfileInfo = await this.clientProfileClient.get(clientProfileId);
+    clientProfileInfo.isPremiumLocationSelected = isPremium;
     this.data.settings.userSettings.serverLocation = serverLocation;
-    // Set the selected client profile id
     this.data.settings.userSettings.clientProfileId = clientProfileId;
-    // Save all user settings
     await this.saveUserSetting();
 
     // Just for Development info
@@ -280,54 +252,23 @@ export class VpnHoodApp {
 
   // Get error message
   public async processError(err: unknown): Promise<void> {
+    // For developer
     console.error(err);
-
-    //TODO Check the errors again
-    if (typeof err === 'string')
-      return await this.showErrorMessage(err);
-
-    if (!(err instanceof Error))
-      return await this.showErrorMessage(i18n.global.t('UNKNOWN_ERROR'));
-
-    if (!(err instanceof ApiException))
-      return await this.showErrorMessage(err.message ?? err);
-
-    // Show a message that the user can connect to the VPN but not to the selected server
-    if (err.exceptionTypeName === 'UnreachableServerLocation' && !this.data.state.hasDiagnoseStarted &&
-      this.data.settings.userSettings.serverLocation)
-      return await this.showErrorMessage(i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE'), true);
-
-    // Just for VpnHoodConnect
-    //TODO Test error
-    if (this.isConnectApp() && err.message === 'Session has been closed.')
-      return await this.signOut();
-
-    // Just for VpnHoodConnect
-    // When the SPA is signed in but the app could not find the user account in the local storage.
-    // Invalid credential.
-    if (this.isConnectApp() && err.statusCode === 401 && !this.data.userState.userAccount) {
-      // Send error message to analytics
-      this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
-        message: i18n.global.t('AUTHENTICATION_ERROR', 'en')
-      });
-
-      await this.showErrorMessage(i18n.global.t('AUTHENTICATION_ERROR'));
-      await this.signOut();
-      return;
-    } else
-      await this.showErrorMessage(err.message ?? err);
+    console.log("typeof: ", typeof err);
+    await ErrorHandler.processError(err);
   }
 
   // Show error dialog
-  private async showErrorMessage(text: string, showChangeServerToAuto: boolean = false): Promise<void> {
+  public async showErrorMessage(text: string, showChangeServerToAuto: boolean = false): Promise<void> {
     // Send error message to analytics
     this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
 
-    const errorDialogData = new ErrorDialogData();
+    const errorDialogData = this.data.uiState.errorDialogData
     errorDialogData.message = text;
     errorDialogData.canDiagnose = this.data.state.canDiagnose;
     errorDialogData.logExists = this.data.state.logExists;
     errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto;
+    errorDialogData.isVisible = true;
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }

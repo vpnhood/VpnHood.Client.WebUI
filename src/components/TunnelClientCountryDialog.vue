@@ -1,39 +1,74 @@
+<script setup lang="ts">
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import i18n from '@/locales/i18n';
+import { computed } from 'vue';
+
+const vhApp = VpnHoodApp.instance;
+const locale = i18n.global.t;
+
+const props = defineProps<{
+  modelValue: boolean,
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void,
+}>();
+
+const tunnelClientCountry = computed<boolean>({
+  get: () => {
+    return vhApp.data.settings.userSettings.tunnelClientCountry;
+  } ,
+  set: async (value: boolean): Promise<void> => {
+    vhApp.data.settings.userSettings.tunnelClientCountry = value;
+    await vhApp.saveUserSetting();
+  }
+});
+</script>
+
 <template>
   <v-dialog
-      :modelValue="modelValue"
-      @update:modelValue="$emit('update:modelValue',$event)"
-      max-width="600"
+    :modelValue="props.modelValue"
+    @update:modelValue="emit('update:modelValue',$event)"
+    max-width="600"
   >
-    <v-card :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'white'">
-      <v-card-title :class="$vpnHoodApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
-        {{ $t("TUNNEL_MY_COUNTRY") }}
+    <v-card :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'">
+      <v-card-title :class="vhApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
+        {{ locale("TUNNEL_MY_COUNTRY") }}
       </v-card-title>
 
       <v-card-text>
         <!-- Disconnecting alert -->
-        <v-alert v-if="$vpnHoodApp.isConnected()" class="mb-5 text-caption" density="compact" :icon="false" type="warning"
-                 :text="$t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"></v-alert>
+        <v-alert
+          v-if="vhApp.isConnected()"
+          class="mb-5 text-caption"
+          density="compact"
+          :icon="false"
+          type="warning"
+          :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')">
+        </v-alert>
 
-        <p :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">{{ $t("TUNNEL_MY_COUNTRY_DESC") }}</p>
+        <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">
+          {{ locale("TUNNEL_MY_COUNTRY_DESC") }}
+        </p>
 
-        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="mx-n3" :disabled="$vpnHoodApp.isConnected()">
+        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="mx-n3" :disabled="vhApp.isConnected()">
 
           <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>
-              <span>{{ $t("TUNNEL_MY_COUNTRY_ON") }}</span>
-              <span :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
-                ({{ $t("TUNNEL_MY_COUNTRY_ON_DESC") }})
+              <span>{{ locale("TUNNEL_MY_COUNTRY_ON") }}</span>
+              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
+                ({{ locale("TUNNEL_MY_COUNTRY_ON_DESC") }})
               </span>
             </template>
           </v-radio>
 
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
-              <span>{{ $t("TUNNEL_MY_COUNTRY_OFF") }}</span>
-              <span :class="[$vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
-                ({{ $t("TUNNEL_MY_COUNTRY_OFF_DESC") }})
+              <span>{{ locale("TUNNEL_MY_COUNTRY_OFF") }}</span>
+              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
+                ({{ locale("TUNNEL_MY_COUNTRY_OFF_DESC") }})
               </span>
-              <v-chip class="ms-2" size="small" color="secondary" :text="$t('RECOMMENDED')"/>
+              <v-chip class="ms-2" size="small" color="secondary" :text="locale('RECOMMENDED')"/>
             </template>
           </v-radio>
 
@@ -41,40 +76,15 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="secondary" variant="text" :text="$t('CLOSE')" @click="$emit('update:modelValue',false)" />
+        <v-spacer/>
+        <v-btn
+          color="secondary"
+          variant="text"
+          :text="locale('CLOSE')"
+          @click="emit('update:modelValue',false)"
+        />
       </v-card-actions>
 
     </v-card>
   </v-dialog>
 </template>
-
-<script lang="ts">
-import {defineComponent} from "vue";
-import {AppName} from "@/UiConstants";
-
-export default defineComponent({
-  data() {
-    return {
-      AppName
-    }
-  },
-  props: {
-    modelValue: Boolean,
-  },
-  emits: [
-    "update:modelValue",
-  ],
-  computed: {
-    tunnelClientCountry: {
-      get() {
-        return this.$vpnHoodApp.data.settings.userSettings.tunnelClientCountry;
-      },
-      async set(value: boolean) {
-        this.$vpnHoodApp.data.settings.userSettings.tunnelClientCountry = value;
-        await this.$vpnHoodApp.saveUserSetting();
-      }
-    },
-  }
-})
-</script>

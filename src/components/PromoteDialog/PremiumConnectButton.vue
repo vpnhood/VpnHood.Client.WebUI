@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { ConnectPlanId } from '@/services/VpnHood.Client.Api';
+import type { MyConnectPlanId } from '@/components/PromoteDialog/MyConnectPlanIds';
 
 const props = defineProps<{
   icon: string,
   title: string,
   description: string,
   buttonText: string,
-  buttonActionPlan: ConnectPlanId,
+  buttonActionPlan: MyConnectPlanId,
 }>();
 const emits = defineEmits<{
-  (e: 'actionByPlan', planId: ConnectPlanId): void;
+  (e: 'actionByPlan', planId: MyConnectPlanId): void;
 }>();
 </script>
 

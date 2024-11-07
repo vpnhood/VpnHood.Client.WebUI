@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { Util } from '@/services/Util'
+import { Util } from '@/helper/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { ref } from 'vue'
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
-import { ComponentName } from '@/UiConstants';
+import { ComponentName } from '@/helper/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
+import { ConnectManager } from '@/helper/ConnectManager';
+import router from '@/services/router';
 
 const VhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -15,11 +17,6 @@ const maximumLocationOnCollapsed: number = 9;
 
 const props = defineProps<{
   expandedPanels: number[];
-}>();
-
-const emits = defineEmits<{
-  (e: 'connect', clientProfileId: string, serverLocation: string | null,
-   isPremium: boolean, isDiagnose: boolean): void;
 }>();
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
@@ -54,9 +51,6 @@ async function saveNewClientProfileName(): Promise<void> {
         )
       })
   );
-}
-function connect(clientProfileId: string, serverLocation: string | null, isPremium: boolean, isDiagnose: boolean): void {
-  emits('connect', clientProfileId, serverLocation, isPremium, isDiagnose);
 }
 </script>
 
@@ -154,7 +148,7 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
                     :title="locale('DIAGNOSE')"
                     :disabled="!VhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="connect(clientProfileInfo.clientProfileId, null, false,true)">
+                    @click="ConnectManager.connect2(clientProfileInfo.clientProfileId, true)">
                   </v-list-item>
                   <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
 
@@ -178,8 +172,8 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
       <!-- Profile region -->
       <template v-slot:text v-if="Util.isServerHaveLocation(clientProfileInfo.serverLocationInfos)">
         <LocationList
-          :client-profile-info="clientProfileInfo"
-          @connect="connect"
+          :client-profile-id="clientProfileInfo.clientProfileId"
+          :server-location-infos="clientProfileInfo.serverLocationInfos"
         />
       </template>
 
@@ -193,12 +187,12 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
 
   <!-- Add server dialog -->
   <AddServerDialog
-    v-model="ComponentRouteController.create($componentName.AddServerDialog).isShow"
-    @new-access-key-added="$router.replace('/')">
+    v-model="ComponentRouteController.create(ComponentName.AddServerDialog).isShow"
+    @new-access-key-added="router.replace('/')">
   </AddServerDialog>
 
   <!-- Rename dialog -->
-  <v-dialog v-model="ComponentRouteController.create($componentName.RenameServerDialog).isShow" max-width="600">
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isShow" max-width="600">
     <v-card :title="locale('RENAME')">
 
       <v-card-text>
@@ -222,7 +216,7 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
           color="primary"
           variant="text"
           :text="locale('CANCEL')"
-          @click="ComponentRouteController.showComponent($componentName.RenameServerDialog, false)"
+          @click="ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false)"
         />
 
         <!-- Save rename button -->
@@ -238,7 +232,7 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
   </v-dialog>
 
   <!-- Confirm delete server dialog -->
-  <v-dialog v-model="ComponentRouteController.create($componentName.ConfirmDeleteServerDialog).isShow"
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isShow"
             max-width="600">
     <v-card>
 
@@ -263,7 +257,7 @@ function connect(clientProfileId: string, serverLocation: string | null, isPremi
         <v-btn
           variant="tonal"
           :text="locale('NO')"
-          @click="ComponentRouteController.showComponent($componentName.ConfirmDeleteServerDialog, false)"
+          @click="ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog, false)"
         />
 
       </v-card-actions>

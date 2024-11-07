@@ -1,34 +1,28 @@
 <script setup lang="ts">
-import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
+import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue'
 
 const vhApp = VpnHoodApp.instance;
-const $t = i18n.global.t;
+const locale = i18n.global.t;
 
 const props = defineProps<{
-  clientProfileInfo: ClientProfileInfo,
+  clientProfileId: string,
+  serverLocationInfos: ClientServerLocationInfo[],
 }>();
 
-const emits = defineEmits<{
-  (e: 'connect', clientProfileId: string, serverLocation: string, isPremium: boolean, isDiagnose: boolean): void;
-}>();
 
-const isActiveClientProfile = vhApp.isActiveClientProfile(props.clientProfileInfo.clientProfileId);
+const isActiveClientProfile = vhApp.isActiveClientProfile(props.clientProfileId);
 
 // Locations categories
-const freeLocations = props.clientProfileInfo.serverLocationInfos.filter(x => x.options.hasFree);
-const premiumLocations = props.clientProfileInfo.serverLocationInfos.filter(x => x.options.hasPremium);
+const freeLocations = props.serverLocationInfos.filter(x => x.options.hasFree);
+const premiumLocations = props.serverLocationInfos.filter(x => x.options.hasPremium);
 
 // Categories open state
-const openedListGroups = ref<string[]>([$t('FREE_LOCATIONS'), $t('PREMIUM_LOCATIONS')]);
+const openedListGroups = ref<string[]>([locale('FREE_LOCATIONS'), locale('PREMIUM_LOCATIONS')]);
 const listIds: string[] = hasGroup() ? ['freeLocations', 'premiumLocations'] : ['allLocations'];
-
-async function onClickLocation(serverLocation: string, isPremium: boolean, isDiagnose: boolean): Promise<void> {
-  emits('connect', props.clientProfileInfo.clientProfileId, serverLocation, isPremium, isDiagnose);
-}
 
 function hasGroup(): boolean{
   if (freeLocations.length === 0)
@@ -54,9 +48,9 @@ function hasGroup(): boolean{
     <template v-if="hasGroup()">
 
       <v-list-group
-        :value="index === 0 ? $t('FREE_LOCATIONS') : $t('PREMIUM_LOCATIONS')"
+        :value="index === 0 ? locale('FREE_LOCATIONS') : locale('PREMIUM_LOCATIONS')"
         class="text-start"
-        :class="{'mb-5': (index === 0 && openedListGroups.find(x => x === $t('FREE_LOCATIONS')))}"
+        :class="{'mb-5': (index === 0 && openedListGroups.find(x => x === locale('FREE_LOCATIONS')))}"
       >
         <!-- Group title -->
         <template v-slot:activator="{ props }">
@@ -67,7 +61,7 @@ function hasGroup(): boolean{
             :ripple="false"
           >
             <div class="d-flex align-center ga-3">
-              <span>{{index === 0 ? $t('FREE_LOCATIONS') : $t('PREMIUM_LOCATIONS')}}</span>
+              <span>{{ index === 0 ? locale('FREE_LOCATIONS') : locale('PREMIUM_LOCATIONS') }}</span>
               <span class="flex-grow-1 border-b-thin border-gray-lighten-1 border-opacity-25"></span>
             </div>
           </v-list-item>
@@ -75,11 +69,11 @@ function hasGroup(): boolean{
 
         <!-- Group items -->
         <LocationListItem
+          :client-profile-id="props.clientProfileId"
           :locations-list="index === 0 ? freeLocations : premiumLocations"
           :is-active-profile="isActiveClientProfile"
           :is-premium="index!==0"
           :has-group="true"
-          @on-click-location="onClickLocation"
         />
       </v-list-group>
 
@@ -87,11 +81,11 @@ function hasGroup(): boolean{
 
     <!-- If the locations does not have both the Free and Premium category -->
     <LocationListItem v-else
-      :locations-list="props.clientProfileInfo.serverLocationInfos"
+      :client-profile-id="props.clientProfileId"
+      :locations-list="props.serverLocationInfos"
       :is-active-profile="isActiveClientProfile"
       :is-premium="false"
       :has-group = "false"
-      @on-click-location="onClickLocation"
     />
 
   </v-list>

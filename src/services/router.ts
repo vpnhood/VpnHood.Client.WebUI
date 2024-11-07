@@ -37,7 +37,7 @@ const routes = [
   {
     path: '/languages',
     name: 'Languages',
-    component: () => import(/* webpackChunkName: "Languages" */ '@/pages/Languages.vue'),
+    component: () => import(/* webpackChunkName: "Languages" */ '@/pages/AppLanguages.vue'),
     meta: {
       title: 'Languages',
     }

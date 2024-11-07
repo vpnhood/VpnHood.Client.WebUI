@@ -1,4 +1,4 @@
-import router from "@/plugins/router";
+import router from "@/services/router";
 import AsyncLock from 'async-lock';
 
 export class ComponentRouteController {

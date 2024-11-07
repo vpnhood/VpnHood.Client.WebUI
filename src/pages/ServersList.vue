@@ -6,7 +6,7 @@ import AppBar from "@/components/AppBar.vue";
 import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
-import { ConnectManager } from '@/services/ConnectManager';
+import { ComponentName } from '@/helper/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -17,12 +17,6 @@ onMounted(() => {
   // Create open state for each clientProfileInfo item
   expandedPanels.value = vhApp.data.clientProfileInfos.map(() => 0);
 });
-
-// Connect or diagnose selected client profile
-async function connect(clientProfileId: string, serverLocation: string | null,
-                       isPremium: boolean, isDiagnose: boolean): Promise<void> {
-  await ConnectManager.connect3(clientProfileId, serverLocation, isPremium, isDiagnose);
-}
 </script>
 
 <template>
@@ -42,7 +36,7 @@ async function connect(clientProfileId: string, serverLocation: string | null,
       class="text-primary-darken-1 mt-1 mb-5 text-capitalize"
       rounded="pill"
       :text="locale('ADD_SERVER')"
-      @click="ComponentRouteController.showComponent($componentName.AddServerDialog)"
+      @click="ComponentRouteController.showComponent(ComponentName.AddServerDialog)"
     >
       <template v-slot:prepend>
         <v-icon icon="mdi-plus-circle" size="30"/>
@@ -66,13 +60,16 @@ async function connect(clientProfileId: string, serverLocation: string | null,
     <!-- For VpnHoodCONNECT -->
     <!-- Single server mode -->
     <template v-else-if="vhApp.isSingleServerMode()">
-      <LocationList :client-profile-info="vhApp.data.clientProfileInfos[0]" @connect="connect" />
+      <LocationList
+        :client-profile-id="vhApp.data.clientProfileInfos[0].clientProfileId"
+        :server-location-infos="vhApp.data.clientProfileInfos[0].serverLocationInfos"
+      />
     </template>
 
     <!-- For VpnHoodCLIENT -->
     <!-- Multi server mode -->
     <template v-else>
-      <ExpansionPanelList :expanded-panels="expandedPanels" @connect="connect" />
+      <ExpansionPanelList :expanded-panels="expandedPanels" />
     </template>
 
   </v-sheet>

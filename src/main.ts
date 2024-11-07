@@ -1,10 +1,10 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 import { VpnHoodApp } from './services/VpnHoodApp'
-import { AppName, ComponentName } from './UiConstants'
-import vuetify from './plugins/vuetify'
+import { AppName } from './helper/UiConstants'
+import vuetify from './services/vuetify'
 import i18n from './locales/i18n'
-import router from './plugins/router'
+import router from './services/router'
 import ErrorPage from "./pages/ErrorPage.vue"
 import './assets/styles/general.css'
 import './assets/styles/override.css'
@@ -12,17 +12,12 @@ import './assets/styles/vpn-hood.css'
 import './assets/styles/vpn-hood-connect.css'
 import './assets/styles/rtl.css'
 
-
 async function main(): Promise<void> {
   try {
     console.log("Current Mode: " + import.meta.env.MODE);
     // Init app
     const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
     const app = createApp(App);
-
-    // Global properties
-    app.config.globalProperties.$vpnHoodApp = vpnHoodApp;
-    app.config.globalProperties.$componentName = ComponentName;
 
     // Set app theme
     vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHood;

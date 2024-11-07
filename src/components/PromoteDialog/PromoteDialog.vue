@@ -5,6 +5,8 @@ import i18n from '@/locales/i18n';
 import { computed } from 'vue';
 import { PromoteDialogData } from '@/components/PromoteDialog/PromoteDialogData';
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
+import { type MyConnectPlanId, MyPlanId } from '@/components/PromoteDialog/MyConnectPlanIds';
+import router from '@/services/router';
 
 const props = defineProps<{
   modelValue: boolean,
@@ -20,7 +22,17 @@ const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
 const dialogDescription = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM_DESC') : locale('SELECTED_LOCATION_IS_FREE_DESC'));
 
-async function actionByPlan(planId: ConnectPlanId): Promise<void> {
+async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
+  // TODO check with trudy
+  if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
+    throw new Error("Could not found required data.");
+
+  // Open PurchaseSubscription page
+  if (planId === MyPlanId.premiumByPurchase){
+    await router.push('/purchase-subscription');
+    return;
+  }
+
   await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
     dialogData.value.isPremiumLocation, planId);
 }
@@ -67,7 +79,7 @@ async function actionByPlan(planId: ConnectPlanId): Promise<void> {
               size="small"
               rounded="pill"
               variant="flat"
-              @click="actionByPlan('1')"
+              @click="actionByConnectPlan(ConnectPlanId.Normal)"
             />
           </v-col>
         </v-row>
@@ -86,7 +98,7 @@ async function actionByPlan(planId: ConnectPlanId): Promise<void> {
           :description="locale('WATCH_REWARDED_AD_DESC')"
           :button-text="locale('CONNECT')"
           :button-action-plan="ConnectPlanId.PremiumByAdReward"
-          @action-by-plan="actionByPlan"
+          @action-by-plan="actionByConnectPlan"
         />
 
         <!-- Try premium -->
@@ -97,7 +109,7 @@ async function actionByPlan(planId: ConnectPlanId): Promise<void> {
           :description="locale('TRY_PREMIUM_DESC')"
           :button-text="locale('CONNECT')"
           :button-action-plan="ConnectPlanId.PremiumByTrial"
-          @action-by-plan="actionByPlan"
+          @action-by-plan="actionByConnectPlan"
         />
 
         <!-- Go premium -->
@@ -107,8 +119,8 @@ async function actionByPlan(planId: ConnectPlanId): Promise<void> {
           :title="locale('GO_PREMIUM_2')"
           :description="locale('GO_PREMIUM_DESC')"
           :button-text="locale('UPGRADE')"
-          button-action-plan="4"
-          @action-by-plan="actionByPlan"
+          :button-action-plan="MyPlanId.premiumByPurchase"
+          @action-by-plan="actionByConnectPlan"
         />
 
         <!-- Back button -->

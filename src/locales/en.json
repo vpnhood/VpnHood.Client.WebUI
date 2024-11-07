@@ -201,6 +201,7 @@
   "UPGRADE": "Upgrade",
   "UNKNOWN_ERROR": "Unknown Error",
   "ALREADY_CONNECTED_TO_LOCATION": "You are already connected to the selected location.",
-  "CLIENT_PROFILE_ID_NOT_FOUND_MESSAGE": "Could not find client profile Id of the selected location. If you receive this message again, please let us know.",
-  "OR": "or"
+  "CLIENT_PROFILE_ID_NOT_FOUND_MESSAGE": "Could not find the client profile ID of the selected location. If you receive this message again, please let us know.",
+  "OR": "or",
+  "COULD_NOT_CONNECT_TO_SERVER": "Could not connect to the server. If you receive this message again, please let us know."
 }

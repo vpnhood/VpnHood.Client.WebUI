@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
+import { AppConnectionState, FilterMode, Traffic } from '@/services/VpnHood.Client.Api';
 import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
 import ProtocolDialog from '@/components/ProtocolDialog.vue';
 import HomeAppBar from '@/components/HomeAppBar.vue';
 import SuppressSnackbar from '@/components/SuppressSnackbar.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
-import { UiConstants } from '@/UiConstants';
+import { UiConstants } from '@/helper/UiConstants';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import GeneralSnackbar from '@/components/GeneralSnackbar.vue';
 import i18n from '@/locales/i18n';
-import vuetify from '@/plugins/vuetify';
-import router from '@/plugins/router';
-import { ConnectManager } from '@/services/ConnectManager';
+import vuetify from '@/services/vuetify';
+import router from '@/services/router';
+import { ConnectManager } from '@/helper/ConnectManager';
+import { ComponentName } from '@/helper/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -89,17 +90,17 @@ function bandwidthUsage(): { Used: string; Total: string } | null {
 
   const mb = 1000000;
   const gb = 1000 * mb;
-  const traffic = vhApp.data.state.accountTraffic;
+  const traffic: Traffic = vhApp.data.state.accountTraffic;
 
-  const ret = {
+  const ret: {used: number, total: number} = {
     used: traffic.sent + traffic.received,
     total: accessUsage.maxTraffic
   };
-  const total =
+  const total: string =
     ret.total >= gb
       ? Number((ret.total / gb).toFixed(1)).toString() + 'GB'
       : Number((ret.total / mb).toFixed(0)).toString() + 'MB';
-  const used =
+  const used: string =
     ret.used >= gb
       ? Number((ret.used / gb).toFixed(1)).toString() + 'GB'
       : Number((ret.used / mb).toFixed(0)).toString() + 'MB';
@@ -163,7 +164,7 @@ function udpProtocolButtonText(): string {
 }
 
 function getLocaleChevronIcon(): string {
-  return vuetify.locale.isRtl ? 'mdi-chevron-left' : 'mdi-chevron-right';
+  return vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right';
 }
 
 </script>
@@ -343,7 +344,7 @@ function getLocaleChevronIcon(): string {
             class="config-item mb-1"
             @click="
               ComponentRouteController.showComponent(
-                $componentName.TunnelClientCountryDialog,
+                ComponentName.TunnelClientCountryDialog,
               )
             "
           >
@@ -398,7 +399,7 @@ function getLocaleChevronIcon(): string {
             size="small"
             prepend-icon="mdi-transit-connection-variant"
             class="config-item"
-            @click="ComponentRouteController.showComponent($componentName.ProtocolDialog)"
+            @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
           >
             <span>{{ locale('PROTOCOL_TITLE') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
@@ -420,8 +421,8 @@ function getLocaleChevronIcon(): string {
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
   <SuppressSnackbar v-model="vhApp.data.uiState.showSuppressSnackbar" />
   <TunnelClientCountryDialog
-    v-model="ComponentRouteController.create($componentName.TunnelClientCountryDialog).isShow" />
-  <ProtocolDialog v-model="ComponentRouteController.create($componentName.ProtocolDialog).isShow" />
+    v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
+  <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
 </template>
 
 <style scoped>

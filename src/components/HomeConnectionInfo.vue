@@ -13,8 +13,8 @@ const props = defineProps<{
   connectionStateText: string,
   stateIcon: string | null,
   expireDate: string | null,
-  bandwidthUsed: string | null,
-  bandwidthTotal: string | null,
+  bandwidthUsed: string | undefined,
+  bandwidthTotal: string | undefined,
 }>();
 
 function determineClass() {
@@ -59,7 +59,7 @@ function processConnectedAnimation(): void {
       <span :class="[vhApp.isConnectApp() ? 'text-body-2' : 'text-body-1']">{{ props.connectionStateText }}</span>
 
       <!-- Usage -->
-      <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && props.bandwidthTotal">
+      <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && props.bandwidthTotal && props.bandwidthUsed">
         <span class="text-body-1">{{ props.bandwidthUsed }} {{ locale('OF') }}</span>
         <span class="text-ui-tertiary">{{ props.bandwidthTotal }}</span>
       </div>

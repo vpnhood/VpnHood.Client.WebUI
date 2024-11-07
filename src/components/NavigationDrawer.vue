@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { AppName } from '@/UiConstants';
+import { AppName } from '@/helper/UiConstants';
 import { ref, watch } from 'vue';
-import router from '@/plugins/router';
+import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import vuetify from '@/plugins/vuetify';
+import vuetify from '@/services/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -14,12 +14,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'modelValue', value: boolean): void;
+  (e: 'update:modelValue', value: boolean): void;
 }>();
 
 const closeByKeyboardEscape = (event: KeyboardEvent) => {
   if (event.code === 'Escape')
-    emit('modelValue', false);
+    emit('update:modelValue', false);
 };
 
 const isCheckForUpdate = ref<boolean>(false);
@@ -34,11 +34,11 @@ watch(() => props.modelValue, (newVal) => {
 
 function goPremium() {
   router.replace('/purchase-subscription');
-  emit('modelValue', false);
+  emit('update:modelValue', false);
 }
 
 async function diagnose(): Promise<void> {
-  emit('modelValue', false);
+  emit('update:modelValue', false);
   await vhApp.diagnose();
 }
 
@@ -60,7 +60,7 @@ async function checkForUpdate() {
   }
   finally {
     isCheckForUpdate.value = false;
-    emit('modelValue', false);
+    emit('update:modelValue', false);
   }
 }
 
@@ -68,7 +68,7 @@ async function onSignIn() {
   try {
     vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();
-    emit('modelValue', false);
+    emit('update:modelValue', false);
   } finally {
     vhApp.data.uiState.showLoadingDialog = false;
   }
@@ -77,15 +77,19 @@ async function onSignIn() {
 function onSignOut() {
   showConfirmSignOut.value = false;
   vhApp.signOut();
-  emit('modelValue', false);
+  emit('update:modelValue', false);
+}
+
+function itemClass(){
+  return vhApp.isConnectApp() ? 'border-secondary border-b' : 'border-b';
 }
 </script>
 
 <template>
   <v-navigation-drawer
-    @update:modelValue="emit('modelValue', $event)"
+    @update:modelValue="emit('update:modelValue', $event)"
     :modelValue="modelValue"
-    :location="$vuetify.locale.isRtl? 'right' : 'left'"
+    :location="vuetify.locale.isRtl.value? 'right' : 'left'"
     :color="vhApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
     :temporary="true"
     :disable-route-watcher="true"
@@ -93,31 +97,20 @@ function onSignOut() {
   >
 
     <!-- Header -->
-    <div
-      :class="[vhApp.isConnectApp() ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
+    <div :class="[vhApp.isConnectApp() ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
 
-      <!-- VpnHoodConnect logo -->
-      <v-img v-if="vhApp.isConnectApp()" :eager="true"
-             :src="vhApp.getImageUrl('logo-connect.png')"
-             alt="logo"
-             max-width="50"
-             width="50"
-             height="50"
-      />
-
-      <!-- VpnHood logo -->
-      <v-img v-else :eager="true"
-             :src="vhApp.getImageUrl('logo.png')"
-             alt="logo"
-             max-width="60"
-             width="60"
-             height="60"
+      <v-img
+        :src="vhApp.getImageUrl(vhApp.isConnectApp() ? 'logo-connect.png' : 'logo.png')"
+        :eager="true"
+        alt="logo"
+        max-width="50"
+        width="50"
+        height="50"
       />
 
       <div class="text-white ms-3">
-
         <!-- App name -->
-        <h4 dir="ltr" :class="vuetify.locale.isRtl? 'text-end' : 'text-start'">
+        <h4 dir="ltr" :class="vuetify.locale.isRtl.value? 'text-end' : 'text-start'">
           {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
         </h4>
 
@@ -126,17 +119,18 @@ function onSignOut() {
           <span class="me-2">{{ locale('VERSION') }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
-
       </div>
+
     </div>
 
+    <!-- TODO create component -->
     <!-- Menu items -->
     <v-list dense class="pt-0">
 
       <!-- Go premium or Change subscription -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
-        :class="[{'border-secondary': vhApp.isConnectApp()}, 'border-b']"
+        :class="itemClass()"
         @click="goPremium()"
       >
         <v-list-item-title>
@@ -150,7 +144,7 @@ function onSignOut() {
       <!-- Sign in button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported && !vhApp.data.userState.userAccount"
-        :class="[{'border-secondary': vhApp.isConnectApp()}, 'border-b']"
+        :class="itemClass()"
         @click="onSignIn()"
       >
         <v-list-item-title>
@@ -162,7 +156,7 @@ function onSignOut() {
       <!-- Sign out button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported && vhApp.data.userState.userAccount"
-        :class="[vhApp.isConnectApp() ? 'border-secondary' : '', 'border-b']"
+        :class="itemClass"
         @click="showConfirmSignOut = true"
       >
         <v-list-item-title class="d-flex align-center">
@@ -176,9 +170,8 @@ function onSignOut() {
 
       <!-- Settings -->
       <v-list-item
-        class="border-b"
-        :class="{'border-secondary' : vhApp.isConnectApp()}"
-        @click="$router.replace({path: '/settings'})"
+        :class="itemClass()"
+        @click="router.replace({path: '/settings'})"
       >
         <v-list-item-title>
           <v-icon icon="mdi-cog" />
@@ -188,7 +181,7 @@ function onSignOut() {
 
       <!-- Diagnose -->
       <v-list-item
-        :class="[vhApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+        :class="itemClass()"
         :disabled="!vhApp.data.state.canDiagnose"
         @click="diagnose"
       >
@@ -200,12 +193,11 @@ function onSignOut() {
 
       <!-- Check for update -->
       <v-list-item
-        :class="[vhApp.data.features.uiName === AppName.VpnHoodConnect ? 'border-secondary' : '', 'border-b']"
+        :class="itemClass()"
         @click="checkForUpdate"
       >
         <v-list-item-title>
-          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true"
-                               color="secondary" />
+          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary" />
           <v-icon v-else icon="mdi-update" />
           <span class="ms-3">{{ locale('CHECK_FOR_UPDATE') }}</span>
         </v-list-item-title>
@@ -213,12 +205,12 @@ function onSignOut() {
 
       <!-- Whats new -->
       <v-list-item
-        v-if="$vuetify.display.mobile || $vuetify.display.platform.win"
+        v-if="vuetify.display.mobile || vuetify.display.platform.value.win"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
         href="https://github.com/vpnhood/VpnHood/blob/main/CHANGELOG.md"
-        @click="$emit('update:modelValue',false)"
+        @click="emit('update:modelValue',false)"
         target="_blank">
 
         <v-list-item-title>
@@ -228,13 +220,14 @@ function onSignOut() {
       </v-list-item>
 
       <!-- Send feedback -->
+      <!-- Do not show on TV -->
       <v-list-item
-        v-if="$vuetify.display.mobile || $vuetify.display.platform.win"
+        v-if="vuetify.display.mobile || vuetify.display.platform.value.win"
         :nav="true"
         density="compact"
         class="opacity-80"
         href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
-        @click="$emit('update:modelValue',false)"
+        @click="emit('update:modelValue',false)"
         target="_blank">
 
         <v-list-item-title>
@@ -244,13 +237,15 @@ function onSignOut() {
       </v-list-item>
 
       <!-- Create personal server -->
+      <!-- Do not show on TV -->
       <v-list-item
-        v-if="vhApp.data.features.uiName !== AppName.VpnHoodConnect && ($vuetify.display.mobile || $vuetify.display.platform.win)"
+        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile
+        || !vhApp.isConnectApp() && vuetify.display.platform.value.win)"
         :nav="true"
         density="compact"
         class="opacity-80"
         href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
-        @click="$emit('update:modelValue',false)"
+        @click="emit('update:modelValue',false)"
         target="_blank">
 
         <v-list-item-title>
@@ -263,8 +258,8 @@ function onSignOut() {
 
     <!-- Powered by button -->
     <a
-      :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2',
-         'text-center mb-4 text-caption position-fixed bottom-0 position-fixed w-100 text-decoration-none']"
+      class="text-center mb-4 text-caption position-fixed bottom-0 position-fixed w-100 text-decoration-none"
+      :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2']"
       href="https://www.vpnhood.com"
       target="_blank"
     >
@@ -273,6 +268,7 @@ function onSignOut() {
     </a>
   </v-navigation-drawer>
 
+  <!-- TODO use global confirm dialog -->
   <!-- Confirm sign-out dialog -->
   <v-dialog v-model="showConfirmSignOut" max-width="600" :persistent="true">
 

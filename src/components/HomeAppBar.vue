@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import {ComponentRouteController} from "@/services/ComponentRouteController";
+import { ComponentName } from '@/helper/UiConstants';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 
@@ -51,7 +52,7 @@ async function saveDebugData() {
   <v-app-bar color="transparent" elevation="0" absolute>
 
     <!-- Navigation drawer button -->
-    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent($componentName.NavigationDrawer)" class="ms-0"/>
+    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="ms-0"/>
 
     <!-- App name -->
     <v-spacer></v-spacer>

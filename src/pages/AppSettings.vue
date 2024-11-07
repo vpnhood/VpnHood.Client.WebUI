@@ -1,70 +1,74 @@
 <script lang="ts" setup>
 import AppBar from '@/components/AppBar.vue'
-import { LanguagesCode } from '@/UiConstants'
+import { LanguagesCode } from '@/helper/UiConstants'
 import { computed } from 'vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
+import vuetify from '@/services/vuetify';
+import router from '@/services/router';
 
-const $vpnHoodApp = VpnHoodApp.instance
+const vhApp = VpnHoodApp.instance
+const locale = i18n.global.t;
+
 const includeLocalNetwork = computed({
   get: () => VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork,
   set: async (value: boolean) => {
-    VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork = value
-    await VpnHoodApp.instance.saveUserSetting()
+    vhApp.data.settings.userSettings.includeLocalNetwork = value
+    await vhApp.saveUserSetting()
   }
 })
 </script>
 
 <template>
   <!-- Page header -->
-  <AppBar :page-title="$t('SETTINGS')" />
+  <AppBar :page-title="locale('SETTINGS')" />
 
   <v-sheet
-    :color="$vpnHoodApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
+    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
     class="pa-4"
   >
     <!-- Change language -->
     <v-card
-      :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'"
+      :color="vhApp.isConnectApp() ? 'background' : 'white'"
       class="pa-4 mb-5"
     >
       <!-- Section title -->
-      <h4 class="mb-2">{{ $t('LANGUAGE') }}</h4>
+      <h4 class="mb-2">{{ locale('LANGUAGE') }}</h4>
 
       <v-btn
         block
         class="justify-space-between px-2"
         color="gray-lighten-2"
         variant="tonal"
-        @click="$router.push({ path: '/languages' })"
+        @click="router.push({ path: '/languages' })"
       >
         <span
           :class="[
-            $vpnHoodApp.isConnectApp() ? 'text-white' : 'text-black',
+            vhApp.isConnectApp() ? 'text-white' : 'text-black',
             'text-transform-none',
           ]"
         >
-          {{ $t('APP_LANGUAGE') }}
+          {{ locale('APP_LANGUAGE') }}
         </span>
 
         <template v-slot:append>
           <!-- Active language name -->
           <span
             :class="[
-              $vpnHoodApp.isConnectApp()
+              vhApp.isConnectApp()
                 ? 'text-disabled'
                 : 'text-gray-lighten-2',
               'text-caption text-capitalize me-1',
             ]"
           >
-            {{ $vpnHoodApp.data.state.currentUiCultureInfo.nativeName }}
+            {{ vhApp.data.state.currentUiCultureInfo.nativeName }}
           </span>
 
           <!-- Button icon -->
           <v-icon
-            :color="$vpnHoodApp.isConnectApp() ? 'white' : 'black'"
+            :color="vhApp.isConnectApp() ? 'white' : 'black'"
             :icon="
-              $vuetify.locale.isRtl ? 'mdi-chevron-left' : 'mdi-chevron-right'
+              vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right'
             "
           />
         </template>
@@ -75,13 +79,13 @@ const includeLocalNetwork = computed({
         <!-- Description -->
         <p
           :class="[
-            $vpnHoodApp.isConnectApp()
+            vhApp.isConnectApp()
               ? 'text-disabled'
               : 'text-gray-lighten-2',
             'text-caption mt-4 mb-1',
           ]"
         >
-          {{ $t('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}
+          {{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}
         </p>
 
         <!-- Link -->
@@ -90,7 +94,7 @@ const includeLocalNetwork = computed({
           href="https://explore.transifex.com/vpnhood/vpnhood-client"
           target="_blank"
         >
-          {{ $t('CONTRIBUTE_EDIT_LANGUAGES_Title') }}
+          {{ locale('CONTRIBUTE_EDIT_LANGUAGES_Title') }}
           <v-icon icon="mdi-open-in-new" />
         </a>
       </div>
@@ -98,28 +102,28 @@ const includeLocalNetwork = computed({
 
     <!-- Exclude local network option -->
     <v-card
-      :color="$vpnHoodApp.isConnectApp() ? 'background' : 'white'"
+      :color="vhApp.isConnectApp() ? 'background' : 'white'"
       class="pa-4"
     >
       <!-- Section title -->
-      <h4 class="mb-2">{{ $t('LOCAL_NETWORK') }}</h4>
+      <h4 class="mb-2">{{ locale('LOCAL_NETWORK') }}</h4>
 
       <!-- Disconnecting alert -->
       <v-alert
-        v-if="$vpnHoodApp.isConnected()"
+        v-if="vhApp.isConnected()"
         :icon="false"
-        :text="$t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
+        :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
         class="mb-2 text-caption"
         density="compact"
         type="warning"
       ></v-alert>
 
       <v-row class="align-center justify-space-between">
-        <v-col>{{ $t('INCLUDE_LOCAL_NETWORK') }}</v-col>
+        <v-col>{{ locale('INCLUDE_LOCAL_NETWORK') }}</v-col>
         <v-col cols="auto">
           <v-switch
             v-model="includeLocalNetwork"
-            :disabled="$vpnHoodApp.isConnected()"
+            :disabled="vhApp.isConnected()"
             :hide-details="true"
             :inline="true"
             class="px-2"
@@ -130,11 +134,11 @@ const includeLocalNetwork = computed({
       </v-row>
       <p
         :class="[
-          $vpnHoodApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2',
+          vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2',
           'text-caption mt-1',
         ]"
       >
-        {{ $t('INCLUDE_LOCAL_NETWORK_DESC') }}
+        {{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
   </v-sheet>

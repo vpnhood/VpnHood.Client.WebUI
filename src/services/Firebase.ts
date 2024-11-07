@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 import {initializeApp} from 'firebase/app'
 import type {FirebaseOptions} from 'firebase/app'
 import { getAnalytics } from "firebase/analytics";

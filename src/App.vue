@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import Vuetify from '@/plugins/vuetify';
+import Vuetify from '@/services/vuetify';
 import {ComponentRouteController} from './services/ComponentRouteController';
-import { ComponentName } from '@/UiConstants';
-import {LocalStorage} from "@/UiConstants";
-import AlertDialog from "@/components/ErrorDialog/ErrorDialog.vue";
+import { ComponentName } from '@/helper/UiConstants';
+import {LocalStorage} from "@/helper/UiConstants";
+import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
@@ -14,9 +14,7 @@ import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 
-let isShowPrivacyPolicyDialog: boolean = false;
-
-const isErrorDialogVisible = computed<boolean>({
+const isShowErrorDialog = computed<boolean>({
   get: () => {
     return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog) &&
       vhApp.data.uiState.errorDialogData.isVisible;
@@ -28,7 +26,7 @@ const isErrorDialogVisible = computed<boolean>({
   }
 })
 
-const isPromoteDialogVisible = computed<boolean>({
+const isShowPromoteDialog = computed<boolean>({
   get: () => {
     return ComponentRouteController.isShowComponent(ComponentName.PromoteDialog) &&
       vhApp.data.uiState.promoteDialogData.isVisible;
@@ -39,23 +37,24 @@ const isPromoteDialogVisible = computed<boolean>({
   }
 })
 
-  onMounted(async () => {
-    // Reload 'state' every 1 second if app window is focused.
-    setInterval(async () => {
-      if (!document.hidden)
-        await vhApp.reloadState();
-    }, 1000);
+const isShowPrivacyPolicyDialog = ref<boolean>(false);
 
-    // Show privacy policy if app is VpnHoodCONNECT
-    if (vhApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
-      isShowPrivacyPolicyDialog = true;
-      return;
-    }
+onMounted(async () => {
+  // Reload 'state' every 1 second if app window is focused.
+  setInterval(async () => {
+    if (!document.hidden)
+      await vhApp.reloadState();
+  }, 1000);
 
-    if (vhApp.data.features.isAccountSupported)
-      await vhApp.loadAccount();
-  })
+  // Show privacy policy if app is VpnHoodCONNECT
+  if (vhApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
+    isShowPrivacyPolicyDialog.value = true;
+    return;
+  }
 
+  if (vhApp.data.features.isAccountSupported)
+    await vhApp.loadAccount();
+})
 </script>
 
 <template>
@@ -82,10 +81,10 @@ const isPromoteDialogVisible = computed<boolean>({
       <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Global alert dialog -->
-      <alert-dialog v-model="isErrorDialogVisible" v-if="vhApp.data.uiState.errorDialogData.isVisible"/>
+      <error-dialog v-model="isShowErrorDialog" v-if="vhApp.data.uiState.errorDialogData.isVisible"/>
 
       <!-- Global promote dialog -->
-      <promote-dialog v-model="isPromoteDialogVisible" v-if="vhApp.data.uiState.promoteDialogData.isVisible"/>
+      <promote-dialog v-model="isShowPromoteDialog" v-if="vhApp.data.uiState.promoteDialogData.isVisible"/>
 
       <!-- Global async confirm dialog -->
       <ConfirmDialog/>
