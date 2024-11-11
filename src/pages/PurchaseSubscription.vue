@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
 import { SubscriptionPlansId } from '@/helper/UiConstants';
-import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { GooglePlayBillingPurchaseState } from '@/helper/googlePlayBilling/GooglePlayBillingPurchaseState';
-import { GooglePlayBillingResponseCode } from '@/helper/googlePlayBilling/GooglePlayBillingResponseCode';
 import { onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -34,7 +32,7 @@ onMounted(async () => {
     subscriptionPlans.value = cloneSubscriptionPlans;
   } catch (err: unknown) {
     await router.replace('/');
-    googleBillingException(err);
+    throw err;
   } finally {
     vhApp.data.uiState.showLoadingDialog = false;
   }
@@ -69,77 +67,15 @@ async function onBuyClick(): Promise<void> {
 }
 
 async function purchase(planId: string): Promise<void> {
-  try {
-    const billingClient = ClientApiFactory.instance.createBillingClient();
-    await billingClient.purchase(planId);
-    showPurchaseCompleteDialog.value = true;
-    await vhApp.loadAccount();
-  } catch (err: unknown) {
-    showPurchaseCompleteDialog.value = false;
-    googleBillingException(err);
-  }
+  const billingClient = ClientApiFactory.instance.createBillingClient();
+  await billingClient.purchase(planId);
+  await vhApp.loadAccount();
+  showPurchaseCompleteDialog.value = true;
 }
 
 async function closeOnPurchaseComplete(): Promise<void> {
   showPurchaseCompleteDialog.value = false;
   await router.replace('/');
-}
-
-function googleBillingException(exception: unknown) {
-  if (!(exception instanceof ApiException) || exception.exceptionTypeName !== 'GoogleBillingException')
-    throw exception;
-
-  else {
-    const googleMessageTitle = locale('GOOGLE_EXCEPTION_MESSAGE');
-    const billingMessage = exception.data.BillingMessage;
-
-    if (exception.data.PurchaseState === GooglePlayBillingPurchaseState.Pending)
-      throw new Error(locale('GOOGLE_BILLING_PENDING_PURCHASE'));
-
-    switch (exception.data.BillingResponseCode) {
-
-      case GooglePlayBillingResponseCode.BillingUnavailable:
-        throw new Error(locale('GOOGLE_BILLING_BILLING_UNAVAILABLE'));
-
-      case GooglePlayBillingResponseCode.ServiceDisconnected:
-        throw new Error(locale('GOOGLE_BILLING_SERVICE_DISCONNECTED'));
-
-      case GooglePlayBillingResponseCode.Error:
-        throw new Error(
-          `${locale('ORDER_PROCESSING_FAILED')}
-                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`);
-
-      case GooglePlayBillingResponseCode.DeveloperError:
-        throw new Error(
-          `${locale('GOOGLE_BILLING_DEVELOPER_ERROR')}
-                ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`);
-
-      case GooglePlayBillingResponseCode.FeatureNotSupported:
-        throw new Error(locale('GOOGLE_BILLING_FEATURE_NOT_SUPPORTED'));
-
-      case GooglePlayBillingResponseCode.ItemAlreadyOwned:
-        throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
-
-      case GooglePlayBillingResponseCode.ItemUnavailable:
-        throw new Error(locale('GOOGLE_BILLING_ITEM_UNAVAILABLE'));
-
-      case GooglePlayBillingResponseCode.ItemNotOwned:
-        throw new Error(locale('GOOGLE_BILLING_ITEM_NOT_OWNED'));
-
-      case GooglePlayBillingResponseCode.NetworkError:
-        throw new Error(locale('GOOGLE_BILLING_NETWORK_ERROR'));
-
-      case GooglePlayBillingResponseCode.ServiceTimeout:
-        throw new Error(locale('GOOGLE_BILLING_SERVICE_TIMEOUT'));
-
-      case GooglePlayBillingResponseCode.ServiceUnavailable:
-        throw new Error(locale('GOOGLE_BILLING_SERVICE_UNAVAILABLE'));
-
-      case GooglePlayBillingResponseCode.UserCancelled:
-        console.log(locale('GOOGLE_BILLING_USER_CANCELED'));
-    }
-  }
-
 }
 
 </script>

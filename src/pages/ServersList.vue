@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import {ComponentRouteController} from "@/services/ComponentRouteController";
 import AppBar from "@/components/AppBar.vue";
@@ -11,12 +10,6 @@ import { ComponentName } from '@/helper/UiConstants';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const expandedPanels = ref<number[]>([]);
-
-onMounted(() => {
-  // Create open state for each clientProfileInfo item
-  expandedPanels.value = vhApp.data.clientProfileInfos.map(() => 0);
-});
 </script>
 
 <template>
@@ -69,7 +62,7 @@ onMounted(() => {
     <!-- For VpnHoodCLIENT -->
     <!-- Multi server mode -->
     <template v-else>
-      <ExpansionPanelList :expanded-panels="expandedPanels" />
+      <ExpansionPanelList/>
     </template>
 
   </v-sheet>

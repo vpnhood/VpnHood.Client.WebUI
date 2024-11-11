@@ -3,7 +3,7 @@ import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -29,6 +29,7 @@ function hasGroup(): boolean{
     return false;
   return premiumLocations.length > 0;
 }
+
 </script>
 
 <template>

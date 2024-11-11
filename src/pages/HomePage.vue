@@ -9,7 +9,7 @@ import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { UiConstants } from '@/helper/UiConstants';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import GeneralSnackbar from '@/components/GeneralSnackbar.vue';
+//import GeneralSnackbar from '@/components/GeneralSnackbar.vue';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import router from '@/services/router';
@@ -21,6 +21,7 @@ const locale = i18n.global.t;
 let lastConnectPressedTime = Date.now() - 1000;
 
 async function onConnectButtonClick(): Promise<void> {
+
   // Prevent double click
   if (lastConnectPressedTime >= Date.now() - 1000)
     return;
@@ -152,20 +153,18 @@ function alertForExpire(): boolean {
   return diffDays <= 3;
 }
 
-// TODO implement http/3 option
 function udpProtocolButtonText(): string {
-  if (vhApp.data.state.connectionState === AppConnectionState.Connected &&
-    vhApp.data.state.isUdpChannelSupported === false)
-    return locale('PROTOCOL_TCP');
-
-  return vhApp.data.settings.userSettings.useUdpChannel
-    ? locale('PROTOCOL_UDP')
-    : locale('PROTOCOL_TCP');
+  const { connectionState, isUdpChannelSupported } = vhApp.data.state;
+  const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
+  if (connectionState === AppConnectionState.Connected && !isUdpChannelSupported) {
+    return dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP");
+  }
+  return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
-
 function getLocaleChevronIcon(): string {
   return vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right';
 }
+
 
 </script>
 
@@ -300,9 +299,8 @@ function getLocaleChevronIcon(): string {
             <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
             <span
-              class="text-capitalize text-caption text-white opacity-50 text-truncate"
+              class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate"
               tabindex="-1"
-              style="max-width: 195px"
             >
               {{ vhApp.getActiveServerNameOrLocation() }}
             </span>
@@ -313,11 +311,7 @@ function getLocaleChevronIcon(): string {
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
-                <img
-                  :src="vhApp.getActiveServerCountryFlag()!"
-                  height="100%"
-                  alt="country flag"
-                />
+                <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
               </span>
               <v-chip
                 v-else
@@ -350,7 +344,7 @@ function getLocaleChevronIcon(): string {
           >
             <span>{{ locale('COUNTRIES') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
-            <span class="text-capitalize text-caption text-white opacity-50">
+            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">
               {{ vhApp.data.settings.userSettings.tunnelClientCountry
               ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
             </span>
@@ -386,7 +380,7 @@ function getLocaleChevronIcon(): string {
           >
             <span>{{ locale('APPS') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{ appFilterStatus() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ appFilterStatus() }}</span>
           </v-btn>
         </v-col>
 
@@ -403,7 +397,7 @@ function getLocaleChevronIcon(): string {
           >
             <span>{{ locale('PROTOCOL_TITLE') }}</span>
             <v-icon :icon="getLocaleChevronIcon()" />
-            <span class="text-capitalize text-caption text-white opacity-50">{{ udpProtocolButtonText() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ udpProtocolButtonText() }}</span>
           </v-btn>
         </v-col>
       </v-row>
@@ -412,17 +406,17 @@ function getLocaleChevronIcon(): string {
 
   <!-- New server added toast -->
   <!-- TODO Test this -->
-  <general-snackbar
+<!--  <general-snackbar
     :model-value="vhApp.data.uiState.showNewServerAdded"
     :message="locale('NEW_SERVER_ADDED')"
-  />
+  />-->
 
   <!-- Components -->
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
   <SuppressSnackbar v-model="vhApp.data.uiState.showSuppressSnackbar" />
-  <TunnelClientCountryDialog
-    v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
+  <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow"/>
   <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
+
 </template>
 
 <style scoped>
@@ -441,6 +435,9 @@ function getLocaleChevronIcon(): string {
 .VpnHoodConnect .config-item {
   /*noinspection CssUnresolvedCustomProperty*/
   background: rgba(var(--v-theme-primary-darken-1), 0.4);
+}
+.limited-width-to-truncate{
+  max-width: calc(100vw - 110px);
 }
 </style>
 

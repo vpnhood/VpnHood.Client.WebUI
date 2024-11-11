@@ -2,7 +2,7 @@
 import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { Protocols } from '@/helper/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
@@ -14,25 +14,22 @@ const props = defineProps<{
 
 const activeProtocol = computed<Protocols>({
   get: () => {
-    if (isUdpUnsupported())
-      return vhApp.data.settings.userSettings.dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP;
-
-    return vhApp.data.settings.userSettings.useUdpChannel
-      ? Protocols.UDP
-      : vhApp.data.settings.userSettings.dropQuic
-        ? Protocols.TcpAndDropHTTP3
-        : Protocols.TCP;
+    const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
+    if (isUdpUnsupported()) {
+      return dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP;
+    }
+    return useUdpChannel ? Protocols.UDP : (dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP);
   },
   set: async (value: Protocols) => {
-    vhApp.data.settings.userSettings.useUdpChannel = (!(value === Protocols.TCP || value === Protocols.TcpAndDropHTTP3));
-    vhApp.data.settings.userSettings.dropQuic = value === Protocols.TcpAndDropHTTP3;
+    const userSettings = vhApp.data.settings.userSettings;
+    userSettings.useUdpChannel = value === Protocols.UDP;
+    userSettings.dropQuic = value === Protocols.TcpAndDropHTTP3;
     await vhApp.saveUserSetting();
   }
 });
-
 function isUdpUnsupported(): boolean {
   return vhApp.data.state.connectionState === AppConnectionState.Connected &&
-    vhApp.data.state.isUdpChannelSupported === false;
+    !vhApp.data.state.isUdpChannelSupported;
 }
 </script>
 

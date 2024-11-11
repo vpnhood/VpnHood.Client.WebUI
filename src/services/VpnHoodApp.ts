@@ -259,7 +259,7 @@ export class VpnHoodApp {
   }
 
   // Show error dialog
-  public async showErrorMessage(text: string, showChangeServerToAuto: boolean = false): Promise<void> {
+  public async showErrorMessage(text: string): Promise<void> {
     // Send error message to analytics
     this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
 
@@ -267,7 +267,7 @@ export class VpnHoodApp {
     errorDialogData.message = text;
     errorDialogData.canDiagnose = this.data.state.canDiagnose;
     errorDialogData.logExists = this.data.state.logExists;
-    errorDialogData.showChangeServerToAutoButton = showChangeServerToAuto;
+    errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
     errorDialogData.isVisible = true;
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);

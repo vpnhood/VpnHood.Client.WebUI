@@ -205,7 +205,7 @@ function itemClass(){
 
       <!-- Whats new -->
       <v-list-item
-        v-if="vuetify.display.mobile || vuetify.display.platform.value.win"
+        v-if="vuetify.display.mobile.value || vuetify.display.platform.value.win"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
@@ -222,7 +222,7 @@ function itemClass(){
       <!-- Send feedback -->
       <!-- Do not show on TV -->
       <v-list-item
-        v-if="vuetify.display.mobile || vuetify.display.platform.value.win"
+        v-if="vuetify.display.mobile.value || vuetify.display.platform.value.win"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -239,12 +239,12 @@ function itemClass(){
       <!-- Create personal server -->
       <!-- Do not show on TV -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile
+        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile.value
         || !vhApp.isConnectApp() && vuetify.display.platform.value.win)"
         :nav="true"
         density="compact"
         class="opacity-80"
-        href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Access-Server"
+        href="https://github.com/vpnhood/VpnHood/wiki/VpnHood-Manager"
         @click="emit('update:modelValue',false)"
         target="_blank">
 

@@ -2,7 +2,7 @@
 import { Util } from '@/helper/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
 import { ComponentName } from '@/helper/UiConstants';
@@ -11,17 +11,21 @@ import LocationList from '@/components/Servers/LocationList.vue'
 import { ConnectManager } from '@/helper/ConnectManager';
 import router from '@/services/router';
 
-const VhApp = VpnHoodApp.instance;
+const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const maximumLocationOnCollapsed: number = 9;
-
-const props = defineProps<{
-  expandedPanels: number[];
-}>();
+const maximumLocationOnCollapsed: number = 14;
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
 const newClientProfileName = ref<string>("");
-const localExpandedPanels = ref([...props.expandedPanels]);
+const expandedPanels = ref<number[]>([]);
+
+onMounted(() => {
+  // Create open state if client profile is active or has single location
+  expandedPanels.value = vhApp.data.clientProfileInfos.map(x => {
+     return vhApp.isActiveClientProfile(x.clientProfileId) || Util.isSingleLocation(x.serverLocationInfos.length) ? 0 : 1
+  });
+});
+
 
 // Show confirm dialog for delete server
 async function showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
@@ -32,7 +36,7 @@ async function showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Pr
 // Delete server by user
 async function removeServer(clientProfileId: string): Promise<void> {
   await ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog, false);
-  await VhApp.deleteClientProfile(clientProfileId);
+  await vhApp.deleteClientProfile(clientProfileId);
 }
 
 // Show rename server dialog
@@ -45,20 +49,19 @@ async function showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<v
 // Rename server by user
 async function saveNewClientProfileName(): Promise<void> {
   await ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false);
-  await VhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, new
-    ClientProfileUpdateParams(
-      { clientProfileName: new PatchOfString({ value: newClientProfileName.value }
-        )
-      })
+  await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, new
+    ClientProfileUpdateParams({
+    clientProfileName: new PatchOfString({ value: newClientProfileName.value })
+    })
   );
 }
 </script>
 
 <template>
   <v-expansion-panels
-    v-for="(clientProfileInfo, index) in VhApp.data.clientProfileInfos"
+    v-for="(clientProfileInfo, index) in vhApp.data.clientProfileInfos"
     :key="index"
-    v-model="localExpandedPanels[index]"
+    v-model="expandedPanels[index]"
     flat
     rounded="xl"
     bg-color="white"
@@ -72,31 +75,31 @@ async function saveNewClientProfileName(): Promise<void> {
 
       <!-- Country flag on collapse state -->
       <div v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)
-            && Util.isCollapsed(localExpandedPanels[index])"
-        class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start text-truncate"
-        style="border-radius: 14px; max-width: 311px;"
-        @click="localExpandedPanels[index] = 0"
+            && Util.isCollapsed(expandedPanels[index])"
+        class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start"
+        style="border-radius: 14px;"
+        @click="expandedPanels[index] = 0"
       >
         <template v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos">
             <span
               v-if="!serverLocationInfo.isNestedCountry
-                && !VhApp.isLocationAutoSelected(serverLocationInfo.countryCode)
+                && !vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)
                 && index <= maximumLocationOnCollapsed"
               :key="index"
-              class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-2"
+              class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-n2 elevation-2"
               style="width: 23px; height: 23px;"
             >
               <!-- Auto select icon -->
-              <v-icon v-if="VhApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
+              <v-icon v-if="vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
                       color="primary-darken-1" size="27"></v-icon>
 
               <!-- Country flag -->
-              <img v-else :src="VhApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%"
+              <img v-else :src="vhApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%"
                    alt="country flag"/>
             </span>
         </template>
         <span v-if="Util.calcLocationCount(clientProfileInfo) > maximumLocationOnCollapsed"
-              class="text-caption text-lowercase">
+              class="text-caption text-lowercase ps-3">
             +{{ Util.calcLocationCount(clientProfileInfo) - maximumLocationOnCollapsed }}
           </span>
       </div>
@@ -108,21 +111,21 @@ async function saveNewClientProfileName(): Promise<void> {
           <!-- Radio button -->
           <v-col cols="auto py-0">
             <div
-              :class="[VhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
+              :class="[vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
                 ? 'border-secondary'
                 : 'border-gray-lighten-4'
                 , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
               style="width: 25px; height: 25px; border-width: 3px !important;"
             >
               <!-- Check icon if is active client profile -->
-              <v-icon v-if="VhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
+              <v-icon v-if="vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
                       icon="mdi-check-bold" size="15"/>
             </div>
           </v-col>
 
           <!-- Profile name -->
-          <v-col class="px-0 py-0">
-            <h4 class="text-primary-darken-1 text-truncate text-capitalize" style="max-width: 190px;">
+          <v-col class="px-0 py-0 text-truncate limited-width-to-truncate">
+            <h4 class="text-primary-darken-1 text-truncate text-capitalize">
               {{ clientProfileInfo.clientProfileName }}
             </h4>
           </v-col>
@@ -138,22 +141,22 @@ async function saveNewClientProfileName(): Promise<void> {
 
                   <!-- Rename item -->
                   <v-list-item
-                    v-if="clientProfileInfo.clientProfileId !== VhApp.data.features.builtInClientProfileId"
+                    v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"
                     :title="locale('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
                   <v-divider
-                    v-if="clientProfileInfo.clientProfileId !== VhApp.data.features.builtInClientProfileId"/>
+                    v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"/>
 
                   <!-- Diagnose item -->
                   <v-list-item
                     :title="locale('DIAGNOSE')"
-                    :disabled="!VhApp.data.state.canDiagnose"
+                    :disabled="!vhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
                     @click="ConnectManager.connect2(clientProfileInfo.clientProfileId, true)">
                   </v-list-item>
-                  <v-divider v-if="VhApp.data.features.isAddAccessKeySupported"/>
+                  <v-divider v-if="vhApp.data.features.isAddAccessKeySupported"/>
 
                   <!-- Delete item -->
-                  <v-list-item v-if="VhApp.data.features.isAddAccessKeySupported" :title="locale('REMOVE')"
+                  <v-list-item v-if="vhApp.data.features.isAddAccessKeySupported" :title="locale('REMOVE')"
                                prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(clientProfileInfo)"/>
                 </v-list>
               </v-menu>
@@ -161,7 +164,7 @@ async function saveNewClientProfileName(): Promise<void> {
 
             <!-- Expand/Collapse button -->
             <template v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)">
-              <v-icon v-if="localExpandedPanels[index] === 0" size="28" icon="mdi-minus-circle-outline" />
+              <v-icon v-if="expandedPanels[index] === 0" size="28" icon="mdi-minus-circle-outline" />
               <v-icon v-else icon="mdi-plus-circle-outline" size="28" />
             </template>
           </v-col>

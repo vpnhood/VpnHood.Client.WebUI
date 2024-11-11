@@ -124,11 +124,21 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
 
 /*noinspection CssUnusedSymbol*/
 .limited-width{
-  max-width: calc(100vw - 110px);
+  max-width: calc(100vw - 135px);
 }
 
 /*noinspection CssUnusedSymbol*/
 .active-item-limited-width{
+  max-width: calc(100vw - 175px);
+}
+
+/*noinspection CssUnusedSymbol*/
+.VpnHoodConnect .limited-width{
+  max-width: calc(100vw - 110px);
+}
+
+/*noinspection CssUnusedSymbol*/
+.VpnHoodConnect .active-item-limited-width{
   max-width: calc(100vw - 150px);
 }
 

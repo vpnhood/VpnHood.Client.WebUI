@@ -22,6 +22,6 @@ export class Util {
 
     // Client profile have a location or not
     public static isServerHaveLocation(serverLocationInfos: ServerLocationInfo[]): boolean {
-        return serverLocationInfos.length > 0
+        return serverLocationInfos.length > 0;
     }
 }
