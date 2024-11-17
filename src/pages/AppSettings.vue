@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AppBar from '@/components/AppBar.vue'
-import { LanguagesCode } from '@/helper/UiConstants'
+import { LanguagesCode } from '@/helpers/UiConstants'
 import { computed } from 'vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'

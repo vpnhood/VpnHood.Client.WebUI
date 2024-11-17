@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Util } from '@/helper/Util'
-import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api'
+import { Util } from '@/helpers/Util'
+import { ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
-import { ConnectManager } from '@/helper/ConnectManager';
+import { ConnectManager } from '@/helpers/ConnectManager';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -11,15 +12,33 @@ const locale = i18n.global.t;
 const props = defineProps<{
   clientProfileId: string,
   locationsList: ClientServerLocationInfo[],
-  hasGroup: boolean,
-  isPremium: boolean,
-  isActiveProfile: boolean,
+  isPremiumGroup: boolean,
+  isPremiumLocationSelected: boolean,
 }>();
 
+function internalConnect(serverLocation: string): void {
+  if (Util.isSingleLocation(props.locationsList.length))
+    return;
+  ConnectManager.connect3(props.clientProfileId, serverLocation, props.isPremiumGroup, false);
+}
 function isActiveItem(location: ClientServerLocationInfo): boolean{
-  if (!props.isActiveProfile)
+  // This situation happened in the Client app
+  if (!vhApp.isActiveClientProfile(props.clientProfileId))
     return false;
-  return vhApp.isActiveLocation(location);
+
+  // TODO Trudy should not changed */* to null
+  // Change server location if the selected item is auto
+  const serverLocation: string | null = location.serverLocation === "*/*" ? null : location.serverLocation;
+
+  // Check premium items
+  if (props.isPremiumLocationSelected){
+    return (serverLocation === vhApp.data.settings.userSettings.serverLocation && props.isPremiumGroup)
+      ?? (location.isDefault && props.isPremiumGroup);
+  }
+
+  // Check free items
+  return (serverLocation === vhApp.data.settings.userSettings.serverLocation && !props.isPremiumGroup) ??
+    (location.isDefault && !props.isPremiumGroup );
 }
 </script>
 
@@ -33,14 +52,14 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       'border-b' : ''), (vhApp.isConnectApp() ? 'border-secondary' : 'border-gray-lighten-3 px-2')]"
     :active="isActiveItem(location)"
     :color="vhApp.isConnectApp() ? 'secondary-lighten-1' : 'secondary'"
-    @click="ConnectManager.connect3(props.clientProfileId, location.serverLocation, props.isPremium, false)"
+    @click="internalConnect(location.serverLocation)"
   >
 
     <v-list-item-title class="d-flex align-center justify-space-between text-subtitle-1" :class="[location.isNestedCountry ? 'ps-4' : '']">
 
       <div class="d-flex align-center">
         <!-- Fastest item -->
-        <template v-if="vhApp.isLocationAutoSelected(location.countryCode)">
+        <template v-if="Util.isLocationAutoSelected(location.countryCode)">
           <v-icon
             icon="mdi-lightning-bolt-outline"
             size="35"
@@ -80,7 +99,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
 
               <!-- Only if server has nested item -->
               <span
-                v-if="vhApp.isLocationAutoSelected(location.regionName)"
+                v-if="Util.isLocationAutoSelected(location.regionName)"
                 class="text-caption ms-1"
                 :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1']"
               >
@@ -104,12 +123,12 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
         size="x-small"
         :text="locale('ACTIVE')"
       >
-        <template v-slot:append v-if="props.isPremium">
+        <template v-slot:append v-if="props.isPremiumGroup">
           <v-icon icon="mdi-crown" size="13"/>
         </template>
       </v-chip>
 
-      <v-icon v-else-if="props.isPremium" size="20" icon="mdi-crown" color="tertiary" />
+      <v-icon v-else-if="props.isPremiumGroup" size="20" icon="mdi-crown" color="tertiary" />
 
     </v-list-item-title>
   </v-list-item>

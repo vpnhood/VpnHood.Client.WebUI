@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import { ComponentName } from '@/helper/UiConstants';
+import { ComponentName } from '@/helpers/UiConstants';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 

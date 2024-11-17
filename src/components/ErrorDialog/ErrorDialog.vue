@@ -2,7 +2,7 @@
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
-import { ConnectManager } from '@/helper/ConnectManager';
+import { ConnectManager } from '@/helpers/ConnectManager';
 import i18n from '@/locales/i18n';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -23,14 +23,12 @@ async function changeLocationToAuto(): Promise<void> {
   vhApp.data.settings.userSettings.serverLocation = null;
   await vhApp.saveUserSetting();
   await ConnectManager.connect1(false);
-  vhApp.data.uiState.errorDialogData.isVisible = false;
 }
 
 async function diagnose(): Promise<void> {
   emit('update:modelValue', false);
   await vhApp.clearLastError();
   await vhApp.diagnose();
-  vhApp.data.uiState.errorDialogData.isVisible = false;
 }
 
 async function sendReport(): Promise<void> {
@@ -58,7 +56,6 @@ async function sendReport(): Promise<void> {
     uploadBytes(storageRef, log).then(() => {
       console.log('Report has been sent!');
     });
-    vhApp.data.uiState.errorDialogData.isVisible = false;
   } catch (ex) {
     console.error('Oops! Could not even send the report details!', ex);
   }

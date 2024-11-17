@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {FilterMode} from "@/services/VpnHood.Client.Api";
 import AppBar from "@/components/AppBar.vue";
-import {UiConstants} from "@/helper/UiConstants";
+import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { onMounted, ref } from 'vue';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -19,7 +20,8 @@ enum ConfirmDialogAction {
   SelectAll,
   ClearAll
 }
-
+const showConfirmDialog = ref<boolean>(false);
+const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 
 onMounted(async () => {
@@ -68,18 +70,6 @@ function sortApps(installedApps: IMyInstalledApps[]) {
   });
 }
 
-function selectAll() {
-  myInstalledApps.value.forEach(app => {app.isSelected = true});
-  sortApps(myInstalledApps.value);
-  saveChange();
-}
-
-function clearAll() {
-  myInstalledApps.value.forEach(app => {app.isSelected = false});
-  sortApps(myInstalledApps.value);
-  saveChange();
-}
-
 // Called after change each selection
 async function saveChange(){
 
@@ -111,20 +101,18 @@ async function saveChange(){
   await vhApp.saveUserSetting();
 }
 
-async function showDialog(confirmAction: ConfirmDialogAction, title: string, message: string) {
-  const confirmResult = await vhApp.data.confirmDialog.showDialog(title, message);
-  if (!confirmResult)
-    return;
-
-  if (confirmAction === ConfirmDialogAction.SelectAll)
-    selectAll();
+async function actionOnConfirm() {
+  if (confirmDialogAction.value === ConfirmDialogAction.SelectAll)
+    myInstalledApps.value.forEach(app => {app.isSelected = true});
   else
-    clearAll();
+    myInstalledApps.value.forEach(app => {app.isSelected = false});
+
+  sortApps(myInstalledApps.value);
+  await saveChange();
 }
 </script>
 
 <template>
-
   <AppBar :page-title="locale('APP_FILTER')"/>
 
   <v-sheet :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
@@ -141,7 +129,7 @@ async function showDialog(confirmAction: ConfirmDialogAction, title: string, mes
       density="comfortable"
       class="text-caption me-3"
       :text="locale('SELECT_ALL')"
-      @click="showDialog(ConfirmDialogAction.SelectAll, locale('SELECT_ALL_APPS_TITLE'), locale('ARE_YOU_SURE'))"
+      @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
     />
 
     <v-btn
@@ -152,7 +140,7 @@ async function showDialog(confirmAction: ConfirmDialogAction, title: string, mes
       density="comfortable"
       class="text-caption"
       :text="locale('CLEAR_ALL')"
-      @click="showDialog(ConfirmDialogAction.ClearAll, locale('CLEAR_ALL_APPS_TITLE'), locale('ARE_YOU_SURE'))"
+      @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
     />
 
     <!-- Filter apps option -->
@@ -205,6 +193,13 @@ async function showDialog(confirmAction: ConfirmDialogAction, title: string, mes
     </v-card>
   </v-sheet>
 
+  <ConfirmDialog
+    v-model="showConfirmDialog"
+    :title="confirmDialogAction == ConfirmDialogAction.SelectAll
+    ? locale('SELECT_ALL_APPS_TITLE') : locale('CLEAR_ALL_APPS_TITLE')"
+    :message="locale('ARE_YOU_SURE')"
+    @click-action="actionOnConfirm"
+  />
 </template>
 
 <!--suppress CssUnusedSymbol -->

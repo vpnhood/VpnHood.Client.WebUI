@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { Util } from '@/helper/Util'
+import { Util } from '@/helpers/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { onMounted, ref } from 'vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
-import { ComponentName } from '@/helper/UiConstants';
+import { ComponentName } from '@/helpers/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
-import { ConnectManager } from '@/helper/ConnectManager';
-import router from '@/services/router';
+import { ConnectManager } from '@/helpers/ConnectManager';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const maximumLocationOnCollapsed: number = 14;
+const maximumLocationOnCollapsed: number = 8;
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
 const newClientProfileName = ref<string>("");
@@ -71,11 +70,13 @@ async function saveNewClientProfileName(): Promise<void> {
       :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
       hide-actions
       class="text-primary-darken-1 pa-4"
+      @click="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) ?
+      ConnectManager.connect2(clientProfileInfo.clientProfileId, false) : ''"
     >
 
       <!-- Country flag on collapse state -->
       <div v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)
-            && Util.isCollapsed(expandedPanels[index])"
+            && expandedPanels[index] !== 0"
         class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start"
         style="border-radius: 14px;"
         @click="expandedPanels[index] = 0"
@@ -83,14 +84,14 @@ async function saveNewClientProfileName(): Promise<void> {
         <template v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos">
             <span
               v-if="!serverLocationInfo.isNestedCountry
-                && !vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)
+                && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
                 && index <= maximumLocationOnCollapsed"
               :key="index"
-              class="rounded-circle overflow-hidden d-inline-flex align-center justify-center border me-n2 elevation-2"
-              style="width: 23px; height: 23px;"
+              class="rounded-circle overflow-hidden d-inline-flex align-center me-1 justify-center border"
+              style="width: 25px; height: 25px;"
             >
               <!-- Auto select icon -->
-              <v-icon v-if="vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
+              <v-icon v-if="Util.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
                       color="primary-darken-1" size="27"></v-icon>
 
               <!-- Country flag -->
@@ -173,11 +174,8 @@ async function saveNewClientProfileName(): Promise<void> {
       </template>
 
       <!-- Profile region -->
-      <template v-slot:text v-if="Util.isServerHaveLocation(clientProfileInfo.serverLocationInfos)">
-        <LocationList
-          :client-profile-id="clientProfileInfo.clientProfileId"
-          :server-location-infos="clientProfileInfo.serverLocationInfos"
-        />
+      <template v-slot:text>
+        <LocationList :client-profile="clientProfileInfo"/>
       </template>
 
       <!-- Support id &  -->
@@ -189,10 +187,7 @@ async function saveNewClientProfileName(): Promise<void> {
   </v-expansion-panels>
 
   <!-- Add server dialog -->
-  <AddServerDialog
-    v-model="ComponentRouteController.create(ComponentName.AddServerDialog).isShow"
-    @new-access-key-added="router.replace('/')">
-  </AddServerDialog>
+  <AddServerDialog v-model="ComponentRouteController.create(ComponentName.AddServerDialog).isShow"/>
 
   <!-- Rename dialog -->
   <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isShow" max-width="600">

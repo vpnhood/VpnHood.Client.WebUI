@@ -2,8 +2,8 @@ import { ApiException } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AnalyticsCustomEvent } from '@/services/Firebase';
-import { GooglePlayBillingPurchaseState } from '@/helper/googlePlayBilling/GooglePlayBillingPurchaseState';
-import { GooglePlayBillingResponseCode } from '@/helper/googlePlayBilling/GooglePlayBillingResponseCode';
+import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
+import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 
 export class ErrorHandler {
 

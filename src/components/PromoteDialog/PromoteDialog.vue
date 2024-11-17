@@ -47,26 +47,27 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
     content-class="pa-3"
     class="bg-black"
   >
-    <v-card class="justify-space-between primary-bg-grad border border-secondary text-white rounded-lg pb-3">
-      <div class="mb-10">
-        <v-img
-          :eager="true"
-          :src="vhApp.getImageUrl(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
-          alt="Servers Icon"
-          width="80%"
-          max-width="500px"
-          class="mx-auto"
-        />
+    <v-card class="justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
+      <div class="mt-5">
         <h3 class="text-center" v-html="dialogTitle" />
         <p class="px-5 text-disabled text-center text-caption">{{dialogDescription}}</p>
       </div>
+
+      <v-img
+        :eager="true"
+        :src="vhApp.getImageUrl(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
+        alt="Servers Icon"
+        width="100%"
+        max-width="500px"
+        class="mx-auto"
+      />
 
 
       <div class="px-3">
 
         <!-- Continue as Free -->
         <v-row v-if="!dialogData.isPremiumLocation" dense align="center"
-               class="button-wrapper border border-secondary border-opacity-100 pa-2 mx-0 mb-3 rounded-lg">
+               class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg">
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
             <p class="text-disabled text-caption" style="line-height: 1.3">{{ locale('SELECTED_FREE_SERVER_DESC') }}</p>
@@ -84,7 +85,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           </v-col>
         </v-row>
         <!-- Divider -->
-        <div v-if="!dialogData.isPremiumLocation" class="d-flex align-center justify-center mt-3 mb-4 mx-10">
+        <div v-if="!dialogData.isPremiumLocation" class="d-flex align-center justify-center my-3 mx-10">
           <div class="w-100 border-b border-secondary-lighten-1"></div>
           <span class="position-relative text-secondary-lighten-1 text-h6 h2 px-4">{{locale('OR')}}</span>
           <div class="w-100 border-b border-secondary-lighten-1"></div>
@@ -95,7 +96,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           v-if="dialogData.showRewardedAd"
           icon="mdi-play-box-lock-open-outline"
           :title="locale('WATCH_REWARDED_AD')"
-          :description="locale('WATCH_REWARDED_AD_DESC')"
+          :description="locale('WATCH_REWARDED_AD_DESC', {minutes: dialogData.showRewardedAd})"
           :button-text="locale('CONNECT')"
           :button-action-plan="ConnectPlanId.PremiumByAdReward"
           @action-by-plan="actionByConnectPlan"
@@ -106,7 +107,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           v-if="dialogData.showTryPremium"
           icon="mdi-timer-lock-open-outline"
           :title="locale('TRY_PREMIUM')"
-          :description="locale('TRY_PREMIUM_DESC')"
+          :description="locale('TRY_PREMIUM_DESC', {minutes: dialogData.showTryPremium})"
           :button-text="locale('CONNECT')"
           :button-action-plan="ConnectPlanId.PremiumByTrial"
           @action-by-plan="actionByConnectPlan"
@@ -132,7 +133,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           prepend-icon="mdi-chevron-left"
           class="opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
-          @click="$emit('update:modelValue', false); dialogData.isVisible = false"
+          @click="$emit('update:modelValue', false)"
         />
 
       </div>

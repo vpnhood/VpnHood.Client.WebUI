@@ -5,5 +5,4 @@ export class PromoteDialogData {
   public showGoPremium: boolean = false;
   public showRewardedAd?: number | null;
   public showTryPremium?: number | null;
-  public isVisible: boolean = false;
 }

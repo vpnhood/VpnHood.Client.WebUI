@@ -42,3 +42,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     50%{opacity:0.4;}
     100%{opacity:0.90;}
 }
+.animation-translate-y{
+    animation: translate-y 3s ease-in-out infinite;
+}
+@keyframes translate-y {
+    0% {transform: translateY(0px);}
+    50% {transform: translateY(-28px);}
+    100% {transform: translateY(0px);}
+}

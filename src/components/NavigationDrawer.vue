@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { AppName } from '@/helper/UiConstants';
+import { AppName } from '@/helpers/UiConstants';
 import { ref, watch } from 'vue';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -268,36 +269,11 @@ function itemClass(){
     </a>
   </v-navigation-drawer>
 
-  <!-- TODO use global confirm dialog -->
   <!-- Confirm sign-out dialog -->
-  <v-dialog v-model="showConfirmSignOut" max-width="600" :persistent="true">
-
-    <v-card color="primary-darken-2">
-
-      <v-card-title class="text-secondary">{{ locale('CONFIRM_SIGN_OUT_TITLE') }}</v-card-title>
-      <v-card-text>{{ locale('CONFIRM_SIGN_OUT_DESC') }}</v-card-text>
-
-      <!-- Dialog buttons -->
-      <v-card-actions>
-        <v-spacer />
-
-        <!-- Confirm button -->
-        <v-btn
-          variant="text"
-          color="secondary"
-          :text="locale('YES')"
-          @click="onSignOut"
-        />
-
-        <!-- Cancel button -->
-        <v-btn
-          variant="tonal"
-          color="secondary"
-          :text="locale('NO')"
-          @click="showConfirmSignOut = false"
-        />
-
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <ConfirmDialog
+    v-model="showConfirmSignOut"
+    :title="locale('CONFIRM_SIGN_OUT_TITLE')"
+    :message="locale('CONFIRM_SIGN_OUT_DESC')"
+    @click-action="onSignOut"
+  />
 </template>

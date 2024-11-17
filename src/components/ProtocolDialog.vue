@@ -3,7 +3,7 @@ import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted } from 'vue';
-import { Protocols } from '@/helper/UiConstants';
+import { Protocols } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -91,7 +91,7 @@ function isUdpUnsupported(): boolean {
                 <span>{{ locale('PROTOCOL_DROP_QUIC') }}</span>
                 <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption']">
                   {{ locale('PROTOCOL_DROP_QUIC_DESC') }}
-                  <span class="text-secondary">({{ locale('DEFAULT') }})</span>
+                  <v-chip color="secondary" :text="locale('DEFAULT')" size="small" variant="tonal" density="comfortable"/>
                 </span>
               </div>
             </template>

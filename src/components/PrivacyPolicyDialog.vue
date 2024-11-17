@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {LocalStorage} from "@/helper/UiConstants";
+import {LocalStorage} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 

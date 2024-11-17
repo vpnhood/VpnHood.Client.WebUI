@@ -1,4 +1,4 @@
-import {ClientProfileInfo, ServerLocationInfo} from "@/services/VpnHood.Client.Api";
+import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
 
 export class Util {
     // Client profile have single location
@@ -6,11 +6,6 @@ export class Util {
         return locationCount < 2;
     }
 
-    // Server card state is collapsed or expanded
-    // 0 = expanded
-    public static isCollapsed(expandState: number): boolean {
-        return expandState !== 0;
-    }
 
     // Location count of client profile
     public static calcLocationCount(clientProfileInfo: ClientProfileInfo): number {
@@ -20,8 +15,8 @@ export class Util {
         return excludeAutoSelect.length;
     }
 
-    // Client profile have a location or not
-    public static isServerHaveLocation(serverLocationInfos: ServerLocationInfo[]): boolean {
-        return serverLocationInfos.length > 0;
-    }
+  public static isLocationAutoSelected(value: string): boolean {
+    return value === '*';
+  }
+
 }

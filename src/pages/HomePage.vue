@@ -6,15 +6,14 @@ import HomeAppBar from '@/components/HomeAppBar.vue';
 import SuppressSnackbar from '@/components/SuppressSnackbar.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
-import { UiConstants } from '@/helper/UiConstants';
+import { UiConstants } from '@/helpers/UiConstants';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-//import GeneralSnackbar from '@/components/GeneralSnackbar.vue';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import router from '@/services/router';
-import { ConnectManager } from '@/helper/ConnectManager';
-import { ComponentName } from '@/helper/UiConstants';
+import { ConnectManager } from '@/helpers/ConnectManager';
+import { ComponentName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -403,13 +402,6 @@ function getLocaleChevronIcon(): string {
       </v-row>
     </v-col>
   </v-row>
-
-  <!-- New server added toast -->
-  <!-- TODO Test this -->
-<!--  <general-snackbar
-    :model-value="vhApp.data.uiState.showNewServerAdded"
-    :message="locale('NEW_SERVER_ADDED')"
-  />-->
 
   <!-- Components -->
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />

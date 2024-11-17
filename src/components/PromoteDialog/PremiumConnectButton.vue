@@ -14,7 +14,7 @@ const emits = defineEmits<{
 </script>
 
 <template>
-  <v-row dense align="center" class="button-wrapper border border-purple-lighten-1 px-1 mx-0 mb-3 rounded-lg">
+  <v-row dense align="center" class="button-wrapper border border-purple border-opacity-25 px-1 mx-0 mb-2 rounded-lg">
     <v-col cols="auto">
       <v-icon :icon="props.icon" color="tertiary" size="30" />
     </v-col>

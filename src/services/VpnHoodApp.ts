@@ -1,19 +1,21 @@
-import { ApiException, AppAccount, AppClient, AppConnectionState, AppFeatures, AppSettings, AppState, ConfigParams,
-  ClientProfileClient, ClientProfileInfo, ClientProfileUpdateParams, ClientServerLocationInfo, ConnectPlanId,
-  DeviceAppInfo, SessionSuppressType, UiCultureInfo } from '@/services/VpnHood.Client.Api';
+import {
+  ApiException, AppAccount, AppClient, AppConnectionState, AppFeatures, AppSettings, AppState, ConfigParams,
+  ClientProfileClient, ClientProfileInfo, ClientProfileUpdateParams, ConnectPlanId,
+  DeviceAppInfo, SessionSuppressType, UiCultureInfo, PatchOfBoolean
+} from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { UiState } from '@/helper/UiState';
-import { UserState } from '@/helper/UserState';
-import { AppName, ComponentName, SubscriptionPlansId } from '@/helper/UiConstants';
+import { UiState } from '@/helpers/UiState';
+import { UserState } from '@/helpers/UserState';
+import { AppName, ComponentName, SubscriptionPlansId } from '@/helpers/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
-import { ConfirmDialogData } from '@/components/ConfirmDialog/ConfirmDialogData';
 import type { Analytics } from 'firebase/analytics';
 import { logEvent, setUserId } from 'firebase/analytics';
 import { AnalyticsCustomEvent, FirebaseApp } from '@/services/Firebase';
-import { ErrorHandler } from '@/helper/ErrorHandler';
+import { ErrorHandler } from '@/helpers/ErrorHandler';
+import { Util } from '@/helpers/Util';
 
 // VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
 export class VpnHoodAppData {
@@ -25,7 +27,6 @@ export class VpnHoodAppData {
   public features: AppFeatures;
   public clientProfileInfos: ClientProfileInfo[];
   public cultureInfos: UiCultureInfo[];
-  public confirmDialog: ConfirmDialogData = new ConfirmDialogData();
 
   public constructor(
     state: AppState,
@@ -173,14 +174,20 @@ export class VpnHoodApp {
                        isPremium: boolean, planId: ConnectPlanId, isDiagnose: boolean = false): Promise<void> {
 
     // User select active item and already connected
-    // TODO Implement
-    /*if (this.data.state.canDisconnect
+    if (this.data.state.canDisconnect
       && clientProfileId === this.data.state.clientProfile?.clientProfileId
-      && serverLocation === this.data.state.serverLocationInfo?.serverLocation)
-      return vhApp.showSnackbar(locale('ALREADY_CONNECTED_TO_LOCATION'));*/
+      && serverLocation === this.data.state.serverLocationInfo?.serverLocation){
+      this.data.uiState.generalSnackbarData.message = i18n.global.t('ALREADY_CONNECTED_TO_LOCATION');
+      this.data.uiState.generalSnackbarData.isShow = true;
+      return;
+    }
 
-    const clientProfileInfo: ClientProfileInfo = await this.clientProfileClient.get(clientProfileId);
-    clientProfileInfo.isPremiumLocationSelected = isPremium;
+    // Update client profile
+    await this.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
+      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium == true!})
+    }));
+
+    // Update user settings
     this.data.settings.userSettings.serverLocation = serverLocation;
     this.data.settings.userSettings.clientProfileId = clientProfileId;
     await this.saveUserSetting();
@@ -218,9 +225,7 @@ export class VpnHoodApp {
 
   // Select profile by user
   public async updateClientProfile(clientProfileId: string, clientProfileUpdateParam: ClientProfileUpdateParams): Promise<void> {
-    console.log('1');
     await this.clientProfileClient.update(clientProfileId, clientProfileUpdateParam);
-    console.log('2');
     await this.reloadSettings();
   }
 
@@ -268,7 +273,6 @@ export class VpnHoodApp {
     errorDialogData.canDiagnose = this.data.state.canDiagnose;
     errorDialogData.logExists = this.data.state.logExists;
     errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
-    errorDialogData.isVisible = true;
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }
@@ -289,7 +293,7 @@ export class VpnHoodApp {
   getActiveServerCountryFlag(): string | null {
     const serverLocationInfo = this.data.state.serverLocationInfo ??
       this.data.state.clientServerLocationInfo;
-    return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
+    return serverLocationInfo && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
       : null;
   }
@@ -307,18 +311,8 @@ export class VpnHoodApp {
     return new URL(`../assets/images/${imageName}`, import.meta.url).href;
   }
 
-  public isLocationAutoSelected(value: string): boolean {
-    return value === '*';
-  }
-
   public isActiveClientProfile(clientProfileId: string): boolean {
     return clientProfileId === this.data.settings.userSettings.clientProfileId;
-  }
-
-  public isActiveLocation(serverLocationInfo: ClientServerLocationInfo): boolean {
-    return this.data.settings.userSettings.serverLocation
-      ? serverLocationInfo.serverLocation === this.data.settings.userSettings.serverLocation
-      : serverLocationInfo.isDefault;
   }
 
   public isConnectApp(): boolean {
@@ -336,10 +330,10 @@ export class VpnHoodApp {
 
     // App is VpnHoodCONNECT
     const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
-    if (!serverLocationInfo || this.isLocationAutoSelected(serverLocationInfo.countryCode))
+    if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
       return i18n.global.t('AUTO_SELECT');
 
-    const text = this.isLocationAutoSelected(serverLocationInfo.regionName)
+    const text = Util.isLocationAutoSelected(serverLocationInfo.regionName)
       ? serverLocationInfo.countryName
       : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
 
@@ -360,7 +354,6 @@ export class VpnHoodApp {
 
   public async clearLastError(): Promise<void> {
     this.data.uiState.stateLastErrorMessage = null;
-    this.data.uiState.errorDialogData.isVisible = false;
     await this.apiClient.clearLastError();
     await this.reloadState();
   }

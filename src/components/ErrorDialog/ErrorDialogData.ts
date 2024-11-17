@@ -3,5 +3,4 @@ export class ErrorDialogData {
   public canDiagnose: boolean = false;
   public logExists: boolean = false;
   public showChangeServerToAutoButton: boolean = false;
-  public isVisible: boolean = false;
 }

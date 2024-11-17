@@ -2,7 +2,7 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { onUpdated, ref } from 'vue';
-import { ConnectManager } from '@/helper/ConnectManager';
+import { ConnectManager } from '@/helpers/ConnectManager';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -13,7 +13,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (e: 'newAccessKeyAdded'): void;
 }>();
 
 const accessKey = ref<string>('');
@@ -41,22 +40,18 @@ async function addAccessKey(): Promise<void> {
 }
 
 async function connect(clientProfileId:string): Promise<void>{
-  vhApp.data.settings.userSettings.clientProfileId = clientProfileId;
-  await vhApp.saveUserSetting();
 
-  // Close current sheet
+  // Close current dialog
   emit('update:modelValue', false);
-
-  // Close parent sheet
-  emit('newAccessKeyAdded');
 
   accessKey.value = '';
 
   // Show new server added snackbar
-  vhApp.data.uiState.showNewServerAdded = true;
+  vhApp.data.uiState.generalSnackbarData.message = locale('NEW_SERVER_ADDED');
+  vhApp.data.uiState.generalSnackbarData.isShow = true;
 
   // Connect to server
-  await ConnectManager.connect1(false);
+  await ConnectManager.connect2(clientProfileId, false);
 }
 
 </script>

@@ -5,7 +5,7 @@ import AppBar from "@/components/AppBar.vue";
 import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
-import { ComponentName } from '@/helper/UiConstants';
+import { ComponentName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -53,10 +53,7 @@ const locale = i18n.global.t;
     <!-- For VpnHoodCONNECT -->
     <!-- Single server mode -->
     <template v-else-if="vhApp.isSingleServerMode()">
-      <LocationList
-        :client-profile-id="vhApp.data.clientProfileInfos[0].clientProfileId"
-        :server-location-infos="vhApp.data.clientProfileInfos[0].serverLocationInfos"
-      />
+      <LocationList :client-profile="vhApp.data.clientProfileInfos[0]" />
     </template>
 
     <!-- For VpnHoodCLIENT -->

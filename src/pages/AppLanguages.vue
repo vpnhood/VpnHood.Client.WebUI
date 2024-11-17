@@ -3,7 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import AppBar from "@/components/AppBar.vue";
-import {LanguagesCode} from "@/helper/UiConstants";
+import {LanguagesCode} from "@/helpers/UiConstants";
 import { type IUiCultureInfo } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
 

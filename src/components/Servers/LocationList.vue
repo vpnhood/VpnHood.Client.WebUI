@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import LocationListItem from '@/components/Servers/LocationListItem.vue'
+import LocationListItems from '@/components/Servers/LocationListItems.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue';
 
@@ -9,16 +9,12 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const props = defineProps<{
-  clientProfileId: string,
-  serverLocationInfos: ClientServerLocationInfo[],
+  clientProfile: ClientProfileInfo
 }>();
 
-
-const isActiveClientProfile = vhApp.isActiveClientProfile(props.clientProfileId);
-
 // Locations categories
-const freeLocations = props.serverLocationInfos.filter(x => x.options.hasFree);
-const premiumLocations = props.serverLocationInfos.filter(x => x.options.hasPremium);
+const freeLocations = props.clientProfile.serverLocationInfos.filter(x => x.options.hasFree);
+const premiumLocations = props.clientProfile.serverLocationInfos.filter(x => x.options.hasPremium);
 
 // Categories open state
 const openedListGroups = ref<string[]>([locale('FREE_LOCATIONS'), locale('PREMIUM_LOCATIONS')]);
@@ -69,24 +65,22 @@ function hasGroup(): boolean{
         </template>
 
         <!-- Group items -->
-        <LocationListItem
-          :client-profile-id="props.clientProfileId"
+        <LocationListItems
+          :client-profile-id="props.clientProfile.clientProfileId"
           :locations-list="index === 0 ? freeLocations : premiumLocations"
-          :is-active-profile="isActiveClientProfile"
-          :is-premium="index!==0"
-          :has-group="true"
+          :is-premium-group="index!==0"
+          :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
         />
       </v-list-group>
 
     </template>
 
     <!-- If the locations does not have both the Free and Premium category -->
-    <LocationListItem v-else
-      :client-profile-id="props.clientProfileId"
-      :locations-list="props.serverLocationInfos"
-      :is-active-profile="isActiveClientProfile"
-      :is-premium="false"
-      :has-group = "false"
+    <LocationListItems v-else
+      :client-profile-id="props.clientProfile.clientProfileId"
+      :locations-list="props.clientProfile.serverLocationInfos"
+      :is-premium-group="false"
+      :is-premium-location-selected="false"
     />
 
   </v-list>

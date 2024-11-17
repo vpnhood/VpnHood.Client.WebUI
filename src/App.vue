@@ -3,21 +3,20 @@ import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import Vuetify from '@/services/vuetify';
 import {ComponentRouteController} from './services/ComponentRouteController';
-import { ComponentName } from '@/helper/UiConstants';
-import {LocalStorage} from "@/helper/UiConstants";
+import { ComponentName } from '@/helpers/UiConstants';
+import {LocalStorage} from "@/helpers/UiConstants";
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import ConfirmDialog from "@/components/ConfirmDialog/ConfirmDialog.vue";
 import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
+import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 
 const vhApp = VpnHoodApp.instance;
 
 const isShowErrorDialog = computed<boolean>({
   get: () => {
-    return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog) &&
-      vhApp.data.uiState.errorDialogData.isVisible;
+    return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog)
   },
   set: async (value: boolean) => {
     if (value) return; // Already is Open
@@ -28,8 +27,7 @@ const isShowErrorDialog = computed<boolean>({
 
 const isShowPromoteDialog = computed<boolean>({
   get: () => {
-    return ComponentRouteController.isShowComponent(ComponentName.PromoteDialog) &&
-      vhApp.data.uiState.promoteDialogData.isVisible;
+    return ComponentRouteController.isShowComponent(ComponentName.PromoteDialog)
   },
   set: async (value: boolean) => {
     if (value) return; // Already is Open
@@ -75,19 +73,21 @@ onMounted(async () => {
       <router-view v-if="!isShowPrivacyPolicyDialog"/>
 
       <!-- Only for VpnHoodCONNECT -->
-      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog"/>
+      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" v-if="isShowPrivacyPolicyDialog"/>
 
       <!-- Loading dialog before each api call -->
-      <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog" v-if="!isShowPrivacyPolicyDialog"/>
+      <LoadingDialog v-else v-model="vhApp.data.uiState.showLoadingDialog"/>
 
       <!-- Global alert dialog -->
-      <error-dialog v-model="isShowErrorDialog" v-if="vhApp.data.uiState.errorDialogData.isVisible"/>
+      <error-dialog v-model="isShowErrorDialog" v-if="isShowErrorDialog"/>
 
       <!-- Global promote dialog -->
-      <promote-dialog v-model="isShowPromoteDialog" v-if="vhApp.data.uiState.promoteDialogData.isVisible"/>
+      <promote-dialog v-model="isShowPromoteDialog" v-if="isShowPromoteDialog"/>
 
-      <!-- Global async confirm dialog -->
-      <ConfirmDialog/>
+      <!-- Global snackbar -->
+      <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"
+        v-if="vhApp.data.uiState.generalSnackbarData.isShow" />
+
 
     </v-main>
   </v-app>

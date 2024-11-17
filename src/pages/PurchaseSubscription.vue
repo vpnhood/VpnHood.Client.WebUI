@@ -1,23 +1,16 @@
 <script setup lang="ts">
-import AppBar from '@/components/AppBar.vue';
-import { SubscriptionPlansId } from '@/helper/UiConstants';
 import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
-import vuetify from '@/services/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const subscriptionPlans = ref<SubscriptionPlan[]>([]);
-const selectedPlanId = ref<string>('');
-const planTitle = ref<string>('');
-const planDetails = ref<string>('');
 const showPurchaseCompleteDialog = ref<boolean>(false);
-const showPlanDetailsDialog = ref<boolean>(false);
 
 onMounted(async () => {
   vhApp.data.uiState.showLoadingDialog = true;
@@ -38,32 +31,14 @@ onMounted(async () => {
   }
 });
 
-function showPlanDetails(planId: string): void {
-  if (vhApp.data.userState.userAccount?.providerPlanId === planId)
-    return;
-
-  // Defined plan title and details to show in the dialog
-  switch (planId) {
-    case SubscriptionPlansId.GlobalServer:
-      planTitle.value = 'GLOBAL_SERVERS';
-      planDetails.value = 'GLOBAL_SERVERS_NOTICE';
-      break;
-  }
-
-  // Save user selected plan id for continue purchase
-  selectedPlanId.value = planId;
-  showPlanDetailsDialog.value = true;
-}
-
-async function onBuyClick(): Promise<void> {
-  showPlanDetailsDialog.value = false;
+async function onPurchaseClick(planId: string): Promise<void> {
   if (!vhApp.data.userState.userAccount)
     await vhApp.signIn();
 
-  if (vhApp.data.userState.userAccount?.providerPlanId === selectedPlanId.value)
+  if (vhApp.data.userState.userAccount?.providerPlanId === planId)
     throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
 
-  await purchase(selectedPlanId.value);
+  await purchase(planId);
 }
 
 async function purchase(planId: string): Promise<void> {
@@ -82,64 +57,110 @@ async function closeOnPurchaseComplete(): Promise<void> {
 
 <template>
 
-  <!-- Page header -->
-  <AppBar :page-title="locale('PURCHASE_SUBSCRIPTION')" />
+  <v-sheet class="pa-3" color="black">
 
-  <v-sheet class="pa-4" color="primary-darken-2">
+    <v-card v-if="subscriptionPlans.length > 0" max-width="375"
+      class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100 mx-auto" >
 
-    <v-card color="transparent" flat v-if="subscriptionPlans.length > 0">
-      <!-- Products list -->
-      <v-card-item class="bg-primary-darken-2 border border-tertiary border-opacity-50 rounded-xl pa-3 mb-3 w-100">
-        <!-- Image -->
-        <v-img :eager="true" :src="vhApp.getImageUrl('ad-icon.png')" :alt="locale('PREMIUM_SERVER_AD_TITLE')"
-               max-width="150px"
-               class="mx-auto" />
-
-        <!-- Title -->
-        <h3 class="title-bold text-tertiary text-uppercase text-center pb-2 mb-2">
-          {{ locale('PREMIUM_SERVER_AD_TITLE') }}</h3>
-
-        <!-- Description -->
-        <ul id="subscriptionFeaturesList">
+      <!-- Title, image and features -->
+      <div>
+        <div id="rocketWrapper" class="mx-auto">
+          <h3 class="text-secondary-lighten-1 text-uppercase text-center mt-4">{{locale('GO_PREMIUM')}}</h3>
+          <img
+            id="rocket"
+            :src="vhApp.getImageUrl('rocket.webp')"
+            alt="Rocket"
+            width="70"
+            height="164"
+            class="animation-translate-y mx-auto"
+          />
+          <img
+            id="rocketSmoke"
+            :src="vhApp.getImageUrl('rocket-smoke.webp')"
+            alt="Rocket smoke"
+            width="104"
+            height="84"
+            class="mx-auto"
+          />
+        </div>
+        <ul id="featuresList" class="text-capitalize text-white px-5 mt-3" style="list-style: none;">
           <li>
-            <span class="feature-title"></span>
-            <h4 class="text-center text-white opacity-60">{{ locale('FREE') }}</h4>
-            <h4 class="text-center text-secondary-lighten-1">{{ locale('PREMIUM') }}</h4>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('ULTRA_FAST_SPEED')}}
           </li>
           <li>
-            <span class="feature-title">{{ locale('SPEED') }}</span>
-            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
-            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('REMOVE_AD')}}
           </li>
           <li>
-            <span class="feature-title">{{ locale('TRAFFIC') }}</span>
-            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
-            <span class="free-feature">{{ locale('UNLIMITED') }}</span>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('MORE_LOCATIONS')}}
           </li>
           <li>
-            <span class="feature-title">{{ locale('NO_ADS') }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
-            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('ALWAYS_ON')}}
           </li>
           <li>
-            <span class="feature-title">{{ locale('ALWAYS_ON') }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
-            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('QUICK_LAUNCH')}}
           </li>
           <li>
-            <span class="feature-title">{{ locale('SUPPORT') }}</span>
-            <span class="free-feature"><v-icon icon="mdi-closeDialog" /></span>
-            <span class="premium-feature"><v-icon icon="mdi-check" /></span>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('SUPPORT')}}
           </li>
         </ul>
-      </v-card-item>
+      </div>
 
-      <!-- Plans list -->
-      <v-card-item class="pa-0 w-100">
+      <!-- Plan title, price, purchase button and back button -->
+      <div class="px-5 mt-6">
+
+        <!-- Plan title, price -->
+        <v-row justify="space-between" class="mx-0">
+          <v-col cols="auto" class="d-flex ga-1 align-items-center">
+            <v-icon icon="mdi-crown" size="23" color="tertiary-lighten-1"/>
+            <!-- TODO must change to subscriptionPlanId -->
+            <span class="font-weight-bold text-body-1">{{locale('1_MONTH')}}</span>
+          </v-col>
+          <v-col cols="auto">
+            <span class="font-weight-bold text-body-1">{{subscriptionPlans[0].planPrice}}</span>
+            <span class="text-caption">{{locale('PER_MONTH')}}</span>
+          </v-col>
+        </v-row>
+
+        <!-- Purchase button -->
+        <v-btn
+          block
+          rounded="pill"
+          color="secondary-lighten-1"
+          class="text-primary-darken-2 mt-2 font-weight-bold"
+          variant="flat"
+          :text="locale('PURCHASE')"
+          @click="onPurchaseClick(subscriptionPlans[0].subscriptionPlanId)"
+        />
+
+        <!-- Plan Descriptions -->
+        <ul class="text-white opacity-30 text-caption ps-4 mt-2">
+          <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
+          <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
+        </ul>
+
+
+        <!-- Back button -->
+        <v-btn
+          rounded="pill"
+          variant="text"
+          :ripple="false"
+          color="secondary"
+          prepend-icon="mdi-chevron-left"
+          class="opacity-60 text-capitalize align-self-start px-0 mt-3"
+          :text="locale('GO_BACK')"
+          @click="router.go(-1)"
+        />
+      </div>
 
         <!-- Multi Plans -->
-        <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
-          <!-- Plan item -->
+<!--        <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
+          &lt;!&ndash; Plan item &ndash;&gt;
           <v-list-item
             v-for="plan in subscriptionPlans"
             :key="plan.subscriptionPlanId"
@@ -150,17 +171,17 @@ async function closeOnPurchaseComplete(): Promise<void> {
             :class="[vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
             ? 'border-secondary-lighten-1 border-opacity-100 py-2'
             : 'border-secondary border-opacity-25 py-3', 'mb-3 pe-2 border']"
-            @click="showPlanDetails(plan.subscriptionPlanId)"
+            @click="onPurchaseClick(plan.subscriptionPlanId)"
           >
 
-            <!-- Plan title -->
+            &lt;!&ndash; Plan title &ndash;&gt;
             <v-list-item-title class="d-flex align-center">
               <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">
                 {{ locale('GLOBAL_SERVERS') }}
               </span>
             </v-list-item-title>
 
-            <!-- Already subscribed -->
+            &lt;!&ndash; Already subscribed &ndash;&gt;
             <v-list-item-subtitle
               v-if="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
               class="text-caption text-secondary-lighten-1"
@@ -168,13 +189,13 @@ async function closeOnPurchaseComplete(): Promise<void> {
               {{ locale('ALREADY_SUBSCRIBED') }}
             </v-list-item-subtitle>
 
-            <!-- Plan price -->
+            &lt;!&ndash; Plan price &ndash;&gt;
             <template v-slot:append>
               <div class="text-end text-subtitle-2 text-secondary">
                 <span>{{ plan.planPrice }}</span>
                 <span>{{ locale('PER_MONTH') }}</span>
               </div>
-              <!--suppress NestedConditionalExpressionJS -->
+              &lt;!&ndash;suppress NestedConditionalExpressionJS &ndash;&gt;
               <v-icon
                 :icon="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
@@ -186,10 +207,10 @@ async function closeOnPurchaseComplete(): Promise<void> {
               />
             </template>
           </v-list-item>
-        </v-list>
+        </v-list>-->
 
         <!-- Single Plan -->
-        <v-list v-else bg-color="transparent">
+<!--        <v-list v-else bg-color="transparent">
 
           <v-list-item
             v-for="plan in subscriptionPlans"
@@ -204,14 +225,14 @@ async function closeOnPurchaseComplete(): Promise<void> {
             @click="showPlanDetails(plan.subscriptionPlanId)"
           >
 
-            <!-- Plan title -->
+            &lt;!&ndash; Plan title &ndash;&gt;
             <v-list-item-title class="d-flex align-center">
               <span v-if="plan.subscriptionPlanId === SubscriptionPlansId.GlobalServer">
                 {{ locale('GLOBAL_SERVERS') }}
               </span>
             </v-list-item-title>
 
-            <!-- Already subscribed -->
+            &lt;!&ndash; Already subscribed &ndash;&gt;
             <v-list-item-subtitle
               v-if="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId"
               class="text-caption text-secondary-lighten-1"
@@ -219,13 +240,13 @@ async function closeOnPurchaseComplete(): Promise<void> {
               {{ locale('ALREADY_SUBSCRIBED') }}
             </v-list-item-subtitle>
 
-            <!-- Plan price -->
+            &lt;!&ndash; Plan price &ndash;&gt;
             <template v-slot:append>
               <div class="text-end text-subtitle-2 text-secondary">
                 <span>{{ plan.planPrice }}</span>
                 <span>{{ locale('PER_MONTH') }}</span>
               </div>
-              <!--suppress NestedConditionalExpressionJS -->
+              &lt;!&ndash;suppress NestedConditionalExpressionJS &ndash;&gt;
               <v-icon
                 :icon="vhApp.data.userState.userAccount?.providerPlanId === plan.subscriptionPlanId
                       ? 'mdi-check-decagram'
@@ -237,53 +258,11 @@ async function closeOnPurchaseComplete(): Promise<void> {
               />
             </template>
           </v-list-item>
-        </v-list>
+        </v-list>-->
 
-      </v-card-item>
-
-
-      <ul class="text-white opacity-30 text-caption ps-4">
-        <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
-        <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
-      </ul>
     </v-card>
 
   </v-sheet>
-
-  <!-- Plan details dialog on purchase subscription -->
-  <v-dialog v-model="showPlanDetailsDialog" max-width="600">
-    <v-card color="primary-darken-2">
-
-      <!-- Plan title -->
-      <v-card-title class="text-secondary d-flex">
-        <span :class="[vuetify.locale.isRtl.value? 'me-1' : 'order-1 ms-1']">{{ locale('SUBSCRIPTION') }}</span>
-        <span>{{ locale(planTitle) }}</span>
-      </v-card-title>
-
-      <!-- Plan description -->
-      <v-card-text>{{ locale(planDetails) }}</v-card-text>
-
-      <!-- Dialog buttons -->
-      <v-card-actions>
-        <v-spacer />
-        <!-- Close button -->
-        <v-btn
-          variant="text"
-          color="secondary"
-          :text="locale('CLOSE')"
-          @click="showPlanDetailsDialog = false"
-        />
-        <!-- Buy button -->
-        <v-btn
-          variant="tonal"
-          color="secondary"
-          class="px-6"
-          :text="locale('BUY')"
-          @click="onBuyClick"
-        />
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 
   <!-- Pending purchase process dialog -->
   <v-dialog
@@ -325,45 +304,32 @@ async function closeOnPurchaseComplete(): Promise<void> {
 </template>
 
 <style scoped>
-#subscriptionFeaturesList > li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 5px;
+#rocketWrapper{
+  position: relative;
+  background: url('@/assets/images/rocket-bg.webp') no-repeat top center;
+  background-size: contain;
+  width: 250px;
+  height: 302px;
 }
-
-#subscriptionFeaturesList > li:not(:first-child) {
-  font-size: 12px;
+#rocket, #rocketSmoke{
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: auto;
 }
-
-#subscriptionFeaturesList > li:nth-child(even) {
-  /*noinspection CssUnresolvedCustomProperty*/
-  background-color: rgba(var(--v-theme-primary), 50%);
-  border-radius: 3px;
+#rocket{
+  width: 59px;
+  height: 138px;
+  bottom: 95px;
+  z-index: 1;
 }
-
-#subscriptionFeaturesList > li > *:first-child {
-  width: 44%;
+#rocketSmoke{
+  width: 104px;
+  height: 84px;
+  bottom: 50px;
+  z-index: 2;
 }
-
-#subscriptionFeaturesList > li > *:not(:first-child) {
-  width: 28%;
-}
-
-.feature-title {
-  /*noinspection CssUnresolvedCustomProperty*/
-  color: rgb(var(--v-theme-secondary));
-  min-width: 50px;
-  font-size: 14px;
-}
-
-.free-feature {
-  color: rgba(255, 255, 255, 0.7);
-  text-align: center;
-}
-
-.premium-feature {
-  /*noinspection CssUnresolvedCustomProperty*/
-  color: rgb(var(--v-theme-secondary-lighten-1));
-  text-align: center;
+#featuresList>li{
+  padding: 3px 0;
 }
 </style>

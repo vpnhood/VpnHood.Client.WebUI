@@ -1,22 +1,23 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ClientProfileInfo, ConnectPlanId, ServerLocationOptions } from '@/services/VpnHood.Client.Api';
-import { ComponentName } from '@/helper/UiConstants';
+import { ComponentName } from '@/helpers/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import router from '@/services/router';
 
 export class ConnectManager {
   private static async showPromoteDialog(clientProfileId: string, isPremium: boolean, serverLocation: string): Promise<boolean> {
-    if (!serverLocation)
-      return true;
 
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
     const options: ServerLocationOptions | undefined = clientProfileInfo.serverLocationInfos.find(
       x => x.serverLocation === serverLocation)?.options;
 
-    // Create promote dialog
+    // Fore developer
+    console.log("Show Prompt: " + options?.prompt);
+
     if (!options?.prompt)
       return false;
 
+    // Config promote dialog
     const promoteData = VpnHoodApp.instance.data.uiState.promoteDialogData;
     promoteData.clientProfileId = clientProfileId;
     promoteData.serverLocation = serverLocation;
@@ -24,7 +25,6 @@ export class ConnectManager {
     promoteData.showTryPremium = options.premiumByTrial;
     promoteData.showGoPremium = options.premiumByPurchase;
     promoteData.isPremiumLocation = isPremium;
-    promoteData.isVisible = true;
 
     // Show promote dialog
     await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
