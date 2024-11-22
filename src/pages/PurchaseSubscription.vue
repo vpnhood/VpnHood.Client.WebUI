@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import { SubscriptionPlan } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
@@ -10,6 +10,7 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const subscriptionPlans = ref<SubscriptionPlan[]>([]);
+const showProcessDialog = ref<boolean>(false);
 const showPurchaseCompleteDialog = ref<boolean>(false);
 
 onMounted(async () => {
@@ -43,8 +44,10 @@ async function onPurchaseClick(planId: string): Promise<void> {
 
 async function purchase(planId: string): Promise<void> {
   const billingClient = ClientApiFactory.instance.createBillingClient();
+  showProcessDialog.value = true;
   await billingClient.purchase(planId);
   await vhApp.loadAccount();
+  showProcessDialog.value = false;
   showPurchaseCompleteDialog.value = true;
 }
 
@@ -266,7 +269,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
 
   <!-- Pending purchase process dialog -->
   <v-dialog
-    :model-value="vhApp.data.state.purchaseState === BillingPurchaseState.Processing"
+    v-model="showProcessDialog"
     :persistent="true"
     max-width="600"
   >
