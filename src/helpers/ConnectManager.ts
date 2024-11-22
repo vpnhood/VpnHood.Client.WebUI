@@ -5,7 +5,7 @@ import { ComponentRouteController } from '@/services/ComponentRouteController';
 import router from '@/services/router';
 
 export class ConnectManager {
-  private static async showPromoteDialog(clientProfileId: string, isPremium: boolean, serverLocation: string): Promise<boolean> {
+  public static async showPromoteDialog(clientProfileId: string, isPremium: boolean, serverLocation: string): Promise<boolean> {
 
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
     const options: ServerLocationOptions | undefined = clientProfileInfo.serverLocationInfos.find(
@@ -35,8 +35,7 @@ export class ConnectManager {
     // For developer
     console.log("Connect1");
 
-    const clientProfileId = VpnHoodApp.instance.data.settings.userSettings.clientProfileId
-      ?? VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
+    const clientProfileId = VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
 
     if (!clientProfileId) {
       await router.push('/servers');
@@ -51,7 +50,7 @@ export class ConnectManager {
 
     const serverLocation: string = VpnHoodApp.instance.data.settings.userSettings.serverLocation ?? '*/*';
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    const isPremiumLocation: boolean = clientProfileInfo.isPremiumLocationSelected;
+    const isPremiumLocation: boolean = clientProfileInfo.isPremiumLocationSelected ?? false;
     await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose);
   }
 

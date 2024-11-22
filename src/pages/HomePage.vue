@@ -10,14 +10,16 @@ import { UiConstants } from '@/helpers/UiConstants';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import vuetify from '@/services/vuetify';
 import router from '@/services/router';
 import { ConnectManager } from '@/helpers/ConnectManager';
 import { ComponentName } from '@/helpers/UiConstants';
+import { Util } from '@/helpers/Util';
+import CountDown from '@/components/CountDown.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 let lastConnectPressedTime = Date.now() - 1000;
+
 
 async function onConnectButtonClick(): Promise<void> {
 
@@ -86,7 +88,7 @@ function bandwidthUsage(): { Used: string; Total: string } | null {
     return null;
 
   const accessUsage = vhApp.data.state.sessionStatus.accessUsage;
-  if (accessUsage.maxTraffic === 0) return null;
+  if (!accessUsage.maxTraffic) return null;
 
   const mb = 1000000;
   const gb = 1000 * mb;
@@ -160,10 +162,6 @@ function udpProtocolButtonText(): string {
   }
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
-function getLocaleChevronIcon(): string {
-  return vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right';
-}
-
 
 </script>
 
@@ -176,12 +174,21 @@ function getLocaleChevronIcon(): string {
     justify="center"
     class="h-100 px-md-2 pb-3 ma-0"
   >
+    <!-- Go Premium button -->
     <v-col cols="12" class="text-center pt-0">
-      <!-- Go Premium button Only for VpnHoodConnect -->
-      <div v-if="vhApp.isConnectApp()">
+      <div v-if="vhApp.data.features.isBillingSupported && !vhApp.data.state.sessionStatus?.accessUsage?.canExtendPremiumByRewardedAd">
+        <!-- Go Premium Server button for premium user -->
+        <v-chip v-if="vhApp.data.state.clientProfile?.isPremiumAccount"
+                prepend-icon="mdi-crown"
+                :text="locale('YOU_ARE_PREMIUM')"
+                color="secondary-lighten-1"
+                variant="tonal"
+                tag="h6"
+                @click="router.push('/manage-subscriptions')"
+        />
+
         <!-- Go Premium button for guest and normal user -->
-        <v-btn
-          v-if="!vhApp.data.userState.userAccount?.subscriptionId"
+        <v-btn v-else
           :flat="true"
           variant="outlined"
           color="tertiary"
@@ -199,18 +206,10 @@ function getLocaleChevronIcon(): string {
           />
           {{ locale('GO_PREMIUM') }}
         </v-btn>
-
-        <!-- Go Premium Server button for premium user -->
-        <v-chip
-          v-else
-          prepend-icon="mdi-crown"
-          :text="locale('YOU_ARE_PREMIUM')"
-          color="secondary-lighten-1"
-          variant="tonal"
-          tag="h6"
-          @click="router.push('/purchase-subscription')"
-        />
       </div>
+
+      <!-- Countdown and extend session button -->
+      <CountDown v-else-if="vhApp.data.state.sessionStatus?.accessUsage?.isPremium"/>
     </v-col>
 
     <!-- Speed & Circle & Connect button -->
@@ -251,11 +250,7 @@ function getLocaleChevronIcon(): string {
 
       <!-- Circle -->
       <HomeConnectionInfo
-        :is-connect-app="vhApp.isConnectApp()"
-        :is-connected="vhApp.isConnected()"
         :alert-for-expire="alertForExpire()"
-        :connection-state="vhApp.data.state.connectionState"
-        :connection-state-text="vhApp.getConnectionStateText()"
         :state-icon="stateIcon()"
         :expire-date="getExpireDate()"
         :bandwidth-used="bandwidthUsage()?.Used"
@@ -271,8 +266,8 @@ function getLocaleChevronIcon(): string {
           vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
           vhApp.data.state.connectionState === AppConnectionState.Initializing
         "
-        :class="[vhApp.data.state.connectionState === AppConnectionState.Connected
-            ? 'secondary-btn' : 'master-btn','mt-5',
+        class="font-weight-bold mt-5"
+        :class="[vhApp.data.state.connectionState === AppConnectionState.Connected ? 'secondary-btn' : 'master-btn',
           {'solid': vhApp.isConnectApp() }]"
         @click="onConnectButtonClick"
       >
@@ -296,7 +291,7 @@ function getLocaleChevronIcon(): string {
             @click="router.push('/servers')"
           >
             <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
-            <v-icon :icon="getLocaleChevronIcon()" />
+            <v-icon :icon="Util.getLocalizedRightChevron()" />
             <span
               class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate"
               tabindex="-1"
@@ -342,7 +337,7 @@ function getLocaleChevronIcon(): string {
             "
           >
             <span>{{ locale('COUNTRIES') }}</span>
-            <v-icon :icon="getLocaleChevronIcon()" />
+            <v-icon :icon="Util.getLocalizedRightChevron()" />
             <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">
               {{ vhApp.data.settings.userSettings.tunnelClientCountry
               ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
@@ -378,7 +373,7 @@ function getLocaleChevronIcon(): string {
             to="/apps-filter"
           >
             <span>{{ locale('APPS') }}</span>
-            <v-icon :icon="getLocaleChevronIcon()" />
+            <v-icon :icon="Util.getLocalizedRightChevron()" />
             <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ appFilterStatus() }}</span>
           </v-btn>
         </v-col>
@@ -395,7 +390,7 @@ function getLocaleChevronIcon(): string {
             @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
           >
             <span>{{ locale('PROTOCOL_TITLE') }}</span>
-            <v-icon :icon="getLocaleChevronIcon()" />
+            <v-icon :icon="Util.getLocalizedRightChevron()" />
             <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ udpProtocolButtonText() }}</span>
           </v-btn>
         </v-col>

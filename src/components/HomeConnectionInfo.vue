@@ -7,10 +7,9 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const showConnectedAnimation = ref<boolean | null>(null);
+
 const props = defineProps<{
   alertForExpire: boolean,
-  connectionState: string,
-  connectionStateText: string,
   stateIcon: string | null,
   expireDate: string | null,
   bandwidthUsed: string | undefined,
@@ -21,7 +20,7 @@ function determineClass() {
   // VpnHoodCONNECT
   if (vhApp.isConnectApp()) {
     processConnectedAnimation();
-    return props.connectionState.toLowerCase() + ' my-3' + ' animation-' +
+    return vhApp.data.state.connectionState.toLowerCase() + ' my-3' + ' animation-' +
       (showConnectedAnimation.value === true).toString();
   }
   // VpnHoodClient
@@ -56,7 +55,7 @@ function processConnectedAnimation(): void {
     <div class="d-flex flex-column align-center justify-center position-relative h-100">
 
       <!-- Connection state text -->
-      <span :class="[vhApp.isConnectApp() ? 'text-body-2' : 'text-body-1']">{{ props.connectionStateText }}</span>
+      <span :class="[vhApp.isConnectApp() ? 'text-body-2' : 'text-body-1']">{{ vhApp.getConnectionStateText() }}</span>
 
       <!-- Usage -->
       <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && props.bandwidthTotal && props.bandwidthUsed">

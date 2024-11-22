@@ -1,4 +1,5 @@
 import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
+import vuetify from '@/services/vuetify';
 
 export class Util {
     // Client profile have single location
@@ -19,4 +20,10 @@ export class Util {
     return value === '*';
   }
 
+  public static getLocalizedRightChevron(): string {
+    return vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right';
+  }
+  public static getLocalizedLeftChevron(): string {
+    return vuetify.locale.isRtl.value ? 'mdi-chevron-right' : 'mdi-chevron-left';
+  }
 }

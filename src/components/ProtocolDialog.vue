@@ -2,7 +2,7 @@
 import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { Protocols } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;

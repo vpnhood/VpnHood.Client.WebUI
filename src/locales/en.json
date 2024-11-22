@@ -203,5 +203,11 @@
   "MORE_LOCATIONS": "More Locations",
   "QUICK_LAUNCH": "Quick Launch",
   "PURCHASE": "Purchase",
-  "1_MONTH": "1 month"
+  "1_MONTH": "1 month",
+  "EXTEND_IT": "Extend it",
+  "MANAGE_SUBSCRIPTIONS": "Manage Subscriptions",
+  "EXTEND_PREMIUM_SESSION": "Extend <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span> Session",
+  "EXTEND_PREMIUM_DESC": "Lorem Ipsum has been the industry's standard dummy text ever since when an unknown printer",
+  "SHOW_AD": "Show Ad",
+  "EXTEND_BY_REWARDED_AD_DESC": "Add {minutes} minutes to current session after watch ad."
 }

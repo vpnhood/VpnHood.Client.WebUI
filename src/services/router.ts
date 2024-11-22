@@ -49,6 +49,14 @@ const routes = [
     meta: {
       title: 'Purchase Subscription',
     }
+  },
+  {
+    path: '/manage-subscriptions',
+    name: 'Manage Subscriptions',
+    component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/ManageSubscriptions.vue'),
+    meta: {
+      title: 'Manage Subscriptions',
+    }
   }
 ];
 

@@ -2043,7 +2043,6 @@ export class AppState implements IAppState {
     canDiagnose!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
-    purchaseState?: BillingPurchaseState | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2090,7 +2089,6 @@ export class AppState implements IAppState {
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
-            this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
         }
     }
 
@@ -2130,7 +2128,6 @@ export class AppState implements IAppState {
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
-        data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
         return data;
     }
 }
@@ -2163,7 +2160,6 @@ export interface IAppState {
     canDiagnose: boolean;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
-    purchaseState?: BillingPurchaseState | null;
 }
 
 export enum AppConnectionState {
@@ -2252,6 +2248,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     supportId?: string | null;
     customData?: string | null;
     isPremiumLocationSelected!: boolean;
+    isPremiumAccount!: boolean;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -2269,6 +2266,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.supportId = _data["supportId"] !== undefined ? _data["supportId"] : <any>null;
             this.customData = _data["customData"] !== undefined ? _data["customData"] : <any>null;
             this.isPremiumLocationSelected = _data["isPremiumLocationSelected"] !== undefined ? _data["isPremiumLocationSelected"] : <any>null;
+            this.isPremiumAccount = _data["isPremiumAccount"] !== undefined ? _data["isPremiumAccount"] : <any>null;
         }
     }
 
@@ -2286,6 +2284,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
         data["supportId"] = this.supportId !== undefined ? this.supportId : <any>null;
         data["customData"] = this.customData !== undefined ? this.customData : <any>null;
         data["isPremiumLocationSelected"] = this.isPremiumLocationSelected !== undefined ? this.isPremiumLocationSelected : <any>null;
+        data["isPremiumAccount"] = this.isPremiumAccount !== undefined ? this.isPremiumAccount : <any>null;
         return data;
     }
 }
@@ -2296,6 +2295,7 @@ export interface IClientProfileBaseInfo {
     supportId?: string | null;
     customData?: string | null;
     isPremiumLocationSelected: boolean;
+    isPremiumAccount: boolean;
 }
 
 export class ServerLocationInfo implements IServerLocationInfo {
@@ -2523,10 +2523,13 @@ export enum SessionErrorCode {
     SessionClosed = "SessionClosed",
     SessionSuppressedBy = "SessionSuppressedBy",
     SessionError = "SessionError",
+    SessionExpired = "SessionExpired",
     AccessExpired = "AccessExpired",
-    AccessTrafficOverflow = "AccessTrafficOverflow",
+    AccessCodeRejected = "AccessCodeRejected",
     AccessLocked = "AccessLocked",
+    AccessTrafficOverflow = "AccessTrafficOverflow",
     AccessError = "AccessError",
+    NoServerAvailable = "NoServerAvailable",
     AdError = "AdError",
     Maintenance = "Maintenance",
     RedirectHost = "RedirectHost",
@@ -2535,6 +2538,8 @@ export enum SessionErrorCode {
 }
 
 export class AccessUsage implements IAccessUsage {
+    canExtendPremiumByRewardedAd!: boolean;
+    isPremium!: boolean;
     traffic!: Traffic;
     maxTraffic!: number;
     expirationTime?: Date | null;
@@ -2555,6 +2560,8 @@ export class AccessUsage implements IAccessUsage {
 
     init(_data?: any) {
         if (_data) {
+            this.canExtendPremiumByRewardedAd = _data["canExtendPremiumByRewardedAd"] !== undefined ? _data["canExtendPremiumByRewardedAd"] : <any>null;
+            this.isPremium = _data["isPremium"] !== undefined ? _data["isPremium"] : <any>null;
             this.traffic = _data["traffic"] ? Traffic.fromJS(_data["traffic"]) : new Traffic();
             this.maxTraffic = _data["maxTraffic"] !== undefined ? _data["maxTraffic"] : <any>null;
             this.expirationTime = _data["expirationTime"] ? new Date(_data["expirationTime"].toString()) : <any>null;
@@ -2572,6 +2579,8 @@ export class AccessUsage implements IAccessUsage {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["canExtendPremiumByRewardedAd"] = this.canExtendPremiumByRewardedAd !== undefined ? this.canExtendPremiumByRewardedAd : <any>null;
+        data["isPremium"] = this.isPremium !== undefined ? this.isPremium : <any>null;
         data["traffic"] = this.traffic ? this.traffic.toJSON() : <any>null;
         data["maxTraffic"] = this.maxTraffic !== undefined ? this.maxTraffic : <any>null;
         data["expirationTime"] = this.expirationTime ? this.expirationTime.toISOString() : <any>null;
@@ -2582,6 +2591,8 @@ export class AccessUsage implements IAccessUsage {
 }
 
 export interface IAccessUsage {
+    canExtendPremiumByRewardedAd: boolean;
+    isPremium: boolean;
     traffic: Traffic;
     maxTraffic: number;
     expirationTime?: Date | null;
@@ -2752,12 +2763,6 @@ export class UiCultureInfo implements IUiCultureInfo {
 export interface IUiCultureInfo {
     code: string;
     nativeName: string;
-}
-
-export enum BillingPurchaseState {
-    None = "None",
-    Started = "Started",
-    Processing = "Processing",
 }
 
 export class ClientProfileInfo extends ClientProfileBaseInfo implements IClientProfileInfo {
@@ -2976,7 +2981,7 @@ export interface IAppStrings {
 export enum ConnectPlanId {
     Normal = "Normal",
     PremiumByTrial = "PremiumByTrial",
-    PremiumByAdReward = "PremiumByAdReward",
+    PremiumByRewardedAd = "PremiumByRewardedAd",
 }
 
 export class DeviceAppInfo implements IDeviceAppInfo {

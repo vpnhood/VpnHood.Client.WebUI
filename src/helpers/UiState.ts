@@ -25,4 +25,5 @@ export class UiState {
   public showLoadingDialog: boolean = false;
 
   public stateLastErrorMessage: string | null = null;
+
 }

@@ -1,7 +1,22 @@
 import {
-  ApiException, AppAccount, AppClient, AppConnectionState, AppFeatures, AppSettings, AppState, ConfigParams,
-  ClientProfileClient, ClientProfileInfo, ClientProfileUpdateParams, ConnectPlanId,
-  DeviceAppInfo, SessionSuppressType, UiCultureInfo, PatchOfBoolean
+  AccessUsage,
+  ApiException,
+  AppAccount,
+  AppClient,
+  AppConnectionState,
+  AppFeatures,
+  AppSettings,
+  AppState,
+  ClientProfileClient,
+  ClientProfileInfo,
+  ClientProfileUpdateParams,
+  ConfigParams,
+  ConnectPlanId,
+  DeviceAppInfo,
+  PatchOfBoolean,
+  SessionStatus,
+  SessionSuppressType,
+  UiCultureInfo
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { UiState } from '@/helpers/UiState';
@@ -168,6 +183,13 @@ export class VpnHoodApp {
       this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None) {
       this.data.uiState.showSuppressSnackbar = false;
     }
+    //TODO Remove
+    if (this.data.state.connectionState === AppConnectionState.Connected  && this.data.state.clientProfile?.isPremiumLocationSelected){
+      this.data.state.sessionStatus ??= new SessionStatus();
+      this.data.state.sessionStatus.accessUsage ??= new AccessUsage();
+      this.data.state.sessionStatus.accessUsage.isPremium = true;
+      this.data.state.sessionStatus.accessUsage.expirationTime = new Date(2024, 10, 22, 24, 0, 0);
+    }
   }
 
   public async connect(clientProfileId: string, serverLocation: string,
@@ -184,7 +206,7 @@ export class VpnHoodApp {
 
     // Update client profile
     await this.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
-      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium == true!})
+      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium ?? false})
     }));
 
     // Update user settings
