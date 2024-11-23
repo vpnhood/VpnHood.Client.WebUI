@@ -6,10 +6,24 @@ import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
 import { ComponentName } from '@/helpers/UiConstants';
+import type { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+// TODO Must be remove in future (when the client profile has not changed in the premium account)
+function getSingleServerModeClientProfile(): ClientProfileInfo{
+  // Return premium client profile
+  if (vhApp.isConnectApp() && vhApp.data.state.clientProfile?.isPremiumAccount){
+    const premiumClientProfile: ClientProfileInfo | undefined = vhApp.data.clientProfileInfos.find(
+      x => x.clientProfileId == vhApp.data.state.clientProfile?.clientProfileId);
+    if (!premiumClientProfile)
+      throw new Error("Could not find premium client profile info.");
+    return premiumClientProfile;
+  }
+  // Return first client profile
+  return vhApp.data.clientProfileInfos[0];
+}
 </script>
 
 <template>
@@ -52,8 +66,8 @@ const locale = i18n.global.t;
 
     <!-- For VpnHoodCONNECT -->
     <!-- Single server mode -->
-    <template v-else-if="vhApp.isSingleServerMode()">
-      <LocationList :client-profile="vhApp.data.clientProfileInfos[0]" />
+    <template v-else-if="vhApp.isConnectApp() || vhApp.isSingleServerMode()">
+      <LocationList :client-profile="getSingleServerModeClientProfile()" />
     </template>
 
     <!-- For VpnHoodCLIENT -->

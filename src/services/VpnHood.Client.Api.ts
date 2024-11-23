@@ -1385,6 +1385,12 @@ export class AppAccount implements IAppAccount {
     email?: string | null;
     subscriptionId?: string | null;
     providerPlanId?: string | null;
+    createdTime?: Date | null;
+    expirationTime?: Date | null;
+    priceAmount?: number | null;
+    priceCurrency?: string | null;
+    isAutoRenew?: boolean | null;
+    providerSubscriptionId?: string | null;
 
     constructor(data?: IAppAccount) {
         if (data) {
@@ -1402,6 +1408,12 @@ export class AppAccount implements IAppAccount {
             this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
             this.subscriptionId = _data["subscriptionId"] !== undefined ? _data["subscriptionId"] : <any>null;
             this.providerPlanId = _data["providerPlanId"] !== undefined ? _data["providerPlanId"] : <any>null;
+            this.createdTime = _data["createdTime"] ? new Date(_data["createdTime"].toString()) : <any>null;
+            this.expirationTime = _data["expirationTime"] ? new Date(_data["expirationTime"].toString()) : <any>null;
+            this.priceAmount = _data["priceAmount"] !== undefined ? _data["priceAmount"] : <any>null;
+            this.priceCurrency = _data["priceCurrency"] !== undefined ? _data["priceCurrency"] : <any>null;
+            this.isAutoRenew = _data["isAutoRenew"] !== undefined ? _data["isAutoRenew"] : <any>null;
+            this.providerSubscriptionId = _data["providerSubscriptionId"] !== undefined ? _data["providerSubscriptionId"] : <any>null;
         }
     }
 
@@ -1419,6 +1431,12 @@ export class AppAccount implements IAppAccount {
         data["email"] = this.email !== undefined ? this.email : <any>null;
         data["subscriptionId"] = this.subscriptionId !== undefined ? this.subscriptionId : <any>null;
         data["providerPlanId"] = this.providerPlanId !== undefined ? this.providerPlanId : <any>null;
+        data["createdTime"] = this.createdTime ? this.createdTime.toISOString() : <any>null;
+        data["expirationTime"] = this.expirationTime ? this.expirationTime.toISOString() : <any>null;
+        data["priceAmount"] = this.priceAmount !== undefined ? this.priceAmount : <any>null;
+        data["priceCurrency"] = this.priceCurrency !== undefined ? this.priceCurrency : <any>null;
+        data["isAutoRenew"] = this.isAutoRenew !== undefined ? this.isAutoRenew : <any>null;
+        data["providerSubscriptionId"] = this.providerSubscriptionId !== undefined ? this.providerSubscriptionId : <any>null;
         return data;
     }
 }
@@ -1429,6 +1447,12 @@ export interface IAppAccount {
     email?: string | null;
     subscriptionId?: string | null;
     providerPlanId?: string | null;
+    createdTime?: Date | null;
+    expirationTime?: Date | null;
+    priceAmount?: number | null;
+    priceCurrency?: string | null;
+    isAutoRenew?: boolean | null;
+    providerSubscriptionId?: string | null;
 }
 
 export class AppConfig implements IAppConfig {
@@ -2043,6 +2067,9 @@ export class AppState implements IAppState {
     canDiagnose!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
+    purchaseState?: BillingPurchaseState | null;
+    tcpTunnelledCount?: number | null;
+    tcpPassthruCount?: number | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2089,6 +2116,9 @@ export class AppState implements IAppState {
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
+            this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
+            this.tcpTunnelledCount = _data["tcpTunnelledCount"] !== undefined ? _data["tcpTunnelledCount"] : <any>null;
+            this.tcpPassthruCount = _data["tcpPassthruCount"] !== undefined ? _data["tcpPassthruCount"] : <any>null;
         }
     }
 
@@ -2128,6 +2158,9 @@ export class AppState implements IAppState {
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
+        data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
+        data["tcpTunnelledCount"] = this.tcpTunnelledCount !== undefined ? this.tcpTunnelledCount : <any>null;
+        data["tcpPassthruCount"] = this.tcpPassthruCount !== undefined ? this.tcpPassthruCount : <any>null;
         return data;
     }
 }
@@ -2160,6 +2193,9 @@ export interface IAppState {
     canDiagnose: boolean;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
+    purchaseState?: BillingPurchaseState | null;
+    tcpTunnelledCount?: number | null;
+    tcpPassthruCount?: number | null;
 }
 
 export enum AppConnectionState {
@@ -2763,6 +2799,12 @@ export class UiCultureInfo implements IUiCultureInfo {
 export interface IUiCultureInfo {
     code: string;
     nativeName: string;
+}
+
+export enum BillingPurchaseState {
+    None = "None",
+    Started = "Started",
+    Processing = "Processing",
 }
 
 export class ClientProfileInfo extends ClientProfileBaseInfo implements IClientProfileInfo {

@@ -184,7 +184,7 @@ function udpProtocolButtonText(): string {
                 color="secondary-lighten-1"
                 variant="tonal"
                 tag="h6"
-                @click="router.push('/manage-subscriptions')"
+                @click="router.push('/manage-subscription')"
         />
 
         <!-- Go Premium button for guest and normal user -->

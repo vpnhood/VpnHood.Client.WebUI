@@ -188,7 +188,7 @@ export class VpnHoodApp {
       this.data.state.sessionStatus ??= new SessionStatus();
       this.data.state.sessionStatus.accessUsage ??= new AccessUsage();
       this.data.state.sessionStatus.accessUsage.isPremium = true;
-      this.data.state.sessionStatus.accessUsage.expirationTime = new Date(2024, 10, 22, 24, 0, 0);
+      this.data.state.sessionStatus.accessUsage.expirationTime = new Date(2024, 10, 23, 24, 0, 0);
     }
   }
 
@@ -410,5 +410,6 @@ export class VpnHoodApp {
   public async loadAccount(): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.data.userState.userAccount = await accountClient.get();
+    await this.reloadSettings();
   }
 }

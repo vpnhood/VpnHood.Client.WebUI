@@ -51,11 +51,11 @@ const routes = [
     }
   },
   {
-    path: '/manage-subscriptions',
+    path: '/manage-subscription',
     name: 'Manage Subscriptions',
-    component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/ManageSubscriptions.vue'),
+    component: () => import(/* webpackChunkName: "ManageSubscription" */ '@/pages/ManageSubscription.vue'),
     meta: {
-      title: 'Manage Subscriptions',
+      title: 'Manage Subscription',
     }
   }
 ];

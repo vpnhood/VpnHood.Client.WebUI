@@ -19,9 +19,6 @@ const dialogData = computed<PromoteDialogData>(() => vhApp.data.uiState.promoteD
 const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM') : locale('SELECTED_LOCATION_IS_FREE'));
 
-const dialogDescription = computed<string>(() => dialogData.value.isPremiumLocation
-  ? locale('SELECTED_LOCATION_IS_PREMIUM_DESC') : locale('SELECTED_LOCATION_IS_FREE_DESC'));
-
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   // TODO check with trudy
   if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
@@ -50,7 +47,6 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
     <v-card class="justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
       <div class="mt-5">
         <h3 class="text-center" v-html="dialogTitle" />
-        <p class="px-5 text-disabled text-center text-caption">{{dialogDescription}}</p>
       </div>
 
       <v-img
@@ -98,7 +94,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           :title="locale('WATCH_REWARDED_AD')"
           :description="locale('WATCH_REWARDED_AD_DESC', {minutes: dialogData.showRewardedAd})"
           :button-text="locale('CONNECT')"
-          :button-action-plan="ConnectPlanId.PremiumByAdReward"
+          :button-action-plan="ConnectPlanId.PremiumByRewardedAd"
           @action-by-plan="actionByConnectPlan"
         />
 

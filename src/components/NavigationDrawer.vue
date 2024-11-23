@@ -33,8 +33,12 @@ watch(() => props.modelValue, (newVal) => {
     window.removeEventListener('keydown', closeByKeyboardEscape);
 });
 
-function goPremium() {
-  router.replace('/purchase-subscription');
+function manageOrPurchaseSubscription() {
+  if (vhApp.data.state.clientProfile?.isPremiumAccount)
+    router.replace('/manage-subscription');
+  else
+    router.replace('/purchase-subscription');
+
   emit('update:modelValue', false);
 }
 
@@ -132,12 +136,13 @@ function itemClass(){
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
         :class="itemClass()"
-        @click="goPremium()"
+        @click="manageOrPurchaseSubscription()"
       >
         <v-list-item-title>
-          <v-icon :icon="vhApp.data.userState.userAccount?.subscriptionId ? 'mdi-arrow-decision' : 'mdi-crown'" />
+          <v-icon icon="mdi-crown" />
           <span class="ms-3">
-            {{ vhApp.data.userState.userAccount?.subscriptionId ? locale('CHANGE_SUBSCRIPTION') : locale('GO_PREMIUM') }}
+            {{ vhApp.data.state.clientProfile?.isPremiumAccount ? locale('MANAGE_SUBSCRIPTION') :
+            locale('GO_PREMIUM') }}
           </span>
         </v-list-item-title>
       </v-list-item>
