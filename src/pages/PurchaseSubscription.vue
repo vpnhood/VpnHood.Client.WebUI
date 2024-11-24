@@ -158,6 +158,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
         />
       </div>
 
+      <!-- TODO review after enable more subscriptions -->
         <!-- Multi Plans -->
 <!--        <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
           &lt;!&ndash; Plan item &ndash;&gt;

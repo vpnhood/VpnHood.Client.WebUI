@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Util } from '@/helpers/Util'
-import { ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
 import { ConnectManager } from '@/helpers/ConnectManager';
-import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;

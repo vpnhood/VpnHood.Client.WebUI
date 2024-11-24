@@ -203,7 +203,7 @@
   "PURCHASE": "Purchase",
   "1_MONTH": "1 month",
   "EXTEND_IT": "Extend it",
-  "MANAGE_SUBSCRIPTIONS": "Manage Subscriptions",
+  "ACCOUNT": "Account",
   "EXTEND_PREMIUM_SESSION": "Extend <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span> Session",
   "EXTEND_PREMIUM_DESC": "Lorem Ipsum has been the industry's standard dummy text ever since when an unknown printer",
   "SHOW_AD": "Show Ad",
@@ -212,5 +212,7 @@
   "NEXT_PAYMENT": "Next payment",
   "AUTO_RENEW": "Auto Renew",
   "EXPIRATION_TIME": "Expiration Time",
-  "PRICE": "Price"
+  "PRICE": "Price",
+  "UPGRADE_ACCOUNT_DESC": "Upgrade your account to <span class=\"text-secondary-lighten-1\">PREMIUM</span> and get more features.",
+  "MANAGE_ON_GOOGLE_PLAY": "Manage on Google Play"
 }

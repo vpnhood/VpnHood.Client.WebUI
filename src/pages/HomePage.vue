@@ -184,7 +184,7 @@ function udpProtocolButtonText(): string {
                 color="secondary-lighten-1"
                 variant="tonal"
                 tag="h6"
-                @click="router.push('/manage-subscription')"
+                @click="router.push('/account')"
         />
 
         <!-- Go Premium button for guest and normal user -->
@@ -221,30 +221,18 @@ function udpProtocolButtonText(): string {
       "
     >
       <!-- Speed -->
-      <v-row
-        id="speedSection"
-        align-content="center"
-        justify="center"
-        :class="[
-          vhApp.isConnected() ? 'opacity-100' : 'opacity-0',
-          'mb-2',
-        ]"
+      <v-row id="speedSection" align-content="center" justify="center"
+        :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
       >
         <v-col cols="auto d-inline-flex">
-          <span class="text-ui-tertiary text-body-2"
-          >{{ locale('DOWNLOAD_SPEED') }}:</span
-          >
+          <span class="text-ui-tertiary text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
           <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
           <span class="text-white opacity-50 text-caption">Mbps</span>
         </v-col>
         <v-col cols="auto d-inline-flex">
-          <span class="text-ui-tertiary text-body-2"
-          >{{ locale('UPLOAD_SPEED') }}:</span
-          >
+          <span class="text-ui-tertiary text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
           <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
-          <span class="text-white opacity-50 text-caption order-last"
-          >Mbps</span
-          >
+          <span class="text-white opacity-50 text-caption order-last">Mbps</span>
         </v-col>
       </v-row>
 
@@ -330,11 +318,7 @@ function udpProtocolButtonText(): string {
             size="small"
             prepend-icon="mdi-call-split"
             class="config-item mb-1"
-            @click="
-              ComponentRouteController.showComponent(
-                ComponentName.TunnelClientCountryDialog,
-              )
-            "
+            @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
           >
             <span>{{ locale('COUNTRIES') }}</span>
             <v-icon :icon="Util.getLocalizedRightChevron()" />
@@ -342,19 +326,14 @@ function udpProtocolButtonText(): string {
               {{ vhApp.data.settings.userSettings.tunnelClientCountry
               ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
             </span>
-            <template
+            <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode"
               v-slot:append
-              v-if="!vhApp.data.settings.userSettings.tunnelClientCountry &&
-                vhApp.data.state.clientCountryCode"
             >
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
-                <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)"
-                     height="100%"
-                     alt="country flag"
-                />
+                <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag"/>
               </span>
             </template>
           </v-btn>
@@ -391,7 +370,9 @@ function udpProtocolButtonText(): string {
           >
             <span>{{ locale('PROTOCOL_TITLE') }}</span>
             <v-icon :icon="Util.getLocalizedRightChevron()" />
-            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ udpProtocolButtonText() }}</span>
+            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">
+              {{ udpProtocolButtonText() }}
+            </span>
           </v-btn>
         </v-col>
       </v-row>

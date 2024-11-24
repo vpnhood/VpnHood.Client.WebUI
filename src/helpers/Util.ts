@@ -23,6 +23,8 @@ export class Util {
   public static getLocalizedRightChevron(): string {
     return vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right';
   }
+
+  // noinspection JSUnusedGlobalSymbols
   public static getLocalizedLeftChevron(): string {
     return vuetify.locale.isRtl.value ? 'mdi-chevron-right' : 'mdi-chevron-left';
   }

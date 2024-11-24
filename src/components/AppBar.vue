@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import vuetify from '@/services/vuetify';
 import router from '@/services/router';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const props = defineProps<{
@@ -20,7 +20,7 @@ const props = defineProps<{
 
     <!-- Back button -->
     <v-app-bar-nav-icon
-      :icon="vuetify.locale.isRtl.value? 'mdi-chevron-right' : 'mdi-chevron-left'"
+      :icon="Util.getLocalizedLeftChevron()"
       color="white"
       @click="router.go(-1)"
     />

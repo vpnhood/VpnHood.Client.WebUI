@@ -5,7 +5,6 @@ import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
-import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -24,7 +23,6 @@ const closeByKeyboardEscape = (event: KeyboardEvent) => {
 };
 
 const isCheckForUpdate = ref<boolean>(false);
-const showConfirmSignOut = ref<boolean>(false);
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal)
@@ -32,15 +30,6 @@ watch(() => props.modelValue, (newVal) => {
   else
     window.removeEventListener('keydown', closeByKeyboardEscape);
 });
-
-function manageOrPurchaseSubscription() {
-  if (vhApp.data.state.clientProfile?.isPremiumAccount)
-    router.replace('/manage-subscription');
-  else
-    router.replace('/purchase-subscription');
-
-  emit('update:modelValue', false);
-}
 
 async function diagnose(): Promise<void> {
   emit('update:modelValue', false);
@@ -77,12 +66,6 @@ async function onSignIn() {
   } finally {
     vhApp.data.uiState.showLoadingDialog = false;
   }
-}
-
-function onSignOut() {
-  showConfirmSignOut.value = false;
-  vhApp.signOut();
-  emit('update:modelValue', false);
 }
 
 function itemClass(){
@@ -134,43 +117,25 @@ function itemClass(){
 
       <!-- Go premium or Change subscription -->
       <v-list-item
-        v-if="vhApp.data.features.isAccountSupported"
+        v-if="vhApp.data.features.isAccountSupported && !vhApp.data.state.clientProfile?.isPremiumAccount"
         :class="itemClass()"
-        @click="manageOrPurchaseSubscription()"
+        @click="router.replace('/purchase-subscription'); emit('update:modelValue', false)"
       >
         <v-list-item-title>
           <v-icon icon="mdi-crown" />
-          <span class="ms-3">
-            {{ vhApp.data.state.clientProfile?.isPremiumAccount ? locale('MANAGE_SUBSCRIPTION') :
-            locale('GO_PREMIUM') }}
-          </span>
+          <span class="ms-3">{{locale('GO_PREMIUM') }}</span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Sign in button -->
       <v-list-item
-        v-if="vhApp.data.features.isAccountSupported && !vhApp.data.userState.userAccount"
+        v-if="vhApp.data.features.isAccountSupported"
         :class="itemClass()"
-        @click="onSignIn()"
+        @click="!vhApp.data.userState.userAccount ? onSignIn() : router.replace('/account')"
       >
         <v-list-item-title>
           <v-icon icon="mdi-account" />
-          <span class="ms-3">{{ locale('SIGN_IN_WITH_GOOGLE') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-
-      <!-- Sign out button -->
-      <v-list-item
-        v-if="vhApp.data.features.isAccountSupported && vhApp.data.userState.userAccount"
-        :class="itemClass"
-        @click="showConfirmSignOut = true"
-      >
-        <v-list-item-title class="d-flex align-center">
-          <v-icon icon="mdi-logout" />
-          <div class="d-inline-flex flex-column ms-3">
-            <span>{{ locale('SIGN_OUT') }}</span>
-            <span class="text-caption opacity-50">{{ vhApp.data.userState.userAccount.email }}</span>
-          </div>
+          <span class="ms-3">{{ !vhApp.data.userState.userAccount ? locale('SIGN_IN_WITH_GOOGLE') : locale('ACCOUNT') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -274,11 +239,5 @@ function itemClass(){
     </a>
   </v-navigation-drawer>
 
-  <!-- Confirm sign-out dialog -->
-  <ConfirmDialog
-    v-model="showConfirmSignOut"
-    :title="locale('CONFIRM_SIGN_OUT_TITLE')"
-    :message="locale('CONFIRM_SIGN_OUT_DESC')"
-    @click-action="onSignOut"
-  />
+
 </template>

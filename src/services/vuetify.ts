@@ -79,7 +79,7 @@ export default createVuetify({
           primary: '#211951',
           'primary-darken-1': '#211951',
           'primary-darken-2': '#150e3d',
-          'primary-darken-4': '#070819',
+          'primary-darken-4': '#0b0b24',
           secondary: '#7b7afe',
           'on-secondary': '#ffffff',
           'secondary-lighten-1': '#15f5ba',

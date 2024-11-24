@@ -16,9 +16,6 @@ export class UiState {
   // Update message state
   public showUpdateSnackbar: boolean = false;
 
-  // New server added message state
-  public showNewServerAdded: boolean = false;
-
   // Time of user ignored last error message
   public configTime: Date = new Date();
 

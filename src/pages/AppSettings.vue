@@ -42,24 +42,15 @@ const includeLocalNetwork = computed({
         variant="tonal"
         @click="router.push({ path: '/languages' })"
       >
-        <span
-          :class="[
-            vhApp.isConnectApp() ? 'text-white' : 'text-black',
-            'text-transform-none',
-          ]"
-        >
+        <span :class="[vhApp.isConnectApp() ? 'text-white' : 'text-black','text-transform-none']">
           {{ locale('APP_LANGUAGE') }}
         </span>
 
         <template v-slot:append>
           <!-- Active language name -->
           <span
-            :class="[
-              vhApp.isConnectApp()
-                ? 'text-disabled'
-                : 'text-gray-lighten-2',
-              'text-caption text-capitalize me-1',
-            ]"
+            :class="[vhApp.isConnectApp() ? 'text-disabled': 'text-gray-lighten-2']"
+            class="text-caption text-capitalize me-1"
           >
             {{ vhApp.data.state.currentUiCultureInfo.nativeName }}
           </span>
@@ -77,14 +68,7 @@ const includeLocalNetwork = computed({
       <!-- Language contribute link -->
       <div v-if="i18n.global.locale.value !== LanguagesCode.English">
         <!-- Description -->
-        <p
-          :class="[
-            vhApp.isConnectApp()
-              ? 'text-disabled'
-              : 'text-gray-lighten-2',
-            'text-caption mt-4 mb-1',
-          ]"
-        >
+        <p :class="[vhApp.isConnectApp() ? 'text-disabled': 'text-gray-lighten-2','text-caption mt-4 mb-1']">
           {{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}
         </p>
 
@@ -132,12 +116,7 @@ const includeLocalNetwork = computed({
           />
         </v-col>
       </v-row>
-      <p
-        :class="[
-          vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2',
-          'text-caption mt-1',
-        ]"
-      >
+      <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption mt-1']">
         {{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}
       </p>
     </v-card>
