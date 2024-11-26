@@ -665,6 +665,50 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
+    showRewardedAd( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/show-rewarded-ad";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processShowRewardedAd(_response);
+        });
+    }
+
+    protected processShowRewardedAd(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
     setUserSettings(userSettings: UserSettings, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/user-settings";
         url_ = url_.replace(/[?&]$/, "");
@@ -2444,7 +2488,7 @@ export interface IClientServerLocationInfo extends IServerLocationInfo {
 export class ServerLocationOptions implements IServerLocationOptions {
     normal?: number | null;
     premiumByTrial?: number | null;
-    premiumByRewardAd?: number | null;
+    premiumByRewardedAd?: number | null;
     premiumByPurchase!: boolean;
     hasFree!: boolean;
     hasPremium!: boolean;
@@ -2463,7 +2507,7 @@ export class ServerLocationOptions implements IServerLocationOptions {
         if (_data) {
             this.normal = _data["normal"] !== undefined ? _data["normal"] : <any>null;
             this.premiumByTrial = _data["premiumByTrial"] !== undefined ? _data["premiumByTrial"] : <any>null;
-            this.premiumByRewardAd = _data["premiumByRewardAd"] !== undefined ? _data["premiumByRewardAd"] : <any>null;
+            this.premiumByRewardedAd = _data["premiumByRewardedAd"] !== undefined ? _data["premiumByRewardedAd"] : <any>null;
             this.premiumByPurchase = _data["premiumByPurchase"] !== undefined ? _data["premiumByPurchase"] : <any>null;
             this.hasFree = _data["hasFree"] !== undefined ? _data["hasFree"] : <any>null;
             this.hasPremium = _data["hasPremium"] !== undefined ? _data["hasPremium"] : <any>null;
@@ -2482,7 +2526,7 @@ export class ServerLocationOptions implements IServerLocationOptions {
         data = typeof data === 'object' ? data : {};
         data["normal"] = this.normal !== undefined ? this.normal : <any>null;
         data["premiumByTrial"] = this.premiumByTrial !== undefined ? this.premiumByTrial : <any>null;
-        data["premiumByRewardAd"] = this.premiumByRewardAd !== undefined ? this.premiumByRewardAd : <any>null;
+        data["premiumByRewardedAd"] = this.premiumByRewardedAd !== undefined ? this.premiumByRewardedAd : <any>null;
         data["premiumByPurchase"] = this.premiumByPurchase !== undefined ? this.premiumByPurchase : <any>null;
         data["hasFree"] = this.hasFree !== undefined ? this.hasFree : <any>null;
         data["hasPremium"] = this.hasPremium !== undefined ? this.hasPremium : <any>null;
@@ -2494,7 +2538,7 @@ export class ServerLocationOptions implements IServerLocationOptions {
 export interface IServerLocationOptions {
     normal?: number | null;
     premiumByTrial?: number | null;
-    premiumByRewardAd?: number | null;
+    premiumByRewardedAd?: number | null;
     premiumByPurchase: boolean;
     hasFree: boolean;
     hasPremium: boolean;

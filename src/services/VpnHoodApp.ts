@@ -183,13 +183,6 @@ export class VpnHoodApp {
       this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None) {
       this.data.uiState.showSuppressSnackbar = false;
     }
-    //TODO Remove
-    if (this.data.state.connectionState === AppConnectionState.Connected  && this.data.state.clientProfile?.isPremiumLocationSelected){
-      this.data.state.sessionStatus ??= new SessionStatus();
-      this.data.state.sessionStatus.accessUsage ??= new AccessUsage();
-      this.data.state.sessionStatus.accessUsage.isPremium = true;
-      this.data.state.sessionStatus.accessUsage.expirationTime = new Date(2024, 10, 23, 24, 0, 0);
-    }
   }
 
   public async connect(clientProfileId: string, serverLocation: string,

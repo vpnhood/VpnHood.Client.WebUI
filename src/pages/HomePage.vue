@@ -162,7 +162,12 @@ function udpProtocolButtonText(): string {
   }
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
-
+function isShowCountdown(): boolean{
+  const isPremium = vhApp.data.state.sessionStatus?.accessUsage?.isPremium;
+  const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
+  const canExtendSession = vhApp.data.state.sessionStatus?.accessUsage?.canExtendPremiumByRewardedAd;
+  return !(!isPremium || !expireTime || !canExtendSession);
+}
 </script>
 
 <template>
@@ -174,9 +179,15 @@ function udpProtocolButtonText(): string {
     justify="center"
     class="h-100 px-md-2 pb-3 ma-0"
   >
-    <!-- Go Premium button -->
+    <!-- Go Premium or Countdown button -->
     <v-col cols="12" class="text-center pt-0">
-      <div v-if="vhApp.data.features.isBillingSupported && !vhApp.data.state.sessionStatus?.accessUsage?.canExtendPremiumByRewardedAd">
+
+      <!-- Countdown and extend session button -->
+      <CountDown v-if="isShowCountdown()"/>
+
+      <!-- Go Premium button -->
+      <div v-else-if="vhApp.data.features.isBillingSupported">
+
         <!-- Go Premium Server button for premium user -->
         <v-chip v-if="vhApp.data.state.clientProfile?.isPremiumAccount"
                 prepend-icon="mdi-crown"
@@ -206,20 +217,13 @@ function udpProtocolButtonText(): string {
           />
           {{ locale('GO_PREMIUM') }}
         </v-btn>
+
       </div>
 
-      <!-- Countdown and extend session button -->
-      <CountDown v-else-if="vhApp.data.state.sessionStatus?.accessUsage?.isPremium"/>
     </v-col>
 
     <!-- Speed & Circle & Connect button -->
-    <v-col
-      cols="12"
-      :class="
-        'py-0 text-center state-' +
-        [vhApp.data.state.connectionState.toLowerCase()]
-      "
-    >
+    <v-col cols="12" :class="'py-0 text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
       <!-- Speed -->
       <v-row id="speedSection" align-content="center" justify="center"
         :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"

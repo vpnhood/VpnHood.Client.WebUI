@@ -45,7 +45,7 @@ function formatDate(date: Date | null | undefined): string | null{
     class="pa-4 d-flex flex-column justify-space-between"
     :class="{'primary-bg-grad' : vhApp.isConnectApp() && isPremiumAccount}"
   >
-    <!-- Premium image (top page section on premium) -->
+    <!-- Premium image -->
     <div v-if="isPremiumAccount" class="position-relative">
       <v-img
         :eager="true"
@@ -60,7 +60,7 @@ function formatDate(date: Date | null | undefined): string | null{
       </h3>
     </div>
 
-    <!-- Premium image (bottom page section on premium and top on free) -->
+    <!-- User and subscription info -->
     <div>
 
       <!-- User details -->

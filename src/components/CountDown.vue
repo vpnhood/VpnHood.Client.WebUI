@@ -9,37 +9,38 @@ import router from '@/services/router';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const countDownRemainingTime = ref<number>(0);
+const remainingTimeSecond = ref<number>(0);
 const showExtendDialog = ref<boolean>(false);
-function calcRemainingTime(expireTime: Date){
-  const currentDate: Date = new Date();
-  const diffTime = expireTime.getTime() - currentDate.getTime();
-  countDownRemainingTime.value = Math.floor(diffTime / 1000);
+function calcRemainingTime(){
+  const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
+  if (expireTime){
+    const currentDate: Date = new Date();
+    const diffTime = expireTime.getTime() - currentDate.getTime();
+    remainingTimeSecond.value = Math.floor(diffTime / 1000);
+  }
 }
 
 function formatCountdown(): string {
-  const seconds = countDownRemainingTime.value;
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
+  const hrs = Math.floor(remainingTimeSecond.value / 3600);
+  const mins = Math.floor((remainingTimeSecond.value % 3600) / 60);
+  const secs = remainingTimeSecond.value % 60;
   return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 }
 function pad(num: number): string{
   return num.toString().padStart(2, '0');
 }
 function getCountdownColor(): string{
-  if (countDownRemainingTime.value < 300)
+  if (remainingTimeSecond.value < 300)
     return 'error';
-  if (countDownRemainingTime.value < 900)
+  if (remainingTimeSecond.value < 900)
     return 'tertiary-lighten-1';
   return 'secondary-lighten-1';
 }
 
 onMounted(() => {
-  const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
-  if (!document.hidden && expireTime){
+  if (!document.hidden){
     setInterval(() => {
-      calcRemainingTime(expireTime);
+      calcRemainingTime();
     }, 1000);
   }
 })
@@ -97,7 +98,7 @@ onMounted(() => {
           <v-col>
             <h4 class="text-capitalize">{{locale('WATCH_REWARDED_AD')}}</h4>
             <p class="text-disabled text-caption" style="line-height: 1.3">
-              {{ locale('EXTEND_BY_REWARDED_AD_DESC', {minutes: vhApp.data.state.clientServerLocationInfo?.options.premiumByRewardAd}) }}
+              {{ locale('EXTEND_BY_REWARDED_AD_DESC', {minutes: vhApp.data.state.clientServerLocationInfo?.options.premiumByRewardedAd}) }}
             </p>
           </v-col>
           <v-col cols="auto" class="action-btn">
