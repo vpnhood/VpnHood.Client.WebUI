@@ -1,26 +1,23 @@
 <script setup lang="ts">
 import { Util } from '@/helpers/Util';
 import i18n from '@/locales/i18n';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import router from '@/services/router';
-
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const remainingTimeSecond = ref<number>(0);
 const showExtendDialog = ref<boolean>(false);
-function calcRemainingTime(){
+function calcRemainingTime(): string{
+  const currentDate: Date = new Date();
   const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
-  if (expireTime){
-    const currentDate: Date = new Date();
-    const diffTime = expireTime.getTime() - currentDate.getTime();
-    remainingTimeSecond.value = Math.floor(diffTime / 1000);
-  }
-}
+  if (!expireTime)
+    return "";
 
-function formatCountdown(): string {
+  const diffTime = expireTime.getTime() - currentDate.getTime();
+  remainingTimeSecond.value = diffTime > 0 ? Math.floor(diffTime / 1000) : 0;
   const hrs = Math.floor(remainingTimeSecond.value / 3600);
   const mins = Math.floor((remainingTimeSecond.value % 3600) / 60);
   const secs = remainingTimeSecond.value % 60;
@@ -36,14 +33,6 @@ function getCountdownColor(): string{
     return 'tertiary-lighten-1';
   return 'secondary-lighten-1';
 }
-
-onMounted(() => {
-  if (!document.hidden){
-    setInterval(() => {
-      calcRemainingTime();
-    }, 1000);
-  }
-})
 </script>
 
 <template>
@@ -52,10 +41,11 @@ onMounted(() => {
     :color="getCountdownColor()"
     class="pe-1"
     variant="tonal"
-    @click="showExtendDialog = true"
+    @click="remainingTimeSecond > 299 && (showExtendDialog = true)"
   >
-    <span class="text-start" style="width: 63px">{{ formatCountdown() }}</span>
+    <span class="text-start" style="width: 63px">{{ calcRemainingTime() }}</span>
     <v-chip
+      v-if="remainingTimeSecond > 299"
       variant="flat"
       color="tertiary-lighten-1"
       class="text-capitalize text-primary font-weight-bold"
@@ -73,10 +63,7 @@ onMounted(() => {
     class="bg-black"
   >
     <v-card class="justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
-      <div class="mt-5">
-        <h3 class="text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />
-        <p class="px-5 text-disabled text-center text-caption">{{locale('EXTEND_PREMIUM_DESC')}}</p>
-      </div>
+      <h3 class="mt-5 text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />
 
       <v-img
         :eager="true"
@@ -98,7 +85,8 @@ onMounted(() => {
           <v-col>
             <h4 class="text-capitalize">{{locale('WATCH_REWARDED_AD')}}</h4>
             <p class="text-disabled text-caption" style="line-height: 1.3">
-              {{ locale('EXTEND_BY_REWARDED_AD_DESC', {minutes: vhApp.data.state.clientServerLocationInfo?.options.premiumByRewardedAd}) }}
+              {{ locale('EXTEND_BY_REWARDED_AD_DESC', {minutes:
+              vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByRewardedAd}) }}
             </p>
           </v-col>
           <v-col cols="auto" class="action-btn">
@@ -109,6 +97,7 @@ onMounted(() => {
               size="small"
               rounded="pill"
               variant="flat"
+              @click="vhApp.apiClient.extendByRewardedAd()"
             />
           </v-col>
         </v-row>

@@ -10,14 +10,14 @@ export class Util {
 
     // Location count of client profile
     public static calcLocationCount(clientProfileInfo: ClientProfileInfo): number {
-        const excludeAutoSelect = clientProfileInfo.serverLocationInfos.filter(
+        const excludeAutoSelect = clientProfileInfo.locationInfos.filter(
             x => x.countryCode !== '*' && !x.isNestedCountry
         );
         return excludeAutoSelect.length;
     }
 
   public static isLocationAutoSelected(value: string): boolean {
-    return value === '*';
+    return value === '*' || value === "*/*";
   }
 
   public static getLocalizedRightChevron(): string {

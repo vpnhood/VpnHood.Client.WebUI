@@ -4,6 +4,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
 import { ConnectManager } from '@/helpers/ConnectManager';
 import i18n from '@/locales/i18n';
+import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
@@ -18,10 +19,11 @@ const emit = defineEmits<{
 const dialogData = computed(() => vhApp.data.uiState.errorDialogData);
 const logFileLocation: string = '/api/app/log.txt';
 
-async function changeLocationToAuto(): Promise<void> {
+async function changeLocationToAuto(clientProfileId: string): Promise<void> {
+  await vhApp.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
+    selectedLocation: new PatchOfString({value: null})
+  }));
   emit('update:modelValue', false);
-  vhApp.data.settings.userSettings.serverLocation = null;
-  await vhApp.saveUserSetting();
   await ConnectManager.connect1(false);
 }
 
@@ -81,6 +83,7 @@ async function sendReport(): Promise<void> {
       <v-card-actions class="flex-column px-5">
 
         <!-- Change location to auto -->
+        <!-- TODO Test it -->
         <v-btn
           v-if="dialogData.showChangeServerToAutoButton"
           rounded="pill"
@@ -88,7 +91,8 @@ async function sendReport(): Promise<void> {
           block
           class="text-center mb-4 text-secondary"
           :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
-          @click="changeLocationToAuto()"
+          @click="vhApp.data.state.clientProfile?.clientProfileId
+          && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
         />
 
         <!-- Diagnose -->

@@ -21,7 +21,8 @@ const expandedPanels = ref<number[]>([]);
 onMounted(() => {
   // Create open state if client profile is active or has single location
   expandedPanels.value = vhApp.data.clientProfileInfos.map(x => {
-     return vhApp.isActiveClientProfile(x.clientProfileId) || Util.isSingleLocation(x.serverLocationInfos.length) ? 0 : 1
+     return vhApp.isActiveClientProfile(x.clientProfileId) || Util.isSingleLocation(x.locationInfos.length) ?
+       0 : 1
   });
 });
 
@@ -67,21 +68,21 @@ async function saveNewClientProfileName(): Promise<void> {
     class="mb-4"
   >
     <v-expansion-panel
-      :readonly="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)"
+      :readonly="Util.isSingleLocation(clientProfileInfo.locationInfos.length)"
       hide-actions
       class="text-primary-darken-1 pa-4"
-      @click="Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length) ?
+      @click="Util.isSingleLocation(clientProfileInfo.locationInfos.length) ?
       ConnectManager.connect2(clientProfileInfo.clientProfileId, false) : ''"
     >
 
       <!-- Country flag on collapse state -->
-      <div v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)
+      <div v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)
             && expandedPanels[index] !== 0"
         class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start"
         style="border-radius: 14px;"
         @click="expandedPanels[index] = 0"
       >
-        <template v-for="(serverLocationInfo, index) in clientProfileInfo.serverLocationInfos">
+        <template v-for="(serverLocationInfo, index) in clientProfileInfo.locationInfos">
             <span
               v-if="!serverLocationInfo.isNestedCountry
                 && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
@@ -164,7 +165,7 @@ async function saveNewClientProfileName(): Promise<void> {
             </v-btn>
 
             <!-- Expand/Collapse button -->
-            <template v-if="!Util.isSingleLocation(clientProfileInfo.serverLocationInfos.length)">
+            <template v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)">
               <v-icon v-if="expandedPanels[index] === 0" size="28" icon="mdi-minus-circle-outline" />
               <v-icon v-else icon="mdi-plus-circle-outline" size="28" />
             </template>

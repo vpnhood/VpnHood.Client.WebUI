@@ -1,5 +1,4 @@
 import {
-  AccessUsage,
   ApiException,
   AppAccount,
   AppClient,
@@ -13,8 +12,7 @@ import {
   ConfigParams,
   ConnectPlanId,
   DeviceAppInfo,
-  PatchOfBoolean,
-  SessionStatus,
+  PatchOfBoolean, PatchOfString,
   SessionSuppressType,
   UiCultureInfo
 } from '@/services/VpnHood.Client.Api';
@@ -185,31 +183,32 @@ export class VpnHoodApp {
     }
   }
 
-  public async connect(clientProfileId: string, serverLocation: string,
+  public async connect(clientProfileId: string, serverLocation: string | null,
                        isPremium: boolean, planId: ConnectPlanId, isDiagnose: boolean = false): Promise<void> {
+
 
     // User select active item and already connected
     if (this.data.state.canDisconnect
       && clientProfileId === this.data.state.clientProfile?.clientProfileId
       && serverLocation === this.data.state.serverLocationInfo?.serverLocation){
-      this.data.uiState.generalSnackbarData.message = i18n.global.t('ALREADY_CONNECTED_TO_LOCATION');
-      this.data.uiState.generalSnackbarData.isShow = true;
+      this.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'));
       return;
     }
 
     // Update client profile
     await this.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
-      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium ?? false})
+      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium ?? false}),
+      selectedLocation: new PatchOfString({value: serverLocation})
     }));
 
     // Update user settings
-    this.data.settings.userSettings.serverLocation = serverLocation;
     this.data.settings.userSettings.clientProfileId = clientProfileId;
     await this.saveUserSetting();
 
     // Just for Development info
     console.log('Connecting to ' + this.data.state.clientProfile?.clientProfileName);
-    console.log('Server location: ' + this.data.settings.userSettings.serverLocation);
+    console.log('Server location: ' + this.data.state.clientProfile?.selectedLocationInfo?.serverLocation);
+    console.log('ClientProfile: ' + this.data.state.clientProfile);
 
     // Navigate to home page
     await router.replace('/');
@@ -274,7 +273,8 @@ export class VpnHoodApp {
   public async processError(err: unknown): Promise<void> {
     // For developer
     console.error(err);
-    console.log("typeof: ", typeof err);
+    console.log("Error is typeof: ", typeof err);
+
     await ErrorHandler.processError(err);
   }
 
@@ -307,7 +307,7 @@ export class VpnHoodApp {
 
   getActiveServerCountryFlag(): string | null {
     const serverLocationInfo = this.data.state.serverLocationInfo ??
-      this.data.state.clientServerLocationInfo;
+      this.data.state.clientProfile?.selectedLocationInfo;
     return serverLocationInfo && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
       : null;
@@ -344,7 +344,7 @@ export class VpnHoodApp {
       return (this.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
 
     // App is VpnHoodCONNECT
-    const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientServerLocationInfo;
+    const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientProfile?.selectedLocationInfo;
     if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
       return i18n.global.t('AUTO_SELECT');
 
@@ -373,6 +373,10 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
+  public showGeneralSnackbar(message: string): void{
+    this.data.uiState.generalSnackbarData.message = message;
+    this.data.uiState.generalSnackbarData.isShow = true;
+  }
   //------------------------------------------
   // Just for VpnHoodConnect
   //------------------------------------------

@@ -40,7 +40,6 @@ const isShowPrivacyPolicyDialog = ref<boolean>(false);
 onMounted(async () => {
   // Reload 'state' every 1 second if app window is focused.
   setInterval(async () => {
-    console.log(vhApp.data.state.sessionStatus);
     if (!document.hidden)
       await vhApp.reloadState();
   }, 1000);

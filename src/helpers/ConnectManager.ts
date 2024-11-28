@@ -8,7 +8,7 @@ export class ConnectManager {
   public static async showPromoteDialog(clientProfileId: string, isPremium: boolean, serverLocation: string): Promise<boolean> {
 
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    const options: ServerLocationOptions | undefined = clientProfileInfo.serverLocationInfos.find(
+    const options: ServerLocationOptions | undefined = clientProfileInfo.locationInfos.find(
       x => x.serverLocation === serverLocation)?.options;
 
     // Fore developer
@@ -21,7 +21,7 @@ export class ConnectManager {
     const promoteData = VpnHoodApp.instance.data.uiState.promoteDialogData;
     promoteData.clientProfileId = clientProfileId;
     promoteData.serverLocation = serverLocation;
-    promoteData.showRewardedAd = options.premiumByRewardAd;
+    promoteData.showRewardedAd = options.premiumByRewardedAd;
     promoteData.showTryPremium = options.premiumByTrial;
     promoteData.showGoPremium = options.premiumByPurchase;
     promoteData.isPremiumLocation = isPremium;
@@ -48,18 +48,19 @@ export class ConnectManager {
     // For developer
     console.log("Connect2");
 
-    const serverLocation: string = VpnHoodApp.instance.data.settings.userSettings.serverLocation ?? '*/*';
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
+    const serverLocation: string | null = clientProfileInfo.selectedLocationInfo?.serverLocation ?? null;
     const isPremiumLocation: boolean = clientProfileInfo.isPremiumLocationSelected ?? false;
     await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose);
   }
 
-  public static async connect3(clientProfileId: string, serverLocation: string, isPremiumLocation: boolean, isDiagnose: boolean = false) {
+  public static async connect3(clientProfileId: string, serverLocation: string | null, isPremiumLocation: boolean, isDiagnose: boolean = false) {
     // For developer
     console.log("Connect3");
 
-    if (await this.showPromoteDialog(clientProfileId, isPremiumLocation, serverLocation))
+    if (serverLocation && await this.showPromoteDialog(clientProfileId, isPremiumLocation, serverLocation))
       return;
+
     await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose);
   }
 }

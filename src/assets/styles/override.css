@@ -38,3 +38,6 @@
 .v-switch__track{
     min-width: 28px !important;
 }
+.v-btn--disabled {
+    opacity: 0.50;
+}

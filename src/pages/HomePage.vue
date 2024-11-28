@@ -130,8 +130,9 @@ function appFilterStatus(): string {
 }
 
 function getExpireDate(): string | null {
-  if (vhApp.data.state.connectionState !== AppConnectionState.Connected ||
-    !vhApp.data.state.sessionStatus?.accessUsage?.expirationTime)
+  if (!vhApp.data.state.clientProfile?.isPremiumAccount
+    || vhApp.data.state.connectionState !== AppConnectionState.Connected
+    || !vhApp.data.state.sessionStatus?.accessUsage?.expirationTime)
     return null;
 
   const expDate: Date = vhApp.data.state.sessionStatus.accessUsage.expirationTime;
@@ -163,10 +164,10 @@ function udpProtocolButtonText(): string {
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
 function isShowCountdown(): boolean{
-  const isPremium = vhApp.data.state.sessionStatus?.accessUsage?.isPremium;
-  const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
-  const canExtendSession = vhApp.data.state.sessionStatus?.accessUsage?.canExtendPremiumByRewardedAd;
-  return !(!isPremium || !expireTime || !canExtendSession);
+  const isPremiumAccount = vhApp.data.state.clientProfile?.isPremiumAccount;
+  const hasExpireTime = !!vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
+  return !isPremiumAccount && hasExpireTime;
+
 }
 </script>
 
@@ -183,7 +184,7 @@ function isShowCountdown(): boolean{
     <v-col cols="12" class="text-center pt-0">
 
       <!-- Countdown and extend session button -->
-      <CountDown v-if="isShowCountdown()"/>
+      <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
 
       <!-- Go Premium button -->
       <div v-else-if="vhApp.data.features.isBillingSupported">

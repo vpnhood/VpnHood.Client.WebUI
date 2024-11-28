@@ -16,7 +16,7 @@ const props = defineProps<{
   bandwidthTotal: string | undefined,
 }>();
 
-function determineClass() {
+function determineClass(): string {
   // VpnHoodCONNECT
   if (vhApp.isConnectApp()) {
     processConnectedAnimation();
@@ -29,7 +29,7 @@ function determineClass() {
 
 // Process connect animation state for VpnHoodCONNECT
 function processConnectedAnimation(): void {
-  if (vhApp.isConnected()) {
+  if (!vhApp.isConnected()) {
     showConnectedAnimation.value = false;
     return;
   }
@@ -67,7 +67,7 @@ function processConnectedAnimation(): void {
       <v-icon v-if="props.stateIcon" size="50" color="white">{{ props.stateIcon }}</v-icon>
 
       <!-- Access Key expire date -->
-      <p v-if="!vhApp.isConnectApp() && props.expireDate"
+      <p v-if="props.expireDate"
          :class="[props.alertForExpire ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">
         {{ locale('EXPIRE') + ': ' + props.expireDate }}</p>
 

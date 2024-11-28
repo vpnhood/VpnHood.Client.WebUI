@@ -205,7 +205,6 @@
   "EXTEND_IT": "Extend it",
   "ACCOUNT": "Account",
   "EXTEND_PREMIUM_SESSION": "Extend <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span> Session",
-  "EXTEND_PREMIUM_DESC": "Lorem Ipsum has been the industry's standard dummy text ever since when an unknown printer",
   "SHOW_AD": "Show Ad",
   "EXTEND_BY_REWARDED_AD_DESC": "Add {minutes} minutes to current session after watch ad.",
   "SUBSCRIBED_SINCE": "Subscribed since",
@@ -214,5 +213,7 @@
   "EXPIRATION_TIME": "Expiration Time",
   "PRICE": "Price",
   "UPGRADE_ACCOUNT_DESC": "Upgrade your account to <span class=\"text-secondary-lighten-1\">PREMIUM</span> and get more features.",
-  "MANAGE_ON_GOOGLE_PLAY": "Manage on Google Play"
+  "MANAGE_ON_GOOGLE_PLAY": "Manage on Google Play",
+  "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Could not find any available server in the selected location.",
+  "NO_ADDITIONAL_LOCATION_AVAILABLE": "There are no additional locations available for selection."
 }

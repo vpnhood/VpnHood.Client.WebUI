@@ -16,8 +16,9 @@ const props = defineProps<{
 }>();
 
 function internalConnect(serverLocation: string): void {
-  if (Util.isSingleLocation(props.locationsList.length))
-    return;
+  // TODO remove remark
+  /*if (Util.isSingleLocation(props.locationsList.length))
+    return;*/
   ConnectManager.connect3(props.clientProfileId, serverLocation, props.isPremiumGroup, false);
 }
 function isActiveItem(location: ClientServerLocationInfo): boolean{
@@ -27,16 +28,18 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
 
   // TODO Trudy should not changed */* to null
   // Change server location if the selected item is auto
-  const serverLocation: string | null = location.serverLocation === "*/*" ? null : location.serverLocation;
+  const serverLocation: string | null = Util.isLocationAutoSelected(location.serverLocation) ? null : location.serverLocation;
 
   // Check premium items
   if (props.isPremiumLocationSelected){
-    return (serverLocation === vhApp.data.settings.userSettings.serverLocation && props.isPremiumGroup)
+    return (serverLocation === vhApp.data.state.clientProfile?.selectedLocationInfo?.serverLocation &&
+        props.isPremiumGroup)
       ?? (location.isDefault && props.isPremiumGroup);
   }
 
   // Check free items
-  return (serverLocation === vhApp.data.settings.userSettings.serverLocation && !props.isPremiumGroup) ??
+  return (serverLocation === vhApp.data.state.clientProfile?.selectedLocationInfo?.serverLocation &&
+      !props.isPremiumGroup) ??
     (location.isDefault && !props.isPremiumGroup );
 }
 </script>

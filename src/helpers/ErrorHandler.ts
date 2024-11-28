@@ -21,25 +21,27 @@ export class ErrorHandler {
     if (typeof err === 'string')
       return err;
 
-    if (err instanceof Error)
-      return err.message ?? err;
-
     if (err instanceof ApiException)
       return this.processApiException(err);
+
+    if (err instanceof Error)
+      return err.message ?? err;
 
     return i18n.global.t('UNKNOWN_ERROR');
   }
 
   private static async processApiException(err: ApiException): Promise<string | null> {
-
     // For developer
     console.log('ApiException, ExceptionTypeName: ', err.exceptionTypeName);
+    console.log("Error Status Code: " + err.statusCode);
 
     switch (err.exceptionTypeName) {
       case 'HttpRequestException':
         return this.httpRequestExceptionHandler(err);
       case 'UnreachableServerLocation':
         return this.unreachableServerExceptionHandler(err);
+      case 'SessionException':
+        return this.sessionExceptionHandler(err);
       case 'GoogleBillingException':
         return this.googleBillingExceptionHandler(err);
     }
@@ -80,10 +82,17 @@ export class ErrorHandler {
 
   private static async unreachableServerExceptionHandler(err: ApiException): Promise<string> {
 
-    // Show a message that the user can connect to the VPN but not to the selected server
-    if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted && VpnHoodApp.instance.data.settings.userSettings.serverLocation) {
+    // Show the message when the user can connect to the VPN but not to the selected server
+    if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted && VpnHoodApp.instance.data.state.clientProfile?.selectedLocationInfo?.serverLocation)
       return i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
-    }
+
+    return err.message;
+  }
+
+  private static async sessionExceptionHandler(err: ApiException): Promise<string> {
+    if (err.statusCode == 500)
+      return i18n.global.t('COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION');
+
     return err.message;
   }
 
