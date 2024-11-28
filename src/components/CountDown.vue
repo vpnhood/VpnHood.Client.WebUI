@@ -10,6 +10,10 @@ const locale = i18n.global.t;
 
 const remainingTimeSecond = ref<number>(0);
 const showExtendDialog = ref<boolean>(false);
+const showLoadingAdDialog = ref<boolean>(false);
+
+const fiveMinutes = 299;
+const fifteenMinutes = 899;
 function calcRemainingTime(): string{
   const currentDate: Date = new Date();
   const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
@@ -18,6 +22,10 @@ function calcRemainingTime(): string{
 
   const diffTime = expireTime.getTime() - currentDate.getTime();
   remainingTimeSecond.value = diffTime > 0 ? Math.floor(diffTime / 1000) : 0;
+
+  if (remainingTimeSecond.value < fiveMinutes)
+    showExtendDialog.value = false;
+
   const hrs = Math.floor(remainingTimeSecond.value / 3600);
   const mins = Math.floor((remainingTimeSecond.value % 3600) / 60);
   const secs = remainingTimeSecond.value % 60;
@@ -27,11 +35,24 @@ function pad(num: number): string{
   return num.toString().padStart(2, '0');
 }
 function getCountdownColor(): string{
-  if (remainingTimeSecond.value < 300)
+  if (remainingTimeSecond.value < fiveMinutes)
     return 'error';
-  if (remainingTimeSecond.value < 900)
+  if (remainingTimeSecond.value < fifteenMinutes)
     return 'tertiary-lighten-1';
   return 'secondary-lighten-1';
+}
+async function showRewardedAd(){
+  try {
+    showLoadingAdDialog.value = true;
+    await vhApp.apiClient.extendByRewardedAd();
+    showExtendDialog.value = false;
+  }
+  catch (err: unknown){
+    console.log(err);
+  }
+  finally {
+    showLoadingAdDialog.value = false;
+  }
 }
 </script>
 
@@ -41,17 +62,17 @@ function getCountdownColor(): string{
     :color="getCountdownColor()"
     class="pe-1"
     variant="tonal"
-    @click="remainingTimeSecond > 299 && (showExtendDialog = true)"
   >
     <span class="text-start" style="width: 63px">{{ calcRemainingTime() }}</span>
     <v-chip
-      v-if="remainingTimeSecond > 299"
+      v-if="remainingTimeSecond > fiveMinutes"
       variant="flat"
       color="tertiary-lighten-1"
       class="text-capitalize text-primary font-weight-bold"
       :append-icon="Util.getLocalizedRightChevron()"
       size="small"
       :text="locale('EXTEND_IT')"
+      @click="showExtendDialog = true"
     />
   </v-chip>
 
@@ -97,7 +118,7 @@ function getCountdownColor(): string{
               size="small"
               rounded="pill"
               variant="flat"
-              @click="vhApp.apiClient.extendByRewardedAd()"
+              @click="showRewardedAd()"
             />
           </v-col>
         </v-row>

@@ -87,7 +87,7 @@ function listHasGroup(): boolean{
     <LocationListItems v-else
       :client-profile-id="props.clientProfile.clientProfileId"
       :locations-list="props.clientProfile.locationInfos"
-      :is-premium-group="false"
+      :is-premium-group="premiumLocations.length > 0"
       :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
     />
 

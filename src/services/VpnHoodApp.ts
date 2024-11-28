@@ -183,9 +183,8 @@ export class VpnHoodApp {
     }
   }
 
-  public async connect(clientProfileId: string, serverLocation: string | null,
-                       isPremium: boolean, planId: ConnectPlanId, isDiagnose: boolean = false): Promise<void> {
-
+  public async connect(clientProfileId: string, serverLocation: string, isPremium: boolean, planId: ConnectPlanId,
+                       isDiagnose: boolean = false): Promise<void> {
 
     // User select active item and already connected
     if (this.data.state.canDisconnect
@@ -206,9 +205,8 @@ export class VpnHoodApp {
     await this.saveUserSetting();
 
     // Just for Development info
-    console.log('Connecting to ' + this.data.state.clientProfile?.clientProfileName);
-    console.log('Server location: ' + this.data.state.clientProfile?.selectedLocationInfo?.serverLocation);
-    console.log('ClientProfile: ' + this.data.state.clientProfile);
+    console.log('Connecting to profile: ' + this.data.state.clientProfile?.clientProfileName);
+    console.log('Final Server location: ' + this.data.state.clientProfile?.selectedLocationInfo?.serverLocation);
 
     // Navigate to home page
     await router.replace('/');

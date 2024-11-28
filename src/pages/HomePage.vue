@@ -271,6 +271,7 @@ function isShowCountdown(): boolean{
     <!-- Config buttons -->
     <v-col cols="12">
       <v-row>
+        <!-- TODO restore click condition -->
         <!-- Servers button -->
         <v-col cols="12" md="6" class="py-0 pa-md-1">
           <v-btn

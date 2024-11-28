@@ -5,7 +5,7 @@ import { ComponentRouteController } from '@/services/ComponentRouteController';
 import router from '@/services/router';
 
 export class ConnectManager {
-  public static async showPromoteDialog(clientProfileId: string, isPremium: boolean, serverLocation: string): Promise<boolean> {
+  public static async showPromoteDialog(clientProfileId: string, serverLocation: string, isPremium: boolean): Promise<boolean> {
 
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
     const options: ServerLocationOptions | undefined = clientProfileInfo.locationInfos.find(
@@ -36,7 +36,6 @@ export class ConnectManager {
     console.log("Connect1");
 
     const clientProfileId = VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
-
     if (!clientProfileId) {
       await router.push('/servers');
       return;
@@ -49,16 +48,37 @@ export class ConnectManager {
     console.log("Connect2");
 
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    const serverLocation: string | null = clientProfileInfo.selectedLocationInfo?.serverLocation ?? null;
-    const isPremiumLocation: boolean = clientProfileInfo.isPremiumLocationSelected ?? false;
+    const serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
+    if (!serverLocation){
+      await router.push('/servers');
+      return;
+    }
+
+    let isPremiumLocation: boolean;
+
+    // If the location has a premium option and the normal option is unavailable (i.e., 0), it is classified as premium.
+    // This scenario is expected to be rare and typically occurs only on first-time use.
+    if(clientProfileInfo.selectedLocationInfo?.options.hasPremium === true
+      && clientProfileInfo.selectedLocationInfo?.options.normal == null)
+      isPremiumLocation = true;
+
+    // If the location does not have a premium option or has both premium and free options, we rely on
+    // clientProfileInfo.isPremiumLocationSelected. If the user has previously selected premium or free options,
+    // their selection will be used. Otherwise, the default value for clientProfileInfo.isPremiumLocationSelected is
+    // false, which means the free option is selected by default.
+    else
+      isPremiumLocation = clientProfileInfo.isPremiumLocationSelected;
+
     await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose);
   }
 
-  public static async connect3(clientProfileId: string, serverLocation: string | null, isPremiumLocation: boolean, isDiagnose: boolean = false) {
+  public static async connect3(clientProfileId: string, serverLocation: string, isPremiumLocation: boolean, isDiagnose: boolean = false) {
     // For developer
     console.log("Connect3");
+    console.log('Detected server location: ' + serverLocation);
+    console.log('isPremiumLocation: ' + isPremiumLocation);
 
-    if (serverLocation && await this.showPromoteDialog(clientProfileId, isPremiumLocation, serverLocation))
+    if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;
 
     await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose);
