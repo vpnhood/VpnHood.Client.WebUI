@@ -1,6 +1,6 @@
 {
   "name": "vpnhood.spa",
-  "version": "1.0.238",
+  "version": "1.0.243",
   "private": true,
   "type": "module",
   "scripts": {
@@ -25,6 +25,7 @@
     "vuetify": "^3.7.3"
   },
   "devDependencies": {
+    "@iconify/vue": "^4.1.2",
     "@intlify/unplugin-vue-i18n": "^5.2.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.16.11",

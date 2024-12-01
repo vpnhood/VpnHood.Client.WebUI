@@ -5,6 +5,7 @@ import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
+import { Icon } from '@iconify/vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -83,7 +84,6 @@ function itemClass(){
     :disable-route-watcher="true"
     :floating="true"
   >
-
     <!-- Header -->
     <div :class="[vhApp.isConnectApp() ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
 
@@ -227,16 +227,66 @@ function itemClass(){
 
     </v-list>
 
-    <!-- Powered by button -->
-    <a
-      class="text-center mb-4 text-caption position-fixed bottom-0 position-fixed w-100 text-decoration-none"
-      :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2']"
-      href="https://www.vpnhood.com"
-      target="_blank"
-    >
-      <span>{{ locale('POWERED_BY_VPNHOOD_ENGINE') }}</span>
-      <v-icon icon="mdi-open-in-new" class="ms-2" />
-    </a>
+    <!-- Bottom section -->
+    <div class="text-center position-fixed bottom-0 w-100">
+
+      <!-- Social icons -->
+<!--      <div class="d-flex justify-center ga-3 mb-5">
+
+        &lt;!&ndash; Website &ndash;&gt;
+        <v-btn
+          icon
+          size="small"
+          variant="tonal"
+          density="comfortable"
+          href="https://www.vpnhood.com"
+          target="_blank"
+        >
+          <template v-slot:default>
+            <Icon icon="proicons:globe" width="20" />
+          </template>
+        </v-btn>
+
+        &lt;!&ndash; Instagram &ndash;&gt;
+        <v-btn
+          icon
+          size="small"
+          variant="tonal"
+          density="comfortable"
+          href="https://www.instagram.com/vpnhood/"
+          target="_blank"
+        >
+          <template v-slot:default>
+            <Icon icon="proicons:instagram" width="20" />
+          </template>
+        </v-btn>
+
+        &lt;!&ndash; Twitter &ndash;&gt;
+        <v-btn
+          icon
+          size="small"
+          variant="tonal"
+          density="comfortable"
+          href="https://x.com/vpnhood"
+          target="_blank"
+        >
+          <template v-slot:default>
+            <Icon icon="proicons:x-twitter" width="17" />
+          </template>
+        </v-btn>
+      </div>-->
+
+      <!-- Powered by button -->
+      <a
+        class="d-block mb-4 text-caption text-decoration-none"
+        :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2']"
+        href="https://github.com/vpnhood/VpnHood"
+        target="_blank"
+      >
+        <span>{{ locale('POWERED_BY_VPNHOOD_ENGINE') }}</span>
+        <v-icon icon="mdi-open-in-new" class="ms-2" />
+      </a>
+    </div>
   </v-navigation-drawer>
 
 

@@ -19,6 +19,7 @@ const snackbarData = ref<GeneralSnackbarData>(VpnHoodApp.instance.data.uiState.g
     timer="rgba(255,255,255,0.3)"
     timeout="5000"
     class="pt-12"
+    :content-class="`text-${snackbarData.textColor}`"
     close-on-content-click
     :color="snackbarData.color"
     :text="snackbarData.message"

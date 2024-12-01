@@ -32,14 +32,17 @@ export class ErrorHandler {
 
   private static async processApiException(err: ApiException): Promise<string | null> {
     // For developer
-    console.log('ApiException, ExceptionTypeName: ', err.exceptionTypeName);
-    console.log("Error Status Code: " + err.statusCode);
+    console.log('Exception Type: ApiException');
+    console.log('TypeName: ', err.exceptionTypeName);
+    console.log("Error Infos: " + err);
 
     switch (err.exceptionTypeName) {
       case 'HttpRequestException':
         return this.httpRequestExceptionHandler(err);
       case 'UnreachableServerLocation':
         return this.unreachableServerExceptionHandler(err);
+      case 'LoadAdException':
+        return this.loadAdExceptionHandler(err);
       case 'SessionException':
         return this.sessionExceptionHandler(err);
       case 'GoogleBillingException':
@@ -90,9 +93,12 @@ export class ErrorHandler {
   }
 
   private static async sessionExceptionHandler(err: ApiException): Promise<string> {
-    if (err.statusCode == 500)
-      return i18n.global.t('COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION');
+    // TODO implement error messages
+    return err.message;
+  }
 
+  private static async loadAdExceptionHandler(err: ApiException): Promise<string> {
+    // TODO implement error messages
     return err.message;
   }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MyConnectPlanId } from '@/components/PromoteDialog/MyConnectPlanIds';
+import type { MyConnectPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 
 const props = defineProps<{
   icon: string,

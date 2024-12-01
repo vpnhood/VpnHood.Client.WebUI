@@ -1,4 +1,4 @@
-export class PromoteDialogData {
+export class PromotePremiumData {
   public clientProfileId: string | null = null;
   public serverLocation: string | null = null;
   public isPremiumLocation: boolean = false;

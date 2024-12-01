@@ -16,7 +16,6 @@ export enum ComponentName {
     NavigationDrawer = "NavigationDrawer",
     ProtocolDialog = "ProtocolDialog",
     ErrorDialog = "ErrorDialog",
-    PromoteDialog = "PromoteDialog",
     AddServerDialog = "AddServerDialog",
     RenameServerDialog = "RenameServerDialog",
     ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",

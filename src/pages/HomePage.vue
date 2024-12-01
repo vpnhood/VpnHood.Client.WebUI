@@ -167,7 +167,6 @@ function isShowCountdown(): boolean{
   const isPremiumAccount = vhApp.data.state.clientProfile?.isPremiumAccount;
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
   return !isPremiumAccount && hasExpireTime;
-
 }
 </script>
 
@@ -282,7 +281,10 @@ function isShowCountdown(): boolean{
             size="small"
             prepend-icon="mdi-earth"
             class="config-item align-center mb-1"
-            @click="router.push('/servers')"
+            @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length == 1
+            && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
+            ? vhApp.showGeneralSnackbar(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'))
+            : router.push('/servers')"
           >
             <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
             <v-icon :icon="Util.getLocalizedRightChevron()" />

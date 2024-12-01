@@ -57,6 +57,22 @@ const routes = [
     meta: {
       title: 'Account',
     }
+  },
+  {
+    path: '/extend-session',
+    name: 'Extend Session',
+    component: () => import(/* webpackChunkName: "ExtendSession" */ '@/pages/ExtendSession.vue'),
+    meta: {
+      title: 'Extend Session',
+    }
+  },
+  {
+    path: '/promote-premium',
+    name: 'Promote Premium',
+    component: () => import(/* webpackChunkName: "PromotePremium" */ '@/pages/PromotePremium.vue'),
+    meta: {
+      title: 'Promote Premium',
+    }
   }
 ];
 

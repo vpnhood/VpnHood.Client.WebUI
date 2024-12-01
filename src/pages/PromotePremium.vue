@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import PremiumConnectButton from '@/components/PromoteDialog/PremiumConnectButton.vue';
+import PromoteConnectButton from '@/components/PromoteConnectButton.vue';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
-import { PromoteDialogData } from '@/components/PromoteDialog/PromoteDialogData';
+import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData';
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
-import { type MyConnectPlanId, MyPlanId } from '@/components/PromoteDialog/MyConnectPlanIds';
+import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import router from '@/services/router';
-
-const props = defineProps<{
-  modelValue: boolean,
-}>();
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const dialogData = computed<PromoteDialogData>(() => vhApp.data.uiState.promoteDialogData);
+const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
 
 const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM') : locale('SELECTED_LOCATION_IS_FREE'));
@@ -36,15 +32,10 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 </script>
 
 <template>
-  <v-dialog
-    :modelValue="props.modelValue"
-    @update:modelValue="$emit('update:modelValue',$event)"
-    :persistent="true"
-    fullscreen
-    content-class="pa-3"
-    class="bg-black"
-  >
-    <v-card class="justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
+  <v-sheet class="pa-3 h-100" color="black">
+
+    <v-card
+      class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
       <div class="mt-5">
         <h3 class="text-center" v-html="dialogTitle" />
       </div>
@@ -88,7 +79,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         </div>
 
         <!-- Watch rewarded ad -->
-        <premium-connect-button
+        <promote-connect-button
           v-if="dialogData.showRewardedAd"
           icon="mdi-play-box-lock-open-outline"
           :title="locale('WATCH_REWARDED_AD')"
@@ -99,7 +90,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         />
 
         <!-- Try premium -->
-        <premium-connect-button
+        <promote-connect-button
           v-if="dialogData.showTryPremium"
           icon="mdi-timer-lock-open-outline"
           :title="locale('TRY_PREMIUM')"
@@ -110,7 +101,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         />
 
         <!-- Go premium -->
-        <premium-connect-button
+        <promote-connect-button
           v-if="dialogData.showGoPremium"
           icon="mdi-crown-circle-outline"
           :title="locale('GO_PREMIUM_2')"
@@ -129,11 +120,11 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           prepend-icon="mdi-chevron-left"
           class="opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
-          @click="$emit('update:modelValue', false)"
+          @click="router.go(-1)"
         />
 
       </div>
 
     </v-card>
-  </v-dialog>
+  </v-sheet>
 </template>

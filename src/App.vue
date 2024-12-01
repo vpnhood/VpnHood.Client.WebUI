@@ -9,7 +9,6 @@ import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import PromoteDialog from '@/components/PromoteDialog/PromoteDialog.vue';
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 
 const vhApp = VpnHoodApp.instance;
@@ -22,16 +21,6 @@ const isShowErrorDialog = computed<boolean>({
     if (value) return; // Already is Open
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog, value);
     await vhApp.clearLastError();
-  }
-})
-
-const isShowPromoteDialog = computed<boolean>({
-  get: () => {
-    return ComponentRouteController.isShowComponent(ComponentName.PromoteDialog)
-  },
-  set: async (value: boolean) => {
-    if (value) return; // Already is Open
-    await ComponentRouteController.showComponent(ComponentName.PromoteDialog, value);
   }
 })
 
@@ -80,9 +69,6 @@ onMounted(async () => {
 
       <!-- Global alert dialog -->
       <error-dialog v-model="isShowErrorDialog" v-if="isShowErrorDialog"/>
-
-      <!-- Global promote dialog -->
-      <promote-dialog v-model="isShowPromoteDialog" v-if="isShowPromoteDialog"/>
 
       <!-- Global snackbar -->
       <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"

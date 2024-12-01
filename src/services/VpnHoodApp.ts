@@ -205,8 +205,9 @@ export class VpnHoodApp {
     await this.saveUserSetting();
 
     // Just for Development info
-    console.log('Connecting to profile: ' + this.data.state.clientProfile?.clientProfileName);
-    console.log('Final Server location: ' + this.data.state.clientProfile?.selectedLocationInfo?.serverLocation);
+    console.log(`Connecting to profile:  ${this.data.state.clientProfile?.clientProfileName}`);
+    console.log(`Final Server location:  ${this.data.state.clientProfile?.selectedLocationInfo?.serverLocation}`);
+    console.log(`PlanId:  ${planId}`);
 
     // Navigate to home page
     await router.replace('/');
@@ -358,7 +359,8 @@ export class VpnHoodApp {
   }
 
   public getConnectionStateText(): string {
-    if (this.data.state.isWaitingForAd) return i18n.global.t('LOADING_AD');
+    if (this.data.state.isWaitingForAd && this.data.state.connectionState !== AppConnectionState.Connected)
+      return i18n.global.t('LOADING_AD');
 
     return this.data.state.connectionState === AppConnectionState.None
       ? i18n.global.t('DISCONNECTED')
@@ -371,7 +373,11 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string): void{
+  public showGeneralSnackbar(message: string, bgColor?: string, textColor?: string): void{
+    if (bgColor)
+      this.data.uiState.generalSnackbarData.color = bgColor;
+    if (textColor)
+      this.data.uiState.generalSnackbarData.textColor = textColor;
     this.data.uiState.generalSnackbarData.message = message;
     this.data.uiState.generalSnackbarData.isShow = true;
   }
