@@ -207,7 +207,7 @@
   "AUTO_RENEW": "Otomatik Yenileme",
   "EXPIRATION_TIME": "Bitiş Zamanı",
   "PRICE": "Fiyat",
-  "UPGRADE_ACCOUNT_DESC": "\"Hesabınızı <span class=\\\"text-secondary-lighten-1\\\">Premium</span>'a yükseltin ve daha fazla özellik kazanın.",
+  "UPGRADE_ACCOUNT_DESC": "Hesabınızı <span class=\"text-secondary-lighten-1\">Premium</span>'a yükseltin ve daha fazla özellik kazanın.",
   "MANAGE_ON_GOOGLE_PLAY": "Google Play'de Yönet",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Seçilen konumda kullanılabilir bir sunucu bulunamadı.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Seçilebilecek ek konum yok.",
