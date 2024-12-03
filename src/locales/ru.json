@@ -199,7 +199,7 @@
   "1_MONTH": "1 месяц",
   "EXTEND_IT": "Продлить",
   "ACCOUNT": "Аккаунт",
-  "EXTEND_PREMIUM_SESSION": " \"Продлить <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Премиум</span> сессию",
+  "EXTEND_PREMIUM_SESSION": " \"Продлить <span class=\"text-uppercase text-secondary-lighten-1\">Премиум</span> сессию",
   "SHOW_AD": "Показать рекламу",
   "EXTEND_BY_REWARDED_AD_DESC": "Добавьте {minutes} минут к текущей сессии после просмотра рекламы.",
   "SUBSCRIBED_SINCE": "Подписан с",
