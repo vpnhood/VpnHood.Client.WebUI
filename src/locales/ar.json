@@ -199,7 +199,7 @@
   "1_MONTH": "1 شهر",
   "EXTEND_IT": "تمديده",
   "ACCOUNT": "حساب",
-  "EXTEND_PREMIUM_SESSION": "تمديد جلسة <span class=\\\"text-uppercase text-secondary-lighten-1\\\">مميزة</span>",
+  "EXTEND_PREMIUM_SESSION": "تمديد جلسة <span class=\"text-uppercase text-secondary-lighten-1\">مميزة</span>",
   "SHOW_AD": "عرض إعلان",
   "EXTEND_BY_REWARDED_AD_DESC": "إضافة {minutes} دقيقة إلى الجلسة الحالية بعد مشاهدة الإعلان.",
   "SUBSCRIBED_SINCE": "مشترك منذ",
