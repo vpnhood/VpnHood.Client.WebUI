@@ -199,7 +199,7 @@
   "1_MONTH": "1 Monat",
   "EXTEND_IT": "Verlängern",
   "ACCOUNT": "Konto",
-  "EXTEND_PREMIUM_SESSION": "Premium-Sitzung verlängern <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span>",
+  "EXTEND_PREMIUM_SESSION": "Premium-Sitzung verlängern <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
   "SHOW_AD": "Anzeige zeigen",
   "EXTEND_BY_REWARDED_AD_DESC": "Nach dem Ansehen der Anzeige {minutes} Minuten zur aktuellen Sitzung hinzufügen.",
   "SUBSCRIBED_SINCE": "Abonniert seit",
