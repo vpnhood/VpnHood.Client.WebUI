@@ -211,7 +211,7 @@
   "MANAGE_ON_GOOGLE_PLAY": "Gerenciar no Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Não foi possível encontrar nenhum servidor disponível na localização selecionada.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Não há localizações adicionais disponíveis para seleção.",
-  "EXTEND_BY_REWARDED_AD_NOTE": "\"Por favor, permaneça no aplicativo até que o anúncio termine. Se você sair do aplicativo, sua sessão não será estendida.",
+  "EXTEND_BY_REWARDED_AD_NOTE": "Por favor, permaneça no aplicativo até que o anúncio termine. Se você sair do aplicativo, sua sessão não será estendida.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Parabéns! Sua sessão foi estendida com sucesso.",
   "NOTE": "Nota"
 }
