@@ -207,7 +207,7 @@
   "AUTO_RENEW": "Автообновление",
   "EXPIRATION_TIME": "Время истечения",
   "PRICE": "Цена",
-  "UPGRADE_ACCOUNT_DESC": "Обновите свой аккаунт до <span class=\\\"text-secondary-lighten-1\\\">Премиум</span> и получите больше функций.",
+  "UPGRADE_ACCOUNT_DESC": "Обновите свой аккаунт до <span class=\"text-secondary-lighten-1\">Премиум</span> и получите больше функций.",
   "MANAGE_ON_GOOGLE_PLAY": "Управлять на Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Не удалось найти доступный сервер в выбранном местоположении.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Нет дополнительных местоположений для выбора.",
