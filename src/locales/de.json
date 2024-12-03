@@ -102,7 +102,7 @@
   "OOPS": "Ups!",
   "LOAD_APP_ERROR_DESC": "Es gab ein Problem beim Ausführen der App",
   "RELOAD_APP": "App neu laden",
-  "NO_SERVER_AVAILABLE": "Sie haben noch keine Server hinzugefügt. Bitte fügen Sie einen Server hinzu, indem Sie auf die Schaltfläche \\\"Server hinzufügen\\\" klicken.",
+  "NO_SERVER_AVAILABLE": "Sie haben noch keine Server hinzugefügt. Bitte fügen Sie einen Server hinzu, indem Sie auf die Schaltfläche \"Server hinzufügen\" klicken.",
   "GET_SERVER_KEY_METHODS_DESC": "<h3 class=\"mb-3\">Haben Sie keinen Server-Schlüssel?</h3><p class=\"mb-2\">Wenn Sie eine kostenlose VPN für den persönlichen Gebrauch benötigen, sollten Sie in Erwägung ziehen, die <a href=\"https://play.google.com/store/apps/details?id=com.vpnhood.connect.android\" target=\"_blank\">\"VpnHood! CONNECT\" App</a> zu installieren. Wenn das nicht Ihren Bedürfnissen entspricht, können Sie einen Server-Schlüssel auf folgende Weise erwerben:</p><ul class=\"ps-3\"><li class=\"mb-2\">Erhalten Sie Server-Schlüssel von Freunden, Gemeinschaften, die sie verteilen, oder Drittanbietern.</li><li>Richten Sie Ihren eigenen VpnHood-Server auf einem Server-Hosting ein und erstellen Sie selbst Server-Schlüssel.</li></ul>",
   "CHECK_FOR_UPDATE": "Auf Update prüfen",
   "EXPIRE": "Ablauf",
