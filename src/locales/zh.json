@@ -174,7 +174,7 @@
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "是的，自动连接。",
   "FREE_LOCATIONS": "免费位置",
   "PREMIUM_LOCATIONS": "高级位置",
-  "SELECTED_LOCATION_IS_PREMIUM": "选择的位置是 <span class=\\\"text-uppercase text-secondary-lighten-1\\\">高级</span>",
+  "SELECTED_LOCATION_IS_PREMIUM": "选择的位置是 <span class=\"text-uppercase text-secondary-lighten-1\">高级</span>",
   "SELECTED_LOCATION_IS_FREE": "选择的位置是<br/> <span class=\\\"text-uppercase text-secondary\\\">免费</span> 但具有 <span class=\\\"text-uppercase text-secondary-lighten-1\\\">高级</span>",
   "GO_BACK": "返回",
   "SELECTED_FREE_SERVER": "免费服务器",
