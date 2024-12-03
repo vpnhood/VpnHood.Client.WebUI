@@ -199,7 +199,7 @@
   "1_MONTH": "1 ماه",
   "EXTEND_IT": "افزایش دهید",
   "ACCOUNT": "حساب کاربری",
-  "EXTEND_PREMIUM_SESSION": "اتصال <span class=\\\"text-uppercase text-secondary-lighten-1\\\">ویژه</span> را تمدید کنید",
+  "EXTEND_PREMIUM_SESSION": "اتصال <span class=\"text-uppercase text-secondary-lighten-1\">ویژه</span> را تمدید کنید",
   "SHOW_AD": "نمایش تبلیغ",
   "EXTEND_BY_REWARDED_AD_DESC": "پس از مشاهده تبلیغ {minutes} دقیقه به زمان اتصال فعلی اضافه کنید.",
   "SUBSCRIBED_SINCE": "شروع اشتراک از",
