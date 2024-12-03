@@ -199,7 +199,7 @@
   "1_MONTH": "1 个月",
   "EXTEND_IT": "延长它",
   "ACCOUNT": "账户",
-  "EXTEND_PREMIUM_SESSION": "延长 <span class=\\\"text-uppercase text-secondary-lighten-1\\\">高级</span> 会话",
+  "EXTEND_PREMIUM_SESSION": "延长 <span class=\"text-uppercase text-secondary-lighten-1\">高级</span> 会话",
   "SHOW_AD": "显示广告",
   "EXTEND_BY_REWARDED_AD_DESC": "观看广告后将当前会话延长 {minutes} 分钟。",
   "SUBSCRIBED_SINCE": "自订阅以来",
