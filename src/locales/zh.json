@@ -58,7 +58,7 @@
   "IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY": "排除我的国家",
   "PROTOCOL": "协议",
   "PROTOCOL_TITLE": "协议",
-  "PROTOCOL_DESC": "UDP对于大量使用它的应用程序（如种子）来说要快得多，但是它可能无法与某些防火墙和代理一起使用。如果您禁用UDP，所有应用程序仍然可以工作，但是它们可能会变得慢得多。",
+  "PROTOCOL_DESC": "UDP对于大量使用它的应用程序（例如种子下载）来说速度更快，但它可能无法通过某些防火墙和代理。如果禁用UDP，所有应用程序仍能运行，但速度可能会变得非常慢。",
   "PROTOCOL_UDP": "使用 UDP",
   "PROTOCOL_UDP_DESC": "延迟较低",
   "PROTOCOL_TCP": "使用 TCP",
