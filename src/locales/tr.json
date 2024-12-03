@@ -199,7 +199,7 @@
   "1_MONTH": "1 ay",
   "EXTEND_IT": "Uzalt",
   "ACCOUNT": "Hesap",
-  "EXTEND_PREMIUM_SESSION": "<span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span> Oturumu Uzalt",
+  "EXTEND_PREMIUM_SESSION": "<span class=\"text-uppercase text-secondary-lighten-1\">Premium</span> Oturumu Uzalt",
   "SHOW_AD": "Reklam Göster",
   "EXTEND_BY_REWARDED_AD_DESC": "Reklam izledikten sonra geçerli oturuma {minutes} dakika ekleyin.",
   "SUBSCRIBED_SINCE": "Abonelik Başlangıcı",
