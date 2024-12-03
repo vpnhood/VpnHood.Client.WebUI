@@ -207,7 +207,7 @@
   "AUTO_RENEW": "تمدید خودکار",
   "EXPIRATION_TIME": "تاریخ انقضاء",
   "PRICE": "قیمت",
-  "UPGRADE_ACCOUNT_DESC": "\"حساب خود را به <span class=\\\"text-secondary-lighten-1\\\">ویژه</span> ارتقا دهید و ویژگی‌های بیشتری دریافت کنید.",
+  "UPGRADE_ACCOUNT_DESC": "\"حساب خود را به <span class=\"text-secondary-lighten-1\">ویژه</span> ارتقا دهید و ویژگی‌های بیشتری دریافت کنید.",
   "MANAGE_ON_GOOGLE_PLAY": "در Google Play مدیریت کنید",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "هیچ سرور قابل دسترسی در مکان انتخاب‌شده پیدا نشد.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "مکان اضافی دیگری برای انتخاب موجود نیست.",
