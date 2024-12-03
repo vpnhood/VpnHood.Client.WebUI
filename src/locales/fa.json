@@ -174,7 +174,7 @@
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "بله، به صورت خودکار متصل شوید.",
   "FREE_LOCATIONS": "مکان‌های رایگان",
   "PREMIUM_LOCATIONS": "مکان‌های ویژه",
-  "SELECTED_LOCATION_IS_PREMIUM": "مکان انتخاب‌شده <span class=\\\"text-uppercase text-secondary-lighten-1\\\">ویژه</span> است",
+  "SELECTED_LOCATION_IS_PREMIUM": "مکان انتخاب‌شده <span class=\"text-uppercase text-secondary-lighten-1\">ویژه</span> است",
   "SELECTED_LOCATION_IS_FREE": "\"مکان انتخاب‌شده<br/> <span class=\\\"text-uppercase text-secondary\\\">رایگان</span> است اما دارای <span class=\\\"text-uppercase text-secondary-lighten-1\\\">ویژه</span> است",
   "GO_BACK": "بازگشت",
   "SELECTED_FREE_SERVER": "سرور رایگان",
