@@ -207,7 +207,7 @@
   "AUTO_RENEW": "تجديد تلقائي",
   "EXPIRATION_TIME": "وقت الانتهاء",
   "PRICE": "السعر",
-  "UPGRADE_ACCOUNT_DESC": "قم بترقية حسابك إلى <span class=\\\"text-secondary-lighten-1\\\">مميز</span> واحصل على المزيد من الميزات.",
+  "UPGRADE_ACCOUNT_DESC": "قم بترقية حسابك إلى <span class=\"text-secondary-lighten-1\">مميز</span>  واحصل على المزيد من الميزات.",
   "MANAGE_ON_GOOGLE_PLAY": "إدارة على Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "لم أتمكن من العثور على أي خادم متاح في الموقع المحدد.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "لا توجد مواقع إضافية متاحة للاختيار.",
