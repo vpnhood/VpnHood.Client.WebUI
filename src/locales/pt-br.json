@@ -58,7 +58,7 @@
   "IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY": "Excluir meu país",
   "PROTOCOL": "Protocolo",
   "PROTOCOL_TITLE": "Protocolo",
-  "PROTOCOL_DESC": "\"UDP é muito mais rápido para apps que o utilizam intensivamente, como torrents, mas pode não funcionar com alguns firewalls e proxies. Se você desativar o UDP, todos os apps ainda funcionarão, mas podem ficar muito mais lentos.",
+  "PROTOCOL_DESC": "UDP é muito mais rápido para apps que o utilizam intensivamente, como torrents, mas pode não funcionar com alguns firewalls e proxies. Se você desativar o UDP, todos os apps ainda funcionarão, mas podem ficar muito mais lentos.",
   "PROTOCOL_UDP": "Usar UDP",
   "PROTOCOL_UDP_DESC": "Menor latência",
   "PROTOCOL_TCP": "Usar TCP",
