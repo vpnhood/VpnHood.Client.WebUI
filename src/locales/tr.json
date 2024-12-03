@@ -102,7 +102,7 @@
   "OOPS": "Hata!",
   "LOAD_APP_ERROR_DESC": "Uygulamanın çalıştırılmasında bir sorun oldu",
   "RELOAD_APP": "Uygulamayı Yeniden Yükle",
-  "NO_SERVER_AVAILABLE": "Henüz hiç sunucu eklememişsiniz. Lütfen \\\"Sunucu Ekle\\\" düğmesine tıklayarak bir sunucu ekleyin.",
+  "NO_SERVER_AVAILABLE": "Henüz hiç sunucu eklememişsiniz. Lütfen \"Sunucu Ekle\" düğmesine tıklayarak bir sunucu ekleyin.",
   "GET_SERVER_KEY_METHODS_DESC": "<h3 class=\"mb-3\">Sunucu Anahtarı Yok mu?</h3><p class=\"mb-2\">Kişisel kullanım için ücretsiz bir VPN’e ihtiyacınız varsa, <a href=\"https://play.google.com/store/apps/details?id=com.vpnhood.connect.android\" target=\"_blank\">\"VpnHood! CONNECT\" uygulamasını</a> yüklemeyi düşünün. Eğer bu ihtiyaçlarınızı karşılamıyorsa, aşağıdaki yöntemlerle bir sunucu anahtarı edinebilirsiniz:</p><ul class=\"ps-3\"><li class=\"mb-2\">Sunucu anahtarlarını arkadaşlardan, onları dağıtan topluluklardan veya üçüncü taraf satıcılardan alın.</li><li>Bir sunucu barındırmada kendi VpnHood sunucunuzu kurun ve kendiniz sunucu anahtarları oluşturun.</li></ul>",
   "CHECK_FOR_UPDATE": "Güncellemeyi kontrol et",
   "EXPIRE": "Son",
