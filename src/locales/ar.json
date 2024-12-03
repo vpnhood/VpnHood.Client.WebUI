@@ -175,7 +175,7 @@
   "FREE_LOCATIONS": "نعم، الاتصال بالتلقائي",
   "PREMIUM_LOCATIONS": "مواقع مميزة",
   "SELECTED_LOCATION_IS_PREMIUM": "الموقع المختار هو <span class=\"text-uppercase text-secondary-lighten-1\">مميز</span>",
-  "SELECTED_LOCATION_IS_FREE": "الموقع المختار هو<br/> <span class=\\\"text-uppercase text-secondary\\\">مجاني</span> ولكنه يحتوي على <span class=\\\"text-uppercase text-secondary-lighten-1\\\">مميز</span>",
+  "SELECTED_LOCATION_IS_FREE": "الموقع المختار هو<br/> <span class=\"text-uppercase text-secondary\">مجاني</span> ولكنه يحتوي على <span class=\"text-uppercase text-secondary-lighten-1\">مميز</span>",
   "GO_BACK": "رجوع",
   "SELECTED_FREE_SERVER": "خادم مجاني",
   "SELECTED_FREE_SERVER_DESC": "الاتصال بالموقع المجاني المختار",
