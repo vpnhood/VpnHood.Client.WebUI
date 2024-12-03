@@ -174,7 +174,7 @@
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sí, conectar automáticamente.",
   "FREE_LOCATIONS": "Ubicaciones Gratuitas",
   "PREMIUM_LOCATIONS": "Ubicaciones Premium",
-  "SELECTED_LOCATION_IS_PREMIUM": "Ubicación seleccionada es <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span>",
+  "SELECTED_LOCATION_IS_PREMIUM": "Ubicación seleccionada es <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
   "SELECTED_LOCATION_IS_FREE": "Ubicación seleccionada es<br/> <span class=\\\"text-uppercase text-secondary\\\">GRATUITA</span> pero tiene <span class=\\\"text-uppercase text-secondary-lighten-1\\\">PREMIUM</span>",
   "GO_BACK": "Volver",
   "SELECTED_FREE_SERVER": "Servidor Gratuito",
