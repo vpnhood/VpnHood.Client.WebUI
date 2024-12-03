@@ -36,7 +36,6 @@ function getCountdownColor(): string{
     return 'tertiary-lighten-1';
   return 'secondary-lighten-1';
 }
-console.log(`ExpirationTime: ${vhApp.data.state.sessionStatus?.accessUsage?.expirationTime}`);
 </script>
 
 <template>
