@@ -69,7 +69,7 @@
   "NEW_SERVER_ADDED": "Um novo servidor foi adicionado.",
   "LOCAL_NETWORK": "Rede local",
   "INCLUDE_LOCAL_NETWORK": "Incluir rede local (LAN)",
-  "INCLUDE_LOCAL_NETWORK_DESC": "\"Envie meus pacotes de rede local para servidores VPN.",
+  "INCLUDE_LOCAL_NETWORK_DESC": "Envie meus pacotes de rede local para servidores VPN.",
   "createServer": "Criar um servidor pessoal",
   "TUNNEL_MY_COUNTRY": "Túnel do meu país",
   "TUNNEL_MY_COUNTRY_DESC": "Você quer criar um túnel para o tráfego hospedado no seu país?",
