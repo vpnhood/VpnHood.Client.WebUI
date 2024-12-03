@@ -175,7 +175,7 @@
   "FREE_LOCATIONS": "Kostenlose Standorte",
   "PREMIUM_LOCATIONS": "Premium-Standorte",
   "SELECTED_LOCATION_IS_PREMIUM": "Ausgewählter Standort ist <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
-  "SELECTED_LOCATION_IS_FREE": "Ausgewählter Standort ist<br/> <span class=\\\"text-uppercase text-secondary\\\">Kostenlos</span>, aber hat <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span>",
+  "SELECTED_LOCATION_IS_FREE": "Ausgewählter Standort ist<br/> <span class=\"text-uppercase text-secondary\">Kostenlos</span>, aber hat <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
   "GO_BACK": "Zurück",
   "SELECTED_FREE_SERVER": "Kostenloser Server",
   "SELECTED_FREE_SERVER_DESC": "Mit dem ausgewählten kostenlosen Standort verbinden",
