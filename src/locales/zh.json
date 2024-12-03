@@ -207,7 +207,7 @@
   "AUTO_RENEW": "自动续订",
   "EXPIRATION_TIME": "到期时间",
   "PRICE": "价格",
-  "UPGRADE_ACCOUNT_DESC": "升级您的账户到 <span class=\\\"text-secondary-lighten-1\\\">高级</span> 以获得更多功能。",
+  "UPGRADE_ACCOUNT_DESC": "升级您的账户到 <span class=\"text-secondary-lighten-1\">高级</span> 以获得更多功能。",
   "MANAGE_ON_GOOGLE_PLAY": "在 Google Play 上管理",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "在选择的位置找不到可用的服务器。",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "没有其他可选择的位置。",
