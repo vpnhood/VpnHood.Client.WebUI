@@ -207,7 +207,7 @@
   "AUTO_RENEW": "Automatische Verlängerung",
   "EXPIRATION_TIME": "Ablaufzeit",
   "PRICE": "Preis",
-  "UPGRADE_ACCOUNT_DESC": "Upgraden Sie Ihr Konto auf <span class=\\\"text-secondary-lighten-1\\\">Premium</span> und erhalten Sie weitere Funktionen.",
+  "UPGRADE_ACCOUNT_DESC": "Upgraden Sie Ihr Konto auf <span class=\"text-secondary-lighten-1\">Premium</span> und erhalten Sie weitere Funktionen.",
   "MANAGE_ON_GOOGLE_PLAY": "Verwalten Sie bei Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Konnte keinen verfügbaren Server am ausgewählten Standort finden.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Es sind keine zusätzlichen Standorte zur Auswahl verfügbar.",
