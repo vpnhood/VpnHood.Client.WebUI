@@ -207,7 +207,7 @@
   "AUTO_RENEW": "Renovación automática",
   "EXPIRATION_TIME": "Hora de expiración",
   "PRICE": "Precio",
-  "UPGRADE_ACCOUNT_DESC": "Actualiza tu cuenta a <span class=\\\"text-secondary-lighten-1\\\">PREMIUM</span> y obtén más funciones.",
+  "UPGRADE_ACCOUNT_DESC": "Actualiza tu cuenta a <span class=\"text-secondary-lighten-1\">PREMIUM</span> y obtén más funciones.",
   "MANAGE_ON_GOOGLE_PLAY": "Gestionar en Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "No se pudo encontrar un servidor disponible en la ubicación seleccionada.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "No hay ubicaciones adicionales disponibles para seleccionar.",
