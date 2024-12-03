@@ -174,7 +174,7 @@
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Да, подключиться автоматически.",
   "FREE_LOCATIONS": "Бесплатные местоположения",
   "PREMIUM_LOCATIONS": "Премиум местоположения",
-  "SELECTED_LOCATION_IS_PREMIUM": "Выбранное местоположение <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Премиум</span>",
+  "SELECTED_LOCATION_IS_PREMIUM": "Выбранное местоположение <span class=\"text-uppercase text-secondary-lighten-1\">Премиум</span>",
   "SELECTED_LOCATION_IS_FREE": "Выбранное местоположение<br/> <span class=\\\"text-uppercase text-secondary\\\">БЕСПЛАТНО</span>, но имеет <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Премиум</span>",
   "GO_BACK": "Назад",
   "SELECTED_FREE_SERVER": "Бесплатный сервер",
