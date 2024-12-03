@@ -174,7 +174,7 @@
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Evet, otomatik olarak bağlan.",
   "FREE_LOCATIONS": "Ücretsiz Konumlar",
   "PREMIUM_LOCATIONS": "Premium Konumlar",
-  "SELECTED_LOCATION_IS_PREMIUM": "Seçilen Konum <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span>",
+  "SELECTED_LOCATION_IS_PREMIUM": "Seçilen Konum <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
   "SELECTED_LOCATION_IS_FREE": "Seçilen Konum<br/> <span class=\\\"text-uppercase text-secondary\\\">ÜCRETSİZ</span> ancak <span class=\\\"text-uppercase text-secondary-lighten-1\\\">Premium</span> özellikli",
   "GO_BACK": "Geri dön",
   "SELECTED_FREE_SERVER": "Ücretsiz Sunucu",
