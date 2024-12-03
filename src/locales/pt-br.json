@@ -108,7 +108,7 @@
   "EXPIRE": "Exp",
   "DEFAULT": "Padrão",
   "PLEASE_WAIT": "Por favor, aguarde",
-  "AUTHENTICATION_ERROR": ": \"Há um erro com sua conta, por favor, faça login novamente",
+  "AUTHENTICATION_ERROR": "Há um erro com sua conta, por favor, faça login novamente",
   "PER_MONTH": "/mês",
   "GLOBAL_SERVERS": "Servidores Globais",
   "GLOBAL_SERVERS_SUBTITLE": "Remover anúncios",
