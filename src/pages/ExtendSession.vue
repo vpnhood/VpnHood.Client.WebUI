@@ -18,6 +18,8 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
       await router.push('/purchase-subscription');
       break;
     case ConnectPlanId.PremiumByRewardedAd:
+      if (!vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd)
+        break;
       await showRewardedAd();
       break;
     default:
@@ -25,11 +27,15 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   }
 }
 async function showRewardedAd(){
-  showLoadingAdDialog.value = true;
-  await vhApp.apiClient.extendByRewardedAd();
-  showLoadingAdDialog.value = false;
-  vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "secondary-lighten-1", "primary-darken-2");
-  await router.replace("/");
+  try {
+    showLoadingAdDialog.value = true;
+    await vhApp.apiClient.extendByRewardedAd();
+    vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "secondary-lighten-1", "primary-darken-2");
+    await router.replace("/");
+  }
+  finally {
+    showLoadingAdDialog.value = false;
+  }
 }
 </script>
 

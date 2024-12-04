@@ -53,11 +53,14 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
       <div class="px-3">
 
         <!-- Continue as Free -->
-        <v-row v-if="!dialogData.isPremiumLocation" dense align="center"
+        <v-row v-if="!dialogData.isPremiumLocation && dialogData.normal" dense align="center"
                class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg">
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
-            <p class="text-disabled text-caption" style="line-height: 1.3">{{ locale('SELECTED_FREE_SERVER_DESC') }}</p>
+            <p class="text-disabled text-caption" style="line-height: 1.3">
+              {{ dialogData.normal === 0 ? locale('SELECTED_FREE_SERVER_DESC')
+              : locale('SELECTED_FREE_SERVER_UNLIMITED_DESC', {minutes: dialogData.normal}) }}
+            </p>
           </v-col>
           <v-col cols="auto" class="action-btn">
             <v-btn

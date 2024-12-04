@@ -75,7 +75,7 @@ onMounted(() => {
               <v-icon v-else icon="mdi-radiobox-blank" class="text-gray-lighten-1"/>
             </span>
 
-            {{ item.nativeName }}
+            <span>{{ item.nativeName }}</span>
 
             <!-- System default language name -->
             <span

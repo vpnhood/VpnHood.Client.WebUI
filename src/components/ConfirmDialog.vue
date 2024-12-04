@@ -26,13 +26,13 @@ const emit = defineEmits<{
       >
       <v-card
         :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'"
-        :class="{'pa-3' : vhApp.isConnectApp()}"
+        class="pt-2"
       >
         <!-- Title -->
         <v-card-title :class="vhApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
           <div class="d-flex align-center">
             <v-icon class="pe-3" icon="mdi-alert-circle-outline"/>
-            <h3>{{ props.title }}</h3>
+            <h4 class="text-wrap">{{ props.title }}</h4>
           </div>
           <v-divider v-if="vhApp.isConnectApp()" class="mt-3 border-opacity-25"></v-divider>
         </v-card-title>

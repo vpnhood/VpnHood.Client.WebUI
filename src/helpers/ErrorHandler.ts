@@ -35,12 +35,12 @@ export class ErrorHandler {
     console.log('Exception Type: ApiException');
     console.log('TypeName: ', err.exceptionTypeName);
     console.log("Error Infos: " + err);
-
+// TODO handle UnreachableServer
     switch (err.exceptionTypeName) {
       case 'HttpRequestException':
         return this.httpRequestExceptionHandler(err);
       case 'UnreachableServerLocation':
-        return this.unreachableServerExceptionHandler(err);
+        return this.unreachableServerExceptionHandler();
       case 'LoadAdException':
         return this.loadAdExceptionHandler(err);
       case 'SessionException':
@@ -83,13 +83,14 @@ export class ErrorHandler {
     return err.message;
   }
 
-  private static async unreachableServerExceptionHandler(err: ApiException): Promise<string> {
+  private static async unreachableServerExceptionHandler(): Promise<string> {
+    // Suggest to connect to the auto location
+    if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted
+      && VpnHoodApp.instance.data.state.clientProfile?.selectedLocationInfo?.serverLocation !== "*/*" )
+      return i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
 
     // Show the message when the user can connect to the VPN but not to the selected server
-    if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted && VpnHoodApp.instance.data.state.clientProfile?.selectedLocationInfo?.serverLocation)
-      return i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
-
-    return err.message;
+    return i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
   }
 
   private static async sessionExceptionHandler(err: ApiException): Promise<string> {

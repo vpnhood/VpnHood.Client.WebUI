@@ -224,6 +224,21 @@ function itemClass(){
         </v-list-item-title>
       </v-list-item>
 
+      <!-- Website -->
+      <v-list-item
+        :nav="true"
+        density="compact"
+        class="opacity-80"
+        href="https://www.vpnhood.com"
+        @click="emit('update:modelValue',false)"
+        target="_blank">
+
+        <v-list-item-title>
+          <v-icon icon="mdi-web" />
+          <span class="ms-3 text-caption">vpnhood.com</span>
+        </v-list-item-title>
+      </v-list-item>
+
     </v-list>
 
     <!-- Bottom section -->
@@ -277,13 +292,14 @@ function itemClass(){
 
       <!-- Powered by button -->
       <a
-        class="d-block mb-4 text-caption text-decoration-none"
+        class="d-block mb-2 text-caption text-decoration-none"
         :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2']"
         href="https://github.com/vpnhood/VpnHood"
         target="_blank"
       >
-        <span>{{ locale('POWERED_BY_VPNHOOD_ENGINE') }}</span>
-        <v-icon icon="mdi-open-in-new" class="ms-2" />
+        <span class="text-secondary">{{ locale('POWERED_BY') }}</span><br/>
+        <span>{{locale('VPNHOOD_ENGINE')}}</span>
+        <v-icon icon="mdi-open-in-new" class="ms-1" size="13" />
       </a>
     </div>
   </v-navigation-drawer>

@@ -195,7 +195,7 @@ export class VpnHoodApp {
     }
 
     // Update client profile
-    await this.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
+    await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
       isPremiumLocationSelected: new PatchOfBoolean({value: isPremium ?? false}),
       selectedLocation: new PatchOfString({value: serverLocation})
     }));
@@ -205,8 +205,7 @@ export class VpnHoodApp {
     await this.saveUserSetting();
 
     // Just for Development info
-    console.log(`Connecting to profile:  ${this.data.state.clientProfile?.clientProfileName}`);
-    console.log(`Final Server location:  ${this.data.state.clientProfile?.selectedLocationInfo?.serverLocation}`);
+    console.log(`Final Server location:  ${serverLocation}`);
     console.log(`PlanId:  ${planId}`);
 
     // Navigate to home page
@@ -278,15 +277,15 @@ export class VpnHoodApp {
   }
 
   // Show error dialog
-  public async showErrorMessage(text: string): Promise<void> {
+  public async showErrorMessage(text: string, canDiagnose?: boolean): Promise<void> {
     // Send error message to analytics
     this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
 
     const errorDialogData = this.data.uiState.errorDialogData
     errorDialogData.message = text;
-    errorDialogData.canDiagnose = this.data.state.canDiagnose;
+    errorDialogData.canDiagnose = canDiagnose ?? this.data.state.canDiagnose;
     errorDialogData.logExists = this.data.state.logExists;
-    errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE');
+    errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }

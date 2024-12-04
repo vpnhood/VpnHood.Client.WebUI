@@ -252,7 +252,7 @@ function isShowCountdown(): boolean{
       <!-- Connect button -->
       <v-btn
         height="40px"
-        width="180px"
+        min-width="180px"
         rounded="pill"
         :disabled="
           vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
@@ -270,7 +270,6 @@ function isShowCountdown(): boolean{
     <!-- Config buttons -->
     <v-col cols="12">
       <v-row>
-        <!-- TODO restore click condition -->
         <!-- Servers button -->
         <v-col cols="12" md="6" class="py-0 pa-md-1">
           <v-btn
@@ -281,9 +280,9 @@ function isShowCountdown(): boolean{
             size="small"
             prepend-icon="mdi-earth"
             class="config-item align-center mb-1"
-            @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length == 1
+            @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
-            ? vhApp.showGeneralSnackbar(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'))
+            ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
             : router.push('/servers')"
           >
             <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>

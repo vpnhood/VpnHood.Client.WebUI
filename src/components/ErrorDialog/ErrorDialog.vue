@@ -21,7 +21,7 @@ const logFileLocation: string = '/api/app/log.txt';
 
 async function changeLocationToAuto(clientProfileId: string): Promise<void> {
   await vhApp.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
-    selectedLocation: new PatchOfString({value: null})
+    selectedLocation: new PatchOfString({value: "*/*"})
   }));
   emit('update:modelValue', false);
   await ConnectManager.connect1(false);
@@ -83,7 +83,6 @@ async function sendReport(): Promise<void> {
       <v-card-actions class="flex-column px-5">
 
         <!-- Change location to auto -->
-        <!-- TODO Test it -->
         <v-btn
           v-if="dialogData.showChangeServerToAutoButton"
           rounded="pill"

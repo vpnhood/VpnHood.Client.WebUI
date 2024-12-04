@@ -22,6 +22,7 @@ export class ConnectManager {
     promoteData.showRewardedAd = options.premiumByRewardedAd;
     promoteData.showTryPremium = options.premiumByTrial;
     promoteData.showGoPremium = options.premiumByPurchase;
+    promoteData.normal = options.normal
     promoteData.isPremiumLocation = isPremium;
 
     // Show promote dialog
