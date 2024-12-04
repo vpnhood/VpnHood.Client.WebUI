@@ -171,7 +171,7 @@
   "ARE_YOU_SURE": "Вы уверены?",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Вы подключились к VPN, но все серверы в выбранном местоположении недоступны из вашего региона.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Вы подключились к VPN, но все серверы в выбранном местоположении недоступны из вашего региона. Хотите переключить местоположение на автоматическое и подключиться к доступному серверу?",
-  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Да, подключиться автоматически.",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Да, подключитесь к авто",
   "FREE_LOCATIONS": "Бесплатные местоположения",
   "PREMIUM_LOCATIONS": "Премиум местоположения",
   "SELECTED_LOCATION_IS_PREMIUM": "Выбранное местоположение <span class=\"text-uppercase text-secondary-lighten-1\">Премиум</span>",
