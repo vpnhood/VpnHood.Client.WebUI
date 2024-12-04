@@ -16,7 +16,7 @@ const props = defineProps<{
 }>();
 
 function internalConnect(serverLocation: string): void {
-  if (Util.isSingleLocation(props.locationsList.length))
+  if (!vhApp.isConnectApp() && Util.isSingleLocation(props.locationsList.length))
     return;
   ConnectManager.connect3(props.clientProfileId, serverLocation, props.isPremiumGroup, false);
 }

@@ -15,6 +15,10 @@ const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promote
 const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM') : locale('SELECTED_LOCATION_IS_FREE'));
 
+function isFreeAvailable(){
+  return !dialogData.value.isPremiumLocation && dialogData.value.normal !== null;
+}
+
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   // TODO check with trudy
   if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
@@ -29,6 +33,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
     dialogData.value.isPremiumLocation, planId);
 }
+
 </script>
 
 <template>
@@ -53,7 +58,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
       <div class="px-3">
 
         <!-- Continue as Free -->
-        <v-row v-if="!dialogData.isPremiumLocation && dialogData.normal" dense align="center"
+        <v-row v-if="isFreeAvailable()" dense align="center"
                class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg">
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
@@ -75,9 +80,9 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           </v-col>
         </v-row>
         <!-- Divider -->
-        <div v-if="!dialogData.isPremiumLocation" class="d-flex align-center justify-center my-3 mx-10">
+        <div v-if="isFreeAvailable()" class="d-flex align-center justify-center my-5 mx-10">
           <div class="w-100 border-b border-secondary-lighten-1"></div>
-          <span class="position-relative text-secondary-lighten-1 text-h6 h2 px-4">{{locale('OR')}}</span>
+          <span class="position-relative text-secondary-lighten-1 h3 px-4">{{locale('OR')}}</span>
           <div class="w-100 border-b border-secondary-lighten-1"></div>
         </div>
 

@@ -37,8 +37,8 @@ async function sendReport(): Promise<void> {
   try {
     emit('update:modelValue', false);
     const reportId: string =
-      vhApp.data.settings.clientId.substring(0, 8) + '@' +
       new Date().toISOString().substring(0, 19).replace(/:/g, '').replace(/-/g, '') + '-' +
+      vhApp.data.settings.clientId.substring(0, 8) + '@' +
       Math.random().toString().substring(2, 10);
 
     const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;

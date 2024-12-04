@@ -35,12 +35,14 @@ export class ErrorHandler {
     console.log('Exception Type: ApiException');
     console.log('TypeName: ', err.exceptionTypeName);
     console.log("Error Infos: " + err);
-// TODO handle UnreachableServer
+
     switch (err.exceptionTypeName) {
       case 'HttpRequestException':
         return this.httpRequestExceptionHandler(err);
+      case 'UnreachableServer':
+        return i18n.global.t('UNREACHABLE_SERVER_MESSAGE');
       case 'UnreachableServerLocation':
-        return this.unreachableServerExceptionHandler();
+        return this.unreachableServerLocationExceptionHandler();
       case 'LoadAdException':
         return this.loadAdExceptionHandler(err);
       case 'SessionException':
@@ -83,7 +85,7 @@ export class ErrorHandler {
     return err.message;
   }
 
-  private static async unreachableServerExceptionHandler(): Promise<string> {
+  private static async unreachableServerLocationExceptionHandler(): Promise<string> {
     // Suggest to connect to the auto location
     if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted
       && VpnHoodApp.instance.data.state.clientProfile?.selectedLocationInfo?.serverLocation !== "*/*" )
