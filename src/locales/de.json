@@ -171,7 +171,7 @@
   "ARE_YOU_SURE": "Bist du sicher?",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Sie haben sich mit dem VPN-Netzwerk verbunden, aber alle Server an Ihrem ausgewählten Standort sind von Ihrer Region aus nicht erreichbar.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Sie haben sich mit dem VPN-Netzwerk verbunden, aber alle Server an Ihrem ausgewählten Standort sind von Ihrer Region aus nicht erreichbar. Möchten Sie den Standort auf automatisch umstellen und eine erreichbare Verbindung herstellen?",
-  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Ja, automatisch verbinden.",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Ja, automatisch verbinden",
   "FREE_LOCATIONS": "Kostenlose Standorte",
   "PREMIUM_LOCATIONS": "Premium-Standorte",
   "SELECTED_LOCATION_IS_PREMIUM": "Ausgewählter Standort ist <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
