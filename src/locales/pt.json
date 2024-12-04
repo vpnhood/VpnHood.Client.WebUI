@@ -171,7 +171,7 @@
   "ARE_YOU_SURE": "Você tem certeza?",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região. Deseja mudar o local para auto e se conectar a um servidor acessível?",
-  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sim, conectar automaticamente.",
+  "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sim, conecte",
   "FREE_LOCATIONS": "Localizações gratuitas",
   "PREMIUM_LOCATIONS": "Localizações premium",
   "SELECTED_LOCATION_IS_PREMIUM": "O local selecionado é <span class=\"text-uppercase text-secondary-lighten-1\">Premium</span>",
