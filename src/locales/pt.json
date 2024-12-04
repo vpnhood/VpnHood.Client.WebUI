@@ -170,7 +170,7 @@
   "CLEAR_ALL_APPS_TITLE": "Limpar todos os aplicativos selecionados",
   "ARE_YOU_SURE": "Você tem certeza?",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região.",
-  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região. Deseja mudar o local para automático e se conectar a um servidor acessível?",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Você se conectou à rede VPN, mas todos os servidores no local selecionado estão inacessíveis da sua região. Deseja mudar o local para auto e se conectar a um servidor acessível?",
   "CONFIRM_CHANGE_LOCATION_TO_AUTO": "Sim, conectar automaticamente.",
   "FREE_LOCATIONS": "Localizações gratuitas",
   "PREMIUM_LOCATIONS": "Localizações premium",
