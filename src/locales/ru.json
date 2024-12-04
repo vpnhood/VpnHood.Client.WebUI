@@ -1,5 +1,5 @@
 {
-  "SYSTEM_DEFAULT_LANGUAGE": "Системные настройки по умолчанию",
+  "SYSTEM_DEFAULT_LANGUAGE": "Система по умолчанию",
   "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "Язык",
   "VPN_HOOD_APP_NAME": "VpnHood!",
