@@ -47,7 +47,7 @@ const tunnelClientCountry = computed<boolean>({
           :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')">
         </v-alert>
 
-        <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">
+        <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','pb-4']">
           {{ locale("TUNNEL_MY_COUNTRY_DESC") }}
         </p>
 
@@ -56,7 +56,7 @@ const tunnelClientCountry = computed<boolean>({
           <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>
               <span>{{ locale("TUNNEL_MY_COUNTRY_ON") }}</span>
-              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
+              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','text-caption ms-1']">
                 ({{ locale("TUNNEL_MY_COUNTRY_ON_DESC") }})
               </span>
             </template>
@@ -65,7 +65,7 @@ const tunnelClientCountry = computed<boolean>({
           <v-radio :value="false" color="secondary">
             <template v-slot:label>
               <span>{{ locale("TUNNEL_MY_COUNTRY_OFF") }}</span>
-              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption ms-1']">
+              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','text-caption ms-1']">
                 ({{ locale("TUNNEL_MY_COUNTRY_OFF_DESC") }})
               </span>
               <v-chip class="ms-2" size="small" color="secondary" :text="locale('RECOMMENDED')"/>

@@ -40,7 +40,6 @@ async function addAccessKey(): Promise<void> {
 }
 
 async function connect(clientProfileId:string): Promise<void>{
-
   // Close current dialog
   emit('update:modelValue', false);
 

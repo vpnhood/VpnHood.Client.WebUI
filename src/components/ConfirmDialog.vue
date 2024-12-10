@@ -26,7 +26,6 @@ const emit = defineEmits<{
       >
       <v-card
         :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'"
-        class="pt-2"
       >
         <!-- Title -->
         <v-card-title :class="vhApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">

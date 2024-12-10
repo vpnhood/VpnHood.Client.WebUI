@@ -4,7 +4,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp'
 import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { onMounted, ref } from 'vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController'
-import AddServerDialog from '@/components/Servers/AddServerDialog.vue'
 import { ComponentName } from '@/helpers/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
@@ -25,7 +24,6 @@ onMounted(() => {
        0 : 1
   });
 });
-
 
 // Show confirm dialog for delete server
 async function showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
@@ -186,9 +184,6 @@ async function saveNewClientProfileName(): Promise<void> {
       </div>
     </v-expansion-panel>
   </v-expansion-panels>
-
-  <!-- Add server dialog -->
-  <AddServerDialog v-model="ComponentRouteController.create(ComponentName.AddServerDialog).isShow"/>
 
   <!-- Rename dialog -->
   <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isShow" max-width="600">

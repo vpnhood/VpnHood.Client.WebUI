@@ -4,7 +4,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import Vuetify from '@/services/vuetify';
 import {ComponentRouteController} from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
-import {LocalStorage} from "@/helpers/UiConstants";
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
@@ -34,7 +33,7 @@ onMounted(async () => {
   }, 1000);
 
   // Show privacy policy if app is VpnHoodCONNECT
-  if (vhApp.isConnectApp() && !localStorage.getItem(LocalStorage.acceptedPrivacyPolicy)) {
+  if (vhApp.isConnectApp() && !vhApp.data.settings.userSettings.isLicenseAccepted) {
     isShowPrivacyPolicyDialog.value = true;
     return;
   }

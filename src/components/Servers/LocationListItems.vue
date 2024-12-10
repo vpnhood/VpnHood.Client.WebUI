@@ -95,13 +95,13 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
               <span>{{ location.countryName }}</span>
 
               <!-- Only if server has nested item -->
-              <span
+<!--              <span
                 v-if="Util.isLocationAutoSelected(location.regionName)"
                 class="text-caption ms-1"
                 :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1']"
               >
               ({{ locale('AUTO_SELECT') }})
-            </span>
+            </span>-->
             </div>
           </template>
 

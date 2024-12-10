@@ -229,7 +229,7 @@ function itemClass(){
         :nav="true"
         density="compact"
         class="opacity-80"
-        href="https://www.vpnhood.com"
+        href="https://www.vpnhood.com/home"
         @click="emit('update:modelValue',false)"
         target="_blank">
 

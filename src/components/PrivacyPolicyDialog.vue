@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {LocalStorage} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 const vhApp = VpnHoodApp.instance;
@@ -13,7 +12,8 @@ const emit = defineEmits<{
 }>();
 
 async function accept(): Promise<void>{
-  localStorage.setItem(LocalStorage.acceptedPrivacyPolicy, "true");
+  vhApp.data.settings.userSettings.isLicenseAccepted = true;
+  await vhApp.saveUserSetting();
   try {
     await vhApp.loadAccount();
   }
