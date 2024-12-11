@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import vue from '@vitejs/plugin-vue';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import legacy from '@vitejs/plugin-legacy';
+import autoprefixer from 'autoprefixer';
+import postcssPresetEnv from 'postcss-preset-env';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,12 +19,20 @@ export default defineConfig({
       compositionOnly: false,
       fullInstall: true,
     }),
-    //----- Handle legacy browsers
+    //--- Handle legacy browsers ---
     legacy({
-      targets: ['Chrome >= 69']
-    })
-    //---------------------------
+      targets: ['Chrome >= 69'],
+    }),
+    //------------------------------
   ],
+  css: {
+    postcss: {
+      plugins: [
+        autoprefixer(),
+        postcssPresetEnv()
+      ]
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

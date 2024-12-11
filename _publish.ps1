@@ -1,7 +1,7 @@
 $solutionDir = Join-Path -Path (Split-Path -parent $PSScriptRoot) -ChildPath "VpnHood";
 
 $distDir= "$PSScriptRoot\dist"
-$spaZipFile= "$solutionDir\VpnHood.Client.App.Resources\Resources\SPA.zip";
+$spaZipFile= "$solutionDir\VpnHood.Client.App.Libs\VpnHood.Client.App.Resources\Resources\SPA.zip";
 
 # build output
 try {

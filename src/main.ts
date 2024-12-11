@@ -1,7 +1,7 @@
-//----- Handle legacy browsers
+//--- Handle legacy browsers ---
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-//----------------------------
+//------------------------------
 import {createApp} from 'vue'
 import App from './App.vue'
 import { VpnHoodApp } from './services/VpnHoodApp'
