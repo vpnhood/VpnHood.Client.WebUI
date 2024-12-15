@@ -216,5 +216,6 @@
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Seçilebilecek ek konum yok.",
   "EXTEND_BY_REWARDED_AD_NOTE": "Lütfen reklam bitene kadar uygulamada kalın. Uygulamadan çıkarsanız oturumunuz uzatılmayacaktır.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Tebrikler! Oturumunuz başarıyla uzatıldı.",
-  "NOTE": "Dikkat"
+  "NOTE": "Dikkat",
+  "SEARCH": "Arama"
 }
