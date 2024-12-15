@@ -216,5 +216,6 @@
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "Es sind keine zusätzlichen Standorte zur Auswahl verfügbar.",
   "EXTEND_BY_REWARDED_AD_NOTE": "Bitte bleiben Sie in der App, bis die Anzeige beendet ist. Wenn Sie die App verlassen, wird Ihre Sitzung nicht verlängert.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Herzlichen Glückwunsch! Ihre Sitzung wurde erfolgreich verlängert.",
-  "NOTE": "Hinweis"
+  "NOTE": "Hinweis",
+  "SEARCH": "Suchen"
 }
