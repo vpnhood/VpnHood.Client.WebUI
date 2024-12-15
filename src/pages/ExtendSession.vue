@@ -86,7 +86,7 @@ async function showRewardedAd(){
           :ripple="false"
           color="secondary"
           prepend-icon="mdi-chevron-left"
-          class="opacity-60 text-capitalize align-self-start px-0 mt-3"
+          class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
           @click="router.go(-1)"
         />

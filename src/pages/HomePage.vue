@@ -177,7 +177,7 @@ function isShowCountdown(): boolean{
   <v-row
     align-content="space-between"
     justify="center"
-    class="h-100 px-md-2 pb-3 ma-0"
+    class="fill-height px-md-2 pb-3 ma-0"
   >
     <!-- Go Premium or Countdown button -->
     <v-col cols="12" class="text-center pt-0">

@@ -20,7 +20,7 @@ function isFreeAvailable(){
 }
 
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
-  // TODO check with trudy
+  // TODO: check with trudy
   if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
     throw new Error("Could not found required data.");
 
@@ -126,7 +126,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           :ripple="false"
           color="secondary"
           prepend-icon="mdi-chevron-left"
-          class="opacity-60 text-capitalize align-self-start px-0 mt-3"
+          class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
           @click="router.go(-1)"
         />

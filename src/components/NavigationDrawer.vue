@@ -43,6 +43,7 @@ function mergedAppAndUiVersion(): string {
     appVersion[appVersion.length - 1] = uiVersion[2];
     return appVersion.join('.');
   } else {
+    console.error('could not find UI package version.');
     return vhApp.data.features.version;
   }
 }
@@ -110,7 +111,7 @@ function itemClass(){
 
     </div>
 
-    <!-- TODO create component -->
+    <!-- TODO: create component -->
     <!-- Menu items -->
     <v-list dense class="pt-0">
 

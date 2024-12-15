@@ -52,7 +52,7 @@ export class ErrorHandler {
     }
 
     // Just for VpnHoodConnect
-    //TODO Test error
+    //TODO: Test error
     if (VpnHoodApp.instance.isConnectApp() && err.message === 'Session has been closed.') {
       await VpnHoodApp.instance.signOut();
       return null;
@@ -96,12 +96,12 @@ export class ErrorHandler {
   }
 
   private static async sessionExceptionHandler(err: ApiException): Promise<string> {
-    // TODO implement error messages
+    // TODO: implement error messages
     return err.message;
   }
 
   private static async loadAdExceptionHandler(err: ApiException): Promise<string> {
-    // TODO implement error messages
+    // TODO: implement error messages
     return err.message;
   }
 

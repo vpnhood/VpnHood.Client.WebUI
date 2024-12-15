@@ -19,6 +19,7 @@ import './assets/styles/rtl.css'
 async function main(): Promise<void> {
   try {
     console.log("Current Mode: " + import.meta.env.MODE);
+
     // Init app
     const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
     const app = createApp(App);
@@ -31,6 +32,7 @@ async function main(): Promise<void> {
     if (isUserSetDefaultLanguage) i18n.global.locale.value = vpnHoodApp.data.state.currentUiCultureInfo.code;
     // Set Vuetify current language
     vuetify.locale.current.value = i18n.global.locale.value;
+
 
     // Add language code as class to the body element
     window.document.body.classList.add(i18n.global.locale.value);

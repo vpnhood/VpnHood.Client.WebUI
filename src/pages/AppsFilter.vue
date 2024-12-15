@@ -127,7 +127,7 @@ async function actionOnConfirm() {
       rounded="pill"
       :disabled="vhApp.isConnected()"
       density="comfortable"
-      class="text-caption me-3"
+      class="d-inline-flex text-caption me-3"
       :text="locale('SELECT_ALL')"
       @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
     />
@@ -138,7 +138,7 @@ async function actionOnConfirm() {
       rounded="pill"
       :disabled="vhApp.isConnected()"
       density="comfortable"
-      class="text-caption"
+      class="d-inline-flex text-caption"
       :text="locale('CLEAR_ALL')"
       @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
     />

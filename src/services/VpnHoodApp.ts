@@ -264,7 +264,12 @@ export class VpnHoodApp {
 
   public analyticsLogEvent(eventName: string, eventParams: object) {
     if (!this.analytics) return;
-    logEvent(this.analytics, eventName, eventParams);
+    try {
+      logEvent(this.analytics, eventName, eventParams);
+    }
+    catch (err: unknown){
+      console.error(`An error occurred while logging event to Analytics. Error: ${err}`);
+    }
   }
 
   // Get error message

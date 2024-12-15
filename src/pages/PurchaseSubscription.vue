@@ -118,7 +118,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
         <v-row justify="space-between" class="mx-0">
           <v-col cols="auto" class="d-flex ga-1 align-items-center">
             <v-icon icon="mdi-crown" size="23" color="tertiary-lighten-1"/>
-            <!-- TODO must change to subscriptionPlanId -->
+            <!-- TODO: must change to subscriptionPlanId -->
             <span class="font-weight-bold text-body-1">{{locale('1_MONTH')}}</span>
           </v-col>
           <v-col cols="auto">
@@ -152,13 +152,13 @@ async function closeOnPurchaseComplete(): Promise<void> {
           :ripple="false"
           color="secondary"
           prepend-icon="mdi-chevron-left"
-          class="opacity-60 text-capitalize align-self-start px-0 mt-3"
+          class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
           @click="router.go(-1)"
         />
       </div>
 
-      <!-- TODO review after enable more subscriptions -->
+      <!-- TODO: review after enable more subscriptions -->
         <!-- Multi Plans -->
 <!--        <v-list v-if="subscriptionPlans.length > 1" bg-color="transparent">
           &lt;!&ndash; Plan item &ndash;&gt;

@@ -52,9 +52,10 @@ onMounted(async () => {
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
+    <!-- DO NOT REMOVE 'fill-height' class to support legacy browsers -->
     <v-main
       id="mainBg"
-      :class="[Vuetify.display.mdAndUp.value? 'not-mobile rounded-lg mx-auto my-10' : '','w-100']"
+      :class="[Vuetify.display.mdAndUp.value? 'not-mobile rounded-lg mx-auto my-10' : '','w-100 fill-height']"
       :style="[Vuetify.display.mdAndUp.value ? 'max-width:850px;' : '']"
     >
 
@@ -83,6 +84,7 @@ onMounted(async () => {
   /*noinspection CssUnresolvedCustomProperty*/
   background-image: linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
   position: relative;
+  z-index: 0;
 }
 
 #mainBg:before {
@@ -94,6 +96,7 @@ onMounted(async () => {
   left: 0;
   background: url("@/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
+  z-index: -1;
 }
 
 /*noinspection CssUnusedSymbol*/
@@ -114,6 +117,7 @@ onMounted(async () => {
   }
 }
 
+/*** Android TV background ***/
 #appContainer:before {
   content: "";
   position: absolute;
