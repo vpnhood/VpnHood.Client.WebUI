@@ -216,5 +216,6 @@
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "No hay ubicaciones adicionales disponibles para seleccionar.",
   "EXTEND_BY_REWARDED_AD_NOTE": "Por favor, permanece en la aplicación hasta que termine el anuncio. Si sales de la aplicación, tu sesión no será extendida.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "¡Felicidades! Tu sesión ha sido extendida con éxito.",
-  "NOTE": "Nota"
+  "NOTE": "Nota",
+  "SEARCH": "Buscar"
 }
