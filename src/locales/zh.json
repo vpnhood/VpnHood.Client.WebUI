@@ -216,5 +216,6 @@
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "没有其他可选择的位置。",
   "EXTEND_BY_REWARDED_AD_NOTE": "请留在应用程序中直到广告结束。如果您离开应用程序，您的会话将不会延长。",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "恭喜！您的会话已成功延长。",
-  "NOTE": "注意"
+  "NOTE": "注意",
+  "SEARCH": "搜索"
 }
