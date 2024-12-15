@@ -4,7 +4,7 @@ import AppBar from "@/components/AppBar.vue";
 import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
@@ -23,6 +23,15 @@ enum ConfirmDialogAction {
 const showConfirmDialog = ref<boolean>(false);
 const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
+const search = ref<string | null>(null);
+
+const appList = computed<IMyInstalledApps[]>(() => {
+  if (search.value == null)
+    return myInstalledApps.value;
+
+  const searchText = search.value.toLowerCase();
+  return myInstalledApps.value.filter(x => x.appName.toLowerCase().includes(searchText));
+})
 
 onMounted(async () => {
   if (vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported) {
@@ -146,8 +155,25 @@ async function actionOnConfirm() {
     <!-- Filter apps option -->
     <v-card :color="vhApp.isConnectApp() ? 'background' : ''" class="mt-3">
 
-      <!-- Apps list -->
-      <v-card-item class="px-0 pb-0">
+      <!-- Search box -->
+      <v-card-item>
+        <v-text-field
+          v-model="search"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          single-line
+          density="compact"
+          rounded="pill"
+          color="secondary"
+          clearable
+          hide-details
+          :placeholder="locale('SEARCH')"
+          :disabled="myInstalledApps.length < 1"
+          id="appSearchField"
+        >
+        </v-text-field>
+      </v-card-item>
+
 
         <!-- Loading list -->
         <v-progress-linear v-if="myInstalledApps.length < 1" color="secondary" indeterminate />
@@ -163,7 +189,7 @@ async function actionOnConfirm() {
           selectable
         >
           <v-list-item
-            v-for="app in myInstalledApps"
+            v-for="app in appList"
             :key="app.appId"
             :value="app.appId"
             :title="app.appName"
@@ -189,7 +215,7 @@ async function actionOnConfirm() {
             </template>
           </v-list-item>
         </v-list>
-      </v-card-item>
+
     </v-card>
   </v-sheet>
 
@@ -211,5 +237,9 @@ async function actionOnConfirm() {
 
 #appFilterList .v-list-item__overlay{
   opacity: 0;
+}
+
+#appSearchField{
+  font-size: 13px;
 }
 </style>
