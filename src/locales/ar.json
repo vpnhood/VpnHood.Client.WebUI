@@ -216,5 +216,6 @@
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "لا توجد مواقع إضافية متاحة للاختيار.",
   "EXTEND_BY_REWARDED_AD_NOTE": "يرجى البقاء في التطبيق حتى ينتهي الإعلان. إذا غادرت التطبيق، لن يتم تمديد جلستك.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "تهانينا! تم تمديد جلستك بنجاح.",
-  "NOTE": "ملاحظة"
+  "NOTE": "ملاحظة",
+  "SEARCH": "بحث"
 }
