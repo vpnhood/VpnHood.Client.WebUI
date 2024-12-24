@@ -168,6 +168,22 @@ function isShowCountdown(): boolean{
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
   return !isPremiumAccount && hasExpireTime;
 }
+function getActiveServerNameOrLocation(): string {
+  // App is VpnHoodClient
+  if (!vhApp.isSingleServerMode() && !vhApp.isConnectApp())
+    return (vhApp.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
+
+  // App is VpnHoodCONNECT
+  const serverLocationInfo = vhApp.data.state.serverLocationInfo ?? vhApp.data.state.clientProfile?.selectedLocationInfo;
+  if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
+    return i18n.global.t('AUTO_SELECT');
+
+  const text = Util.isLocationAutoSelected(serverLocationInfo.regionName)
+    ? serverLocationInfo.countryName
+    : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
+
+  return text.replace('United States (', 'USA (');
+}
 </script>
 
 <template>
@@ -185,21 +201,19 @@ function isShowCountdown(): boolean{
       <!-- Countdown and extend session button -->
       <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
 
-      <!-- Go Premium button -->
-      <div v-else-if="vhApp.data.features.isBillingSupported">
+      <!-- You are premium button go to account -->
+      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount"
+              prepend-icon="mdi-crown"
+              :text="locale('YOU_ARE_PREMIUM')"
+              color="secondary-lighten-1"
+              variant="tonal"
+              tag="h6"
+              @click="router.push('/account')"
+      />
 
-        <!-- Go Premium Server button for premium user -->
-        <v-chip v-if="vhApp.data.state.clientProfile?.isPremiumAccount"
-                prepend-icon="mdi-crown"
-                :text="locale('YOU_ARE_PREMIUM')"
-                color="secondary-lighten-1"
-                variant="tonal"
-                tag="h6"
-                @click="router.push('/account')"
-        />
-
-        <!-- Go Premium button for guest and normal user -->
-        <v-btn v-else
+        <!-- Go Premium button for guest user -->
+        <v-btn
+          v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
           :flat="true"
           variant="outlined"
           color="tertiary"
@@ -217,8 +231,6 @@ function isShowCountdown(): boolean{
           />
           {{ locale('GO_PREMIUM') }}
         </v-btn>
-
-      </div>
 
     </v-col>
 
@@ -291,7 +303,7 @@ function isShowCountdown(): boolean{
               class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate"
               tabindex="-1"
             >
-              {{ vhApp.getActiveServerNameOrLocation() }}
+              {{ getActiveServerNameOrLocation() }}
             </span>
 
             <template v-slot:append>

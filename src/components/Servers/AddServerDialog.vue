@@ -16,9 +16,9 @@ const emit = defineEmits<{
 }>();
 
 const accessKey = ref<string>('');
-const accessKeyErrorMessage = ref<string>('');
-const accessKeyPrefix = ref<string>('vh://');
+const accessKeyErrorMessage = ref<string | null>(null);
 
+// TODO: remove if unnecessary
 onUpdated(() => {
   if (!props.modelValue) {
     accessKey.value = '';
@@ -74,7 +74,7 @@ async function connect(clientProfileId:string): Promise<void>{
         <v-text-field
           v-model="accessKey"
           :error-messages="accessKeyErrorMessage"
-          :placeholder="accessKeyPrefix"
+          placeholder="vh://"
           @input="addAccessKey()"
           append-inner-icon="mdi-key"
           spellcheck="false"

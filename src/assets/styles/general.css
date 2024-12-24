@@ -47,6 +47,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 }
 @keyframes translate-y {
     0% {transform: translateY(0px);}
-    50% {transform: translateY(-28px);}
+    50% {transform: translateY(-19px);}
     100% {transform: translateY(0px);}
 }

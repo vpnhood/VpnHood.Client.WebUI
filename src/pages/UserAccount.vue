@@ -4,7 +4,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppPackageName } from '@/helpers/UiConstants';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import router from '@/services/router';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
@@ -13,6 +13,12 @@ const locale = i18n.global.t;
 const userAccount = vhApp.data.userState.userAccount;
 const showConfirmSignOut = ref<boolean>(false);
 const isPremiumAccount = ref<boolean>(vhApp.data.state.clientProfile?.isPremiumAccount ?? false);
+
+// Get refreshed account data if user has active subscription
+onMounted(async () => {
+  if (vhApp.data.userState.userAccount?.subscriptionId)
+    await vhApp.loadAccount(true);
+})
 
 function onSignOut() {
   showConfirmSignOut.value = false;
@@ -132,8 +138,7 @@ function formatDate(date: Date | null | undefined): string | null{
             rounded="pill"
             color="secondary-lighten-1"
             size="small"
-            :href="'https://play.google.com/store/account/subscriptions?sku='+ userAccount?.providerSubscriptionId +
-        '&package=' + vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient"
+            :href="`https://play.google.com/store/account/subscriptions?sku=${userAccount?.providerSubscriptionId}&package=${vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient}`"
             target="_blank"
           />
         </v-card-actions>

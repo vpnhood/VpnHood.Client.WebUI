@@ -117,7 +117,7 @@ function itemClass(){
 
       <!-- Go premium or Change subscription -->
       <v-list-item
-        v-if="vhApp.data.features.isAccountSupported && !vhApp.data.state.clientProfile?.isPremiumAccount"
+        v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         :class="itemClass()"
         @click="router.replace('/purchase-subscription'); emit('update:modelValue', false)"
       >

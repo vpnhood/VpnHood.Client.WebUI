@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import { ConnectManager } from '@/helpers/ConnectManager';
 import i18n from '@/locales/i18n';
 import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
+import { UiConstants } from '@/helpers/UiConstants';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
@@ -17,7 +18,6 @@ const emit = defineEmits<{
 }>();
 
 const dialogData = computed(() => vhApp.data.uiState.errorDialogData);
-const logFileLocation: string = '/api/app/log.txt';
 
 async function changeLocationToAuto(clientProfileId: string): Promise<void> {
   await vhApp.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
@@ -45,7 +45,7 @@ async function sendReport(): Promise<void> {
     window.open(link, 'VpnHood-BugReport');
 
     // get report
-    const url: string = vhApp.data.serverUrl + logFileLocation;
+    const url: string = vhApp.data.serverUrl + UiConstants.logFileLocation;
     const response: Response = await fetch(url);
     const log: Blob = await response.blob();
 
@@ -96,7 +96,7 @@ async function sendReport(): Promise<void> {
 
         <!-- Diagnose -->
         <v-btn
-          v-if="dialogData.canDiagnose"
+          v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
           rounded="pill"
           variant="flat"
           block
@@ -107,20 +107,20 @@ async function sendReport(): Promise<void> {
 
         <!-- OpenReport -->
         <v-btn
-          v-if="dialogData.logExists"
+          v-if="dialogData.promptForLog"
           rounded="pill"
           variant="flat"
           block
           prepend-icon="mdi-open-in-new"
           class="text-center mb-4 text-secondary"
-          :href="vhApp.data.serverUrl + logFileLocation"
+          :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
           :text="locale('OPEN_REPORT')"
           target="_blank"
         />
 
         <!-- SendReport -->
         <v-btn
-          v-if="dialogData.logExists"
+          v-if="dialogData.promptForLog"
           rounded="pill"
           variant="flat"
           block

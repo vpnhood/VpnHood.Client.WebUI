@@ -97,7 +97,9 @@ function listHasGroup(): boolean{
 <!--suppress CssUnusedSymbol -->
 <style>
 .server-item-group>.v-list-item__overlay{display: none;}
-.server-item-group .v-list-item__content{margin-right: -25px;}
+.server-item-group .v-list-item__append > .v-icon ~ .v-list-item__spacer{
+  width: 10px;
+}
 .v-list-group__items .v-list-item{
   padding-inline-start: 7px !important;
   margin: 0 15px;

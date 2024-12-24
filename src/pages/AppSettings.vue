@@ -4,8 +4,8 @@ import { LanguagesCode } from '@/helpers/UiConstants'
 import { computed } from 'vue'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
-import vuetify from '@/services/vuetify';
 import router from '@/services/router';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance
 const locale = i18n.global.t;
@@ -58,9 +58,7 @@ const includeLocalNetwork = computed({
           <!-- Button icon -->
           <v-icon
             :color="vhApp.isConnectApp() ? 'white' : 'black'"
-            :icon="
-              vuetify.locale.isRtl.value ? 'mdi-chevron-left' : 'mdi-chevron-right'
-            "
+            :icon="Util.getLocalizedRightChevron()"
           />
         </template>
       </v-btn>
@@ -100,7 +98,7 @@ const includeLocalNetwork = computed({
         class="mb-2 text-caption"
         density="compact"
         type="warning"
-      ></v-alert>
+      />
 
       <v-row class="align-center justify-space-between">
         <v-col>{{ locale('INCLUDE_LOCAL_NETWORK') }}</v-col>

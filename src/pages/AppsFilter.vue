@@ -124,68 +124,78 @@ async function actionOnConfirm() {
 <template>
   <AppBar :page-title="locale('APP_FILTER')"/>
 
-  <v-sheet :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
+  <v-sheet
+    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
+    class="pt-0 pb-5"
+  >
 
-    <!-- Disconnecting alert -->
-    <v-alert v-if="vhApp.isConnected()" class="mb-5 text-caption" density="compact" :icon="false" type="warning"
-             :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"></v-alert>
-
-    <v-btn
-      prepend-icon="mdi-select-all"
-      variant="tonal"
-      rounded="pill"
-      :disabled="vhApp.isConnected()"
-      density="comfortable"
-      class="d-inline-flex text-caption me-3"
-      :text="locale('SELECT_ALL')"
-      @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
+    <!-- Disconnect required alert -->
+    <v-alert v-if="vhApp.isConnected()"
+       class="text-caption mt-5"
+       density="compact"
+       :icon="false"
+       type="warning"
+       :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
     />
 
-    <v-btn
-      prepend-icon="mdi-select-remove"
-      variant="tonal"
+    <!-- Select all apps button -->
+    <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
+    <div class="mt-5">
+      <v-btn
+        prepend-icon="mdi-select-all"
+        variant="tonal"
+        rounded="pill"
+        :disabled="vhApp.isConnected()"
+        density="comfortable"
+        class="d-inline-flex text-caption me-2"
+        :text="locale('SELECT_ALL')"
+        @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
+      />
+
+      <!-- Remove all apps button -->
+      <v-btn
+        prepend-icon="mdi-select-remove"
+        variant="tonal"
+        rounded="pill"
+        :disabled="vhApp.isConnected()"
+        density="comfortable"
+        class="d-inline-flex text-caption"
+        :text="locale('CLEAR_ALL')"
+        @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
+      />
+    </div>
+
+    <!-- Search box -->
+    <v-text-field
+      v-model="search"
+      single-line
+      clearable
+      hide-details
+      prepend-inner-icon="mdi-magnify"
+      variant="outlined"
+      density="compact"
       rounded="pill"
-      :disabled="vhApp.isConnected()"
-      density="comfortable"
-      class="d-inline-flex text-caption"
-      :text="locale('CLEAR_ALL')"
-      @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
-    />
+      color="secondary"
+      id="appSearchField"
+      :placeholder="locale('SEARCH')"
+      :disabled="myInstalledApps.length < 1"
+      class="mt-5"
+    >
+    </v-text-field>
 
     <!-- Filter apps option -->
-    <v-card :color="vhApp.isConnectApp() ? 'background' : ''" class="mt-3">
-
-      <!-- Search box -->
-      <v-card-item>
-        <v-text-field
-          v-model="search"
-          prepend-inner-icon="mdi-magnify"
-          variant="outlined"
-          single-line
-          density="compact"
-          rounded="pill"
-          color="secondary"
-          clearable
-          hide-details
-          :placeholder="locale('SEARCH')"
-          :disabled="myInstalledApps.length < 1"
-          id="appSearchField"
-        >
-        </v-text-field>
-      </v-card-item>
-
-
-        <!-- Loading list -->
-        <v-progress-linear v-if="myInstalledApps.length < 1" color="secondary" indeterminate />
-
+    <v-card
+      :color="vhApp.isConnectApp() ? 'background' : ''"
+      :loading="myInstalledApps.length < 1"
+      class="fill-height mt-5"
+    >
         <!-- Apps list -->
         <v-list
-          v-else
+          v-if="myInstalledApps.length > 1"
           id="appFilterList"
           select-strategy="classic"
           bg-color="transparent"
           :disabled="vhApp.isConnected()"
-          class="py-0"
           selectable
         >
           <v-list-item

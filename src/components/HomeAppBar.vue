@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import { ComponentName } from '@/helpers/UiConstants';
+import { ComponentName, UiConstants } from '@/helpers/UiConstants';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 
@@ -80,21 +80,20 @@ async function saveDebugData() {
 
       <v-card-item class="mb-8">
         <v-text-field v-model="debugData1" clearable hide-details label="DebugData1" class="mb-4"/>
-        <v-text-field v-model="debugData2" clearable hide-details label="DebugData2"/>
+        <v-text-field v-model="debugData2" clearable hide-details label="DebugData2" class="mb-4"/>
+        <!-- Open log file -->
+        <v-btn
+          color="secondary"
+          block
+          text="Open log"
+          :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
+          target="_blank"
+        />
       </v-card-item>
 
       <v-divider class="border-opacity-25"></v-divider>
       <v-card-actions>
         <v-spacer/>
-        <!-- Save and closeDialog -->
-        <v-btn
-          rounded="pill"
-          variant="text"
-          class="px-4"
-          text="Ok"
-          @click="saveDebugData()"
-        />
-
         <!-- Cancel -->
         <v-btn
           rounded="pill"
@@ -102,6 +101,15 @@ async function saveDebugData() {
           class="px-4"
           text="Cancel"
           @click="isShowDebugDialog = false"
+        />
+
+        <!-- Ok -->
+        <v-btn
+          rounded="pill"
+          variant="text"
+          class="px-4"
+          text="Ok"
+          @click="saveDebugData()"
         />
       </v-card-actions>
     </v-card>

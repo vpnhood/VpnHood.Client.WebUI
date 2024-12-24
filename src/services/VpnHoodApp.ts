@@ -183,7 +183,7 @@ export class VpnHoodApp {
     }
   }
 
-  public async connect(clientProfileId: string, serverLocation: string, isPremium: boolean, planId: ConnectPlanId,
+  public async connect(clientProfileId: string, serverLocation: string | undefined, isPremium: boolean, planId: ConnectPlanId,
                        isDiagnose: boolean = false): Promise<void> {
 
     // User select active item and already connected
@@ -289,7 +289,7 @@ export class VpnHoodApp {
     const errorDialogData = this.data.uiState.errorDialogData
     errorDialogData.message = text;
     errorDialogData.canDiagnose = canDiagnose ?? this.data.state.canDiagnose;
-    errorDialogData.logExists = this.data.state.logExists;
+    errorDialogData.promptForLog = this.data.state.promptForLog;
     errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
@@ -339,23 +339,6 @@ export class VpnHoodApp {
 
   public isSingleServerMode(): boolean {
     return this.isConnectApp() && this.data.clientProfileInfos.length === 1;
-  }
-
-  public getActiveServerNameOrLocation(): string {
-    // App is VpnHoodClient
-    if (!this.isSingleServerMode())
-      return (this.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
-
-    // App is VpnHoodCONNECT
-    const serverLocationInfo = this.data.state.serverLocationInfo ?? this.data.state.clientProfile?.selectedLocationInfo;
-    if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
-      return i18n.global.t('AUTO_SELECT');
-
-    const text = Util.isLocationAutoSelected(serverLocationInfo.regionName)
-      ? serverLocationInfo.countryName
-      : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
-
-    return text.replace('United States (', 'USA (');
   }
 
   public isConnected(): boolean {
@@ -412,9 +395,14 @@ export class VpnHoodApp {
     await this.loadAccount();
   }
 
-  public async loadAccount(): Promise<void> {
+  public async loadAccount(clearCache: boolean = false): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
+    if (clearCache)
+      await accountClient.refresh();
+
     this.data.userState.userAccount = await accountClient.get();
+    // For developer
+    console.log(this.data.userState.userAccount);
     await this.reloadSettings();
   }
 }

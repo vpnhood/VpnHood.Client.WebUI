@@ -87,7 +87,7 @@ export class ErrorHandler {
 
   private static async unreachableServerLocationExceptionHandler(): Promise<string> {
     // Suggest to connect to the auto location
-    if (!VpnHoodApp.instance.data.state.hasDiagnoseStarted
+    if (!VpnHoodApp.instance.data.state.hasDiagnoseRequested
       && VpnHoodApp.instance.data.state.clientProfile?.selectedLocationInfo?.serverLocation !== "*/*" )
       return i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
 

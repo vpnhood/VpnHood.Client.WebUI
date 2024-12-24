@@ -253,7 +253,7 @@ export class AccountClient {
         return Promise.resolve<void>(null as any);
     }
 
-    getAccessKeys(subscriptionId: string, cancelToken?: CancelToken): Promise<string[]> {
+    listAccessKeys(subscriptionId: string, cancelToken?: CancelToken): Promise<string[]> {
         let url_ = this.baseUrl + "/api/account/subscriptions/{subscriptionId}/access-keys";
         if (subscriptionId === undefined || subscriptionId === null)
             throw new Error("The parameter 'subscriptionId' must be defined.");
@@ -276,11 +276,11 @@ export class AccountClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetAccessKeys(_response);
+            return this.processListAccessKeys(_response);
         });
     }
 
-    protected processGetAccessKeys(response: AxiosResponse): Promise<string[]> {
+    protected processListAccessKeys(response: AxiosResponse): Promise<string[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1581,6 +1581,7 @@ export interface IAppData {
 }
 
 export class AppFeatures implements IAppFeatures {
+    appId!: string;
     version!: string;
     isExcludeAppsSupported!: boolean;
     isIncludeAppsSupported!: boolean;
@@ -1595,6 +1596,7 @@ export class AppFeatures implements IAppFeatures {
     isAlwaysOnSupported!: boolean;
     gaMeasurementId?: string | null;
     clientId!: string;
+    isDebugMode!: boolean;
 
     constructor(data?: IAppFeatures) {
         if (data) {
@@ -1607,6 +1609,7 @@ export class AppFeatures implements IAppFeatures {
 
     init(_data?: any) {
         if (_data) {
+            this.appId = _data["appId"] !== undefined ? _data["appId"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
             this.isExcludeAppsSupported = _data["isExcludeAppsSupported"] !== undefined ? _data["isExcludeAppsSupported"] : <any>null;
             this.isIncludeAppsSupported = _data["isIncludeAppsSupported"] !== undefined ? _data["isIncludeAppsSupported"] : <any>null;
@@ -1621,6 +1624,7 @@ export class AppFeatures implements IAppFeatures {
             this.isAlwaysOnSupported = _data["isAlwaysOnSupported"] !== undefined ? _data["isAlwaysOnSupported"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
+            this.isDebugMode = _data["isDebugMode"] !== undefined ? _data["isDebugMode"] : <any>null;
         }
     }
 
@@ -1633,6 +1637,7 @@ export class AppFeatures implements IAppFeatures {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["appId"] = this.appId !== undefined ? this.appId : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         data["isExcludeAppsSupported"] = this.isExcludeAppsSupported !== undefined ? this.isExcludeAppsSupported : <any>null;
         data["isIncludeAppsSupported"] = this.isIncludeAppsSupported !== undefined ? this.isIncludeAppsSupported : <any>null;
@@ -1647,11 +1652,13 @@ export class AppFeatures implements IAppFeatures {
         data["isAlwaysOnSupported"] = this.isAlwaysOnSupported !== undefined ? this.isAlwaysOnSupported : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
+        data["isDebugMode"] = this.isDebugMode !== undefined ? this.isDebugMode : <any>null;
         return data;
     }
 }
 
 export interface IAppFeatures {
+    appId: string;
     version: string;
     isExcludeAppsSupported: boolean;
     isIncludeAppsSupported: boolean;
@@ -1666,6 +1673,7 @@ export interface IAppFeatures {
     isAlwaysOnSupported: boolean;
     gaMeasurementId?: string | null;
     clientId: string;
+    isDebugMode: boolean;
 }
 
 export class AppSettings implements IAppSettings {
@@ -1728,7 +1736,6 @@ export interface IAppSettings {
 }
 
 export class UserSettings implements IUserSettings {
-    logging!: AppLogSettings;
     isLicenseAccepted!: boolean;
     cultureCode?: string | null;
     clientProfileId?: string | null;
@@ -1744,6 +1751,7 @@ export class UserSettings implements IUserSettings {
     domainFilter!: DomainFilter;
     debugData1?: string | null;
     debugData2?: string | null;
+    logAnonymous!: boolean;
     includeLocalNetwork!: boolean;
     includeIpRanges!: string[];
     excludeIpRanges!: string[];
@@ -1758,7 +1766,6 @@ export class UserSettings implements IUserSettings {
             }
         }
         if (!data) {
-            this.logging = new AppLogSettings();
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
             this.includeIpRanges = [];
@@ -1770,7 +1777,6 @@ export class UserSettings implements IUserSettings {
 
     init(_data?: any) {
         if (_data) {
-            this.logging = _data["logging"] ? AppLogSettings.fromJS(_data["logging"]) : new AppLogSettings();
             this.isLicenseAccepted = _data["isLicenseAccepted"] !== undefined ? _data["isLicenseAccepted"] : <any>null;
             this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
             this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
@@ -1800,6 +1806,7 @@ export class UserSettings implements IUserSettings {
             this.domainFilter = _data["domainFilter"] ? DomainFilter.fromJS(_data["domainFilter"]) : new DomainFilter();
             this.debugData1 = _data["debugData1"] !== undefined ? _data["debugData1"] : <any>null;
             this.debugData2 = _data["debugData2"] !== undefined ? _data["debugData2"] : <any>null;
+            this.logAnonymous = _data["logAnonymous"] !== undefined ? _data["logAnonymous"] : <any>null;
             this.includeLocalNetwork = _data["includeLocalNetwork"] !== undefined ? _data["includeLocalNetwork"] : <any>null;
             if (Array.isArray(_data["includeIpRanges"])) {
                 this.includeIpRanges = [] as any;
@@ -1845,7 +1852,6 @@ export class UserSettings implements IUserSettings {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["logging"] = this.logging ? this.logging.toJSON() : <any>null;
         data["isLicenseAccepted"] = this.isLicenseAccepted !== undefined ? this.isLicenseAccepted : <any>null;
         data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
         data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
@@ -1869,6 +1875,7 @@ export class UserSettings implements IUserSettings {
         data["domainFilter"] = this.domainFilter ? this.domainFilter.toJSON() : <any>null;
         data["debugData1"] = this.debugData1 !== undefined ? this.debugData1 : <any>null;
         data["debugData2"] = this.debugData2 !== undefined ? this.debugData2 : <any>null;
+        data["logAnonymous"] = this.logAnonymous !== undefined ? this.logAnonymous : <any>null;
         data["includeLocalNetwork"] = this.includeLocalNetwork !== undefined ? this.includeLocalNetwork : <any>null;
         if (Array.isArray(this.includeIpRanges)) {
             data["includeIpRanges"] = [];
@@ -1895,7 +1902,6 @@ export class UserSettings implements IUserSettings {
 }
 
 export interface IUserSettings {
-    logging: AppLogSettings;
     isLicenseAccepted: boolean;
     cultureCode?: string | null;
     clientProfileId?: string | null;
@@ -1911,88 +1917,12 @@ export interface IUserSettings {
     domainFilter: DomainFilter;
     debugData1?: string | null;
     debugData2?: string | null;
+    logAnonymous: boolean;
     includeLocalNetwork: boolean;
     includeIpRanges: string[];
     excludeIpRanges: string[];
     packetCaptureIncludeIpRanges: string[];
     packetCaptureExcludeIpRanges: string[];
-}
-
-export class AppLogSettings implements IAppLogSettings {
-    logToConsole!: boolean;
-    logToFile!: boolean;
-    logAnonymous!: boolean;
-    logEventNames!: string[];
-    logLevel!: LogLevel;
-
-    constructor(data?: IAppLogSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.logEventNames = [];
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.logToConsole = _data["logToConsole"] !== undefined ? _data["logToConsole"] : <any>null;
-            this.logToFile = _data["logToFile"] !== undefined ? _data["logToFile"] : <any>null;
-            this.logAnonymous = _data["logAnonymous"] !== undefined ? _data["logAnonymous"] : <any>null;
-            if (Array.isArray(_data["logEventNames"])) {
-                this.logEventNames = [] as any;
-                for (let item of _data["logEventNames"])
-                    this.logEventNames!.push(item);
-            }
-            else {
-                this.logEventNames = <any>null;
-            }
-            this.logLevel = _data["logLevel"] !== undefined ? _data["logLevel"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): AppLogSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new AppLogSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["logToConsole"] = this.logToConsole !== undefined ? this.logToConsole : <any>null;
-        data["logToFile"] = this.logToFile !== undefined ? this.logToFile : <any>null;
-        data["logAnonymous"] = this.logAnonymous !== undefined ? this.logAnonymous : <any>null;
-        if (Array.isArray(this.logEventNames)) {
-            data["logEventNames"] = [];
-            for (let item of this.logEventNames)
-                data["logEventNames"].push(item);
-        }
-        data["logLevel"] = this.logLevel !== undefined ? this.logLevel : <any>null;
-        return data;
-    }
-}
-
-export interface IAppLogSettings {
-    logToConsole: boolean;
-    logToFile: boolean;
-    logAnonymous: boolean;
-    logEventNames: string[];
-    logLevel: LogLevel;
-}
-
-/** Defines logging severity levels. */
-export enum LogLevel {
-    Trace = "Trace",
-    Debug = "Debug",
-    Information = "Information",
-    Warning = "Warning",
-    Error = "Error",
-    Critical = "Critical",
-    None = "None",
 }
 
 export enum FilterMode {
@@ -2091,8 +2021,9 @@ export class AppState implements IAppState {
     clientProfile?: ClientProfileBaseInfo | null;
     serverLocationInfo?: ServerLocationInfo | null;
     isIdle!: boolean;
+    promptForLog!: boolean;
     logExists!: boolean;
-    hasDiagnoseStarted!: boolean;
+    hasDiagnoseRequested!: boolean;
     hasDisconnectedByUser!: boolean;
     hasProblemDetected!: boolean;
     sessionStatus?: SessionStatus | null;
@@ -2139,8 +2070,9 @@ export class AppState implements IAppState {
             this.clientProfile = _data["clientProfile"] ? ClientProfileBaseInfo.fromJS(_data["clientProfile"]) : <any>null;
             this.serverLocationInfo = _data["serverLocationInfo"] ? ServerLocationInfo.fromJS(_data["serverLocationInfo"]) : <any>null;
             this.isIdle = _data["isIdle"] !== undefined ? _data["isIdle"] : <any>null;
+            this.promptForLog = _data["promptForLog"] !== undefined ? _data["promptForLog"] : <any>null;
             this.logExists = _data["logExists"] !== undefined ? _data["logExists"] : <any>null;
-            this.hasDiagnoseStarted = _data["hasDiagnoseStarted"] !== undefined ? _data["hasDiagnoseStarted"] : <any>null;
+            this.hasDiagnoseRequested = _data["hasDiagnoseRequested"] !== undefined ? _data["hasDiagnoseRequested"] : <any>null;
             this.hasDisconnectedByUser = _data["hasDisconnectedByUser"] !== undefined ? _data["hasDisconnectedByUser"] : <any>null;
             this.hasProblemDetected = _data["hasProblemDetected"] !== undefined ? _data["hasProblemDetected"] : <any>null;
             this.sessionStatus = _data["sessionStatus"] ? SessionStatus.fromJS(_data["sessionStatus"]) : <any>null;
@@ -2180,8 +2112,9 @@ export class AppState implements IAppState {
         data["clientProfile"] = this.clientProfile ? this.clientProfile.toJSON() : <any>null;
         data["serverLocationInfo"] = this.serverLocationInfo ? this.serverLocationInfo.toJSON() : <any>null;
         data["isIdle"] = this.isIdle !== undefined ? this.isIdle : <any>null;
+        data["promptForLog"] = this.promptForLog !== undefined ? this.promptForLog : <any>null;
         data["logExists"] = this.logExists !== undefined ? this.logExists : <any>null;
-        data["hasDiagnoseStarted"] = this.hasDiagnoseStarted !== undefined ? this.hasDiagnoseStarted : <any>null;
+        data["hasDiagnoseRequested"] = this.hasDiagnoseRequested !== undefined ? this.hasDiagnoseRequested : <any>null;
         data["hasDisconnectedByUser"] = this.hasDisconnectedByUser !== undefined ? this.hasDisconnectedByUser : <any>null;
         data["hasProblemDetected"] = this.hasProblemDetected !== undefined ? this.hasProblemDetected : <any>null;
         data["sessionStatus"] = this.sessionStatus ? this.sessionStatus.toJSON() : <any>null;
@@ -2214,8 +2147,9 @@ export interface IAppState {
     clientProfile?: ClientProfileBaseInfo | null;
     serverLocationInfo?: ServerLocationInfo | null;
     isIdle: boolean;
+    promptForLog: boolean;
     logExists: boolean;
-    hasDiagnoseStarted: boolean;
+    hasDiagnoseRequested: boolean;
     hasDisconnectedByUser: boolean;
     hasProblemDetected: boolean;
     sessionStatus?: SessionStatus | null;
@@ -2326,6 +2260,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     isPremiumLocationSelected!: boolean;
     isPremiumAccount!: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
+    hasAccessCode!: boolean;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -2345,6 +2280,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.isPremiumLocationSelected = _data["isPremiumLocationSelected"] !== undefined ? _data["isPremiumLocationSelected"] : <any>null;
             this.isPremiumAccount = _data["isPremiumAccount"] !== undefined ? _data["isPremiumAccount"] : <any>null;
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
+            this.hasAccessCode = _data["hasAccessCode"] !== undefined ? _data["hasAccessCode"] : <any>null;
         }
     }
 
@@ -2364,6 +2300,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
         data["isPremiumLocationSelected"] = this.isPremiumLocationSelected !== undefined ? this.isPremiumLocationSelected : <any>null;
         data["isPremiumAccount"] = this.isPremiumAccount !== undefined ? this.isPremiumAccount : <any>null;
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
+        data["hasAccessCode"] = this.hasAccessCode !== undefined ? this.hasAccessCode : <any>null;
         return data;
     }
 }
@@ -2376,6 +2313,7 @@ export interface IClientProfileBaseInfo {
     isPremiumLocationSelected: boolean;
     isPremiumAccount: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
+    hasAccessCode: boolean;
 }
 
 export class ServerLocationInfo implements IServerLocationInfo {
@@ -2494,6 +2432,8 @@ export class ServerLocationOptions implements IServerLocationOptions {
     premiumByTrial?: number | null;
     premiumByRewardedAd?: number | null;
     premiumByPurchase!: boolean;
+    premiumByCode!: boolean;
+    canGoPremium!: boolean;
     hasFree!: boolean;
     hasPremium!: boolean;
     hasUnblockable!: boolean;
@@ -2514,6 +2454,8 @@ export class ServerLocationOptions implements IServerLocationOptions {
             this.premiumByTrial = _data["premiumByTrial"] !== undefined ? _data["premiumByTrial"] : <any>null;
             this.premiumByRewardedAd = _data["premiumByRewardedAd"] !== undefined ? _data["premiumByRewardedAd"] : <any>null;
             this.premiumByPurchase = _data["premiumByPurchase"] !== undefined ? _data["premiumByPurchase"] : <any>null;
+            this.premiumByCode = _data["premiumByCode"] !== undefined ? _data["premiumByCode"] : <any>null;
+            this.canGoPremium = _data["canGoPremium"] !== undefined ? _data["canGoPremium"] : <any>null;
             this.hasFree = _data["hasFree"] !== undefined ? _data["hasFree"] : <any>null;
             this.hasPremium = _data["hasPremium"] !== undefined ? _data["hasPremium"] : <any>null;
             this.hasUnblockable = _data["hasUnblockable"] !== undefined ? _data["hasUnblockable"] : <any>null;
@@ -2534,6 +2476,8 @@ export class ServerLocationOptions implements IServerLocationOptions {
         data["premiumByTrial"] = this.premiumByTrial !== undefined ? this.premiumByTrial : <any>null;
         data["premiumByRewardedAd"] = this.premiumByRewardedAd !== undefined ? this.premiumByRewardedAd : <any>null;
         data["premiumByPurchase"] = this.premiumByPurchase !== undefined ? this.premiumByPurchase : <any>null;
+        data["premiumByCode"] = this.premiumByCode !== undefined ? this.premiumByCode : <any>null;
+        data["canGoPremium"] = this.canGoPremium !== undefined ? this.canGoPremium : <any>null;
         data["hasFree"] = this.hasFree !== undefined ? this.hasFree : <any>null;
         data["hasPremium"] = this.hasPremium !== undefined ? this.hasPremium : <any>null;
         data["hasUnblockable"] = this.hasUnblockable !== undefined ? this.hasUnblockable : <any>null;
@@ -2547,6 +2491,8 @@ export interface IServerLocationOptions {
     premiumByTrial?: number | null;
     premiumByRewardedAd?: number | null;
     premiumByPurchase: boolean;
+    premiumByCode: boolean;
+    canGoPremium: boolean;
     hasFree: boolean;
     hasPremium: boolean;
     hasUnblockable: boolean;
@@ -2873,6 +2819,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
     isValidHostName!: boolean;
     isBuiltIn!: boolean;
     isForAccount!: boolean;
+    accessCode?: string | null;
     locationInfos!: ClientServerLocationInfo[];
     selectedLocationInfo?: ClientServerLocationInfo | null;
 
@@ -2909,6 +2856,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
             this.isValidHostName = _data["isValidHostName"] !== undefined ? _data["isValidHostName"] : <any>null;
             this.isBuiltIn = _data["isBuiltIn"] !== undefined ? _data["isBuiltIn"] : <any>null;
             this.isForAccount = _data["isForAccount"] !== undefined ? _data["isForAccount"] : <any>null;
+            this.accessCode = _data["accessCode"] !== undefined ? _data["accessCode"] : <any>null;
             if (Array.isArray(_data["locationInfos"])) {
                 this.locationInfos = [] as any;
                 for (let item of _data["locationInfos"])
@@ -2945,6 +2893,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
         data["isValidHostName"] = this.isValidHostName !== undefined ? this.isValidHostName : <any>null;
         data["isBuiltIn"] = this.isBuiltIn !== undefined ? this.isBuiltIn : <any>null;
         data["isForAccount"] = this.isForAccount !== undefined ? this.isForAccount : <any>null;
+        data["accessCode"] = this.accessCode !== undefined ? this.accessCode : <any>null;
         if (Array.isArray(this.locationInfos)) {
             data["locationInfos"] = [];
             for (let item of this.locationInfos)
@@ -2967,6 +2916,7 @@ export interface IClientProfileInfo {
     isValidHostName: boolean;
     isBuiltIn: boolean;
     isForAccount: boolean;
+    accessCode?: string | null;
     locationInfos: ClientServerLocationInfo[];
     selectedLocationInfo?: ClientServerLocationInfo | null;
 }
@@ -3109,6 +3059,7 @@ export enum ConnectPlanId {
     Normal = "Normal",
     PremiumByTrial = "PremiumByTrial",
     PremiumByRewardedAd = "PremiumByRewardedAd",
+    Status = "Status",
 }
 
 export class DeviceAppInfo implements IDeviceAppInfo {
@@ -3201,6 +3152,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
     selectedLocation?: PatchOfString | null;
     customData?: PatchOfString | null;
     isPremiumLocationSelected?: PatchOfBoolean | null;
+    accessCode?: PatchOfString | null;
 
     constructor(data?: IClientProfileUpdateParams) {
         if (data) {
@@ -3218,6 +3170,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
             this.selectedLocation = _data["selectedLocation"] ? PatchOfString.fromJS(_data["selectedLocation"]) : <any>null;
             this.customData = _data["customData"] ? PatchOfString.fromJS(_data["customData"]) : <any>null;
             this.isPremiumLocationSelected = _data["isPremiumLocationSelected"] ? PatchOfBoolean.fromJS(_data["isPremiumLocationSelected"]) : <any>null;
+            this.accessCode = _data["accessCode"] ? PatchOfString.fromJS(_data["accessCode"]) : <any>null;
         }
     }
 
@@ -3235,6 +3188,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
         data["selectedLocation"] = this.selectedLocation ? this.selectedLocation.toJSON() : <any>null;
         data["customData"] = this.customData ? this.customData.toJSON() : <any>null;
         data["isPremiumLocationSelected"] = this.isPremiumLocationSelected ? this.isPremiumLocationSelected.toJSON() : <any>null;
+        data["accessCode"] = this.accessCode ? this.accessCode.toJSON() : <any>null;
         return data;
     }
 }
@@ -3245,6 +3199,7 @@ export interface IClientProfileUpdateParams {
     selectedLocation?: PatchOfString | null;
     customData?: PatchOfString | null;
     isPremiumLocationSelected?: PatchOfBoolean | null;
+    accessCode?: PatchOfString | null;
 }
 
 export class PatchOfString implements IPatchOfString {

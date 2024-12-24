@@ -30,7 +30,7 @@ export default defineConfig({
           features:{
             'not-pseudo-class':true,
             'logical-properties-and-values': false,
-            'logical-viewport-units': false,
+            'logical-viewport-units': false
           }
         }),
       ]

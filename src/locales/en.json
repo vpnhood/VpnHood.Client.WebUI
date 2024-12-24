@@ -98,7 +98,7 @@
   "RECOMMENDED": "Recommended",
   "OF": "of",
   "ERROR": "Error",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "You must disconnect to change settings",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "You must disconnect to change the settings",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "Please stay in the app until the ad finishes. If you leave the app, your session will not be extended.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Congratulations! Your session has been successfully extended.",
   "NOTE": "Note",
-  "SEARCH": "Search"
+  "SEARCH": "Search",
+  "I_HAVE_A_PREMIUM_CODE": "I have a Premium Code",
+  "ENTER_PREMIUM_CODE": "Enter premium code",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "If your code has an expiration date, it will become active from the moment you enter it.",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Your code has been activated, and you are now a premium user.",
+  "IMPORTANT": "Important",
+  "INTER_YOUR_CODE": "Inter your code",
+  "CHECK_AND_ACTIVE": "Check and Active"
 }

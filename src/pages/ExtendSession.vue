@@ -6,6 +6,7 @@ import { ref } from 'vue';
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import PromoteConnectButton from '@/components/PromoteConnectButton.vue';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -85,7 +86,7 @@ async function showRewardedAd(){
           variant="text"
           :ripple="false"
           color="secondary"
-          prepend-icon="mdi-chevron-left"
+          :prepend-icon="Util.getLocalizedLeftChevron()"
           class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
           @click="router.go(-1)"

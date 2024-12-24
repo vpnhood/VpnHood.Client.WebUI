@@ -7,6 +7,7 @@ import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData'
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import router from '@/services/router';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -110,7 +111,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
         <!-- Go premium -->
         <promote-connect-button
-          v-if="dialogData.showGoPremium"
+          v-if="dialogData.premiumByPurchase"
           icon="mdi-crown-circle-outline"
           :title="locale('GO_PREMIUM_2')"
           :description="locale('GO_PREMIUM_DESC')"
@@ -125,7 +126,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           variant="text"
           :ripple="false"
           color="secondary"
-          prepend-icon="mdi-chevron-left"
+          :prepend-icon="Util.getLocalizedLeftChevron()"
           class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
           :text="locale('GO_BACK')"
           @click="router.go(-1)"

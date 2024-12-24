@@ -14,12 +14,7 @@ const emit = defineEmits<{
 async function accept(): Promise<void>{
   vhApp.data.settings.userSettings.isLicenseAccepted = true;
   await vhApp.saveUserSetting();
-  try {
-    await vhApp.loadAccount();
-  }
-  finally {
-    emit('update:modelValue',false);
-  }
+  emit('update:modelValue',false);
 }
 </script>
 
