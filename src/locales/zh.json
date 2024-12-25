@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "请留在应用程序中直到广告结束。如果您离开应用程序，您的会话将不会延长。",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "恭喜！您的会话已成功延长。",
   "NOTE": "注意",
-  "SEARCH": "搜索"
+  "SEARCH": "搜索",
+  "I_HAVE_A_PREMIUM_CODE": "我有一个高级码",
+  "ENTER_PREMIUM_CODE": "输入高级码",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "如果您的代码有一个到期日期，它会从您输入的那一刻起激活",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "您的代码已激活，您现在是高级用户",
+  "IMPORTANT": "重要",
+  "INTER_YOUR_CODE": "输入您的代码",
+  "CHECK_AND_ACTIVE": "检查和激活"
 }
