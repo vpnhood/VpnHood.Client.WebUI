@@ -98,7 +98,7 @@
   "RECOMMENDED": "अनुशंसित",
   "OF": "का",
   "ERROR": "त्रुटि",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "सेटिंग्स बदलने के लिए आपको डिस्कनेक्ट होना होगा",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "आपको सेटिंग्स बदलने के लिए डिस्कनेक्ट करना होगा",
   "OOPS": "ओह!",
   "LOAD_APP_ERROR_DESC": "ऐप चलाने में एक समस्या थी",
   "RELOAD_APP": "ऐप पुनः लोड करें",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "कृपया विज्ञापन समाप्त होने तक ऐप में रहें। यदि आप ऐप छोड़ते हैं, तो आपका सत्र विस्तारित नहीं होगा।",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "बधाई हो! आपका सत्र सफलतापूर्वक विस्तारित कर दिया गया है।",
   "NOTE": "नोट",
-  "SEARCH": "खोज"
+  "SEARCH": "खोज",
+  "I_HAVE_A_PREMIUM_CODE": "मेरे पास एक प्रीमियम कोड है",
+  "ENTER_PREMIUM_CODE": "प्रीमियम कोड दर्ज करें",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "यदि आपके कोड की समाप्ति तिथि है, तो यह आपके दर्ज करने के क्षण से सक्रिय हो जाएगा",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "आपका कोड सक्रिय हो गया है, और अब आप एक प्रीमियम उपयोगकर्ता हैं",
+  "IMPORTANT": "महत्वपूर्ण",
+  "INTER_YOUR_CODE": "अपना कोड दर्ज करें",
+  "CHECK_AND_ACTIVE": "जांचें और सक्रिय करें"
 }
