@@ -98,7 +98,7 @@
   "RECOMMENDED": "Recomendado",
   "OF": "de",
   "ERROR": "Erro",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Você deve desconectar para alterar as configurações",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Deve desconectar-se para alterar as definições",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "Houve um problema ao executar o aplicativo",
   "RELOAD_APP": "Recarregar aplicativo",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "Por favor, permaneça no aplicativo até que o anúncio termine. Se você sair do aplicativo, sua sessão não será estendida.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Parabéns! Sua sessão foi estendida com sucesso.",
   "NOTE": "Nota",
-  "SEARCH": "Pesquisa"
+  "SEARCH": "Pesquisa",
+  "I_HAVE_A_PREMIUM_CODE": "Tenho um código premium",
+  "ENTER_PREMIUM_CODE": "Insira o código premium",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "Se o seu código tiver uma data de validade, ele ficará ativo a partir do momento em que o inserir.",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "O seu código foi ativado, e agora é um utilizador premium.",
+  "IMPORTANT": "Importante",
+  "INTER_YOUR_CODE": "Insira o seu código",
+  "CHECK_AND_ACTIVE": "Verificar e ativar"
 }
