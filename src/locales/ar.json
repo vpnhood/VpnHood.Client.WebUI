@@ -98,7 +98,7 @@
   "RECOMMENDED": "موصى به",
   "OF": "من",
   "ERROR": "خطأ",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "يجب أن تقطع الاتصال لتغيير الإعدادات",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "يجب عليك قطع الاتصال لتغيير الإعدادات",
   "OOPS": "عفوًا!",
   "LOAD_APP_ERROR_DESC": "كانت هناك مشكلة في تشغيل التطبيق",
   "RELOAD_APP": "إعادة تحميل التطبيق",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "يرجى البقاء في التطبيق حتى ينتهي الإعلان. إذا غادرت التطبيق، لن يتم تمديد جلستك.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "تهانينا! تم تمديد جلستك بنجاح.",
   "NOTE": "ملاحظة",
-  "SEARCH": "بحث"
+  "SEARCH": "بحث",
+  "I_HAVE_A_PREMIUM_CODE": "لدي رمز مميز",
+  "ENTER_PREMIUM_CODE": "أدخل الرمز المميز",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "إذا كان لرمزك تاريخ انتهاء، فسيصبح نشطًا من لحظة إدخاله",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "تم تفعيل رمزك وأنت الآن مستخدم مميز",
+  "IMPORTANT": "مهم",
+  "INTER_YOUR_CODE": "أدخل رمزك",
+  "CHECK_AND_ACTIVE": "تحقق ونشط"
 }
