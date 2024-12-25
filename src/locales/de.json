@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "Bitte bleiben Sie in der App, bis die Anzeige beendet ist. Wenn Sie die App verlassen, wird Ihre Sitzung nicht verlängert.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Herzlichen Glückwunsch! Ihre Sitzung wurde erfolgreich verlängert.",
   "NOTE": "Hinweis",
-  "SEARCH": "Suchen"
+  "SEARCH": "Suchen",
+  "I_HAVE_A_PREMIUM_CODE": "Ich habe einen Premium-Code",
+  "ENTER_PREMIUM_CODE": "Premium-Code eingeben",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "Wenn Ihr Code ein Ablaufdatum hat, wird er ab dem Moment, in dem Sie ihn eingeben, aktiv",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Ihr Code wurde aktiviert und Sie sind jetzt ein Premium-Benutzer",
+  "IMPORTANT": "Wichtig",
+  "INTER_YOUR_CODE": "Geben Sie Ihren Code ein",
+  "CHECK_AND_ACTIVE": "Überprüfen und aktivieren"
 }
