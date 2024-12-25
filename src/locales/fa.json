@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "لطفاً تا پایان تبلیغ در برنامه بمانید. اگر برنامه را ترک کنید، زمان اتصال شما تمدید نخواهد شد.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "تبریک! زمان اتصال شما با موفقیت تمدید شد.",
   "NOTE": "توجه",
-  "SEARCH": "جستجو"
+  "SEARCH": "جستجو",
+  "I_HAVE_A_PREMIUM_CODE": "من یک کد ویژه دارم",
+  "ENTER_PREMIUM_CODE": "کد ویژه را وارد کنید",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "اگر کد شما تاریخ انقضاء داشته باشد، از لحظه وارد کردن، فعال می‌شود.",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "کد شما فعال شد و اکنون شما یک کاربر ویژه هستید.",
+  "IMPORTANT": "مهم",
+  "INTER_YOUR_CODE": "کد خود را وارد کنید",
+  "CHECK_AND_ACTIVE": "بررسی و فعال‌سازی"
 }
