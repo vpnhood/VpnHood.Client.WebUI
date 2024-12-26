@@ -98,7 +98,7 @@
   "RECOMMENDED": "Önerilen",
   "OF": "nın",
   "ERROR": "Hata",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Ayarları değiştirmek için bağlantıyı kesmelisiniz",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Ayarları değiştirmek için bağlantıyı kesmelisiniz.",
   "OOPS": "Hata!",
   "LOAD_APP_ERROR_DESC": "Uygulamanın çalıştırılmasında bir sorun oldu",
   "RELOAD_APP": "Uygulamayı Yeniden Yükle",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "Lütfen reklam bitene kadar uygulamada kalın. Uygulamadan çıkarsanız oturumunuz uzatılmayacaktır.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Tebrikler! Oturumunuz başarıyla uzatıldı.",
   "NOTE": "Dikkat",
-  "SEARCH": "Arama"
+  "SEARCH": "Arama",
+  "I_HAVE_A_PREMIUM_CODE": "Bir Premium Kodum var",
+  "ENTER_PREMIUM_CODE": "Premium kodunu girin",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "Eğer kodunuzun bir son kullanma tarihi varsa, onu girdiğiniz andan itibaren aktif hale gelecektir.",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Kodunuz etkinleştirildi ve artık premium kullanıcısınız.",
+  "IMPORTANT": "Önemli",
+  "INTER_YOUR_CODE": "Kodunuzu girin",
+  "CHECK_AND_ACTIVE": "Kontrol et ve etkinleştir"
 }
