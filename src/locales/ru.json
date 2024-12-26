@@ -98,7 +98,7 @@
   "RECOMMENDED": "Рекомендуется",
   "OF": "из",
   "ERROR": "Ошибка",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Вы должны отключиться, чтобы изменить настройки",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Вам необходимо отключиться, чтобы изменить настройки.",
   "OOPS": "Ой!",
   "LOAD_APP_ERROR_DESC": "Произошла проблема при запуске приложения",
   "RELOAD_APP": "Перезагрузить приложение",
@@ -217,5 +217,12 @@
   "EXTEND_BY_REWARDED_AD_NOTE": "Пожалуйста, оставайтесь в приложении, пока реклама не закончится. Если вы покинете приложение, ваша сессия не будет продлена.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Поздравляем! Ваша сессия была успешно продлена.",
   "NOTE": "Заметка",
-  "SEARCH": "Поиск"
+  "SEARCH": "Поиск",
+  "I_HAVE_A_PREMIUM_CODE": "У меня есть премиум-код",
+  "ENTER_PREMIUM_CODE": "Введите премиум-код",
+  "ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE": "Если у вашего кода есть срок действия, он активируется с момента ввода.",
+  "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Ваш код был активирован, и теперь вы премиум-пользователь.",
+  "IMPORTANT": "Важно",
+  "INTER_YOUR_CODE": "Введите ваш код",
+  "CHECK_AND_ACTIVE": "Проверить и активировать"
 }
