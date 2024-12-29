@@ -17,13 +17,15 @@ const premiumCode = ref<string | null>(null);
 const premiumCodeErrorMessage = ref<string | null>(null);
 
 onMounted(async () => {
-  // Get products list from Google and sort based on plan prices
-  const billingClient = ClientApiFactory.instance.createBillingClient();
-  const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
-  cloneSubscriptionPlans.sort(
-    (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
-      Number((b.planPrice).replace(/\D/g, '')));
-  subscriptionPlans.value = cloneSubscriptionPlans;
+  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase){
+    // Get products list from Google and sort based on plan prices
+    const billingClient = ClientApiFactory.instance.createBillingClient();
+    const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
+    cloneSubscriptionPlans.sort(
+      (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
+        Number((b.planPrice).replace(/\D/g, '')));
+    subscriptionPlans.value = cloneSubscriptionPlans;
+  }
 });
 
 onUnmounted(() => {
@@ -369,6 +371,8 @@ async function closeOnPurchaseComplete(): Promise<void> {
   background-size: contain;
   width: 100%;
   height: 57%;
+  min-height: 150px;
+  max-height: 335px;
 }
 /*TODO: remove if unnecessary*/
 #rocket, #rocketSmoke{

@@ -1587,6 +1587,7 @@ export class AppFeatures implements IAppFeatures {
     isIncludeAppsSupported!: boolean;
     updateInfoUrl?: string | null;
     uiName?: string | null;
+    isPremiumFlagSupported!: boolean;
     isAddAccessKeySupported!: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported!: boolean;
@@ -1597,6 +1598,7 @@ export class AppFeatures implements IAppFeatures {
     gaMeasurementId?: string | null;
     clientId!: string;
     isDebugMode!: boolean;
+    debugCommands!: string[];
 
     constructor(data?: IAppFeatures) {
         if (data) {
@@ -1604,6 +1606,9 @@ export class AppFeatures implements IAppFeatures {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.debugCommands = [];
         }
     }
 
@@ -1615,6 +1620,7 @@ export class AppFeatures implements IAppFeatures {
             this.isIncludeAppsSupported = _data["isIncludeAppsSupported"] !== undefined ? _data["isIncludeAppsSupported"] : <any>null;
             this.updateInfoUrl = _data["updateInfoUrl"] !== undefined ? _data["updateInfoUrl"] : <any>null;
             this.uiName = _data["uiName"] !== undefined ? _data["uiName"] : <any>null;
+            this.isPremiumFlagSupported = _data["isPremiumFlagSupported"] !== undefined ? _data["isPremiumFlagSupported"] : <any>null;
             this.isAddAccessKeySupported = _data["isAddAccessKeySupported"] !== undefined ? _data["isAddAccessKeySupported"] : <any>null;
             this.builtInClientProfileId = _data["builtInClientProfileId"] !== undefined ? _data["builtInClientProfileId"] : <any>null;
             this.isAccountSupported = _data["isAccountSupported"] !== undefined ? _data["isAccountSupported"] : <any>null;
@@ -1625,6 +1631,14 @@ export class AppFeatures implements IAppFeatures {
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
             this.isDebugMode = _data["isDebugMode"] !== undefined ? _data["isDebugMode"] : <any>null;
+            if (Array.isArray(_data["debugCommands"])) {
+                this.debugCommands = [] as any;
+                for (let item of _data["debugCommands"])
+                    this.debugCommands!.push(item);
+            }
+            else {
+                this.debugCommands = <any>null;
+            }
         }
     }
 
@@ -1643,6 +1657,7 @@ export class AppFeatures implements IAppFeatures {
         data["isIncludeAppsSupported"] = this.isIncludeAppsSupported !== undefined ? this.isIncludeAppsSupported : <any>null;
         data["updateInfoUrl"] = this.updateInfoUrl !== undefined ? this.updateInfoUrl : <any>null;
         data["uiName"] = this.uiName !== undefined ? this.uiName : <any>null;
+        data["isPremiumFlagSupported"] = this.isPremiumFlagSupported !== undefined ? this.isPremiumFlagSupported : <any>null;
         data["isAddAccessKeySupported"] = this.isAddAccessKeySupported !== undefined ? this.isAddAccessKeySupported : <any>null;
         data["builtInClientProfileId"] = this.builtInClientProfileId !== undefined ? this.builtInClientProfileId : <any>null;
         data["isAccountSupported"] = this.isAccountSupported !== undefined ? this.isAccountSupported : <any>null;
@@ -1653,6 +1668,11 @@ export class AppFeatures implements IAppFeatures {
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
         data["isDebugMode"] = this.isDebugMode !== undefined ? this.isDebugMode : <any>null;
+        if (Array.isArray(this.debugCommands)) {
+            data["debugCommands"] = [];
+            for (let item of this.debugCommands)
+                data["debugCommands"].push(item);
+        }
         return data;
     }
 }
@@ -1664,6 +1684,7 @@ export interface IAppFeatures {
     isIncludeAppsSupported: boolean;
     updateInfoUrl?: string | null;
     uiName?: string | null;
+    isPremiumFlagSupported: boolean;
     isAddAccessKeySupported: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported: boolean;
@@ -1674,6 +1695,7 @@ export interface IAppFeatures {
     gaMeasurementId?: string | null;
     clientId: string;
     isDebugMode: boolean;
+    debugCommands: string[];
 }
 
 export class AppSettings implements IAppSettings {

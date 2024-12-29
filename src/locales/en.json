@@ -98,7 +98,7 @@
   "RECOMMENDED": "Recommended",
   "OF": "of",
   "ERROR": "Error",
-  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "You must disconnect to change the settings",
+  "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Your connection will be disconnected immediately after applying the change.",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",

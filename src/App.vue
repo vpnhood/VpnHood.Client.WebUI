@@ -38,9 +38,10 @@ onMounted(async () => {
     return;
   }
 
-  if (vhApp.data.features.isAccountSupported && vhApp.data.userState.userAccount)
-    // Clear cache applied if the user has a subscription
-    await vhApp.loadAccount(!!vhApp.data.userState.userAccount.subscriptionId);
+  // Get user account
+  if (vhApp.data.features.isAccountSupported)
+    await vhApp.loadAccount();
+
 })
 </script>
 

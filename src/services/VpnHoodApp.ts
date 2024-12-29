@@ -1,6 +1,5 @@
 import {
   ApiException,
-  AppAccount,
   AppClient,
   AppConnectionState,
   AppFeatures,
@@ -12,14 +11,15 @@ import {
   ConfigParams,
   ConnectPlanId,
   DeviceAppInfo,
-  PatchOfBoolean, PatchOfString,
+  PatchOfBoolean,
+  PatchOfString,
   SessionSuppressType,
   UiCultureInfo
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { UiState } from '@/helpers/UiState';
 import { UserState } from '@/helpers/UserState';
-import { AppName, ComponentName, SubscriptionPlansId } from '@/helpers/UiConstants';
+import { AppName, ComponentName } from '@/helpers/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
@@ -113,33 +113,13 @@ export class VpnHoodApp {
     this.data.features = config.features;
     this.data.settings = config.settings;
 
-    // Reload and calc available client profiles
-    this.data.clientProfileInfos = VpnHoodApp.getClientProfileInfos(
-      this.isConnectApp(),
-      config.clientProfileInfos,
-      config.features.builtInClientProfileId,
-      this.data.userState.userAccount
-    );
+    // Remove built-in client profile if the user is premium
+    this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
+      ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
+      : config.clientProfileInfos
 
     if (config.clientProfileInfos.length === 0)
       this.data.settings.userSettings.clientProfileId = null;
-  }
-
-  // Return available client profiles based on app name and user state
-  private static getClientProfileInfos(isConnectApp: boolean, clientProfileInfos: ClientProfileInfo[],
-                                       builtInClientProfileId: string | null = null, userAccount: AppAccount | null): ClientProfileInfo[] {
-    // App is VpnHoodClient
-    if (!isConnectApp) return clientProfileInfos;
-
-    // App is VpnHoodCONNECT and user is guest or does not have active subscription
-    if (userAccount === null || userAccount.subscriptionId === null)
-      return clientProfileInfos;
-
-    // App is VpnHoodCONNECT and user have active subscription
-    if (userAccount.providerPlanId === SubscriptionPlansId.GlobalServer)
-      return clientProfileInfos.filter(x => x.clientProfileId !== builtInClientProfileId);
-
-    return clientProfileInfos;
   }
 
   public async reloadState(): Promise<void> {
@@ -189,15 +169,15 @@ export class VpnHoodApp {
     // User select active item and already connected
     if (this.data.state.canDisconnect
       && clientProfileId === this.data.state.clientProfile?.clientProfileId
-      && serverLocation === this.data.state.serverLocationInfo?.serverLocation){
+      && serverLocation === this.data.state.serverLocationInfo?.serverLocation) {
       this.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'));
       return;
     }
 
     // Update client profile
     await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
-      isPremiumLocationSelected: new PatchOfBoolean({value: isPremium ?? false}),
-      selectedLocation: new PatchOfString({value: serverLocation})
+      isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium ?? false }),
+      selectedLocation: new PatchOfString({ value: serverLocation })
     }));
 
     // Update user settings
@@ -266,8 +246,7 @@ export class VpnHoodApp {
     if (!this.analytics) return;
     try {
       logEvent(this.analytics, eventName, eventParams);
-    }
-    catch (err: unknown){
+    } catch (err: unknown) {
       console.error(`An error occurred while logging event to Analytics. Error: ${err}`);
     }
   }
@@ -276,7 +255,7 @@ export class VpnHoodApp {
   public async processError(err: unknown): Promise<void> {
     // For developer
     console.error(err);
-    console.log("Error is typeof: ", typeof err);
+    console.log('Error is typeof: ', typeof err);
 
     await ErrorHandler.processError(err);
   }
@@ -286,7 +265,7 @@ export class VpnHoodApp {
     // Send error message to analytics
     this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
 
-    const errorDialogData = this.data.uiState.errorDialogData
+    const errorDialogData = this.data.uiState.errorDialogData;
     errorDialogData.message = text;
     errorDialogData.canDiagnose = canDiagnose ?? this.data.state.canDiagnose;
     errorDialogData.promptForLog = this.data.state.promptForLog;
@@ -360,7 +339,7 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor?: string, textColor?: string): void{
+  public showGeneralSnackbar(message: string, bgColor?: string, textColor?: string): void {
     if (bgColor)
       this.data.uiState.generalSnackbarData.color = bgColor;
     if (textColor)
@@ -368,6 +347,7 @@ export class VpnHoodApp {
     this.data.uiState.generalSnackbarData.message = message;
     this.data.uiState.generalSnackbarData.isShow = true;
   }
+
   //------------------------------------------
   // Just for VpnHoodConnect
   //------------------------------------------
@@ -395,14 +375,11 @@ export class VpnHoodApp {
     await this.loadAccount();
   }
 
-  public async loadAccount(clearCache: boolean = false): Promise<void> {
+  public async loadAccount(): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
-    if (clearCache)
-      await accountClient.refresh();
-
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.log(this.data.userState.userAccount);
+    console.log(`User Account: ${this.data.userState.userAccount}`);
     await this.reloadSettings();
   }
 }

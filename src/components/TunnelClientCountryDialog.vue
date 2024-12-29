@@ -51,7 +51,7 @@ const tunnelClientCountry = computed<boolean>({
           {{ locale("TUNNEL_MY_COUNTRY_DESC") }}
         </p>
 
-        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="mx-n3" :disabled="vhApp.isConnected()">
+        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="mx-n3" >
 
           <v-radio :value="true" color="secondary" class="mb-3">
             <template v-slot:label>

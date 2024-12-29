@@ -115,7 +115,7 @@ function itemClass(){
     <!-- Menu items -->
     <v-list dense class="pt-0">
 
-      <!-- Go premium or Change subscription -->
+      <!-- Go premium -->
       <v-list-item
         v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         :class="itemClass()"
@@ -127,7 +127,7 @@ function itemClass(){
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Sign in button -->
+      <!-- Sign in or account button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
         :class="itemClass()"

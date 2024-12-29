@@ -126,12 +126,12 @@ async function actionOnConfirm() {
 
   <v-sheet
     :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-    class="pt-0 pb-5"
+    class="py-5"
   >
 
     <!-- Disconnect required alert -->
     <v-alert v-if="vhApp.isConnected()"
-       class="text-caption mt-5"
+       class="text-caption mb-5"
        density="compact"
        :icon="false"
        type="warning"
@@ -140,12 +140,11 @@ async function actionOnConfirm() {
 
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
-    <div class="mt-5">
+    <div>
       <v-btn
         prepend-icon="mdi-select-all"
         variant="tonal"
         rounded="pill"
-        :disabled="vhApp.isConnected()"
         density="comfortable"
         class="d-inline-flex text-caption me-2"
         :text="locale('SELECT_ALL')"
@@ -157,7 +156,6 @@ async function actionOnConfirm() {
         prepend-icon="mdi-select-remove"
         variant="tonal"
         rounded="pill"
-        :disabled="vhApp.isConnected()"
         density="comfortable"
         class="d-inline-flex text-caption"
         :text="locale('CLEAR_ALL')"
@@ -178,7 +176,6 @@ async function actionOnConfirm() {
       color="secondary"
       id="appSearchField"
       :placeholder="locale('SEARCH')"
-      :disabled="myInstalledApps.length < 1"
       class="mt-5"
     >
     </v-text-field>
@@ -187,7 +184,8 @@ async function actionOnConfirm() {
     <v-card
       :color="vhApp.isConnectApp() ? 'background' : ''"
       :loading="myInstalledApps.length < 1"
-      class="fill-height mt-5"
+      class="mt-5"
+      min-height="300px"
     >
         <!-- Apps list -->
         <v-list
@@ -195,11 +193,11 @@ async function actionOnConfirm() {
           id="appFilterList"
           select-strategy="classic"
           bg-color="transparent"
-          :disabled="vhApp.isConnected()"
           selectable
+          class="py-0"
         >
           <v-list-item
-            v-for="app in appList"
+            v-for="(app, index) in appList"
             :key="app.appId"
             :value="app.appId"
             :title="app.appName"
@@ -209,7 +207,7 @@ async function actionOnConfirm() {
                 vhApp.isConnectApp()
                 ? 'border-primary-darken-2 border-opacity-50'
                 : 'border-gray-lighten-5 border-opacity-100',
-                'border-b text-caption'
+                'text-caption', {'border-b': myInstalledApps.length > index + 1}
                 ]"
             @click="app.isSelected = !app.isSelected; saveChange()"
           >

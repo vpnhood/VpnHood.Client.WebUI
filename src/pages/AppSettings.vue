@@ -105,7 +105,6 @@ const includeLocalNetwork = computed({
         <v-col cols="auto">
           <v-switch
             v-model="includeLocalNetwork"
-            :disabled="vhApp.isConnected()"
             :hide-details="true"
             :inline="true"
             class="px-2"

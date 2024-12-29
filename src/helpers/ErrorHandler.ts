@@ -109,6 +109,7 @@ export class ErrorHandler {
 
     const googleMessageTitle = i18n.global.t('GOOGLE_EXCEPTION_MESSAGE');
     const billingMessage = err.data.BillingMessage;
+    const purchaseState = err.data.PurchaseState;
 
     if (err.data.PurchaseState === GooglePlayBillingPurchaseState.Pending)
       return i18n.global.t('GOOGLE_BILLING_PENDING_PURCHASE');
@@ -122,6 +123,8 @@ export class ErrorHandler {
         return i18n.global.t('GOOGLE_BILLING_SERVICE_DISCONNECTED');
 
       case GooglePlayBillingResponseCode.Error:
+        if (purchaseState === "")
+          return `${billingMessage}`; // TODO: translate google error
         return `${i18n.global.t('ORDER_PROCESSING_FAILED')} ${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`;
 
       case GooglePlayBillingResponseCode.DeveloperError:

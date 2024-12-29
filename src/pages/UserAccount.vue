@@ -4,7 +4,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppPackageName } from '@/helpers/UiConstants';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import router from '@/services/router';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
@@ -12,13 +12,7 @@ const vhApp = VpnHoodApp.instance
 const locale = i18n.global.t;
 const userAccount = vhApp.data.userState.userAccount;
 const showConfirmSignOut = ref<boolean>(false);
-const isPremiumAccount = ref<boolean>(vhApp.data.state.clientProfile?.isPremiumAccount ?? false);
-
-// Get refreshed account data if user has active subscription
-onMounted(async () => {
-  if (vhApp.data.userState.userAccount?.subscriptionId)
-    await vhApp.loadAccount(true);
-})
+const isPremiumAccount = ref<boolean>((vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported) ?? false);
 
 function onSignOut() {
   showConfirmSignOut.value = false;
@@ -90,7 +84,9 @@ function formatDate(date: Date | null | undefined): string | null{
       </v-card>
 
       <!-- Subscriptions details -->
-      <v-card v-if="isPremiumAccount" :color="vhApp.isConnectApp() ? 'background' : 'white'" class="mt-4">
+      <v-card v-if="isPremiumAccount && vhApp.data.userState.userAccount?.subscriptionId" :color="vhApp.isConnectApp() ?
+      'background' : 'white'"
+              class="mt-4">
         <v-card-text>
           <ul id="subscriptionInfoList" style="list-style: none;">
             <!-- Created time -->
@@ -145,7 +141,8 @@ function formatDate(date: Date | null | undefined): string | null{
       </v-card>
 
       <!-- Go premium -->
-      <v-card v-else :color="vhApp.isConnectApp() ? 'background' : 'white'" class="mt-4">
+      <v-card v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+              :color="vhApp.isConnectApp() ? 'background' : 'white'" class="mt-4">
         <v-card-text class="d-flex align-center ga-4">
           <v-img
             :eager="true"

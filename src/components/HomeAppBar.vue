@@ -10,21 +10,21 @@ const locale = i18n.global.t;
 const isShowDebugDialog = ref<boolean>(false);
 const openDebugDialogCounter = ref<number>(0);
 
-const debugData1 = computed<string | null | undefined>({
+const debugData1 = computed<string[]>({
   get: () => {
-    return vhApp.data.settings.userSettings.debugData1;
+    return vhApp.data.settings.userSettings.debugData1?.split(" ") ?? [];
   },
-  set: (value: string | null | undefined) => {
-    vhApp.data.settings.userSettings.debugData1 = value === "" ? null : value;
+  set: (value: string[] | null) => {
+    vhApp.data.settings.userSettings.debugData1 = value?.join(" ") || null;
   }
 });
 
-const debugData2 = computed<string | null | undefined>({
+const debugData2 = computed<string | null>({
   get: () => {
-    return vhApp.data.settings.userSettings.debugData2;
+    return vhApp.data.settings.userSettings.debugData2 ?? null;
   },
-  set: (value: string | null | undefined) => {
-    vhApp.data.settings.userSettings.debugData2 = value === "" ? null : value;
+  set: (value: string | null) => {
+    vhApp.data.settings.userSettings.debugData2 = value;
   }
 });
 
@@ -78,9 +78,33 @@ async function saveDebugData() {
     <v-card rounded="lg" color="gray" class="py-0">
       <v-card-title>Only for developers</v-card-title>
 
-      <v-card-item class="mb-8">
-        <v-text-field v-model="debugData1" clearable hide-details label="DebugData1" class="mb-4"/>
-        <v-text-field v-model="debugData2" clearable hide-details label="DebugData2" class="mb-4"/>
+      <v-card-item>
+
+        <!-- Debug data-1 -->
+        <v-combobox
+          v-model="debugData1"
+          clearable
+          label="DebugData1"
+          :items="vhApp.data.features.debugCommands"
+          variant="filled"
+          hide-details
+          hide-selected
+          chips
+          closable-chips
+          multiple
+          class="mb-4"
+        />
+
+        <!-- Debug data-2 -->
+        <v-combobox
+          v-model="debugData2"
+          clearable
+          label="DebugData2"
+          variant="filled"
+          hide-details
+          class="mb-4"
+        />
+
         <!-- Open log file -->
         <v-btn
           color="secondary"
@@ -91,24 +115,15 @@ async function saveDebugData() {
         />
       </v-card-item>
 
+      <!-- Close button -->
       <v-divider class="border-opacity-25"></v-divider>
       <v-card-actions>
         <v-spacer/>
-        <!-- Cancel -->
         <v-btn
           rounded="pill"
           variant="tonal"
           class="px-4"
-          text="Cancel"
-          @click="isShowDebugDialog = false"
-        />
-
-        <!-- Ok -->
-        <v-btn
-          rounded="pill"
-          variant="text"
-          class="px-4"
-          text="Ok"
+          text="Close"
           @click="saveDebugData()"
         />
       </v-card-actions>

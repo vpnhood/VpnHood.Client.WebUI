@@ -130,7 +130,7 @@ function appFilterStatus(): string {
 }
 
 function getExpireDate(): string | null {
-  if (!vhApp.data.state.clientProfile?.isPremiumAccount
+  if ((!vhApp.data.state.clientProfile?.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
     || vhApp.data.state.connectionState !== AppConnectionState.Connected
     || !vhApp.data.state.sessionStatus?.accessUsage?.expirationTime)
     return null;
@@ -164,7 +164,7 @@ function udpProtocolButtonText(): string {
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
 function isShowCountdown(): boolean{
-  const isPremiumAccount = vhApp.data.state.clientProfile?.isPremiumAccount;
+  const isPremiumAccount = vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported;
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
   return !isPremiumAccount && hasExpireTime;
 }
@@ -201,14 +201,14 @@ function getActiveServerNameOrLocation(): string {
       <!-- Countdown and extend session button -->
       <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
 
+      <!-- TODO: Check on expired subscription -->
       <!-- You are premium button go to account -->
-      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount"
+      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
               prepend-icon="mdi-crown"
               :text="locale('YOU_ARE_PREMIUM')"
               color="secondary-lighten-1"
               variant="tonal"
               tag="h6"
-              @click="router.push('/account')"
       />
 
         <!-- Go Premium button for guest user -->
