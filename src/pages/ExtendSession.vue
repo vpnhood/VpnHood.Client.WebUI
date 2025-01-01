@@ -44,6 +44,17 @@ async function showRewardedAd(){
 
   <v-sheet class="pa-3" color="black">
     <v-card class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
+
+      <!-- Back button -->
+      <v-btn
+        variant="tonal"
+        size="30"
+        color="secondary"
+        :icon="Util.getLocalizedLeftChevron()"
+        class="opacity-70 text-capitalize ms-3 mt-3"
+        @click="router.go(-1)"
+      />
+
       <h3 class="mt-5 text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />
 
       <v-img
@@ -78,18 +89,6 @@ async function showRewardedAd(){
           :button-text="locale('UPGRADE')"
           :button-action-plan="MyPlanId.premiumByPurchase"
           @action-by-plan="actionByConnectPlan"
-        />
-
-        <!-- Back button -->
-        <v-btn
-          rounded="pill"
-          variant="text"
-          :ripple="false"
-          color="secondary"
-          :prepend-icon="Util.getLocalizedLeftChevron()"
-          class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
-          :text="locale('GO_BACK')"
-          @click="router.go(-1)"
         />
 
       </div>

@@ -73,6 +73,22 @@ const routes = [
     meta: {
       title: 'Promote Premium',
     }
+  },
+  {
+    path: '/filter-ips-by-device',
+    name: 'Filter IPs By Device',
+    component: () => import(/* webpackChunkName: "FilterIPsByDevice" */ '@/pages/FilterIPsByDevice.vue'),
+    meta: {
+      title: 'Filter IPs By Device',
+    }
+  },
+  {
+    path: '/filter-ips-by-app',
+    name: 'Filter IPs By App',
+    component: () => import(/* webpackChunkName: "FilterIPsByApp" */ '@/pages/FilterIPsByApp.vue'),
+    meta: {
+      title: 'Filter IPs By App',
+    }
   }
 ];
 

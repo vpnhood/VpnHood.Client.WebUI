@@ -42,7 +42,7 @@ function openDebugDialog(){
   },3000)
 }
 
-async function saveDebugData() {
+async function saveSetting() {
   await vhApp.saveUserSetting();
   isShowDebugDialog.value = false;
 }
@@ -124,7 +124,7 @@ async function saveDebugData() {
           variant="tonal"
           class="px-4"
           text="Close"
-          @click="saveDebugData()"
+          @click="saveSetting()"
         />
       </v-card-actions>
     </v-card>

@@ -33,6 +33,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 /*noinspection CssUnusedSymbol*/
 .opacity-100 {transition: opacity 1.4s ease;}
 .text-transform-none{text-transform: none;}
+.rounded-md{border-radius: 4px;}
 
 /*noinspection CssUnusedSymbol*/
 .flasher{animation: pulseOpacity 1s infinite;}

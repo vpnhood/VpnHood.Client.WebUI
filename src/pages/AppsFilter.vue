@@ -6,6 +6,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -130,13 +131,7 @@ async function actionOnConfirm() {
   >
 
     <!-- Disconnect required alert -->
-    <v-alert v-if="vhApp.isConnected()"
-       class="text-caption mb-5"
-       density="compact"
-       :icon="false"
-       type="warning"
-       :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
-    />
+    <disconnect-required-alert/>
 
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->

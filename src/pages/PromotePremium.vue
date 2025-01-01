@@ -42,9 +42,18 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
     <v-card
       class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
-      <div class="mt-5">
-        <h3 class="text-center" v-html="dialogTitle" />
-      </div>
+
+      <!-- Back button -->
+      <v-btn
+        variant="tonal"
+        size="30"
+        color="secondary"
+        :icon="Util.getLocalizedLeftChevron()"
+        class="opacity-70 text-capitalize ms-3 mt-3"
+        @click="router.go(-1)"
+      />
+
+      <h3 class="text-center mt-5" v-html="dialogTitle" />
 
       <v-img
         :eager="true"
@@ -55,12 +64,15 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         class="mx-auto"
       />
 
-
       <div class="px-3">
 
         <!-- Continue as Free -->
-        <v-row v-if="isFreeAvailable()" dense align="center"
-               class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg">
+        <v-row v-if="isFreeAvailable()"
+           dense
+           align="center"
+           class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg"
+               style="background-color: rgba(var(--v-theme-primary-lighten-1), 0.3);"
+        >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
             <p class="text-disabled text-caption" style="line-height: 1.3">
@@ -80,6 +92,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
             />
           </v-col>
         </v-row>
+
         <!-- Divider -->
         <div v-if="isFreeAvailable()" class="d-flex align-center justify-center my-5 mx-10">
           <div class="w-100 border-b border-secondary-lighten-1"></div>
@@ -118,18 +131,6 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
           :button-text="locale('UPGRADE')"
           :button-action-plan="MyPlanId.premiumByPurchase"
           @action-by-plan="actionByConnectPlan"
-        />
-
-        <!-- Back button -->
-        <v-btn
-          rounded="pill"
-          variant="text"
-          :ripple="false"
-          color="secondary"
-          :prepend-icon="Util.getLocalizedLeftChevron()"
-          class="d-inline-flex opacity-60 text-capitalize align-self-start px-0 mt-3"
-          :text="locale('GO_BACK')"
-          @click="router.go(-1)"
         />
 
       </div>

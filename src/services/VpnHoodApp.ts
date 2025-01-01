@@ -116,7 +116,7 @@ export class VpnHoodApp {
     // Remove built-in client profile if the user is premium
     this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
       ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
-      : config.clientProfileInfos
+      : config.clientProfileInfos;
 
     if (config.clientProfileInfos.length === 0)
       this.data.settings.userSettings.clientProfileId = null;
@@ -379,7 +379,7 @@ export class VpnHoodApp {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.log(`User Account: ${this.data.userState.userAccount}`);
+    console.log("User Account: ", this.data.userState.userAccount);
     await this.reloadSettings();
   }
 }

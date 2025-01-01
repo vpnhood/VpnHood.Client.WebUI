@@ -51,13 +51,6 @@ export class ErrorHandler {
         return this.googleBillingExceptionHandler(err);
     }
 
-    // Just for VpnHoodConnect
-    //TODO: Test error
-    if (VpnHoodApp.instance.isConnectApp() && err.message === 'Session has been closed.') {
-      await VpnHoodApp.instance.signOut();
-      return null;
-    }
-
     return err.message ?? err;
   }
 

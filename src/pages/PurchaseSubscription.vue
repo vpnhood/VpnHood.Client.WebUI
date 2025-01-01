@@ -374,12 +374,10 @@ async function closeOnPurchaseComplete(): Promise<void> {
   min-height: 150px;
   max-height: 335px;
 }
-/*TODO: remove if unnecessary*/
 #rocket, #rocketSmoke{
   position: absolute;
   left: 0;
   right: 0;
-  height: auto;
 }
 #rocket{
   background: url('@/assets/images/rocket.webp') no-repeat top center;

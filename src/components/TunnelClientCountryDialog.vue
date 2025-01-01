@@ -2,6 +2,7 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
+import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -38,14 +39,7 @@ const tunnelClientCountry = computed<boolean>({
 
       <v-card-text>
         <!-- Disconnecting alert -->
-        <v-alert
-          v-if="vhApp.isConnected()"
-          class="mb-5 text-caption"
-          density="compact"
-          :icon="false"
-          type="warning"
-          :text="locale('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')">
-        </v-alert>
+        <disconnect-required-alert/>
 
         <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','pb-4']">
           {{ locale("TUNNEL_MY_COUNTRY_DESC") }}

@@ -201,7 +201,6 @@ function getActiveServerNameOrLocation(): string {
       <!-- Countdown and extend session button -->
       <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
 
-      <!-- TODO: Check on expired subscription -->
       <!-- You are premium button go to account -->
       <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
               prepend-icon="mdi-crown"
