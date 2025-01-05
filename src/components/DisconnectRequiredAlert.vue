@@ -8,7 +8,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
     v-if="VpnHoodApp.instance.isConnected()"
     :icon="false"
     :text="i18n.global.t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
-    class="text-caption mb-4"
+    class="text-caption"
     density="compact"
     type="warning"
   />

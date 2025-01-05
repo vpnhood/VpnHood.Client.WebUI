@@ -125,7 +125,9 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
         </template>
       </v-chip>
 
-      <v-icon v-else-if="props.isPremiumGroup" size="20" icon="mdi-crown" color="tertiary" />
+      <v-icon v-else-if="props.isPremiumGroup" size="20" icon="mdi-crown"
+              :color="vhApp.isConnectApp() ? (vhApp.data.state.clientProfile?.isPremiumAccount ?
+              'secondary-lighten-1' : 'tertiary') : 'primary'" />
 
     </v-list-item-title>
   </v-list-item>

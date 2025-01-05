@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
+import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -15,16 +16,34 @@ const showPurchaseCompleteDialog = ref<boolean>(false);
 const purchaseCompleteMessage = ref<string | null>(null);
 const premiumCode = ref<string | null>(null);
 const premiumCodeErrorMessage = ref<string | null>(null);
+const isGooglePlayAvailable = ref<boolean>(true);
+const isGoogleBillingAvailable = ref<boolean>(true);
 
 onMounted(async () => {
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase){
-    // Get products list from Google and sort based on plan prices
-    const billingClient = ClientApiFactory.instance.createBillingClient();
-    const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
-    cloneSubscriptionPlans.sort(
-      (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
-        Number((b.planPrice).replace(/\D/g, '')));
-    subscriptionPlans.value = cloneSubscriptionPlans;
+    try {
+      // Get products list from Google and sort based on plan prices
+      const billingClient = ClientApiFactory.instance.createBillingClient();
+      const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
+      cloneSubscriptionPlans.sort(
+        (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
+          Number((b.planPrice).replace(/\D/g, '')));
+      subscriptionPlans.value = cloneSubscriptionPlans;
+    }
+    catch (err: unknown){
+      if (!(err instanceof ApiException))
+        throw err;
+
+      if (err.exceptionTypeName === "GoogleBillingException" && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable){
+        isGoogleBillingAvailable.value = false;
+        return;
+      }
+
+      if (err.exceptionTypeName === "GooglePlayUnavailableException")
+        isGooglePlayAvailable.value = false;
+
+      throw err;
+    }
   }
 });
 
@@ -96,6 +115,14 @@ async function closeOnPurchaseComplete(): Promise<void> {
           </li>
           <li>
             <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('FILTER_IP_ADDRESSES')}}
+          </li>
+          <li>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
+            {{locale('INCLUDE_LOCAL_NETWORK')}}
+          </li>
+          <li>
+            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
             {{locale('ALWAYS_ON')}}
           </li>
           <li>
@@ -113,55 +140,75 @@ async function closeOnPurchaseComplete(): Promise<void> {
       <div class="px-5 mt-4">
 
         <!-- Purchase by google -->
-        <v-card v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
-          class="py-3 px-3 rounded-lg text-white"
+        <v-card v-if="isGooglePlayAvailable &&
+        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
+          class="py-3 px-3 rounded-lg text-white mb-4"
+          :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
           color="rgba(var(--v-theme-primary-lighten-1), 0.3)"
         >
-        <!-- Plan title, price -->
-        <v-row justify="space-between">
-          <v-col cols="auto" class="d-flex ga-1 align-center">
-            <v-icon icon="mdi-crown" size="23" color="tertiary-lighten-1"/>
-            <!-- TODO: must change to subscriptionPlanId -->
-            <span class="font-weight-bold text-body-2">{{locale('1_MONTH')}}</span>
-          </v-col>
-          <v-col cols="auto" class="d-flex ga-1 align-center">
+          <template v-if="isGoogleBillingAvailable">
+            <!-- Plan title, price -->
+            <v-row justify="space-between">
+              <v-col cols="auto" class="d-flex ga-1 align-center">
+                <v-icon icon="mdi-crown" size="23" color="tertiary-lighten-1"/>
+                <!-- TODO: must change to subscriptionPlanId -->
+                <span class="font-weight-bold text-body-2">{{locale('1_MONTH')}}</span>
+              </v-col>
+              <v-col cols="auto" class="d-flex ga-1 align-center">
             <span v-if="subscriptionPlans[0]?.planPrice" class="font-weight-bold text-body-2">
               {{subscriptionPlans[0].planPrice}}
             </span>
-            <v-progress-circular
-              v-else
-              size="18"
-              indeterminate
-              width="1"
+                <v-progress-circular
+                  v-else
+                  size="18"
+                  indeterminate
+                  width="1"
+                />
+                <span class="text-caption">{{locale('PER_MONTH')}}</span>
+              </v-col>
+            </v-row>
+
+            <!-- Purchase button -->
+            <v-btn
+              block
+              rounded="pill"
+              color="secondary-lighten-1"
+              class="text-primary-darken-2 mt-1 font-weight-bold"
+              variant="flat"
+              :loading="!subscriptionPlans[0]?.subscriptionPlanId"
+              :disabled="!subscriptionPlans[0]?.subscriptionPlanId"
+              :text="locale('PURCHASE')"
+              @click="onPurchaseClick(subscriptionPlans[0].subscriptionPlanId)"
             />
-            <span class="text-caption">{{locale('PER_MONTH')}}</span>
-          </v-col>
-        </v-row>
 
-        <!-- Purchase button -->
-        <v-btn
-          block
-          rounded="pill"
-          color="secondary-lighten-1"
-          class="text-primary-darken-2 mt-1 font-weight-bold"
-          variant="flat"
-          :loading="!subscriptionPlans[0]?.subscriptionPlanId"
-          :disabled="!subscriptionPlans[0]?.subscriptionPlanId"
-          :text="locale('PURCHASE')"
-          @click="onPurchaseClick(subscriptionPlans[0].subscriptionPlanId)"
-        />
+            <!-- Plan Descriptions -->
+            <ul class="text-white opacity-30 ps-4 mt-2" style="font-size: 10px;">
+              <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
+              <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
+            </ul>
+          </template>
 
-        <!-- Plan Descriptions -->
-        <ul class="text-white opacity-30 ps-4 mt-2" style="font-size: 10px;">
-          <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
-          <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
-        </ul>
+          <template v-else>
+            <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline"/>
+            <span class="text-error text-caption">{{locale('GOOGLE_PLAY_BILLING_UNAVAILABLE')}}</span>
+            <v-btn
+              :text="locale('MORE_INFO')"
+              color="error"
+              variant="tonal"
+              rounded="pill"
+              size="small"
+              block
+              class="text-lowercase mt-2"
+              @click="vhApp.showErrorMessage(locale('GOOGLE_BILLING_BILLING_UNAVAILABLE'))"
+            />
+          </template>
+
         </v-card>
 
         <!-- Input premium code button and sheet -->
         <v-bottom-sheet v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByCode">
           <template v-slot:activator="{ props }">
-            <v-card class="mt-4 py-1 rounded-lg" color="rgba(var(--v-theme-primary-lighten-1), 0.3)">
+            <v-card class="py-1 rounded-lg" color="rgba(var(--v-theme-primary-lighten-1), 0.3)">
               <v-btn
                 v-bind="props"
                 block

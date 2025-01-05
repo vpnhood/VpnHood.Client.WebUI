@@ -12,7 +12,7 @@ const vhApp = VpnHoodApp.instance
 const locale = i18n.global.t;
 
 const includeLocalNetwork = computed({
-  get: () => VpnHoodApp.instance.data.settings.userSettings.includeLocalNetwork,
+  get: () => vhApp.data.settings.userSettings.includeLocalNetwork,
   set: async (value: boolean) => {
     vhApp.data.settings.userSettings.includeLocalNetwork = value
     await vhApp.saveUserSetting()
@@ -21,26 +21,48 @@ const includeLocalNetwork = computed({
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return VpnHoodApp.instance.data.settings.userSettings.usePacketCaptureIpFilter;
+    return vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
   },
   set: async (value: boolean) => {
-    VpnHoodApp.instance.data.settings.userSettings.usePacketCaptureIpFilter = value;
+    vhApp.data.settings.userSettings.usePacketCaptureIpFilter = value;
     await saveSetting();
   }
 })
 
 const useIpFilterByApp = computed<boolean>({
   get: () => {
-    return VpnHoodApp.instance.data.settings.userSettings.useAppIpFilter;
+    return vhApp.data.settings.userSettings.useAppIpFilter;
   },
   set: async (value: boolean) => {
-    VpnHoodApp.instance.data.settings.userSettings.useAppIpFilter = value;
+    vhApp.data.settings.userSettings.useAppIpFilter = value;
     await saveSetting();
   }
 })
 
 async function saveSetting() {
   await vhApp.saveUserSetting();
+}
+function isFilterIpByDeviceAvailable(): boolean{
+  if (isPremiumFeaturesAvailable())
+    return true;
+
+  return vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
+}
+function isFilterIpByAppAvailable(): boolean{
+  if (isPremiumFeaturesAvailable())
+    return true;
+
+  return vhApp.data.settings.userSettings.useAppIpFilter;
+}
+function isIncludeLocalNetworkAvailable(): boolean{
+  if (isPremiumFeaturesAvailable())
+    return true;
+  return vhApp.data.settings.userSettings.includeLocalNetwork;
+}
+function isPremiumFeaturesAvailable(): boolean{
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    return true;
+  return vhApp.data.state.clientProfile?.isPremiumAccount === true;
 }
 </script>
 
@@ -57,7 +79,7 @@ async function saveSetting() {
       'VCard':{'class': 'mb-4', 'color': vhApp.isConnectApp() ? 'background' : 'white'},
       'VCardTitle':{'class': 'pt-4 pb-0'},
       'VCardSubtitle':{'class': [vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-wrap text-caption']},
-      'VSwitch':{'class': 'px-2', 'color': 'secondary', 'density': 'compact'},
+      'VSwitch':{'class': 'px-2', 'color': 'secondary', 'density': 'compact', 'hideDetails': true},
       'VDivider':{'class':'mx-4'},
       'VBtn':{'variant':'tonal', 'color': 'secondary', 'class': 'justify-space-between text-transform-none mb-2',
               'block': true, 'text': locale('MANAGE_IP_ADDRESSES')},
@@ -112,17 +134,27 @@ async function saveSetting() {
       <!-- Exclude local network -->
       <v-card>
         <!-- Section title -->
-        <v-card-title>{{ locale('LOCAL_NETWORK') }}</v-card-title>
+        <v-card-title class="d-flex justify-space-between align-center">
+          {{ locale('LOCAL_NETWORK') }}
+          <v-icon
+            v-if="vhApp.data.features.isPremiumFlagSupported"
+            :color="!isPremiumFeaturesAvailable() ? 'warning' : 'secondary-lighten-1'"
+            icon="mdi-crown"
+            size="18"
+          />
+        </v-card-title>
         <v-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</v-card-subtitle>
 
         <!-- Disconnecting alert -->
-        <disconnect-required-alert/>
+        <v-card-item v-if="vhApp.isConnected()">
+          <disconnect-required-alert/>
+        </v-card-item>
 
-        <v-card-item>
+        <v-card-item @click="!isIncludeLocalNetworkAvailable() ? router.push('/purchase-subscription') : ''">
           <v-row class="align-center justify-space-between">
             <v-col>{{ locale('INCLUDE_LOCAL_NETWORK') }}</v-col>
             <v-col cols="auto">
-              <v-switch v-model="includeLocalNetwork" hide-details />
+              <v-switch v-model="includeLocalNetwork" :disabled="!isIncludeLocalNetworkAvailable()"/>
             </v-col>
           </v-row>
         </v-card-item>
@@ -130,20 +162,28 @@ async function saveSetting() {
 
       <!-- Exclude/Include IP ranges -->
       <v-card>
-        <v-card-title>{{locale("FILTER_IP_ADDRESSES")}}</v-card-title>
+        <v-card-title class="d-flex justify-space-between align-center">
+          {{locale("FILTER_IP_ADDRESSES")}}
+          <v-icon
+            v-if="vhApp.data.features.isPremiumFlagSupported"
+            :color="!isPremiumFeaturesAvailable() ? 'warning' : 'secondary-lighten-1'"
+            icon="mdi-crown"
+            size="18"
+          />
+        </v-card-title>
         <v-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</v-card-subtitle>
 
         <!-- Disconnecting alert -->
-        <v-card-text v-if="vhApp.isConnected()">
+        <v-card-item v-if="vhApp.isConnected()">
           <disconnect-required-alert/>
-        </v-card-text>
+        </v-card-item>
 
         <!-- Filter by device -->
-        <v-card-item>
+        <v-card-item @click="!isFilterIpByDeviceAvailable() ? router.push('/purchase-subscription') :  null ">
           <v-row class="align-center justify-space-between">
             <v-col>{{locale("FILTER_IPS_BY_DEVICE")}}</v-col>
             <v-col cols="auto">
-              <v-switch v-model="useIpFilterByDevice" hide-details/>
+              <v-switch v-model="useIpFilterByDevice" :disabled="!isFilterIpByDeviceAvailable()" />
             </v-col>
           </v-row>
 
@@ -157,11 +197,11 @@ async function saveSetting() {
         <v-divider />
 
         <!-- Filter by App -->
-        <v-card-item>
+        <v-card-item @click="!isFilterIpByAppAvailable() ? router.push('/purchase-subscription') :  null ">
           <v-row class="align-center justify-space-between">
             <v-col>{{locale("FILTER_IPS_BY_APP")}}</v-col>
             <v-col cols="auto">
-              <v-switch v-model="useIpFilterByApp" hide-details/>
+              <v-switch v-model="useIpFilterByApp" :disabled="!isFilterIpByAppAvailable()" />
             </v-col>
           </v-row>
 

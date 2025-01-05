@@ -49,6 +49,8 @@ export class ErrorHandler {
         return this.sessionExceptionHandler(err);
       case 'GoogleBillingException':
         return this.googleBillingExceptionHandler(err);
+      case 'GooglePlayUnavailableException':
+        return i18n.global.t("GOOGLE_PLAY_IS_UNAVAILABLE");
     }
 
     return err.message ?? err;

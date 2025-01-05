@@ -13,7 +13,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
-  (e: 'clickAction'): void,
+  (e: 'confirm'): void,
+  (e: 'cancel'): void,
 }>();
 </script>
 
@@ -53,7 +54,7 @@ const emit = defineEmits<{
             min-width="70px"
             color="secondary"
             :text="locale('NO')"
-            @click="emit('update:modelValue', false)"
+            @click="emit('cancel'); emit('update:modelValue', false)"
           />
 
           <!-- Yes -->
@@ -64,7 +65,7 @@ const emit = defineEmits<{
             min-width="70px"
             color="secondary"
             :text="locale('YES')"
-            @click="emit('clickAction'); emit('update:modelValue', false)"
+            @click="emit('confirm'); emit('update:modelValue', false)"
           />
         </v-card-actions>
       </v-card>

@@ -34,6 +34,10 @@ export enum AppName{
     VpnHood = "VpnHood",
     VpnHoodConnect = "VpnHoodConnect",
 }
+export enum IPFilterType{
+    FilterByDevice,
+    FilterByApp
+}
 
 export enum AppPackageName{
   VpnHoodConnect = "com.vpnhood.connect.android",

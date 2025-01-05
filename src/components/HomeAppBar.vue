@@ -66,7 +66,9 @@ async function saveSetting() {
       @click="openDebugDialog"
       tabindex="-1"
       :class="[vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null
-         ? 'bg-warning border border-on-warning  text-black rounded-pill px-1' : 'text-disabled','text-caption me-3']"
+         ? 'bg-warning border text-black rounded-pill px-1' : 'text-disabled','text-caption me-3',
+          {'text-decoration-underline':vhApp.data.settings.userSettings.usePacketCaptureIpFilter ||
+          vhApp.data.settings.userSettings.useAppIpFilter}]"
     >
       {{ locale("ABBREVIATION_VERSION") }}
       {{vhApp.getAppVersion(false) }}

@@ -227,7 +227,7 @@ async function actionOnConfirm() {
     :title="confirmDialogAction == ConfirmDialogAction.SelectAll
     ? locale('SELECT_ALL_APPS_TITLE') : locale('CLEAR_ALL_APPS_TITLE')"
     :message="locale('ARE_YOU_SURE')"
-    @click-action="actionOnConfirm"
+    @confirm="actionOnConfirm()"
   />
 </template>
 
