@@ -131,7 +131,7 @@ async function actionOnConfirm() {
   >
 
     <!-- Disconnect required alert -->
-    <disconnect-required-alert/>
+    <disconnect-required-alert class="mb-4"/>
 
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->

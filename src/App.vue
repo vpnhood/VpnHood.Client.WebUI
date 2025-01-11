@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import Vuetify from '@/services/vuetify';
 import {ComponentRouteController} from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
@@ -23,7 +22,7 @@ const isShowErrorDialog = computed<boolean>({
   }
 })
 
-const isShowPrivacyPolicyDialog = ref<boolean>(false);
+const isShowPrivacyPolicyDialog = ref<boolean>(vhApp.isConnectApp() && !vhApp.data.settings.userSettings.isLicenseAccepted);
 
 onMounted(async () => {
   // Reload 'state' every 1 second if app window is focused.
@@ -32,114 +31,79 @@ onMounted(async () => {
       await vhApp.reloadState();
   }, 1000);
 
-  // Show privacy policy if app is VpnHoodCONNECT
-  if (vhApp.isConnectApp() && !vhApp.data.settings.userSettings.isLicenseAccepted) {
-    isShowPrivacyPolicyDialog.value = true;
-    return;
-  }
-
   // Get user account
-  if (vhApp.data.features.isAccountSupported)
+  if (vhApp.data.features.isAccountSupported && !isShowPrivacyPolicyDialog.value)
     await vhApp.loadAccount();
 
 })
 </script>
 
 <template>
-  <v-app id="appContainer"
-         :class="[vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode,
-         'bg-primary-darken-2 position-relative']"
-  >
+  <v-app id="appContainer" :class="[vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]">
 
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
-    <!-- DO NOT REMOVE 'fill-height' class to support legacy browsers -->
-    <v-main
-      id="mainBg"
-      :class="[Vuetify.display.mdAndUp.value? 'not-mobile rounded-lg mx-auto my-10' : '','w-100 fill-height']"
-      :style="[Vuetify.display.mdAndUp.value ? 'max-width:850px;' : '']"
-    >
+    <v-main id="mainBg">
 
-      <router-view v-if="!isShowPrivacyPolicyDialog"/>
-
-      <!-- Only for VpnHoodCONNECT -->
+      <!-- Privacy policy dialog -->
       <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" v-if="isShowPrivacyPolicyDialog"/>
 
-      <!-- Loading dialog before each api call -->
-      <LoadingDialog v-else v-model="vhApp.data.uiState.showLoadingDialog"/>
+      <router-view v-else/>
+
+      <!-- Global Loading dialog -->
+      <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog"/>
 
       <!-- Global alert dialog -->
-      <error-dialog v-model="isShowErrorDialog" v-if="isShowErrorDialog"/>
+      <error-dialog v-model="isShowErrorDialog"/>
 
       <!-- Global snackbar -->
-      <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"
-        v-if="vhApp.data.uiState.generalSnackbarData.isShow" />
-
+      <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"/>
 
     </v-main>
+
   </v-app>
 </template>
 
+
+<!--suppress CssUnresolvedCustomProperty -->
 <style scoped>
 #mainBg {
-  /*noinspection CssUnresolvedCustomProperty*/
-  background-image: linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
-  position: relative;
-  z-index: 0;
-}
-
-#mainBg:before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  right: 0;
-  left: 0;
-  background: url("@/assets/images/body-bg.png") no-repeat center center fixed;
   background-size: cover;
-  z-index: -1;
+  background-repeat: no-repeat ;
+  background-attachment: fixed;
+  background-position: center center;
+  width: 100%;
+  /*DO NOT REMOVE 'height: 100%' to support legacy browsers*/
+  height: 100%;
 }
 
-/*noinspection CssUnusedSymbol*/
-#mainBg.not-mobile {
-  /*noinspection CssUnresolvedCustomProperty*/
-  border: 1px rgba(var(--v-theme-secondary), .5) solid;
-  box-shadow: 0 0 20px 9px #00000047;
-}
-
-/*noinspection CssUnusedSymbol*/
-#mainBg.not-mobile:before {
-  border-radius: 8px;
-}
-
-@media (max-width: 425px) {
-  #mainBg:before {
-    background-image: url('@/assets/images/body-bg-mobile.png');
+@media (max-width: 959px) {
+  #mainBg {
+    background-image: url("@/assets/images/body-bg-mobile.png"), linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
+  }
+  .VpnHoodConnect #mainBg{
+    background-image: url("@/assets/images/body-bg-mobile.png"), linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
   }
 }
 
-/*** Android TV background ***/
-#appContainer:before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  right: 0;
-  left: 0;
-  background: url('@/assets/images/body-bg.png') no-repeat center center fixed;
-  background-size: cover;
-  filter: blur(14px);
+/************ Device is not mobile *************/
+@media (min-width: 960px){
+  #mainBg {
+    background-image: url("@/assets/images/body-bg.png"), linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
+    border: 1px rgba(var(--v-theme-secondary), .5) solid;
+    max-width: 850px;
+    box-shadow: 0 0 20px 9px #00000047;
+    border-radius: 10px;
+    margin: 10px auto;
+  }
+  .VpnHoodConnect #mainBg {
+    background-image: url("@/assets/images/body-bg.png"), linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
+  }
+  #appContainer {
+    background: url('@/assets/images/body-blur-bg.png') rgb(var(--v-theme-primary-darken-2)) no-repeat center center fixed;
+    background-size: cover;
+  }
 }
-
-/*** App is the VpnHoodConnect ***/
-/*noinspection CssUnusedSymbol*/
-.VpnHoodConnect #mainBg {
-  /*noinspection CssUnresolvedCustomProperty*/
-  background-image: linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
-}
-.VpnHoodConnect #mainBg:before,
-.VpnHoodConnect #appContainer:before {
-  opacity: .5;
-}
+/************ End of Device is not mobile *************/
 </style>

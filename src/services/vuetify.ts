@@ -4,12 +4,8 @@ import { createVuetify } from 'vuetify';
 import * as directives from 'vuetify/directives';
 import { en, fa } from 'vuetify/locale';
 import * as components from 'vuetify/components';
-import { VSnackbarQueue } from 'vuetify/labs/VSnackbarQueue';
 export default createVuetify({
-  components:{
-    ...components,
-    VSnackbarQueue
-  },
+  components,
   directives,
   locale: {
     locale: 'en',

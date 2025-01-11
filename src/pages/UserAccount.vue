@@ -15,7 +15,6 @@ const showConfirmSignOut = ref<boolean>(false);
 const isPremiumAccount = ref<boolean>((vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported) ?? false);
 
 function onSignOut() {
-  showConfirmSignOut.value = false;
   vhApp.signOut();
   router.replace('/');
 }
@@ -175,7 +174,7 @@ function formatDate(date: Date | null | undefined): string | null{
     v-model="showConfirmSignOut"
     :title="locale('CONFIRM_SIGN_OUT_TITLE')"
     :message="locale('CONFIRM_SIGN_OUT_DESC')"
-    @click-action="onSignOut"
+    @confirm="onSignOut()"
   />
 </template>
 

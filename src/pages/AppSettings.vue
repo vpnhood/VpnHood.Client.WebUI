@@ -132,7 +132,7 @@ function isPremiumFeaturesAvailable(): boolean{
       </v-card>
 
       <!-- Exclude local network -->
-      <v-card>
+      <v-card v-if="vhApp.data.features.isLocalNetworkSupported">
         <!-- Section title -->
         <v-card-title class="d-flex justify-space-between align-center">
           {{ locale('LOCAL_NETWORK') }}

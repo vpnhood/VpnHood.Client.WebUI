@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { AppConnectionState, FilterMode, Traffic } from '@/services/VpnHood.Client.Api';
+import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
 import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
 import ProtocolDialog from '@/components/ProtocolDialog.vue';
 import HomeAppBar from '@/components/HomeAppBar.vue';
 import SuppressSnackbar from '@/components/SuppressSnackbar.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
-import { UiConstants } from '@/helpers/UiConstants';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -19,7 +18,6 @@ import CountDown from '@/components/CountDown.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 let lastConnectPressedTime = Date.now() - 1000;
-
 
 async function onConnectButtonClick(): Promise<void> {
 
@@ -40,121 +38,6 @@ async function onConnectButtonClick(): Promise<void> {
     await ConnectManager.connect1(false);
   }
 }
-
-// Return text for connect button based on connection state
-function connectButtonText(): string {
-  if (!vhApp.data.state.canDiagnose &&
-    (vhApp.data.state.connectionState === AppConnectionState.Connected
-      || vhApp.data.state.connectionState === AppConnectionState.Connecting))
-    return locale('STOP_DIAGNOSING');
-  else
-    switch (vhApp.data.state.connectionState) {
-      case AppConnectionState.Initializing:
-        return locale('INITIALIZING');
-      case AppConnectionState.Connecting:
-        return locale('DISCONNECT');
-      case AppConnectionState.Waiting:
-        return locale('DISCONNECT');
-      case AppConnectionState.Connected:
-        return locale('DISCONNECT');
-      case AppConnectionState.Disconnecting:
-        return locale('DISCONNECTING');
-      case AppConnectionState.Diagnosing:
-        return locale('STOP_DIAGNOSING');
-      default:
-        return locale('CONNECT');
-    }
-}
-
-// Return icon based on connection state
-function stateIcon(): string | null {
-  if (vhApp.data.state.connectionState === AppConnectionState.Connected && !bandwidthUsage())
-    return 'mdi-check';
-  if (vhApp.data.state.connectionState === AppConnectionState.None)
-    return 'mdi-power-plug-off';
-  if (vhApp.data.state.connectionState === AppConnectionState.Connecting)
-    return 'mdi-power-plug';
-  if (vhApp.data.state.connectionState === AppConnectionState.Diagnosing)
-    return 'mdi-stethoscope';
-  if (vhApp.data.state.connectionState === AppConnectionState.Waiting)
-    return 'mdi-timer-sand';
-
-  return null;
-}
-
-// Calculate user bandwidth usage
-function bandwidthUsage(): { Used: string; Total: string } | null {
-  if (!vhApp.data.state || !vhApp.data.state.sessionStatus || !vhApp.data.state.sessionStatus.accessUsage)
-    return null;
-
-  const accessUsage = vhApp.data.state.sessionStatus.accessUsage;
-  if (!accessUsage.maxTraffic) return null;
-
-  const mb = 1000000;
-  const gb = 1000 * mb;
-  const traffic: Traffic = vhApp.data.state.accountTraffic;
-
-  const ret: {used: number, total: number} = {
-    used: traffic.sent + traffic.received,
-    total: accessUsage.maxTraffic
-  };
-  const total: string =
-    ret.total >= gb
-      ? Number((ret.total / gb).toFixed(1)).toString() + 'GB'
-      : Number((ret.total / mb).toFixed(0)).toString() + 'MB';
-  const used: string =
-    ret.used >= gb
-      ? Number((ret.used / gb).toFixed(1)).toString() + 'GB'
-      : Number((ret.used / mb).toFixed(0)).toString() + 'MB';
-  return { Used: used, Total: total };
-}
-
-// Return connection download and upload speed based on Mbps
-function formatSpeed(speed: number): string {
-  return ((speed * 10) / 1000000).toFixed(2);
-}
-
-// Return status of filtered apps by user (Only in mobile)
-function appFilterStatus(): string {
-  let appFilters = vhApp.data.settings.userSettings.appFilters;
-  if (!appFilters) appFilters = [];
-
-  switch (vhApp.data.settings.userSettings.appFiltersMode) {
-    case FilterMode.Exclude:
-      return locale('APP_FILTER_STATUS_EXCLUDE', { x: appFilters.length });
-    case FilterMode.Include:
-      return locale('APP_FILTER_STATUS_INCLUDE', { x: appFilters.length });
-    default:
-      return locale('APP_FILTER_STATUS_ALL');
-  }
-}
-
-function getExpireDate(): string | null {
-  if ((!vhApp.data.state.clientProfile?.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
-    || vhApp.data.state.connectionState !== AppConnectionState.Connected
-    || !vhApp.data.state.sessionStatus?.accessUsage?.expirationTime)
-    return null;
-
-  const expDate: Date = vhApp.data.state.sessionStatus.accessUsage.expirationTime;
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  };
-  // noinspection TypeScriptValidateJSTypes
-  return expDate.toLocaleString('locales', options).replace(',', '');
-}
-
-function alertForExpire(): boolean {
-  const expDate: Date | null | undefined = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
-  if (!expDate) return false;
-
-  const currentDate: Date = new Date();
-  const diffTime = expDate.getTime() - currentDate.getTime();
-  const diffDays: number = Math.ceil(diffTime / UiConstants.millisecondPerDay);
-  return diffDays <= 3;
-}
-
 function udpProtocolButtonText(): string {
   const { connectionState, isUdpChannelSupported } = vhApp.data.state;
   const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
@@ -184,17 +67,58 @@ function getActiveServerNameOrLocation(): string {
 
   return text.replace('United States (', 'USA (');
 }
+
+// Return text for connect button based on connection state
+function connectButtonText(): string {
+  if (!vhApp.data.state.canDiagnose &&
+    (vhApp.data.state.connectionState === AppConnectionState.Connected
+      || vhApp.data.state.connectionState === AppConnectionState.Connecting))
+    return locale('STOP_DIAGNOSING');
+  else
+    switch (vhApp.data.state.connectionState) {
+      case AppConnectionState.Initializing:
+        return locale('INITIALIZING');
+      case AppConnectionState.Connecting:
+        return locale('DISCONNECT');
+      case AppConnectionState.Waiting:
+        return locale('DISCONNECT');
+      case AppConnectionState.Connected:
+        return locale('DISCONNECT');
+      case AppConnectionState.Disconnecting:
+        return locale('DISCONNECTING');
+      case AppConnectionState.Diagnosing:
+        return locale('STOP_DIAGNOSING');
+      default:
+        return locale('CONNECT');
+    }
+}
+
+// Return connection download and upload speed based on Mbps
+function formatSpeed(speed: number): string {
+  return ((speed * 10) / 1000000).toFixed(2);
+}
+
+// Return status of filtered apps by user (Only in mobile)
+function appFilterStatus(): string {
+  let appFilters = vhApp.data.settings.userSettings.appFilters;
+  if (!appFilters) appFilters = [];
+
+  switch (vhApp.data.settings.userSettings.appFiltersMode) {
+    case FilterMode.Exclude:
+      return locale('APP_FILTER_STATUS_EXCLUDE', { x: appFilters.length });
+    case FilterMode.Include:
+      return locale('APP_FILTER_STATUS_INCLUDE', { x: appFilters.length });
+    default:
+      return locale('APP_FILTER_STATUS_ALL');
+  }
+}
 </script>
 
 <template>
   <!-- App bar -->
   <HomeAppBar />
 
-  <v-row
-    align-content="space-between"
-    justify="center"
-    class="fill-height px-md-2 pb-3 ma-0"
-  >
+  <v-row align-content="space-between" justify="center" class="fill-height px-md-2 pb-3 ma-0">
     <!-- Go Premium or Countdown button -->
     <v-col cols="12" class="text-center pt-0">
 
@@ -252,13 +176,7 @@ function getActiveServerNameOrLocation(): string {
       </v-row>
 
       <!-- Circle -->
-      <HomeConnectionInfo
-        :alert-for-expire="alertForExpire()"
-        :state-icon="stateIcon()"
-        :expire-date="getExpireDate()"
-        :bandwidth-used="bandwidthUsage()?.Used"
-        :bandwidth-total="bandwidthUsage()?.Total"
-      />
+      <HomeConnectionInfo />
 
       <!-- Connect button -->
       <v-btn

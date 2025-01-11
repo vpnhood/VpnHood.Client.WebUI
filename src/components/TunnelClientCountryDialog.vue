@@ -39,7 +39,7 @@ const tunnelClientCountry = computed<boolean>({
 
       <v-card-text>
         <!-- Disconnecting alert -->
-        <disconnect-required-alert/>
+        <disconnect-required-alert class="mb-4"/>
 
         <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','pb-4']">
           {{ locale("TUNNEL_MY_COUNTRY_DESC") }}
