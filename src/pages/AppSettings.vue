@@ -70,18 +70,15 @@ function isPremiumFeaturesAvailable(): boolean{
   <!-- Page header -->
   <AppBar :page-title="locale('SETTINGS')" />
 
-  <v-sheet
-    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-    class="pa-4"
-  >
+  <v-sheet>
 
     <v-defaults-provider :defaults="{
-      'VCard':{'class': 'mb-4', 'color': vhApp.isConnectApp() ? 'background' : 'white'},
+      'VCard':{'class': 'mb-4', 'color': 'card-bg'},
       'VCardTitle':{'class': 'pt-4 pb-0'},
-      'VCardSubtitle':{'class': [vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-wrap text-caption']},
-      'VSwitch':{'class': 'px-2', 'color': 'secondary', 'density': 'compact', 'hideDetails': true},
+      'VCardSubtitle':{'class': 'text-disabled text-wrap text-caption'},
+      'VSwitch':{'class': 'px-2', 'color': 'highlight', 'density': 'compact', 'hideDetails': true},
       'VDivider':{'class':'mx-4'},
-      'VBtn':{'variant':'tonal', 'color': 'secondary', 'class': 'justify-space-between text-transform-none mb-2',
+      'VBtn':{'variant':'tonal', 'color': 'highlight', 'class': 'justify-space-between text-transform-none mb-2',
               'block': true, 'text': locale('MANAGE_IP_ADDRESSES')},
     }">
       <!-- Change language -->
@@ -98,10 +95,7 @@ function isPremiumFeaturesAvailable(): boolean{
 
             <template v-slot:append>
               <!-- Active language name -->
-              <span
-                :class="[vhApp.isConnectApp() ? 'text-disabled': 'text-gray-lighten-2']"
-                class="text-caption text-capitalize me-1"
-              >
+              <span class="text-disabled text-caption text-capitalize me-1">
                 {{ vhApp.data.state.currentUiCultureInfo.nativeName }}
               </span>
 
@@ -114,13 +108,11 @@ function isPremiumFeaturesAvailable(): boolean{
         <!-- Language contribute link -->
         <v-card-text v-if="i18n.global.locale.value !== LanguagesCode.English" class="text-caption">
           <!-- Description -->
-          <p :class="[vhApp.isConnectApp() ? 'text-disabled': 'text-gray-lighten-2', 'mb-2']">
-            {{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}
-          </p>
+          <p class="text-disabled mb-2">{{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}</p>
 
           <!-- Link -->
           <a
-            class="text-secondary text-decoration-none"
+            class="text-highlight text-decoration-none"
             href="https://explore.transifex.com/vpnhood/vpnhood-client"
             target="_blank"
           >
@@ -138,7 +130,7 @@ function isPremiumFeaturesAvailable(): boolean{
           {{ locale('LOCAL_NETWORK') }}
           <v-icon
             v-if="vhApp.data.features.isPremiumFlagSupported"
-            :color="!isPremiumFeaturesAvailable() ? 'warning' : 'secondary-lighten-1'"
+            :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
             icon="mdi-crown"
             size="18"
           />
@@ -164,12 +156,8 @@ function isPremiumFeaturesAvailable(): boolean{
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
           {{locale("FILTER_IP_ADDRESSES")}}
-          <v-icon
-            v-if="vhApp.data.features.isPremiumFlagSupported"
-            :color="!isPremiumFeaturesAvailable() ? 'warning' : 'secondary-lighten-1'"
-            icon="mdi-crown"
-            size="18"
-          />
+          <PremiumIcon v-if="vhApp.data.features.isPremiumFlagSupported"/>
+
         </v-card-title>
         <v-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</v-card-subtitle>
 

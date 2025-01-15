@@ -98,7 +98,8 @@ onMounted(async () => {
     margin: 10px auto;
   }
   .VpnHoodConnect #mainBg {
-    background-image: url("@/assets/images/body-bg.png"), linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
+    background-image: url("@/assets/images/body-bg.png");
+    background-color: rgb(var(--v-theme-primary-darken-2));
   }
   #appContainer {
     background: url('@/assets/images/body-blur-bg.png') rgb(var(--v-theme-primary-darken-2)) no-repeat center center fixed;

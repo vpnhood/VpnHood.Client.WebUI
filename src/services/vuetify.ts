@@ -4,6 +4,48 @@ import { createVuetify } from 'vuetify';
 import * as directives from 'vuetify/directives';
 import { en, fa } from 'vuetify/locale';
 import * as components from 'vuetify/components';
+import { VIcon } from 'vuetify/components/VIcon';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+
+const myColors = {
+  gray:{
+    100: "#f3f3f3",
+    200: "#efefef",
+    300: "#eaeaea",
+    400: "#bebebe",
+    500: "#929292",
+    600: "#888888ff",
+    700: "#3f3f3f"
+  },
+  blue:{
+    100:"#16a3fe",
+    200:"#1940b0",
+    300:"#122272",
+    400:"#06124b",
+  },
+  purple:{
+    100:"#8d9fe4",
+    200:"#7b7afe",
+    300:"#2f296e",
+    400:"#211951",
+    500:"#150e3d",
+    600:"#0b0b24"
+  },
+  green:{
+    100:"#15f5ba",
+    200:"#23c99d"
+  },
+  yellow:{
+    100:"#ffe066",
+    200:"#ffe648",
+  }
+}
+function isPremiumFeaturesAvailable(): boolean{
+  if (!VpnHoodApp.instance.data.features.isPremiumFlagSupported)
+    return true;
+  return VpnHoodApp.instance.data.state.clientProfile?.isPremiumAccount === true;
+}
+
 export default createVuetify({
   components,
   directives,
@@ -17,20 +59,41 @@ export default createVuetify({
       isRtl: true
     }
   },
+  aliases: {
+    PremiumIcon: VIcon,
+  },
   defaults: {
     VSheet: {
-      class: 'pa-4 position-relative',
-      height: '100%'
+      class: "pa-4",
+      color: "background",
+      height: "100%"
+    },
+    PremiumIcon:{
+      color:isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium',
+      icon:"mdi-crown",
+      size:"18"
     }
   },
   theme: {
     defaultTheme: 'VpnHood',
+    variations: {
+      colors: ['background'],
+      lighten: 2,
+      darken: 4,
+    },
     themes: {
       VpnHood: {
         dark: false,
         colors: {
+          background: myColors.gray['100'],
+          'on-background':'#000000',
+          'card-bg': '#ffffff',
+          active: myColors.green['200'],
+          highlight: myColors.green['200'],
+          'enable-premium':myColors.blue['400'],
+          'disable-premium':myColors.yellow['100'],
+
           'ui-tertiary': '#16a3fe',
-          background: '#122272',
           surface: '#ffffff',
           'on-surface': '#212121',
           primary: '#1940b0',
@@ -67,8 +130,15 @@ export default createVuetify({
       VpnHoodConnect: {
         dark: true,
         colors: {
+          background: myColors.purple['500'],
+          'on-background':'#ffffff',
+          'card-bg': myColors.purple['400'],
+          active: myColors.green['100'],
+          highlight: myColors.purple['200'],
+          'enable-premium':myColors.green['100'],
+          'disable-premium':myColors.yellow['100'],
+
           'ui-tertiary': '#7b7afe',
-          background: '#211951',
           surface: '#ffffff',
           'on-surface': '#212121',
           'primary-lighten-1': '#2f296e',
