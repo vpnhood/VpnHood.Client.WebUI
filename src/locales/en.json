@@ -237,9 +237,11 @@
   "FILTER_IP_ADDRESSES_DESC": "Include or exclude specific host IP addresses from VPN traffic.",
   "MANAGE_IP_ADDRESSES": "Manage IP addresses",
   "REMARK_IP_FILTER_DESC": "To add a comment, start your text with a # symbol.",
-  "CAUTION_INCREASE_NUMBER_OF_IP": "Caution: Increasing the number of IPs in the 'filter by device' setting may be limited by your operating system, potentially preventing the VPN from starting.",
+  "CAUTION_INCREASE_NUMBER_OF_IP": "Increasing the number of IPs in the 'filter by device' setting may be limited by your operating system, potentially preventing the VPN from starting.",
   "REVERT":"Revert",
   "GOOGLE_PLAY_IS_UNAVAILABLE": "Google Play is unavailable on your device.",
   "GOOGLE_PLAY_BILLING_UNAVAILABLE": "Google Play billing is unavailable.",
-  "MORE_INFO": "More info"
+  "MORE_INFO": "More info",
+  "ALERT": "Alert",
+  "INFO": "Info"
 }

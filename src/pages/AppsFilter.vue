@@ -125,10 +125,7 @@ async function actionOnConfirm() {
 <template>
   <AppBar :page-title="locale('APP_FILTER')"/>
 
-  <v-sheet
-    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-    class="py-5"
-  >
+  <v-sheet>
 
     <!-- Disconnect required alert -->
     <disconnect-required-alert class="mb-4"/>
@@ -136,26 +133,30 @@ async function actionOnConfirm() {
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
     <div>
-      <v-btn
-        prepend-icon="mdi-select-all"
-        variant="tonal"
-        rounded="pill"
-        density="comfortable"
-        class="d-inline-flex text-caption me-2"
-        :text="locale('SELECT_ALL')"
-        @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
-      />
+      <v-defaults-provider :defaults="{
+        'VBtn':{
+        'variant':'tonal',
+        'rounded': 'pill',
+        'class': 'd-inline-flex text-caption',
+        'density':'comfortable',
+        },
+       }"
+      >
+        <!-- Select all apps button -->
+        <v-btn
+          prepend-icon="mdi-select-all"
+          class="me-2"
+          :text="locale('SELECT_ALL')"
+          @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
+        />
 
-      <!-- Remove all apps button -->
-      <v-btn
-        prepend-icon="mdi-select-remove"
-        variant="tonal"
-        rounded="pill"
-        density="comfortable"
-        class="d-inline-flex text-caption"
-        :text="locale('CLEAR_ALL')"
-        @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
-      />
+        <!-- Remove all apps button -->
+        <v-btn
+          prepend-icon="mdi-select-remove"
+          :text="locale('CLEAR_ALL')"
+          @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
+        />
+      </v-defaults-provider>
     </div>
 
     <!-- Search box -->
@@ -168,7 +169,7 @@ async function actionOnConfirm() {
       variant="outlined"
       density="compact"
       rounded="pill"
-      color="secondary"
+      color="highlight"
       id="appSearchField"
       :placeholder="locale('SEARCH')"
       class="mt-5"
@@ -176,15 +177,13 @@ async function actionOnConfirm() {
     </v-text-field>
 
     <!-- Filter apps option -->
-    <v-card
-      :color="vhApp.isConnectApp() ? 'background' : ''"
-      :loading="myInstalledApps.length < 1"
+    <v-card :loading="myInstalledApps.length < 1"
+      color="card-bg"
       class="mt-5"
       min-height="300px"
     >
         <!-- Apps list -->
-        <v-list
-          v-if="myInstalledApps.length > 1"
+        <v-list v-if="myInstalledApps.length > 1"
           id="appFilterList"
           select-strategy="classic"
           bg-color="transparent"
@@ -198,22 +197,18 @@ async function actionOnConfirm() {
             :title="app.appName"
             :ripple="true"
             :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
-            :class="[
-                vhApp.isConnectApp()
-                ? 'border-primary-darken-2 border-opacity-50'
-                : 'border-gray-lighten-5 border-opacity-100',
-                'text-caption', {'border-b': myInstalledApps.length > index + 1}
-                ]"
+            class="text-caption"
+            :class="{'border-b border-on-card-border': myInstalledApps.length > index + 1}"
             @click="app.isSelected = !app.isSelected; saveChange()"
           >
             <template v-slot:append>
               <v-switch
-                tabindex="-1"
                 :model-value="app.isSelected"
                 :hide-details="true"
+                tabindex="-1"
                 readonly
                 density="compact"
-                color="secondary"
+                color="highlight"
               />
             </template>
           </v-list-item>

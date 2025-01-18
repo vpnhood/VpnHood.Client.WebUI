@@ -115,31 +115,33 @@ function appFilterStatus(): string {
 </script>
 
 <template>
-  <!-- App bar -->
-  <HomeAppBar />
+    <!-- App bar -->
+    <HomeAppBar />
 
-  <v-row align-content="space-between" justify="center" class="fill-height px-md-2 pb-3 ma-0">
-    <!-- Go Premium or Countdown button -->
-    <v-col cols="12" class="text-center pt-0">
+  <v-container class="pt-0 fill-height">
+    <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters ">
 
-      <!-- Countdown and extend session button -->
-      <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
+      <!-- Go Premium or Countdown button -->
+      <v-col cols="12" class="text-center">
 
-      <!-- You are premium button go to account -->
-      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
-              prepend-icon="mdi-crown"
-              :text="locale('YOU_ARE_PREMIUM')"
-              color="secondary-lighten-1"
-              variant="tonal"
-              tag="h6"
-      />
+        <!-- Countdown and extend session button -->
+        <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
+
+        <!-- You are premium button go to account -->
+        <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
+                prepend-icon="mdi-crown"
+                :text="locale('YOU_ARE_PREMIUM')"
+                color="enable-premium"
+                variant="tonal"
+                tag="h6"
+        />
 
         <!-- Go Premium button for guest user -->
         <v-btn
           v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
           :flat="true"
           variant="outlined"
-          color="tertiary"
+          color="go-premium-btn"
           rounded="pill"
           size="small"
           height="35"
@@ -148,82 +150,67 @@ function appFilterStatus(): string {
         >
           <v-icon
             icon="mdi-crown"
-            color="primary"
             size="25"
-            class="bg-tertiary rounded-circle me-2"
+            class="bg-go-premium-btn rounded-circle me-2"
           />
           {{ locale('GO_PREMIUM') }}
         </v-btn>
 
-    </v-col>
+      </v-col>
 
-    <!-- Speed & Circle & Connect button -->
-    <v-col cols="12" :class="'py-0 text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
-      <!-- Speed -->
-      <v-row id="speedSection" align-content="center" justify="center"
-        :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
-      >
-        <v-col cols="auto d-inline-flex">
-          <span class="text-ui-tertiary text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
-          <span class="text-white opacity-50 text-caption">Mbps</span>
-        </v-col>
-        <v-col cols="auto d-inline-flex">
-          <span class="text-ui-tertiary text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
-          <span class="text-white opacity-50 text-caption order-last">Mbps</span>
-        </v-col>
-      </v-row>
+      <!-- Speed & Circle & Connect button -->
+      <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
+        <!-- Speed -->
+        <v-row align-content="center" justify="center" :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
+          <v-col cols="auto d-inline-flex">
+            <span class="text-connection-speed text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
+            <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
+            <span class="text-disabled text-caption">Mbps</span>
+          </v-col>
+          <v-col cols="auto d-inline-flex">
+            <span class="text-connection-speed text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
+            <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
+            <span class="text-disabled text-caption order-last">Mbps</span>
+          </v-col>
+        </v-row>
 
-      <!-- Circle -->
-      <HomeConnectionInfo />
+        <!-- Circle -->
+        <HomeConnectionInfo />
 
-      <!-- Connect button -->
-      <v-btn
-        height="40px"
-        min-width="180px"
-        rounded="pill"
-        :disabled="
-          vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
-          vhApp.data.state.connectionState === AppConnectionState.Initializing
-        "
-        class="font-weight-bold mt-5"
-        :class="[vhApp.data.state.connectionState === AppConnectionState.Connected ? 'secondary-btn' : 'master-btn',
-          {'solid': vhApp.isConnectApp() }]"
-        @click="onConnectButtonClick"
-      >
-        {{ connectButtonText() }}
-      </v-btn>
-    </v-col>
+        <!-- Connect button -->
+        <v-btn
+          id="connectBtn"
+          height="40px"
+          min-width="180px"
+          rounded="pill"
+          :disabled="vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
+          vhApp.data.state.connectionState === AppConnectionState.Initializing"
+          class="font-weight-bold mt-5"
+          :class="{'connected': vhApp.data.state.connectionState === AppConnectionState.Connected}"
+          :text="connectButtonText()"
+          @click="onConnectButtonClick"
+        />
 
-    <!-- Config buttons -->
-    <v-col cols="12">
-      <v-row>
+      </v-col>
+
+      <!-- Config buttons -->
+      <v-col cols="12">
+
         <!-- Servers button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
-          <v-btn
-            depressed
-            block
-            id="serverButton"
-            variant="text"
-            size="small"
-            prepend-icon="mdi-earth"
-            class="config-item align-center mb-1"
-            @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
+        <HomeConfigBtn
+          id="serverButton"
+          prepend-icon="mdi-earth"
+          class="align-center mb-1"
+          @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
             : router.push('/servers')"
-          >
-            <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
-            <v-icon :icon="Util.getLocalizedRightChevron()" />
-            <span
-              class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate"
-              tabindex="-1"
-            >
-              {{ getActiveServerNameOrLocation() }}
-            </span>
+        >
+          <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <HomeConfigChip tabindex="-1" :text="getActiveServerNameOrLocation()"/>
 
-            <template v-slot:append>
+          <template v-slot:append>
               <span
                 v-if="vhApp.getActiveServerCountryFlag()"
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
@@ -231,89 +218,64 @@ function appFilterStatus(): string {
               >
                 <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
               </span>
-              <v-chip
-                v-else
-                :text="locale('AUTO')"
-                size="small"
-                density="compact"
-                variant="tonal"
-                color="gray-lighten-3"
-                class="text-caption px-2"
-              />
-            </template>
-          </v-btn>
-        </v-col>
+            <v-chip
+              v-else
+              :text="locale('AUTO')"
+              size="small"
+              density="compact"
+              variant="tonal"
+              color="disabled"
+              class="text-caption px-2"
+            />
+          </template>
+        </HomeConfigBtn>
 
         <!-- Exclude country button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
-          <v-btn
-            depressed
-            block
-            id="excludeCountryButton"
-            variant="outlined"
-            size="small"
-            prepend-icon="mdi-call-split"
-            class="config-item mb-1"
-            @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
-          >
-            <span>{{ locale('COUNTRIES') }}</span>
-            <v-icon :icon="Util.getLocalizedRightChevron()" />
-            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">
-              {{ vhApp.data.settings.userSettings.tunnelClientCountry
-              ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
-            </span>
-            <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode"
-              v-slot:append
-            >
+        <HomeConfigBtn
+          id="excludeCountryButton"
+          prepend-icon="mdi-call-split"
+          class="mb-1"
+          @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
+        >
+          <span>{{ locale('COUNTRIES') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <HomeConfigChip :text="vhApp.data.settings.userSettings.tunnelClientCountry
+              ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')" />
+          <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
                 <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag"/>
               </span>
-            </template>
-          </v-btn>
-        </v-col>
+          </template>
+        </HomeConfigBtn>
 
         <!-- App filter button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
-          <v-btn
-            v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
-            depressed
-            block
-            variant="text"
-            size="small"
-            prepend-icon="mdi-call-split"
-            class="config-item mb-1"
-            to="/apps-filter"
-          >
-            <span>{{ locale('APPS') }}</span>
-            <v-icon :icon="Util.getLocalizedRightChevron()" />
-            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">{{ appFilterStatus() }}</span>
-          </v-btn>
-        </v-col>
+        <HomeConfigBtn
+          v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+          prepend-icon="mdi-call-split"
+          class="mb-1"
+          to="/apps-filter"
+        >
+          <span>{{ locale('APPS') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <HomeConfigChip :text="appFilterStatus()"/>
+        </HomeConfigBtn>
 
         <!-- Protocol button -->
-        <v-col cols="12" md="6" class="py-0 pa-md-1">
-          <v-btn
-            depressed
-            block
-            variant="text"
-            size="small"
-            prepend-icon="mdi-transit-connection-variant"
-            class="config-item"
-            @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
-          >
-            <span>{{ locale('PROTOCOL_TITLE') }}</span>
-            <v-icon :icon="Util.getLocalizedRightChevron()" />
-            <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate">
-              {{ udpProtocolButtonText() }}
-            </span>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+        <HomeConfigBtn
+          prepend-icon="mdi-transit-connection-variant"
+          @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
+        >
+          <span>{{ locale('PROTOCOL_TITLE') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <HomeConfigChip :text="udpProtocolButtonText()" />
+        </HomeConfigBtn>
+
+      </v-col>
+    </v-row>
+  </v-container>
 
   <!-- Components -->
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
@@ -323,12 +285,25 @@ function appFilterStatus(): string {
 
 </template>
 
+<!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
-/*noinspection CssUnresolvedCustomProperty*/
+#connectBtn {
+  transition: all 0.4s ease;
+  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-disconnected-grad-1)),
+  rgb(var(--v-theme-connect-btn-disconnected-grad-2)) 90%) !important;
+  color: rgb(var(--v-theme-on-connect-btn-disconnected));
+}
+
+#connectBtn.connected {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-connected)),
+  rgb(var(--v-theme-connect-btn-connected)) 90%) !important;
+  color: rgb(var(--v-theme-on-connect-btn-connected));
+}
+
 .config-item {
-  color: rgb(var(--v-theme-tertiary));
-  background: rgba(var(--v-theme-primary-darken-1), 0.8);
-  border: 1px rgba(var(--v-theme-tertiary), 0.3) solid;
+  color: rgb(var(--v-theme-on-config-btn-bg));
+  background: rgba(var(--v-theme-config-btn-bg), 0.7);
+  border: 1px rgba(var(--v-theme-on-config-btn-bg), 0.3) solid;
   min-height: 40px;
   justify-content: start;
   white-space: nowrap !important;
@@ -336,10 +311,6 @@ function appFilterStatus(): string {
   text-overflow: ellipsis !important;
 }
 
-.VpnHoodConnect .config-item {
-  /*noinspection CssUnresolvedCustomProperty*/
-  background: rgba(var(--v-theme-primary-darken-1), 0.4);
-}
 .limited-width-to-truncate{
   max-width: calc(100vw - 110px);
 }

@@ -35,6 +35,12 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 .text-transform-none{text-transform: none;}
 .rounded-md{border-radius: 4px;}
 
+.v-card + .v-card{
+    margin-top: 16px;
+}
+.v-alert + .v-alert{
+    margin-top: 10px;
+}
 /*noinspection CssUnusedSymbol*/
 .flasher{animation: pulseOpacity 1s infinite;}
 @keyframes pulseOpacity

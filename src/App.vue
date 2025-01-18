@@ -8,6 +8,7 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
+import i18n from '@/locales/i18n';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -44,7 +45,7 @@ onMounted(async () => {
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
-    <v-main id="mainBg">
+    <v-main id="pagesContainer">
 
       <!-- Privacy policy dialog -->
       <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" v-if="isShowPrivacyPolicyDialog"/>
@@ -68,7 +69,7 @@ onMounted(async () => {
 
 <!--suppress CssUnresolvedCustomProperty -->
 <style scoped>
-#mainBg {
+#pagesContainer {
   background-size: cover;
   background-repeat: no-repeat ;
   background-attachment: fixed;
@@ -79,32 +80,28 @@ onMounted(async () => {
 }
 
 @media (max-width: 959px) {
-  #mainBg {
-    background-image: url("@/assets/images/body-bg-mobile.png"), linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
-  }
-  .VpnHoodConnect #mainBg{
-    background-image: url("@/assets/images/body-bg-mobile.png"), linear-gradient(rgb(var(--v-theme-primary-darken-2)), rgb(var(--v-theme-primary-darken-2)));
+  #pagesContainer {
+    background-image: url("@/assets/images/body-bg-mobile.png"),
+    linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2)));
   }
 }
 
 /************ Device is not mobile *************/
 @media (min-width: 960px){
-  #mainBg {
-    background-image: url("@/assets/images/body-bg.png"), linear-gradient(rgb(var(--v-theme-primary)), rgb(var(--v-theme-primary-darken-1)));
-    border: 1px rgba(var(--v-theme-secondary), .5) solid;
+  #appContainer {
+    background: url('@/assets/images/body-blur-bg.png') rgb(var(--v-theme-app-bg)) no-repeat center center fixed;
+    background-size: cover;
+  }
+  #pagesContainer {
+    background-image: url("@/assets/images/body-bg.png"),
+    linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2)));
+    border: 1px rgba(var(--v-theme-highlight), .5) solid;
+    width: 100%;
     max-width: 850px;
     box-shadow: 0 0 20px 9px #00000047;
     border-radius: 10px;
     margin: 10px auto;
   }
-  .VpnHoodConnect #mainBg {
-    background-image: url("@/assets/images/body-bg.png");
-    background-color: rgb(var(--v-theme-primary-darken-2));
-  }
-  #appContainer {
-    background: url('@/assets/images/body-blur-bg.png') rgb(var(--v-theme-primary-darken-2)) no-repeat center center fixed;
-    background-size: cover;
-  }
 }
-/************ End of Device is not mobile *************/
+/********* End of Device is not mobile **********/
 </style>

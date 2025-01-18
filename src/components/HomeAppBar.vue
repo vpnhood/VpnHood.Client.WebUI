@@ -52,11 +52,12 @@ async function saveSetting() {
   <v-app-bar color="transparent" elevation="0" absolute>
 
     <!-- Navigation drawer button -->
-    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="ms-0"/>
+    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="ms-0"
+                        color="white"/>
 
     <!-- App name -->
     <v-spacer></v-spacer>
-    <h4 dir="ltr">
+    <h4 dir="ltr" class="text-white">
       {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
     </h4>
     <v-spacer></v-spacer>
@@ -109,7 +110,7 @@ async function saveSetting() {
 
         <!-- Open log file -->
         <v-btn
-          color="secondary"
+          color="info"
           block
           text="Open log"
           :href="vhApp.data.serverUrl + UiConstants.logFileLocation"

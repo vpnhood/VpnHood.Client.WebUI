@@ -20,10 +20,10 @@ function getExpireDate(): string | null {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit'
+    day: '2-digit',
   };
   // noinspection TypeScriptValidateJSTypes
-  return expDate.toLocaleString('locales', options).replace(',', '');
+  return expDate.toLocaleString('en-GB', options).replace(',', '');
 }
 function alertForExpire(): boolean {
   const expDate: Date | null | undefined = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
@@ -116,12 +116,12 @@ function processConnectedAnimation(): void {
     <div class="d-flex flex-column align-center justify-center position-relative h-100">
 
       <!-- Connection state text -->
-      <span :class="[vhApp.isConnectApp() ? 'text-body-2' : 'text-body-1']">{{ vhApp.getConnectionStateText() }}</span>
+      <span class="text-body-2">{{ vhApp.getConnectionStateText() }}</span>
 
       <!-- Usage -->
       <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && bandwidthUsage()">
         <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ locale('OF') }}</span>
-        <span class="text-ui-tertiary">{{ bandwidthUsage()?.Total }}</span>
+        <span class="text-total-bandwidth">{{ bandwidthUsage()?.Total }}</span>
       </div>
 
       <!-- Check -->
@@ -129,7 +129,7 @@ function processConnectedAnimation(): void {
 
       <!-- Access Key expire date -->
       <p v-if="getExpireDate()"
-         :class="[alertForExpire() ? 'text-error' : 'text-purple-lighten-1', 'text-caption mt-2']">
+         :class="[alertForExpire() ? 'text-expire-date-warning' : 'text-expire-date-alert', 'text-caption mt-2']">
         {{ locale('EXPIRE') + ': ' + getExpireDate() }}</p>
 
     </div>

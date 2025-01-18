@@ -92,61 +92,85 @@ function revertCurrentChange(): void{
 </script>
 
 <template>
-  <v-sheet
-    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-    class="pa-4"
-  >
+  <v-sheet>
     <!-- Disconnecting alert -->
     <disconnect-required-alert class="mb-3"/>
 
     <v-defaults-provider :defaults="{
-      'VChip':{'density':'compact', 'color':'on-surface', 'size':'small',
-      'class':'px-1 py-0 border border-primary-lighten-1 border-opacity-100', 'style':'border-radius: 3px'},
-
-      'VTextarea':{'class':[vhApp.isConnectApp() ? 'connect-app' : '', 'ipList my-5'],
-      'dir':'ltr', 'bgColor':vhApp.isConnectApp() ? 'primary-darken-1' : 'white', 'density':'compact',
-      'variant':'outlined', 'rows':'4', 'color':'secondary', 'loading':isLoadingIP,
-      'placeholder':locale('IP_FILTER_PLACE_HOLDER'), 'hideDetails': true},
+      'VChip':{
+        'density': 'compact',
+        'color': 'on-surface',
+        'size': 'small',
+        'class': 'px-1 py-0 ms-1 border border-primary-lighten-1 border-opacity-100',
+        'style': 'border-radius: 3px'
+        },
+      'VTextarea':{
+        'class': 'ipList',
+        'dir': 'ltr',
+        'density': 'compact',
+        'rows': '3',
+        'variant': 'outlined',
+        'color': 'highlight',
+        'loading': isLoadingIP,
+        'placeholder': locale('IP_FILTER_PLACE_HOLDER'),
+        'hideDetails': true
+        },
     }">
 
       <!-- Sample ip format -->
-      <ul :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption ms-4 mb-2']">
-        <li>{{locale('SINGLE_IP')}}<v-chip text="192.168.1.1" /></li>
-        <li class="py-1">{{locale('RANGES_OF_IP')}}<v-chip text="192.168.1.1-192.168.1.255" /></li>
-        <li>{{locale('CIDR_NOTATION')}}<v-chip text="192.168.1.0/24" /></li>
-      </ul>
+      <InfoAlert>
+        <ul class="text-caption" style="list-style: none">
+          <li>
+            {{locale('SINGLE_IP')}}
+            <v-chip text="192.168.1.1" />
+          </li>
+          <li class="py-1">
+            {{locale('RANGES_OF_IP')}}
+            <v-chip text="192.168.1.1-192.168.1.255" />
+          </li>
+          <li>
+            {{locale('CIDR_NOTATION')}}
+            <v-chip text="192.168.1.0/24" />
+          </li>
+        </ul>
+      </InfoAlert>
 
       <!-- Describe remark -->
-      <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption']">
-        <strong :class="[vhApp.isConnectApp() ? 'text-white' : 'text-black']">{{locale('NOTE')}} :</strong>
-        {{locale('REMARK_IP_FILTER_DESC')}}
-      </p>
+      <NoteAlert :text="locale('REMARK_IP_FILTER_DESC')" />
 
       <!-- Alert for number of IPs in the filter by device -->
-      <v-alert
-        v-if="props.ipFilterType === IPFilterType.FilterByDevice"
-        :icon="false"
+      <WarningAlert v-if="props.ipFilterType === IPFilterType.FilterByDevice"
         :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
-        class="text-caption my-4"
-        density="compact"
-        type="warning"
+        class="mb-4"
       />
 
-      <!-- Exclude list -->
-      <v-textarea v-model="excludeIpFilters" :label="locale('IPS_TO_EXCLUDE')" />
 
-      <!-- Include list -->
-      <v-textarea v-model="includeIpFilters" :label="locale('IPS_TO_INCLUDE')" />
+      <v-card>
+        <!-- Exclude list -->
+        <v-card-item>
+          <p>{{locale('IPS_TO_EXCLUDE')}}</p>
+          <v-textarea v-model="excludeIpFilters" />
+        </v-card-item>
 
-      <v-btn v-if="showRevertButton"
-         block
-         variant="flat"
-         color="secondary"
-         :text="locale('REVERT')"
-         rounded="pill"
-         class="mt-4"
-         @click="revertCurrentChange()"
-      />
+        <!-- Include list -->
+        <v-card-item>
+          <p>{{locale('IPS_TO_INCLUDE')}}</p>
+          <v-textarea v-model="includeIpFilters" />
+        </v-card-item>
+
+        <!-- Revert button -->
+        <v-btn v-if="showRevertButton"
+               block
+               variant="flat"
+               color="secondary"
+               :text="locale('REVERT')"
+               rounded="pill"
+               class="mt-4"
+               @click="revertCurrentChange()"
+        />
+
+      </v-card>
+
     </v-defaults-provider>
   </v-sheet>
 </template>
@@ -154,19 +178,10 @@ function revertCurrentChange(): void{
 <style>
 .ipList textarea{
   /*noinspection CssUnresolvedCustomProperty*/
-  color: inherit !important;
   font-size: 14px;
   padding-top: 15px;
 }
 .ipList textarea::placeholder{
   font-size: 12px;
-  color: inherit;
-}
-.ipList.connect-app textarea{
-  /*noinspection CssUnresolvedCustomProperty*/
-  color: rgb(var(--v-theme-secondary)) !important;
-}
-.ipList.connect-app textarea::placeholder{
-  color: white;
 }
 </style>

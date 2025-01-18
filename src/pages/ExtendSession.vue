@@ -31,7 +31,7 @@ async function showRewardedAd(){
   try {
     showLoadingAdDialog.value = true;
     await vhApp.apiClient.extendByRewardedAd();
-    vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "secondary-lighten-1", "primary-darken-2");
+    vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "active");
     await router.replace("/");
   }
   finally {
@@ -42,14 +42,14 @@ async function showRewardedAd(){
 
 <template>
 
-  <v-sheet class="pa-3" color="black">
-    <v-card class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
+  <v-sheet color="colored-bg-dark">
+    <v-card class="d-flex flex-column justify-space-between primary-bg-grad border border-highlight border-opacity-50 text-white rounded-lg pb-3 h-100">
 
       <!-- Back button -->
       <v-btn
         variant="tonal"
         size="30"
-        color="secondary"
+        color="highlight"
         :icon="Util.getLocalizedLeftChevron()"
         class="opacity-70 text-capitalize ms-3 mt-3"
         @click="router.go(-1)"
@@ -95,14 +95,17 @@ async function showRewardedAd(){
     </v-card>
   </v-sheet>
   <v-dialog v-model="showLoadingAdDialog" :persistent="true" max-width="320">
-    <v-card rounded="lg" :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'">
-      <v-card-text class="text-center text-white">
-        <v-progress-circular color="secondary" class="mb-2" :indeterminate="true" size="30" width="2"/>
+    <v-card rounded="lg" color="background">
+      <v-card-text class="text-center">
+        <v-progress-circular color="highlight" class="mb-2" :indeterminate="true" size="30" width="2"/>
         <p class="text-caption mb-5">{{locale("LOADING_AD")}}...</p>
-        <p class="text-start">
-          <strong class="text-tertiary-lighten-1">{{locale("NOTE")}} :</strong>
-          {{locale("EXTEND_BY_REWARDED_AD_NOTE") }}
-        </p>
+        <v-alert
+          :icon="false"
+          :text="locale('EXTEND_BY_REWARDED_AD_NOTE')"
+          class="text-caption text-start"
+          density="compact"
+          type="warning"
+        />
       </v-card-text>
     </v-card>
   </v-dialog>

@@ -31,10 +31,10 @@ function pad(num: number): string{
 }
 function getCountdownColor(): string{
   if (remainingTimeSecond.value < fiveMinutes)
-    return 'error';
+    return 'count-down-warning';
   if (remainingTimeSecond.value < fifteenMinutes)
-    return 'tertiary-lighten-1';
-  return 'secondary-lighten-1';
+    return 'count-down-alert';
+  return 'count-down-normal';
 }
 </script>
 
@@ -49,8 +49,8 @@ function getCountdownColor(): string{
     <v-chip
       v-if="vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd"
       variant="flat"
-      color="tertiary-lighten-1"
-      class="text-capitalize text-primary font-weight-bold"
+      color="extent-session-btn"
+      class="text-capitalize font-weight-bold"
       :append-icon="Util.getLocalizedRightChevron()"
       size="small"
       :text="locale('EXTEND_IT')"

@@ -42,56 +42,48 @@ onMounted(() => {
   <!-- Page header -->
   <AppBar :page-title="locale('LANGUAGE')"/>
 
-  <v-sheet class="pa-4" :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'">
+  <v-sheet>
 
-    <v-card :color="vhApp.isConnectApp() ? 'background' : 'white'">
+    <v-card>
       <v-list
         v-model="defaultLanguage"
         select-strategy="classic"
         bg-color="transparent"
-        class="py-0"
-        active-class="text-secondary"
+        class="py-0 my-n2"
+        active-class="text-highlight"
       >
         <v-list-item
           v-for="(item, index) in myLocales"
           :key="index"
           :value="item.code"
-          :class="[
-                vhApp.isConnectApp()
-                ? 'border-primary-darken-2 border-opacity-50'
-                : 'border-gray-lighten-5 border-opacity-100',
-                'border-b'
-                ]"
+          class="border-b border-on-card-border"
           :active="item.code === defaultLanguage"
           @click="defaultLanguage = item.code"
         >
 
-          <!-- Language name -->
           <v-list-item-title class="text-capitalize">
 
             <!-- Radio button icon -->
             <span class="me-2">
               <v-icon v-if="item.code === defaultLanguage" icon="mdi-radiobox-marked"/>
-              <v-icon v-else icon="mdi-radiobox-blank" class="text-gray-lighten-1"/>
+              <v-icon v-else icon="mdi-radiobox-blank" class="text-disabled"/>
             </span>
 
+            <!-- Language name -->
             <span>{{ item.nativeName }}</span>
 
             <!-- System default language name -->
-            <span
-              v-if="item.code === LanguagesCode.SystemDefault"
-              :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption ms-1']"
-            >
+            <span v-if="item.code === LanguagesCode.SystemDefault" class="text-disabled text-caption ms-1">
               ({{ vhApp.data.state.systemUiCultureInfo.nativeName }})
             </span>
+
           </v-list-item-title>
 
           <!-- Show message if the system language does not supported -->
-          <p
-            dir="ltr"
-            v-if="item.code === LanguagesCode.SystemDefault &&
+          <p v-if="item.code === LanguagesCode.SystemDefault &&
             !myLocales.find(x => x.code === vhApp.data.state.systemUiCultureInfo.code)"
-            :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2', 'text-caption']"
+            dir="ltr"
+            class="text-disabled text-caption"
           >
             {{ locale("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC") }}
           </p>

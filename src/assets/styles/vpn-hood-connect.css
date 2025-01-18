@@ -3,26 +3,10 @@
 .v-overlay__scrim{
     background-color: black;
 }
-
-/*noinspection CssUnresolvedCustomProperty*/
-.master-btn.solid {
-    background: rgb(var(--v-theme-tertiary)) !important;
-    color: rgb(var(--v-theme-primary));
-}
-.secondary-btn.solid {
-    transition: all 0.4s ease;
-    /*noinspection CssUnresolvedCustomProperty*/
-    background-color: rgb(var(--v-theme-secondary)) !important;
-    color: white;
-}
-.master-btn.v-btn--disabled.solid,
-.secondary-btn.v-btn--disabled.solid{
-    color: rgba(255, 255, 255, 0.7);
-}
 /*** -------------------- General -------------------- ***/
 .primary-bg-grad{
     /*noinspection CssUnresolvedCustomProperty*/
-    background: linear-gradient(to bottom, rgb(var(--v-theme-primary-darken-4)) 60%, rgb(var(--v-theme-primary-darken-2)));
+    background: linear-gradient(to bottom, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
 }
 /*** --------------------Home Circle Section-------------------- ***/
 #connectionCircleIndicator{
