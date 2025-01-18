@@ -8,6 +8,7 @@ import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VChip } from 'vuetify/components/VChip';
+import { VCard, VCardSubtitle, VCardTitle } from 'vuetify/components/VCard';
 import i18n from '@/locales/i18n';
 
 const myColors = {
@@ -18,7 +19,8 @@ const myColors = {
     400: "#bebebe",
     500: "#929292",
     600: "#888888ff",
-    700: "#3f3f3f"
+    700: "#3f3f3f",
+    800: "#1e1e1e",
   },
   blue:{
     100:"#16a3fe",
@@ -27,6 +29,7 @@ const myColors = {
     400:"#06124b",
   },
   purple:{
+    50:"#aabaed",
     100:"#8d9fe4",
     200:"#7b7afe",
     300:"#2f296e",
@@ -67,28 +70,44 @@ export default createVuetify({
   },
   aliases: {
     PremiumIcon: VIcon,
+
     HomeConfigBtn: VBtn,
+    AlertDialogButton: VBtn,
+
     HomeConfigChip: VChip,
-    WarningAlert: VAlert,
-    InfoAlert: VAlert,
-    NoteAlert: VAlert,
+
+    ConfigCard: VCard,
+    ConfigCardTitle: VCardTitle,
+    ConfigCardSubtitle: VCardSubtitle,
+
+    AlertWarning: VAlert,
+    AlertInfo: VAlert,
+    AlertNote: VAlert,
   },
   defaults: {
+    VDialog: {
+      maxWidth: "500"
+    },
+    VBtn: {
+      class: "text-transform-none"
+    },
     VSheet: {
       class: "pa-4",
       color: "background",
       height: "100%"
     },
-    VCard:{
-      color:'card-bg',
+
+    ConfigCard:{
+      color:'config-card-bg',
       class: 'py-2'
     },
-    VCardTitle:{
-      class: "pt-1 pb-0"
+    ConfigCardTitle:{
+      class: "d-flex justify-space-between align-center pt-1 pb-0"
     },
-    VCardSubtitle:{
+    ConfigCardSubtitle:{
       class: "text-disabled text-wrap text-caption"
     },
+
     HomeConfigBtn:{
       block: true,
       depressed: true,
@@ -100,11 +119,21 @@ export default createVuetify({
       variant:'text',
       class: 'text-capitalize text-caption text-disabled text-truncate limited-width-to-truncate px-0'
     },
+
+    AlertDialogButton:{
+      rounded:'pill',
+      variant: 'tonal',
+      color: 'dialog-alert-btn',
+      class: 'text-transform-none mb-3',
+      block: true
+    },
+
     PremiumIcon:{
       icon:"mdi-crown",
       size:"18"
     },
-    WarningAlert:{
+
+    AlertWarning:{
       icon: false,
       type: "warning",
       density: "compact",
@@ -112,7 +141,7 @@ export default createVuetify({
       border: "start",
       title: i18n.global.t("ALERT")
     },
-    NoteAlert:{
+    AlertNote:{
       icon: false,
       type: "note",
       density: "compact",
@@ -121,7 +150,7 @@ export default createVuetify({
       variant: 'tonal',
       title: i18n.global.t("NOTE")
     },
-    InfoAlert:{
+    AlertInfo:{
       icon: false,
       type: "info",
       density: "compact",
@@ -180,10 +209,9 @@ export default createVuetify({
           'config-btn-bg': myColors.blue['300'],
           'on-config-btn-bg': myColors.blue['100'],
 
-
-          /*** Cards ***/
-          'card-bg': '#ffffff',
-          'on-card-border': myColors.gray['200'],
+          /*** Config card ***/
+          'config-card-bg': '#ffffff',
+          'on-config-card-border': myColors.gray['200'],
 
           /*** States ***/
           active: myColors.green['300'],
@@ -225,7 +253,7 @@ export default createVuetify({
         },
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-color': '#000000'
+          'border-opacity': '0.3'
         }
       },
       VpnHoodConnect: {
@@ -274,9 +302,25 @@ export default createVuetify({
           'config-btn-bg': myColors.purple['500'],
           'on-config-btn-bg': myColors.cream['100'],
 
-          /*** Cards ***/
-          'card-bg': myColors.purple['400'],
-          'on-card-border': myColors.purple['500'],
+          /*** Config card ***/
+          'config-card-bg': myColors.purple['400'],
+
+
+          /*** Light dialog ***/
+          'dialog-light': myColors.green['200'],
+          'on-dialog-light': '#ffffff',
+          'dialog-light-text': '#ffffff',
+
+          /*** Dark dialog ***/
+          'dialog-dark': myColors.purple['400'],
+          'on-dialog-dark': myColors.cream['100'],
+          'dialog-dark-text': '#ffffff',
+
+          /*** Alert dialog ***/
+          'dialog-alert': myColors.cream['100'],
+          'on-dialog-alert': myColors.purple['500'],
+          'dialog-alert-text': myColors.gray['800'],
+          'dialog-alert-btn': myColors.purple['500'],
 
           /*** States ***/
           active: myColors.green['100'],
@@ -321,7 +365,7 @@ export default createVuetify({
         },
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-color': '#000000'
+          'border-opacity': '0.03'
         }
       }
     }

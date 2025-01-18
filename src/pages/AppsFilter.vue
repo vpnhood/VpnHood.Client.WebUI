@@ -172,16 +172,12 @@ async function actionOnConfirm() {
       color="highlight"
       id="appSearchField"
       :placeholder="locale('SEARCH')"
-      class="mt-5"
+      class="my-5"
     >
     </v-text-field>
 
     <!-- Filter apps option -->
-    <v-card :loading="myInstalledApps.length < 1"
-      color="card-bg"
-      class="mt-5"
-      min-height="300px"
-    >
+    <config-card :loading="myInstalledApps.length < 1" min-height="300px">
         <!-- Apps list -->
         <v-list v-if="myInstalledApps.length > 1"
           id="appFilterList"
@@ -198,7 +194,7 @@ async function actionOnConfirm() {
             :ripple="true"
             :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
             class="text-caption"
-            :class="{'border-b border-on-card-border': myInstalledApps.length > index + 1}"
+            :class="{'border-b border-on-config-card-border': myInstalledApps.length > index + 1}"
             @click="app.isSelected = !app.isSelected; saveChange()"
           >
             <template v-slot:append>
@@ -214,7 +210,7 @@ async function actionOnConfirm() {
           </v-list-item>
         </v-list>
 
-    </v-card>
+    </config-card>
   </v-sheet>
 
   <ConfirmDialog

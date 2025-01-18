@@ -24,7 +24,7 @@
   "REMOVE": "Delete",
   "RENAME": "Rename",
   "CANCEL": "Cancel",
-  "CLOSE": "close",
+  "CLOSE": "Close",
   "SAVE": "Save",
   "OK": "OK",
   "UPLOAD_SPEED": "Up",
@@ -243,5 +243,6 @@
   "GOOGLE_PLAY_BILLING_UNAVAILABLE": "Google Play billing is unavailable.",
   "MORE_INFO": "More info",
   "ALERT": "Alert",
-  "INFO": "Info"
+  "INFO": "Info",
+  "MESSAGE": "Message"
 }

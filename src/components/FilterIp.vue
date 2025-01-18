@@ -114,11 +114,12 @@ function revertCurrentChange(): void{
         'loading': isLoadingIP,
         'placeholder': locale('IP_FILTER_PLACE_HOLDER'),
         'hideDetails': true
-        },
-    }">
+        }
+      }"
+    >
 
       <!-- Sample ip format -->
-      <InfoAlert>
+      <alert-info>
         <ul class="text-caption" style="list-style: none">
           <li>
             {{locale('SINGLE_IP')}}
@@ -133,19 +134,18 @@ function revertCurrentChange(): void{
             <v-chip text="192.168.1.0/24" />
           </li>
         </ul>
-      </InfoAlert>
+      </alert-info>
 
       <!-- Describe remark -->
-      <NoteAlert :text="locale('REMARK_IP_FILTER_DESC')" />
+      <alert-note :text="locale('REMARK_IP_FILTER_DESC')" />
 
       <!-- Alert for number of IPs in the filter by device -->
-      <WarningAlert v-if="props.ipFilterType === IPFilterType.FilterByDevice"
+      <alert-warning v-if="props.ipFilterType === IPFilterType.FilterByDevice"
         :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
         class="mb-4"
       />
 
-
-      <v-card>
+      <config-card>
         <!-- Exclude list -->
         <v-card-item>
           <p>{{locale('IPS_TO_EXCLUDE')}}</p>
@@ -159,17 +159,18 @@ function revertCurrentChange(): void{
         </v-card-item>
 
         <!-- Revert button -->
-        <v-btn v-if="showRevertButton"
-               block
-               variant="flat"
-               color="secondary"
-               :text="locale('REVERT')"
-               rounded="pill"
-               class="mt-4"
-               @click="revertCurrentChange()"
-        />
+        <v-card-item>
+          <v-btn
+            variant="flat"
+            block
+            color="secondary"
+            :text="locale('REVERT')"
+            rounded="pill"
+            @click="revertCurrentChange()"
+          />
+        </v-card-item>
 
-      </v-card>
+      </config-card>
 
     </v-defaults-provider>
   </v-sheet>

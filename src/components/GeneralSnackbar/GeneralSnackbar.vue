@@ -16,11 +16,11 @@ const snackbarData = ref<GeneralSnackbarData>(VpnHoodApp.instance.data.uiState.g
     :modelValue="props.modelValue"
     @update:modelValue="$emit('update:modelValue',false)"
     location="top"
-    timer="rgba(255,255,255,0.3)"
+    timer="rgba(255,255,255,0.5)"
     timeout="5000"
     class="pt-12"
-    :content-class="`text-${snackbarData.textColor}`"
     close-on-content-click
+    :content-class="`text-${snackbarData.textColor}`"
     :color="snackbarData.color"
     :text="snackbarData.message"
   />

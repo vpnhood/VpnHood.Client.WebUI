@@ -44,7 +44,7 @@ onMounted(() => {
 
   <v-sheet>
 
-    <v-card>
+    <config-card>
       <v-list
         v-model="defaultLanguage"
         select-strategy="classic"
@@ -56,7 +56,7 @@ onMounted(() => {
           v-for="(item, index) in myLocales"
           :key="index"
           :value="item.code"
-          class="border-b border-on-card-border"
+          class="border-b"
           :active="item.code === defaultLanguage"
           @click="defaultLanguage = item.code"
         >
@@ -90,7 +90,7 @@ onMounted(() => {
 
         </v-list-item>
       </v-list>
-    </v-card>
+    </config-card>
 
   </v-sheet>
 </template>

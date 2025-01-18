@@ -8,13 +8,12 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
-import i18n from '@/locales/i18n';
 
 const vhApp = VpnHoodApp.instance;
 
 const isShowErrorDialog = computed<boolean>({
   get: () => {
-    return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog)
+    return ComponentRouteController.isShowComponent(ComponentName.ErrorDialog);
   },
   set: async (value: boolean) => {
     if (value) return; // Already is Open

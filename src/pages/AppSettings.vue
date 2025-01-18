@@ -75,12 +75,12 @@ function isPremiumFeaturesAvailable(): boolean{
     <v-defaults-provider :defaults="{
       'VSwitch':{'class': 'px-2', 'color': 'highlight', 'density': 'compact', 'hideDetails': true},
       'VDivider':{'class':'mx-4'},
-      'VBtn':{'variant':'tonal', 'color': 'highlight', 'class': 'justify-space-between text-transform-none',
-              'block': true, 'text': locale('MANAGE_IP_ADDRESSES')},
+      'VBtn':{'variant':'tonal', 'color': 'highlight', 'class': 'justify-space-between text-transform-none','block': true},
     }">
+
       <!-- Change language -->
-      <v-card>
-        <v-card-title>{{ locale('LANGUAGE') }}</v-card-title>
+      <config-card>
+        <config-card-title>{{ locale('LANGUAGE') }}</config-card-title>
         <v-card-item>
           <v-btn @click="router.push({ path: '/languages' })">
 
@@ -101,6 +101,7 @@ function isPremiumFeaturesAvailable(): boolean{
 
         <!-- Language contribute link -->
         <v-card-text v-if="i18n.global.locale.value !== LanguagesCode.English" class="text-caption">
+
           <!-- Description -->
           <p class="text-disabled mb-2">{{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}</p>
 
@@ -115,18 +116,19 @@ function isPremiumFeaturesAvailable(): boolean{
           </a>
         </v-card-text>
 
-      </v-card>
+      </config-card>
 
       <!-- Exclude local network -->
-      <v-card v-if="vhApp.data.features.isLocalNetworkSupported">
-        <!-- Section title -->
-        <v-card-title class="d-flex justify-space-between align-center">
+      <config-card v-if="vhApp.data.features.isLocalNetworkSupported">
+
+        <config-card-title>
           {{ locale('LOCAL_NETWORK') }}
-          <PremiumIcon v-if="vhApp.data.features.isPremiumFlagSupported"
-                       :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
+          <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported"
+             :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
           />
-        </v-card-title>
-        <v-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</v-card-subtitle>
+        </config-card-title>
+
+        <config-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</config-card-subtitle>
 
         <!-- Disconnecting alert -->
         <v-card-item v-if="vhApp.isConnected()">
@@ -141,17 +143,19 @@ function isPremiumFeaturesAvailable(): boolean{
             </v-col>
           </v-row>
         </v-card-item>
-      </v-card>
+      </config-card>
 
       <!-- Exclude/Include IP ranges -->
-      <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
+      <config-card>
+
+        <config-card-title>
           {{locale("FILTER_IP_ADDRESSES")}}
-          <PremiumIcon v-if="vhApp.data.features.isPremiumFlagSupported"
-                       :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
+          <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported"
+             :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
           />
-        </v-card-title>
-        <v-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</v-card-subtitle>
+        </config-card-title>
+
+        <config-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</config-card-subtitle>
 
         <!-- Disconnecting alert -->
         <v-card-item v-if="vhApp.isConnected()">
@@ -169,15 +173,18 @@ function isPremiumFeaturesAvailable(): boolean{
 
           <!-- Manage IP button -->
           <v-btn v-if="useIpFilterByDevice"
+             :text="locale('MANAGE_IP_ADDRESSES')"
              :append-icon="Util.getLocalizedRightChevron()"
              @click="router.push({ path: '/filter-ips-by-device' })"
           />
+
         </v-card-item>
 
         <v-divider />
 
         <!-- Filter by App -->
         <v-card-item @click="!isFilterIpByAppAvailable() ? router.push('/purchase-subscription') :  null ">
+
           <v-row class="align-center justify-space-between">
             <v-col>{{locale("FILTER_IPS_BY_APP")}}</v-col>
             <v-col cols="auto">
@@ -187,12 +194,15 @@ function isPremiumFeaturesAvailable(): boolean{
 
           <!-- Manage IP button -->
           <v-btn v-if="useIpFilterByApp"
+             :text="locale('MANAGE_IP_ADDRESSES')"
              :append-icon="Util.getLocalizedRightChevron()"
              @click="router.push({ path: '/filter-ips-by-app' })"
           />
+
         </v-card-item>
 
-      </v-card>
+      </config-card>
+
     </v-defaults-provider>
 
   </v-sheet>

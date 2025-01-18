@@ -69,78 +69,64 @@ async function sendReport(): Promise<void> {
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue',$event)"
     :persistent="true"
-    max-width="600"
   >
     <v-card
-      rounded="lg"
-      color="secondary"
-      class="pt-0 pb-3 notice position-relative text-white">
-      <v-card-text>
-        <v-icon class="pe-3" icon="mdi-alert-circle-outline"/>
-        <span>{{ dialogData.message }}</span>
-      </v-card-text>
-      <v-divider class="mb-3 border-opacity-25" />
-      <v-card-actions class="flex-column px-5">
+      :title="locale('MESSAGE')"
+      append-icon="mdi-alert-circle-outline"
+      rounded="xl"
+      color="dialog-alert"
+    >
 
-        <!-- Change location to auto -->
-        <v-btn
-          v-if="dialogData.showChangeServerToAutoButton"
-          rounded="pill"
-          variant="flat"
-          block
-          class="text-center mb-4 text-secondary"
-          :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
-          @click="vhApp.data.state.clientProfile?.clientProfileId
+      <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message }}</v-card-text>
+
+      <v-card-item v-if="dialogData.showChangeServerToAutoButton || (dialogData.canDiagnose &&
+      !vhApp.data.state.hasDiagnoseRequested) || dialogData.promptForLog">
+
+          <!-- Change location to auto -->
+          <alert-dialog-button v-if="dialogData.showChangeServerToAutoButton"
+            variant="flat"
+            :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
+            @click="vhApp.data.state.clientProfile?.clientProfileId
           && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
-        />
+          />
 
-        <!-- Diagnose -->
-        <v-btn
-          v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
-          rounded="pill"
-          variant="flat"
-          block
-          class="text-center mb-4 text-secondary"
-          :text="locale('DIAGNOSE')"
-          @click="diagnose()"
-        />
+          <!-- Diagnose -->
+          <alert-dialog-button v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
+            prepend-icon="mdi-stethoscope"
+            :text="locale('DIAGNOSE')"
+            @click="diagnose()"
+          />
 
-        <!-- OpenReport -->
-        <v-btn
-          v-if="dialogData.promptForLog"
-          rounded="pill"
-          variant="flat"
-          block
-          prepend-icon="mdi-open-in-new"
-          class="text-center mb-4 text-secondary"
-          :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
-          :text="locale('OPEN_REPORT')"
-          target="_blank"
-        />
+          <!-- OpenReport -->
+          <alert-dialog-button v-if="dialogData.promptForLog"
+            prepend-icon="mdi-open-in-new"
+            :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
+            :text="locale('OPEN_REPORT')"
+            target="_blank"
+          />
 
-        <!-- SendReport -->
-        <v-btn
-          v-if="dialogData.promptForLog"
-          rounded="pill"
-          variant="flat"
-          block
-          prepend-icon="mdi-send-outline"
-          class="text-center mb-4 text-secondary"
-          target="_blank"
-          :text="locale('SEND_REPORT')"
-          @click="sendReport()"
-        />
+          <!-- SendReport -->
+          <alert-dialog-button v-if="dialogData.promptForLog"
+            prepend-icon="mdi-send-outline"
+            target="_blank"
+            :text="locale('SEND_REPORT')"
+            @click="sendReport()"
+          />
 
+      </v-card-item>
+
+      <v-card-actions >
         <!-- Close -->
         <v-btn
+          variant="text"
           rounded="pill"
-          variant="flat"
-          block
-          class="text-center text-secondary"
+          class="font-weight-bold"
+          :ripple="false"
           :text="locale('CLOSE')"
           @click="emit('update:modelValue', false)"
         />
       </v-card-actions>
+
     </v-card>
   </v-dialog>
 </template>
