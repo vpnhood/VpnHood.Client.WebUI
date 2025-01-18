@@ -9,7 +9,6 @@ import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VChip } from 'vuetify/components/VChip';
 import i18n from '@/locales/i18n';
-import { VSheet } from 'vuetify/components/VSheet';
 
 const myColors = {
   gray:{
@@ -73,11 +72,11 @@ export default createVuetify({
     WarningAlert: VAlert,
     InfoAlert: VAlert,
     NoteAlert: VAlert,
-    ColoredSheet: VSheet
   },
   defaults: {
     VSheet: {
       class: "pa-4",
+      color: "background",
       height: "100%"
     },
     VCard:{
@@ -89,9 +88,6 @@ export default createVuetify({
     },
     VCardSubtitle:{
       class: "text-disabled text-wrap text-caption"
-    },
-    ColoredSheet:{
-      color: "background",
     },
     HomeConfigBtn:{
       block: true,
