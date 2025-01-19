@@ -77,8 +77,6 @@ export default createVuetify({
     HomeConfigChip: VChip,
 
     ConfigCard: VCard,
-    ConfigCardTitle: VCardTitle,
-    ConfigCardSubtitle: VCardSubtitle,
 
     AlertWarning: VAlert,
     AlertInfo: VAlert,
@@ -99,13 +97,13 @@ export default createVuetify({
 
     ConfigCard:{
       color:'config-card-bg',
-      class: 'py-2'
-    },
-    ConfigCardTitle:{
-      class: "d-flex justify-space-between align-center pt-1 pb-0"
-    },
-    ConfigCardSubtitle:{
-      class: "text-disabled text-wrap text-caption"
+      class: 'py-2',
+      VCardTitle:{
+        class: "d-flex justify-space-between align-center pt-1 pb-0"
+      },
+      VCardSubtitle:{
+        class: "text-disabled text-wrap text-caption"
+      }
     },
 
     HomeConfigBtn:{
@@ -132,33 +130,41 @@ export default createVuetify({
       icon:"mdi-crown",
       size:"18"
     },
-
     AlertWarning:{
       icon: false,
       type: "warning",
       density: "compact",
-      class: "text-caption",
+      class: "text-caption pt-1",
       border: "start",
-      title: i18n.global.t("ALERT")
+      title: i18n.global.t("ALERT"),
+      VAlertTitle:{
+        style: "font-weight: 600; font-size: 0.9rem;"
+      }
     },
     AlertNote:{
       icon: false,
       type: "note",
       density: "compact",
-      class: "text-caption",
+      class: "text-caption pt-1",
       border: "start",
       variant: 'tonal',
-      title: i18n.global.t("NOTE")
+      title: i18n.global.t("NOTE"),
+      VAlertTitle:{
+        style: "font-weight: 600; font-size: 0.9rem;"
+      }
     },
     AlertInfo:{
       icon: false,
       type: "info",
       density: "compact",
-      class: "text-caption",
+      class: "text-caption pt-1",
       border: "start",
       variant: 'tonal',
-      title: i18n.global.t("INFO")
-    }
+      title: i18n.global.t("INFO"),
+      VAlertTitle:{
+        style: "font-weight: 600; font-size: 0.9rem;"
+      }
+    },
   },
   theme: {
     defaultTheme: 'VpnHood',

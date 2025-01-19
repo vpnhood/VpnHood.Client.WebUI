@@ -159,7 +159,7 @@ function revertCurrentChange(): void{
         </v-card-item>
 
         <!-- Revert button -->
-        <v-card-item>
+        <v-card-item v-if="showRevertButton">
           <v-btn
             variant="flat"
             block

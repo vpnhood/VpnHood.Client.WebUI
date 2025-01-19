@@ -80,7 +80,7 @@ function isPremiumFeaturesAvailable(): boolean{
 
       <!-- Change language -->
       <config-card>
-        <config-card-title>{{ locale('LANGUAGE') }}</config-card-title>
+        <v-card-title>{{ locale('LANGUAGE') }}</v-card-title>
         <v-card-item>
           <v-btn @click="router.push({ path: '/languages' })">
 
@@ -121,14 +121,14 @@ function isPremiumFeaturesAvailable(): boolean{
       <!-- Exclude local network -->
       <config-card v-if="vhApp.data.features.isLocalNetworkSupported">
 
-        <config-card-title>
+        <v-card-title>
           {{ locale('LOCAL_NETWORK') }}
           <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported"
              :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
           />
-        </config-card-title>
+        </v-card-title>
 
-        <config-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</config-card-subtitle>
+        <v-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</v-card-subtitle>
 
         <!-- Disconnecting alert -->
         <v-card-item v-if="vhApp.isConnected()">
@@ -148,14 +148,14 @@ function isPremiumFeaturesAvailable(): boolean{
       <!-- Exclude/Include IP ranges -->
       <config-card>
 
-        <config-card-title>
+        <v-card-title>
           {{locale("FILTER_IP_ADDRESSES")}}
           <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported"
              :color="isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium'"
           />
-        </config-card-title>
+        </v-card-title>
 
-        <config-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</config-card-subtitle>
+        <v-card-subtitle>{{locale("FILTER_IP_ADDRESSES_DESC")}}</v-card-subtitle>
 
         <!-- Disconnecting alert -->
         <v-card-item v-if="vhApp.isConnected()">
