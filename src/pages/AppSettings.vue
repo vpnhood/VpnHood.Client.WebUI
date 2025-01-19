@@ -75,7 +75,7 @@ function isPremiumFeaturesAvailable(): boolean{
     <v-defaults-provider :defaults="{
       'VSwitch':{'class': 'px-2', 'color': 'highlight', 'density': 'compact', 'hideDetails': true},
       'VDivider':{'class':'mx-4'},
-      'VBtn':{'variant':'tonal', 'color': 'highlight', 'class': 'justify-space-between text-transform-none','block': true},
+      'VBtn':{'variant':'tonal', 'color': 'highlight', 'class': 'justify-space-between text-transform-none','block': true}
     }">
 
       <!-- Change language -->

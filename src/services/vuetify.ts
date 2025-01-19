@@ -8,7 +8,7 @@ import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VChip } from 'vuetify/components/VChip';
-import { VCard, VCardSubtitle, VCardTitle } from 'vuetify/components/VCard';
+import { VCard } from 'vuetify/components/VCard';
 import i18n from '@/locales/i18n';
 
 const myColors = {
