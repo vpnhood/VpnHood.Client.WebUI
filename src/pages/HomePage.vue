@@ -208,7 +208,9 @@ function appFilterStatus(): string {
         >
           <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <HomeConfigChip tabindex="-1" :text="getActiveServerNameOrLocation()"/>
+          <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate" tabindex="-1">
+            {{ getActiveServerNameOrLocation() }}
+          </span>
 
           <template v-slot:append>
               <span
