@@ -9,6 +9,131 @@ import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VCard } from 'vuetify/components/VCard';
 import i18n from '@/locales/i18n';
+import { VSheet } from 'vuetify/components/VSheet';
+import { AppName } from '@/helpers/UiConstants';
+
+interface IThemeColorNames {
+  [key: string]: string;
+
+  background: string,
+  'on-background': string,
+  'colored-bg-light': string,
+  'colored-bg-dark': string,
+  'app-bg': string,
+
+  'navigation-drawer': string,
+  'navigation-drawer-header': string,
+  'navigation-drawer-version': string,
+
+  'home-app-bar': string,
+
+  /*** Home page gradient background ***/
+  'home-bg-grad-1': string,
+  'home-bg-grad-2': string,
+
+  /*** Home page connect btn ***/
+  'connect-btn-disconnected-grad-1': string,
+  'connect-btn-disconnected-grad-2': string,
+  'connect-btn-connected': string,
+  'on-connect-btn-disconnected': string,
+  'on-connect-btn-connected': string,
+
+  /*** Home page extend session countdown ***/
+  'count-down-normal': string,
+  'count-down-alert': string,
+  'count-down-warning': string,
+  'extent-session-btn': string,
+  'on-extent-session-btn': string,
+
+  /*** Home page go premium btn ***/
+  'go-premium-btn': string,
+  'on-go-premium-btn': string,
+
+  'suppress-snackbar': string,
+
+  'update-snackbar-alert': string,
+  'update-snackbar-warning': string,
+  'btn-on-update-snackbar': string,
+
+  /*** Home page 'Down' and 'Up' color ***/
+  'connection-speed': string,
+
+  /*** Home page total bandwidth ***/
+  'total-bandwidth': string,
+
+  /*** Home page access key expired date ***/
+  'expire-date-alert': string,
+  'expire-date-warning': string,
+
+  /*** Home page config buttons ***/
+  'config-btn-bg': string,
+  'on-config-btn-bg': string,
+
+  /*** Config card ***/
+  'config-card-bg': string,
+  'zebra-on-config-card-bg': string,
+
+  /*** Light dialog ***/
+  'dialog-light': string,
+  'on-dialog-light': string,
+  'dialog-light-text': string,
+
+  /*** Dark dialog ***/
+  'dialog-dark': string,
+  'on-dialog-dark': string,
+  'dialog-dark-text': string,
+
+  'grad-bg-container-bg': string,
+
+  'promote-connect-btn-icon': string,
+
+  'tonal-icon-btn': string,
+
+  'card-on-grad-bg': string,
+
+  'general-dialog': string,
+  'on-general-dialog': string,
+  'general-dialog-text': string,
+
+  /*** Alert dialog ***/
+  'dialog-alert': string,
+  'on-dialog-alert': string,
+  'dialog-alert-text': string,
+  'dialog-alert-btn': string,
+
+  'sample-ip-filter-bg': string,
+  'sample-ip-filter-text': string,
+
+  'btn-style-1': string,
+  'on-btn-style-1': string,
+
+  'btn-style-2': string,
+  'on-btn-style-2': string,
+
+  'btn-style-3': string,
+  'on-btn-style-3': string,
+
+  'btn-style-4': string,
+
+  'btn-style-5': string,
+  'on-btn-style-5': string,
+
+  'connection-circle-border': string,
+
+  /*** States ***/
+  active: string,
+  'on-active': string,
+  highlight: string,
+  'enable-premium': string,
+  'disable-premium': string,
+
+  /*** Alerts ***/
+  info: string,
+  note: string,
+  error: string,
+  warning: string,
+  'on-warning': string,
+}
 
 const myColors = {
   gray:{
@@ -53,6 +178,252 @@ const myColors = {
   },
 }
 
+const vhConnectThemeColors: IThemeColorNames = {
+  /*** Backgrounds ***/
+  background: myColors.purple['500'],
+  'on-background':'#ffffff',
+  'colored-bg-light': myColors.purple['500'],
+  'colored-bg-dark': myColors.purple['600'],
+  'app-bg': myColors.purple['500'],
+
+  /*** Navigation drawer ***/
+  'navigation-drawer': myColors.purple['400'],
+  'navigation-drawer-header': myColors.purple['500'],
+  'navigation-drawer-version': myColors.green['200'],
+
+  'home-app-bar': '#ffffff',
+
+  /*** Home page gradient background ***/
+  'home-bg-grad-1': myColors.purple['500'],
+  'home-bg-grad-2': myColors.purple['500'],
+
+  /*** Home page connect btn ***/
+  'connect-btn-disconnected-grad-1': myColors.cream['100'],
+  'connect-btn-disconnected-grad-2': myColors.cream['100'],
+  'connect-btn-connected': myColors.purple['200'],
+  'on-connect-btn-disconnected': myColors.purple['300'],
+  'on-connect-btn-connected': '#ffffff',
+
+  /*** Home page extend session countdown ***/
+  'count-down-normal': myColors.green['200'],
+  'count-down-alert': myColors.yellow['200'],
+  'count-down-warning': myColors.red['100'],
+  'extent-session-btn': myColors.yellow['200'],
+  'on-extent-session-btn': myColors.purple['600'],
+
+  /*** Home page go premium btn ***/
+  'go-premium-btn': myColors.cream['100'],
+  'on-go-premium-btn': myColors.purple['500'],
+
+  'suppress-snackbar': myColors.cream['100'],
+
+  'update-snackbar-alert': myColors.purple['200'],
+  'update-snackbar-warning': myColors.cream['100'],
+  'btn-on-update-snackbar': myColors.purple['500'],
+
+  /*** Home page 'Down' and 'Up' color ***/
+  'connection-speed': myColors.purple['200'],
+
+  /*** Home page total bandwidth ***/
+  'total-bandwidth': myColors.purple['200'],
+
+  /*** Home page access key expired date ***/
+  'expire-date-alert': myColors.purple['100'],
+  'expire-date-warning': myColors.red['100'],
+
+  /*** Home page config buttons ***/
+  'config-btn-bg': myColors.purple['500'],
+  'on-config-btn-bg': myColors.cream['100'],
+
+  /*** Config card ***/
+  'config-card-bg': myColors.purple['400'],
+  'zebra-on-config-card-bg': myColors.purple['500'],
+
+  /*** Light dialog ***/
+  'dialog-light': myColors.green['200'],
+  'on-dialog-light': '#ffffff',
+  'dialog-light-text': '#ffffff',
+
+  /*** Dark dialog ***/
+  'dialog-dark': myColors.purple['400'],
+  'on-dialog-dark': myColors.cream['100'],
+  'dialog-dark-text': '#ffffff',
+
+  'grad-bg-container-bg': myColors.purple['600'],
+
+  'promote-connect-btn-icon': myColors.green['200'],
+
+  'tonal-icon-btn': myColors.purple['200'],
+
+  'card-on-grad-bg': myColors.purple['300'],
+
+  'general-dialog': myColors.purple['500'],
+  'on-general-dialog': myColors.purple['200'],
+  'general-dialog-text': myColors.gray['300'],
+
+  /*** Alert dialog ***/
+  'dialog-alert': myColors.cream['100'],
+  'on-dialog-alert': myColors.purple['500'],
+  'dialog-alert-text': myColors.gray['800'],
+  'dialog-alert-btn': myColors.purple['500'],
+
+  'sample-ip-filter-bg': myColors.gray['800'],
+  'sample-ip-filter-text': myColors.gray['400'],
+
+  'btn-style-1': myColors.green['200'],
+  'on-btn-style-1': myColors.purple['500'],
+
+  'btn-style-2': myColors.purple['200'],
+  'on-btn-style-2': '#ffffff',
+
+  'btn-style-3': myColors.cream['100'],
+  'on-btn-style-3': myColors.purple['500'],
+
+  'btn-style-4': myColors.purple['200'],
+
+  'btn-style-5': myColors.gray['300'],
+  'on-btn-style-5': '#ffffff',
+
+  'connection-circle-border': myColors.cream['100'],
+
+  /*** States ***/
+  active: myColors.green['200'],
+  'on-active': myColors.purple['500'],
+  highlight: myColors.purple['200'],
+  'enable-premium': myColors.green['200'],
+  'disable-premium': myColors.cream['100'],
+
+  /*** Alerts ***/
+  info: myColors.green['300'],
+  note: myColors.purple['100'],
+  error: myColors.red['100'],
+  warning: myColors.yellow['100'],
+  'on-warning': myColors.yellow['300'],
+}
+/*const vhClientThemeColors: IThemeColorNames = {
+
+  /!*** Backgrounds ***!/
+  background: myColors.gray['100'],
+  'on-background': '#000000',
+  'colored-bg-light': myColors.blue['200'],
+  'colored-bg-dark': myColors.blue['300'],
+  'app-bg': myColors.blue['400'],
+
+  /!*** Navigation drawer ***!/
+  'navigation-drawer': myColors.purple['400'],
+  'navigation-drawer-version': myColors.green['200'],
+
+  'home-app-bar': '#ffffff',
+
+  /!*** Home page gradient background ***!/
+  'home-bg-grad-1': myColors.blue['200'],
+  'home-bg-grad-2': myColors.blue['300'],
+
+  /!*** Home page connect btn ***!/
+  'connect-btn-disconnected-grad-1': myColors.blue['100'],
+  'connect-btn-disconnected-grad-2': myColors.green['100'],
+  'connect-btn-connected': myColors.blue['100'],
+  'on-connect-btn-disconnected': myColors.blue['400'],
+  'on-connect-btn-connected': '#ffffff',
+
+  /!*** Home page extend session countdown ***!/
+  'count-down-normal': myColors.green['300'],
+  'count-down-alert': myColors.yellow['200'],
+  'count-down-warning': myColors.red['100'],
+  'extent-session-btn': myColors.yellow['200'],
+  'on-extent-session-btn': myColors.blue['400'],
+
+  /!*** Home page go premium btn ***!/
+  'go-premium-btn': myColors.blue['100'],
+  'on-go-premium-btn': myColors.blue['200'],
+
+  'suppress-snackbar': myColors.cream['100'],
+
+  'update-snackbar-alert': myColors.purple['200'],
+  'update-snackbar-warning': myColors.cream['100'],
+  'btn-on-update-snackbar': myColors.purple['500'],
+
+  /!*** Home page 'Down' and 'Up' color ***!/
+  'connection-speed': myColors.blue['100'],
+
+  /!*** Home page total bandwidth ***!/
+  'total-bandwidth': myColors.blue['100'],
+
+  /!*** Home page access key expired date ***!/
+  'expire-date-alert': myColors.purple['100'],
+  'expire-date-warning': myColors.red['100'],
+
+  /!*** Home page config buttons ***!/
+  'config-btn-bg': myColors.blue['300'],
+  'on-config-btn-bg': myColors.blue['100'],
+
+  /!*** Config card ***!/
+  'config-card-bg': '#ffffff',
+  'zebra-on-config-card-bg': myColors.blue['400'],
+
+  /!*** Light dialog ***!/
+  'dialog-light': myColors.green['200'],
+  'on-dialog-light': '#ffffff',
+  'dialog-light-text': '#ffffff',
+
+  /!*** Dark dialog ***!/
+  'dialog-dark': myColors.purple['400'],
+  'on-dialog-dark': myColors.cream['100'],
+  'dialog-dark-text': '#ffffff',
+
+  'grad-bg-container-bg': myColors.purple['600'],
+
+  'promote-connect-btn-icon': myColors.green['200'],
+
+  'tonal-icon-btn': myColors.purple['200'],
+
+  'card-on-grad-bg': myColors.purple['300'],
+
+  'general-dialog': myColors.purple['500'],
+  'on-general-dialog': myColors.purple['200'],
+  'general-dialog-text': myColors.gray['300'],
+
+  /!*** Alert dialog ***!/
+  'dialog-alert': myColors.cream['100'],
+  'on-dialog-alert': myColors.purple['500'],
+  'dialog-alert-text': myColors.gray['800'],
+  'dialog-alert-btn': myColors.purple['500'],
+
+  'sample-ip-filter-bg': myColors.gray['800'],
+  'sample-ip-filter-text': myColors.gray['400'],
+
+  'btn-style-1': myColors.blue['400'],
+  'on-btn-style-1': '#ffffff',
+
+  'btn-style-2': myColors.purple['200'],
+  'on-btn-style-2': '#ffffff',
+
+  'btn-style-3': myColors.cream['100'],
+  'on-btn-style-3': myColors.purple['500'],
+
+  'btn-style-4': myColors.purple['200'],
+
+  'btn-style-5': myColors.gray['300'],
+  'on-btn-style-5': '#ffffff',
+
+  'connection-circle-border': myColors.cream['100'],
+
+  /!*** States ***!/
+  active: myColors.green['300'],
+  'on-active': myColors.blue['400'],
+  highlight: myColors.green['300'],
+  'enable-premium': myColors.blue['400'],
+  'disable-premium': myColors.yellow['200'],
+
+  /!*** Alerts ***!/
+  info: myColors.green['300'],
+  note: myColors.purple['200'],
+  error: myColors.red['100'],
+  warning: myColors.yellow['100'],
+  'on-warning': myColors.yellow['300'],
+}*/
+
+
 export default createVuetify({
   components,
   directives,
@@ -67,12 +438,15 @@ export default createVuetify({
     }
   },
   aliases: {
+    HomeSheet: VSheet,
+
     PremiumIcon: VIcon,
 
     BtnStyle1: VBtn,
     BtnStyle2: VBtn,
     BtnStyle3: VBtn,
     BtnStyle4: VBtn,
+    BtnStyle5: VBtn,
     TonalIconBtn: VBtn,
 
     HomeConfigBtn: VBtn,
@@ -108,6 +482,11 @@ export default createVuetify({
       color: "background",
     },
 
+    HomeSheet:{
+      class: "fill-height",
+      color: "transparent",
+    },
+
     BtnStyle1:{
       variant:'flat',
       rounded: 'pill',
@@ -121,19 +500,24 @@ export default createVuetify({
       class: "text-transform-none"
     },
     BtnStyle3:{
-      variant: 'tonal',
+      variant: "flat",
+      rounded: "pill",
       color: 'btn-style-3',
+      class: "text-transform-none"
+    },
+    BtnStyle4:{
+      variant: 'tonal',
+      color: 'btn-style-4',
       class: "text-transform-none justify-space-between",
       block: true
     },
-    BtnStyle4:{
+    BtnStyle5:{
       variant:'tonal',
       rounded: 'pill',
       density:'comfortable',
-      color: 'btn-style-4',
+      color: 'btn-style-5',
       class: "text-transform-none"
     },
-
     TonalIconBtn: {
       variant: "tonal",
       size: "30",
@@ -174,6 +558,7 @@ export default createVuetify({
       icon:"mdi-crown",
       size:"18"
     },
+
     AlertWarning:{
       icon: false,
       type: "warning",
@@ -211,17 +596,25 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: 'VpnHood',
+    defaultTheme: AppName.VpnHoodClient,
     themes: {
-      VpnHood: {
+      VpnHoodClient: {
         dark: false,
         colors: {
+
           /*** Backgrounds ***/
           background: myColors.gray['100'],
           'on-background': '#000000',
           'colored-bg-light': myColors.blue['200'],
           'colored-bg-dark': myColors.blue['300'],
           'app-bg': myColors.blue['400'],
+
+          /*** Navigation drawer ***/
+          'navigation-drawer': "#ffffff",
+          'navigation-drawer-header': myColors.blue['300'],
+          'navigation-drawer-version': myColors.green['200'],
+
+          'home-app-bar': '#ffffff',
 
           /*** Home page gradient background ***/
           'home-bg-grad-1': myColors.blue['200'],
@@ -245,6 +638,12 @@ export default createVuetify({
           'go-premium-btn': myColors.blue['100'],
           'on-go-premium-btn': myColors.blue['200'],
 
+          'suppress-snackbar': myColors.cream['100'],
+
+          'update-snackbar-alert': myColors.purple['200'],
+          'update-snackbar-warning': myColors.cream['100'],
+          'btn-on-update-snackbar': myColors.purple['500'],
+
           /*** Home page 'Down' and 'Up' color ***/
           'connection-speed': myColors.blue['100'],
 
@@ -252,8 +651,8 @@ export default createVuetify({
           'total-bandwidth': myColors.blue['100'],
 
           /*** Home page access key expired date ***/
-          'expire-date-warning': myColors.purple['100'],
-          'expire-date-alert': myColors.red['100'],
+          'expire-date-alert': myColors.purple['100'],
+          'expire-date-warning': myColors.red['100'],
 
           /*** Home page config buttons ***/
           'config-btn-bg': myColors.blue['300'],
@@ -261,7 +660,54 @@ export default createVuetify({
 
           /*** Config card ***/
           'config-card-bg': '#ffffff',
-          'on-config-card-border': myColors.gray['200'],
+          'zebra-on-config-card-bg': myColors.blue['400'],
+
+          /*** Light dialog ***/
+          'dialog-light': myColors.green['200'],
+          'on-dialog-light': '#ffffff',
+          'dialog-light-text': '#ffffff',
+
+          /*** Dark dialog ***/
+          'dialog-dark': myColors.purple['400'],
+          'on-dialog-dark': myColors.cream['100'],
+          'dialog-dark-text': '#ffffff',
+
+          'grad-bg-container-bg': myColors.purple['600'],
+
+          'promote-connect-btn-icon': myColors.green['200'],
+
+          'tonal-icon-btn': myColors.purple['200'],
+
+          'card-on-grad-bg': myColors.purple['300'],
+
+          'general-dialog': "#ffffff",
+          'on-general-dialog': myColors.blue['300'],
+          'general-dialog-text': '#000000',
+
+          /*** Alert dialog ***/
+          'dialog-alert': myColors.cream['100'],
+          'on-dialog-alert': myColors.purple['500'],
+          'dialog-alert-text': myColors.gray['800'],
+          'dialog-alert-btn': myColors.purple['500'],
+
+          'sample-ip-filter-bg': myColors.gray['800'],
+          'sample-ip-filter-text': myColors.gray['400'],
+
+          'btn-style-1': myColors.blue['300'],
+          'on-btn-style-1': '#ffffff',
+
+          'btn-style-2': myColors.purple['200'],
+          'on-btn-style-2': '#ffffff',
+
+          'btn-style-3': myColors.cream['100'],
+          'on-btn-style-3': myColors.purple['500'],
+
+          'btn-style-4': myColors.purple['200'],
+
+          'btn-style-5': myColors.gray['300'],
+          'on-btn-style-5': '#ffffff',
+
+          'connection-circle-border': myColors.cream['100'],
 
           /*** States ***/
           active: myColors.green['300'],
@@ -277,9 +723,6 @@ export default createVuetify({
           warning: myColors.yellow['100'],
           'on-warning': myColors.yellow['300'],
 
-          'ui-tertiary': '#16a3fe',
-          surface: '#ffffff',
-          'on-surface': '#212121',
           primary: '#1940b0',
           'primary-darken-1': '#122272',
           'primary-darken-2': '#06124b',
@@ -303,154 +746,12 @@ export default createVuetify({
         },
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-opacity': '0.3'
+          'border-opacity': '0.07'
         }
       },
       VpnHoodConnect: {
         dark: true,
-        colors: {
-          /*** Backgrounds ***/
-          background: myColors.purple['500'],
-          'on-background':'#ffffff',
-          'colored-bg-light': myColors.purple['500'],
-          'colored-bg-dark': myColors.purple['600'],
-          'app-bg': myColors.purple['500'],
-
-          'navigation-drawer': myColors.purple['400'],
-          'navigation-drawer-version': myColors.green['200'],
-
-          /*** Home page gradient background ***/
-          'home-bg-grad-1': myColors.purple['500'],
-          'home-bg-grad-2': myColors.purple['500'],
-
-          /*** Home page connect btn ***/
-          'connect-btn-disconnected-grad-1': myColors.cream['100'],
-          'connect-btn-disconnected-grad-2': myColors.cream['100'],
-          'connect-btn-connected': myColors.purple['200'],
-          'on-connect-btn-disconnected': myColors.purple['300'],
-          'on-connect-btn-connected': '#ffffff',
-
-          /*** Home page extend session countdown ***/
-          'count-down-normal': myColors.green['200'],
-          'count-down-alert': myColors.yellow['200'],
-          'count-down-warning': myColors.red['100'],
-          'extent-session-btn': myColors.yellow['200'],
-          'on-extent-session-btn': myColors.purple['600'],
-
-          /*** Home page go premium btn ***/
-          'go-premium-btn': myColors.cream['100'],
-          'on-go-premium-btn': myColors.purple['500'],
-
-          'suppress-snackbar': myColors.cream['100'],
-
-          'update-snackbar-alert': myColors.purple['200'],
-          'update-snackbar-warning': myColors.cream['100'],
-          'btn-on-update-snackbar': myColors.purple['500'],
-
-          /*** Home page 'Down' and 'Up' color ***/
-          'connection-speed': myColors.purple['200'],
-
-          /*** Home page total bandwidth ***/
-          'total-bandwidth': myColors.purple['200'],
-
-          /*** Home page access key expired date ***/
-          'expire-date-warning': myColors.purple['100'],
-          'expire-date-alert': myColors.red['100'],
-
-          /*** Home page config buttons ***/
-          'config-btn-bg': myColors.purple['500'],
-          'on-config-btn-bg': myColors.cream['100'],
-
-          /*** Config card ***/
-          'config-card-bg': myColors.purple['400'],
-          'zebra-on-config-card-bg': myColors.purple['500'],
-
-          /*** Light dialog ***/
-          'dialog-light': myColors.green['200'],
-          'on-dialog-light': '#ffffff',
-          'dialog-light-text': '#ffffff',
-
-          /*** Dark dialog ***/
-          'dialog-dark': myColors.purple['400'],
-          'on-dialog-dark': myColors.cream['100'],
-          'dialog-dark-text': '#ffffff',
-
-          'grad-bg-container-bg': myColors.purple['600'],
-
-          'promote-connect-btn-icon': myColors.cream['100'],
-
-          'tonal-icon-btn': myColors.purple['200'],
-
-          'card-on-grad-bg': myColors.purple['300'],
-
-          'general-dialog': myColors.purple['500'],
-          'on-general-dialog': myColors.purple['200'],
-          'general-dialog-text': myColors.gray['300'],
-
-          /*** Alert dialog ***/
-          'dialog-alert': myColors.cream['100'],
-          'on-dialog-alert': myColors.purple['500'],
-          'dialog-alert-text': myColors.gray['800'],
-          'dialog-alert-btn': myColors.purple['500'],
-
-          'sample-ip-filter-bg': myColors.gray['800'],
-          'sample-ip-filter-text': myColors.gray['400'],
-
-          'btn-style-1': myColors.green['200'],
-          'on-btn-style-1': myColors.purple['500'],
-
-          'btn-style-2': myColors.purple['200'],
-          'on-btn-style-2': '#ffffff',
-
-          'btn-style-3': myColors.purple['200'],
-
-          'btn-style-4': myColors.gray['300'],
-          'on-btn-style-4': '#ffffff',
-
-          'btn-style-5': myColors.gray['300'],
-          'on-btn-style-5': '#ffffff',
-
-          /*** States ***/
-          active: myColors.green['200'],
-          'on-active': myColors.purple['500'],
-          highlight: myColors.purple['200'],
-          'enable-premium': myColors.green['200'],
-          'disable-premium': myColors.yellow['200'],
-
-          /*** Alerts ***/
-          info: myColors.green['300'],
-          note: myColors.purple['100'],
-          error: myColors.red['100'],
-          warning: myColors.yellow['100'],
-          'on-warning': myColors.yellow['300'],
-
-          'ui-tertiary': '#7b7afe',
-          surface: '#ffffff',
-          'on-surface': '#212121',
-          'primary-lighten-1': '#2f296e',
-          primary: '#211951',
-          'primary-darken-1': '#211951',
-          'primary-darken-2': '#150e3d',
-          'primary-darken-4': '#0b0b24',
-          secondary: '#7b7afe',
-          'on-secondary': '#ffffff',
-          'secondary-lighten-1': '#15f5ba',
-          'secondary-lighten-2': '#23c99d',
-          'on-secondary-lighten-1': '#ffffff',
-          'tertiary-lighten-1': '#ffe648',
-          'tertiary': '#e7b481',
-          'on-tertiary': '#ffffff',
-          'purple': '#7b7afe',
-          'purple-lighten-1': '#8d9fe4',
-          'on-purple-lighten-1': '#ffffff',
-          'purple-lighten-2': '#f0f3ff',
-          'gray': '#3f3f3f',
-          'gray-lighten-1': '#888888ff',
-          'gray-lighten-2': '#929292',
-          'gray-lighten-3': '#bebebe',
-          'gray-lighten-4': '#eaeaea',
-          'gray-lighten-5': '#f3f3f3',
-        },
+        colors: vhConnectThemeColors,
         variables: {
           'medium-emphasis-opacity': '0.8',
           'border-opacity': '0.03'

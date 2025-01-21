@@ -106,6 +106,7 @@ function processConnectedAnimation(): void {
   <div
     :id="vhApp.isConnectApp() ? 'connectionCircleIndicator' : 'circleOuter'"
     :class="determineClass()"
+    class="text-white"
   >
 
     <div v-if="vhApp.isConnectApp()" class="position-absolute w-100 fill-height">

@@ -23,14 +23,11 @@ const emits = defineEmits<{
       <p class="text-disabled text-caption">{{ props.description }}</p>
     </v-col>
     <v-col cols="auto" class="action-btn pe-0">
-      <v-btn
+      <btn-style-1
         :text="props.buttonText"
-        color="secondary-lighten-1"
-        class="text-primary-darken-2 px-2"
+        class="px-2"
         block
         size="small"
-        rounded="pill"
-        variant="flat"
         @click="emits('actionByPlan', props.buttonActionPlan)"
       />
     </v-col>

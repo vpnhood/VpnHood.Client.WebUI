@@ -40,7 +40,7 @@ const tunnelClientCountry = computed<boolean>({
         <!-- Disconnecting alert -->
         <disconnect-required-alert class="mb-4"/>
 
-        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="text-white" color="highlight">
+        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="text-general-dialog-text" color="highlight">
 
           <v-radio :value="true" class="mb-3">
             <template v-slot:label>

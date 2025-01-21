@@ -134,7 +134,7 @@ async function actionOnConfirm() {
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
     <div>
         <!-- Select all apps button -->
-        <btn-style-4
+        <btn-style-5
           prepend-icon="mdi-select-all"
           class="d-inline-flex text-caption me-2"
           :text="locale('SELECT_ALL')"
@@ -142,7 +142,7 @@ async function actionOnConfirm() {
         />
 
         <!-- Remove all apps button -->
-        <btn-style-4
+        <btn-style-5
           prepend-icon="mdi-select-remove"
           class="d-inline-flex text-caption"
           :text="locale('CLEAR_ALL')"

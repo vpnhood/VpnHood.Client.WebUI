@@ -56,16 +56,20 @@ function isIpFilterAvailable(): boolean{
 </script>
 
 <template>
-  <v-app-bar color="transparent" elevation="0" absolute>
+  <v-app-bar color="transparent" elevation="0" theme="dark" absolute>
     <v-row class="align-center mx-0" >
 
       <!-- Navigation drawer button -->
       <v-col cols="3" class="ps-0">
-        <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="mx-0"  />
+        <v-app-bar-nav-icon
+          color="home-app-bar"
+          class="mx-0"
+          @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)"
+        />
       </v-col>
 
       <!-- App name -->
-      <v-col cols="6" class="text-center">
+      <v-col cols="6" class="text-center text-home-app-bar">
         <h4 dir="ltr">{{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}</h4>
       </v-col>
 
@@ -87,7 +91,7 @@ function isIpFilterAvailable(): boolean{
   </v-app-bar>
 
   <v-dialog v-model="isShowDebugDialog" :persistent="true" max-width="600">
-    <v-card color="background" title="Only developers" append-icon="mdi-bug-outline" class="text-highlight">
+    <v-card color="background" title="Only developers" append-icon="mdi-bug-outline">
 
       <v-card-item>
 

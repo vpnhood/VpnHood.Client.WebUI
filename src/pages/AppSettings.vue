@@ -74,7 +74,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
     <config-card>
       <v-card-title>{{ locale('LANGUAGE') }}</v-card-title>
       <v-card-item>
-        <btn-style-3 @click="router.push({ path: '/languages' })">
+        <btn-style-4 @click="router.push({ path: '/languages' })">
 
           <span>{{ locale('APP_LANGUAGE') }}</span>
 
@@ -88,7 +88,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
             <v-icon :icon="Util.getLocalizedRightChevron()" />
           </template>
 
-        </btn-style-3>
+        </btn-style-4>
       </v-card-item>
 
       <!-- Language contribute link -->
@@ -161,7 +161,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         </v-row>
 
         <!-- Manage IP button -->
-        <btn-style-3 v-if="useIpFilterByDevice"
+        <btn-style-4 v-if="useIpFilterByDevice"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
                      @click="router.push({ path: '/filter-ips-by-device' })"
@@ -182,7 +182,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         </v-row>
 
         <!-- Manage IP button -->
-        <btn-style-3 v-if="useIpFilterByApp"
+        <btn-style-4 v-if="useIpFilterByApp"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
                      @click="router.push({ path: '/filter-ips-by-app' })"

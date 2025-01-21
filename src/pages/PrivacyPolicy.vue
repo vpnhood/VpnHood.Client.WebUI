@@ -30,14 +30,10 @@ const emit = defineEmits<{
 
       <v-card-actions>
         <!-- Accept button -->
-        <v-btn
-          color="tertiary"
+        <btn-style-3
           block
-          rounded="pill"
-          variant="flat"
           text="Accept and continue"
           @click="emit('accept', true)"
-          class="text-primary-darken-2"
         />
       </v-card-actions>
     </v-card>

@@ -81,7 +81,7 @@ async function onSignIn() {
     :floating="true"
   >
     <!-- Header -->
-    <div class="bg-background d-flex align-center pa-4">
+    <div class="bg-navigation-drawer-header d-flex align-center pa-4">
 
       <v-img
         :src="vhApp.getImageUrl(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"

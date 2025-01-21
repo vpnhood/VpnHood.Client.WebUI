@@ -150,7 +150,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
             <!-- Plan title, price -->
             <v-row justify="space-between">
               <v-col cols="auto" class="d-flex ga-1 align-center">
-                <v-icon icon="mdi-crown" size="23" color="tertiary-lighten-1"/>
+                <v-icon icon="mdi-crown" size="23" color="disable-premium"/>
                 <!-- TODO: must change to subscriptionPlanId -->
                 <span class="font-weight-bold text-body-2">{{locale('1_MONTH')}}</span>
               </v-col>
