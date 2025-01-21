@@ -341,6 +341,12 @@ export default createVuetify({
           'go-premium-btn': myColors.cream['100'],
           'on-go-premium-btn': myColors.purple['500'],
 
+          'suppress-snackbar': myColors.cream['100'],
+
+          'update-snackbar-alert': myColors.purple['200'],
+          'update-snackbar-warning': myColors.cream['100'],
+          'btn-on-update-snackbar': myColors.purple['500'],
+
           /*** Home page 'Down' and 'Up' color ***/
           'connection-speed': myColors.purple['200'],
 
@@ -357,6 +363,7 @@ export default createVuetify({
 
           /*** Config card ***/
           'config-card-bg': myColors.purple['400'],
+          'zebra-on-config-card-bg': myColors.purple['500'],
 
           /*** Light dialog ***/
           'dialog-light': myColors.green['200'],
@@ -404,10 +411,10 @@ export default createVuetify({
           'on-btn-style-5': '#ffffff',
 
           /*** States ***/
-          active: myColors.green['100'],
+          active: myColors.green['200'],
           'on-active': myColors.purple['500'],
           highlight: myColors.purple['200'],
-          'enable-premium': myColors.green['100'],
+          'enable-premium': myColors.green['200'],
           'disable-premium': myColors.yellow['200'],
 
           /*** Alerts ***/

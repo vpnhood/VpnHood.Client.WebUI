@@ -43,7 +43,7 @@ onMounted(async () => {
   }, 1000);
 
   // Get user account
-  if (vhApp.data.features.isAccountSupported && vhApp.data.userState.userAccount)
+  if (vhApp.data.features.isAccountSupported)
     await vhApp.loadAccount();
 })
 </script>

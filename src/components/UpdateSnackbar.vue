@@ -22,16 +22,18 @@ async function ignoreUpdate() {
   emit('update:modelValue', false);
 }
 </script>
-
+<!-- TODO: Improve page-->
 <template>
   <v-snackbar
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue',$event)"
     location="top"
     max-width="570px"
-    :vertical="true"
+    vertical
+    rounded="xl"
     :timeout="-1"
-    :color="vhApp.data.state.versionStatus === VersionStatus.Deprecated ? 'warning' : 'light-purple'"
+    :color="vhApp.data.state.versionStatus === VersionStatus.Deprecated ? 'update-snackbar-warning' :
+    'update-snackbar-alert'"
   >
     <p class="text-subtitle-1 mb-3">
       {{vhApp.data.state.versionStatus === VersionStatus.Deprecated
@@ -42,8 +44,8 @@ async function ignoreUpdate() {
     <v-btn
       v-if="!vhApp.data.state.lastPublishInfo?.googlePlayUrl"
       :href="vhApp.data.state.lastPublishInfo?.installationPageUrl"
-      color="primary"
-      class="text-capitalize"
+      color="btn-on-update-snackbar"
+      rounded="pill"
       block
       target="_blank"
       :text="locale('UPDATE_FROM_DIRECT_LINK')"
@@ -54,8 +56,8 @@ async function ignoreUpdate() {
     <v-btn
       v-if="vhApp.data.state.lastPublishInfo?.googlePlayUrl"
       :href="vhApp.data.state.lastPublishInfo?.googlePlayUrl"
-      color="primary"
-      class="text-capitalize"
+      color="btn-on-update-snackbar"
+      rounded="pill"
       block
       target="_blank"
       :text="locale('UPDATE_FROM_GOOGLE_PLAY')"
@@ -65,7 +67,7 @@ async function ignoreUpdate() {
     <!-- Do not access to google play question -->
     <v-btn
       v-if="vhApp.data.state.lastPublishInfo?.googlePlayUrl && !showAlternativeDownloadLink"
-      class="mt-2 text-lowercase text-caption color-light-blue"
+      class="mt-2 text-lowercase text-caption"
       @click="showAlternativeDownloadLink = true"
       variant="text"
       block
@@ -76,9 +78,10 @@ async function ignoreUpdate() {
     <div v-if="showAlternativeDownloadLink">
       <!-- Update from direct link -->
       <v-btn
-        class="mt-2 text-capitalize"
+        class="mt-2"
         :href="vhApp.data.state.lastPublishInfo?.installationPageUrl"
         variant="tonal"
+        rounded="pill"
         block
         target="_blank"
         :text="locale('UPDATE_FROM_ALTERNATIVE_LINK')"
@@ -86,7 +89,7 @@ async function ignoreUpdate() {
       </v-btn>
 
       <!-- Direct link notice -->
-      <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-50">
+      <p style="font-size: 0.8em;" class="text-center text-lowercase opacity-60">
         {{locale('UPDATE_FROM_ALTERNATIVE_LINK_NOTICE')}}
       </p>
     </div>
@@ -96,7 +99,7 @@ async function ignoreUpdate() {
     <div class="d-flex align-center justify-space-between">
       <!-- Compare versions -->
       <div class="text-caption">
-        <p class="opacity-50"> {{ locale("CURRENT_VERSION") }} {{ vhApp.getAppVersion(true) }}</p>
+        <p class="opacity-60"> {{ locale("CURRENT_VERSION") }} {{ vhApp.getAppVersion(true) }}</p>
         <p> {{ locale("NEW_VERSION") }} {{ vhApp.data.state.lastPublishInfo?.version }}</p>
       </div>
 

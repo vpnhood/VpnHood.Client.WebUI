@@ -29,25 +29,27 @@ function onCloseButton(){
 
 <template>
   <v-snackbar
-    :modelValue="props.modelValue" @update:modelValue="emit('update:modelValue',$event)"
-    close-on-content-click
+    :modelValue="props.modelValue"
+    @update:modelValue="emit('update:modelValue',$event)"
     location="top"
     :timeout="-1"
     class="mt-11"
-    color="deep-purple accent-4"
+    color="suppress-snackbar"
+    vertical
+    rounded="xl"
   >
     <!-- If suppressed by -->
-    <span v-if="vhApp.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None" class="text-justify" >
+    <span v-if="vhApp.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None">
       {{ locale("SESSION_SUPPRESSED_BY_OTHER") }}
     </span>
 
     <!-- If 'suppressed to' is available and 'suppressed by' is none, because 'suppress by' has priority over 'suppress to' -->
-    <span v-else-if="vhApp.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None" class="text-justify" >
+    <span v-else-if="vhApp.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None">
       {{ locale("SESSION_SUPPRESSED_TO_OTHER") }}
     </span>
 
     <template v-slot:actions>
-      <v-btn icon="mdi-closeDialog" size="small" @click="onCloseButton" />
+      <v-btn :text="locale('CLOSE')" size="small" @click="onCloseButton" />
     </template>
   </v-snackbar>
 </template>
