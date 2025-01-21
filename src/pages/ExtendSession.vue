@@ -42,16 +42,14 @@ async function showRewardedAd(){
 
 <template>
 
-  <v-sheet color="colored-bg-dark">
-    <v-card class="d-flex flex-column justify-space-between primary-bg-grad border border-highlight border-opacity-50 text-white rounded-lg pb-3 h-100">
+  <v-sheet color="grad-bg-container-bg">
+    <v-card
+      class="d-flex flex-column justify-space-between primary-bg-grad text-white border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
-      <v-btn
-        variant="tonal"
-        size="30"
-        color="highlight"
+      <tonal-icon-btn
         :icon="Util.getLocalizedLeftChevron()"
-        class="opacity-70 text-capitalize ms-3 mt-3"
+        class="ms-3 mt-3"
         @click="router.go(-1)"
       />
 
@@ -94,19 +92,15 @@ async function showRewardedAd(){
       </div>
     </v-card>
   </v-sheet>
-  <v-dialog v-model="showLoadingAdDialog" :persistent="true" max-width="320">
-    <v-card rounded="lg" color="background">
-      <v-card-text class="text-center">
-        <v-progress-circular color="highlight" class="mb-2" :indeterminate="true" size="30" width="2"/>
-        <p class="text-caption mb-5">{{locale("LOADING_AD")}}...</p>
-        <v-alert
-          :icon="false"
-          :text="locale('EXTEND_BY_REWARDED_AD_NOTE')"
-          class="text-caption text-start"
-          density="compact"
-          type="warning"
-        />
+<!--TODO: Use general dialog-->
+  <v-dialog v-model="showLoadingAdDialog" :persistent="true">
+    <v-card color="general-dialog" :title="locale('LOADING_AD')">
+      <v-card-text class="text-general-dialog-text text-body-2">
+        {{locale('EXTEND_BY_REWARDED_AD_NOTE')}}
       </v-card-text>
+      <v-card-item class="text-center pt-0">
+        <v-progress-circular class="mb-3" :indeterminate="true" size="30" width="2"/>
+      </v-card-item>
     </v-card>
   </v-dialog>
 </template>

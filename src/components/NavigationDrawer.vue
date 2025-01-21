@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { AppName } from '@/helpers/UiConstants';
 import { ref, watch } from 'vue';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
+import { AppName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -68,10 +68,6 @@ async function onSignIn() {
     vhApp.data.uiState.showLoadingDialog = false;
   }
 }
-
-function itemClass(){
-  return vhApp.isConnectApp() ? 'border-secondary border-b' : 'border-b';
-}
 </script>
 
 <template>
@@ -79,16 +75,16 @@ function itemClass(){
     @update:modelValue="emit('update:modelValue', $event)"
     :modelValue="modelValue"
     :location="vuetify.locale.isRtl.value? 'right' : 'left'"
-    :color="vhApp.data.features.uiName === AppName.VpnHoodConnect ? 'background' : 'white'"
+    color="navigation-drawer"
     :temporary="true"
     :disable-route-watcher="true"
     :floating="true"
   >
     <!-- Header -->
-    <div :class="[vhApp.isConnectApp() ? 'bg-primary-darken-2' : 'bg-primary-darken-1','d-flex align-center pa-4']">
+    <div class="bg-background d-flex align-center pa-4">
 
       <v-img
-        :src="vhApp.getImageUrl(vhApp.isConnectApp() ? 'logo-connect.png' : 'logo.png')"
+        :src="vhApp.getImageUrl(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
         :eager="true"
         alt="logo"
         max-width="50"
@@ -96,14 +92,14 @@ function itemClass(){
         height="50"
       />
 
-      <div class="text-white ms-3">
+      <div class="ms-3">
         <!-- App name -->
         <h4 dir="ltr" :class="vuetify.locale.isRtl.value? 'text-end' : 'text-start'">
           {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
         </h4>
 
         <!-- App full version -->
-        <div class="text-secondary-lighten-1 text-caption">
+        <div class="text-navigation-drawer-version text-caption">
           <span class="me-2">{{ locale('VERSION') }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
@@ -113,12 +109,12 @@ function itemClass(){
 
     <!-- TODO: create component -->
     <!-- Menu items -->
-    <v-list dense class="pt-0">
+    <v-list>
 
       <!-- Go premium -->
       <v-list-item
         v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-        :class="itemClass()"
+        class="border-b"
         @click="router.replace('/purchase-subscription'); emit('update:modelValue', false)"
       >
         <v-list-item-title>
@@ -130,18 +126,23 @@ function itemClass(){
       <!-- Sign in or account button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
-        :class="itemClass()"
-        @click="!vhApp.data.userState.userAccount ? onSignIn() : router.replace('/account')"
+        class="border-b"
+        @click="vhApp.data.userState.userAccount ? router.replace('/account') : onSignIn()"
       >
-        <v-list-item-title>
+        <v-list-item-title class="d-flex align-center">
           <v-icon icon="mdi-account" />
-          <span class="ms-3">{{ !vhApp.data.userState.userAccount ? locale('SIGN_IN_WITH_GOOGLE') : locale('ACCOUNT') }}</span>
+          <span class="ms-3 d-flex flex-column">
+            <span>{{ vhApp.data.userState.userAccount ? locale('ACCOUNT') : locale('SIGN_IN_WITH_GOOGLE') }}</span>
+            <span v-if="vhApp.data.userState.userAccount" class="text-disabled text-caption text-truncate" style="max-width: 195px">
+              {{vhApp.data.userState.userAccount.email}}
+            </span>
+          </span>
         </v-list-item-title>
       </v-list-item>
 
       <!-- Settings -->
       <v-list-item
-        :class="itemClass()"
+        class="border-b"
         @click="router.replace({path: '/settings'})"
       >
         <v-list-item-title>
@@ -152,7 +153,7 @@ function itemClass(){
 
       <!-- Diagnose -->
       <v-list-item
-        :class="itemClass()"
+        class="border-b"
         :disabled="!vhApp.data.state.canDiagnose"
         @click="diagnose"
       >
@@ -164,11 +165,11 @@ function itemClass(){
 
       <!-- Check for update -->
       <v-list-item
-        :class="itemClass()"
+        class="border-b"
         @click="checkForUpdate"
       >
         <v-list-item-title>
-          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="secondary" />
+          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="active" />
           <v-icon v-else icon="mdi-update" />
           <span class="ms-3">{{ locale('CHECK_FOR_UPDATE') }}</span>
         </v-list-item-title>
@@ -210,8 +211,7 @@ function itemClass(){
       <!-- Create personal server -->
       <!-- Do not show on TV -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile.value
-        || !vhApp.isConnectApp() && vuetify.display.platform.value.win)"
+        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile.value || vuetify.display.platform.value.win)"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -293,17 +293,15 @@ function itemClass(){
 
       <!-- Powered by button -->
       <a
-        class="d-block mb-2 text-caption text-decoration-none"
-        :class="[vhApp.isConnectApp() ? 'text-secondary-lighten-1' : 'text-primary-darken-2']"
+        class="d-block mb-2 text-caption text-decoration-none text-active"
         href="https://github.com/vpnhood/VpnHood"
         target="_blank"
       >
-        <span class="text-secondary">{{ locale('POWERED_BY') }}</span><br/>
+        <span class="text-highlight">{{ locale('POWERED_BY') }}</span><br/>
         <span>{{locale('VPNHOOD_ENGINE')}}</span>
         <v-icon icon="mdi-open-in-new" class="ms-1" size="13" />
       </a>
     </div>
   </v-navigation-drawer>
-
 
 </template>

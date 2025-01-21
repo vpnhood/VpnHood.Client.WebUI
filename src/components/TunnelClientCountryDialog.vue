@@ -30,53 +30,50 @@ const tunnelClientCountry = computed<boolean>({
   <v-dialog
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue',$event)"
-    max-width="600"
   >
-    <v-card :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'">
-      <v-card-title :class="vhApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
-        {{ locale("TUNNEL_MY_COUNTRY") }}
-      </v-card-title>
+    <v-card color="general-dialog" :title="locale('TUNNEL_MY_COUNTRY')">
 
-      <v-card-text>
+      <v-card-text class="text-disabled text-caption">{{ locale("TUNNEL_MY_COUNTRY_DESC") }}</v-card-text>
+
+      <v-card-item>
+
         <!-- Disconnecting alert -->
         <disconnect-required-alert class="mb-4"/>
 
-        <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','pb-4']">
-          {{ locale("TUNNEL_MY_COUNTRY_DESC") }}
-        </p>
+        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="text-white" color="highlight">
 
-        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="mx-n3" >
-
-          <v-radio :value="true" color="secondary" class="mb-3">
+          <v-radio :value="true" class="mb-3">
             <template v-slot:label>
-              <span>{{ locale("TUNNEL_MY_COUNTRY_ON") }}</span>
-              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','text-caption ms-1']">
-                ({{ locale("TUNNEL_MY_COUNTRY_ON_DESC") }})
-              </span>
+              <div class="d-flex flex-column">
+                <span>{{ locale("TUNNEL_MY_COUNTRY_ON") }}</span>
+                <span class="text-disabled text-caption">{{ locale("TUNNEL_MY_COUNTRY_ON_DESC") }}</span>
+              </div>
             </template>
           </v-radio>
 
-          <v-radio :value="false" color="secondary">
+          <v-radio :value="false">
             <template v-slot:label>
-              <span>{{ locale("TUNNEL_MY_COUNTRY_OFF") }}</span>
-              <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-1','text-caption ms-1']">
-                ({{ locale("TUNNEL_MY_COUNTRY_OFF_DESC") }})
-              </span>
-              <v-chip class="ms-2" size="small" color="secondary" :text="locale('RECOMMENDED')"/>
+              <div class="d-flex flex-column">
+                <span>{{ locale("TUNNEL_MY_COUNTRY_OFF") }}</span>
+                <span class="text-disabled text-caption">
+                  {{ locale("TUNNEL_MY_COUNTRY_OFF_DESC") }}
+                  <v-chip
+                    color="highlight"
+                    :text="locale('RECOMMENDED')"
+                    size="small"
+                    variant="tonal"
+                    density="comfortable"
+                  />
+                </span>
+              </div>
             </template>
           </v-radio>
 
         </v-radio-group>
-      </v-card-text>
+      </v-card-item>
 
       <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          color="secondary"
-          variant="text"
-          :text="locale('CLOSE')"
-          @click="emit('update:modelValue',false)"
-        />
+        <v-btn :text="locale('CLOSE')" @click="emit('update:modelValue',false)" />
       </v-card-actions>
 
     </v-card>

@@ -37,72 +37,66 @@ function isUdpUnsupported(): boolean {
   <v-dialog
     :modelValue="props.modelValue"
     @update:modelValue="$emit('update:modelValue',$event)"
-    max-width="600"
   >
-    <v-card :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'white'">
-      <v-card-title :class="vhApp.isConnectApp() ? 'text-secondary' : 'bg-secondary'">
-        {{ locale('PROTOCOL') }}
-      </v-card-title>
+    <v-card color="general-dialog" :title="locale('PROTOCOL')">
 
-      <v-card-text>
-        <p :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','pb-4']">
-          {{ locale('PROTOCOL_DESC') }}
-        </p>
+      <v-card-text class="text-disabled text-caption">{{ locale('PROTOCOL_DESC') }}</v-card-text>
+
+      <v-card-item>
 
         <!-- UDP not supported alert -->
-        <v-alert
+        <alert-warning
           v-if="isUdpUnsupported()"
-          class="mb-3 text-caption"
-          :icon="false"
-          type="warning"
+          class="mb-3"
           :text="locale('UDP_NOT_SUPPORTED_MESSAGE')"
         />
 
-        <v-radio-group :hide-details="true" v-model="activeProtocol" class="mx-n3">
+        <v-radio-group :hide-details="true" v-model="activeProtocol" class="text-white" color="highlight">
 
           <!-- UDP -->
-          <v-radio :value="Protocols.UDP" :disabled="isUdpUnsupported()" color="secondary" class="mb-3">
+          <v-radio :value="Protocols.UDP" :disabled="isUdpUnsupported()" class="mb-3">
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>{{ locale('PROTOCOL_UDP') }}</span>
-                <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption']">
-                {{ locale('PROTOCOL_UDP_DESC') }}
-              </span>
+                <span class="text-disabled text-caption">{{ locale('PROTOCOL_UDP_DESC') }}</span>
               </div>
             </template>
           </v-radio>
 
           <!-- TCP -->
-          <v-radio :value="Protocols.TCP" color="secondary" class="mb-3">
+          <v-radio :value="Protocols.TCP" class="mb-3" >
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>{{ locale('PROTOCOL_TCP') }}</span>
-                <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption']">
-                  {{ locale('PROTOCOL_TCP_DESC') }}
-                </span>
+                <span class="text-disabled text-caption">{{ locale('PROTOCOL_TCP_DESC') }}</span>
               </div>
             </template>
           </v-radio>
 
           <!-- TCP & Drop HTTP/3 -->
-          <v-radio :value="Protocols.TcpAndDropHTTP3" color="secondary">
+          <v-radio :value="Protocols.TcpAndDropHTTP3">
             <template v-slot:label>
               <div class="d-flex flex-column align-start">
                 <span>{{ locale('PROTOCOL_DROP_QUIC') }}</span>
-                <span :class="[vhApp.isConnectApp() ? 'text-disabled' : 'text-gray-lighten-2','text-caption']">
+                <span class="text-disabled text-caption">
                   {{ locale('PROTOCOL_DROP_QUIC_DESC') }}
-                  <v-chip color="secondary" :text="locale('DEFAULT')" size="small" variant="tonal" density="comfortable"/>
+                  <v-chip
+                    color="highlight"
+                    :text="locale('DEFAULT')"
+                    size="small"
+                    variant="tonal"
+                    density="comfortable"
+                  />
                 </span>
               </div>
             </template>
           </v-radio>
 
         </v-radio-group>
-      </v-card-text>
+      </v-card-item>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="secondary" variant="text" :text="locale('CLOSE')" @click="$emit('update:modelValue',false)" />
+        <v-btn :text="locale('CLOSE')" @click="$emit('update:modelValue',false)" />
       </v-card-actions>
 
     </v-card>

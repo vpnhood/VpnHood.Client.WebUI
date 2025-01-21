@@ -133,30 +133,21 @@ async function actionOnConfirm() {
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
     <div>
-      <v-defaults-provider :defaults="{
-        'VBtn':{
-        'variant':'tonal',
-        'rounded': 'pill',
-        'class': 'd-inline-flex text-caption',
-        'density':'comfortable',
-        },
-       }"
-      >
         <!-- Select all apps button -->
-        <v-btn
+        <btn-style-4
           prepend-icon="mdi-select-all"
-          class="me-2"
+          class="d-inline-flex text-caption me-2"
           :text="locale('SELECT_ALL')"
           @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
         />
 
         <!-- Remove all apps button -->
-        <v-btn
+        <btn-style-4
           prepend-icon="mdi-select-remove"
+          class="d-inline-flex text-caption"
           :text="locale('CLEAR_ALL')"
           @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
         />
-      </v-defaults-provider>
     </div>
 
     <!-- Search box -->
@@ -194,7 +185,7 @@ async function actionOnConfirm() {
             :ripple="true"
             :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
             class="text-caption"
-            :class="{'border-b border-on-config-card-border': myInstalledApps.length > index + 1}"
+            :class="{'border-b': myInstalledApps.length > index + 1}"
             @click="app.isSelected = !app.isSelected; saveChange()"
           >
             <template v-slot:append>

@@ -73,7 +73,6 @@ async function sendReport(): Promise<void> {
     <v-card
       :title="locale('MESSAGE')"
       append-icon="mdi-alert-circle-outline"
-      rounded="xl"
       color="dialog-alert"
     >
 
@@ -82,8 +81,18 @@ async function sendReport(): Promise<void> {
       <v-card-item v-if="dialogData.showChangeServerToAutoButton || (dialogData.canDiagnose &&
       !vhApp.data.state.hasDiagnoseRequested) || dialogData.promptForLog">
 
+        <v-defaults-provider :defaults="{
+          'VBtn':{
+            rounded:'pill',
+            variant: 'tonal',
+            color: 'dialog-alert-btn',
+            class: 'text-transform-none mb-3',
+            block: true
+          }
+        }">
+
           <!-- Change location to auto -->
-          <alert-dialog-button v-if="dialogData.showChangeServerToAutoButton"
+          <v-btn v-if="dialogData.showChangeServerToAutoButton"
             variant="flat"
             :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
             @click="vhApp.data.state.clientProfile?.clientProfileId
@@ -91,14 +100,14 @@ async function sendReport(): Promise<void> {
           />
 
           <!-- Diagnose -->
-          <alert-dialog-button v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
+          <v-btn v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
             prepend-icon="mdi-stethoscope"
             :text="locale('DIAGNOSE')"
             @click="diagnose()"
           />
 
           <!-- OpenReport -->
-          <alert-dialog-button v-if="dialogData.promptForLog"
+          <v-btn v-if="dialogData.promptForLog"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"
@@ -106,25 +115,20 @@ async function sendReport(): Promise<void> {
           />
 
           <!-- SendReport -->
-          <alert-dialog-button v-if="dialogData.promptForLog"
+          <v-btn v-if="dialogData.promptForLog"
             prepend-icon="mdi-send-outline"
             target="_blank"
             :text="locale('SEND_REPORT')"
             @click="sendReport()"
           />
 
+        </v-defaults-provider>
+
       </v-card-item>
 
       <v-card-actions >
         <!-- Close -->
-        <v-btn
-          variant="text"
-          rounded="pill"
-          class="font-weight-bold"
-          :ripple="false"
-          :text="locale('CLOSE')"
-          @click="emit('update:modelValue', false)"
-        />
+        <v-btn :text="locale('CLOSE')" @click="emit('update:modelValue', false)" />
       </v-card-actions>
 
     </v-card>

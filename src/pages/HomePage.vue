@@ -118,166 +118,153 @@ function appFilterStatus(): string {
     <!-- App bar -->
     <HomeAppBar />
 
-  <v-container class="pt-0 fill-height">
-    <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters ">
+  <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters mx-3 pb-4">
 
-      <!-- Go Premium or Countdown button -->
-      <v-col cols="12" class="text-center">
+    <!-- Go Premium or Countdown button -->
+    <v-col cols="12" class="text-center">
 
-        <!-- Countdown and extend session button -->
-        <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
+      <!-- Countdown and extend session button -->
+      <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
 
-        <!-- You are premium button go to account -->
-        <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
-                prepend-icon="mdi-crown"
-                :text="locale('YOU_ARE_PREMIUM')"
-                color="enable-premium"
-                variant="tonal"
-                tag="h6"
+      <!-- You are premium button go to account -->
+      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
+              prepend-icon="mdi-crown"
+              :text="locale('YOU_ARE_PREMIUM')"
+              color="enable-premium"
+              variant="tonal"
+              tag="h6"
+      />
+
+      <!-- Go Premium button for guest user -->
+      <v-btn
+        v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+        :flat="true"
+        variant="outlined"
+        color="go-premium-btn"
+        rounded="pill"
+        size="small"
+        height="35"
+        @click="router.push('/purchase-subscription')"
+        class="ps-1 pe-3 text-capitalize"
+      >
+        <v-icon
+          icon="mdi-crown"
+          size="25"
+          class="bg-go-premium-btn rounded-circle me-2"
         />
+        {{ locale('GO_PREMIUM') }}
+      </v-btn>
 
-        <!-- Go Premium button for guest user -->
-        <v-btn
-          v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-          :flat="true"
-          variant="outlined"
-          color="go-premium-btn"
-          rounded="pill"
-          size="small"
-          height="35"
-          @click="router.push('/purchase-subscription')"
-          class="ps-1 pe-3 text-capitalize"
-        >
-          <v-icon
-            icon="mdi-crown"
-            size="25"
-            class="bg-go-premium-btn rounded-circle me-2"
-          />
-          {{ locale('GO_PREMIUM') }}
-        </v-btn>
+    </v-col>
 
-      </v-col>
+    <!-- Speed & Circle & Connect button -->
+    <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
+      <!-- Speed -->
+      <v-row align-content="center" justify="center" :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
+        <v-col cols="auto d-inline-flex">
+          <span class="text-connection-speed text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
+          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
+          <span class="text-disabled text-caption">Mbps</span>
+        </v-col>
+        <v-col cols="auto d-inline-flex">
+          <span class="text-connection-speed text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
+          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
+          <span class="text-disabled text-caption order-last">Mbps</span>
+        </v-col>
+      </v-row>
 
-      <!-- Speed & Circle & Connect button -->
-      <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
-        <!-- Speed -->
-        <v-row align-content="center" justify="center" :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
-          <v-col cols="auto d-inline-flex">
-            <span class="text-connection-speed text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
-            <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
-            <span class="text-disabled text-caption">Mbps</span>
-          </v-col>
-          <v-col cols="auto d-inline-flex">
-            <span class="text-connection-speed text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
-            <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
-            <span class="text-disabled text-caption order-last">Mbps</span>
-          </v-col>
-        </v-row>
+      <!-- Circle -->
+      <HomeConnectionInfo />
 
-        <!-- Circle -->
-        <HomeConnectionInfo />
-
-        <!-- Connect button -->
-        <v-btn
-          id="connectBtn"
-          height="40px"
-          min-width="180px"
-          rounded="pill"
-          :disabled="vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
+      <!-- Connect button -->
+      <v-btn
+        id="connectBtn"
+        height="40px"
+        min-width="180px"
+        rounded="pill"
+        :disabled="vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
           vhApp.data.state.connectionState === AppConnectionState.Initializing"
-          class="font-weight-bold mt-5"
-          :class="{'connected': vhApp.data.state.connectionState === AppConnectionState.Connected}"
-          :text="connectButtonText()"
-          @click="onConnectButtonClick"
-        />
+        class="font-weight-bold mt-5"
+        :class="{'connected': vhApp.data.state.connectionState === AppConnectionState.Connected}"
+        :text="connectButtonText()"
+        @click="onConnectButtonClick"
+      />
 
-      </v-col>
+    </v-col>
 
-      <!-- Config buttons -->
-      <v-col cols="12">
+    <!-- Config buttons -->
+    <v-col cols="12">
 
-        <!-- Servers button -->
-        <HomeConfigBtn
-          id="serverButton"
-          prepend-icon="mdi-earth"
-          class="align-center mb-1"
-          @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
+      <!-- Servers button -->
+      <home-config-btn
+        id="serverButton"
+        prepend-icon="mdi-earth"
+        class="align-center mb-1"
+        @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
             : router.push('/servers')"
-        >
-          <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <span class="text-capitalize text-caption text-white opacity-50 text-truncate limited-width-to-truncate" tabindex="-1">
-            {{ getActiveServerNameOrLocation() }}
+      >
+        <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
+        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <v-chip tabindex="-1" :text="getActiveServerNameOrLocation()" class="px-0"/>
+
+        <template v-slot:append>
+          <span v-if="vhApp.getActiveServerCountryFlag()"
+            class="overflow-hidden d-inline-flex align-center justify-center ms-1"
+            style="width: 23px; height: 15px; border-radius: 3px"
+          >
+            <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
           </span>
+          <v-chip v-else :text="locale('AUTO')" variant="tonal" />
+        </template>
+      </home-config-btn>
 
-          <template v-slot:append>
-              <span
-                v-if="vhApp.getActiveServerCountryFlag()"
-                class="overflow-hidden d-inline-flex align-center justify-center ms-1"
-                style="width: 23px; height: 15px; border-radius: 3px"
-              >
-                <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
-              </span>
-            <v-chip
-              v-else
-              :text="locale('AUTO')"
-              size="small"
-              density="compact"
-              variant="tonal"
-              color="disabled"
-              class="text-caption px-2"
-            />
-          </template>
-        </HomeConfigBtn>
-
-        <!-- Exclude country button -->
-        <HomeConfigBtn
-          id="excludeCountryButton"
-          prepend-icon="mdi-call-split"
-          class="mb-1"
-          @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
-        >
-          <span>{{ locale('COUNTRIES') }}</span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <HomeConfigChip :text="vhApp.data.settings.userSettings.tunnelClientCountry
-              ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')" />
-          <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
+      <!-- Exclude country button -->
+      <home-config-btn
+        id="excludeCountryButton"
+        prepend-icon="mdi-call-split"
+        class="mb-1"
+        @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
+      >
+        <span>{{ locale('COUNTRIES') }}</span>
+        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <v-chip :text="vhApp.data.settings.userSettings.tunnelClientCountry
+              ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')" class="px-0"/>
+        <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
                 <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag"/>
               </span>
-          </template>
-        </HomeConfigBtn>
+        </template>
+      </home-config-btn>
 
-        <!-- App filter button -->
-        <HomeConfigBtn
-          v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
-          prepend-icon="mdi-call-split"
-          class="mb-1"
-          to="/apps-filter"
-        >
-          <span>{{ locale('APPS') }}</span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <HomeConfigChip :text="appFilterStatus()"/>
-        </HomeConfigBtn>
+      <!-- App filter button -->
+      <home-config-btn
+        v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+        prepend-icon="mdi-call-split"
+        class="mb-1"
+        to="/apps-filter"
+      >
+        <span>{{ locale('APPS') }}</span>
+        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <v-chip :text="appFilterStatus()" class="px-0"/>
+      </home-config-btn>
 
-        <!-- Protocol button -->
-        <HomeConfigBtn
-          prepend-icon="mdi-transit-connection-variant"
-          @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
-        >
-          <span>{{ locale('PROTOCOL_TITLE') }}</span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <HomeConfigChip :text="udpProtocolButtonText()" />
-        </HomeConfigBtn>
+      <!-- Protocol button -->
+      <home-config-btn
+        prepend-icon="mdi-transit-connection-variant"
+        @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
+      >
+        <span>{{ locale('PROTOCOL_TITLE') }}</span>
+        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <v-chip :text="udpProtocolButtonText()" class="px-0" />
+      </home-config-btn>
 
-      </v-col>
-    </v-row>
-  </v-container>
+    </v-col>
+  </v-row>
 
   <!-- Components -->
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />

@@ -31,7 +31,7 @@ export enum SubscriptionPlansId {
 }
 
 export enum AppName{
-    VpnHood = "VpnHood",
+    VpnHoodClient = "VpnHoodClient",
     VpnHoodConnect = "VpnHoodConnect",
 }
 export enum IPFilterType{

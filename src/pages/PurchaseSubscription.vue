@@ -10,10 +10,9 @@ import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/Googl
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-
+// TODO: Improve this page
 const subscriptionPlans = ref<SubscriptionPlan[]>([]);
 const showPurchaseCompleteDialog = ref<boolean>(false);
-const purchaseCompleteMessage = ref<string | null>(null);
 const premiumCode = ref<string | null>(null);
 const premiumCodeErrorMessage = ref<string | null>(null);
 const isGooglePlayAvailable = ref<boolean>(true);
@@ -66,7 +65,6 @@ async function purchase(planId: string): Promise<void> {
   const billingClient = ClientApiFactory.instance.createBillingClient();
   await billingClient.purchase(planId);
   await vhApp.loadAccount();
-  purchaseCompleteMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
   showPurchaseCompleteDialog.value = true;
 }
 
@@ -78,62 +76,64 @@ async function closeOnPurchaseComplete(): Promise<void> {
 
 <template>
 
-  <v-sheet class="pa-3" color="black">
+  <v-sheet color="grad-bg-container-bg">
 
     <v-card max-width="600"
-            class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-5 h-100 mx-auto" >
+            class="d-flex flex-column justify-space-between primary-bg-grad border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
-      <v-btn
-        variant="tonal"
-        size="30"
-        color="secondary"
+      <tonal-icon-btn
         :icon="Util.getLocalizedLeftChevron()"
-        class="position-absolute opacity-70 text-capitalize ms-3 mt-3"
+        class="position-absolute ms-3 mt-3"
         style="z-index: 999"
         @click="router.go(-1)"
       />
       <!-- Title, image and features -->
       <div class="d-flex flex-column flex-grow-1">
-        <h4 class="text-secondary-lighten-1 text-uppercase text-center mt-4">{{locale('GO_PREMIUM')}}</h4>
+        <h4 class="text-active text-uppercase text-center mt-4">{{locale('GO_PREMIUM')}}</h4>
         <div id="rocketWrapper" class="mx-auto">
           <div id="rocket" class="animation-translate-y mx-auto" />
           <div id="rocketSmoke" class="mx-auto"/>
         </div>
-        <ul id="featuresList" class="text-capitalize text-body-2 text-white px-5 mt-4" style="list-style: none;">
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('ULTRA_FAST_SPEED')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('REMOVE_AD')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('MORE_LOCATIONS')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('FILTER_IP_ADDRESSES')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('INCLUDE_LOCAL_NETWORK')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('ALWAYS_ON')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('QUICK_LAUNCH')}}
-          </li>
-          <li>
-            <v-icon icon="mdi-check-circle" size="16" color="secondary" class="me-2"/>
-            {{locale('SUPPORT')}}
-          </li>
-        </ul>
+        <v-defaults-provider :defaults="{
+          'VIcon': {
+            'icon': 'mdi-check-circle',
+            'color': 'highlight',
+            'size': '18',
+            'class': 'me-2',
+          }
+        }">
+          <ul id="featuresList" class="text-capitalize text-body-2 text-white px-5 mt-4" style="list-style: none;">
+            <li>
+              <v-icon/>
+              {{locale('ULTRA_FAST_SPEED')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('REMOVE_AD')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('MORE_LOCATIONS')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('FILTER_IP_ADDRESSES')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('ALWAYS_ON')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('QUICK_LAUNCH')}}
+            </li>
+            <li>
+              <v-icon/>
+              {{locale('SUPPORT')}}
+            </li>
+          </ul>
+        </v-defaults-provider>
       </div>
 
       <!-- Premium by google and by code buttons -->
@@ -144,7 +144,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
           class="py-3 px-3 rounded-lg text-white mb-4"
           :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
-          color="rgba(var(--v-theme-primary-lighten-1), 0.3)"
+          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <template v-if="isGoogleBillingAvailable">
             <!-- Plan title, price -->
@@ -155,9 +155,9 @@ async function closeOnPurchaseComplete(): Promise<void> {
                 <span class="font-weight-bold text-body-2">{{locale('1_MONTH')}}</span>
               </v-col>
               <v-col cols="auto" class="d-flex ga-1 align-center">
-            <span v-if="subscriptionPlans[0]?.planPrice" class="font-weight-bold text-body-2">
-              {{subscriptionPlans[0].planPrice}}
-            </span>
+                <span v-if="subscriptionPlans[0]?.planPrice" class="font-weight-bold text-body-2">
+                  {{subscriptionPlans[0].planPrice}}
+                </span>
                 <v-progress-circular
                   v-else
                   size="18"
@@ -169,12 +169,9 @@ async function closeOnPurchaseComplete(): Promise<void> {
             </v-row>
 
             <!-- Purchase button -->
-            <v-btn
+            <btn-style-1
               block
-              rounded="pill"
-              color="secondary-lighten-1"
-              class="text-primary-darken-2 mt-1 font-weight-bold"
-              variant="flat"
+              class="mt-1"
               :loading="!subscriptionPlans[0]?.subscriptionPlanId"
               :disabled="!subscriptionPlans[0]?.subscriptionPlanId"
               :text="locale('PURCHASE')"
@@ -182,7 +179,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
             />
 
             <!-- Plan Descriptions -->
-            <ul class="text-white opacity-30 ps-4 mt-2" style="font-size: 10px;">
+            <ul class="text-disabled opacity-50 ps-4 mt-2" style="font-size: 10px;">
               <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
               <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
             </ul>
@@ -208,12 +205,12 @@ async function closeOnPurchaseComplete(): Promise<void> {
         <!-- Input premium code button and sheet -->
         <v-bottom-sheet v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByCode">
           <template v-slot:activator="{ props }">
-            <v-card class="py-1 rounded-lg" color="rgba(var(--v-theme-primary-lighten-1), 0.3)">
+            <v-card class="py-1 rounded-lg mb-4" color="rgba(var(--v-theme-card-on-grad-bg), 0.3)">
               <v-btn
                 v-bind="props"
                 block
-                color="secondary"
-                class="text-transform-none"
+                :ripple="false"
+                color="highlight"
                 variant="text"
                 prepend-icon="mdi-key"
                 :text="locale('I_HAVE_A_PREMIUM_CODE')"
@@ -223,14 +220,12 @@ async function closeOnPurchaseComplete(): Promise<void> {
 
           <v-card
             prepend-icon="mdi-key"
-            :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
+            color="background"
+            class="rounded-b-0"
             :title="locale('ENTER_PREMIUM_CODE')"
-            class="pa-3 rounded-t-xl"
           >
-            <v-divider/>
-            <v-card-item >
-              <h5 class="text-secondary">{{locale("IMPORTANT")}}:</h5>
-              <p class="text-caption text-secondary mb-4">{{locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')}}</p>
+            <v-card-item class="pt-0">
+              <alert-note :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2"/>
 
               <v-text-field
                 v-model="premiumCode"
@@ -242,21 +237,17 @@ async function closeOnPurchaseComplete(): Promise<void> {
                 spellcheck="false"
                 autocomplete="off"
                 dir="ltr"
-                :autofocus="true"
                 density="compact"
-                color="secondary"
+                color="highlight"
                 variant="outlined"
-                rounded="lg"
+                rounded="md"
+                class="mb-5"
               />
 
-              <v-btn
+              <btn-style-2
                 block
-                rounded="pill"
-                color="secondary"
-                variant="flat"
                 :disabled="!premiumCode"
                 :text="locale('CHECK_AND_ACTIVE')"
-                class="text-transform-none mt-2"
               />
             </v-card-item>
 
@@ -376,35 +367,27 @@ async function closeOnPurchaseComplete(): Promise<void> {
   <v-dialog
     :model-value="vhApp.data.state.purchaseState === BillingPurchaseState.Processing"
     :persistent="true"
-    max-width="600"
   >
-    <v-card rounded="lg" color="secondary">
-      <v-card-text class="px-3">
+    <v-card color="general-dialog">
+      <v-card-text class="text-general-dialog-text text-body-2">
         {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
-        <v-progress-linear :indeterminate="true" rounded="true" class="mt-3 mb-4" />
+        <v-progress-linear :indeterminate="true" height="2" rounded="true" class="my-3" />
       </v-card-text>
     </v-card>
   </v-dialog>
 
   <!-- Purchase complete dialog -->
-  <v-dialog v-model="showPurchaseCompleteDialog" max-width="600">
-    <v-card rounded="lg" color="secondary">
-      <v-card-title class="text-center">
+  <v-dialog v-model="showPurchaseCompleteDialog">
+    <v-card color="active">
+      <v-card-title class="text-center pt-4">
         <v-icon class="text-h2">mdi-party-popper</v-icon>
         <h2>{{ locale('CONGRATULATIONS') }}</h2>
       </v-card-title>
 
-      <v-card-text>{{ purchaseCompleteMessage }}</v-card-text>
+      <v-card-text>{{ locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE') }}</v-card-text>
 
       <v-card-actions>
-        <v-spacer />
-        <v-btn
-          rounded="pill"
-          variant="text"
-          color="primary"
-          :text="locale('CLOSE')"
-          @click="closeOnPurchaseComplete"
-        />
+        <v-btn :text="locale('CLOSE')" @click="closeOnPurchaseComplete" />
       </v-card-actions>
     </v-card>
   </v-dialog>

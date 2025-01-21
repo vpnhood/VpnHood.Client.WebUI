@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import {ComponentRouteController} from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
-import PrivacyPolicyDialog from "@/components/PrivacyPolicyDialog.vue";
+import PrivacyPolicy from "@/pages/PrivacyPolicy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 
@@ -22,7 +22,18 @@ const isShowErrorDialog = computed<boolean>({
   }
 })
 
-const isShowPrivacyPolicyDialog = ref<boolean>(vhApp.isConnectApp() && !vhApp.data.settings.userSettings.isLicenseAccepted);
+const isShowPrivacyPolicyDialog = computed<boolean>({
+  get: () => {
+    if (!vhApp.isConnectApp())
+      return false;
+
+    return !vhApp.data.settings.userSettings.isLicenseAccepted;
+  },
+  set: async (value: boolean) => {
+    VpnHoodApp.instance.data.settings.userSettings.isLicenseAccepted = value;
+    await VpnHoodApp.instance.saveUserSetting();
+  }
+})
 
 onMounted(async () => {
   // Reload 'state' every 1 second if app window is focused.
@@ -32,9 +43,8 @@ onMounted(async () => {
   }, 1000);
 
   // Get user account
-  if (vhApp.data.features.isAccountSupported && !isShowPrivacyPolicyDialog.value)
+  if (vhApp.data.features.isAccountSupported && vhApp.data.userState.userAccount)
     await vhApp.loadAccount();
-
 })
 </script>
 
@@ -46,8 +56,8 @@ onMounted(async () => {
 
     <v-main id="pagesContainer">
 
-      <!-- Privacy policy dialog -->
-      <PrivacyPolicyDialog v-model="isShowPrivacyPolicyDialog" v-if="isShowPrivacyPolicyDialog"/>
+      <!-- Privacy policy page -->
+      <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
 
       <router-view v-else/>
 

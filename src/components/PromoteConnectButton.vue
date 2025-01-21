@@ -14,19 +14,20 @@ const emits = defineEmits<{
 </script>
 
 <template>
-  <v-row dense align="center" class="button-wrapper border border-purple border-opacity-25 px-1 mx-0 mb-2 rounded-lg" style="background-color: rgba(var(--v-theme-primary-lighten-1), 0.3);">
-    <v-col cols="auto">
-      <v-icon :icon="props.icon" color="tertiary" size="30" />
-    </v-col>
+  <v-row dense align="center" class="px-2 py-1 mx-0 mb-3 rounded-lg card-on-grad-bg">
     <v-col>
-      <h4 class="text-capitalize">{{props.title}}</h4>
-      <p class="text-disabled text-caption" style="line-height: 1.3">{{ props.description }}</p>
+      <div class="d-flex align-center">
+        <v-icon :icon="props.icon" color="promote-connect-btn-icon" size="25" class="me-2" />
+        <h4 class="text-capitalize">{{props.title}}</h4>
+      </div>
+      <p class="text-disabled text-caption">{{ props.description }}</p>
     </v-col>
-    <v-col cols="auto" class="action-btn">
+    <v-col cols="auto" class="action-btn pe-0">
       <v-btn
         :text="props.buttonText"
         color="secondary-lighten-1"
         class="text-primary-darken-2 px-2"
+        block
         size="small"
         rounded="pill"
         variant="flat"
@@ -37,14 +38,12 @@ const emits = defineEmits<{
 </template>
 
 <style scoped>
-@media (max-width: 358px) {
-  .button-wrapper{
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
+@media (max-width: 319px) {
   .action-btn{
     width: 100% !important;
     text-align: right;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
   }
   .v-locale--is-rtl .action-btn{
     text-align: left;

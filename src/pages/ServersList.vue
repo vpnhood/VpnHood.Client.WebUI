@@ -20,17 +20,14 @@ const isShowAddServerDialog = computed<boolean>({
     await ComponentRouteController.showComponent(ComponentName.AddServerDialog, value);
   }
 })
-
+// TODO: Check in the CLIENT app
 </script>
 
 <template>
   <!-- Page header -->
   <AppBar :page-title="locale('SERVERS')"/>
 
-  <v-sheet
-    :color="vhApp.isConnectApp() ? 'primary-darken-2' : 'gray-lighten-6'"
-    :class="[vhApp.isSingleServerMode() ? 'py-0 px-0' : 'pa-4','text-center']"
-  >
+  <v-sheet>
 
     <!-- Add server button -->
     <v-btn

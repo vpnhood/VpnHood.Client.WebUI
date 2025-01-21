@@ -47,9 +47,9 @@ onMounted(() => {
     <config-card>
       <v-list
         v-model="defaultLanguage"
-        select-strategy="classic"
         bg-color="transparent"
-        class="py-0 my-n2"
+        select-strategy="classic"
+        class="my-n2"
         active-class="text-highlight"
       >
         <v-list-item

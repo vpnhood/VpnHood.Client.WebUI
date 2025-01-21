@@ -99,10 +99,11 @@ function revertCurrentChange(): void{
     <v-defaults-provider :defaults="{
       'VChip':{
         'density': 'compact',
-        'color': 'on-surface',
+        'color': 'sample-ip-filter-bg',
         'size': 'small',
-        'class': 'px-1 py-0 ms-1 border border-primary-lighten-1 border-opacity-100',
-        'style': 'border-radius: 3px'
+        'class': 'px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text',
+        'style': 'border-radius: 3px',
+        'variant': 'flat'
         },
       'VTextarea':{
         'class': 'ipList',
@@ -123,7 +124,7 @@ function revertCurrentChange(): void{
         <ul class="text-caption" style="list-style: none">
           <li>
             {{locale('SINGLE_IP')}}
-            <v-chip text="192.168.1.1" />
+            <v-chip text="192.168.1.1"/>
           </li>
           <li class="py-1">
             {{locale('RANGES_OF_IP')}}
@@ -160,12 +161,9 @@ function revertCurrentChange(): void{
 
         <!-- Revert button -->
         <v-card-item v-if="showRevertButton">
-          <v-btn
-            variant="flat"
+          <btn-style-2
             block
-            color="secondary"
             :text="locale('REVERT')"
-            rounded="pill"
             @click="revertCurrentChange()"
           />
         </v-card-item>

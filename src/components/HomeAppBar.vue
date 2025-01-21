@@ -42,54 +42,62 @@ function openDebugDialog(){
   },3000)
 }
 
-async function saveSetting() {
+async function saveSetting(): Promise<void> {
   await vhApp.saveUserSetting();
   isShowDebugDialog.value = false;
+}
+
+function isDebugDataHasValue(): boolean{
+  return vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null
+}
+function isIpFilterAvailable(): boolean{
+ return vhApp.data.settings.userSettings.usePacketCaptureIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
 }
 </script>
 
 <template>
   <v-app-bar color="transparent" elevation="0" absolute>
+    <v-row class="align-center mx-0" >
 
-    <!-- Navigation drawer button -->
-    <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="ms-0"
-                        color="white"/>
+      <!-- Navigation drawer button -->
+      <v-col cols="3" class="ps-0">
+        <v-app-bar-nav-icon @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" class="mx-0"  />
+      </v-col>
 
-    <!-- App name -->
-    <v-spacer></v-spacer>
-    <h4 dir="ltr" class="text-white">
-      {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
-    </h4>
-    <v-spacer></v-spacer>
+      <!-- App name -->
+      <v-col cols="6" class="text-center">
+        <h4 dir="ltr">{{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}</h4>
+      </v-col>
 
-    <!-- App mini version -->
-    <span
-      @click="openDebugDialog"
-      tabindex="-1"
-      :class="[vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null
-         ? 'bg-warning border text-black rounded-pill px-1' : 'text-disabled','text-caption me-3',
-          {'text-decoration-underline':vhApp.data.settings.userSettings.usePacketCaptureIpFilter ||
-          vhApp.data.settings.userSettings.useAppIpFilter}]"
-    >
-      {{ locale("ABBREVIATION_VERSION") }}
-      {{vhApp.getAppVersion(false) }}
-    </span>
+      <!-- App mini version -->
+      <v-col cols="3" class="text-end">
+        <v-chip
+          tabindex="-1"
+          size="small"
+          density="compact"
+          :color="isDebugDataHasValue() ? 'warning' : 'disabled'"
+          :variant="isDebugDataHasValue() ? 'flat' : 'text'"
+          :class="[{'text-decoration-underline': isIpFilterAvailable()}, isDebugDataHasValue() ? 'px-2' : 'px-0']"
+          :text="locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false)"
+          @click="openDebugDialog"
+        />
+      </v-col>
 
+    </v-row>
   </v-app-bar>
 
   <v-dialog v-model="isShowDebugDialog" :persistent="true" max-width="600">
-    <v-card rounded="lg" color="gray" class="py-0">
-      <v-card-title>Only for developers</v-card-title>
+    <v-card color="background" title="Only developers" append-icon="mdi-bug-outline" class="text-highlight">
 
       <v-card-item>
 
         <!-- Debug data-1 -->
         <v-combobox
+          theme="dark"
           v-model="debugData1"
           clearable
           label="DebugData1"
           :items="vhApp.data.features.debugCommands"
-          variant="filled"
           hide-details
           hide-selected
           chips
@@ -109,8 +117,7 @@ async function saveSetting() {
         />
 
         <!-- Open log file -->
-        <v-btn
-          color="info"
+        <btn-style-1
           block
           text="Open log"
           :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
@@ -119,17 +126,10 @@ async function saveSetting() {
       </v-card-item>
 
       <!-- Close button -->
-      <v-divider class="border-opacity-25"></v-divider>
       <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          rounded="pill"
-          variant="tonal"
-          class="px-4"
-          text="Close"
-          @click="saveSetting()"
-        />
+        <v-btn text="Close" @click="saveSetting()" />
       </v-card-actions>
+
     </v-card>
   </v-dialog>
 </template>

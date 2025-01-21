@@ -7,7 +7,6 @@ import * as components from 'vuetify/components';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
-import { VChip } from 'vuetify/components/VChip';
 import { VCard } from 'vuetify/components/VCard';
 import i18n from '@/locales/i18n';
 
@@ -29,7 +28,6 @@ const myColors = {
     400:"#06124b",
   },
   purple:{
-    50:"#aabaed",
     100:"#8d9fe4",
     200:"#7b7afe",
     300:"#2f296e",
@@ -71,11 +69,13 @@ export default createVuetify({
   aliases: {
     PremiumIcon: VIcon,
 
+    BtnStyle1: VBtn,
+    BtnStyle2: VBtn,
+    BtnStyle3: VBtn,
+    BtnStyle4: VBtn,
+    TonalIconBtn: VBtn,
+
     HomeConfigBtn: VBtn,
-    AlertDialogButton: VBtn,
-
-    HomeConfigChip: VChip,
-
     ConfigCard: VCard,
 
     AlertWarning: VAlert,
@@ -83,16 +83,61 @@ export default createVuetify({
     AlertNote: VAlert,
   },
   defaults: {
+    VList:{
+      class:"py-0",
+    },
     VDialog: {
-      maxWidth: "500"
+      maxWidth: "500",
+      VCard:{
+        rounded:"xl",
+        VCardActions:{
+          VBtn:{
+            variant:"text",
+            rounded:"pill",
+            class:"font-weight-bold text-transform-none",
+            ripple:false
+          }
+        }
+      }
     },
     VBtn: {
       class: "text-transform-none"
     },
     VSheet: {
-      class: "pa-4",
+      class: "pa-4 fill-height",
       color: "background",
-      height: "100%"
+    },
+
+    BtnStyle1:{
+      variant:'flat',
+      rounded: 'pill',
+      color: 'btn-style-1',
+      class: "text-transform-none font-weight-bold"
+    },
+    BtnStyle2:{
+      variant: "flat",
+      rounded: "pill",
+      color: 'btn-style-2',
+      class: "text-transform-none"
+    },
+    BtnStyle3:{
+      variant: 'tonal',
+      color: 'btn-style-3',
+      class: "text-transform-none justify-space-between",
+      block: true
+    },
+    BtnStyle4:{
+      variant:'tonal',
+      rounded: 'pill',
+      density:'comfortable',
+      color: 'btn-style-4',
+      class: "text-transform-none"
+    },
+
+    TonalIconBtn: {
+      variant: "tonal",
+      size: "30",
+      color: "tonal-icon-btn"
     },
 
     ConfigCard:{
@@ -103,29 +148,28 @@ export default createVuetify({
       },
       VCardSubtitle:{
         class: "text-disabled text-wrap text-caption"
+      },
+      VSwitch:{
+        class: 'px-2',
+        color: 'highlight',
+        density: 'compact',
+        hideDetails: true
       }
     },
-
     HomeConfigBtn:{
       block: true,
       depressed: true,
       variant:'text',
       size:'small',
-      class: 'config-item'
+      class: 'config-item',
+      VChip:{
+        variant:'text',
+        size:"small",
+        density:"compact",
+        color:"disabled",
+        class: 'text-capitalize text-caption text-truncate limited-width-to-truncate',
+      },
     },
-    HomeConfigChip:{
-      variant:'text',
-      class: 'text-capitalize text-caption text-disabled text-truncate limited-width-to-truncate px-0'
-    },
-
-    AlertDialogButton:{
-      rounded:'pill',
-      variant: 'tonal',
-      color: 'dialog-alert-btn',
-      class: 'text-transform-none mb-3',
-      block: true
-    },
-
     PremiumIcon:{
       icon:"mdi-crown",
       size:"18"
@@ -134,7 +178,7 @@ export default createVuetify({
       icon: false,
       type: "warning",
       density: "compact",
-      class: "text-caption pt-1",
+      class: "text-caption pt-1 text-start",
       border: "start",
       title: i18n.global.t("ALERT"),
       VAlertTitle:{
@@ -145,7 +189,7 @@ export default createVuetify({
       icon: false,
       type: "note",
       density: "compact",
-      class: "text-caption pt-1",
+      class: "text-caption pt-1 text-start",
       border: "start",
       variant: 'tonal',
       title: i18n.global.t("NOTE"),
@@ -157,7 +201,7 @@ export default createVuetify({
       icon: false,
       type: "info",
       density: "compact",
-      class: "text-caption pt-1",
+      class: "text-caption pt-1 text-start",
       border: "start",
       variant: 'tonal',
       title: i18n.global.t("INFO"),
@@ -272,6 +316,9 @@ export default createVuetify({
           'colored-bg-dark': myColors.purple['600'],
           'app-bg': myColors.purple['500'],
 
+          'navigation-drawer': myColors.purple['400'],
+          'navigation-drawer-version': myColors.green['200'],
+
           /*** Home page gradient background ***/
           'home-bg-grad-1': myColors.purple['500'],
           'home-bg-grad-2': myColors.purple['500'],
@@ -311,7 +358,6 @@ export default createVuetify({
           /*** Config card ***/
           'config-card-bg': myColors.purple['400'],
 
-
           /*** Light dialog ***/
           'dialog-light': myColors.green['200'],
           'on-dialog-light': '#ffffff',
@@ -322,11 +368,40 @@ export default createVuetify({
           'on-dialog-dark': myColors.cream['100'],
           'dialog-dark-text': '#ffffff',
 
+          'grad-bg-container-bg': myColors.purple['600'],
+
+          'promote-connect-btn-icon': myColors.cream['100'],
+
+          'tonal-icon-btn': myColors.purple['200'],
+
+          'card-on-grad-bg': myColors.purple['300'],
+
+          'general-dialog': myColors.purple['500'],
+          'on-general-dialog': myColors.purple['200'],
+          'general-dialog-text': myColors.gray['300'],
+
           /*** Alert dialog ***/
           'dialog-alert': myColors.cream['100'],
           'on-dialog-alert': myColors.purple['500'],
           'dialog-alert-text': myColors.gray['800'],
           'dialog-alert-btn': myColors.purple['500'],
+
+          'sample-ip-filter-bg': myColors.gray['800'],
+          'sample-ip-filter-text': myColors.gray['400'],
+
+          'btn-style-1': myColors.green['200'],
+          'on-btn-style-1': myColors.purple['500'],
+
+          'btn-style-2': myColors.purple['200'],
+          'on-btn-style-2': '#ffffff',
+
+          'btn-style-3': myColors.purple['200'],
+
+          'btn-style-4': myColors.gray['300'],
+          'on-btn-style-4': '#ffffff',
+
+          'btn-style-5': myColors.gray['300'],
+          'on-btn-style-5': '#ffffff',
 
           /*** States ***/
           active: myColors.green['100'],

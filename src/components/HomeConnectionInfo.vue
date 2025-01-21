@@ -108,12 +108,12 @@ function processConnectedAnimation(): void {
     :class="determineClass()"
   >
 
-    <div v-if="vhApp.isConnectApp()" class="position-absolute w-100 h-100">
+    <div v-if="vhApp.isConnectApp()" class="position-absolute w-100 fill-height">
       <div id="rotateCircle"></div>
     </div>
     <div v-else id="circle"></div>
 
-    <div class="d-flex flex-column align-center justify-center position-relative h-100">
+    <div class="d-flex flex-column align-center justify-center position-relative fill-height">
 
       <!-- Connection state text -->
       <span class="text-body-2">{{ vhApp.getConnectionStateText() }}</span>

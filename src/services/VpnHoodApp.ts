@@ -348,6 +348,15 @@ export class VpnHoodApp {
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
+  public isPremiumFeaturesAvailable(): boolean{
+    if (!this.data.features.isPremiumFlagSupported)
+      return true;
+    return this.data.state.clientProfile?.isPremiumAccount === true;
+  }
+
+  public premiumIconColor(): string{
+    return this.isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium';
+  }
   //------------------------------------------
   // Just for VpnHoodConnect
   //------------------------------------------

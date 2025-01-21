@@ -38,18 +38,15 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 </script>
 
 <template>
-  <v-sheet class="pa-3 h-100" color="black">
+  <v-sheet color="grad-bg-container-bg">
 
     <v-card
-      class="d-flex flex-column justify-space-between primary-bg-grad border border-secondary border-opacity-50 text-white rounded-lg pb-3 h-100">
+      class="d-flex flex-column text-white justify-space-between primary-bg-grad border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
-      <v-btn
-        variant="tonal"
-        size="30"
-        color="secondary"
+      <tonal-icon-btn
         :icon="Util.getLocalizedLeftChevron()"
-        class="opacity-70 text-capitalize ms-3 mt-3"
+        class="ms-3 mt-3"
         @click="router.go(-1)"
       />
 
@@ -70,8 +67,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <v-row v-if="isFreeAvailable()"
            dense
            align="center"
-           class="button-wrapper border border-secondary border-opacity-100 px-2 py-1 mx-0 rounded-lg"
-               style="background-color: rgba(var(--v-theme-primary-lighten-1), 0.3);"
+           class="px-2 py-1 mx-0 rounded-lg card-on-grad-bg"
         >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
@@ -80,24 +76,21 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
               : locale('SELECTED_FREE_SERVER_UNLIMITED_DESC', {minutes: dialogData.normal}) }}
             </p>
           </v-col>
-          <v-col cols="auto" class="action-btn">
-            <v-btn
+          <v-col cols="auto" class="pe-0 action-btn">
+            <btn-style-2
               :text="locale('CONNECT')"
-              color="secondary"
-              class="text-white px-2"
+              class="px-2"
               size="small"
-              rounded="pill"
-              variant="flat"
               @click="actionByConnectPlan(ConnectPlanId.Normal)"
             />
           </v-col>
         </v-row>
 
         <!-- Divider -->
-        <div v-if="isFreeAvailable()" class="d-flex align-center justify-center my-5 mx-10">
-          <div class="w-100 border-b border-secondary-lighten-1"></div>
-          <span class="position-relative text-secondary-lighten-1 h3 px-4">{{locale('OR')}}</span>
-          <div class="w-100 border-b border-secondary-lighten-1"></div>
+        <div v-if="isFreeAvailable()" class="d-flex align-center justify-center my-5 mx-15">
+          <div class="w-100 border-b border-active"></div>
+          <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
+          <div class="w-100 border-b border-active"></div>
         </div>
 
         <!-- Watch rewarded ad -->
