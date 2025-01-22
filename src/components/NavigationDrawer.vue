@@ -169,7 +169,7 @@ async function onSignIn() {
         @click="checkForUpdate"
       >
         <v-list-item-title>
-          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="active" />
+          <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="highlight" />
           <v-icon v-else icon="mdi-update" />
           <span class="ms-3">{{ locale('CHECK_FOR_UPDATE') }}</span>
         </v-list-item-title>

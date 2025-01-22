@@ -33,8 +33,8 @@ function onCloseButton(){
     @update:modelValue="emit('update:modelValue',$event)"
     location="top"
     :timeout="-1"
-    class="mt-11"
     color="suppress-snackbar"
+    class="mx-10"
     vertical
     rounded="xl"
   >

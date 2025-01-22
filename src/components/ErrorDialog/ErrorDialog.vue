@@ -76,7 +76,7 @@ async function sendReport(): Promise<void> {
       color="dialog-alert"
     >
 
-      <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message }}</v-card-text>
+      <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message || 'Oops! Could not even send the report details!' }}</v-card-text>
 
       <v-card-item v-if="dialogData.showChangeServerToAutoButton || (dialogData.canDiagnose &&
       !vhApp.data.state.hasDiagnoseRequested) || dialogData.promptForLog">

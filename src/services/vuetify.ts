@@ -23,6 +23,7 @@ const myColors = {
     800: "#1e1e1e",
   },
   blue:{
+    20: "#eaeff6",
     100:"#16a3fe",
     200:"#1940b0",
     300:"#122272",
@@ -341,73 +342,92 @@ const vhConnectThemeColors: IThemeColorNames = {
   warning: myColors.yellow['100'],
   'on-warning': myColors.yellow['300'],
 }
-/*const vhClientThemeColors: IThemeColorNames = {
 
-  /!*** Backgrounds ***!/
-  background: myColors.gray['100'],
+const vhClientThemeColors: IThemeColorNames = {
+
+  /*** Backgrounds ***/
+  background: myColors.blue['20'],
   'on-background': '#000000',
   'colored-bg-light': myColors.blue['200'],
   'colored-bg-dark': myColors.blue['300'],
   'app-bg': myColors.blue['400'],
+  'app-bar': myColors.green['300'],
+  'on-app-bar': '#ffffff',
 
-  /!*** Navigation drawer ***!/
-  'navigation-drawer': myColors.purple['400'],
+  /*** Navigation drawer ***/
+  'navigation-drawer': "#ffffff",
+  'navigation-drawer-header': myColors.blue['300'],
   'navigation-drawer-version': myColors.green['200'],
 
   'home-app-bar': '#ffffff',
 
-  /!*** Home page gradient background ***!/
+  /*** Home page gradient background ***/
   'home-bg-grad-1': myColors.blue['200'],
   'home-bg-grad-2': myColors.blue['300'],
 
-  /!*** Home page connect btn ***!/
+  /*** Home page connect btn ***/
   'connect-btn-disconnected-grad-1': myColors.blue['100'],
   'connect-btn-disconnected-grad-2': myColors.green['100'],
   'connect-btn-connected': myColors.blue['100'],
   'on-connect-btn-disconnected': myColors.blue['400'],
   'on-connect-btn-connected': '#ffffff',
 
-  /!*** Home page extend session countdown ***!/
+  /*** Home page extend session countdown ***/
   'count-down-normal': myColors.green['300'],
   'count-down-alert': myColors.yellow['200'],
   'count-down-warning': myColors.red['100'],
   'extent-session-btn': myColors.yellow['200'],
   'on-extent-session-btn': myColors.blue['400'],
 
-  /!*** Home page go premium btn ***!/
+  /*** Home page go premium btn ***/
   'go-premium-btn': myColors.blue['100'],
   'on-go-premium-btn': myColors.blue['200'],
 
-  'suppress-snackbar': myColors.cream['100'],
+  'suppress-snackbar': myColors.purple['200'],
 
-  'update-snackbar-alert': myColors.purple['200'],
-  'update-snackbar-warning': myColors.cream['100'],
-  'btn-on-update-snackbar': myColors.purple['500'],
+  'update-snackbar-alert': myColors.blue['20'],
+  'update-snackbar-warning': myColors.green['200'],
+  'btn-on-update-snackbar': myColors.blue['400'],
 
-  /!*** Home page 'Down' and 'Up' color ***!/
+  /*** Home page 'Down' and 'Up' color ***/
   'connection-speed': myColors.blue['100'],
 
-  /!*** Home page total bandwidth ***!/
+  /*** Home page total bandwidth ***/
   'total-bandwidth': myColors.blue['100'],
 
-  /!*** Home page access key expired date ***!/
+  /*** Home page access key expired date ***/
   'expire-date-alert': myColors.purple['100'],
   'expire-date-warning': myColors.red['100'],
 
-  /!*** Home page config buttons ***!/
+  /*** Home page config buttons ***/
   'config-btn-bg': myColors.blue['300'],
   'on-config-btn-bg': myColors.blue['100'],
 
-  /!*** Config card ***!/
+  /*** Servers list ***/
+  'active-server': myColors.green['300'],
+  'fastest-server': myColors.blue['400'],
+  'active-server-chip': myColors.green['300'],
+  'on-active-server-chip': '#ffffff',
+
+  /*** Expansion panels on servers list ***/
+  'expansion-panels': '#ffffff',
+  'on-expansion-panels': myColors.blue['400'],
+  'expansion-panels-servers-list': myColors.blue['20'],
+  'active-profile-radio': myColors.green['300'],
+  'inactive-profile-radio': myColors.gray['300'],
+  'profile-menu-btn': myColors.gray['400'],
+
+  /*** Config card ***/
   'config-card-bg': '#ffffff',
   'zebra-on-config-card-bg': myColors.blue['400'],
+  'config-card-on-expansion-panel': myColors.blue['20'],
 
-  /!*** Light dialog ***!/
+  /*** Light dialog ***/
   'dialog-light': myColors.green['200'],
   'on-dialog-light': '#ffffff',
   'dialog-light-text': '#ffffff',
 
-  /!*** Dark dialog ***!/
+  /*** Dark dialog ***/
   'dialog-dark': myColors.purple['400'],
   'on-dialog-dark': myColors.cream['100'],
   'dialog-dark-text': '#ffffff',
@@ -420,49 +440,52 @@ const vhConnectThemeColors: IThemeColorNames = {
 
   'card-on-grad-bg': myColors.purple['300'],
 
-  'general-dialog': myColors.purple['500'],
-  'on-general-dialog': myColors.purple['200'],
-  'general-dialog-text': myColors.gray['300'],
+  'general-dialog': "#ffffff",
+  'on-general-dialog': myColors.blue['300'],
+  'general-dialog-text': '#000000',
 
-  /!*** Alert dialog ***!/
-  'dialog-alert': myColors.cream['100'],
-  'on-dialog-alert': myColors.purple['500'],
+  /*** Alert dialog ***/
+  'dialog-alert': '#ffffff',
+  'on-dialog-alert': myColors.blue['400'],
   'dialog-alert-text': myColors.gray['800'],
-  'dialog-alert-btn': myColors.purple['500'],
+  'dialog-alert-btn': myColors.blue['400'],
 
-  'sample-ip-filter-bg': myColors.gray['800'],
-  'sample-ip-filter-text': myColors.gray['400'],
+  'sample-ip-filter-bg': myColors.gray['400'],
+  'sample-ip-filter-text': myColors.gray['800'],
 
-  'btn-style-1': myColors.blue['400'],
+  'btn-style-1': myColors.blue['300'],
   'on-btn-style-1': '#ffffff',
 
-  'btn-style-2': myColors.purple['200'],
+  'btn-style-2': myColors.blue['100'],
   'on-btn-style-2': '#ffffff',
 
   'btn-style-3': myColors.cream['100'],
   'on-btn-style-3': myColors.purple['500'],
 
-  'btn-style-4': myColors.purple['200'],
+  'btn-style-4': myColors.green['300'],
 
-  'btn-style-5': myColors.gray['300'],
+  'btn-style-5': myColors.gray['800'],
   'on-btn-style-5': '#ffffff',
+
+  'btn-style-6': '#ffffff',
+  'on-btn-style-6': myColors.blue['400'],
 
   'connection-circle-border': myColors.cream['100'],
 
-  /!*** States ***!/
-  active: myColors.green['300'],
+  /*** States ***/
+  active: myColors.blue['400'],
   'on-active': myColors.blue['400'],
   highlight: myColors.green['300'],
   'enable-premium': myColors.blue['400'],
   'disable-premium': myColors.yellow['200'],
 
-  /!*** Alerts ***!/
+  /*** Alerts ***/
   info: myColors.green['300'],
   note: myColors.purple['200'],
   error: myColors.red['100'],
   warning: myColors.yellow['100'],
   'on-warning': myColors.yellow['300'],
-}*/
+}
 
 
 export default createVuetify({
@@ -646,170 +669,7 @@ export default createVuetify({
     themes: {
       VpnHoodClient: {
         dark: false,
-        colors: {
-
-          /*** Backgrounds ***/
-          background: myColors.gray['100'],
-          'on-background': '#000000',
-          'colored-bg-light': myColors.blue['200'],
-          'colored-bg-dark': myColors.blue['300'],
-          'app-bg': myColors.blue['400'],
-          'app-bar': myColors.green['300'],
-          'on-app-bar': '#ffffff',
-
-          /*** Navigation drawer ***/
-          'navigation-drawer': "#ffffff",
-          'navigation-drawer-header': myColors.blue['300'],
-          'navigation-drawer-version': myColors.green['200'],
-
-          'home-app-bar': '#ffffff',
-
-          /*** Home page gradient background ***/
-          'home-bg-grad-1': myColors.blue['200'],
-          'home-bg-grad-2': myColors.blue['300'],
-
-          /*** Home page connect btn ***/
-          'connect-btn-disconnected-grad-1': myColors.blue['100'],
-          'connect-btn-disconnected-grad-2': myColors.green['100'],
-          'connect-btn-connected': myColors.blue['100'],
-          'on-connect-btn-disconnected': myColors.blue['400'],
-          'on-connect-btn-connected': '#ffffff',
-
-          /*** Home page extend session countdown ***/
-          'count-down-normal': myColors.green['300'],
-          'count-down-alert': myColors.yellow['200'],
-          'count-down-warning': myColors.red['100'],
-          'extent-session-btn': myColors.yellow['200'],
-          'on-extent-session-btn': myColors.blue['400'],
-
-          /*** Home page go premium btn ***/
-          'go-premium-btn': myColors.blue['100'],
-          'on-go-premium-btn': myColors.blue['200'],
-
-          'suppress-snackbar': myColors.cream['100'],
-
-          'update-snackbar-alert': myColors.purple['200'],
-          'update-snackbar-warning': myColors.cream['100'],
-          'btn-on-update-snackbar': myColors.purple['500'],
-
-          /*** Home page 'Down' and 'Up' color ***/
-          'connection-speed': myColors.blue['100'],
-
-          /*** Home page total bandwidth ***/
-          'total-bandwidth': myColors.blue['100'],
-
-          /*** Home page access key expired date ***/
-          'expire-date-alert': myColors.purple['100'],
-          'expire-date-warning': myColors.red['100'],
-
-          /*** Home page config buttons ***/
-          'config-btn-bg': myColors.blue['300'],
-          'on-config-btn-bg': myColors.blue['100'],
-
-          /*** Servers list ***/
-          'active-server': myColors.green['300'],
-          'fastest-server': myColors.blue['400'],
-          'active-server-chip': myColors.green['300'],
-          'on-active-server-chip': '#ffffff',
-
-          /*** Expansion panels on servers list ***/
-          'expansion-panels': '#ffffff',
-          'on-expansion-panels': myColors.blue['400'],
-          'expansion-panels-servers-list': myColors.gray['100'],
-          'active-profile-radio': myColors.green['300'],
-          'inactive-profile-radio': myColors.gray['300'],
-          'profile-menu-btn': myColors.gray['400'],
-
-          /*** Config card ***/
-          'config-card-bg': '#ffffff',
-          'zebra-on-config-card-bg': myColors.blue['400'],
-          'config-card-on-expansion-panel': myColors.gray['100'],
-
-          /*** Light dialog ***/
-          'dialog-light': myColors.green['200'],
-          'on-dialog-light': '#ffffff',
-          'dialog-light-text': '#ffffff',
-
-          /*** Dark dialog ***/
-          'dialog-dark': myColors.purple['400'],
-          'on-dialog-dark': myColors.cream['100'],
-          'dialog-dark-text': '#ffffff',
-
-          'grad-bg-container-bg': myColors.purple['600'],
-
-          'promote-connect-btn-icon': myColors.green['200'],
-
-          'tonal-icon-btn': myColors.purple['200'],
-
-          'card-on-grad-bg': myColors.purple['300'],
-
-          'general-dialog': "#ffffff",
-          'on-general-dialog': myColors.blue['300'],
-          'general-dialog-text': '#000000',
-
-          /*** Alert dialog ***/
-          'dialog-alert': myColors.cream['100'],
-          'on-dialog-alert': myColors.purple['500'],
-          'dialog-alert-text': myColors.gray['800'],
-          'dialog-alert-btn': myColors.purple['500'],
-
-          'sample-ip-filter-bg': myColors.gray['400'],
-          'sample-ip-filter-text': myColors.gray['800'],
-
-          'btn-style-1': myColors.blue['300'],
-          'on-btn-style-1': '#ffffff',
-
-          'btn-style-2': myColors.blue['100'],
-          'on-btn-style-2': '#ffffff',
-
-          'btn-style-3': myColors.cream['100'],
-          'on-btn-style-3': myColors.purple['500'],
-
-          'btn-style-4': myColors.green['300'],
-
-          'btn-style-5': myColors.gray['800'],
-          'on-btn-style-5': '#ffffff',
-
-          'btn-style-6': '#ffffff',
-          'on-btn-style-6': myColors.blue['400'],
-
-          'connection-circle-border': myColors.cream['100'],
-
-          /*** States ***/
-          active: myColors.blue['400'],
-          'on-active': myColors.blue['400'],
-          highlight: myColors.green['300'],
-          'enable-premium': myColors.blue['400'],
-          'disable-premium': myColors.yellow['200'],
-
-          /*** Alerts ***/
-          info: myColors.green['300'],
-          note: myColors.purple['200'],
-          error: myColors.red['100'],
-          warning: myColors.yellow['100'],
-          'on-warning': myColors.yellow['300'],
-
-          primary: '#1940b0',
-          'primary-darken-1': '#122272',
-          'primary-darken-2': '#06124b',
-          secondary: '#23c99d',
-          'on-secondary': '#ffffff',
-          'secondary-lighten-1': '#3ff6a9',
-          'on-secondary-lighten-1': '#ffffff',
-          'tertiary': '#16a3fe',
-          'on-tertiary': '#ffffff',
-          'purple': '#7b7afe',
-          'purple-lighten-1': '#8d9fe4',
-          'on-purple-lighten-1': '#ffffff',
-          'purple-lighten-2': '#f0f3ff',
-          'gray': '#3f3f3f',
-          'gray-lighten-1': '#888888ff',
-          'gray-lighten-2': '#929292',
-          'gray-lighten-3': '#bebebe',
-          'gray-lighten-4': '#eaeaea',
-          'gray-lighten-5': '#efefef',
-          'gray-lighten-6': '#f3f3f3',
-        },
+        colors: vhClientThemeColors,
         variables: {
           'medium-emphasis-opacity': '0.8',
           'border-opacity': '0.07',

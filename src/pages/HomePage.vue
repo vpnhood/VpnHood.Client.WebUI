@@ -164,13 +164,13 @@ function appFilterStatus(): string {
       <v-row align-content="center" justify="center" :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
         <v-col cols="auto d-inline-flex">
           <span class="text-connection-speed text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
-          <span class="text-disabled text-caption">Mbps</span>
+          <span class="px-2 text-body-2 text-white" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
+          <span class="text-white opacity-40 text-caption">Mbps</span>
         </v-col>
         <v-col cols="auto d-inline-flex">
           <span class="text-connection-speed text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
-          <span class="text-disabled text-caption order-last">Mbps</span>
+          <span class="px-2 text-body-2 text-white" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
+          <span class="text-white opacity-40 text-caption order-last">Mbps</span>
         </v-col>
       </v-row>
 

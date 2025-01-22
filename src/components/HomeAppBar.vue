@@ -56,7 +56,7 @@ function isIpFilterAvailable(): boolean{
 </script>
 
 <template>
-  <v-app-bar color="transparent" elevation="0" theme="dark" absolute>
+  <v-app-bar color="transparent" elevation="0" absolute>
     <v-row class="align-center mx-0" >
 
       <!-- Navigation drawer button -->
@@ -82,9 +82,12 @@ function isIpFilterAvailable(): boolean{
           :color="isDebugDataHasValue() ? 'warning' : 'disabled'"
           :variant="isDebugDataHasValue() ? 'flat' : 'text'"
           :class="[{'text-decoration-underline': isIpFilterAvailable()}, isDebugDataHasValue() ? 'px-2' : 'px-0']"
-          :text="locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false)"
           @click="openDebugDialog"
-        />
+        >
+          <span :class="{'text-white opacity-40': !isDebugDataHasValue()}">{{locale('ABBREVIATION_VERSION') + ' ' +
+          vhApp.getAppVersion(false)
+            }}</span>
+        </v-chip>
       </v-col>
 
     </v-row>
