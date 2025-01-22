@@ -51,7 +51,7 @@ function isUdpUnsupported(): boolean {
           :text="locale('UDP_NOT_SUPPORTED_MESSAGE')"
         />
 
-        <v-radio-group :hide-details="true" v-model="activeProtocol" class="text-white" color="highlight">
+        <v-radio-group :hide-details="true" v-model="activeProtocol" class="text-general-dialog-text" color="highlight">
 
           <!-- UDP -->
           <v-radio :value="Protocols.UDP" :disabled="isUdpUnsupported()" class="mb-3">

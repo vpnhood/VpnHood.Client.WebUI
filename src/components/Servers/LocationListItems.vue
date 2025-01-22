@@ -47,7 +47,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     class="pa-2"
     :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
     :active="isActiveItem(location)"
-    color="active"
+    color="active-server"
     @click="internalConnect(location.serverLocation)"
   >
 
@@ -62,7 +62,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
           <v-icon
             icon="mdi-lightning-bolt-outline"
             size="31"
-            :color="!isActiveItem(location) ? 'highlight' : ''"
+            :color="!isActiveItem(location) ? 'fastest-server' : ''"
           />
 
           <!-- Title and subtitle -->
@@ -112,7 +112,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       <!-- Status -->
       <v-chip
         v-if="isActiveItem(location)"
-        color="active"
+        color="active-server-chip"
         variant="flat"
         size="x-small"
         :text="locale('ACTIVE')"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 const props = defineProps<{
   pageTitle: string,
@@ -10,9 +11,9 @@ const props = defineProps<{
 <template>
   <!-- Page header -->
   <v-app-bar
-    flat
+    :flat="VpnHoodApp.instance.isConnectApp()"
     absolute
-    color="background"
+    color="app-bar"
     density="compact"
   >
 

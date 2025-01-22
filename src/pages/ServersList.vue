@@ -30,34 +30,28 @@ const isShowAddServerDialog = computed<boolean>({
   <v-sheet>
 
     <!-- Add server button -->
-    <v-btn
-      v-if="vhApp.data.features.isAddAccessKeySupported"
-      variant="flat"
-      color="white"
-      class="text-primary-darken-1 mt-1 mb-5 text-capitalize"
-      rounded="pill"
-      :text="locale('ADD_SERVER')"
-      @click="isShowAddServerDialog = true"
-    >
-      <template v-slot:prepend>
-        <v-icon icon="mdi-plus-circle" size="30"/>
-      </template>
-    </v-btn>
+    <div class="text-center">
+      <btn-style-6
+        v-if="vhApp.data.features.isAddAccessKeySupported"
+        class="mt-1 mb-5"
+        :text="locale('ADD_SERVER')"
+        @click="isShowAddServerDialog = true"
+      >
+        <template v-slot:prepend>
+          <v-icon icon="mdi-plus-circle" size="30"/>
+        </template>
+      </btn-style-6>
+    </div>
 
     <!-- Show alert, if user does not have any server -->
-    <div v-if="vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length === 0"
-         class="text-start"
-    >
-      <v-alert
-        :text="locale('NO_SERVER_AVAILABLE')"
-        density="compact"
-        type="warning"
-        class="mb-4"
-      />
-      <div
-        v-html="locale('GET_SERVER_KEY_METHODS_DESC')"
-        class="get-server-key-alert pa-4 text-subtitle-2"
-      ></div>
+    <div v-if="vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length === 0">
+      <alert-warning :text="locale('NO_SERVER_AVAILABLE')" class="mb-4" />
+      <config-card>
+        <div
+          v-html="locale('GET_SERVER_KEY_METHODS_DESC')"
+          class="pa-4 text-caption"
+        ></div>
+      </config-card>
     </div>
 
     <!-- For VpnHoodCONNECT -->

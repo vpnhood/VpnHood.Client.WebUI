@@ -64,13 +64,15 @@ async function connect(clientProfileId:string): Promise<void>{
   >
 
     <!-- Add Private Server -->
-    <v-card class="mx-auto pb-3" width="100%" variant="flat">
-      <v-card-title>
-        {{ locale('ADD_ACCESS_KEY_TITLE') }}
-        <v-divider class="mt-2" />
-      </v-card-title>
-      <v-card-text class="pt-0">{{ locale('ADD_ACCESS_KEY_SUBTITLE') }}</v-card-text>
-      <v-card-actions class="px-4">
+    <v-card
+      color="background"
+      class="rounded-b-0 mx-auto"
+      width="100%"
+      variant="flat"
+      :title="locale('ADD_ACCESS_KEY_TITLE')"
+    >
+      <v-card-text class="test-disabled text-caption">{{ locale('ADD_ACCESS_KEY_SUBTITLE') }}</v-card-text>
+      <v-card-item>
         <v-text-field
           v-model="accessKey"
           :error-messages="accessKeyErrorMessage"
@@ -82,9 +84,9 @@ async function connect(clientProfileId:string): Promise<void>{
           dir="ltr"
           :autofocus="true"
           density="compact"
-          color="secondary"
+          color="highlight"
         ></v-text-field>
-      </v-card-actions>
+      </v-card-item>
     </v-card>
 
   </v-bottom-sheet>

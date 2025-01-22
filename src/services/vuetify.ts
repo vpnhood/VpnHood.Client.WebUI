@@ -9,8 +9,50 @@ import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VCard } from 'vuetify/components/VCard';
 import i18n from '@/locales/i18n';
-import { VSheet } from 'vuetify/components/VSheet';
 import { AppName } from '@/helpers/UiConstants';
+
+const myColors = {
+  gray:{
+    100: "#f3f3f3",
+    200: "#efefef",
+    300: "#eaeaea",
+    400: "#bebebe",
+    500: "#929292",
+    600: "#888888ff",
+    700: "#3f3f3f",
+    800: "#1e1e1e",
+  },
+  blue:{
+    100:"#16a3fe",
+    200:"#1940b0",
+    300:"#122272",
+    400:"#06124b",
+  },
+  purple:{
+    100:"#8d9fe4",
+    200:"#7b7afe",
+    300:"#2f296e",
+    400:"#211951",
+    500:"#150e3d",
+    600:"#0b0b24"
+  },
+  green:{
+    100:"#3ff6a9",
+    200:"#15f5ba",
+    300:"#23c99d"
+  },
+  yellow:{
+    100:"#ffe066",
+    200:"#ffe648",
+    300: "#704d00"
+  },
+  cream:{
+    100:"#e7b481"
+  },
+  red:{
+    100: "#ff5252"
+  },
+}
 
 interface IThemeColorNames {
   [key: string]: string;
@@ -20,6 +62,9 @@ interface IThemeColorNames {
   'colored-bg-light': string,
   'colored-bg-dark': string,
   'app-bg': string,
+
+  'app-bar': string,
+  'on-app-bar': string,
 
   'navigation-drawer': string,
   'navigation-drawer-header': string,
@@ -69,9 +114,24 @@ interface IThemeColorNames {
   'config-btn-bg': string,
   'on-config-btn-bg': string,
 
+  /*** Servers list ***/
+  'active-server': string,
+  'fastest-server': string,
+  'active-server-chip': string,
+  'on-active-server-chip': string,
+
+  /*** Expansion panels on servers list ***/
+  'expansion-panels': string,
+  'on-expansion-panels': string,
+  'expansion-panels-servers-list': string,
+  'active-profile-radio': string,
+  'inactive-profile-radio': string,
+  'profile-menu-btn': string,
+
   /*** Config card ***/
   'config-card-bg': string,
   'zebra-on-config-card-bg': string,
+  'config-card-on-expansion-panel': string,
 
   /*** Light dialog ***/
   'dialog-light': string,
@@ -118,6 +178,9 @@ interface IThemeColorNames {
   'btn-style-5': string,
   'on-btn-style-5': string,
 
+  'btn-style-6': string,
+  'on-btn-style-6': string,
+
   'connection-circle-border': string,
 
   /*** States ***/
@@ -135,49 +198,6 @@ interface IThemeColorNames {
   'on-warning': string,
 }
 
-const myColors = {
-  gray:{
-    100: "#f3f3f3",
-    200: "#efefef",
-    300: "#eaeaea",
-    400: "#bebebe",
-    500: "#929292",
-    600: "#888888ff",
-    700: "#3f3f3f",
-    800: "#1e1e1e",
-  },
-  blue:{
-    100:"#16a3fe",
-    200:"#1940b0",
-    300:"#122272",
-    400:"#06124b",
-  },
-  purple:{
-    100:"#8d9fe4",
-    200:"#7b7afe",
-    300:"#2f296e",
-    400:"#211951",
-    500:"#150e3d",
-    600:"#0b0b24"
-  },
-  green:{
-    100:"#3ff6a9",
-    200:"#15f5ba",
-    300:"#23c99d"
-  },
-  yellow:{
-    100:"#ffe066",
-    200:"#ffe648",
-    300: "#704d00"
-  },
-  cream:{
-    100:"#e7b481"
-  },
-  red:{
-    100: "#ff5252"
-  },
-}
-
 const vhConnectThemeColors: IThemeColorNames = {
   /*** Backgrounds ***/
   background: myColors.purple['500'],
@@ -185,6 +205,9 @@ const vhConnectThemeColors: IThemeColorNames = {
   'colored-bg-light': myColors.purple['500'],
   'colored-bg-dark': myColors.purple['600'],
   'app-bg': myColors.purple['500'],
+
+  'app-bar': myColors.purple['500'],
+  'on-app-bar': '#ffffff',
 
   /*** Navigation drawer ***/
   'navigation-drawer': myColors.purple['400'],
@@ -235,9 +258,24 @@ const vhConnectThemeColors: IThemeColorNames = {
   'config-btn-bg': myColors.purple['500'],
   'on-config-btn-bg': myColors.cream['100'],
 
+  /*** Servers list ***/
+  'active-server': myColors.green['200'],
+  'fastest-server': myColors.purple['200'],
+  'active-server-chip': myColors.green['200'],
+  'on-active-server-chip': myColors.purple['500'],
+
+  /*** Expansion panels on servers list ***/
+  'expansion-panels': myColors.purple['400'],
+  'on-expansion-panels': '#ffffff',
+  'expansion-panels-servers-list': myColors.purple['400'],
+  'active-profile-radio': myColors.green['300'],
+  'inactive-profile-radio': myColors.gray['300'],
+  'profile-menu-btn': myColors.gray['400'],
+
   /*** Config card ***/
   'config-card-bg': myColors.purple['400'],
   'zebra-on-config-card-bg': myColors.purple['500'],
+  'config-card-on-expansion-panel': myColors.purple['400'],
 
   /*** Light dialog ***/
   'dialog-light': myColors.green['200'],
@@ -283,6 +321,9 @@ const vhConnectThemeColors: IThemeColorNames = {
 
   'btn-style-5': myColors.gray['300'],
   'on-btn-style-5': '#ffffff',
+
+  'btn-style-6': '#ffffff',
+  'on-btn-style-6': myColors.purple['500'],
 
   'connection-circle-border': myColors.cream['100'],
 
@@ -438,8 +479,6 @@ export default createVuetify({
     }
   },
   aliases: {
-    HomeSheet: VSheet,
-
     PremiumIcon: VIcon,
 
     BtnStyle1: VBtn,
@@ -447,6 +486,7 @@ export default createVuetify({
     BtnStyle3: VBtn,
     BtnStyle4: VBtn,
     BtnStyle5: VBtn,
+    BtnStyle6: VBtn,
     TonalIconBtn: VBtn,
 
     HomeConfigBtn: VBtn,
@@ -481,10 +521,10 @@ export default createVuetify({
       class: "pa-4 fill-height",
       color: "background",
     },
-
-    HomeSheet:{
-      class: "fill-height",
-      color: "transparent",
+    VExpansionPanel:{
+      ConfigCard:{
+        color:'config-card-on-expansion-panel',
+      }
     },
 
     BtnStyle1:{
@@ -516,6 +556,12 @@ export default createVuetify({
       rounded: 'pill',
       density:'comfortable',
       color: 'btn-style-5',
+      class: "text-transform-none"
+    },
+    BtnStyle6:{
+      variant:'flat',
+      rounded: 'pill',
+      color: 'btn-style-6',
       class: "text-transform-none"
     },
     TonalIconBtn: {
@@ -550,8 +596,8 @@ export default createVuetify({
         variant:'text',
         size:"small",
         density:"compact",
-        color:"disabled",
-        class: 'text-capitalize text-caption text-truncate limited-width-to-truncate',
+        color:"white",
+        class: 'text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50',
       },
     },
     PremiumIcon:{
@@ -608,6 +654,8 @@ export default createVuetify({
           'colored-bg-light': myColors.blue['200'],
           'colored-bg-dark': myColors.blue['300'],
           'app-bg': myColors.blue['400'],
+          'app-bar': myColors.green['300'],
+          'on-app-bar': '#ffffff',
 
           /*** Navigation drawer ***/
           'navigation-drawer': "#ffffff",
@@ -658,9 +706,24 @@ export default createVuetify({
           'config-btn-bg': myColors.blue['300'],
           'on-config-btn-bg': myColors.blue['100'],
 
+          /*** Servers list ***/
+          'active-server': myColors.green['300'],
+          'fastest-server': myColors.blue['400'],
+          'active-server-chip': myColors.green['300'],
+          'on-active-server-chip': '#ffffff',
+
+          /*** Expansion panels on servers list ***/
+          'expansion-panels': '#ffffff',
+          'on-expansion-panels': myColors.blue['400'],
+          'expansion-panels-servers-list': myColors.gray['100'],
+          'active-profile-radio': myColors.green['300'],
+          'inactive-profile-radio': myColors.gray['300'],
+          'profile-menu-btn': myColors.gray['400'],
+
           /*** Config card ***/
           'config-card-bg': '#ffffff',
           'zebra-on-config-card-bg': myColors.blue['400'],
+          'config-card-on-expansion-panel': myColors.gray['100'],
 
           /*** Light dialog ***/
           'dialog-light': myColors.green['200'],
@@ -690,27 +753,30 @@ export default createVuetify({
           'dialog-alert-text': myColors.gray['800'],
           'dialog-alert-btn': myColors.purple['500'],
 
-          'sample-ip-filter-bg': myColors.gray['800'],
-          'sample-ip-filter-text': myColors.gray['400'],
+          'sample-ip-filter-bg': myColors.gray['400'],
+          'sample-ip-filter-text': myColors.gray['800'],
 
           'btn-style-1': myColors.blue['300'],
           'on-btn-style-1': '#ffffff',
 
-          'btn-style-2': myColors.purple['200'],
+          'btn-style-2': myColors.blue['100'],
           'on-btn-style-2': '#ffffff',
 
           'btn-style-3': myColors.cream['100'],
           'on-btn-style-3': myColors.purple['500'],
 
-          'btn-style-4': myColors.purple['200'],
+          'btn-style-4': myColors.green['300'],
 
-          'btn-style-5': myColors.gray['300'],
+          'btn-style-5': myColors.gray['800'],
           'on-btn-style-5': '#ffffff',
+
+          'btn-style-6': '#ffffff',
+          'on-btn-style-6': myColors.blue['400'],
 
           'connection-circle-border': myColors.cream['100'],
 
           /*** States ***/
-          active: myColors.green['300'],
+          active: myColors.blue['400'],
           'on-active': myColors.blue['400'],
           highlight: myColors.green['300'],
           'enable-premium': myColors.blue['400'],
@@ -746,7 +812,8 @@ export default createVuetify({
         },
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-opacity': '0.07'
+          'border-opacity': '0.07',
+          'disabled-opacity': '0.7'
         }
       },
       VpnHoodConnect: {
@@ -754,7 +821,7 @@ export default createVuetify({
         colors: vhConnectThemeColors,
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-opacity': '0.03'
+          'border-opacity': '0.03',
         }
       }
     }

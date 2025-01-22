@@ -45,7 +45,7 @@ function listHasGroup(): boolean{
     v-model:opened="openedListGroupsModel"
     open-strategy="multiple"
     bg-color="background"
-    :class="{'zebra rounded-xl': !vhApp.isConnectApp()}"
+    :class="{'rounded-lg': !vhApp.isConnectApp()}"
   >
     <!-- Categorised locations -->
     <template v-if="listHasGroup()">

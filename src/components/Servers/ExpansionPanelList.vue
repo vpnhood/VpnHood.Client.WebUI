@@ -62,13 +62,13 @@ async function saveNewClientProfileName(): Promise<void> {
     v-model="expandedPanels[index]"
     flat
     rounded="xl"
-    bg-color="white"
+    bg-color="expansion-panels"
     class="mb-4"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.locationInfos.length)"
       hide-actions
-      class="text-primary-darken-1 pa-4"
+      class="pa-4"
       @click="Util.isSingleLocation(clientProfileInfo.locationInfos.length) ?
       ConnectManager.connect2(clientProfileInfo.clientProfileId, false) : ''"
     >
@@ -76,7 +76,7 @@ async function saveNewClientProfileName(): Promise<void> {
       <!-- Country flag on collapse state -->
       <div v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)
             && expandedPanels[index] !== 0"
-        class="d-flex align-center bg-gray-lighten-6 py-3 px-2 text-start"
+        class="d-flex align-center bg-expansion-panels-servers-list py-3 px-2 text-start"
         style="border-radius: 14px;"
         @click="expandedPanels[index] = 0"
       >
@@ -91,7 +91,7 @@ async function saveNewClientProfileName(): Promise<void> {
             >
               <!-- Auto select icon -->
               <v-icon v-if="Util.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
-                      color="primary-darken-1" size="27"></v-icon>
+                      color="fastest-server" size="27"></v-icon>
 
               <!-- Country flag -->
               <img v-else :src="vhApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%"
@@ -112,9 +112,9 @@ async function saveNewClientProfileName(): Promise<void> {
           <v-col cols="auto py-0">
             <div
               :class="[vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
-                ? 'border-secondary'
-                : 'border-gray-lighten-4'
-                , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-secondary']"
+                ? 'border-active-profile-radio'
+                : 'border-inactive-profile-radio'
+                , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-active-profile-radio']"
               style="width: 25px; height: 25px; border-width: 3px !important;"
             >
               <!-- Check icon if is active client profile -->
@@ -125,7 +125,7 @@ async function saveNewClientProfileName(): Promise<void> {
 
           <!-- Profile name -->
           <v-col class="px-0 py-0 text-truncate limited-width-to-truncate">
-            <h4 class="text-primary-darken-1 text-truncate text-capitalize">
+            <h4 class="text-truncate text-capitalize">
               {{ clientProfileInfo.clientProfileName }}
             </h4>
           </v-col>
@@ -133,7 +133,7 @@ async function saveNewClientProfileName(): Promise<void> {
           <!-- Menu button and Expand/Collapse button -->
           <v-col cols="auto" class="py-0">
             <!-- Menu button -->
-            <v-btn :icon="true" density="compact" variant="plain" color="gray-lighten-3">
+            <v-btn :icon="true" density="compact" variant="plain" color="profile-menu-btn">
               <v-icon>mdi-dots-vertical</v-icon>
               <v-menu activator="parent">
                 <!-- Menu items -->
@@ -178,7 +178,7 @@ async function saveNewClientProfileName(): Promise<void> {
       </template>
 
       <!-- Support id &  -->
-      <div class="d-flex align-center justify-space-between text-gray-lighten-3 text-caption px-1 mt-2">
+      <div class="d-flex align-center justify-space-between text-disabled text-caption px-1 mt-2">
         <span>SID:{{ clientProfileInfo.supportId }}</span>
         <span>{{ clientProfileInfo.hostNames[0] }}</span>
       </div>
@@ -187,15 +187,15 @@ async function saveNewClientProfileName(): Promise<void> {
 
   <!-- Rename dialog -->
   <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isShow" max-width="600">
-    <v-card :title="locale('RENAME')">
+    <v-card :title="locale('RENAME')" color="general-dialog">
 
-      <v-card-text>
+      <v-card-text class="text-general-dialog-text">
         <!-- Name text field -->
         <v-text-field
           v-model="newClientProfileName"
           spellcheck="false"
           autocomplete="off"
-          color="primary"
+          color="highlight"
           :hint="locale('SAVE_EMPTY_TO_DISPLAY_DEFAULT_NAME')"
           persistent-hint
           :clearable="true">
@@ -203,56 +203,39 @@ async function saveNewClientProfileName(): Promise<void> {
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
 
         <!-- Cancel rename button -->
         <v-btn
-          color="primary"
-          variant="text"
           :text="locale('CANCEL')"
           @click="ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false)"
         />
 
         <!-- Save rename button -->
-        <v-btn
-          color="primary"
-          variant="text"
-          :text="locale('SAVE')"
-          @click="saveNewClientProfileName"
-        />
+        <v-btn :text="locale('SAVE')" @click="saveNewClientProfileName" />
 
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <!-- Confirm delete server dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isShow"
-            max-width="600">
-    <v-card>
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isShow">
+    <v-card color="general-dialog" :title="locale('WARNING')">
 
-      <v-card-title class="text-on-warning bg-warning">{{ locale('WARNING') }}</v-card-title>
-
-      <v-card-text>
-        <p class="color-muted">{{ locale("CONFIRM_REMOVE_SERVER") }}</p>
+      <v-card-text class="text-general-dialog-text">
+        <p class="text-caption mb-3">{{ locale("CONFIRM_REMOVE_SERVER") }}</p>
         <strong>{{ currentClientProfileInfo.clientProfileName }}</strong>
       </v-card-text>
 
       <!-- Dialog buttons -->
-      <v-card-actions class="d-flex justify-space-around mt-4 mb-3">
-
-        <!-- Confirm delete button -->
-        <v-btn
-          variant="text"
-          :text="locale('YES')"
-          @click="removeServer(currentClientProfileInfo.clientProfileId)"
-        />
+      <v-card-actions>
 
         <!-- Cancel delete button -->
-        <v-btn
-          variant="tonal"
-          :text="locale('NO')"
+        <v-btn :text="locale('NO')"
           @click="ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog, false)"
         />
+
+        <!-- Confirm delete button -->
+        <v-btn :text="locale('YES')" @click="removeServer(currentClientProfileInfo.clientProfileId)" variant="plain"/>
 
       </v-card-actions>
     </v-card>
