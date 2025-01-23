@@ -11,5 +11,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
     class="text-caption"
     density="compact"
     type="warning"
+    color="disconnect-warning"
   />
 </template>

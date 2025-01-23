@@ -79,7 +79,7 @@ function isIpFilterAvailable(): boolean{
           tabindex="-1"
           size="small"
           density="compact"
-          :color="isDebugDataHasValue() ? 'warning' : 'disabled'"
+          :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
           :variant="isDebugDataHasValue() ? 'flat' : 'text'"
           :class="[{'text-decoration-underline': isIpFilterAvailable()}, isDebugDataHasValue() ? 'px-2' : 'px-0']"
           @click="openDebugDialog"

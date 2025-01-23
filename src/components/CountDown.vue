@@ -49,7 +49,7 @@ function getCountdownColor(): string{
     <v-chip
       v-if="vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd"
       variant="flat"
-      color="extent-session-btn"
+      :color="getCountdownColor()"
       class="text-capitalize font-weight-bold"
       :append-icon="Util.getLocalizedRightChevron()"
       size="small"

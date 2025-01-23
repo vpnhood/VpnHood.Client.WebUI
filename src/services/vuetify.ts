@@ -88,8 +88,6 @@ interface IThemeColorNames {
   'count-down-normal': string,
   'count-down-alert': string,
   'count-down-warning': string,
-  'extent-session-btn': string,
-  'on-extent-session-btn': string,
 
   /*** Home page go premium btn ***/
   'go-premium-btn': string,
@@ -191,9 +189,17 @@ interface IThemeColorNames {
   'enable-premium': string,
   'disable-premium': string,
 
+  'disconnect-warning': string,
+  'on-disconnect-warning': string,
+
+  'version-on-home-debug': string,
+  'on-version-on-home-debug': string,
+
   /*** Alerts ***/
   info: string,
+  'on-info': string,
   note: string,
+  'on-note': string,
   error: string,
   warning: string,
   'on-warning': string,
@@ -230,10 +236,8 @@ const vhConnectThemeColors: IThemeColorNames = {
 
   /*** Home page extend session countdown ***/
   'count-down-normal': myColors.green['200'],
-  'count-down-alert': myColors.yellow['200'],
+  'count-down-alert': myColors.cream['100'],
   'count-down-warning': myColors.red['100'],
-  'extent-session-btn': myColors.yellow['200'],
-  'on-extent-session-btn': myColors.purple['600'],
 
   /*** Home page go premium btn ***/
   'go-premium-btn': myColors.cream['100'],
@@ -335,12 +339,20 @@ const vhConnectThemeColors: IThemeColorNames = {
   'enable-premium': myColors.green['200'],
   'disable-premium': myColors.cream['100'],
 
+  'disconnect-warning': myColors.purple['100'],
+  'on-disconnect-warning': myColors.purple['600'],
+
+  'version-on-home-debug': myColors.cream['100'],
+  'on-version-on-home-debug': myColors.purple['600'],
+
   /*** Alerts ***/
-  info: myColors.green['300'],
-  note: myColors.purple['100'],
+  info: myColors.purple['400'],
+  'on-info': myColors.gray['400'],
+  note: myColors.purple['400'],
+  'on-note': myColors.purple['100'],
   error: myColors.red['100'],
-  warning: myColors.yellow['100'],
-  'on-warning': myColors.yellow['300'],
+  warning: myColors.purple['400'],
+  'on-warning': myColors.cream['100'],
 }
 
 const vhClientThemeColors: IThemeColorNames = {
@@ -376,8 +388,6 @@ const vhClientThemeColors: IThemeColorNames = {
   'count-down-normal': myColors.green['300'],
   'count-down-alert': myColors.yellow['200'],
   'count-down-warning': myColors.red['100'],
-  'extent-session-btn': myColors.yellow['200'],
-  'on-extent-session-btn': myColors.blue['400'],
 
   /*** Home page go premium btn ***/
   'go-premium-btn': myColors.blue['100'],
@@ -479,9 +489,17 @@ const vhClientThemeColors: IThemeColorNames = {
   'enable-premium': myColors.blue['400'],
   'disable-premium': myColors.yellow['200'],
 
+  'disconnect-warning': myColors.yellow['200'],
+  'on-disconnect-warning': myColors.yellow['300'],
+
+  'version-on-home-debug': myColors.yellow['200'],
+  'on-version-on-home-debug': myColors.blue['400'],
+
   /*** Alerts ***/
   info: myColors.green['300'],
+  'on-info': myColors.blue['400'],
   note: myColors.purple['200'],
+  'on-note': myColors.purple['200'],
   error: myColors.red['100'],
   warning: myColors.yellow['100'],
   'on-warning': myColors.yellow['300'],
@@ -633,7 +651,6 @@ export default createVuetify({
       type: "warning",
       density: "compact",
       class: "text-caption pt-1 text-start",
-      border: "start",
       title: i18n.global.t("ALERT"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"
@@ -644,8 +661,6 @@ export default createVuetify({
       type: "note",
       density: "compact",
       class: "text-caption pt-1 text-start",
-      border: "start",
-      variant: 'tonal',
       title: i18n.global.t("NOTE"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"
@@ -656,8 +671,6 @@ export default createVuetify({
       type: "info",
       density: "compact",
       class: "text-caption pt-1 text-start",
-      border: "start",
-      variant: 'tonal',
       title: i18n.global.t("INFO"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"

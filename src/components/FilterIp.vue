@@ -94,7 +94,7 @@ function revertCurrentChange(): void{
 <template>
   <v-sheet>
     <!-- Disconnecting alert -->
-    <disconnect-required-alert class="mb-3"/>
+    <disconnect-required-alert />
 
     <v-defaults-provider :defaults="{
       'VChip':{
