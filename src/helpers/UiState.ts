@@ -9,9 +9,7 @@ export class UiState {
   public generalSnackbarData: GeneralSnackbarData = new GeneralSnackbarData();
 
   // Suppress message state
-  public showSuppressSnackbar: boolean = false;
   public userIgnoreSuppressToTime: Date | null = null;
-  public userIgnoreSuppressByTime: Date | null = null;
 
   // Update message state
   public showUpdateSnackbar: boolean = false;

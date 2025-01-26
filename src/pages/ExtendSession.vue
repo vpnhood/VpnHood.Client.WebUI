@@ -19,7 +19,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
       await router.push('/purchase-subscription');
       break;
     case ConnectPlanId.PremiumByRewardedAd:
-      if (!vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd)
+      if (!vhApp.data.state.sessionStatus?.canExtendByRewardedAd)
         break;
       await showRewardedAd();
       break;
@@ -68,7 +68,7 @@ async function showRewardedAd(){
 
         <!-- Watch rewarded ad -->
         <promote-connect-button
-          :class="{'opacity-30': !vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd}"
+          :class="{'opacity-30': !vhApp.data.state.sessionStatus?.canExtendByRewardedAd}"
           icon="mdi-play-box-lock-open-outline"
           :title="locale('WATCH_REWARDED_AD')"
           :description="locale('EXTEND_BY_REWARDED_AD_DESC', {minutes:

@@ -89,6 +89,14 @@ const routes = [
     meta: {
       title: 'Filter IPs By App',
     }
+  },
+  {
+    path: '/premium-details',
+    name: 'Premium Details',
+    component: () => import(/* webpackChunkName: "Premium Details" */ '@/pages/PremiumDetails.vue'),
+    meta: {
+      title: 'Premium Details',
+    }
   }
 ];
 

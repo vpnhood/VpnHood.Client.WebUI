@@ -1,22 +1,33 @@
 <script setup lang="ts">
-import { ApiException, BillingPurchaseState, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import {
+  ApiException,
+  BillingPurchaseState,
+  ClientProfileUpdateParams, PatchOfString,
+  SubscriptionPlan
+} from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
+import { ConnectManager } from '@/helpers/ConnectManager';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 // TODO: Improve this page
-const subscriptionPlans = ref<SubscriptionPlan[]>([]);
-const showPurchaseCompleteDialog = ref<boolean>(false);
-const premiumCode = ref<string | null>(null);
-const premiumCodeErrorMessage = ref<string | null>(null);
 const isGooglePlayAvailable = ref<boolean>(true);
 const isGoogleBillingAvailable = ref<boolean>(true);
+const subscriptionPlans = ref<SubscriptionPlan[]>([]);
+const premiumCode = ref<string>('');
+const showProcessDialog = ref<boolean>(false);
+const purchaseCompleteDialogMessage = ref<string | null>(null);
+
+// Use one dialog for purchase by google and by premium key
+const isShowProcessDialog = computed<boolean>(() => {
+  return vhApp.data.state.purchaseState === BillingPurchaseState.Processing || showProcessDialog.value;
+});
 
 onMounted(async () => {
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase){
@@ -46,11 +57,6 @@ onMounted(async () => {
   }
 });
 
-onUnmounted(() => {
-    premiumCode.value = '';
-    premiumCodeErrorMessage.value = '';
-})
-
 async function onPurchaseClick(planId: string): Promise<void> {
   if (!vhApp.data.userState.userAccount)
     await vhApp.signIn();
@@ -65,12 +71,43 @@ async function purchase(planId: string): Promise<void> {
   const billingClient = ClientApiFactory.instance.createBillingClient();
   await billingClient.purchase(planId);
   await vhApp.loadAccount();
-  showPurchaseCompleteDialog.value = true;
+  purchaseCompleteDialogMessage.value = locale("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE");
 }
 
-async function closeOnPurchaseComplete(): Promise<void> {
-  showPurchaseCompleteDialog.value = false;
-  await router.replace('/');
+async function checkAndActivePremiumCode(): Promise<void> {
+  const profileId = vhApp.data.state.clientProfile?.clientProfileId;
+  if (!profileId)
+    throw new Error("Could not find the profile id.");
+
+  try {
+    showProcessDialog.value = true;
+
+    const clientProfileInfo = await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+      accessCode: new PatchOfString({value: premiumCode.value})
+    }))
+    console.log(clientProfileInfo);
+
+    await ConnectManager.connect3(profileId, undefined, false);
+    purchaseCompleteDialogMessage.value = locale("PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE");
+  }
+  catch (err: unknown){
+    console.log(err);
+
+    const clientProfileInfo = await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+      accessCode: new PatchOfString({value: null})
+    }))
+    console.log(clientProfileInfo);
+
+    console.log("Access code removed.");
+    throw err;
+  }
+  finally {
+    showProcessDialog.value = false;
+  }
+}
+function closeCompleteDialog(showDetails: boolean) {
+  purchaseCompleteDialogMessage.value = null;
+  router.replace(showDetails ? '/premium-details' : '/')
 }
 </script>
 
@@ -229,11 +266,11 @@ async function closeOnPurchaseComplete(): Promise<void> {
 
               <v-text-field
                 v-model="premiumCode"
-                :error-messages="premiumCodeErrorMessage"
                 :placeholder="locale('INTER_YOUR_CODE')"
                 hide-details
                 single-line
                 clearable
+                autofocus
                 spellcheck="false"
                 autocomplete="off"
                 dir="ltr"
@@ -248,6 +285,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
                 block
                 :disabled="!premiumCode"
                 :text="locale('CHECK_AND_ACTIVE')"
+                @click="checkAndActivePremiumCode()"
               />
             </v-card-item>
 
@@ -364,10 +402,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
   </v-sheet>
 
   <!-- Pending purchase process dialog -->
-  <v-dialog
-    :model-value="vhApp.data.state.purchaseState === BillingPurchaseState.Processing"
-    :persistent="true"
-  >
+  <v-dialog :model-value="isShowProcessDialog" :persistent="true">
     <v-card color="general-dialog">
       <v-card-text class="text-general-dialog-text text-body-2">
         {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
@@ -377,7 +412,7 @@ async function closeOnPurchaseComplete(): Promise<void> {
   </v-dialog>
 
   <!-- Purchase complete dialog -->
-  <v-dialog v-model="showPurchaseCompleteDialog">
+  <v-dialog :model-value="purchaseCompleteDialogMessage != null" :persistent="true">
     <v-card color="active">
       <v-card-title class="text-center pt-4">
         <v-icon class="text-h2">mdi-party-popper</v-icon>
@@ -387,7 +422,8 @@ async function closeOnPurchaseComplete(): Promise<void> {
       <v-card-text>{{ locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE') }}</v-card-text>
 
       <v-card-actions>
-        <v-btn :text="locale('CLOSE')" @click="closeOnPurchaseComplete" />
+        <v-btn :text="locale('SHOW_PREMIUM_DETAILS')" @click="closeCompleteDialog(true)" />
+        <v-btn :text="locale('CLOSE')" variant="plain" @click="closeCompleteDialog(false)" />
       </v-card-actions>
     </v-card>
   </v-dialog>

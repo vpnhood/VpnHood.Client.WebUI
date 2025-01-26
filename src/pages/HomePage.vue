@@ -3,7 +3,6 @@ import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
 import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
 import ProtocolDialog from '@/components/ProtocolDialog.vue';
 import HomeAppBar from '@/components/HomeAppBar.vue';
-import SuppressSnackbar from '@/components/SuppressSnackbar.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
@@ -39,17 +38,16 @@ async function onConnectButtonClick(): Promise<void> {
   }
 }
 function udpProtocolButtonText(): string {
-  const { connectionState, isUdpChannelSupported } = vhApp.data.state;
   const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
-  if (connectionState === AppConnectionState.Connected && !isUdpChannelSupported) {
+  if (vhApp.data.state.connectionState === AppConnectionState.Connected &&
+    !vhApp.data.state.sessionInfo?.isUdpChannelSupported) {
     return dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP");
   }
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
 function isShowCountdown(): boolean{
-  const isPremiumAccount = vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported;
-  const hasExpireTime = !!vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
-  return !isPremiumAccount && hasExpireTime;
+  const hasExpireTime = !!vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
+  return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.isConnected();
 }
 function getActiveServerNameOrLocation(): string {
   // App is VpnHoodClient
@@ -57,7 +55,8 @@ function getActiveServerNameOrLocation(): string {
     return (vhApp.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
 
   // App is VpnHoodCONNECT
-  const serverLocationInfo = vhApp.data.state.serverLocationInfo ?? vhApp.data.state.clientProfile?.selectedLocationInfo;
+  const serverLocationInfo = vhApp.data.state.sessionInfo?.serverLocationInfo ??
+    vhApp.data.state.clientProfile?.selectedLocationInfo;
   if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
     return i18n.global.t('AUTO_SELECT');
 
@@ -94,7 +93,7 @@ function connectButtonText(): string {
 }
 
 // Return connection download and upload speed based on Mbps
-function formatSpeed(speed: number): string {
+function formatSpeed(speed: number): string | void {
   return ((speed * 10) / 1000000).toFixed(2);
 }
 
@@ -125,15 +124,16 @@ function appFilterStatus(): string {
     <v-col cols="12" class="text-center">
 
       <!-- Countdown and extend session button -->
-      <CountDown v-if="isShowCountdown() && vhApp.isConnected()"/>
+      <CountDown v-if="isShowCountdown()"/>
 
-      <!-- You are premium button go to account -->
-      <v-chip v-else-if="vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported"
+      <!-- You are premium button -->
+      <v-chip v-else-if="vhApp.isPremiumAccount()"
               prepend-icon="mdi-crown"
               :text="locale('YOU_ARE_PREMIUM')"
               color="enable-premium"
               variant="tonal"
               tag="h6"
+              @click="router.push('/premium-details')"
       />
 
       <!-- Go Premium button for guest user -->
@@ -161,16 +161,21 @@ function appFilterStatus(): string {
     <!-- Speed & Circle & Connect button -->
     <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
       <!-- Speed -->
-      <v-row align-content="center" justify="center" :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
-        <v-col cols="auto d-inline-flex">
-          <span class="text-connection-speed text-body-2">{{ locale('DOWNLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2 text-white" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.received) }}</span>
-          <span class="text-white opacity-40 text-caption">Mbps</span>
+      <v-row align-content="center" justify="center"
+              :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
+        <v-col cols="auto d-inline-flex align-center">
+          <v-icon color="active" size="small" icon="mdi-arrow-up-thin"/>
+          <span class="pe-1 text-body-2 text-white" dir="ltr">
+            {{formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1)}}
+          </span>
+          <span class="text-white opacity-40" style="font-size: 10px">Mbps</span>
         </v-col>
-        <v-col cols="auto d-inline-flex">
-          <span class="text-connection-speed text-body-2">{{ locale('UPLOAD_SPEED') }}:</span>
-          <span class="px-2 text-body-2 text-white" dir="ltr">{{ formatSpeed(vhApp.data.state.speed.sent) }}</span>
-          <span class="text-white opacity-40 text-caption order-last">Mbps</span>
+        <v-col cols="auto d-inline-flex align-center">
+          <v-icon color="error" size="small" icon="mdi-arrow-down-thin"/>
+          <span class="pe-1 text-body-2 text-white" dir="ltr">
+            {{formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
+          </span>
+          <span class="text-white opacity-40 order-last" style="font-size: 10px">Mbps</span>
         </v-col>
       </v-row>
 
@@ -269,7 +274,6 @@ function appFilterStatus(): string {
 
   <!-- Components -->
   <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
-  <SuppressSnackbar v-model="vhApp.data.uiState.showSuppressSnackbar" />
   <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow"/>
   <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
 

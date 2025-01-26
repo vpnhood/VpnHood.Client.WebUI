@@ -13,10 +13,10 @@ const showConnectedAnimation = ref<boolean | null>(null);
 function getExpireDate(): string | null {
   if ((!vhApp.data.state.clientProfile?.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
     || vhApp.data.state.connectionState !== AppConnectionState.Connected
-    || !vhApp.data.state.sessionStatus?.accessUsage?.expirationTime)
+    || !vhApp.data.state.sessionInfo?.accessInfo?.expirationTime)
     return null;
 
-  const expDate: Date = vhApp.data.state.sessionStatus.accessUsage.expirationTime;
+  const expDate: Date = vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -26,7 +26,7 @@ function getExpireDate(): string | null {
   return expDate.toLocaleString('en-GB', options).replace(',', '');
 }
 function alertForExpire(): boolean {
-  const expDate: Date | null | undefined = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
+  const expDate: Date | null | undefined = vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
   if (!expDate) return false;
 
   const currentDate: Date = new Date();
@@ -63,19 +63,19 @@ function stateIcon(): string | null {
 
 // Calculate user bandwidth usage
 function bandwidthUsage(): { Used: string; Total: string } | null {
-  if (!vhApp.data.state || !vhApp.data.state.sessionStatus || !vhApp.data.state.sessionStatus.accessUsage)
+  if (!vhApp.data.state || !vhApp.data.state.sessionStatus || !vhApp.data.state.sessionInfo?.accessInfo)
     return null;
 
-  const accessUsage = vhApp.data.state.sessionStatus.accessUsage;
-  if (!accessUsage.maxTraffic) return null;
+  const accessUsage = vhApp.data.state.sessionInfo?.accessInfo;
+  if (!accessUsage?.maxTotalTraffic) return null;
 
   const mb = 1000000;
   const gb = 1000 * mb;
-  const traffic: Traffic = vhApp.data.state.accountTraffic;
+  const traffic: Traffic = vhApp.data.state.sessionStatus.sessionTraffic;
 
   const ret: {used: number, total: number} = {
     used: traffic.sent + traffic.received,
-    total: accessUsage.maxTraffic
+    total: accessUsage.maxTotalTraffic
   };
   const total: string =
     ret.total >= gb

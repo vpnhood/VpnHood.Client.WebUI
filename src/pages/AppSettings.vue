@@ -42,25 +42,14 @@ const useIpFilterByApp = computed<boolean>({
 async function saveSetting() {
   await vhApp.saveUserSetting();
 }
-
 function isFilterIpByDeviceAvailable(): boolean {
-  if (vhApp.isPremiumFeaturesAvailable())
-    return true;
-
-  return vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
+  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
 }
-
 function isFilterIpByAppAvailable(): boolean {
-  if (vhApp.isPremiumFeaturesAvailable())
-    return true;
-
-  return vhApp.data.settings.userSettings.useAppIpFilter;
+  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.useAppIpFilter;
 }
-
 function isIncludeLocalNetworkAvailable(): boolean {
-  if (vhApp.isPremiumFeaturesAvailable())
-    return true;
-  return vhApp.data.settings.userSettings.includeLocalNetwork;
+  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.includeLocalNetwork;
 }
 </script>
 

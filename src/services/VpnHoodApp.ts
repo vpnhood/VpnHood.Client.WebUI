@@ -140,26 +140,11 @@ export class VpnHoodApp {
     if (this.data.state.lastPublishInfo?.packageUrl !== undefined)
       this.data.uiState.showUpdateSnackbar = true;
 
-    // Show 'suppress by' message
-    // noinspection OverlyComplexBooleanExpressionJS
-    if (this.data.state.connectionState === AppConnectionState.None && this.data.state.sessionStatus?.suppressedBy &&
-      this.data.state.sessionStatus?.suppressedBy !== SessionSuppressType.None &&
-      this.data.uiState.userIgnoreSuppressByTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-      this.data.uiState.showSuppressSnackbar = true;
-    }
-
     // Show 'suppress to' message
-    // noinspection OverlyComplexBooleanExpressionJS
-    if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionStatus?.suppressedTo &&
-      this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.Other &&
+    if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionInfo?.suppressedTo &&
+      this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
       this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-      this.data.uiState.showSuppressSnackbar = true;
-    }
-
-    // Hide 'suppress' message
-    if (this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None &&
-      this.data.state.sessionStatus?.suppressedTo === SessionSuppressType.None) {
-      this.data.uiState.showSuppressSnackbar = false;
+      this.showGeneralSnackbar(i18n.global.t("SESSION_SUPPRESSED_TO_OTHER"), 'suppress-snackbar', false);
     }
   }
 
@@ -169,7 +154,7 @@ export class VpnHoodApp {
     // User select active item and already connected
     if (this.data.state.canDisconnect
       && clientProfileId === this.data.state.clientProfile?.clientProfileId
-      && serverLocation === this.data.state.serverLocationInfo?.serverLocation) {
+      && serverLocation === this.data.state.sessionInfo?.serverLocationInfo?.serverLocation) {
       this.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'));
       return;
     }
@@ -189,7 +174,7 @@ export class VpnHoodApp {
     console.log(`PlanId:  ${planId}`);
 
     // Navigate to home page
-    await router.replace('/');
+    //await router.replace('/');
 
     if (isDiagnose) await this.diagnose();
     else await this.apiClient.connect(clientProfileId, serverLocation, planId);
@@ -197,10 +182,10 @@ export class VpnHoodApp {
 
   public async disconnect(): Promise<void> {
     await this.apiClient.disconnect();
-    if (this.data.state.sessionStatus?.suppressedTo
+    /*if (this.data.state.sessionStatus?.suppressedTo
       && this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None
       && this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None)
-      this.data.uiState.showSuppressSnackbar = false;
+      this.data.uiState.showSuppressSnackbar = false;*/
   }
 
   public getAppVersion(isFull: boolean): string {
@@ -288,7 +273,7 @@ export class VpnHoodApp {
   }
 
   getActiveServerCountryFlag(): string | null {
-    const serverLocationInfo = this.data.state.serverLocationInfo ??
+    const serverLocationInfo = this.data.state.sessionInfo?.serverLocationInfo ??
       this.data.state.clientProfile?.selectedLocationInfo;
     return serverLocationInfo && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
@@ -325,7 +310,7 @@ export class VpnHoodApp {
   }
 
   public getConnectionStateText(): string {
-    if (this.data.state.isWaitingForAd && this.data.state.connectionState !== AppConnectionState.Connected)
+    if (this.data.state.sessionStatus?.isWaitingForAd && this.data.state.connectionState !== AppConnectionState.Connected)
       return i18n.global.t('LOADING_AD');
 
     return this.data.state.connectionState === AppConnectionState.None
@@ -339,27 +324,23 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor?: string, textColor?: string): void {
-    if (bgColor)
-      this.data.uiState.generalSnackbarData.color = bgColor;
-    if (textColor)
-      this.data.uiState.generalSnackbarData.textColor = textColor;
+  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string): void {
     this.data.uiState.generalSnackbarData.message = message;
+    this.data.uiState.generalSnackbarData.color = bgColor ?? "highlight";
+    this.data.uiState.generalSnackbarData.isTimerAvailable = hasTimer ?? true;
+    this.data.uiState.generalSnackbarData.textColor = textColor ?? null;
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
-  public isPremiumFeaturesAvailable(): boolean{
+  public isPremiumAccount(): boolean{
     if (!this.data.features.isPremiumFlagSupported)
       return true;
     return this.data.state.clientProfile?.isPremiumAccount === true;
   }
 
   public premiumIconColor(): string{
-    return this.isPremiumFeaturesAvailable() ? 'enable-premium' : 'disable-premium';
+    return this.isPremiumAccount() ? 'enable-premium' : 'disable-premium';
   }
-  //------------------------------------------
-  // Just for VpnHoodConnect
-  //------------------------------------------
 
   public async signIn(showLoading: boolean = true): Promise<void> {
     if (showLoading) this.data.uiState.showLoadingDialog = true;

@@ -61,12 +61,16 @@ async function checkForUpdate() {
 
 async function onSignIn() {
   try {
+    emit('update:modelValue', false);
     vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();
-    emit('update:modelValue', false);
   } finally {
     vhApp.data.uiState.showLoadingDialog = false;
   }
+}
+function navigateByRouter(address: string){
+  emit('update:modelValue', false);
+  router.replace(address);
 }
 </script>
 
@@ -115,7 +119,7 @@ async function onSignIn() {
       <v-list-item
         v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         class="border-b"
-        @click="router.replace('/purchase-subscription'); emit('update:modelValue', false)"
+        @click="navigateByRouter('/purchase-subscription')"
       >
         <v-list-item-title>
           <v-icon icon="mdi-crown" />
@@ -123,11 +127,23 @@ async function onSignIn() {
         </v-list-item-title>
       </v-list-item>
 
+      <!-- Premium details -->
+      <v-list-item
+        v-if="vhApp.isPremiumAccount()"
+        class="border-b"
+        @click="navigateByRouter('/premium-details')"
+      >
+        <v-list-item-title>
+          <v-icon icon="mdi-crown" />
+          <span class="ms-3">{{locale('PREMIUM_DETAILS') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+
       <!-- Sign in or account button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
         class="border-b"
-        @click="vhApp.data.userState.userAccount ? router.replace('/account') : onSignIn()"
+        @click="vhApp.data.userState.userAccount ? navigateByRouter('/account') : onSignIn()"
       >
         <v-list-item-title class="d-flex align-center">
           <v-icon icon="mdi-account" />
@@ -143,7 +159,7 @@ async function onSignIn() {
       <!-- Settings -->
       <v-list-item
         class="border-b"
-        @click="router.replace({path: '/settings'})"
+        @click="navigateByRouter('/settings')"
       >
         <v-list-item-title>
           <v-icon icon="mdi-cog" />

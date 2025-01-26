@@ -1,23 +1,22 @@
-import {ClientProfileInfo} from "@/services/VpnHood.Client.Api";
+import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/services/vuetify';
 
 export class Util {
-    // Client profile have single location
-    public static isSingleLocation(locationCount: number): boolean {
-        return locationCount < 2;
-    }
+  // Client profile have single location
+  public static isSingleLocation(locationCount: number): boolean {
+    return locationCount < 2;
+  }
 
-
-    // Location count of client profile
-    public static calcLocationCount(clientProfileInfo: ClientProfileInfo): number {
-        const excludeAutoSelect = clientProfileInfo.locationInfos.filter(
-            x => x.countryCode !== '*' && !x.isNestedCountry
-        );
-        return excludeAutoSelect.length;
-    }
+  // Location count of client profile
+  public static calcLocationCount(clientProfileInfo: ClientProfileInfo): number {
+    const excludeAutoSelect = clientProfileInfo.locationInfos.filter(
+      x => x.countryCode !== '*' && !x.isNestedCountry
+    );
+    return excludeAutoSelect.length;
+  }
 
   public static isLocationAutoSelected(value: string): boolean {
-    return value === '*' || value === "*/*";
+    return value === '*' || value === '*/*';
   }
 
   public static getLocalizedRightChevron(): string {

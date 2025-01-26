@@ -14,7 +14,7 @@ const fiveMinutes = 299;
 const fifteenMinutes = 899;
 function calcRemainingTime(): string{
   const currentDate: Date = new Date();
-  const expireTime = vhApp.data.state.sessionStatus?.accessUsage?.expirationTime;
+  const expireTime = vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
   if (!expireTime)
     return "";
 
@@ -47,7 +47,7 @@ function getCountdownColor(): string{
   >
     <span class="text-start" style="width: 63px">{{ calcRemainingTime() }}</span>
     <v-chip
-      v-if="vhApp.data.state.sessionStatus?.accessUsage?.canExtendByRewardedAd"
+      v-if="vhApp.data.state.sessionStatus?.canExtendByRewardedAd"
       variant="flat"
       :color="getCountdownColor()"
       class="text-capitalize font-weight-bold"

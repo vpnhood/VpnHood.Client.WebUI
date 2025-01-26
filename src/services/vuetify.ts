@@ -94,6 +94,7 @@ interface IThemeColorNames {
   'on-go-premium-btn': string,
 
   'suppress-snackbar': string,
+  'on-suppress-snackbar': string,
 
   'update-snackbar-alert': string,
   'update-snackbar-warning': string,
@@ -244,6 +245,7 @@ const vhConnectThemeColors: IThemeColorNames = {
   'on-go-premium-btn': myColors.purple['500'],
 
   'suppress-snackbar': myColors.cream['100'],
+  'on-suppress-snackbar': myColors.gray['800'],
 
   'update-snackbar-alert': myColors.purple['200'],
   'update-snackbar-warning': myColors.cream['100'],
@@ -394,6 +396,7 @@ const vhClientThemeColors: IThemeColorNames = {
   'on-go-premium-btn': myColors.blue['200'],
 
   'suppress-snackbar': myColors.purple['200'],
+  'on-suppress-snackbar': myColors.gray['800'],
 
   'update-snackbar-alert': myColors.blue['20'],
   'update-snackbar-warning': myColors.green['200'],

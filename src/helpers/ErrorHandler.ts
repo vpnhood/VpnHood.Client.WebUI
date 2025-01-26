@@ -91,6 +91,9 @@ export class ErrorHandler {
   }
 
   private static async sessionExceptionHandler(err: ApiException): Promise<string> {
+    if (err.data.ErrorCode === "SessionSuppressedBy")
+      return i18n.global.t('SESSION_SUPPRESSED_BY_OTHER');
+
     // TODO: implement error messages
     return err.message;
   }

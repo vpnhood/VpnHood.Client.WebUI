@@ -27,8 +27,6 @@
   "CLOSE": "Close",
   "SAVE": "Save",
   "OK": "OK",
-  "UPLOAD_SPEED": "Up",
-  "DOWNLOAD_SPEED": "Down",
   "NO_SERVER_SELECTED": "No Server",
   "SERVER": "Server",
   "MANAGE_SERVERS": "Change Server",
@@ -120,8 +118,10 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol.",
   "CONGRATULATIONS": "Congratulations",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Your order has been processed and your subscription has been activated.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "The code you entered is valid, and you have been upgraded to a premium user.",
+  "SHOW_PREMIUM_DETAILS": "Show premium details",
   "SHOW_SERVERS": "Show servers",
-  "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete order process...",
+  "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete process...",
   "YOU_ARE_PREMIUM": "You are premium",
   "YOUR_PREMIUM_SERVERS": "Your premium servers",
   "MANAGE_SUBSCRIPTION": "Manage subscription",
@@ -244,5 +244,6 @@
   "MORE_INFO": "More info",
   "ALERT": "Alert",
   "INFO": "Info",
-  "MESSAGE": "Message"
+  "MESSAGE": "Message",
+  "PREMIUM_DETAILS": "Premium details"
 }
