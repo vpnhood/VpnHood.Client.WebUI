@@ -332,10 +332,17 @@ export class VpnHoodApp {
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
-  public isPremiumAccount(): boolean{
+  public isPremiumAccount(byPremiumCode: boolean = false): boolean{
+    // App does not support the premium features
     if (!this.data.features.isPremiumFlagSupported)
       return true;
-    return this.data.state.clientProfile?.isPremiumAccount === true;
+
+    // User is premium by code
+    if (byPremiumCode)
+      return (this.data.state.clientProfile?.isPremiumAccount == true) && (this.data.state.clientProfile?.hasAccessCode == true);
+
+    // User purchased subscription from Google Play
+    return this.data.state.clientProfile?.isPremiumAccount == true;
   }
 
   public premiumIconColor(): string{

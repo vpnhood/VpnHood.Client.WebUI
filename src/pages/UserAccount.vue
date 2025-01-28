@@ -8,18 +8,17 @@ import { ref } from 'vue';
 import router from '@/services/router';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
-const vhApp = VpnHoodApp.instance
+const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const userAccount = vhApp.data.userState.userAccount;
 const showConfirmSignOut = ref<boolean>(false);
-const isPremiumAccount = ref<boolean>((vhApp.data.state.clientProfile?.isPremiumAccount && vhApp.data.features.isPremiumFlagSupported) ?? false);
 
-function onSignOut() {
-  vhApp.signOut();
-  router.replace('/');
+async function onSignOut() {
+  await vhApp.signOut();
+  await router.replace('/');
 }
 
-function formatDate(date: Date | null | undefined): string | null{
+function formatDate(date: Date | null | undefined): string | null {
   if (!date)
     return null;
 
@@ -31,7 +30,7 @@ function formatDate(date: Date | null | undefined): string | null{
   };
   return date.toLocaleDateString('locales', optionsDate).replace(',', '');
 }
-
+// TODO: improve page
 </script>
 
 <template>
@@ -39,85 +38,88 @@ function formatDate(date: Date | null | undefined): string | null{
   <!-- Page header -->
   <AppBar :page-title="locale('ACCOUNT')" />
 
-  <v-sheet class="d-flex flex-column justify-space-between" :class="{'primary-bg-grad' : isPremiumAccount}">
+  <v-sheet :class="{'primary-bg-grad' : vhApp.isPremiumAccount()}">
 
     <!-- Premium image -->
-    <div v-if="isPremiumAccount" class="position-relative">
+    <div v-if="vhApp.isPremiumAccount()" class="text-center">
       <v-img
         :eager="true"
         :src="vhApp.getImageUrl('you-are-premium.webp')"
         alt="Premium Image"
         width="100%"
         max-width="371px"
-        class="mx-auto"
       />
-      <h3 class="position-absolute w-100 text-active text-center text-capitalize" style="bottom: 20px">
-        {{locale("YOU_ARE_PREMIUM") }}
-      </h3>
+      <div class="text-active mt-n7 mb-10">
+        <h2>{{ locale('CONGRATULATIONS') }}!</h2>
+        <h3>{{ locale('YOU_ARE_PREMIUM') }}</h3>
+      </div>
     </div>
 
-    <!-- User and subscription info -->
-    <div>
-
       <!-- User details -->
-      <v-card color="config-card-bg" >
-        <v-card-text class="d-flex justify-space-between">
-          <!-- User info -->
-          <div>
-            <h4 :class="isPremiumAccount ? 'text-active' : 'text-highlight'">{{userAccount?.name}}</h4>
-            <p class="text-caption text-disabled">{{userAccount?.email}}</p>
-          </div>
-          <!-- Sign out button -->
-          <v-btn
-            :color="isPremiumAccount ? 'active' : 'highlight'"
-            class="text-capitalize font-weight-bold"
+      <config-card>
+
+        <!-- User name -->
+        <v-card-title>{{ userAccount?.name }}</v-card-title>
+
+        <!-- User email -->
+        <v-card-subtitle class="text-disabled">{{ userAccount?.email }}</v-card-subtitle>
+
+        <!-- Sign out button -->
+        <v-card-actions>
+          <btn-style-1
             :text="locale('SIGN_OUT')"
-            rounded="pill"
+            :color="vhApp.isPremiumAccount() ? 'active' : 'highlight'"
+            class="ms-auto"
             size="small"
             @click="showConfirmSignOut = true"
           />
-        </v-card-text>
-      </v-card>
+        </v-card-actions>
+
+      </config-card>
 
       <!-- Subscriptions details -->
-      <v-card v-if="isPremiumAccount && vhApp.data.userState.userAccount?.subscriptionId" color="config-card-bg">
+      <config-card v-if="vhApp.isPremiumAccount()">
+
+        <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
+
         <v-card-text>
           <ul id="subscriptionInfoList" style="list-style: none;">
             <!-- Created time -->
             <li>
-              <span class="text-subtitle-2 text-disabled">{{locale('SUBSCRIBED_SINCE')}}:</span>
-              <span class="text-subtitle-2">{{formatDate(userAccount?.createdTime)}}</span>
+              <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
+              <span class="text-subtitle-2">{{ formatDate(userAccount?.createdTime) }}</span>
             </li>
             <!-- Next payment or Expiration time -->
             <li>
               <span class="text-subtitle-2 text-disabled">
-                {{userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME')}}:
+                {{ userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME') }}:
               </span>
               <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
-                {{formatDate(userAccount?.expirationTime)}}
+                {{ formatDate(userAccount?.expirationTime) }}
               </span>
             </li>
             <!-- Auto renew -->
             <li>
-              <span class="text-subtitle-2 text-disabled">{{locale('AUTO_RENEW')}}:</span>
+              <span class="text-subtitle-2 text-disabled">{{ locale('AUTO_RENEW') }}:</span>
               <v-chip
                 variant="tonal"
                 density="compact"
                 :color="userAccount?.isAutoRenew ? 'active' : 'error' "
               >
-                {{userAccount?.isAutoRenew ? locale('YES') : locale('NO') }}
+                {{ userAccount?.isAutoRenew ? locale('YES') : locale('NO') }}
               </v-chip>
             </li>
             <!-- Price -->
             <li>
-              <span class="text-subtitle-2 text-disabled">{{locale('PRICE')}}:</span>
+              <span class="text-subtitle-2 text-disabled">{{ locale('PRICE') }}:</span>
               <span class="text-subtitle-2">
-                <span class="text-caption text-disabled">{{userAccount?.priceCurrency}}</span>
-                {{userAccount?.priceAmount}}{{locale('PER_MONTH')}}
+                <span class="text-caption text-disabled">{{ userAccount?.priceCurrency }}</span>
+                {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
               </span>
             </li>
           </ul>
         </v-card-text>
+
         <!-- Manage on google play button -->
         <v-card-actions>
           <btn-style-1
@@ -129,32 +131,37 @@ function formatDate(date: Date | null | undefined): string | null{
             target="_blank"
           />
         </v-card-actions>
-      </v-card>
+
+      </config-card>
 
       <!-- Go premium -->
-      <v-card v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium" color="config-card-bg">
-        <v-card-text class="d-flex align-center ga-4">
+      <config-card v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+                   >
+        <v-card-title>{{locale('UPGRADE')}}</v-card-title>
+        <v-card-text class="d-flex align-center justify-space-between">
           <v-img
             :eager="true"
             :src="vhApp.getImageUrl('free-to-premium-account-icon.webp')"
             alt="Go Premium Image"
             width="100%"
             max-width="92px"
+            class="me-4"
           />
-          <div class="text-end flex-grow-1">
-            <p class="text-start" v-html="locale('UPGRADE_ACCOUNT_DESC')"></p>
-            <btn-style-1
-              class="mt-3"
-              :append-icon="Util.getLocalizedRightChevron()"
-              :text="locale('GO_PREMIUM')"
-              size="small"
-              @click="router.push('/purchase-subscription')"
-            />
+          <div class="flex-grow-1">
+            <p v-html="locale('UPGRADE_ACCOUNT_DESC')"></p>
           </div>
         </v-card-text>
-      </v-card>
+        <v-card-actions>
+          <btn-style-1
+            class="ms-auto"
+            :append-icon="Util.getLocalizedRightChevron()"
+            :text="locale('GO_PREMIUM')"
+            size="small"
+            @click="router.push('/purchase-subscription')"
+          />
+        </v-card-actions>
+      </config-card>
 
-    </div>
   </v-sheet>
 
   <!-- Confirm sign-out dialog -->
@@ -167,13 +174,14 @@ function formatDate(date: Date | null | undefined): string | null{
 </template>
 
 <style scoped>
-#subscriptionInfoList>li{
+#subscriptionInfoList > li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 7px 9px;
+  padding: 5px 7px;
 }
-#subscriptionInfoList>li:nth-child(even){
+
+#subscriptionInfoList > li:nth-child(even) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(var(--v-theme-zebra-on-config-card-bg));
 }

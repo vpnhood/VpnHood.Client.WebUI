@@ -616,7 +616,8 @@ export default createVuetify({
 
     ConfigCard:{
       color:'config-card-bg',
-      class: 'py-2',
+      class: 'config-card py-2',
+      rounded: 'lg',
       VCardTitle:{
         class: "d-flex justify-space-between align-center pt-1 pb-0"
       },
@@ -653,6 +654,7 @@ export default createVuetify({
       icon: false,
       type: "warning",
       density: "compact",
+      rounded: "lg",
       class: "text-caption pt-1 text-start",
       title: i18n.global.t("ALERT"),
       VAlertTitle:{
@@ -663,6 +665,7 @@ export default createVuetify({
       icon: false,
       type: "note",
       density: "compact",
+      rounded: "lg",
       class: "text-caption pt-1 text-start",
       title: i18n.global.t("NOTE"),
       VAlertTitle:{
@@ -673,6 +676,7 @@ export default createVuetify({
       icon: false,
       type: "info",
       density: "compact",
+      rounded: "lg",
       class: "text-caption pt-1 text-start",
       title: i18n.global.t("INFO"),
       VAlertTitle:{

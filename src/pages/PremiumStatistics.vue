@@ -34,14 +34,14 @@ function calcDownload(traffic: number): number {
 
 <template>
   <!-- Page header -->
-  <AppBar :page-title="locale('PREMIUM_DETAILS')" />
+  <AppBar :page-title="locale('STATISTICS')" />
 
   <v-sheet>
     <config-card>
       <v-card-title>Statistics</v-card-title>
       <v-card-text class="text-disabled text-caption mt-3">
         <div class="d-flex align-center justify-space-between">
-          <span>Active users:</span>
+          <span>{{locale('ACTIVE_USER')}}</span>
           <span>{{ vhApp.data.state.sessionStatus?.activeClientCount }}</span>
         </div>
       </v-card-text>

@@ -133,7 +133,7 @@ function appFilterStatus(): string {
               color="enable-premium"
               variant="tonal"
               tag="h6"
-              @click="router.push('/premium-details')"
+              @click="router.push('/premium-user')"
       />
 
       <!-- Go Premium button for guest user -->

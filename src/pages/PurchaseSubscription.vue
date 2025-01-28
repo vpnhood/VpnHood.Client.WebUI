@@ -2,11 +2,12 @@
 import {
   ApiException,
   BillingPurchaseState,
-  ClientProfileUpdateParams, PatchOfString,
+  ClientProfileUpdateParams,
+  PatchOfString,
   SubscriptionPlan
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
@@ -20,9 +21,41 @@ const locale = i18n.global.t;
 const isGooglePlayAvailable = ref<boolean>(true);
 const isGoogleBillingAvailable = ref<boolean>(true);
 const subscriptionPlans = ref<SubscriptionPlan[]>([]);
-const premiumCode = ref<string>('');
 const showProcessDialog = ref<boolean>(false);
 const purchaseCompleteDialogMessage = ref<string | null>(null);
+
+const premiumCodeForm = ref<boolean>(false);
+const formattedPremiumCode = ref('');
+const premiumCodeRawNumber = ref<string>('');
+
+const premiumCodeDeviceCount = ref<number | undefined>(vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount);
+const premiumCodeActivationDate = ref<Date | undefined>(vhApp.data.state.sessionInfo?.accessInfo?.createdTime);
+
+function formatActivationDate(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString('en-US', options);
+  return formattedDate;
+}
+
+const numberOnlyRule = (value: string) => {
+  return /^[0-9\-]*$/.test(value) || 'Only numbers are allowed';
+};
+
+const codeCountRule = (value: string) => {
+  const count = value.replace(/-/g, '').length;
+  return count == 20 || 'The code must be 20 characters.';
+};
+
+// Keep only numbers and limit to 20 characters
+const handleInput = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  premiumCodeRawNumber.value = value.replace(/\D/g, '').slice(0, 20);
+};
+
+watchEffect(() => {
+  formattedPremiumCode.value = premiumCodeRawNumber.value.match(/.{1,4}/g)?.join('-') || '';
+});
+
 
 // Use one dialog for purchase by google and by premium key
 const isShowProcessDialog = computed<boolean>(() => {
@@ -30,7 +63,7 @@ const isShowProcessDialog = computed<boolean>(() => {
 });
 
 onMounted(async () => {
-  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase){
+  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase) {
     try {
       // Get products list from Google and sort based on plan prices
       const billingClient = ClientApiFactory.instance.createBillingClient();
@@ -39,17 +72,16 @@ onMounted(async () => {
         (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
           Number((b.planPrice).replace(/\D/g, '')));
       subscriptionPlans.value = cloneSubscriptionPlans;
-    }
-    catch (err: unknown){
+    } catch (err: unknown) {
       if (!(err instanceof ApiException))
         throw err;
 
-      if (err.exceptionTypeName === "GoogleBillingException" && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable){
+      if (err.exceptionTypeName === 'GoogleBillingException' && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable) {
         isGoogleBillingAvailable.value = false;
         return;
       }
 
-      if (err.exceptionTypeName === "GooglePlayUnavailableException")
+      if (err.exceptionTypeName === 'GooglePlayUnavailableException')
         isGooglePlayAvailable.value = false;
 
       throw err;
@@ -71,43 +103,35 @@ async function purchase(planId: string): Promise<void> {
   const billingClient = ClientApiFactory.instance.createBillingClient();
   await billingClient.purchase(planId);
   await vhApp.loadAccount();
-  purchaseCompleteDialogMessage.value = locale("PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE");
+  purchaseCompleteDialogMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
 }
 
-async function checkAndActivePremiumCode(): Promise<void> {
+async function validateCode(): Promise<void> {
+  if (!premiumCodeRawNumber.value)
+    return;
+
   const profileId = vhApp.data.state.clientProfile?.clientProfileId;
   if (!profileId)
-    throw new Error("Could not find the profile id.");
+    throw new Error('Could not find the profile id.');
 
   try {
     showProcessDialog.value = true;
 
-    const clientProfileInfo = await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({value: premiumCode.value})
-    }))
-    console.log(clientProfileInfo);
-
+    await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+      accessCode: new PatchOfString({ value: premiumCodeRawNumber.value.toString() })
+    }));
     await ConnectManager.connect3(profileId, undefined, false);
-    purchaseCompleteDialogMessage.value = locale("PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE");
-  }
-  catch (err: unknown){
-    console.log(err);
 
-    const clientProfileInfo = await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({value: null})
-    }))
-    console.log(clientProfileInfo);
-
-    console.log("Access code removed.");
-    throw err;
-  }
-  finally {
+    if (vhApp.isPremiumAccount())
+      purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
+  } finally {
     showProcessDialog.value = false;
   }
 }
-function closeCompleteDialog(showDetails: boolean) {
+
+function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace(showDetails ? '/premium-details' : '/')
+  router.replace(showStatistics ? '/premium-Statistics' : '/');
 }
 </script>
 
@@ -127,10 +151,10 @@ function closeCompleteDialog(showDetails: boolean) {
       />
       <!-- Title, image and features -->
       <div class="d-flex flex-column flex-grow-1">
-        <h4 class="text-active text-uppercase text-center mt-4">{{locale('GO_PREMIUM')}}</h4>
+        <h4 class="text-active text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
         <div id="rocketWrapper" class="mx-auto">
           <div id="rocket" class="animation-translate-y mx-auto" />
-          <div id="rocketSmoke" class="mx-auto"/>
+          <div id="rocketSmoke" class="mx-auto" />
         </div>
         <v-defaults-provider :defaults="{
           'VIcon': {
@@ -142,32 +166,32 @@ function closeCompleteDialog(showDetails: boolean) {
         }">
           <ul id="featuresList" class="text-capitalize text-body-2 text-white px-5 mt-4" style="list-style: none;">
             <li>
-              <v-icon/>
-              {{locale('ULTRA_FAST_SPEED')}}
+              <v-icon />
+              {{ locale('ULTRA_FAST_SPEED') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('REMOVE_AD')}}
+              <v-icon />
+              {{ locale('REMOVE_AD') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('MORE_LOCATIONS')}}
+              <v-icon />
+              {{ locale('MORE_LOCATIONS') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('FILTER_IP_ADDRESSES')}}
+              <v-icon />
+              {{ locale('FILTER_IP_ADDRESSES') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('ALWAYS_ON')}}
+              <v-icon />
+              {{ locale('ALWAYS_ON') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('QUICK_LAUNCH')}}
+              <v-icon />
+              {{ locale('QUICK_LAUNCH') }}
             </li>
             <li>
-              <v-icon/>
-              {{locale('SUPPORT')}}
+              <v-icon />
+              {{ locale('SUPPORT') }}
             </li>
           </ul>
         </v-defaults-provider>
@@ -179,21 +203,21 @@ function closeCompleteDialog(showDetails: boolean) {
         <!-- Purchase by google -->
         <v-card v-if="isGooglePlayAvailable &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
-          class="py-3 px-3 rounded-lg text-white mb-4"
-          :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
-          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+                class="py-3 px-3 rounded-lg text-white mb-4"
+                :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
+                color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <template v-if="isGoogleBillingAvailable">
             <!-- Plan title, price -->
             <v-row justify="space-between">
               <v-col cols="auto" class="d-flex ga-1 align-center">
-                <v-icon icon="mdi-crown" size="23" color="disable-premium"/>
+                <v-icon icon="mdi-crown" size="23" color="disable-premium" />
                 <!-- TODO: must change to subscriptionPlanId -->
-                <span class="font-weight-bold text-body-2">{{locale('1_MONTH')}}</span>
+                <span class="font-weight-bold text-body-2">{{ locale('1_MONTH') }}</span>
               </v-col>
               <v-col cols="auto" class="d-flex ga-1 align-center">
                 <span v-if="subscriptionPlans[0]?.planPrice" class="font-weight-bold text-body-2">
-                  {{subscriptionPlans[0].planPrice}}
+                  {{ subscriptionPlans[0].planPrice }}
                 </span>
                 <v-progress-circular
                   v-else
@@ -201,7 +225,7 @@ function closeCompleteDialog(showDetails: boolean) {
                   indeterminate
                   width="1"
                 />
-                <span class="text-caption">{{locale('PER_MONTH')}}</span>
+                <span class="text-caption">{{ locale('PER_MONTH') }}</span>
               </v-col>
             </v-row>
 
@@ -223,8 +247,8 @@ function closeCompleteDialog(showDetails: boolean) {
           </template>
 
           <template v-else>
-            <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline"/>
-            <span class="text-error text-caption">{{locale('GOOGLE_PLAY_BILLING_UNAVAILABLE')}}</span>
+            <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline" />
+            <span class="text-error text-caption">{{ locale('GOOGLE_PLAY_BILLING_UNAVAILABLE') }}</span>
             <v-btn
               :text="locale('MORE_INFO')"
               color="error"
@@ -262,31 +286,40 @@ function closeCompleteDialog(showDetails: boolean) {
             :title="locale('ENTER_PREMIUM_CODE')"
           >
             <v-card-item class="pt-0">
-              <alert-note :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2"/>
+              <alert-note :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2" />
 
-              <v-text-field
-                v-model="premiumCode"
-                :placeholder="locale('INTER_YOUR_CODE')"
-                hide-details
-                single-line
-                clearable
-                autofocus
-                spellcheck="false"
-                autocomplete="off"
-                dir="ltr"
-                density="compact"
-                color="highlight"
-                variant="outlined"
-                rounded="md"
-                class="mb-5"
-              />
+              <v-form
+                v-model="premiumCodeForm"
+                @submit.prevent="validateCode()"
+              >
+                <v-text-field
+                  v-model="formattedPremiumCode"
+                  :placeholder="locale('ENTER_YOUR_CODE')"
+                  :rules="[numberOnlyRule, codeCountRule]"
+                  @input="handleInput"
+                  hide-details="auto"
+                  single-line
+                  clearable
+                  autofocus
+                  spellcheck="false"
+                  autocomplete="off"
+                  dir="ltr"
+                  density="compact"
+                  color="highlight"
+                  variant="outlined"
+                  rounded="md"
+                  class="mb-5"
+                />
 
-              <btn-style-2
-                block
-                :disabled="!premiumCode"
-                :text="locale('CHECK_AND_ACTIVE')"
-                @click="checkAndActivePremiumCode()"
-              />
+                <btn-style-2
+                  block
+                  type="submit"
+                  :disabled="!premiumCodeForm"
+                  :text="locale('CHECK_AND_ACTIVE')"
+                />
+              </v-form>
+
+
             </v-card-item>
 
           </v-card>
@@ -414,15 +447,50 @@ function closeCompleteDialog(showDetails: boolean) {
   <!-- Purchase complete dialog -->
   <v-dialog :model-value="purchaseCompleteDialogMessage != null" :persistent="true">
     <v-card color="active">
+
       <v-card-title class="text-center pt-4">
         <v-icon class="text-h2">mdi-party-popper</v-icon>
         <h2>{{ locale('CONGRATULATIONS') }}</h2>
       </v-card-title>
 
-      <v-card-text>{{ locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE') }}</v-card-text>
+      <v-card-text>
+        <p>{{ purchaseCompleteDialogMessage }}</p>
+
+        <!-- TODO: use theme color -->
+        <v-alert v-if="vhApp.isPremiumAccount(true) && !vhApp.data.state.sessionInfo?.accessInfo?.isNew"
+                 variant="flat"
+                 color="#17083d"
+                 density="compact"
+                 rounded="lg"
+                 class="text-caption mt-4"
+        >
+
+          <span v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
+            {{locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE')}}
+          </span>
+
+          <span v-else>{{ locale('ALERT_FOR_USED_PREMIUM_CODE') }}</span>
+
+          <ul id="activationInfo" class="text-error mt-2" style="list-style: none;">
+
+            <li v-if="premiumCodeActivationDate">
+              <span>{{ locale('ACTIVATED_AT') }}:</span>
+              <span>{{ formatActivationDate(premiumCodeActivationDate) }}</span>
+            </li>
+
+            <li v-if="premiumCodeDeviceCount">
+              <span>{{ locale('USED_BY') }}:</span>
+              <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{locale('DEVICE') }}</span>
+            </li>
+
+          </ul>
+
+        </v-alert>
+
+      </v-card-text>
 
       <v-card-actions>
-        <v-btn :text="locale('SHOW_PREMIUM_DETAILS')" @click="closeCompleteDialog(true)" />
+        <v-btn :text="locale('STATISTICS')" @click="closeCompleteDialog(true)" />
         <v-btn :text="locale('CLOSE')" variant="plain" @click="closeCompleteDialog(false)" />
       </v-card-actions>
     </v-card>
@@ -431,7 +499,7 @@ function closeCompleteDialog(showDetails: boolean) {
 </template>
 
 <style scoped>
-#rocketWrapper{
+#rocketWrapper {
   position: relative;
   background: url('@/assets/images/rocket-bg.webp') no-repeat top center;
   background-size: contain;
@@ -440,12 +508,14 @@ function closeCompleteDialog(showDetails: boolean) {
   min-height: 150px;
   max-height: 335px;
 }
-#rocket, #rocketSmoke{
+
+#rocket, #rocketSmoke {
   position: absolute;
   left: 0;
   right: 0;
 }
-#rocket{
+
+#rocket {
   background: url('@/assets/images/rocket.webp') no-repeat top center;
   background-size: contain;
   width: 100%;
@@ -453,7 +523,8 @@ function closeCompleteDialog(showDetails: boolean) {
   bottom: 35%;
   z-index: 1;
 }
-#rocketSmoke{
+
+#rocketSmoke {
   background: url('@/assets/images/rocket-smoke.webp') no-repeat top center;
   background-size: contain;
   width: 42%;
@@ -461,7 +532,14 @@ function closeCompleteDialog(showDetails: boolean) {
   bottom: 16%;
   z-index: 2;
 }
-#featuresList>li{
+
+#featuresList > li {
   padding: 2px 0;
+}
+
+#activationInfo > li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

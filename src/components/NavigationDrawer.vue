@@ -129,14 +129,17 @@ function navigateByRouter(address: string){
 
       <!-- Premium details -->
       <v-list-item
-        v-if="vhApp.isPremiumAccount()"
+        :disabled="!vhApp.isPremiumAccount()"
         class="border-b"
-        @click="navigateByRouter('/premium-details')"
+        @click="navigateByRouter('/premium-Statistics')"
       >
         <v-list-item-title>
-          <v-icon icon="mdi-crown" />
-          <span class="ms-3">{{locale('PREMIUM_DETAILS') }}</span>
+          <v-icon icon="mdi-poll" />
+          <span class="ms-3">{{locale('STATISTICS') }}</span>
         </v-list-item-title>
+        <template v-slot:append>
+          <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()"/>
+        </template>
       </v-list-item>
 
       <!-- Sign in or account button -->

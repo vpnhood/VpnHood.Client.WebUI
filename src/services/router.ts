@@ -91,11 +91,19 @@ const routes = [
     }
   },
   {
-    path: '/premium-details',
-    name: 'Premium Details',
-    component: () => import(/* webpackChunkName: "Premium Details" */ '@/pages/PremiumDetails.vue'),
+    path: '/premium-Statistics',
+    name: 'Premium Statistics',
+    component: () => import(/* webpackChunkName: "Premium Statistics" */ '@/pages/PremiumStatistics.vue'),
     meta: {
-      title: 'Premium Details',
+      title: 'Premium Statistics',
+    }
+  },
+  {
+    path: '/premium-user',
+    name: 'Premium User',
+    component: () => import(/* webpackChunkName: "Premium User" */ '@/pages/PremiumUser.vue'),
+    meta: {
+      title: 'Premium User',
     }
   }
 ];
