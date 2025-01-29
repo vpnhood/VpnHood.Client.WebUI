@@ -2,71 +2,254 @@
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ref } from 'vue';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const mb = 1000000;
-const gb = 1000 * mb;
-const downloadUnit = ref<string>('');
-const uploadUnit = ref<string>('');
+function calcMbps(traffic: number | undefined): number {
+  if (!traffic)
+    return 0;
 
-function calcUpload(traffic: number): number {
-  if (traffic >= gb) {
-    uploadUnit.value = 'GB';
-    return Number((traffic / gb).toFixed(2));
-  }
-  uploadUnit.value = 'Mb';
+  const mb = 1000000;
   return Number((traffic / mb).toFixed(2));
 }
-
-function calcDownload(traffic: number): number {
-  if (traffic >= gb) {
-    downloadUnit.value = 'GB';
-    return Number((traffic / gb).toFixed(2));
-  }
-  downloadUnit.value = 'Mb';
-  return Number((traffic / mb).toFixed(2));
-}
-
 </script>
 
 <template>
   <!-- Page header -->
   <AppBar :page-title="locale('STATISTICS')" />
 
-  <v-sheet>
-    <config-card>
-      <v-card-title>Statistics</v-card-title>
-      <v-card-text class="text-disabled text-caption mt-3">
-        <div class="d-flex align-center justify-space-between">
-          <span>{{locale('ACTIVE_USER')}}</span>
-          <span>{{ vhApp.data.state.sessionStatus?.activeClientCount }}</span>
-        </div>
-      </v-card-text>
-    </config-card>
+  <v-sheet v-if="vhApp.data.state.sessionInfo">
+    <v-defaults-provider :defaults="{
+      'VIcon':{size:'18', disabled: true},
+      'VCardText':{class: 'text-disabled text-caption'}
+    }">
 
-    <config-card>
-      <v-card-title>Cycle traffic</v-card-title>
-      <v-card-text class="text-disabled text-caption mt-3">
-        <div v-if="vhApp.data.state.sessionStatus" class="d-flex justify-space-between pb-1">
-          <span>Download:</span>
-          <div>
-            <span class="text-active me-1">{{ calcDownload(vhApp.data.state.sessionStatus.cycleTraffic.received)
-              }}</span>
-            <span>{{ downloadUnit }}</span>
+      <!-- Date -->
+      <config-card v-if="vhApp.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
+        <v-card-title>
+          {{locale('DATE')}}
+          <v-icon icon="mdi-calendar-range"/>
+        </v-card-title>
+        <v-card-subtitle>{{locale('STATISTICS_DATE_CARD_DESC')}}</v-card-subtitle>
+
+        <v-card-text>
+          <ul class="info-table unstyled">
+
+            <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()" class="border-b">
+              <span>{{locale('PREMIUM_BY')}}</span>
+              <span class="text-active">
+                {{locale(vhApp.isPremiumAccount(true) ? 'PREMIUM_CODE' : 'PURCHASE_SUBSCRIPTION')}}
+              </span>
+            </li>
+
+            <li class="border-b">
+              <span>{{locale('ACTIVATED_ON')}}</span>
+              <span class="text-active">
+                {{ Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.createdTime) }}
+              </span>
+            </li>
+
+            <li class="border-b">
+              <span>{{locale('EXPIRATION_DATE')}}</span>
+              <span :class="[vhApp.data.state.sessionInfo.accessInfo.expirationTime ? 'text-error' : 'text-active']">
+                {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime ?? locale('NEVER') }}
+              </span>
+            </li>
+
+            <li>
+              <span>{{locale('LAST_USED')}}</span>
+              <span class="text-highlight">
+                {{ Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.lastUsedTime) }}
+              </span>
+            </li>
+
+          </ul>
+        </v-card-text>
+      </config-card>
+
+      <!-- Server and IP -->
+      <config-card v-if="vhApp.data.state.sessionInfo.accessInfo" :disabled="!vhApp.isConnected()">
+        <v-card-title>
+          {{locale('SERVER_AND_IP')}}
+          <v-icon icon="mdi-server-outline"/>
+        </v-card-title>
+        <v-card-subtitle>{{locale('STATISTICS_SERVER_CARD_DESC')}}</v-card-subtitle>
+
+        <v-card-text>
+          <ul v-if="vhApp.isConnected()" class="info-table unstyled">
+
+            <li class="border-b">
+              <span>{{locale('YOUR_PROTECTED_IP')}}</span>
+              <span class="text-highlight">{{vhApp.data.state.sessionInfo.clientPublicIpAddress}}</span>
+            </li>
+
+            <!--            <li class="border-b">
+                          <span>Current public IP</span>
+                          <span class="text-active">
+                          </span>
+                        </li>-->
+
+            <li class="border-b">
+              <span>{{locale('COUNTRY')}}</span>
+              <span class="text-active">
+                {{ vhApp.data.state.sessionInfo.serverLocationInfo?.countryName }}
+              </span>
+            </li>
+
+            <li class="border-b">
+              <span>{{locale('REGION')}}</span>
+              <span class="text-active">
+                {{ vhApp.data.state.sessionInfo.serverLocationInfo?.regionName }}
+              </span>
+            </li>
+
+            <li>
+              <span>{{locale('UDP_SUPPORTED')}}</span>
+              <span :class="[vhApp.data.state.sessionInfo.isUdpChannelSupported ? 'text-active' : 'text-error']">
+                {{locale(vhApp.data.state.sessionInfo.isUdpChannelSupported ? 'YES' : 'NO')}}
+              </span>
+            </li>
+
+          </ul>
+          <div v-else class="text-center">
+            <v-icon icon="mdi-information-outline" size="30"/>
+            <p class="mt-3">{{locale('DISPLAY_INFO_AFTER_CONNECTION')}}</p>
           </div>
-        </div>
-        <v-divider class="pb-1" />
-        <div v-if="vhApp.data.state.sessionStatus" class="d-flex justify-space-between">
-          <span>Upload:</span>
-          <div>
-            <span class="text-error me-1">{{ calcUpload(vhApp.data.state.sessionStatus.cycleTraffic.sent) }}</span>
-            <span>{{ uploadUnit }}</span>
-          </div>
-        </div>
-      </v-card-text>
-    </config-card>
+        </v-card-text>
+      </config-card>
+
+      <!-- Devices -->
+      <config-card v-if="vhApp.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
+        <v-card-title>
+          {{locale('DEVICES')}}
+          <v-icon icon="mdi-cellphone-link"/>
+        </v-card-title>
+        <v-card-subtitle>
+          {{locale('STATISTICS_DEVICES_CARD_DESC', {x: vhApp.data.state.sessionInfo.accessInfo.deviceLifeSpan})}}
+        </v-card-subtitle>
+
+        <v-card-text>
+          <ul class="info-table unstyled">
+            <li class="border-b">
+              <span>{{locale('USED_BY')}}</span>
+              <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
+                {{locale('MORE_THAN_X_DEVICES', {x: vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount})}}
+              </span>
+              <span v-else class="text-highlight">
+                {{ vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount }} {{locale('DEVICE') }}
+              </span>
+            </li>
+            <li>
+              <span>{{locale('MAX_DEVICE')}}</span>
+              <span class="text-active">
+                {{ vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount }}
+              </span>
+            </li>
+          </ul>
+        </v-card-text>
+      </config-card>
+
+      <!-- Session traffic -->
+      <config-card>
+        <v-card-title>
+          {{locale('SESSION_TRAFFIC')}}
+          <v-icon icon="mdi-chart-timeline-variant"/>
+        </v-card-title>
+        <v-card-subtitle>{{locale('STATISTICS_SESSION_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+
+        <v-card-text>
+          <ul class="info-table unstyled">
+            <li class="border-b">
+              <span>{{locale('USED')}}</span>
+              <span class="text-highlight">
+                {{(calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.received) +
+                calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.sent)).toFixed(2)}} Mb
+              </span>
+            </li>
+            <li>
+              <span>{{locale('MAX_TRAFFIC')}}</span>
+              <span
+                :class="[vhApp.data.state.sessionStatus?.sessionMaxTraffic &&
+                vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ? 'text-error' : 'text-active']">
+                {{vhApp.data.state.sessionStatus?.sessionMaxTraffic && vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ?
+                `${vhApp.data.state.sessionStatus.sessionMaxTraffic} Mb` : locale('UNLIMITED')}}
+              </span>
+            </li>
+          </ul>
+        </v-card-text>
+      </config-card>
+
+      <!-- Monthly traffic -->
+      <config-card>
+        <v-card-title>
+          {{locale('MONTHLY_TRAFFIC')}}
+          <v-icon icon="mdi-chart-timeline-variant"/>
+        </v-card-title>
+        <v-card-subtitle>{{locale('STATISTICS_MONTHLY_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+
+        <v-card-text>
+          <ul class="info-table unstyled">
+            <li class="border-b">
+              <span>{{locale('USED')}}</span>
+              <span class="text-highlight">
+                {{(calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.received) +
+                calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.sent)).toFixed(2)}} Mb
+              </span>
+            </li>
+            <li>
+              <span>{{locale('MAX_TRAFFIC')}}</span>
+              <span
+                :class="[vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic &&
+                vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ? 'text-error' : 'text-active']">
+                {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic > 0 ?
+                `${vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic} Mb` : locale('UNLIMITED')}}
+              </span>
+            </li>
+          </ul>
+        </v-card-text>
+      </config-card>
+
+      <!-- Total traffic -->
+      <config-card v-if="vhApp.isPremiumAccount()">
+        <v-card-title>
+          {{locale('TOTAL_TRAFFIC')}}
+          <v-icon icon="mdi-chart-timeline-variant"/>
+        </v-card-title>
+        <v-card-subtitle>{{locale('STATISTICS_TOTAL_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+
+        <v-card-text class="text-disabled text-caption mt-3">
+          <ul class="info-table unstyled">
+            <li class="border-b">
+              <span>{{locale('USED')}}</span>
+              <span class="text-highlight">
+                {{(calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.received) +
+                calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.sent)).toFixed(2)}} Mb
+              </span>
+            </li>
+            <li>
+              <span>{{locale('MAX_TRAFFIC')}}</span>
+              <span
+                :class="[vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic &&
+                vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ? 'text-error' : 'text-active']">
+                {{vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic && vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ?
+                `${vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic} Mb` : locale('UNLIMITED')}}
+              </span>
+            </li>
+          </ul>
+        </v-card-text>
+      </config-card>
+
+    </v-defaults-provider>
   </v-sheet>
 </template>
+
+<style scoped>
+.info-table>li{
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+</style>

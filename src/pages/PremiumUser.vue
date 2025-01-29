@@ -16,8 +16,9 @@ const showConfirmRemoveCode = ref<boolean>(false);
 
 async function onSignOut() {
   try {
+    await vhApp.disconnect();
     await vhApp.signOut();
-    await router.replace('/purchase-subscription');
+    await router.replace('/');
   }
   finally {
     showConfirmSignOut.value = false;
@@ -30,10 +31,11 @@ async function removePremiumCode() {
     if (!profileId)
       throw new Error("Could not find the profile id.");
 
+    await vhApp.disconnect();
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({value: null})
     }));
-    await router.replace('/purchase-subscription');
+    await router.replace('/');
   }
   finally {
     showConfirmRemoveCode.value = false;
@@ -76,7 +78,7 @@ async function removePremiumCode() {
           :text="locale('STATISTICS')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/premium-Statistics')"
+          @click="router.push('/premium-statistics')"
         />
         <v-btn
           variant="plain"
@@ -100,7 +102,7 @@ async function removePremiumCode() {
           :text="locale('STATISTICS')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/premium-Statistics')"
+          @click="router.push('/premium-statistics')"
         />
         <v-btn
           variant="plain"

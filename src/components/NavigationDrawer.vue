@@ -127,21 +127,6 @@ function navigateByRouter(address: string){
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Premium details -->
-      <v-list-item
-        :disabled="!vhApp.isPremiumAccount()"
-        class="border-b"
-        @click="navigateByRouter('/premium-Statistics')"
-      >
-        <v-list-item-title>
-          <v-icon icon="mdi-poll" />
-          <span class="ms-3">{{locale('STATISTICS') }}</span>
-        </v-list-item-title>
-        <template v-slot:append>
-          <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()"/>
-        </template>
-      </v-list-item>
-
       <!-- Sign in or account button -->
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
@@ -156,6 +141,17 @@ function navigateByRouter(address: string){
               {{vhApp.data.userState.userAccount.email}}
             </span>
           </span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Statistics -->
+      <v-list-item
+        class="border-b"
+        @click="navigateByRouter('/premium-statistics')"
+      >
+        <v-list-item-title>
+          <v-icon icon="mdi-poll" />
+          <span class="ms-3">{{locale('STATISTICS') }}</span>
         </v-list-item-title>
       </v-list-item>
 

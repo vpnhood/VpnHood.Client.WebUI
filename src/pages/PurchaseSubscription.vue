@@ -28,14 +28,12 @@ const premiumCodeForm = ref<boolean>(false);
 const formattedPremiumCode = ref('');
 const premiumCodeRawNumber = ref<string>('');
 
-const premiumCodeDeviceCount = ref<number | undefined>(vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount);
-const premiumCodeActivationDate = ref<Date | undefined>(vhApp.data.state.sessionInfo?.accessInfo?.createdTime);
-
-function formatActivationDate(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-  const formattedDate = date.toLocaleDateString('en-US', options);
-  return formattedDate;
-}
+const premiumCodeDeviceCount = computed<number | undefined>(() => {
+  return vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount
+});
+const premiumCodeActivationDate = computed<Date | undefined>(() => {
+  return vhApp.data.state.sessionInfo?.accessInfo?.createdTime;
+});
 
 const numberOnlyRule = (value: string) => {
   return /^[0-9\-]*$/.test(value) || 'Only numbers are allowed';
@@ -77,12 +75,15 @@ onMounted(async () => {
         throw err;
 
       if (err.exceptionTypeName === 'GoogleBillingException' && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable) {
+        console.log("Google play service is unavailable.")
         isGoogleBillingAvailable.value = false;
         return;
       }
 
-      if (err.exceptionTypeName === 'GooglePlayUnavailableException')
+      if (err.exceptionTypeName === 'GooglePlayUnavailableException'){
+        console.log("Google play billing is unavailable.")
         isGooglePlayAvailable.value = false;
+      }
 
       throw err;
     }
@@ -131,7 +132,7 @@ async function validateCode(): Promise<void> {
 
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace(showStatistics ? '/premium-Statistics' : '/');
+  router.replace(showStatistics ? '/premium-statistics' : '/');
 }
 </script>
 
@@ -474,8 +475,8 @@ function closeCompleteDialog(showStatistics: boolean) {
           <ul id="activationInfo" class="text-error mt-2" style="list-style: none;">
 
             <li v-if="premiumCodeActivationDate">
-              <span>{{ locale('ACTIVATED_AT') }}:</span>
-              <span>{{ formatActivationDate(premiumCodeActivationDate) }}</span>
+              <span>{{ locale('ACTIVATED_ON') }}:</span>
+              <span>{{ Util.getShortDate(premiumCodeActivationDate) }}</span>
             </li>
 
             <li v-if="premiumCodeDeviceCount">

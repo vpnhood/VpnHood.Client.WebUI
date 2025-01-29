@@ -27,4 +27,10 @@ export class Util {
   public static getLocalizedLeftChevron(): string {
     return vuetify.locale.isRtl.value ? 'mdi-chevron-right' : 'mdi-chevron-left';
   }
+
+  public static getShortDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+  }
 }

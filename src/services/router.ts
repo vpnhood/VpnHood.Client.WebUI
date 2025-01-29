@@ -91,7 +91,7 @@ const routes = [
     }
   },
   {
-    path: '/premium-Statistics',
+    path: '/premium-statistics',
     name: 'Premium Statistics',
     component: () => import(/* webpackChunkName: "Premium Statistics" */ '@/pages/PremiumStatistics.vue'),
     meta: {
