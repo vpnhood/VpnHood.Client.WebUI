@@ -5,6 +5,7 @@ const locale = i18n.global.t;
 function reloadUI() {
   document.location.reload();
 }
+// TODO: Improve page
 </script>
 
 <template>

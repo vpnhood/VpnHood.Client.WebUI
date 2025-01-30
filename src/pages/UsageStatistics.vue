@@ -7,12 +7,20 @@ import { Util } from '@/helpers/Util';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-function calcMbps(traffic: number | undefined): number {
-  if (!traffic)
-    return 0;
+function calcMb(received: number | undefined, sent: number | undefined): string {
+  if (received === undefined || sent === undefined) return '0';
 
-  const mb = 1000000;
-  return Number((traffic / mb).toFixed(2));
+  const mb = 1_000_000;
+  const gb = 1_000 * mb;
+  const total = received + sent;
+
+  const unit = total >= gb ? 'GB' : 'MB';
+  const totalPerUnit = unit === 'GB' ? (total / gb) : (total / mb);
+
+  const totalFixed = Number(totalPerUnit.toFixed(1));
+  const formattedNumber = new Intl.NumberFormat().format(totalFixed);
+
+  return `${formattedNumber} ${unit}`;
 }
 </script>
 
@@ -164,8 +172,7 @@ function calcMbps(traffic: number | undefined): number {
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{(calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.received) +
-                calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.sent)).toFixed(2)}} Mb
+                {{ calcMb(vhApp.data.state.sessionStatus?.sessionTraffic.received, vhApp.data.state.sessionStatus?.sessionTraffic.sent) }}
               </span>
             </li>
             <li>
@@ -195,8 +202,7 @@ function calcMbps(traffic: number | undefined): number {
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{(calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.received) +
-                calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.sent)).toFixed(2)}} Mb
+                {{ calcMb(vhApp.data.state.sessionStatus?.cycleTraffic.received, vhApp.data.state.sessionStatus?.cycleTraffic.sent) }}
               </span>
             </li>
             <li>
@@ -226,8 +232,7 @@ function calcMbps(traffic: number | undefined): number {
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{(calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.received) +
-                calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.sent)).toFixed(2)}} Mb
+                {{ calcMb(vhApp.data.state.sessionStatus?.totalTraffic.received, vhApp.data.state.sessionStatus?.totalTraffic.sent) }}
               </span>
             </li>
             <li>
