@@ -285,5 +285,7 @@
   "STATISTICS_DEVICES_CARD_DESC": "En los últimos {x} días.",
   "STATISTICS_SESSION_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado para la conexión actual.",
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado por mes.",
-  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado desde el uso inicial."
+  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado desde el uso inicial.",
+  "PREMIUM_CODE_NUMBER_RULE_MSG": "Solo se permiten números.",
+  "PREMIUM_CODE_COUNT_RULE_MSG": "El código debe tener 20 caracteres."
 }
