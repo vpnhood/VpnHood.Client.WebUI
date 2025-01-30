@@ -250,7 +250,7 @@
   "CONFIRM_REMOVE_PREMIUM_CODE": "حذف کد",
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "آیا مطمئن هستید که می‌خواهید کد ویژه را حذف کنید؟",
   "REMOVE_CODE": "حذف کد",
-  "PREMIUM_USER": "کاربر ممتاز",
+  "PREMIUM_USER": "کاربر ویژه",
   "ALERT_FOR_USED_PREMIUM_CODE": "این کد قبلاً استفاده شده است.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "این کد قبلاً در دستگاه‌های دیگر استفاده شده است.",
   "SUBSCRIPTION_DETAILS": "جزئیات اشتراک",
