@@ -285,5 +285,7 @@
   "STATISTICS_DEVICES_CARD_DESC": "Son {x} gün içinde.",
   "STATISTICS_SESSION_TRAFFIC_CARD_DESC": "Mevcut bağlantı için izin verilen maksimum ve kullanılan trafik.",
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "Ayda izin verilen maksimum ve kullanılan trafik.",
-  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "İlk kullanımdan bu yana izin verilen maksimum ve kullanılan trafik."
+  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "İlk kullanımdan bu yana izin verilen maksimum ve kullanılan trafik.",
+  "PREMIUM_CODE_NUMBER_RULE_MSG": "Sadece sayılara izin verilir.",
+  "PREMIUM_CODE_COUNT_RULE_MSG": "Kod 20 karakter olmalıdır."
 }
