@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "این سرور از روش اتصال UDP پشتیبانی نمی‌کند.",
   "CONGRATULATIONS": "تبریک می‌گوییم",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "پردازش سفارش شما انجام شد و اشتراک شما فعال گردید.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "کدی که وارد کردید معتبر است و شما به کاربر ممتاز ارتقا یافته‌اید.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "کدی که وارد کردید معتبر است و شما به کاربر ویژه ارتقا یافته‌اید.",
   "SHOW_SERVERS": "نمایش سرورها",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "لطفاً برای تکمیل فرآیند صبر کنید...",
   "YOU_ARE_PREMIUM": "شما کاربر ویژه هستید",
