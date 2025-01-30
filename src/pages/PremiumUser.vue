@@ -74,11 +74,12 @@ async function removePremiumCode() {
 
       <v-card-actions>
         <btn-style-1
+          v-if="vhApp.isStatisticsAvailable()"
           class="ms-auto"
           :text="locale('STATISTICS')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/premium-statistics')"
+          @click="router.push('/usage-statistics')"
         />
         <v-btn
           variant="plain"
@@ -102,7 +103,7 @@ async function removePremiumCode() {
           :text="locale('STATISTICS')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/premium-statistics')"
+          @click="router.push('/usage-statistics')"
         />
         <v-btn
           variant="plain"

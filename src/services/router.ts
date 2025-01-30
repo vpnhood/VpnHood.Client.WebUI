@@ -91,11 +91,11 @@ const routes = [
     }
   },
   {
-    path: '/premium-statistics',
-    name: 'Premium Statistics',
-    component: () => import(/* webpackChunkName: "Premium Statistics" */ '@/pages/PremiumStatistics.vue'),
+    path: '/usage-statistics',
+    name: 'Usage Statistics',
+    component: () => import(/* webpackChunkName: "Usage Statistics" */ '@/pages/UsageStatistics.vue'),
     meta: {
-      title: 'Premium Statistics',
+      title: 'Usage Statistics',
     }
   },
   {

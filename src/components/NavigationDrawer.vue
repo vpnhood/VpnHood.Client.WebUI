@@ -146,8 +146,9 @@ function navigateByRouter(address: string){
 
       <!-- Statistics -->
       <v-list-item
+        :disabled="!vhApp.isStatisticsAvailable()"
         class="border-b"
-        @click="navigateByRouter('/premium-statistics')"
+        @click="navigateByRouter('/usage-statistics')"
       >
         <v-list-item-title>
           <v-icon icon="mdi-poll" />

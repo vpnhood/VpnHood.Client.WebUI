@@ -120,7 +120,7 @@ function revertCurrentChange(): void{
     >
 
       <!-- Sample ip format -->
-      <alert-info>
+      <alert-info :title="locale('INFO')">
         <ul class="text-caption" style="list-style: none">
           <li>
             {{locale('SINGLE_IP')}}
@@ -138,15 +138,15 @@ function revertCurrentChange(): void{
       </alert-info>
 
       <!-- Describe remark -->
-      <alert-note :text="locale('REMARK_IP_FILTER_DESC')" />
+      <alert-note :title="locale('NOTE')" :text="locale('REMARK_IP_FILTER_DESC')" />
 
       <!-- Alert for number of IPs in the filter by device -->
       <alert-warning v-if="props.ipFilterType === IPFilterType.FilterByDevice"
-        :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
-        class="mb-4"
+                     :title="locale('WARNING')"
+                     :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
       />
 
-      <config-card>
+      <config-card class="mt-4">
         <!-- Exclude list -->
         <v-card-item>
           <p>{{locale('IPS_TO_EXCLUDE')}}</p>

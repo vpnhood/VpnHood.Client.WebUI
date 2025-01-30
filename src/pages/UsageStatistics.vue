@@ -163,7 +163,7 @@ function calcMbps(traffic: number | undefined): number {
           <ul class="info-table unstyled">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
-              <span class="text-highlight">
+              <span class="text-highlight" dir="ltr">
                 {{(calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.received) +
                 calcMbps(vhApp.data.state.sessionStatus?.sessionTraffic.sent)).toFixed(2)}} Mb
               </span>
@@ -171,6 +171,7 @@ function calcMbps(traffic: number | undefined): number {
             <li>
               <span>{{locale('MAX_TRAFFIC')}}</span>
               <span
+                dir="ltr"
                 :class="[vhApp.data.state.sessionStatus?.sessionMaxTraffic &&
                 vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ? 'text-error' : 'text-active']">
                 {{vhApp.data.state.sessionStatus?.sessionMaxTraffic && vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ?
@@ -193,7 +194,7 @@ function calcMbps(traffic: number | undefined): number {
           <ul class="info-table unstyled">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
-              <span class="text-highlight">
+              <span class="text-highlight" dir="ltr">
                 {{(calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.received) +
                 calcMbps(vhApp.data.state.sessionStatus?.cycleTraffic.sent)).toFixed(2)}} Mb
               </span>
@@ -201,6 +202,7 @@ function calcMbps(traffic: number | undefined): number {
             <li>
               <span>{{locale('MAX_TRAFFIC')}}</span>
               <span
+                dir="ltr"
                 :class="[vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic &&
                 vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ? 'text-error' : 'text-active']">
                 {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic > 0 ?
@@ -223,7 +225,7 @@ function calcMbps(traffic: number | undefined): number {
           <ul class="info-table unstyled">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
-              <span class="text-highlight">
+              <span class="text-highlight" dir="ltr">
                 {{(calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.received) +
                 calcMbps(vhApp.data.state.sessionStatus?.totalTraffic.sent)).toFixed(2)}} Mb
               </span>
@@ -231,6 +233,7 @@ function calcMbps(traffic: number | undefined): number {
             <li>
               <span>{{locale('MAX_TRAFFIC')}}</span>
               <span
+                dir="ltr"
                 :class="[vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic &&
                 vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ? 'text-error' : 'text-active']">
                 {{vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic && vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ?

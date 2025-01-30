@@ -21,7 +21,6 @@ function isFreeAvailable(){
 }
 
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
-  // TODO: check with trudy
   if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
     throw new Error("Could not found required data.");
 

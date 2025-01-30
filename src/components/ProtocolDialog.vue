@@ -48,6 +48,7 @@ function isUdpUnsupported(): boolean {
         <alert-warning
           v-if="isUdpUnsupported()"
           class="mb-3"
+          :title="locale('WARNING')"
           :text="locale('UDP_NOT_SUPPORTED_MESSAGE')"
         />
 

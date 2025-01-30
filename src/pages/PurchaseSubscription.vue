@@ -36,12 +36,12 @@ const premiumCodeActivationDate = computed<Date | undefined>(() => {
 });
 
 const numberOnlyRule = (value: string) => {
-  return /^[0-9\-]*$/.test(value) || 'Only numbers are allowed';
+  return /^[0-9\-]*$/.test(value) || locale('PREMIUM_CODE_NUMBER_RULE_MSG');
 };
 
 const codeCountRule = (value: string) => {
   const count = value.replace(/-/g, '').length;
-  return count == 20 || 'The code must be 20 characters.';
+  return count == 20 || locale('PREMIUM_CODE_COUNT_RULE_MSG');
 };
 
 // Keep only numbers and limit to 20 characters
@@ -132,7 +132,7 @@ async function validateCode(): Promise<void> {
 
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace(showStatistics ? '/premium-statistics' : '/');
+  router.replace(showStatistics ? '/usage-statistics' : '/');
 }
 </script>
 
@@ -287,7 +287,7 @@ function closeCompleteDialog(showStatistics: boolean) {
             :title="locale('ENTER_PREMIUM_CODE')"
           >
             <v-card-item class="pt-0">
-              <alert-note :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2" />
+              <alert-note :title="locale('NOTE')" :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2" />
 
               <v-form
                 v-model="premiumCodeForm"

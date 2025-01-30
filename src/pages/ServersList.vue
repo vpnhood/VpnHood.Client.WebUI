@@ -20,7 +20,7 @@ const isShowAddServerDialog = computed<boolean>({
     await ComponentRouteController.showComponent(ComponentName.AddServerDialog, value);
   }
 })
-// TODO: Check in the CLIENT app
+
 </script>
 
 <template>
@@ -45,7 +45,7 @@ const isShowAddServerDialog = computed<boolean>({
 
     <!-- Show alert, if user does not have any server -->
     <div v-if="vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length === 0">
-      <alert-warning :text="locale('NO_SERVER_AVAILABLE')" class="mb-4" />
+      <alert-warning :title="locale('WARNING')" :text="locale('NO_SERVER_AVAILABLE')" class="mb-4" />
       <config-card>
         <div
           v-html="locale('GET_SERVER_KEY_METHODS_DESC')"

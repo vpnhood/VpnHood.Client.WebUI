@@ -161,18 +161,18 @@ function appFilterStatus(): string {
     <!-- Speed & Circle & Connect button -->
     <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
       <!-- Speed -->
-      <v-row align-content="center" justify="center"
+      <v-row align-content="center" justify="center" dir="ltr"
               :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
-        <v-col cols="auto d-inline-flex align-center">
+        <v-col cols="auto d-inline-flex align-center" dir="ltr">
           <v-icon color="active" size="small" icon="mdi-arrow-up-thin"/>
-          <span class="pe-1 text-body-2 text-white" dir="ltr">
+          <span class="pe-1 text-body-2 text-white">
             {{formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1)}}
           </span>
           <span class="text-white opacity-40" style="font-size: 10px">Mbps</span>
         </v-col>
-        <v-col cols="auto d-inline-flex align-center">
+        <v-col cols="auto d-inline-flex align-center" dir="ltr">
           <v-icon color="error" size="small" icon="mdi-arrow-down-thin"/>
-          <span class="pe-1 text-body-2 text-white" dir="ltr">
+          <span class="pe-1 text-body-2 text-white">
             {{formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
           </span>
           <span class="text-white opacity-40 order-last" style="font-size: 10px">Mbps</span>

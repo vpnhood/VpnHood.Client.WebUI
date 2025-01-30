@@ -23,7 +23,6 @@
 .v-locale--is-rtl .v-messages__message {line-height: 20px;}
 .v-locale--is-rtl .v-btn--size-small {--v-btn-size: 0.85rem;}
 
-.v-locale--is-rtl.v-application [class*="text-h"],
 .v-locale--is-rtl .v-card-title{
     font-size: 1rem;
 }

@@ -656,7 +656,6 @@ export default createVuetify({
       density: "compact",
       rounded: "lg",
       class: "text-caption pt-1 text-start",
-      title: i18n.global.t("ALERT"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"
       }
@@ -667,7 +666,6 @@ export default createVuetify({
       density: "compact",
       rounded: "lg",
       class: "text-caption pt-1 text-start",
-      title: i18n.global.t("NOTE"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"
       }
@@ -678,7 +676,6 @@ export default createVuetify({
       density: "compact",
       rounded: "lg",
       class: "text-caption pt-1 text-start",
-      title: i18n.global.t("INFO"),
       VAlertTitle:{
         style: "font-weight: 600; font-size: 0.9rem;"
       }

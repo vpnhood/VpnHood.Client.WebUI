@@ -345,6 +345,10 @@ export class VpnHoodApp {
     return this.data.state.clientProfile?.isPremiumAccount == true;
   }
 
+  public isStatisticsAvailable(): boolean{
+    return !!this.data.state.sessionInfo && !!this.data.state.sessionStatus;
+  }
+
   public premiumIconColor(): string{
     return this.isPremiumAccount() ? 'enable-premium' : 'disable-premium';
   }
