@@ -285,5 +285,7 @@
   "STATISTICS_DEVICES_CARD_DESC": "في آخر {x} أيام.",
   "STATISTICS_SESSION_TRAFFIC_CARD_DESC": "الحد الأقصى المسموح به من حركة المرور المستخدمة للاتصال الحالي.",
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "الحد الأقصى المسموح به من حركة المرور المستخدمة شهريًا.",
-  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "الحد الأقصى المسموح به من حركة المرور المستخدمة منذ الاستخدام الأولي."
+  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "الحد الأقصى المسموح به من حركة المرور المستخدمة منذ الاستخدام الأولي.",
+  "PREMIUM_CODE_NUMBER_RULE_MSG": "الأرقام فقط مسموحة.",
+  "PREMIUM_CODE_COUNT_RULE_MSG": "يجب أن يكون طول الرمز 20 حرفًا."
 }
