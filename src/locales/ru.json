@@ -285,5 +285,7 @@
   "STATISTICS_DEVICES_CARD_DESC": "За последние {x} дней.",
   "STATISTICS_SESSION_TRAFFIC_CARD_DESC": "Максимальный разрешенный и использованный трафик для текущего подключения.",
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "Максимальный разрешенный и использованный трафик в месяц.",
-  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Максимальный разрешенный и использованный трафик с момента первого использования."
+  "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Максимальный разрешенный и использованный трафик с момента первого использования.",
+  "PREMIUM_CODE_NUMBER_RULE_MSG": "Разрешены только цифры.",
+  "PREMIUM_CODE_COUNT_RULE_MSG": "Код должен состоять из 20 символов."
 }
