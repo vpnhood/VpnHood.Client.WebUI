@@ -287,5 +287,6 @@
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "Maximal zulässiger und verwendeter Datenverkehr pro Monat.",
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Maximal zulässiger und verwendeter Datenverkehr seit der ersten Verwendung.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Es sind nur Zahlen erlaubt.",
-  "PREMIUM_CODE_COUNT_RULE_MSG": "Der Code muss 20 Zeichen lang sein."
+  "PREMIUM_CODE_COUNT_RULE_MSG": "Der Code muss 20 Zeichen lang sein.",
+  "PREMIUM_ACCESS_EXPIRED": "Ihr Premium-Zugang ist abgelaufen."
 }
