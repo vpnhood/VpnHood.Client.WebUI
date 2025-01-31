@@ -287,5 +287,6 @@
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado por mes.",
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado desde el uso inicial.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Solo se permiten números.",
-  "PREMIUM_CODE_COUNT_RULE_MSG": "El código debe tener 20 caracteres."
+  "PREMIUM_CODE_COUNT_RULE_MSG": "El código debe tener 20 caracteres.",
+  "PREMIUM_ACCESS_EXPIRED": "Su acceso premium ha expirado."
 }
