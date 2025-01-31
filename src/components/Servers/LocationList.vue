@@ -80,12 +80,14 @@ function listHasGroup(): boolean{
     </template>
 
     <!-- If the locations does not have both the Free and Premium category -->
-    <LocationListItems v-else
-      :client-profile-id="props.clientProfile.clientProfileId"
-      :locations-list="props.clientProfile.locationInfos"
-      :is-premium-group="premiumLocations.length > 0"
-      :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
-    />
+    <config-card v-else>
+      <LocationListItems
+        :client-profile-id="props.clientProfile.clientProfileId"
+        :locations-list="props.clientProfile.locationInfos"
+        :is-premium-group="premiumLocations.length > 0"
+        :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+      />
+    </config-card>
   </v-list>
 
 </template>

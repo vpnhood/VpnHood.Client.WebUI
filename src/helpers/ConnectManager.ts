@@ -70,7 +70,7 @@ export class ConnectManager {
     await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose);
   }
 
-  public static async connect3(clientProfileId: string, serverLocation: string | undefined, isPremiumLocation: boolean, isDiagnose: boolean = false) {
+  public static async connect3(clientProfileId: string, serverLocation: string | undefined, isPremiumLocation: boolean, isDiagnose: boolean = false, goToHome: boolean = true) {
     // For developer
     console.log("Connect3");
     console.log('isPremiumLocation: ' + isPremiumLocation);
@@ -78,6 +78,6 @@ export class ConnectManager {
     if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;
 
-    await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose);
+    await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose, goToHome);
   }
 }

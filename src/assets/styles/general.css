@@ -49,9 +49,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 .config-card>.v-card-title + .v-card-text{
     padding-top: 12px;
 }
-.config-card>.v-card-text + .v-card-actions{
-    min-height: auto;
-}
 
 /*noinspection CssUnusedSymbol*/
 .flasher{animation: pulseOpacity 1s infinite;}

@@ -61,6 +61,7 @@ async function checkForUpdate() {
 
 async function onSignIn() {
   try {
+    // TODO: show loader issue
     emit('update:modelValue', false);
     vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();
@@ -117,7 +118,8 @@ function navigateByRouter(address: string){
 
       <!-- Go premium -->
       <v-list-item
-        v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+        v-if="vhApp.data.features.isPremiumFlagSupported &&
+        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         class="border-b"
         @click="navigateByRouter('/purchase-subscription')"
       >
@@ -146,7 +148,7 @@ function navigateByRouter(address: string){
 
       <!-- Statistics -->
       <v-list-item
-        :disabled="!vhApp.isStatisticsAvailable()"
+        :disabled="!vhApp.isConnected()"
         class="border-b"
         @click="navigateByRouter('/usage-statistics')"
       >

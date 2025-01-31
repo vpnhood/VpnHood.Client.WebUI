@@ -8,7 +8,6 @@ import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VCard } from 'vuetify/components/VCard';
-import i18n from '@/locales/i18n';
 import { AppName } from '@/helpers/UiConstants';
 
 const myColors = {
@@ -28,6 +27,7 @@ const myColors = {
     200:"#1940b0",
     300:"#122272",
     400:"#06124b",
+    500:"#000d24"
   },
   purple:{
     100:"#8d9fe4",
@@ -181,6 +181,8 @@ interface IThemeColorNames {
   'btn-style-6': string,
   'on-btn-style-6': string,
 
+  'switch-btn': string,
+
   'connection-circle-border': string,
 
   /*** States ***/
@@ -332,6 +334,8 @@ const vhConnectThemeColors: IThemeColorNames = {
   'btn-style-6': '#ffffff',
   'on-btn-style-6': myColors.purple['500'],
 
+  'switch-btn': myColors.purple['200'],
+
   'connection-circle-border': myColors.cream['100'],
 
   /*** States ***/
@@ -362,10 +366,10 @@ const vhClientThemeColors: IThemeColorNames = {
   /*** Backgrounds ***/
   background: myColors.blue['20'],
   'on-background': '#000000',
-  'colored-bg-light': myColors.blue['200'],
-  'colored-bg-dark': myColors.blue['300'],
+  'colored-bg-light': myColors.blue['300'],
+  'colored-bg-dark': myColors.blue['500'],
   'app-bg': myColors.blue['400'],
-  'app-bar': myColors.green['300'],
+  'app-bar': myColors.blue['200'],
   'on-app-bar': '#ffffff',
 
   /*** Navigation drawer ***/
@@ -418,7 +422,7 @@ const vhClientThemeColors: IThemeColorNames = {
 
   /*** Servers list ***/
   'active-server': myColors.green['300'],
-  'fastest-server': myColors.blue['400'],
+  'fastest-server': myColors.blue['200'],
   'active-server-chip': myColors.green['300'],
   'on-active-server-chip': '#ffffff',
 
@@ -451,7 +455,7 @@ const vhClientThemeColors: IThemeColorNames = {
 
   'tonal-icon-btn': myColors.purple['200'],
 
-  'card-on-grad-bg': myColors.purple['300'],
+  'card-on-grad-bg': myColors.purple['100'],
 
   'general-dialog': "#ffffff",
   'on-general-dialog': myColors.blue['300'],
@@ -475,7 +479,7 @@ const vhClientThemeColors: IThemeColorNames = {
   'btn-style-3': myColors.cream['100'],
   'on-btn-style-3': myColors.purple['500'],
 
-  'btn-style-4': myColors.green['300'],
+  'btn-style-4': myColors.blue['200'],
 
   'btn-style-5': myColors.gray['800'],
   'on-btn-style-5': '#ffffff',
@@ -483,16 +487,18 @@ const vhClientThemeColors: IThemeColorNames = {
   'btn-style-6': '#ffffff',
   'on-btn-style-6': myColors.blue['400'],
 
+  'switch-btn': myColors.blue['200'],
+
   'connection-circle-border': myColors.cream['100'],
 
   /*** States ***/
-  active: myColors.blue['400'],
+  active: myColors.green['300'],
   'on-active': myColors.blue['400'],
-  highlight: myColors.green['300'],
-  'enable-premium': myColors.blue['400'],
+  highlight: myColors.blue['200'],
+  'enable-premium': myColors.blue['200'],
   'disable-premium': myColors.yellow['200'],
 
-  'disconnect-warning': myColors.yellow['200'],
+  'disconnect-warning': myColors.yellow['100'],
   'on-disconnect-warning': myColors.yellow['300'],
 
   'version-on-home-debug': myColors.yellow['200'],
@@ -616,17 +622,17 @@ export default createVuetify({
 
     ConfigCard:{
       color:'config-card-bg',
-      class: 'config-card py-2',
+      class: 'config-card',
       rounded: 'lg',
       VCardTitle:{
-        class: "d-flex justify-space-between align-center pt-1 pb-0"
+        class: "d-flex justify-space-between align-center pt-3 pb-0"
       },
       VCardSubtitle:{
         class: "text-disabled text-wrap text-caption"
       },
       VSwitch:{
         class: 'px-2',
-        color: 'highlight',
+        color: 'switch-btn',
         density: 'compact',
         hideDetails: true
       }
@@ -637,13 +643,7 @@ export default createVuetify({
       variant:'text',
       size:'small',
       class: 'config-item',
-      VChip:{
-        variant:'text',
-        size:"small",
-        density:"compact",
-        color:"white",
-        class: 'text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50',
-      },
+
     },
     PremiumIcon:{
       icon:"mdi-crown",

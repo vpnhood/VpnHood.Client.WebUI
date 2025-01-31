@@ -121,7 +121,7 @@ async function validateCode(): Promise<void> {
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: premiumCodeRawNumber.value.toString() })
     }));
-    await ConnectManager.connect3(profileId, undefined, false);
+    await ConnectManager.connect3(profileId, undefined, false, false, false);
 
     if (vhApp.isPremiumAccount())
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
@@ -491,7 +491,7 @@ function closeCompleteDialog(showStatistics: boolean) {
       </v-card-text>
 
       <v-card-actions>
-        <v-btn :text="locale('STATISTICS')" @click="closeCompleteDialog(true)" />
+        <v-btn v-if="vhApp.isConnected()" :text="locale('STATISTICS')" @click="closeCompleteDialog(true)" />
         <v-btn :text="locale('CLOSE')" variant="plain" @click="closeCompleteDialog(false)" />
       </v-card-actions>
     </v-card>

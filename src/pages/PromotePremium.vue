@@ -31,7 +31,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   }
 
   await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
-    dialogData.value.isPremiumLocation, planId);
+    dialogData.value.isPremiumLocation, planId, false, false);
 }
 
 </script>

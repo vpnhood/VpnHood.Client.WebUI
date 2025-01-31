@@ -149,7 +149,7 @@ export class VpnHoodApp {
   }
 
   public async connect(clientProfileId: string, serverLocation: string | undefined, isPremium: boolean, planId: ConnectPlanId,
-                       isDiagnose: boolean = false): Promise<void> {
+                       isDiagnose: boolean = false, goToHome: boolean = true): Promise<void> {
 
     // User select active item and already connected
     if (this.data.state.canDisconnect
@@ -174,10 +174,17 @@ export class VpnHoodApp {
     console.log(`PlanId:  ${planId}`);
 
     // Navigate to home page
-    //await router.replace('/');
+    if (goToHome)
+      await router.replace('/');
 
-    if (isDiagnose) await this.diagnose();
-    else await this.apiClient.connect(clientProfileId, serverLocation, planId);
+    try {
+      if (isDiagnose) await this.diagnose();
+      else await this.apiClient.connect(clientProfileId, serverLocation, planId);
+    }
+    catch (err: unknown){
+     console.log("Catch from connect and diagnose: ", err);
+     //await this.processError(err);
+    }
   }
 
   public async disconnect(): Promise<void> {
@@ -333,10 +340,6 @@ export class VpnHoodApp {
   }
 
   public isPremiumAccount(byPremiumCode: boolean = false): boolean{
-    // App does not support the premium features
-    if (!this.data.features.isPremiumFlagSupported)
-      return true;
-
     // User is premium by code
     if (byPremiumCode)
       return (this.data.state.clientProfile?.isPremiumAccount == true) && (this.data.state.clientProfile?.hasAccessCode == true);
@@ -345,12 +348,8 @@ export class VpnHoodApp {
     return this.data.state.clientProfile?.isPremiumAccount == true;
   }
 
-  public isStatisticsAvailable(): boolean{
-    return !!this.data.state.sessionInfo && !!this.data.state.sessionStatus;
-  }
-
   public premiumIconColor(): string{
-    return this.isPremiumAccount() ? 'enable-premium' : 'disable-premium';
+    return (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount()) ? 'enable-premium' : 'disable-premium';
   }
 
   public async signIn(showLoading: boolean = true): Promise<void> {

@@ -43,14 +43,21 @@ async function saveSetting() {
   await vhApp.saveUserSetting();
 }
 function isFilterIpByDeviceAvailable(): boolean {
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    return true;
   return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
 }
 function isFilterIpByAppAvailable(): boolean {
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    return true;
   return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.useAppIpFilter;
 }
 function isIncludeLocalNetworkAvailable(): boolean {
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    return true;
   return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.includeLocalNetwork;
 }
+// TODO: disconnect by change ip filter
 </script>
 
 <template>

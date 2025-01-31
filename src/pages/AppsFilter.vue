@@ -175,7 +175,6 @@ async function actionOnConfirm() {
           select-strategy="classic"
           bg-color="transparent"
           selectable
-          class="py-0"
         >
           <v-list-item
             v-for="(app, index) in appList"
@@ -195,7 +194,6 @@ async function actionOnConfirm() {
                 tabindex="-1"
                 readonly
                 density="compact"
-                color="highlight"
               />
             </template>
           </v-list-item>

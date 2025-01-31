@@ -94,6 +94,9 @@ export class ErrorHandler {
     if (err.data.ErrorCode === "SessionSuppressedBy")
       return i18n.global.t('SESSION_SUPPRESSED_BY_OTHER');
 
+    if (err.data.ErrorCode === "AccessExpired")
+      return i18n.global.t('PREMIUM_ACCESS_EXPIRED');
+
     // TODO: implement error messages
     return err.message;
   }

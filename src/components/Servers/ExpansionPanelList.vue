@@ -76,8 +76,7 @@ async function saveNewClientProfileName(): Promise<void> {
       <!-- Country flag on collapse state -->
       <div v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)
             && expandedPanels[index] !== 0"
-        class="d-flex align-center bg-expansion-panels-servers-list py-3 px-2 text-start"
-        style="border-radius: 14px;"
+        class="d-flex align-center bg-expansion-panels-servers-list py-3 px-2 text-start rounded-lg"
         @click="expandedPanels[index] = 0"
       >
         <template v-for="(serverLocationInfo, index) in clientProfileInfo.locationInfos">
@@ -211,7 +210,7 @@ async function saveNewClientProfileName(): Promise<void> {
         />
 
         <!-- Save rename button -->
-        <v-btn :text="locale('SAVE')" @click="saveNewClientProfileName" />
+        <v-btn :text="locale('SAVE')" @click="saveNewClientProfileName" variant="plain"/>
 
       </v-card-actions>
     </v-card>

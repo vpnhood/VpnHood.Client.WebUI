@@ -46,6 +46,8 @@ function udpProtocolButtonText(): string {
   return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
 }
 function isShowCountdown(): boolean{
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    return false;
   const hasExpireTime = !!vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
   return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.isConnected();
 }
@@ -127,7 +129,7 @@ function appFilterStatus(): string {
       <CountDown v-if="isShowCountdown()"/>
 
       <!-- You are premium button -->
-      <v-chip v-else-if="vhApp.isPremiumAccount()"
+      <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
               prepend-icon="mdi-crown"
               :text="locale('YOU_ARE_PREMIUM')"
               color="enable-premium"
@@ -136,9 +138,10 @@ function appFilterStatus(): string {
               @click="router.push('/premium-user')"
       />
 
-      <!-- Go Premium button for guest user -->
+      <!-- Go Premium button -->
       <v-btn
-        v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+        v-else-if="vhApp.data.features.isPremiumFlagSupported &&
+        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         :flat="true"
         variant="outlined"
         color="go-premium-btn"
@@ -213,17 +216,30 @@ function appFilterStatus(): string {
       >
         <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
         <v-icon :icon="Util.getLocalizedRightChevron()" />
-        <v-chip tabindex="-1" :text="getActiveServerNameOrLocation()" class="px-0"/>
+        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{getActiveServerNameOrLocation()}}
+        </span>
 
         <template v-slot:append>
+          <!-- Country flag -->
           <span v-if="vhApp.getActiveServerCountryFlag()"
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
           >
             <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
           </span>
-          <v-chip v-else :text="locale('AUTO')" color="white" variant="tonal" />
+
+          <!-- Auto server -->
+          <v-chip v-else
+                  :text="locale('AUTO')"
+                  color="white"
+                  variant="tonal"
+                  size="small"
+                  density="compact"
+                  class="text-capitalize opacity-50 px-2"
+          />
         </template>
+
       </home-config-btn>
 
       <!-- Exclude country button -->
@@ -235,8 +251,14 @@ function appFilterStatus(): string {
       >
         <span>{{ locale('COUNTRIES') }}</span>
         <v-icon :icon="Util.getLocalizedRightChevron()" />
-        <v-chip :text="vhApp.data.settings.userSettings.tunnelClientCountry
-              ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')" class="px-0"/>
+
+        <!-- Text related to selected option -->
+        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+        {{vhApp.data.settings.userSettings.tunnelClientCountry
+          ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')}}
+        </span>
+
+        <!-- Client country flag -->
         <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
@@ -256,7 +278,11 @@ function appFilterStatus(): string {
       >
         <span>{{ locale('APPS') }}</span>
         <v-icon :icon="Util.getLocalizedRightChevron()" />
-        <v-chip :text="appFilterStatus()" class="px-0"/>
+
+        <!-- Text related to selected option -->
+        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{appFilterStatus()}}
+        </span>
       </home-config-btn>
 
       <!-- Protocol button -->
@@ -266,7 +292,11 @@ function appFilterStatus(): string {
       >
         <span>{{ locale('PROTOCOL_TITLE') }}</span>
         <v-icon :icon="Util.getLocalizedRightChevron()" />
-        <v-chip :text="udpProtocolButtonText()" class="px-0" />
+
+        <!-- Text related to selected option -->
+        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{udpProtocolButtonText()}}
+        </span>
       </home-config-btn>
 
     </v-col>

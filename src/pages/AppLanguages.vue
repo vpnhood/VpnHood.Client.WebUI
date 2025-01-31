@@ -49,7 +49,6 @@ onMounted(() => {
         v-model="defaultLanguage"
         bg-color="transparent"
         select-strategy="classic"
-        class="my-n2"
         active-class="text-highlight"
       >
         <v-list-item

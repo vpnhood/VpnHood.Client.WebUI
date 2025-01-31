@@ -11,19 +11,7 @@ import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Cli
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const showConfirmSignOut = ref<boolean>(false);
 const showConfirmRemoveCode = ref<boolean>(false);
-
-async function onSignOut() {
-  try {
-    await vhApp.disconnect();
-    await vhApp.signOut();
-    await router.replace('/');
-  }
-  finally {
-    showConfirmSignOut.value = false;
-  }
-}
 
 async function removePremiumCode() {
   try {
@@ -74,18 +62,18 @@ async function removePremiumCode() {
 
       <v-card-actions>
         <btn-style-1
-          v-if="vhApp.isStatisticsAvailable()"
+          :text="locale('REMOVE_CODE')"
           class="ms-auto"
-          :text="locale('STATISTICS')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/usage-statistics')"
+          @click="showConfirmRemoveCode = true"
         />
         <v-btn
+          v-if="vhApp.isConnected()"
           variant="plain"
-          :text="locale('REMOVE_CODE')"
+          :text="locale('STATISTICS')"
           size="small"
-          @click="showConfirmRemoveCode = true"
+          @click="router.push('/usage-statistics')"
         />
       </v-card-actions>
     </config-card>
@@ -100,16 +88,10 @@ async function removePremiumCode() {
       <v-card-actions>
         <btn-style-1
           class="ms-auto"
-          :text="locale('STATISTICS')"
+          :text="locale('ACCOUNT')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/usage-statistics')"
-        />
-        <v-btn
-          variant="plain"
-          :text="locale('SIGN_OUT')"
-          size="small"
-          @click="showConfirmSignOut = true"
+          @click="router.push('/account')"
         />
       </v-card-actions>
     </config-card>
@@ -120,14 +102,6 @@ async function removePremiumCode() {
       :title="locale('CONFIRM_REMOVE_PREMIUM_CODE')"
       :message="locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC')"
       @confirm="removePremiumCode()"
-    />
-
-    <!-- Confirm sign-out dialog -->
-    <ConfirmDialog
-      v-model="showConfirmSignOut"
-      :title="locale('CONFIRM_SIGN_OUT_TITLE')"
-      :message="locale('CONFIRM_SIGN_OUT_DESC')"
-      @confirm="onSignOut()"
     />
 
   </v-sheet>

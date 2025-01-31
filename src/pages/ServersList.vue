@@ -20,7 +20,6 @@ const isShowAddServerDialog = computed<boolean>({
     await ComponentRouteController.showComponent(ComponentName.AddServerDialog, value);
   }
 })
-
 </script>
 
 <template>
