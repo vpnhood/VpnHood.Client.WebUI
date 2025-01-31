@@ -287,5 +287,6 @@
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "प्रति माह अधिकतम अनुमत और प्रयुक्त ट्रैफ़िक।",
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "प्रारंभिक उपयोग के बाद से अधिकतम अनुमत और प्रयुक्त ट्रैफ़िक।",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "केवल अंकों की अनुमति है।",
-  "PREMIUM_CODE_COUNT_RULE_MSG": "कोड 20 अक्षरों का होना चाहिए।"
+  "PREMIUM_CODE_COUNT_RULE_MSG": "कोड 20 अक्षरों का होना चाहिए।",
+  "PREMIUM_ACCESS_EXPIRED": "आपकी प्रीमियम सदस्यता समाप्त हो गई है।"
 }
