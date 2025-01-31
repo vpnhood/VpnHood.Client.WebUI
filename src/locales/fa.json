@@ -287,5 +287,6 @@
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "حداکثر ترافیک مجاز و استفاده شده در هر ماه.",
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "حداکثر ترافیک مجاز و استفاده شده از زمان استفاده اولیه.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "فقط اعداد مجاز هستند.",
-  "PREMIUM_CODE_COUNT_RULE_MSG": "کد باید 20 کاراکتر باشد."
+  "PREMIUM_CODE_COUNT_RULE_MSG": "کد باید 20 کاراکتر باشد.",
+  "PREMIUM_ACCESS_EXPIRED": "دسترسی ویژه شما منقضی شده است."
 }
