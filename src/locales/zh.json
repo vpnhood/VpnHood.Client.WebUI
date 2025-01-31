@@ -287,5 +287,6 @@
   "STATISTICS_MONTHLY_TRAFFIC_CARD_DESC": "每月最大允许流量和已用流量。",
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "自首次使用以来的最大允许流量和已用流量。",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "仅允许数字。",
-  "PREMIUM_CODE_COUNT_RULE_MSG": "代码必须是 20 个字符。"
+  "PREMIUM_CODE_COUNT_RULE_MSG": "代码必须是 20 个字符。",
+  "PREMIUM_ACCESS_EXPIRED": "您的高级访问已过期。"
 }
