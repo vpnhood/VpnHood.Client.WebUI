@@ -37,6 +37,10 @@ export class ErrorHandler {
     console.log("Error Infos: " + err);
 
     switch (err.exceptionTypeName) {
+      case 'OperationCanceledException':
+        return null;
+      case 'ObjectDisposedException':
+        return null;
       case 'HttpRequestException':
         return this.httpRequestExceptionHandler(err);
       case 'UnreachableServer':

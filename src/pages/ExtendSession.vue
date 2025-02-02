@@ -2,16 +2,18 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import PromoteConnectButton from '@/components/PromoteConnectButton.vue';
 import { Util } from '@/helpers/Util';
+import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const showLoadingAdDialog = ref<boolean>(false);
+const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
 
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   switch (planId) {
@@ -80,9 +82,9 @@ async function showRewardedAd(){
 
         <!-- Go premium -->
         <promote-connect-button
-          v-if="vhApp.data.features.isBillingSupported"
+          v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
           icon="mdi-crown-circle-outline"
-          :title="locale('GO_PREMIUM_2')"
+          :title="locale('GO_PREMIUM')"
           :description="locale('GO_PREMIUM_DESC')"
           :button-text="locale('UPGRADE')"
           :button-action-plan="MyPlanId.premiumByPurchase"

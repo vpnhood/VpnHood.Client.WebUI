@@ -25,13 +25,13 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
     throw new Error("Could not found required data.");
 
   // Open PurchaseSubscription page
-  if (planId === MyPlanId.premiumByPurchase){
+  if (planId === MyPlanId.premiumByPurchase || planId === MyPlanId.premiumByCode){
     await router.push('/purchase-subscription');
     return;
   }
 
   await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
-    dialogData.value.isPremiumLocation, planId, false, false);
+    dialogData.value.isPremiumLocation, planId, false);
 }
 
 </script>
@@ -116,9 +116,9 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
         <!-- Go premium -->
         <promote-connect-button
-          v-if="dialogData.premiumByPurchase"
+          v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
           icon="mdi-crown-circle-outline"
-          :title="locale('GO_PREMIUM_2')"
+          :title="locale('GO_PREMIUM')"
           :description="locale('GO_PREMIUM_DESC')"
           :button-text="locale('UPGRADE')"
           :button-action-plan="MyPlanId.premiumByPurchase"

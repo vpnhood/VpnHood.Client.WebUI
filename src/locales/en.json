@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "Premium for {minutes} minutes.",
   "TRY_PREMIUM": "Try Premium",
   "TRY_PREMIUM_DESC": "Premium for {minutes} minutes.",
-  "GO_PREMIUM_2": "Go Premium",
+  "PREMIUM_BY_CODE": "Premium by code",
   "GO_PREMIUM_DESC": "Unlock more features.",
   "UPGRADE": "Upgrade",
   "UNKNOWN_ERROR": "Unknown Error",

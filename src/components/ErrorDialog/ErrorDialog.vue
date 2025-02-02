@@ -35,7 +35,6 @@ async function diagnose(): Promise<void> {
 
 async function sendReport(): Promise<void> {
   try {
-    emit('update:modelValue', false);
     const reportId: string =
       new Date().toISOString().substring(0, 19).replace(/:/g, '').replace(/-/g, '') + '-' +
       vhApp.data.settings.clientId.substring(0, 8) + '@' +

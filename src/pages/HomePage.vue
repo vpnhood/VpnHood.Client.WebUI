@@ -34,6 +34,7 @@ async function onConnectButtonClick(): Promise<void> {
 
   // Connect
   if (vhApp.data.state.canConnect){
+    vhApp.data.state.connectionState = AppConnectionState.Connecting;
     await ConnectManager.connect1(false);
   }
 }
