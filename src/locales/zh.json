@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "此服务器不支持UDP协议。",
   "CONGRATULATIONS": "恭喜",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "您的订单已处理，您的订阅已激活。",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "您输入的代码有效，您已升级为高级用户。",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "您已升级为高级用户。",
   "SHOW_SERVERS": "显示服务器",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "请等待完成处理...",
   "YOU_ARE_PREMIUM": "您是高级用户",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "高级版 {minutes} 分钟。",
   "TRY_PREMIUM": "尝试高级",
   "TRY_PREMIUM_DESC": "高级版 {minutes} 分钟。",
-  "GO_PREMIUM_2": "升级到高级",
+  "PREMIUM_BY_CODE": "通过代码激活高级功能",
   "GO_PREMIUM_DESC": "解锁更多功能",
   "UPGRADE": "升级",
   "UNKNOWN_ERROR": "未知错误",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "您的代码已激活，您现在是高级用户",
   "IMPORTANT": "重要",
   "ENTER_YOUR_CODE": "输入您的代码",
-  "CHECK_AND_ACTIVE": "检查和激活",
+  "ACTIVATE": "激活",
   "SINGLE_IP": "单个 IP:",
   "RANGES_OF_IP": "IP 范围:",
   "CIDR_NOTATION": "CIDR 标注:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "您确定要移除高级代码吗？",
   "REMOVE_CODE": "移除代码",
   "PREMIUM_USER": "高级用户",
-  "ALERT_FOR_USED_PREMIUM_CODE": "该代码已被使用。",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "该代码已在其他设备上使用。",
   "SUBSCRIPTION_DETAILS": "订阅详情",
   "WOULD_YOU_LIKE_TO_CHANGE": "您想更改吗？",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "自首次使用以来的最大允许流量和已用流量。",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "仅允许数字。",
   "PREMIUM_CODE_COUNT_RULE_MSG": "代码必须是 20 个字符。",
-  "PREMIUM_ACCESS_EXPIRED": "您的高级访问已过期。"
+  "PREMIUM_ACCESS_EXPIRED": "您的高级代码已过期。您要删除它吗？",
+  "INVALID_ACCESS_CODE": "高级代码无效。"
 }
