@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Sadece sayılara izin verilir.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Kod 20 karakter olmalıdır.",
   "PREMIUM_ACCESS_EXPIRED": "Premium kodunuzun süresi doldu. Kaldırmak istiyor musunuz?",
-  "INVALID_ACCESS_CODE": "Premium kod geçersiz."
+  "INVALID_ACCESS_CODE": "Premium kod geçersiz.",
+  "PREMIUM_CODE_DETAILS": "Premium kod detayları",
+  "MORE_DETAILS": "Daha fazla detay"
 }
