@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "الأرقام فقط مسموحة.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "يجب أن يكون طول الرمز 20 حرفًا.",
   "PREMIUM_ACCESS_EXPIRED": "انتهت صلاحية كود البريميوم الخاص بك. هل تريد حذفه؟",
-  "INVALID_ACCESS_CODE": "كود البريميوم غير صالح."
+  "INVALID_ACCESS_CODE": "كود البريميوم غير صالح.",
+  "PREMIUM_CODE_DETAILS": "تفاصيل رمز العضوية",
+  "MORE_DETAILS": "مزيد من التفاصيل"
 }
