@@ -98,8 +98,15 @@ async function sendReport(): Promise<void> {
           && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
           />
 
+          <!-- Remove premium code -->
+          <v-btn v-if="dialogData.removePremiumCode"
+            variant="flat"
+            :text="locale('REMOVE_CODE')"
+            @click="vhApp.removePremiumCode(); emit('update:modelValue', false)"
+          />
+
           <!-- Diagnose -->
-          <v-btn v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested"
+          <v-btn v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested && !dialogData.removePremiumCode"
             prepend-icon="mdi-stethoscope"
             :text="locale('DIAGNOSE')"
             @click="diagnose()"

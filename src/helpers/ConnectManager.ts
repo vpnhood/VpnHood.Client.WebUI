@@ -32,7 +32,7 @@ export class ConnectManager {
     return true;
   }
 
-  public static async connect1(isDiagnose: boolean = false) {
+  public static async connect1(isDiagnose: boolean = false, throwError: boolean = false) {
     const clientProfileId = VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
 
     // For developer
@@ -43,10 +43,10 @@ export class ConnectManager {
       await router.push('/servers');
       return;
     }
-    await this.connect2(clientProfileId, isDiagnose);
+    await this.connect2(clientProfileId, isDiagnose, throwError);
   }
 
-  public static async connect2(clientProfileId: string, isDiagnose: boolean = false): Promise<void> {
+  public static async connect2(clientProfileId: string, isDiagnose: boolean = false, throwError: boolean = false): Promise<void> {
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
     const serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
 
@@ -67,10 +67,10 @@ export class ConnectManager {
     if(!clientProfileInfo.selectedLocationInfo?.options.hasPremium && clientProfileInfo.selectedLocationInfo?.options.hasFree)
       isPremiumLocation = false;
 
-    await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose);
+    await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose, throwError);
   }
 
-  public static async connect3(clientProfileId: string, serverLocation: string | undefined, isPremiumLocation: boolean, isDiagnose: boolean = false, goToHome: boolean = true) {
+  public static async connect3(clientProfileId: string, serverLocation: string | undefined, isPremiumLocation: boolean, isDiagnose: boolean = false, goToHome: boolean = true, throwError: boolean = false) {
     // For developer
     console.log("Connect3");
     console.log('isPremiumLocation: ' + isPremiumLocation);
@@ -78,6 +78,6 @@ export class ConnectManager {
     if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;
 
-    await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose, goToHome);
+    await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose, goToHome, throwError);
   }
 }

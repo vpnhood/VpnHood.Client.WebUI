@@ -4,6 +4,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AnalyticsCustomEvent } from '@/services/Firebase';
 import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
+import { UiState } from '@/helpers/UiState';
 
 export class ErrorHandler {
 
@@ -98,8 +99,13 @@ export class ErrorHandler {
     if (err.data.ErrorCode === "SessionSuppressedBy")
       return i18n.global.t('SESSION_SUPPRESSED_BY_OTHER');
 
-    if (err.data.ErrorCode === "AccessExpired")
+    if (err.data.ErrorCode === "AccessExpired"){
+      VpnHoodApp.instance.data.uiState.errorDialogData.removePremiumCode = true;
       return i18n.global.t('PREMIUM_ACCESS_EXPIRED');
+    }
+
+    if (err.data.ErrorCode === "AccessCodeRejected")
+      return i18n.global.t('INVALID_ACCESS_CODE');
 
     // TODO: implement error messages
     return err.message;

@@ -49,9 +49,11 @@ function udpProtocolButtonText(): string {
 function isShowCountdown(): boolean{
   if (!vhApp.data.features.isPremiumFlagSupported)
     return false;
-  const hasExpireTime = !!vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
+
+  const hasExpireTime = !!vhApp.data.state.sessionStatus?.sessionExpirationTime;
   return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.isConnected();
 }
+
 function getActiveServerNameOrLocation(): string {
   // App is VpnHoodClient
   if (!vhApp.isSingleServerMode() && !vhApp.isConnectApp())

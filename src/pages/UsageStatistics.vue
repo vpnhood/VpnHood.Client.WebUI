@@ -7,13 +7,13 @@ import { Util } from '@/helpers/Util';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-function calcMb(received: number | undefined, sent: number | undefined): string {
+function calcUsage(received: number | undefined, sent: number | undefined): string {
   if (received === undefined || sent === undefined) return '0';
-
+  return calcUnit(received + sent);
+}
+function calcUnit(total: number): string{
   const mb = 1_000_000;
   const gb = 1_000 * mb;
-  const total = received + sent;
-
   const unit = total >= gb ? 'GB' : 'MB';
   const totalPerUnit = unit === 'GB' ? (total / gb) : (total / mb);
 
@@ -62,7 +62,9 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
             <li class="border-b">
               <span>{{locale('EXPIRATION_DATE')}}</span>
               <span :class="[vhApp.data.state.sessionInfo.accessInfo.expirationTime ? 'text-error' : 'text-active']">
-                {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime ?? locale('NEVER') }}
+                {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime
+                ? Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.expirationTime)
+                : locale('NEVER') }}
               </span>
             </li>
 
@@ -152,7 +154,9 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
             <li>
               <span>{{locale('MAX_DEVICE')}}</span>
               <span class="text-active">
-                {{ vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount }}
+                {{ vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount > 0
+                ? vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount
+                : locale('UNLIMITED') }}
               </span>
             </li>
           </ul>
@@ -172,7 +176,8 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{ calcMb(vhApp.data.state.sessionStatus?.sessionTraffic.received, vhApp.data.state.sessionStatus?.sessionTraffic.sent) }}
+                {{ calcUsage(vhApp.data.state.sessionStatus?.sessionTraffic.received, vhApp.data.state.sessionStatus?.sessionTraffic.sent)
+                }}
               </span>
             </li>
             <li>
@@ -182,7 +187,7 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
                 :class="[vhApp.data.state.sessionStatus?.sessionMaxTraffic &&
                 vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ? 'text-error' : 'text-active']">
                 {{vhApp.data.state.sessionStatus?.sessionMaxTraffic && vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ?
-                `${vhApp.data.state.sessionStatus.sessionMaxTraffic} Mb` : locale('UNLIMITED')}}
+                calcUnit(vhApp.data.state.sessionStatus.sessionMaxTraffic) : locale('UNLIMITED')}}
               </span>
             </li>
           </ul>
@@ -202,7 +207,8 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{ calcMb(vhApp.data.state.sessionStatus?.cycleTraffic.received, vhApp.data.state.sessionStatus?.cycleTraffic.sent) }}
+                {{ calcUsage(vhApp.data.state.sessionStatus?.cycleTraffic.received, vhApp.data.state.sessionStatus?.cycleTraffic.sent)
+                }}
               </span>
             </li>
             <li>
@@ -211,8 +217,8 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
                 dir="ltr"
                 :class="[vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic &&
                 vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ? 'text-error' : 'text-active']">
-                {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic > 0 ?
-                `${vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic} Mb` : locale('UNLIMITED')}}
+                {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ?
+                calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic) : locale('UNLIMITED')}}
               </span>
             </li>
           </ul>
@@ -232,7 +238,8 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
-                {{ calcMb(vhApp.data.state.sessionStatus?.totalTraffic.received, vhApp.data.state.sessionStatus?.totalTraffic.sent) }}
+                {{ calcUsage(vhApp.data.state.sessionStatus?.totalTraffic.received, vhApp.data.state.sessionStatus?.totalTraffic.sent)
+                }}
               </span>
             </li>
             <li>
@@ -242,7 +249,7 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
                 :class="[vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic &&
                 vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ? 'text-error' : 'text-active']">
                 {{vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic && vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ?
-                `${vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic} Mb` : locale('UNLIMITED')}}
+                calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic) : locale('UNLIMITED')}}
               </span>
             </li>
           </ul>
@@ -259,5 +266,13 @@ function calcMb(received: number | undefined, sent: number | undefined): string 
   align-content: center;
   justify-content: space-between;
   padding: 5px 0;
+}
+.info-table>li>span:first-child{
+  margin-inline-end: 20px;
+}
+.info-table>li>span:last-child{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

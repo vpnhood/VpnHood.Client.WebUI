@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "This server does not support the UDP protocol.",
   "CONGRATULATIONS": "Congratulations",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Your order has been processed and your subscription has been activated.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "The code you entered is valid, and you have been upgraded to a premium user.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "You have been upgraded to a premium user.",
   "SHOW_SERVERS": "Show servers",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Please wait to complete process...",
   "YOU_ARE_PREMIUM": "You are premium",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Your code has been activated, and you are now a premium user.",
   "IMPORTANT": "Important",
   "ENTER_YOUR_CODE": "Enter your code",
-  "CHECK_AND_ACTIVE": "Check and Active",
+  "ACTIVATE": "Activate",
   "SINGLE_IP": "Single IP: ",
   "RANGES_OF_IP": "Range of IP: ",
   "CIDR_NOTATION": "CIDR Notation: ",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "Are you sure you want to remove the premium code?",
   "REMOVE_CODE": "Remove code",
   "PREMIUM_USER": "Premium user",
-  "ALERT_FOR_USED_PREMIUM_CODE": "The code has already been used.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "The code has already been used in other devices.",
   "SUBSCRIPTION_DETAILS": "Subscription details",
   "WOULD_YOU_LIKE_TO_CHANGE": "Would you like to change?",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Maximum allowed and used traffic since initial use.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Only numbers are allowed.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "The code must be 20 characters.",
-  "PREMIUM_ACCESS_EXPIRED": "Your premium access has expired."
+  "PREMIUM_ACCESS_EXPIRED": "Your premium code has expired. Do you want to remove it?",
+  "INVALID_ACCESS_CODE": "The premium code is invalid."
 }

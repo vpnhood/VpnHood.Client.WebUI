@@ -14,7 +14,7 @@ const locale = i18n.global.t;
 
 const showLoadingAdDialog = ref<boolean>(false);
 const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
-
+console.log(dialogData.value.premiumByCode);
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   switch (planId) {
     case MyPlanId.premiumByPurchase:

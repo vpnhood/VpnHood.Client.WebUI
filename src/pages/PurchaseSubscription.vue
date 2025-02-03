@@ -28,11 +28,18 @@ const premiumCodeForm = ref<boolean>(false);
 const formattedPremiumCode = ref('');
 const premiumCodeRawNumber = ref<string>('');
 
+const isNewCode = computed<boolean | undefined>(() => {
+  return vhApp.data.state.sessionInfo?.accessInfo?.isNew;
+});
+
 const premiumCodeDeviceCount = computed<number | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount
 });
 const premiumCodeActivationDate = computed<Date | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.createdTime;
+});
+const premiumCodeExpirationDate = computed<Date | null | undefined>(() => {
+  return vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
 });
 
 const numberOnlyRule = (value: string) => {
@@ -121,11 +128,18 @@ async function validateCode(): Promise<void> {
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: premiumCodeRawNumber.value.toString() })
     }));
-    await ConnectManager.connect3(profileId, undefined, false, false, false);
 
-    if (vhApp.isPremiumAccount())
+    await ConnectManager.connect3(profileId, undefined, false, false, false, true);
+
+    if (vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
-  } finally {
+  }
+  catch {
+    await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+      accessCode: new PatchOfString({ value: null })
+    }));
+  }
+  finally {
     showProcessDialog.value = false;
   }
 }
@@ -316,7 +330,7 @@ function closeCompleteDialog(showStatistics: boolean) {
                   block
                   type="submit"
                   :disabled="!premiumCodeForm"
-                  :text="locale('CHECK_AND_ACTIVE')"
+                  :text="locale('ACTIVATE')"
                 />
               </v-form>
 
@@ -458,7 +472,7 @@ function closeCompleteDialog(showStatistics: boolean) {
         <p>{{ purchaseCompleteDialogMessage }}</p>
 
         <!-- TODO: use theme color -->
-        <v-alert v-if="vhApp.isPremiumAccount(true) && !vhApp.data.state.sessionInfo?.accessInfo?.isNew"
+        <v-alert v-if="vhApp.isPremiumAccount(true)"
                  variant="flat"
                  color="#17083d"
                  density="compact"
@@ -466,20 +480,26 @@ function closeCompleteDialog(showStatistics: boolean) {
                  class="text-caption mt-4"
         >
 
-          <span v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
+          <span v-if="!isNewCode && premiumCodeDeviceCount && premiumCodeDeviceCount > 1" class="mb-2">
             {{locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE')}}
           </span>
 
-          <span v-else>{{ locale('ALERT_FOR_USED_PREMIUM_CODE') }}</span>
-
-          <ul id="activationInfo" class="text-error mt-2" style="list-style: none;">
+          <ul id="activationInfo"
+              :class="[premiumCodeDeviceCount && premiumCodeDeviceCount > 1 ? 'text-error' : 'text-active']"
+              style="list-style: none;"
+          >
 
             <li v-if="premiumCodeActivationDate">
               <span>{{ locale('ACTIVATED_ON') }}:</span>
               <span>{{ Util.getShortDate(premiumCodeActivationDate) }}</span>
             </li>
 
-            <li v-if="premiumCodeDeviceCount">
+            <li v-if="premiumCodeExpirationDate">
+              <span>{{ locale('EXPIRATION_DATE') }}:</span>
+              <span>{{ Util.getShortDate(premiumCodeExpirationDate) }}</span>
+            </li>
+
+            <li v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
               <span>{{ locale('USED_BY') }}:</span>
               <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{locale('DEVICE') }}</span>
             </li>

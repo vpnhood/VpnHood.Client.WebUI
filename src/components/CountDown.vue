@@ -14,7 +14,7 @@ const fiveMinutes = 299;
 const fifteenMinutes = 899;
 function calcRemainingTime(): string{
   const currentDate: Date = new Date();
-  const expireTime = vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
+  const expireTime = vhApp.data.state.sessionStatus?.sessionExpirationTime;
   if (!expireTime)
     return "";
 

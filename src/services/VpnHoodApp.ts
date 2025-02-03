@@ -149,7 +149,7 @@ export class VpnHoodApp {
   }
 
   public async connect(clientProfileId: string, serverLocation: string | undefined, isPremium: boolean, planId: ConnectPlanId,
-                       isDiagnose: boolean = false, goToHome: boolean = true): Promise<void> {
+                       isDiagnose: boolean = false, goToHome: boolean = true, throwError: boolean = false): Promise<void> {
 
     // User select active item and already connected
     if (this.data.state.canDisconnect
@@ -182,8 +182,8 @@ export class VpnHoodApp {
       else await this.apiClient.connect(clientProfileId, serverLocation, planId);
     }
     catch (err: unknown){
-     console.log("Catch from connect and diagnose: ", err);
-     //await this.processError(err);
+     if (throwError)
+      throw err;
     }
   }
 
@@ -346,6 +346,19 @@ export class VpnHoodApp {
 
     // User purchased subscription from Google Play
     return this.data.state.clientProfile?.isPremiumAccount == true;
+  }
+
+  public async removePremiumCode(): Promise<void>{
+    const profileId = this.data.state.clientProfile?.clientProfileId;
+    if (!profileId)
+      throw new Error("Could not find the profile id that have a premium code.");
+
+    if (this.isConnected())
+      await this.disconnect();
+
+    await this.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+      accessCode: new PatchOfString({value: null})
+    }));
   }
 
   public premiumIconColor(): string{

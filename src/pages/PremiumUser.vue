@@ -6,23 +6,15 @@ import { Util } from '@/helpers/Util';
 import router from '@/services/router';
 import { ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
-import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const showConfirmRemoveCode = ref<boolean>(false);
 
-async function removePremiumCode() {
+async function removeCode() {
   try {
-    const profileId = vhApp.data.state.clientProfile?.clientProfileId;
-    if (!profileId)
-      throw new Error("Could not find the profile id.");
-
-    await vhApp.disconnect();
-    await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({value: null})
-    }));
+    await vhApp.removePremiumCode();
     await router.replace('/');
   }
   finally {
@@ -101,7 +93,7 @@ async function removePremiumCode() {
       v-model="showConfirmRemoveCode"
       :title="locale('CONFIRM_REMOVE_PREMIUM_CODE')"
       :message="locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC')"
-      @confirm="removePremiumCode()"
+      @confirm="removeCode()"
     />
 
   </v-sheet>
