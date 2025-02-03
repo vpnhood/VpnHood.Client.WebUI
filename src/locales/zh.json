@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "仅允许数字。",
   "PREMIUM_CODE_COUNT_RULE_MSG": "代码必须是 20 个字符。",
   "PREMIUM_ACCESS_EXPIRED": "您的高级代码已过期。您要删除它吗？",
-  "INVALID_ACCESS_CODE": "高级代码无效。"
+  "INVALID_ACCESS_CODE": "高级代码无效。",
+  "PREMIUM_CODE_DETAILS": "高级代码详情",
+  "MORE_DETAILS": "更多细节"
 }
