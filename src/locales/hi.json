@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "यह सर्वर UDP प्रोटोकॉल का समर्थन नहीं करता।",
   "CONGRATULATIONS": "बधाई हो",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "आपका आदेश प्रक्रियाधीन है और आपकी सदस्यता सक्रिय हो गई है।",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "आपके द्वारा दर्ज किया गया कोड मान्य है, और आपको प्रीमियम उपयोगकर्ता के रूप में अपग्रेड कर दिया गया है।",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "आपको प्रीमियम उपयोगकर्ता में अपग्रेड किया गया है।",
   "SHOW_SERVERS": "सर्वर दिखाएं",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "कृपया प्रक्रिया पूरी होने तक प्रतीक्षा करें...",
   "YOU_ARE_PREMIUM": "आप प्रीमियम हैं",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "{minutes} मिनट के लिए प्रीमियम।",
   "TRY_PREMIUM": "प्रीमियम आज़माएं",
   "TRY_PREMIUM_DESC": "{minutes} मिनट के लिए प्रीमियम।",
-  "GO_PREMIUM_2": "प्रीमियम पर जाएं",
+  "PREMIUM_BY_CODE": "कोड द्वारा प्रीमियम",
   "GO_PREMIUM_DESC": "अधिक सुविधाओं को अनलॉक करें.",
   "UPGRADE": "अपग्रेड",
   "UNKNOWN_ERROR": "अज्ञात त्रुटि",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "आपका कोड सक्रिय हो गया है, और अब आप एक प्रीमियम उपयोगकर्ता हैं",
   "IMPORTANT": "महत्वपूर्ण",
   "ENTER_YOUR_CODE": "अपना कोड दर्ज करें",
-  "CHECK_AND_ACTIVE": "जांचें और सक्रिय करें",
+  "ACTIVATE": "सक्रिय करें",
   "SINGLE_IP": "एकल IP:",
   "RANGES_OF_IP": "IP की रेंज:",
   "CIDR_NOTATION": "CIDR नोटेशन:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "क्या आप वाकई प्रीमियम कोड हटाना चाहते हैं?",
   "REMOVE_CODE": "कोड हटाएं",
   "PREMIUM_USER": "प्रीमियम उपयोगकर्ता",
-  "ALERT_FOR_USED_PREMIUM_CODE": "यह कोड पहले ही इस्तेमाल हो चुका है।",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "यह कोड पहले ही अन्य डिवाइसों में इस्तेमाल हो चुका है।",
   "SUBSCRIPTION_DETAILS": "सदस्यता विवरण",
   "WOULD_YOU_LIKE_TO_CHANGE": "क्या आप बदलाव करना चाहेंगे?",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "प्रारंभिक उपयोग के बाद से अधिकतम अनुमत और प्रयुक्त ट्रैफ़िक।",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "केवल अंकों की अनुमति है।",
   "PREMIUM_CODE_COUNT_RULE_MSG": "कोड 20 अक्षरों का होना चाहिए।",
-  "PREMIUM_ACCESS_EXPIRED": "आपकी प्रीमियम सदस्यता समाप्त हो गई है।"
+  "PREMIUM_ACCESS_EXPIRED": "आपका प्रीमियम कोड समाप्त हो गया है। क्या आप इसे हटाना चाहते हैं?",
+  "INVALID_ACCESS_CODE": "प्रीमियम कोड अवैध है।"
 }
