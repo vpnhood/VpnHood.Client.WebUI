@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "فقط اعداد مجاز هستند.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "کد باید 20 کاراکتر باشد.",
   "PREMIUM_ACCESS_EXPIRED": "کد ویژه شما منقضی شده است. آیا می‌خواهید آن را حذف کنید؟",
-  "INVALID_ACCESS_CODE": "کد ویژه نامعتبر است."
+  "INVALID_ACCESS_CODE": "کد ویژه نامعتبر است.",
+  "PREMIUM_CODE_DETAILS": "جزئیات کد ویژه",
+  "MORE_DETAILS": "جزئیات بیشتر"
 }
