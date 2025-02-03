@@ -262,6 +262,7 @@ export class VpnHoodApp {
     errorDialogData.canDiagnose = canDiagnose ?? this.data.state.canDiagnose;
     errorDialogData.promptForLog = this.data.state.promptForLog;
     errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
+    errorDialogData.removePremiumCode = text === i18n.global.t('PREMIUM_ACCESS_EXPIRED') && this.isPremiumAccount(true);
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }

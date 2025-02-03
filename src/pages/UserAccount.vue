@@ -77,13 +77,80 @@ function formatDate(date: Date | null | undefined): string | null {
 
       </config-card>
 
+      <!-- Premium code details -->
+      <config-card v-if="vhApp.isPremiumAccount(true)">
+
+        <v-card-title>{{locale('PREMIUM_CODE_DETAILS')}}</v-card-title>
+
+        <v-card-text>
+          <ul v-if="vhApp.data.state.sessionInfo?.accessInfo" id="premiumInfoList">
+
+            <!-- Activation time -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('ACTIVATED_ON') }}:</span>
+              <span class="text-subtitle-2 text-active">{{
+                  Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.createdTime) }}</span>
+            </li>
+
+            <!-- Expiration time -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('EXPIRATION_DATE') }}:</span>
+              <span :class="[vhApp.data.state.sessionInfo.accessInfo.expirationTime ? 'text-error' : 'text-active']">
+                {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime
+                ? Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.expirationTime)
+                : locale('NEVER') }}
+              </span>
+            </li>
+
+            <!-- Last use -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('LAST_USED') }}:</span>
+              <span class="text-highlight">
+                {{ Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.lastUsedTime) }}
+              </span>
+            </li>
+
+            <!-- Used device -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{locale('USED_BY')}}</span>
+              <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
+                {{locale('MORE_THAN_X_DEVICES', {x: vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount})}}
+              </span>
+              <span v-else class="text-highlight">
+                {{ vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount }} {{locale('DEVICE') }}
+              </span>
+            </li>
+
+          </ul>
+
+          <!-- If connection state is not connected -->
+          <div v-else class="text-center text-caption text-disabled">
+            <v-icon icon="mdi-information-outline" size="30"/>
+            <p class="mt-3">{{locale('DISPLAY_INFO_AFTER_CONNECTION')}}</p>
+          </div>
+
+        </v-card-text>
+
+        <!-- More details -->
+        <v-card-actions v-if="vhApp.data.state.sessionInfo?.accessInfo">
+          <btn-style-1
+            class="ms-auto"
+            :append-icon="Util.getLocalizedRightChevron()"
+            :text="locale('MORE_DETAILS')"
+            size="small"
+            @click="router.push('/usage-statistics')"
+          />
+        </v-card-actions>
+
+      </config-card>
+
       <!-- Subscriptions details -->
-      <config-card v-if="vhApp.isPremiumAccount()">
+      <config-card v-else-if="vhApp.isPremiumAccount()">
 
         <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
 
         <v-card-text>
-          <ul id="subscriptionInfoList" style="list-style: none;">
+          <ul id="premiumInfoList">
             <!-- Created time -->
             <li>
               <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
@@ -174,14 +241,17 @@ function formatDate(date: Date | null | undefined): string | null {
 </template>
 
 <style scoped>
-#subscriptionInfoList > li {
+#premiumInfoList{
+  list-style: none;
+}
+#premiumInfoList > li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 7px;
 }
 
-#subscriptionInfoList > li:nth-child(even) {
+#premiumInfoList > li:nth-child(even) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(var(--v-theme-zebra-on-config-card-bg));
 }

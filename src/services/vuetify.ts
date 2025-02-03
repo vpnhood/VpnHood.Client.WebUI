@@ -30,6 +30,7 @@ const myColors = {
     500:"#000d24"
   },
   purple:{
+    20:"#e1e1ff",
     100:"#8d9fe4",
     200:"#7b7afe",
     300:"#2f296e",
@@ -38,11 +39,14 @@ const myColors = {
     600:"#0b0b24"
   },
   green:{
+    20:"#d3eee7",
     100:"#3ff6a9",
     200:"#15f5ba",
-    300:"#23c99d"
+    300:"#23c99d",
+    400:"#078362",
   },
   yellow:{
+    50:"#fce68f",
     100:"#ffe066",
     200:"#ffe648",
     300: "#704d00"
@@ -467,8 +471,8 @@ const vhClientThemeColors: IThemeColorNames = {
   'dialog-alert-text': myColors.gray['800'],
   'dialog-alert-btn': myColors.blue['400'],
 
-  'sample-ip-filter-bg': myColors.gray['400'],
-  'sample-ip-filter-text': myColors.gray['800'],
+  'sample-ip-filter-bg': myColors.green['400'],
+  'sample-ip-filter-text': myColors.gray['100'],
 
   'btn-style-1': myColors.blue['300'],
   'on-btn-style-1': '#ffffff',
@@ -505,12 +509,12 @@ const vhClientThemeColors: IThemeColorNames = {
   'on-version-on-home-debug': myColors.blue['400'],
 
   /*** Alerts ***/
-  info: myColors.green['300'],
-  'on-info': myColors.blue['400'],
-  note: myColors.purple['200'],
-  'on-note': myColors.purple['200'],
+  info: myColors.green['20'],
+  'on-info': myColors.green['400'],
+  note: myColors.purple['20'],
+  'on-note': myColors.purple['300'],
   error: myColors.red['100'],
-  warning: myColors.yellow['100'],
+  warning: myColors.yellow['50'],
   'on-warning': myColors.yellow['300'],
 }
 

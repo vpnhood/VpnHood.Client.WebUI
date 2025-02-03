@@ -102,7 +102,7 @@ function revertCurrentChange(): void{
         'color': 'sample-ip-filter-bg',
         'size': 'small',
         'class': 'px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text',
-        'style': 'border-radius: 3px',
+        'style': 'border-radius: 3px; letter-spacing: 1px;',
         'variant': 'flat'
         },
       'VTextarea':{
