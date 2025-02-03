@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "هذا الخادم لا يدعم بروتوكول UDP.",
   "CONGRATULATIONS": "تهانينا",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "تمت معالجة طلبك وتم تنشيط اشتراكك.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "الرمز الذي أدخلته صالح، وتمت ترقيتك إلى مستخدم مميز.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "لقد تمت ترقيتك إلى مستخدم مميز.",
   "SHOW_SERVERS": "إظهار الخوادم",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "الرجاء الانتظار لإكمال العملية...",
   "YOU_ARE_PREMIUM": "أنت مشترك مميز",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "مميز لمدة {minutes} دقائق.",
   "TRY_PREMIUM": "تجربة المميز",
   "TRY_PREMIUM_DESC": "مميز لمدة {minutes} دقائق.",
-  "GO_PREMIUM_2": "الانتقال إلى المميز",
+  "PREMIUM_BY_CODE": "بريميوم بواسطة الكود",
   "GO_PREMIUM_DESC": "افتح المزيد من الميزات.",
   "UPGRADE": "ترقية",
   "UNKNOWN_ERROR": "خطأ غير معروف",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "تم تفعيل رمزك وأنت الآن مستخدم مميز",
   "IMPORTANT": "مهم",
   "ENTER_YOUR_CODE": "أدخل رمزك",
-  "CHECK_AND_ACTIVE": "تحقق ونشط",
+  "ACTIVATE": "تفعيل",
   "SINGLE_IP": "عنوان IP واحد:",
   "RANGES_OF_IP": "نطاق IP:",
   "CIDR_NOTATION": "CIDR تدوين:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "هل أنت متأكد من أنك تريد إزالة الرمز المميز؟",
   "REMOVE_CODE": "إزالة الرمز",
   "PREMIUM_USER": "مستخدم مميز",
-  "ALERT_FOR_USED_PREMIUM_CODE": "تم استخدام الرمز بالفعل.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "تم استخدام الرمز بالفعل على أجهزة أخرى.",
   "SUBSCRIPTION_DETAILS": "تفاصيل الاشتراك",
   "WOULD_YOU_LIKE_TO_CHANGE": "هل ترغب في التغيير؟",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "الحد الأقصى المسموح به من حركة المرور المستخدمة منذ الاستخدام الأولي.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "الأرقام فقط مسموحة.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "يجب أن يكون طول الرمز 20 حرفًا.",
-  "PREMIUM_ACCESS_EXPIRED": "لقد انتهت صلاحية وصولك المتميز."
+  "PREMIUM_ACCESS_EXPIRED": "انتهت صلاحية كود البريميوم الخاص بك. هل تريد حذفه؟",
+  "INVALID_ACCESS_CODE": "كود البريميوم غير صالح."
 }
