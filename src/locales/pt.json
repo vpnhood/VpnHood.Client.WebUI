@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "Este servidor não suporta o protocolo UDP.",
   "CONGRATULATIONS": "Parabéns",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Seu pedido foi processado e sua assinatura foi ativada.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "O código que você inseriu é válido e você foi atualizado para um usuário premium.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "Você foi promovido a usuário premium.",
   "SHOW_SERVERS": "Mostrar servidores",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Aguarde a conclusão do processo...",
   "YOU_ARE_PREMIUM": "Você é premium",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "Premium por {minutes} minutos.",
   "TRY_PREMIUM": "Experimentar premium",
   "TRY_PREMIUM_DESC": "Premium por {minutes} minutos.",
-  "GO_PREMIUM_2": "Ir para premium",
+  "PREMIUM_BY_CODE": "Premium por código",
   "GO_PREMIUM_DESC": "Desbloquear mais recursos.",
   "UPGRADE": "Atualizar",
   "UNKNOWN_ERROR": "Erro desconhecido",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "O seu código foi ativado, e agora é um utilizador premium.",
   "IMPORTANT": "Importante",
   "ENTER_YOUR_CODE": "Digite seu código",
-  "CHECK_AND_ACTIVE": "Verificar e ativar",
+  "ACTIVATE": "Ativar",
   "SINGLE_IP": "IP único:",
   "RANGES_OF_IP": "Intervalo de IP:",
   "CIDR_NOTATION": "Notação CIDR:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "Tem certeza que deseja remover o código premium?",
   "REMOVE_CODE": "Remover código",
   "PREMIUM_USER": "Usuário Premium",
-  "ALERT_FOR_USED_PREMIUM_CODE": "O código já foi usado.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "O código já foi usado em outros dispositivos.",
   "SUBSCRIPTION_DETAILS": "Detalhes da assinatura",
   "WOULD_YOU_LIKE_TO_CHANGE": "Gostaria de alterar?",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Tráfego máximo permitido e usado desde o uso inicial.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Apenas números são permitidos.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "O código deve ter 20 caracteres.",
-  "PREMIUM_ACCESS_EXPIRED": "Seu acesso premium expirou."
+  "PREMIUM_ACCESS_EXPIRED": "Seu código premium expirou. Deseja removê-lo?",
+  "INVALID_ACCESS_CODE": "O código premium é inválido."
 }
