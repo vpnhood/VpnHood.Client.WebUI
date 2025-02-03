@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "Bu sunucu UDP protokolünü desteklemiyor.",
   "CONGRATULATIONS": "Tebrikler",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Siparişiniz işlendi ve aboneliğiniz aktif edildi.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "Girdiğiniz kod geçerli ve premium kullanıcı olarak yükseltildiniz.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "Premium kullanıcıya yükseltildiniz.",
   "SHOW_SERVERS": "Sunucuları göster",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Lütfen işlemin tamamlanmasını bekleyin...",
   "YOU_ARE_PREMIUM": "Siz premiumsunuz",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "{minutes} dakika boyunca Premium.",
   "TRY_PREMIUM": "Premium'u Deneyin",
   "TRY_PREMIUM_DESC": "{minutes} dakika boyunca Premium.",
-  "GO_PREMIUM_2": "Premium'a Geç",
+  "PREMIUM_BY_CODE": "Kod ile premium",
   "GO_PREMIUM_DESC": "Daha fazla özelliğin kilidini aç.",
   "UPGRADE": "Güncelle",
   "UNKNOWN_ERROR": "Bilinmeyen Hata",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Kodunuz etkinleştirildi ve artık premium kullanıcısınız.",
   "IMPORTANT": "Önemli",
   "ENTER_YOUR_CODE": "Kodunuzu girin",
-  "CHECK_AND_ACTIVE": "Kontrol et ve etkinleştir",
+  "ACTIVATE": "Aktive et",
   "SINGLE_IP": "Tek IP:",
   "RANGES_OF_IP": "IP Aralığı:",
   "CIDR_NOTATION": "CIDR Notasyonu:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "Premium kodu kaldırmak istediğinizden emin misiniz?",
   "REMOVE_CODE": "Kodu Kaldır",
   "PREMIUM_USER": "Premium Kullanıcı",
-  "ALERT_FOR_USED_PREMIUM_CODE": "Kod zaten kullanılmış.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "Kod zaten başka cihazlarda kullanılmış.",
   "SUBSCRIPTION_DETAILS": "Abonelik Detayları",
   "WOULD_YOU_LIKE_TO_CHANGE": "Değiştirmek ister misiniz?",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "İlk kullanımdan bu yana izin verilen maksimum ve kullanılan trafik.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Sadece sayılara izin verilir.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Kod 20 karakter olmalıdır.",
-  "PREMIUM_ACCESS_EXPIRED": "Premium erişiminizin süresi doldu."
+  "PREMIUM_ACCESS_EXPIRED": "Premium kodunuzun süresi doldu. Kaldırmak istiyor musunuz?",
+  "INVALID_ACCESS_CODE": "Premium kod geçersiz."
 }
