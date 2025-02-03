@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "Этот сервер не поддерживает протокол UDP.",
   "CONGRATULATIONS": "Поздравляем",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "Ваш заказ был обработан, и подписка активирована.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "Введенный вами код действителен, и вы были повышены до премиум-пользователя.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "Вы были повышены до премиум-пользователя.",
   "SHOW_SERVERS": "Показать серверы",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "Пожалуйста, подождите завершения процесса...",
   "YOU_ARE_PREMIUM": "Вы премиум",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "Премиум на {minutes} минут.",
   "TRY_PREMIUM": "Попробовать Премиум",
   "TRY_PREMIUM_DESC": "Премиум на {minutes} минут.",
-  "GO_PREMIUM_2": "Перейти на Премиум",
+  "PREMIUM_BY_CODE": "Премиум по коду",
   "GO_PREMIUM_DESC": "Разблокировать больше функций.",
   "UPGRADE": "Обновить",
   "UNKNOWN_ERROR": "Неизвестная ошибка",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "Ваш код был активирован, и теперь вы премиум-пользователь.",
   "IMPORTANT": "Важно",
   "ENTER_YOUR_CODE": "Введите свой код",
-  "CHECK_AND_ACTIVE": "Проверить и активировать",
+  "ACTIVATE": "Активировать",
   "SINGLE_IP": "Один IP:",
   "RANGES_OF_IP": "Диапазон IP:",
   "CIDR_NOTATION": "CIDR нотация:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "Вы уверены, что хотите удалить премиум-код?",
   "REMOVE_CODE": "Удалить код",
   "PREMIUM_USER": "Премиум-пользователь",
-  "ALERT_FOR_USED_PREMIUM_CODE": "Этот код уже был использован.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "Этот код уже был использован на других устройствах.",
   "SUBSCRIPTION_DETAILS": "Детали подписки",
   "WOULD_YOU_LIKE_TO_CHANGE": "Хотите изменить?",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Максимальный разрешенный и использованный трафик с момента первого использования.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Разрешены только цифры.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Код должен состоять из 20 символов.",
-  "PREMIUM_ACCESS_EXPIRED": "Ваш премиум доступ истек."
+  "PREMIUM_ACCESS_EXPIRED": "Ваш премиум-код истек. Хотите его удалить?",
+  "INVALID_ACCESS_CODE": "Премиум-код недействителен."
 }
