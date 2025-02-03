@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Solo se permiten números.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "El código debe tener 20 caracteres.",
   "PREMIUM_ACCESS_EXPIRED": "Tu código premium ha expirado. ¿Quieres eliminarlo?",
-  "INVALID_ACCESS_CODE": "El código premium es inválido."
+  "INVALID_ACCESS_CODE": "El código premium es inválido.",
+  "PREMIUM_CODE_DETAILS": "Detalles del código premium",
+  "MORE_DETAILS": "Más detalles"
 }
