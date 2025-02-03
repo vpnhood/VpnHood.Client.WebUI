@@ -118,7 +118,7 @@
   "UDP_NOT_SUPPORTED_MESSAGE": "این سرور از روش اتصال UDP پشتیبانی نمی‌کند.",
   "CONGRATULATIONS": "تبریک می‌گوییم",
   "PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE": "پردازش سفارش شما انجام شد و اشتراک شما فعال گردید.",
-  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "کدی که وارد کردید معتبر است و شما به کاربر ویژه ارتقا یافته‌اید.",
+  "PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE": "شما به کاربر ویژه ارتقا یافته‌اید.",
   "SHOW_SERVERS": "نمایش سرورها",
   "WAITING_TO_COMPLETE_ORDER_PROCESS": "لطفاً برای تکمیل فرآیند صبر کنید...",
   "YOU_ARE_PREMIUM": "شما کاربر ویژه هستید",
@@ -185,7 +185,7 @@
   "WATCH_REWARDED_AD_DESC": "ویژه برای {minutes} دقیقه.",
   "TRY_PREMIUM": "ویژه را امتحان کنید",
   "TRY_PREMIUM_DESC": "ویژه برای {minutes} دقیقه.",
-  "GO_PREMIUM_2": "کاربر ویژه شوید",
+  "PREMIUM_BY_CODE": "ویژه توسط کد",
   "GO_PREMIUM_DESC": "فعالسازی ویژگی‌های بیشتر.",
   "UPGRADE": "ارتقا",
   "UNKNOWN_ERROR": "خطای ناشناخته",
@@ -223,7 +223,7 @@
   "PREMIUM_CODE_SUCCESSFULLY_ADDED_MESSAGE": "کد شما فعال شد و اکنون شما یک کاربر ویژه هستید.",
   "IMPORTANT": "مهم",
   "ENTER_YOUR_CODE": "کد خود را وارد کنید",
-  "CHECK_AND_ACTIVE": "بررسی و فعال‌سازی",
+  "ACTIVATE": "فعال کردن",
   "SINGLE_IP": "یک IP:",
   "RANGES_OF_IP": "محدوده IP:",
   "CIDR_NOTATION": "CIDR نماد:",
@@ -251,7 +251,6 @@
   "CONFIRM_REMOVE_PREMIUM_CODE_DESC": "آیا مطمئن هستید که می‌خواهید کد ویژه را حذف کنید؟",
   "REMOVE_CODE": "حذف کد",
   "PREMIUM_USER": "کاربر ویژه",
-  "ALERT_FOR_USED_PREMIUM_CODE": "این کد قبلاً استفاده شده است.",
   "ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE": "این کد قبلاً در دستگاه‌های دیگر استفاده شده است.",
   "SUBSCRIPTION_DETAILS": "جزئیات اشتراک",
   "WOULD_YOU_LIKE_TO_CHANGE": "آیا می‌خواهید تغییر دهید؟",
@@ -288,5 +287,6 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "حداکثر ترافیک مجاز و استفاده شده از زمان استفاده اولیه.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "فقط اعداد مجاز هستند.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "کد باید 20 کاراکتر باشد.",
-  "PREMIUM_ACCESS_EXPIRED": "دسترسی ویژه شما منقضی شده است."
+  "PREMIUM_ACCESS_EXPIRED": "کد ویژه شما منقضی شده است. آیا می‌خواهید آن را حذف کنید؟",
+  "INVALID_ACCESS_CODE": "کد ویژه نامعتبر است."
 }
