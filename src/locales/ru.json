@@ -288,5 +288,7 @@
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Разрешены только цифры.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Код должен состоять из 20 символов.",
   "PREMIUM_ACCESS_EXPIRED": "Ваш премиум-код истек. Хотите его удалить?",
-  "INVALID_ACCESS_CODE": "Премиум-код недействителен."
+  "INVALID_ACCESS_CODE": "Премиум-код недействителен.",
+  "PREMIUM_CODE_DETAILS": "Детали премиум-кода",
+  "MORE_DETAILS": "Больше деталей"
 }
