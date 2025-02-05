@@ -40,7 +40,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   <v-sheet color="grad-bg-container-bg">
 
     <v-card
-      class="d-flex flex-column text-white justify-space-between primary-bg-grad border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
+      class="d-flex flex-column text-white justify-space-between primary-bg-grad border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -70,7 +70,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
-            <p class="text-disabled text-caption" style="line-height: 1.3">
+            <p class="text-white opacity-40 text-caption" style="line-height: 1.3">
               {{ dialogData.normal === 0 ? locale('SELECTED_FREE_SERVER_DESC')
               : locale('SELECTED_FREE_SERVER_UNLIMITED_DESC', {minutes: dialogData.normal}) }}
             </p>

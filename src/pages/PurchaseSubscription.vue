@@ -33,7 +33,7 @@ const isNewCode = computed<boolean | undefined>(() => {
 });
 
 const premiumCodeDeviceCount = computed<number | undefined>(() => {
-  return vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount
+  return vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount;
 });
 const premiumCodeActivationDate = computed<Date | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.createdTime;
@@ -82,13 +82,13 @@ onMounted(async () => {
         throw err;
 
       if (err.exceptionTypeName === 'GoogleBillingException' && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable) {
-        console.log("Google play service is unavailable.")
+        console.log('Google play service is unavailable.');
         isGoogleBillingAvailable.value = false;
         return;
       }
 
-      if (err.exceptionTypeName === 'GooglePlayUnavailableException'){
-        console.log("Google play billing is unavailable.")
+      if (err.exceptionTypeName === 'GooglePlayUnavailableException') {
+        console.log('Google play billing is unavailable.');
         isGooglePlayAvailable.value = false;
       }
 
@@ -133,13 +133,11 @@ async function validateCode(): Promise<void> {
 
     if (vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
-  }
-  catch {
+  } catch {
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: null })
     }));
-  }
-  finally {
+  } finally {
     showProcessDialog.value = false;
   }
 }
@@ -155,7 +153,7 @@ function closeCompleteDialog(showStatistics: boolean) {
   <v-sheet color="grad-bg-container-bg">
 
     <v-card max-width="600"
-            class="d-flex flex-column justify-space-between primary-bg-grad border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
+            class="d-flex flex-column justify-space-between primary-bg-grad border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -166,7 +164,7 @@ function closeCompleteDialog(showStatistics: boolean) {
       />
       <!-- Title, image and features -->
       <div class="d-flex flex-column flex-grow-1">
-        <h4 class="text-active text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
+        <h4 class="text-promote-premium-color-premium text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
         <div id="rocketWrapper" class="mx-auto">
           <div id="rocket" class="animation-translate-y mx-auto" />
           <div id="rocketSmoke" class="mx-auto" />
@@ -174,7 +172,7 @@ function closeCompleteDialog(showStatistics: boolean) {
         <v-defaults-provider :defaults="{
           'VIcon': {
             'icon': 'mdi-check-circle',
-            'color': 'highlight',
+            'color': 'premium-features-icon',
             'size': '18',
             'class': 'me-2',
           }
@@ -218,9 +216,9 @@ function closeCompleteDialog(showStatistics: boolean) {
         <!-- Purchase by google -->
         <v-card v-if="isGooglePlayAvailable &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
-                class="py-3 px-3 rounded-lg text-white mb-4"
-                :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
-                color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+          class="py-3 px-3 rounded-lg text-white mb-4"
+          :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
+          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <template v-if="isGoogleBillingAvailable">
             <!-- Plan title, price -->
@@ -245,9 +243,12 @@ function closeCompleteDialog(showStatistics: boolean) {
             </v-row>
 
             <!-- Purchase button -->
-            <btn-style-1
+            <v-btn
+              variant="flat"
+              rounded="pill"
+              color="purchase-subscription-btn"
+              class="text-transform-none font-weight-bold mt-1"
               block
-              class="mt-1"
               :loading="!subscriptionPlans[0]?.subscriptionPlanId"
               :disabled="!subscriptionPlans[0]?.subscriptionPlanId"
               :text="locale('PURCHASE')"
@@ -255,7 +256,7 @@ function closeCompleteDialog(showStatistics: boolean) {
             />
 
             <!-- Plan Descriptions -->
-            <ul class="text-disabled opacity-50 ps-4 mt-2" style="font-size: 10px;">
+            <ul class="text-white opacity-40 ps-4 mt-2" style="font-size: 10px;">
               <li>{{ locale('PLANS_ARE_AUTOMATICALLY_RENEWED') }}</li>
               <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
             </ul>
@@ -286,7 +287,7 @@ function closeCompleteDialog(showStatistics: boolean) {
                 v-bind="props"
                 block
                 :ripple="false"
-                color="highlight"
+                color="premium-code-btn"
                 variant="text"
                 prepend-icon="mdi-key"
                 :text="locale('I_HAVE_A_PREMIUM_CODE')"
@@ -326,7 +327,11 @@ function closeCompleteDialog(showStatistics: boolean) {
                   class="mb-5"
                 />
 
-                <btn-style-2
+                <v-btn
+                  variant="flat"
+                  rounded="pill"
+                  color="activate-code-btn"
+                  class="text-transform-none"
                   block
                   type="submit"
                   :disabled="!premiumCodeForm"
@@ -481,7 +486,7 @@ function closeCompleteDialog(showStatistics: boolean) {
         >
 
           <span v-if="!isNewCode && premiumCodeDeviceCount && premiumCodeDeviceCount > 1" class="mb-2">
-            {{locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE')}}
+            {{ locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE') }}
           </span>
 
           <ul id="activationInfo"
@@ -501,7 +506,7 @@ function closeCompleteDialog(showStatistics: boolean) {
 
             <li v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
               <span>{{ locale('USED_BY') }}:</span>
-              <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{locale('DEVICE') }}</span>
+              <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{ locale('DEVICE') }}</span>
             </li>
 
           </ul>
@@ -528,6 +533,10 @@ function closeCompleteDialog(showStatistics: boolean) {
   height: 57%;
   min-height: 150px;
   max-height: 335px;
+}
+
+.v-theme--VpnHoodClient #rocketWrapper {
+  background-image: url('@/assets/images/rocket-bg-client.webp');
 }
 
 #rocket, #rocketSmoke {

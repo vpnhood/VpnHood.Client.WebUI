@@ -46,7 +46,7 @@ async function showRewardedAd(){
 
   <v-sheet color="grad-bg-container-bg">
     <v-card
-      class="d-flex flex-column justify-space-between primary-bg-grad text-white border border-highlight border-opacity-50 rounded-xl fill-height mx-auto">
+      class="d-flex flex-column justify-space-between primary-bg-grad text-white border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
 
       <!-- Back button -->
       <tonal-icon-btn

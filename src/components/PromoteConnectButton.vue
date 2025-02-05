@@ -17,15 +17,18 @@ const emits = defineEmits<{
   <v-row dense align="center" class="px-2 py-1 mx-0 mb-3 rounded-lg card-on-grad-bg">
     <v-col>
       <div class="d-flex align-center">
-        <v-icon :icon="props.icon" color="promote-connect-btn-icon" size="25" class="me-2" />
+        <v-icon :icon="props.icon" color="promote-premium-color-premium" size="25" class="me-2" />
         <h4 class="text-capitalize">{{props.title}}</h4>
       </div>
-      <p class="text-disabled text-caption">{{ props.description }}</p>
+      <p class="text-white opacity-40 text-caption">{{ props.description }}</p>
     </v-col>
     <v-col cols="auto" class="action-btn pe-0">
-      <btn-style-1
+      <v-btn
+        variant="flat"
+        rounded="pill"
+        color="promote-premium-color-premium"
+        class="px-2 text-transform-none font-weight-bold"
         :text="props.buttonText"
-        class="px-2"
         block
         size="small"
         @click="emits('actionByPlan', props.buttonActionPlan)"

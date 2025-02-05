@@ -27,7 +27,7 @@ const myColors = {
     200:"#1940b0",
     300:"#122272",
     400:"#06124b",
-    500:"#000d24"
+    500:"#030b30"
   },
   purple:{
     20:"#e1e1ff",
@@ -97,6 +97,19 @@ interface IThemeColorNames {
   'go-premium-btn': string,
   'on-go-premium-btn': string,
 
+  /*** Promote premium pages ***/
+  'promote-premium-border': string,
+  'promote-premium-color-premium': string,
+  'on-promote-premium-color-premium': string,
+  'promote-premium-color-free': string,
+  'on-promote-premium-color-free': string,
+  'premium-features-icon': string,
+  'premium-code-btn': string,
+  'purchase-subscription-btn': string,
+  'on-purchase-subscription-btn': string,
+  'activate-code-btn': string,
+  'on-activate-code-btn': string,
+
   'suppress-snackbar': string,
   'on-suppress-snackbar': string,
 
@@ -148,8 +161,6 @@ interface IThemeColorNames {
   'dialog-dark-text': string,
 
   'grad-bg-container-bg': string,
-
-  'promote-connect-btn-icon': string,
 
   'tonal-icon-btn': string,
 
@@ -250,6 +261,19 @@ const vhConnectThemeColors: IThemeColorNames = {
   'go-premium-btn': myColors.cream['100'],
   'on-go-premium-btn': myColors.purple['500'],
 
+  /*** Promote premium pages ***/
+  'promote-premium-border': myColors.purple['200'],
+  'promote-premium-color-premium': myColors.green['200'],
+  'on-promote-premium-color-premium': myColors.purple['600'],
+  'promote-premium-color-free': myColors.purple['200'],
+  'on-promote-premium-color-free': "white",
+  'premium-features-icon': myColors.purple['200'],
+  'premium-code-btn': myColors.purple['200'],
+  'purchase-subscription-btn': myColors.green['200'],
+  'on-purchase-subscription-btn': myColors.purple['600'],
+  'activate-code-btn': myColors.purple['200'],
+  'on-activate-code-btn': "white",
+
   'suppress-snackbar': myColors.cream['100'],
   'on-suppress-snackbar': myColors.gray['800'],
 
@@ -301,8 +325,6 @@ const vhConnectThemeColors: IThemeColorNames = {
   'dialog-dark-text': '#ffffff',
 
   'grad-bg-container-bg': myColors.purple['600'],
-
-  'promote-connect-btn-icon': myColors.green['200'],
 
   'tonal-icon-btn': myColors.purple['200'],
 
@@ -371,7 +393,7 @@ const vhClientThemeColors: IThemeColorNames = {
   background: myColors.blue['20'],
   'on-background': '#000000',
   'colored-bg-light': myColors.blue['300'],
-  'colored-bg-dark': myColors.blue['500'],
+  'colored-bg-dark': myColors.blue['400'],
   'app-bg': myColors.blue['400'],
   'app-bar': myColors.blue['200'],
   'on-app-bar': '#ffffff',
@@ -400,8 +422,21 @@ const vhClientThemeColors: IThemeColorNames = {
   'count-down-warning': myColors.red['100'],
 
   /*** Home page go premium btn ***/
-  'go-premium-btn': myColors.blue['100'],
+  'go-premium-btn': myColors.green['300'],
   'on-go-premium-btn': myColors.blue['200'],
+
+  /*** Promote premium pages ***/
+  'promote-premium-border': myColors.blue['100'],
+  'promote-premium-color-premium': myColors.green['200'],
+  'on-promote-premium-color-premium': myColors.blue['500'],
+  'promote-premium-color-free': myColors.blue['100'],
+  'on-promote-premium-color-free': "white",
+  'premium-features-icon': myColors.blue['100'],
+  'premium-code-btn': myColors.blue['100'],
+  'purchase-subscription-btn': myColors.green['200'],
+  'on-purchase-subscription-btn': myColors.blue['500'],
+  'activate-code-btn': myColors.blue['200'],
+  'on-activate-code-btn': "white",
 
   'suppress-snackbar': myColors.purple['200'],
   'on-suppress-snackbar': myColors.gray['800'],
@@ -453,13 +488,11 @@ const vhClientThemeColors: IThemeColorNames = {
   'on-dialog-dark': myColors.cream['100'],
   'dialog-dark-text': '#ffffff',
 
-  'grad-bg-container-bg': myColors.purple['600'],
+  'grad-bg-container-bg': myColors.blue['500'],
 
-  'promote-connect-btn-icon': myColors.green['200'],
+  'tonal-icon-btn': myColors.blue['100'],
 
-  'tonal-icon-btn': myColors.purple['200'],
-
-  'card-on-grad-bg': myColors.purple['100'],
+  'card-on-grad-bg': myColors.blue['200'],
 
   'general-dialog': "#ffffff",
   'on-general-dialog': myColors.blue['300'],
@@ -502,7 +535,7 @@ const vhClientThemeColors: IThemeColorNames = {
   'enable-premium': myColors.blue['200'],
   'disable-premium': myColors.yellow['200'],
 
-  'disconnect-warning': myColors.yellow['100'],
+  'disconnect-warning': myColors.yellow['50'],
   'on-disconnect-warning': myColors.yellow['300'],
 
   'version-on-home-debug': myColors.yellow['200'],
