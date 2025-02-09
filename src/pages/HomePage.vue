@@ -97,6 +97,10 @@ function connectButtonText(): string {
     }
 }
 
+function isIpFilterAvailable(): boolean{
+  return vhApp.data.settings.userSettings.usePacketCaptureIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
+}
+
 // Return connection download and upload speed based on Mbps
 function formatSpeed(speed: number): string | void {
   return ((speed * 10) / 1000000).toFixed(2);
@@ -126,62 +130,88 @@ function appFilterStatus(): string {
   <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters mx-3 pb-4">
 
     <!-- Go Premium or Countdown button -->
-    <v-col cols="12" class="text-center">
+    <v-col cols="12">
+      <v-row align="center">
+        <v-col cols="2"></v-col>
+        <v-col cols="8" class="text-center">
+          <!-- Countdown and extend session button -->
+          <CountDown v-if="isShowCountdown()"/>
 
-      <!-- Countdown and extend session button -->
-      <CountDown v-if="isShowCountdown()"/>
+          <!-- You are premium button -->
+          <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
+                  prepend-icon="mdi-crown"
+                  :text="locale('YOU_ARE_PREMIUM')"
+                  color="enable-premium"
+                  variant="tonal"
+                  tag="h6"
+                  @click="router.push('/premium-user')"
+          />
 
-      <!-- You are premium button -->
-      <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
-              prepend-icon="mdi-crown"
-              :text="locale('YOU_ARE_PREMIUM')"
-              color="enable-premium"
-              variant="tonal"
-              tag="h6"
-              @click="router.push('/premium-user')"
-      />
+          <!-- Premium code -->
+          <v-chip v-else-if="!vhApp.data.features.isPremiumFlagSupported &&
+          vhApp.data.state.clientProfile?.hasAccessCode"
+                  prepend-icon="mdi-key"
+                  :text="locale('PREMIUM_CODE_IS_ACTIVE')"
+                  color="active"
+                  variant="tonal"
+                  tag="h6"
+                  @click="router.push('/premium-user')"
+          />
 
-      <!-- Go Premium button -->
-      <v-btn
-        v-else-if="vhApp.data.features.isPremiumFlagSupported &&
+          <!-- Go Premium button -->
+          <v-btn
+            v-else-if="vhApp.data.features.isPremiumFlagSupported &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-        :flat="true"
-        variant="outlined"
-        color="go-premium-btn"
-        rounded="pill"
-        size="small"
-        height="35"
-        @click="router.push('/purchase-subscription')"
-        class="ps-1 pe-3 text-capitalize"
-      >
-        <v-icon
-          icon="mdi-crown"
-          size="25"
-          class="bg-go-premium-btn rounded-circle me-2"
-        />
-        {{ locale('GO_PREMIUM') }}
-      </v-btn>
-
+            :flat="true"
+            variant="outlined"
+            color="go-premium-btn"
+            rounded="pill"
+            size="small"
+            height="35"
+            @click="router.push('/purchase-subscription')"
+            class="ps-1 pe-3 text-capitalize"
+          >
+            <v-icon
+              icon="mdi-crown"
+              size="25"
+              class="bg-go-premium-btn rounded-circle me-2"
+            />
+            {{ locale('GO_PREMIUM') }}
+          </v-btn>
+        </v-col>
+        <v-col cols="2" class="text-end">
+          <v-icon v-if="isIpFilterAvailable()" icon="mdi-ip-network" size="17px"  color="white" class="opacity-40 pb-1"/>
+        </v-col>
+      </v-row>
     </v-col>
 
     <!-- Speed & Circle & Connect button -->
     <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
       <!-- Speed -->
-      <v-row align-content="center" justify="center" dir="ltr"
-              :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']">
-        <v-col cols="auto d-inline-flex align-center" dir="ltr">
+      <v-row
+        align-content="center"
+        justify="center" dir="ltr"
+        :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
+        @click="router.push('/usage-statistics')"
+      >
+        <!-- Statistics -->
+        <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
+          <span>{{locale('STATISTICS')}}</span>
+          <v-icon icon="mdi-chevron-right"/>
+        </v-col>
+        <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
           <v-icon color="active" size="small" icon="mdi-arrow-up-thin"/>
           <span class="pe-1 text-body-2 text-white">
             {{formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1)}}
           </span>
-          <span class="text-white opacity-40" style="font-size: 10px">Mbps</span>
+          <span class="text-white opacity-40 align-self-center" style="font-size: 10px">Mbps</span>
         </v-col>
-        <v-col cols="auto d-inline-flex align-center" dir="ltr">
+        <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
           <v-icon color="error" size="small" icon="mdi-arrow-down-thin"/>
           <span class="pe-1 text-body-2 text-white">
             {{formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
           </span>
-          <span class="text-white opacity-40 order-last" style="font-size: 10px">Mbps</span>
+          <span class="text-white opacity-40 order-last align-self-center" style="font-size: 10px">Mbps</span>
         </v-col>
       </v-row>
 

@@ -290,5 +290,6 @@
   "PREMIUM_ACCESS_EXPIRED": "Your premium code has expired. Do you want to remove it?",
   "INVALID_ACCESS_CODE": "The premium code is invalid.",
   "PREMIUM_CODE_DETAILS": "Premium code details",
-  "MORE_DETAILS": "More details"
+  "MORE_DETAILS": "More details",
+  "PREMIUM_CODE_IS_ACTIVE": "Premium code is active"
 }

@@ -50,9 +50,6 @@ async function saveSetting(): Promise<void> {
 function isDebugDataHasValue(): boolean{
   return vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null
 }
-function isIpFilterAvailable(): boolean{
- return vhApp.data.settings.userSettings.usePacketCaptureIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
-}
 </script>
 
 <template>
@@ -69,7 +66,7 @@ function isIpFilterAvailable(): boolean{
       </v-col>
 
       <!-- App name -->
-      <v-col cols="6" class="text-center text-home-app-bar">
+      <v-col cols="6" class="text-center text-home-app-bar px-0">
         <h4 dir="ltr">{{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}</h4>
       </v-col>
 
@@ -81,7 +78,7 @@ function isIpFilterAvailable(): boolean{
           density="compact"
           :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
           :variant="isDebugDataHasValue() ? 'flat' : 'text'"
-          :class="[{'text-decoration-underline': isIpFilterAvailable()}, isDebugDataHasValue() ? 'px-2' : 'px-0']"
+          :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
           @click="openDebugDialog"
         >
           <span :class="{'text-white opacity-40': !isDebugDataHasValue()}">{{locale('ABBREVIATION_VERSION') + ' ' +

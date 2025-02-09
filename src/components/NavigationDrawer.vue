@@ -146,18 +146,6 @@ function navigateByRouter(address: string){
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Statistics -->
-      <v-list-item
-        :disabled="!vhApp.isConnected()"
-        class="border-b"
-        @click="navigateByRouter('/usage-statistics')"
-      >
-        <v-list-item-title>
-          <v-icon icon="mdi-poll" />
-          <span class="ms-3">{{locale('STATISTICS') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-
       <!-- Settings -->
       <v-list-item
         class="border-b"

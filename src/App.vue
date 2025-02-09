@@ -54,7 +54,7 @@ onMounted(async () => {
     <!-- Navigation drawer -->
     <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
-    <v-main id="pagesContainer">
+    <v-main id="pagesContainer" :class="{'premium-user': vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()}">
 
       <!-- Privacy policy page -->
       <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
@@ -76,7 +76,7 @@ onMounted(async () => {
 </template>
 
 
-<!--suppress CssUnresolvedCustomProperty -->
+<!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
 #pagesContainer {
   background-size: cover;
@@ -113,4 +113,32 @@ onMounted(async () => {
   }
 }
 /********* End of Device is not mobile **********/
+
+#pagesContainer.premium-user {
+  background-image: none;
+  background-color: rgb(var(--v-theme-home-bg-grad-2));
+  position: relative;
+  z-index: 0;
+}
+#pagesContainer.premium-user:before,
+#pagesContainer.premium-user:after {
+  position: absolute;
+  content: '';
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: top;
+}
+#pagesContainer.premium-user:before {
+  background-image: url("@/assets/images/premium-bg-left.webp");
+  background-position-x: left;
+}
+#pagesContainer.premium-user:after {
+  background-image: url("@/assets/images/premium-bg-right.webp");
+  background-position-x: right;
+}
 </style>

@@ -45,17 +45,17 @@ async function saveSetting() {
 function isFilterIpByDeviceAvailable(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)
     return true;
-  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
+  return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
 }
 function isFilterIpByAppAvailable(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)
     return true;
-  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.useAppIpFilter;
+  return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.useAppIpFilter;
 }
 function isIncludeLocalNetworkAvailable(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)
     return true;
-  return vhApp.isPremiumAccount() ?? vhApp.data.settings.userSettings.includeLocalNetwork;
+  return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.includeLocalNetwork;
 }
 // TODO: disconnect by change ip filter
 </script>
@@ -118,7 +118,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       <v-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</v-card-subtitle>
 
       <!-- Disconnecting alert -->
-      <v-card-item v-if="vhApp.isConnected()">
+      <v-card-item v-if="vhApp.isConnected() && isIncludeLocalNetworkAvailable()">
         <disconnect-required-alert />
       </v-card-item>
 
@@ -143,7 +143,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       <v-card-subtitle>{{ locale('FILTER_IP_ADDRESSES_DESC') }}</v-card-subtitle>
 
       <!-- Disconnecting alert -->
-      <v-card-item v-if="vhApp.isConnected()">
+      <v-card-item v-if="vhApp.isConnected() && isFilterIpByDeviceAvailable()">
         <disconnect-required-alert />
       </v-card-item>
 

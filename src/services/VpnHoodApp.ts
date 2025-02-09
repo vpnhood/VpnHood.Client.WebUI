@@ -144,12 +144,19 @@ export class VpnHoodApp {
     if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionInfo?.suppressedTo &&
       this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
       this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-      this.showGeneralSnackbar(i18n.global.t("SESSION_SUPPRESSED_TO_OTHER"), 'suppress-snackbar', false);
+      this.showGeneralSnackbar(i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'), 'suppress-snackbar', false);
     }
   }
 
-  public async connect(clientProfileId: string, serverLocation: string | undefined, isPremium: boolean, planId: ConnectPlanId,
-                       isDiagnose: boolean = false, goToHome: boolean = true, throwError: boolean = false): Promise<void> {
+  public async connect(
+    clientProfileId: string,
+    serverLocation: string | undefined,
+    isPremium: boolean,
+    planId: ConnectPlanId,
+    isDiagnose: boolean = false,
+    goToHome: boolean = true,
+    throwError: boolean = false
+  ): Promise<void> {
 
     // User select active item and already connected
     if (this.data.state.canDisconnect
@@ -172,18 +179,19 @@ export class VpnHoodApp {
     // Just for Development info
     console.log(`Final Server location:  ${serverLocation}`);
     console.log(`PlanId:  ${planId}`);
-
-    // Navigate to home page
-    if (goToHome)
-      await router.replace('/');
+    console.log('goToHome: ' + goToHome);
 
     try {
+      // Navigate to home page
+      if (goToHome && router.currentRoute.value.path !== '/')
+        await router.replace('/');
+
       if (isDiagnose) await this.diagnose();
+
       else await this.apiClient.connect(clientProfileId, serverLocation, planId);
     }
-    catch (err: unknown){
-     if (throwError)
-      throw err;
+    catch (err: unknown) {
+      if (throwError) throw err;
     }
   }
 
@@ -334,13 +342,13 @@ export class VpnHoodApp {
 
   public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string): void {
     this.data.uiState.generalSnackbarData.message = message;
-    this.data.uiState.generalSnackbarData.color = bgColor ?? "highlight";
+    this.data.uiState.generalSnackbarData.color = bgColor ?? 'highlight';
     this.data.uiState.generalSnackbarData.isTimerAvailable = hasTimer ?? true;
     this.data.uiState.generalSnackbarData.textColor = textColor ?? null;
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
-  public isPremiumAccount(byPremiumCode: boolean = false): boolean{
+  public isPremiumAccount(byPremiumCode: boolean = false): boolean {
     // User is premium by code
     if (byPremiumCode)
       return (this.data.state.clientProfile?.isPremiumAccount == true) && (this.data.state.clientProfile?.hasAccessCode == true);
@@ -349,20 +357,20 @@ export class VpnHoodApp {
     return this.data.state.clientProfile?.isPremiumAccount == true;
   }
 
-  public async removePremiumCode(): Promise<void>{
+  public async removePremiumCode(): Promise<void> {
     const profileId = this.data.state.clientProfile?.clientProfileId;
     if (!profileId)
-      throw new Error("Could not find the profile id that have a premium code.");
+      throw new Error('Could not find the profile id that have a premium code.');
 
     if (this.isConnected())
       await this.disconnect();
 
     await this.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({value: null})
+      accessCode: new PatchOfString({ value: null })
     }));
   }
 
-  public premiumIconColor(): string{
+  public premiumIconColor(): string {
     return (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount()) ? 'enable-premium' : 'disable-premium';
   }
 
@@ -393,7 +401,7 @@ export class VpnHoodApp {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.log("User Account: ", this.data.userState.userAccount);
+    console.log('User Account: ', this.data.userState.userAccount);
     await this.reloadSettings();
   }
 }

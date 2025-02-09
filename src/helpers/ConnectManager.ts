@@ -10,7 +10,7 @@ export class ConnectManager {
       x => x.serverLocation === serverLocation)?.options;
 
     // Fore developer
-    console.log("Show Prompt: " + options?.prompt);
+    console.log('Show Prompt: ' + options?.prompt);
 
     if (!options?.prompt)
       return false;
@@ -24,19 +24,19 @@ export class ConnectManager {
     promoteData.premiumByPurchase = options.premiumByPurchase;
     promoteData.premiumByCode = options.premiumByCode;
     promoteData.canGoPremium = options.canGoPremium;
-    promoteData.normal = options.normal
+    promoteData.normal = options.normal;
     promoteData.isPremiumLocation = isPremium;
 
     // Show promote dialog
-    await router.push('/promote-premium')
+    await router.push('/promote-premium');
     return true;
   }
 
-  public static async connect1(isDiagnose: boolean = false, throwError: boolean = false) {
+  public static async connect1(isDiagnose: boolean = false, throwError: boolean = false): Promise<void> {
     const clientProfileId = VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
 
     // For developer
-    console.log("Connect1");
+    console.log('Connect1');
     console.log(`ClientProfileId: ${clientProfileId}`);
 
     if (!clientProfileId) {
@@ -51,29 +51,37 @@ export class ConnectManager {
     const serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
 
     // For developer
-    console.log("Connect2");
+    console.log('Connect2');
     console.log('Detected server location: ' + serverLocation);
 
-    if (!serverLocation && clientProfileInfo.selectedLocationInfo){
+    if (!serverLocation && clientProfileInfo.selectedLocationInfo) {
       await router.push('/servers');
       return;
     }
 
     let isPremiumLocation = clientProfileInfo.isPremiumLocationSelected;
 
-    if(clientProfileInfo.selectedLocationInfo?.options.hasPremium && !clientProfileInfo.selectedLocationInfo?.options.hasFree)
+    if (clientProfileInfo.selectedLocationInfo?.options.hasPremium && !clientProfileInfo.selectedLocationInfo?.options.hasFree)
       isPremiumLocation = true;
 
-    if(!clientProfileInfo.selectedLocationInfo?.options.hasPremium && clientProfileInfo.selectedLocationInfo?.options.hasFree)
+    if (!clientProfileInfo.selectedLocationInfo?.options.hasPremium && clientProfileInfo.selectedLocationInfo?.options.hasFree)
       isPremiumLocation = false;
 
-    await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose, throwError);
+    await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose, undefined, throwError);
   }
 
-  public static async connect3(clientProfileId: string, serverLocation: string | undefined, isPremiumLocation: boolean, isDiagnose: boolean = false, goToHome: boolean = true, throwError: boolean = false) {
+  public static async connect3(
+    clientProfileId: string,
+    serverLocation: string | undefined,
+    isPremiumLocation: boolean,
+    isDiagnose: boolean = false,
+    goToHome: boolean | undefined = true,
+    throwError: boolean = false
+  ): Promise<void> {
     // For developer
-    console.log("Connect3");
+    console.log('Connect3');
     console.log('isPremiumLocation: ' + isPremiumLocation);
+    console.log('goToHome: ' + goToHome);
 
     if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;
