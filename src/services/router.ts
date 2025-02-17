@@ -1,5 +1,5 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import HomePage from '../pages/HomePage.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomePage from '../pages/HomePage.vue';
 
 const routes = [
   {
@@ -7,103 +7,100 @@ const routes = [
     name: 'Home',
     component: HomePage,
     meta: {
-      title: 'Home',
+      title: 'Home'
     }
   },
   {
     path: '/settings',
-    name: 'Settings',
+    name: 'SETTINGS',
     component: () => import(/* webpackChunkName: "Settings" */ '@/pages/AppSettings.vue'),
     meta: {
-      title: 'Settings',
+      title: 'Settings'
     }
   },
   {
     path: '/apps-filter',
-    name: 'Apps Filter',
+    name: 'APP_FILTER',
     component: () => import(/* webpackChunkName: "AppsFilter" */ '@/pages/AppsFilter.vue'),
     meta: {
-      title: 'Apps Filter',
+      title: 'Apps Filter'
     }
   },
   {
     path: '/servers',
-    name: 'Servers',
+    name: 'SERVERS',
     component: () => import(/* webpackChunkName: "Servers" */ '@/pages/ServersList.vue'),
     meta: {
-      title: 'Servers',
+      title: 'Servers'
     }
   },
   {
     path: '/languages',
-    name: 'Languages',
+    name: 'LANGUAGE',
     component: () => import(/* webpackChunkName: "Languages" */ '@/pages/AppLanguages.vue'),
     meta: {
-      title: 'Languages',
+      title: 'Languages'
     }
   },
   {
     path: '/purchase-subscription',
-    name: 'Purchase Subscription',
-    component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/PurchaseSubscription.vue'),
+    component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/SpecialPages/PurchaseSubscription.vue'),
     meta: {
-      title: 'Purchase Subscription',
+      title: 'Purchase Subscription'
     }
   },
   {
     path: '/account',
-    name: 'Account',
+    name: 'ACCOUNT',
     component: () => import(/* webpackChunkName: "Account" */ '@/pages/UserAccount.vue'),
     meta: {
-      title: 'Account',
+      title: 'Account'
     }
   },
   {
     path: '/extend-session',
-    name: 'Extend Session',
-    component: () => import(/* webpackChunkName: "ExtendSession" */ '@/pages/ExtendSession.vue'),
+    component: () => import(/* webpackChunkName: "ExtendSession" */ '@/pages/SpecialPages/ExtendSession.vue'),
     meta: {
-      title: 'Extend Session',
+      title: 'Extend Session'
     }
   },
   {
     path: '/promote-premium',
-    name: 'Promote Premium',
-    component: () => import(/* webpackChunkName: "PromotePremium" */ '@/pages/PromotePremium.vue'),
+    component: () => import(/* webpackChunkName: "PromotePremium" */ '@/pages/SpecialPages/PromotePremium.vue'),
     meta: {
-      title: 'Promote Premium',
+      title: 'Promote Premium'
     }
   },
   {
     path: '/filter-ips-by-device',
-    name: 'Filter IPs By Device',
+    name: 'FILTER_IPS_BY_DEVICE',
     component: () => import(/* webpackChunkName: "FilterIPsByDevice" */ '@/pages/FilterIPsByDevice.vue'),
     meta: {
-      title: 'Filter IPs By Device',
+      title: 'Filter IPs By Device'
     }
   },
   {
     path: '/filter-ips-by-app',
-    name: 'Filter IPs By App',
+    name: 'FILTER_IPS_BY_APP',
     component: () => import(/* webpackChunkName: "FilterIPsByApp" */ '@/pages/FilterIPsByApp.vue'),
     meta: {
-      title: 'Filter IPs By App',
+      title: 'Filter IPs By App'
     }
   },
   {
-    path: '/usage-statistics',
-    name: 'Usage Statistics',
-    component: () => import(/* webpackChunkName: "Usage Statistics" */ '@/pages/UsageStatistics.vue'),
+    path: '/statistics',
+    name: 'STATISTICS',
+    component: () => import(/* webpackChunkName: "Statistics" */ '@/pages/UsageStatistics.vue'),
     meta: {
-      title: 'Usage Statistics',
+      title: 'Statistics'
     }
   },
   {
     path: '/premium-user',
-    name: 'Premium User',
+    name: 'PREMIUM_USER',
     component: () => import(/* webpackChunkName: "Premium User" */ '@/pages/PremiumUser.vue'),
     meta: {
-      title: 'Premium User',
+      title: 'Premium User'
     }
   }
 ];
@@ -119,4 +116,4 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-export default router
+export default router;

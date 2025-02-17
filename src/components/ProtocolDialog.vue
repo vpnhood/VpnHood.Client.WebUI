@@ -65,7 +65,7 @@ function isUdpUnsupported(): boolean {
           </v-radio>
 
           <!-- TCP -->
-          <v-radio :value="Protocols.TCP" class="mb-3" >
+          <v-radio :value="Protocols.TCP" class="mb-3">
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>{{ locale('PROTOCOL_TCP') }}</span>
@@ -87,6 +87,7 @@ function isUdpUnsupported(): boolean {
                     size="small"
                     variant="tonal"
                     density="comfortable"
+                    tabindex="-1"
                   />
                 </span>
               </div>

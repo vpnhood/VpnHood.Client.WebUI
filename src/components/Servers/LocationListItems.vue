@@ -43,6 +43,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
   <v-list-item
     v-for="(location, index) in props.locationsList"
     :key="index"
+    tabindex="0"
     :value="location.serverLocation"
     class="pa-2"
     :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
@@ -115,6 +116,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
         color="active-server-chip"
         variant="flat"
         size="x-small"
+        tabindex="-1"
         :text="locale('ACTIVE')"
       >
         <template v-slot:append v-if="props.isPremiumGroup">

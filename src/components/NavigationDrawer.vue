@@ -5,6 +5,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import { AppName } from '@/helpers/UiConstants';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -23,6 +24,7 @@ const closeByKeyboardEscape = (event: KeyboardEvent) => {
 };
 
 const isCheckForUpdate = ref<boolean>(false);
+const isMobileOrWindows = ref<boolean>(Util.isMobileDevice() || vuetify.display.platform.value.win.valueOf());
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal)
@@ -183,7 +185,7 @@ function navigateByRouter(address: string){
 
       <!-- Whats new -->
       <v-list-item
-        v-if="vuetify.display.mobile.value || vuetify.display.platform.value.win"
+        v-if="isMobileOrWindows"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
@@ -198,9 +200,8 @@ function navigateByRouter(address: string){
       </v-list-item>
 
       <!-- Send feedback -->
-      <!-- Do not show on TV -->
       <v-list-item
-        v-if="vuetify.display.mobile.value || vuetify.display.platform.value.win"
+        v-if="isMobileOrWindows"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -215,9 +216,8 @@ function navigateByRouter(address: string){
       </v-list-item>
 
       <!-- Create personal server -->
-      <!-- Do not show on TV -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && (vuetify.display.mobile.value || vuetify.display.platform.value.win)"
+        v-if="!vhApp.isConnectApp() && isMobileOrWindows"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -233,6 +233,7 @@ function navigateByRouter(address: string){
 
       <!-- Website -->
       <v-list-item
+        v-if="isMobileOrWindows"
         :nav="true"
         density="compact"
         class="opacity-80"

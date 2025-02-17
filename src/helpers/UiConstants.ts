@@ -13,6 +13,7 @@ export enum ComponentName {
     AddServerDialog = "AddServerDialog",
     RenameServerDialog = "RenameServerDialog",
     ConfirmDeleteServerDialog = "ConfirmDeleteServerDialog",
+    EnterPremiumCode = "EnterPremiumCode",
 }
 
 export enum Protocols{

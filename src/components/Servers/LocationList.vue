@@ -39,9 +39,6 @@ function listHasGroup(): boolean{
 <template>
 
   <v-list
-    v-for="(listType, index) in locationLists"
-    :key="index"
-    :id="listType"
     v-model:opened="openedListGroupsModel"
     open-strategy="multiple"
     bg-color="background"
@@ -49,35 +46,36 @@ function listHasGroup(): boolean{
   >
     <!-- Categorised locations -->
     <template v-if="listHasGroup()">
-      <config-card>
+      <config-card v-for="(listType, index) in locationLists" :key="index">
         <v-card-item class="py-0">
-          <v-list-group :value="listType" >
-          <!-- Group title -->
-          <template v-slot:activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              class="server-item-group text-caption px-0"
-              base-color="disabled"
-              :ripple="false"
-            >
-              <div class="d-flex align-center ga-3">
-                <span>{{ listType === locationListType.Free ? locale('FREE_LOCATIONS') : locale('PREMIUM_LOCATIONS') }}</span>
-                <span class="flex-grow-1 border-b border-opacity-25"></span>
-              </div>
-            </v-list-item>
-          </template>
+          <v-list-group :value="listType">
+            <!-- Group title -->
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                v-bind="props"
+                class="server-item-group text-caption px-0"
+                base-color="disabled"
+                :ripple="false"
+              >
+                <div class="d-flex align-center ga-3">
+                  <span>{{ listType === locationListType.Free ? locale('FREE_LOCATIONS') : locale('PREMIUM_LOCATIONS') }}</span>
+                  <span class="flex-grow-1 border-b border-opacity-25"></span>
+                </div>
+              </v-list-item>
+            </template>
 
-          <!-- Group items -->
-          <LocationListItems
-            :client-profile-id="props.clientProfile.clientProfileId"
-            :locations-list="listType === locationListType.Free ? freeLocations : premiumLocations"
-            :is-premium-group="listType === locationListType.Premium"
-            :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
-          />
-        </v-list-group>
+            <!-- Group items -->
+            <LocationListItems
+              :client-profile-id="props.clientProfile.clientProfileId"
+              :locations-list="listType === locationListType.Free ? freeLocations : premiumLocations"
+              :is-premium-group="listType === locationListType.Premium"
+              :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+            />
+          </v-list-group>
         </v-card-item>
       </config-card>
     </template>
+
 
     <!-- If the locations does not have both the Free and Premium category -->
     <config-card v-else>
@@ -88,6 +86,7 @@ function listHasGroup(): boolean{
         :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
       />
     </config-card>
+
   </v-list>
 
 </template>

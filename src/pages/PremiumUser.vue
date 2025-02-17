@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
@@ -24,10 +23,6 @@ async function removeCode() {
 </script>
 
 <template>
-
-  <!-- Page header -->
-  <AppBar :page-title="locale('PREMIUM_USER')" />
-
   <v-sheet class="primary-bg-grad">
 
     <!-- Premium image -->
@@ -65,7 +60,7 @@ async function removeCode() {
           variant="plain"
           :text="locale('STATISTICS')"
           size="small"
-          @click="router.push('/usage-statistics')"
+          @click="router.push('/statistics')"
         />
       </v-card-actions>
     </config-card>

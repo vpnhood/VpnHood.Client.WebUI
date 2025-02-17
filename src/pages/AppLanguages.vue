@@ -2,7 +2,6 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
-import AppBar from '@/components/AppBar.vue';
 import { LanguagesCode } from '@/helpers/UiConstants';
 import { type IUiCultureInfo } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
@@ -38,10 +37,6 @@ onMounted(() => {
 </script>
 
 <template>
-
-  <!-- Page header -->
-  <AppBar :page-title="locale('LANGUAGE')"/>
-
   <v-sheet>
 
     <config-card>
@@ -49,6 +44,7 @@ onMounted(() => {
         v-model="defaultLanguage"
         bg-color="transparent"
         select-strategy="classic"
+        selectable
         active-class="text-highlight"
       >
         <v-list-item

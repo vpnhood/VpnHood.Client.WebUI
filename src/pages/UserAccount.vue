@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
@@ -34,10 +33,6 @@ function formatDate(date: Date | null | undefined): string | null {
 </script>
 
 <template>
-
-  <!-- Page header -->
-  <AppBar :page-title="locale('ACCOUNT')" />
-
   <v-sheet :class="{'primary-bg-grad' : vhApp.isPremiumAccount()}">
 
     <!-- Premium image -->
@@ -138,7 +133,7 @@ function formatDate(date: Date | null | undefined): string | null {
             :append-icon="Util.getLocalizedRightChevron()"
             :text="locale('MORE_DETAILS')"
             size="small"
-            @click="router.push('/usage-statistics')"
+            @click="router.push('/statistics')"
           />
         </v-card-actions>
 

@@ -63,6 +63,7 @@ const tunnelClientCountry = computed<boolean>({
                     size="small"
                     variant="tonal"
                     density="comfortable"
+                    tabindex="-1"
                   />
                 </span>
               </div>

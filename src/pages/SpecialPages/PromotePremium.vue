@@ -39,8 +39,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 <template>
   <v-sheet color="grad-bg-container-bg">
 
-    <v-card
-      class="d-flex flex-column text-white justify-space-between primary-bg-grad border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
+    <v-card :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn

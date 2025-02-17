@@ -12,8 +12,9 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 import { ConnectManager } from '@/helpers/ConnectManager';
+import { ComponentRouteController } from '@/services/ComponentRouteController';
+import { ComponentName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -78,22 +79,21 @@ onMounted(async () => {
           Number((b.planPrice).replace(/\D/g, '')));
       subscriptionPlans.value = cloneSubscriptionPlans;
     } catch (err: unknown) {
-      if (!(err instanceof ApiException))
+      isGoogleBillingAvailable.value = false;
+
+      if (!(err instanceof ApiException)) {
         throw err;
-
-      if (err.exceptionTypeName === 'GoogleBillingException' && err.data.BillingResponseCode === GooglePlayBillingResponseCode.ServiceUnavailable) {
-        console.log('Google play service is unavailable.');
-        isGoogleBillingAvailable.value = false;
-        return;
       }
 
-      if (err.exceptionTypeName === 'GooglePlayUnavailableException') {
+      if (err.exceptionTypeName === 'GoogleBillingException') {
         console.log('Google play billing is unavailable.');
-        isGooglePlayAvailable.value = false;
+      } else if (err.exceptionTypeName === 'GooglePlayUnavailableException') {
+        console.log('Google play service is unavailable.');
+      } else {
+        throw err;
       }
-
-      throw err;
     }
+
   }
 });
 
@@ -144,16 +144,14 @@ async function validateCode(): Promise<void> {
 
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace(showStatistics ? '/usage-statistics' : '/');
+  router.replace(showStatistics ? '/statistics' : '/');
 }
 </script>
 
 <template>
-
   <v-sheet color="grad-bg-container-bg">
 
-    <v-card max-width="600"
-            class="d-flex flex-column justify-space-between primary-bg-grad border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
+    <v-card :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -279,21 +277,28 @@ function closeCompleteDialog(showStatistics: boolean) {
 
         </v-card>
 
-        <!-- Input premium code button and sheet -->
-        <v-bottom-sheet v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByCode">
-          <template v-slot:activator="{ props }">
-            <v-card class="py-1 rounded-lg mb-4" color="rgba(var(--v-theme-card-on-grad-bg), 0.3)">
-              <v-btn
-                v-bind="props"
-                block
-                :ripple="false"
-                color="premium-code-btn"
-                variant="text"
-                prepend-icon="mdi-key"
-                :text="locale('I_HAVE_A_PREMIUM_CODE')"
-              />
-            </v-card>
-          </template>
+        <!-- Input premium code button -->
+        <v-card v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByCode"
+                class="py-1 rounded-lg mb-4"
+                color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+        >
+          <v-btn
+            block
+            :ripple="false"
+            color="premium-code-btn"
+            variant="text"
+            prepend-icon="mdi-key"
+            :text="locale('I_HAVE_A_PREMIUM_CODE')"
+            @click="ComponentRouteController.showComponent(ComponentName.EnterPremiumCode)"
+          />
+        </v-card>
+
+        <!-- Premium code sheet -->
+        <v-bottom-sheet
+          v-model="ComponentRouteController.create(ComponentName.EnterPremiumCode).isShow"
+          contained width="100%"
+          max-width="100%"
+        >
 
           <v-card
             prepend-icon="mdi-key"

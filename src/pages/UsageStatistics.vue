@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
@@ -25,10 +24,8 @@ function calcUnit(total: number): string{
 </script>
 
 <template>
-  <!-- Page header -->
-  <AppBar :page-title="locale('STATISTICS')" />
-
   <v-sheet v-if="vhApp.data.state.sessionInfo">
+
     <v-defaults-provider :defaults="{
       'VIcon':{size:'18', disabled: true},
       'VCardText':{class: 'text-disabled text-caption'}

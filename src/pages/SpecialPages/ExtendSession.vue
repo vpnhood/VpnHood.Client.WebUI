@@ -43,10 +43,9 @@ async function showRewardedAd(){
 </script>
 
 <template>
-
   <v-sheet color="grad-bg-container-bg">
     <v-card
-      class="d-flex flex-column justify-space-between primary-bg-grad text-white border border-promote-premium-border border-opacity-50 rounded-xl fill-height mx-auto">
+      :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -93,16 +92,18 @@ async function showRewardedAd(){
 
       </div>
     </v-card>
+
+    <!--TODO: Use general dialog-->
+    <v-dialog v-model="showLoadingAdDialog" :persistent="true">
+      <v-card color="general-dialog" :title="locale('LOADING_AD')">
+        <v-card-text class="text-general-dialog-text text-body-2">
+          {{locale('EXTEND_BY_REWARDED_AD_NOTE')}}
+        </v-card-text>
+        <v-card-item class="text-center pt-0">
+          <v-progress-circular class="mb-3" :indeterminate="true" size="30" width="2"/>
+        </v-card-item>
+      </v-card>
+    </v-dialog>
+
   </v-sheet>
-<!--TODO: Use general dialog-->
-  <v-dialog v-model="showLoadingAdDialog" :persistent="true">
-    <v-card color="general-dialog" :title="locale('LOADING_AD')">
-      <v-card-text class="text-general-dialog-text text-body-2">
-        {{locale('EXTEND_BY_REWARDED_AD_NOTE')}}
-      </v-card-text>
-      <v-card-item class="text-center pt-0">
-        <v-progress-circular class="mb-3" :indeterminate="true" size="30" width="2"/>
-      </v-card-item>
-    </v-card>
-  </v-dialog>
 </template>

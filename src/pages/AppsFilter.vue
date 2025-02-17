@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {FilterMode} from "@/services/VpnHood.Client.Api";
-import AppBar from "@/components/AppBar.vue";
 import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
+import vuetify from '@/services/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -25,6 +25,8 @@ const showConfirmDialog = ref<boolean>(false);
 const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
+const isShowSearchBox = ref<boolean>(!vuetify.display.mdAndUp.value);
+console.log(vuetify.display.mobile.value);
 
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)
@@ -123,8 +125,6 @@ async function actionOnConfirm() {
 </script>
 
 <template>
-  <AppBar :page-title="locale('APP_FILTER')"/>
-
   <v-sheet>
 
     <!-- Disconnect required alert -->
@@ -132,7 +132,7 @@ async function actionOnConfirm() {
 
     <!-- Select all apps button -->
     <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
-    <div>
+    <div class="mb-5">
         <!-- Select all apps button -->
         <btn-style-5
           prepend-icon="mdi-select-all"
@@ -148,10 +148,21 @@ async function actionOnConfirm() {
           :text="locale('CLEAR_ALL')"
           @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
         />
+
+        <!-- Search button -->
+        <btn-style-5
+          v-if="vuetify.display.mdAndUp.value"
+          prepend-icon="mdi-magnify"
+          class="d-inline-flex text-caption ms-2"
+          :text="locale('SEARCH')"
+          @click="isShowSearchBox = !isShowSearchBox"
+        />
+
     </div>
 
     <!-- Search box -->
     <v-text-field
+      v-if="isShowSearchBox"
       v-model="search"
       single-line
       clearable
@@ -163,7 +174,7 @@ async function actionOnConfirm() {
       color="highlight"
       id="appSearchField"
       :placeholder="locale('SEARCH')"
-      class="my-5"
+      class="mb-5"
     >
     </v-text-field>
 

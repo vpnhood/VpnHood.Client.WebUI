@@ -33,4 +33,18 @@ export class Util {
     const formattedDate = date.toLocaleDateString('en-US', options);
     return formattedDate;
   }
+
+  public static getSpecialPageCardClass(): string{
+    const allDisplaySizeClass: string = "d-flex flex-column justify-space-between primary-bg-grad rounded-xl text-white fill-height"
+    const borderClassForMobileSize: string = "border border-promote-premium-border border-opacity-50"
+
+    if (this.isMobileDevice())
+      return allDisplaySizeClass + ' ' + borderClassForMobileSize;
+
+    return allDisplaySizeClass
+  }
+
+  public static isMobileDevice(): boolean{
+    return vuetify.display.mobile.value && vuetify.display.smAndDown.value;
+  }
 }

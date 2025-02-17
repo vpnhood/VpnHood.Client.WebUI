@@ -2,7 +2,6 @@
 import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
 import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
 import ProtocolDialog from '@/components/ProtocolDialog.vue';
-import HomeAppBar from '@/components/HomeAppBar.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
@@ -124,9 +123,6 @@ function appFilterStatus(): string {
 
 <template>
 
-  <!-- App bar -->
-  <HomeAppBar />
-
   <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters mx-3 pb-4">
 
     <!-- Go Premium or Countdown button -->
@@ -192,12 +188,15 @@ function appFilterStatus(): string {
         align-content="center"
         justify="center" dir="ltr"
         :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
-        @click="router.push('/usage-statistics')"
       >
         <!-- Statistics -->
         <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
-          <span>{{locale('STATISTICS')}}</span>
-          <v-icon icon="mdi-chevron-right"/>
+          <v-btn
+            :text="locale('STATISTICS')"
+            variant="text"
+            append-icon="mdi-chevron-right"
+            @click="router.push('/statistics')"
+          />
         </v-col>
         <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
           <v-icon color="active" size="small" icon="mdi-arrow-up-thin"/>
@@ -226,7 +225,7 @@ function appFilterStatus(): string {
         rounded="pill"
         :disabled="vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
           vhApp.data.state.connectionState === AppConnectionState.Initializing"
-        class="font-weight-bold mt-5"
+        class="font-weight-bold mt-5 mb-4"
         :class="{'connected': vhApp.data.state.connectionState === AppConnectionState.Connected}"
         :text="connectButtonText()"
         @click="onConnectButtonClick"
@@ -270,6 +269,7 @@ function appFilterStatus(): string {
                   size="small"
                   density="compact"
                   class="text-capitalize opacity-50 px-2"
+                  tabindex="-1"
           />
         </template>
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import {ComponentRouteController} from "@/services/ComponentRouteController";
-import AppBar from "@/components/AppBar.vue";
 import i18n from '@/locales/i18n'
 import ExpansionPanelList from '@/components/Servers/ExpansionPanelList.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
@@ -23,15 +22,11 @@ const isShowAddServerDialog = computed<boolean>({
 </script>
 
 <template>
-  <!-- Page header -->
-  <AppBar :page-title="locale('SERVERS')"/>
-
   <v-sheet>
 
     <!-- Add server button -->
-    <div class="text-center">
+    <div v-if="vhApp.data.features.isAddAccessKeySupported" class="text-center">
       <btn-style-6
-        v-if="vhApp.data.features.isAddAccessKeySupported"
         class="mt-1 mb-5"
         :text="locale('ADD_SERVER')"
         @click="isShowAddServerDialog = true"
@@ -55,15 +50,11 @@ const isShowAddServerDialog = computed<boolean>({
 
     <!-- For VpnHoodCONNECT -->
     <!-- Single server mode -->
-    <template v-else-if="vhApp.isSingleServerMode()">
-      <LocationList :client-profile="vhApp.data.clientProfileInfos[0]" />
-    </template>
+    <LocationList v-else-if="vhApp.isSingleServerMode()" :client-profile="vhApp.data.clientProfileInfos[0]" />
 
     <!-- For VpnHoodCLIENT -->
     <!-- Multi server mode -->
-    <template v-else>
-      <ExpansionPanelList/>
-    </template>
+    <ExpansionPanelList v-else/>
 
     <AddServerDialog v-model="isShowAddServerDialog" />
   </v-sheet>

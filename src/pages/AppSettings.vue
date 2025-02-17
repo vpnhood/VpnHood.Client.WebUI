@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import AppBar from '@/components/AppBar.vue';
 import { LanguagesCode } from '@/helpers/UiConstants';
 import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
@@ -61,8 +60,6 @@ function isIncludeLocalNetworkAvailable(): boolean {
 </script>
 
 <template>
-  <!-- Page header -->
-  <AppBar :page-title="locale('SETTINGS')" />
 
   <v-sheet>
 

@@ -8,6 +8,7 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicy from "@/pages/PrivacyPolicy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -46,20 +47,34 @@ onMounted(async () => {
   if (vhApp.data.features.isAccountSupported)
     await vhApp.loadAccount();
 })
+// TODO: change background
 </script>
 
 <template>
   <v-app id="appContainer" :class="[vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]">
 
-    <!-- Navigation drawer -->
-    <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
+    <v-layout
+      id="pagesContainer"
+      width="100%"
+      max-width="850px"
+      full-height
+      class="mx-auto"
+      :class="{'premium-user': vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()}"
+    >
 
-    <v-main id="pagesContainer" :class="{'premium-user': vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()}">
+      <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
 
-      <!-- Privacy policy page -->
-      <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
+      <AppBar v-if="!isShowPrivacyPolicyDialog"/>
 
-      <router-view v-else/>
+      <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
+      <v-main class="fill-height">
+
+        <!-- Privacy policy page -->
+        <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
+
+        <router-view v-else/>
+
+      </v-main>
 
       <!-- Global Loading dialog -->
       <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog"/>
@@ -70,8 +85,7 @@ onMounted(async () => {
       <!-- Global snackbar -->
       <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"/>
 
-    </v-main>
-
+    </v-layout>
   </v-app>
 </template>
 
@@ -83,9 +97,6 @@ onMounted(async () => {
   background-repeat: no-repeat ;
   background-attachment: fixed;
   background-position: center center;
-  width: 100%;
-  /*DO NOT REMOVE 'height: 100%' to support legacy browsers*/
-  height: 100%;
 }
 
 @media (max-width: 959px) {
@@ -105,11 +116,10 @@ onMounted(async () => {
     background-image: url("@/assets/images/body-bg.png"),
     linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2)));
     border: 1px rgba(var(--v-theme-highlight), .5) solid;
-    width: 100%;
-    max-width: 850px;
     box-shadow: 0 0 20px 9px #00000047;
     border-radius: 10px;
-    margin: 10px auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
 }
 /********* End of Device is not mobile **********/
