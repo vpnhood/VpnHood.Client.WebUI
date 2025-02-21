@@ -63,7 +63,6 @@ async function checkForUpdate() {
 
 async function onSignIn() {
   try {
-    // TODO: show loader issue
     emit('update:modelValue', false);
     vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();

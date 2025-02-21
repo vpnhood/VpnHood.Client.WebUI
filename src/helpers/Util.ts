@@ -35,8 +35,8 @@ export class Util {
   }
 
   public static getSpecialPageCardClass(): string{
-    const allDisplaySizeClass: string = "d-flex flex-column justify-space-between primary-bg-grad rounded-xl text-white fill-height"
-    const borderClassForMobileSize: string = "border border-promote-premium-border border-opacity-50"
+    const allDisplaySizeClass: string = "d-flex flex-column justify-space-between primary-bg-grad rounded-xl text-white fill-height border-opacity-50"
+    const borderClassForMobileSize: string = "border border-promote-premium-border"
 
     if (this.isMobileDevice())
       return allDisplaySizeClass + ' ' + borderClassForMobileSize;

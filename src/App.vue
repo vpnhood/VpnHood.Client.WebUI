@@ -59,7 +59,8 @@ onMounted(async () => {
       max-width="850px"
       full-height
       class="mx-auto"
-      :class="{'premium-user': vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()}"
+      :class="{'premium-user': (vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()) ||
+      vhApp.data.state.sessionInfo?.isPremiumSession}"
     >
 
       <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>

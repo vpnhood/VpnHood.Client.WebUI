@@ -6,6 +6,8 @@ import { ConnectManager } from '@/helpers/ConnectManager';
 import i18n from '@/locales/i18n';
 import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { UiConstants } from '@/helpers/UiConstants';
+import { Util } from '@/helpers/Util';
+import vuetify from '@/services/vuetify';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
@@ -40,8 +42,10 @@ async function sendReport(): Promise<void> {
       vhApp.data.settings.clientId.substring(0, 8) + '@' +
       Math.random().toString().substring(2, 10);
 
-    const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
-    window.open(link, 'VpnHood-BugReport');
+    if (Util.isMobileDevice() || vuetify.display.platform.value.win){
+      const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
+      window.open(link, 'VpnHood-BugReport');
+    }
 
     // get report
     const url: string = vhApp.data.serverUrl + UiConstants.logFileLocation;
@@ -75,7 +79,7 @@ async function sendReport(): Promise<void> {
       color="dialog-alert"
     >
 
-      <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message || 'Oops! Could not even send the report details!' }}</v-card-text>
+      <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message }}</v-card-text>
 
       <v-card-item v-if="dialogData.showChangeServerToAutoButton || (dialogData.canDiagnose &&
       !vhApp.data.state.hasDiagnoseRequested) || dialogData.promptForLog">
@@ -113,7 +117,7 @@ async function sendReport(): Promise<void> {
           />
 
           <!-- OpenReport -->
-          <v-btn v-if="dialogData.promptForLog"
+          <v-btn v-if="dialogData.promptForLog && (Util.isMobileDevice() || vuetify.display.platform.value.win)"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"

@@ -14,7 +14,6 @@ const locale = i18n.global.t;
 
 const showLoadingAdDialog = ref<boolean>(false);
 const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
-console.log(dialogData.value.premiumByCode);
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   switch (planId) {
     case MyPlanId.premiumByPurchase:
@@ -44,8 +43,7 @@ async function showRewardedAd(){
 
 <template>
   <v-sheet color="grad-bg-container-bg">
-    <v-card
-      :class="Util.getSpecialPageCardClass()">
+    <v-card :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -61,7 +59,7 @@ async function showRewardedAd(){
         :src="vhApp.getImageUrl('extend-session.webp')"
         alt="Session Icon"
         width="100%"
-        max-width="500px"
+        max-width="400px"
         class="mx-auto"
       />
 

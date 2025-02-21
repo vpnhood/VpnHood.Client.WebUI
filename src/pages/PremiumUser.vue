@@ -26,18 +26,18 @@ async function removeCode() {
   <v-sheet class="primary-bg-grad">
 
     <!-- Premium image -->
-    <div class="text-center">
-      <v-img
-        :eager="true"
-        :src="vhApp.getImageUrl('you-are-premium.webp')"
-        alt="Premium Image"
-        width="100%"
-        max-width="371px"
-      />
-      <div class="text-active mt-n7 mb-10">
-        <h2>{{ locale('CONGRATULATIONS') }}!</h2>
-        <h3>{{ locale('YOU_ARE_PREMIUM') }}</h3>
-      </div>
+    <v-img
+      :eager="true"
+      :src="vhApp.getImageUrl('you-are-premium.webp')"
+      alt="Premium Image"
+      width="100%"
+      max-width="371px"
+      class="mx-auto"
+    />
+
+    <div class="text-active text-center mt-n7 mb-10">
+      <h2>{{ locale('CONGRATULATIONS') }}!</h2>
+      <h3>{{ locale('YOU_ARE_PREMIUM') }}</h3>
     </div>
 
     <!-- user is premium by code -->

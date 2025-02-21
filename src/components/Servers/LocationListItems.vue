@@ -44,7 +44,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     v-for="(location, index) in props.locationsList"
     :key="index"
     tabindex="0"
-    :value="location.serverLocation"
+    :value="isPremiumGroup ? 'premium_'+location.serverLocation : 'free_'+location.serverLocation"
     class="pa-2"
     :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
     :active="isActiveItem(location)"
