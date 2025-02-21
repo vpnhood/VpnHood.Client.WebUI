@@ -290,5 +290,6 @@
   "PREMIUM_ACCESS_EXPIRED": "کد ویژه شما منقضی شده است. آیا می‌خواهید آن را حذف کنید؟",
   "INVALID_ACCESS_CODE": "کد ویژه نامعتبر است.",
   "PREMIUM_CODE_DETAILS": "جزئیات کد ویژه",
-  "MORE_DETAILS": "جزئیات بیشتر"
+  "MORE_DETAILS": "جزئیات بیشتر",
+  "PREMIUM_CODE_IS_ACTIVE": "کد ویژه فعال است"
 }
