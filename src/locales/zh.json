@@ -290,5 +290,6 @@
   "PREMIUM_ACCESS_EXPIRED": "您的高级代码已过期。您要删除它吗？",
   "INVALID_ACCESS_CODE": "高级代码无效。",
   "PREMIUM_CODE_DETAILS": "高级代码详情",
-  "MORE_DETAILS": "更多细节"
+  "MORE_DETAILS": "更多细节",
+  "PREMIUM_CODE_IS_ACTIVE": "高级代码已激活"
 }
