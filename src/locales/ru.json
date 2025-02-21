@@ -290,5 +290,6 @@
   "PREMIUM_ACCESS_EXPIRED": "Ваш премиум-код истек. Хотите его удалить?",
   "INVALID_ACCESS_CODE": "Премиум-код недействителен.",
   "PREMIUM_CODE_DETAILS": "Детали премиум-кода",
-  "MORE_DETAILS": "Больше деталей"
+  "MORE_DETAILS": "Больше деталей",
+  "PREMIUM_CODE_IS_ACTIVE": "Премиум-код активен"
 }
