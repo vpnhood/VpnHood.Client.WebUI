@@ -41,7 +41,7 @@ function listHasGroup(): boolean{
   <v-list
     v-model:opened="openedListGroupsModel"
     open-strategy="multiple"
-    bg-color="background"
+    bg-color="transparent"
     :class="{'rounded-lg': !vhApp.isConnectApp()}"
   >
     <!-- Categorised locations -->

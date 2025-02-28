@@ -23,28 +23,28 @@ let savedIps: IpFilters;
 const excludeIpFilters = computed<string>({
   get: () => {
     return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.packetCaptureIpFilterExclude
-      : ipFilters.value.appIpFilterExclude;
+      ? ipFilters.value.adapterIpFilterExcludes
+      : ipFilters.value.appIpFilterExcludes;
   },
   set: (value: string) => {
     if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.packetCaptureIpFilterExclude = value;
+      ipFilters.value.adapterIpFilterExcludes = value;
     else
-    ipFilters.value.appIpFilterExclude = value;
+    ipFilters.value.appIpFilterExcludes = value;
   }
 })
 
 const includeIpFilters = computed<string>({
   get: () => {
     return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.packetCaptureIpFilterInclude
-      : ipFilters.value.appIpFilterInclude;
+      ? ipFilters.value.adapterIpFilterIncludes
+      : ipFilters.value.appIpFilterIncludes;
   },
   set: (value: string) => {
     if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.packetCaptureIpFilterInclude = value;
+      ipFilters.value.adapterIpFilterIncludes = value;
     else
-    ipFilters.value.appIpFilterInclude = value;
+    ipFilters.value.appIpFilterIncludes = value;
   }
 })
 
@@ -52,10 +52,10 @@ async function saveIpList(){
   if (vhApp.isConnected())
     await vhApp.disconnect();
   await vhApp.apiClient.setIpFilters(new IpFilters({
-    packetCaptureIpFilterExclude: ipFilters.value.packetCaptureIpFilterExclude,
-    packetCaptureIpFilterInclude: ipFilters.value.packetCaptureIpFilterInclude,
-    appIpFilterExclude: ipFilters.value.appIpFilterExclude,
-    appIpFilterInclude: ipFilters.value.appIpFilterInclude
+    adapterIpFilterExcludes: ipFilters.value.adapterIpFilterExcludes,
+    adapterIpFilterIncludes: ipFilters.value.adapterIpFilterIncludes,
+    appIpFilterExcludes: ipFilters.value.appIpFilterExcludes,
+    appIpFilterIncludes: ipFilters.value.appIpFilterIncludes
   }));
   await vhApp.saveUserSetting();
 }
@@ -69,10 +69,10 @@ onMounted(async () => {
 onBeforeRouteLeave(
   async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     try {
-      if (ipFilters.value.packetCaptureIpFilterExclude !== savedIps.packetCaptureIpFilterExclude ||
-        ipFilters.value.packetCaptureIpFilterInclude !== savedIps.packetCaptureIpFilterInclude ||
-        ipFilters.value.appIpFilterExclude !== savedIps.appIpFilterExclude ||
-        ipFilters.value.appIpFilterInclude !== savedIps.appIpFilterInclude)
+      if (ipFilters.value.adapterIpFilterExcludes !== savedIps.adapterIpFilterExcludes ||
+        ipFilters.value.adapterIpFilterIncludes !== savedIps.adapterIpFilterIncludes ||
+        ipFilters.value.appIpFilterExcludes !== savedIps.appIpFilterExcludes ||
+        ipFilters.value.appIpFilterIncludes !== savedIps.appIpFilterIncludes)
         await saveIpList();
       next();
     }

@@ -108,20 +108,6 @@ export class VpnHoodApp {
     return new VpnHoodApp(apiClient, clientProfileClient, appData, analytics);
   }
 
-  private async reloadSettings(): Promise<void> {
-    const config = await this.apiClient.getConfig();
-    this.data.features = config.features;
-    this.data.settings = config.settings;
-
-    // Remove built-in client profile if the user is premium
-    this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
-      ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
-      : config.clientProfileInfos;
-
-    if (config.clientProfileInfos.length === 0)
-      this.data.settings.userSettings.clientProfileId = null;
-  }
-
   public async reloadState(): Promise<void> {
     this.data.state = await this.apiClient.getState();
     // Setting has change and must reload
@@ -143,9 +129,24 @@ export class VpnHoodApp {
     // Show 'suppress to' message
     if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionInfo?.suppressedTo &&
       this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
-      this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString()) {
-      this.showGeneralSnackbar(i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'), 'suppress-snackbar', false);
+      this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString() &&
+      !this.data.uiState.generalSnackbarData.isShow) {
+      this.showGeneralSnackbar(i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'), 'suppress-snackbar', false, undefined, true);
     }
+  }
+
+  private async reloadSettings(): Promise<void> {
+    const config = await this.apiClient.getConfig();
+    this.data.features = config.features;
+    this.data.settings = config.settings;
+
+    // Remove built-in client profile if the user is premium
+    this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
+      ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
+      : config.clientProfileInfos;
+
+    if (config.clientProfileInfos.length === 0)
+      this.data.settings.userSettings.clientProfileId = null;
   }
 
   public async connect(
@@ -158,14 +159,6 @@ export class VpnHoodApp {
     throwError: boolean = false
   ): Promise<void> {
 
-    // User select active item and already connected
-    if (this.data.state.canDisconnect
-      && clientProfileId === this.data.state.clientProfile?.clientProfileId
-      && serverLocation === this.data.state.sessionInfo?.serverLocationInfo?.serverLocation) {
-      this.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'));
-      return;
-    }
-
     // Update client profile
     await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
       isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium ?? false }),
@@ -177,9 +170,9 @@ export class VpnHoodApp {
     await this.saveUserSetting();
 
     // Just for Development info
-    console.log(`Final Server location:  ${serverLocation}`);
-    console.log(`PlanId:  ${planId}`);
-    console.log('goToHome: ' + goToHome);
+    console.log(`Final server location:  ${serverLocation}`);
+    console.log(`Plan id:  ${planId}`);
+    console.log(`Go to home:  ${planId}`);
 
     try {
       // Navigate to home page
@@ -192,6 +185,10 @@ export class VpnHoodApp {
     }
     catch (err: unknown) {
       if (throwError) throw err;
+    }
+    finally {
+      // Reload to apply latest clientProfileInfos updates
+      await this.reloadSettings();
     }
   }
 
@@ -326,7 +323,7 @@ export class VpnHoodApp {
   }
 
   public getConnectionStateText(): string {
-    if (this.data.state.sessionStatus?.isWaitingForAd && this.data.state.connectionState !== AppConnectionState.Connected)
+    if (this.data.state.connectionState === AppConnectionState.WaitingForAd)
       return i18n.global.t('LOADING_AD');
 
     return this.data.state.connectionState === AppConnectionState.None
@@ -340,11 +337,12 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string): void {
+  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string, hasCloseButton?: boolean,): void {
     this.data.uiState.generalSnackbarData.message = message;
-    this.data.uiState.generalSnackbarData.color = bgColor ?? 'highlight';
-    this.data.uiState.generalSnackbarData.isTimerAvailable = hasTimer ?? true;
+    this.data.uiState.generalSnackbarData.bgColor = bgColor ?? 'highlight';
+    this.data.uiState.generalSnackbarData.hasTimer = hasTimer ?? true;
     this.data.uiState.generalSnackbarData.textColor = textColor ?? null;
+    this.data.uiState.generalSnackbarData.hasCloseBtn = hasCloseButton ?? null;
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 

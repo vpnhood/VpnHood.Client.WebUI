@@ -26,7 +26,6 @@ const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectA
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
 const isShowSearchBox = ref<boolean>(!vuetify.display.mdAndUp.value);
-console.log(vuetify.display.mobile.value);
 
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)

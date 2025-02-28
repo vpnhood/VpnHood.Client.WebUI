@@ -36,6 +36,10 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
   }
 })
 
+function convertDevicePixel(pixel: number): number{
+  return pixel / window.devicePixelRatio;
+}
+
 onMounted(async () => {
   // Reload 'state' every 1 second if app window is focused.
   setInterval(async () => {
@@ -47,20 +51,27 @@ onMounted(async () => {
   if (vhApp.data.features.isAccountSupported)
     await vhApp.loadAccount();
 })
-// TODO: change background
 </script>
 
 <template>
-  <v-app id="appContainer" :class="[vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]">
+  <v-app
+    id="appContainer"
+    :class="[vhApp.data.features.isPremiumFlagSupported && (vhApp.isPremiumAccount() ||
+      (vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.isConnected())) ? 'premium-user' : '', vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]"
+
+  >
 
     <v-layout
       id="pagesContainer"
       width="100%"
       max-width="850px"
+      :style="{'margin-top': convertDevicePixel(vhApp.data.state.systemBarsInfo.topHeight) + 'px',
+      'margin-bottom':
+    convertDevicePixel(vhApp.data.state.systemBarsInfo.bottomHeight) + 'px'}"
       full-height
       class="mx-auto"
-      :class="{'premium-user': (vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()) ||
-      vhApp.data.state.sessionInfo?.isPremiumSession}"
+      :class="{'premium-user': vhApp.data.features.isPremiumFlagSupported && (vhApp.isPremiumAccount() ||
+      (vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.isConnected()))}"
     >
 
       <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
@@ -93,63 +104,109 @@ onMounted(async () => {
 
 <!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
-#pagesContainer {
+#appContainer {
   background-size: cover;
   background-repeat: no-repeat ;
   background-attachment: fixed;
-  background-position: center center;
+  background-position: center top;
 }
 
 @media (max-width: 959px) {
-  #pagesContainer {
+  /*----------- User is free ---------*/
+  #appContainer {
     background-image: url("@/assets/images/body-bg-mobile.png"),
     linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2)));
+    position: relative;
+    z-index: 0;
+  }
+  #appContainer:before,
+  #appContainer:after {
+    position: absolute;
+    content: '';
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: top;
+    opacity: 0;
+    transition: opacity 1s linear;
+  }
+  #appContainer:before {
+    background-image: url("@/assets/images/premium-bg-left.webp");
+    background-position-x: left;
+  }
+  #appContainer:after {
+    background-image: url("@/assets/images/premium-bg-right.webp");
+    background-position-x: right;
+  }
+  #appContainer.premium-user {
+    background-image: none;
+    background-color: rgb(var(--v-theme-home-bg-grad-2));
+  }
+  #appContainer.premium-user:before,
+  #appContainer.premium-user:after{
+    opacity: 1;
+    transition-duration: 2s;
   }
 }
 
 /************ Device is not mobile *************/
 @media (min-width: 960px){
+  /*----------- User is free ---------*/
   #appContainer {
-    background: url('@/assets/images/body-blur-bg.png') rgb(var(--v-theme-app-bg)) no-repeat center center fixed;
-    background-size: cover;
+    background-image: url('@/assets/images/body-blur-bg.png');
+    background-color: rgb(var(--v-theme-app-bg));
   }
   #pagesContainer {
     background-image: url("@/assets/images/body-bg.png"),
     linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2)));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+    background-size: cover;
     border: 1px rgba(var(--v-theme-highlight), .5) solid;
     box-shadow: 0 0 20px 9px #00000047;
     border-radius: 10px;
     margin-top: 15px;
     margin-bottom: 15px;
+    position: relative;
+    z-index: 0;
+  }
+  #pagesContainer:before,
+  #pagesContainer:after {
+    position: absolute;
+    content: '';
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: top;
+    opacity: 0;
+    transition: opacity 1s linear;
+  }
+  #pagesContainer:before {
+    background-image: url("@/assets/images/premium-bg-left.webp");
+    background-position-x: left;
+  }
+  #pagesContainer:after {
+    background-image: url("@/assets/images/premium-bg-right.webp");
+    background-position-x: right;
+  }
+  #pagesContainer.premium-user {
+    background-image: none;
+    background-color: rgb(var(--v-theme-home-bg-grad-2));
+  }
+  #pagesContainer.premium-user:before,
+  #pagesContainer.premium-user:after{
+    opacity: 1;
+    transition-duration: 2s;
   }
 }
 /********* End of Device is not mobile **********/
-
-#pagesContainer.premium-user {
-  background-image: none;
-  background-color: rgb(var(--v-theme-home-bg-grad-2));
-  position: relative;
-  z-index: 0;
-}
-#pagesContainer.premium-user:before,
-#pagesContainer.premium-user:after {
-  position: absolute;
-  content: '';
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: -1;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position-y: top;
-}
-#pagesContainer.premium-user:before {
-  background-image: url("@/assets/images/premium-bg-left.webp");
-  background-position-x: left;
-}
-#pagesContainer.premium-user:after {
-  background-image: url("@/assets/images/premium-bg-right.webp");
-  background-position-x: right;
-}
 </style>

@@ -64,8 +64,11 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <!-- Continue as Free -->
         <v-row v-if="isFreeAvailable()"
            dense
+           v-ripple
            align="center"
            class="px-2 py-1 mx-0 rounded-lg card-on-grad-bg"
+           tabindex="1"
+           @click="actionByConnectPlan(ConnectPlanId.Normal)"
         >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
@@ -75,17 +78,19 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
             </p>
           </v-col>
           <v-col cols="auto" class="pe-0 action-btn">
-            <btn-style-2
-              :text="locale('CONNECT')"
-              class="px-2"
+            <v-chip
+              variant="flat"
+              color="btn-style-2"
+              class="font-weight-bold"
               size="small"
-              @click="actionByConnectPlan(ConnectPlanId.Normal)"
+              tabindex="-1"
+              :text="locale('CONNECT')"
             />
           </v-col>
         </v-row>
 
         <!-- Divider -->
-        <div v-if="isFreeAvailable()" class="d-flex align-center justify-center my-5 mx-15">
+        <div v-if="isFreeAvailable()" class="d-flex align-center justify-center w-50 my-5 mx-auto">
           <div class="w-100 border-b border-active"></div>
           <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
           <div class="w-100 border-b border-active"></div>
@@ -94,6 +99,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <!-- Watch rewarded ad -->
         <promote-connect-button
           v-if="dialogData.showRewardedAd"
+          tabindex="1"
           icon="mdi-play-box-lock-open-outline"
           :title="locale('WATCH_REWARDED_AD')"
           :description="locale('WATCH_REWARDED_AD_DESC', {minutes: dialogData.showRewardedAd})"
@@ -105,6 +111,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <!-- Try premium -->
         <promote-connect-button
           v-if="dialogData.showTryPremium"
+          tabindex="1"
           icon="mdi-timer-lock-open-outline"
           :title="locale('TRY_PREMIUM')"
           :description="locale('TRY_PREMIUM_DESC', {minutes: dialogData.showTryPremium})"
@@ -116,6 +123,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <!-- Go premium -->
         <promote-connect-button
           v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
+          tabindex="1"
           icon="mdi-crown-circle-outline"
           :title="locale('GO_PREMIUM')"
           :description="locale('GO_PREMIUM_DESC')"

@@ -27,6 +27,7 @@ async function onConnectButtonClick(): Promise<void> {
 
   // Disconnect
   if (vhApp.data.state.canDisconnect) {
+    vhApp.data.state.connectionState = AppConnectionState.Disconnecting;
     await vhApp.disconnect();
     return;
   }
@@ -80,7 +81,9 @@ function connectButtonText(): string {
   else
     switch (vhApp.data.state.connectionState) {
       case AppConnectionState.Initializing:
-        return locale('INITIALIZING');
+        return locale('DISCONNECT');
+      case AppConnectionState.WaitingForAd:
+        return locale('DISCONNECT');
       case AppConnectionState.Connecting:
         return locale('DISCONNECT');
       case AppConnectionState.Waiting:
@@ -97,7 +100,7 @@ function connectButtonText(): string {
 }
 
 function isIpFilterAvailable(): boolean{
-  return vhApp.data.settings.userSettings.usePacketCaptureIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
+  return vhApp.data.settings.userSettings.useVpnAdapterIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
 }
 
 // Return connection download and upload speed based on Mbps
@@ -195,7 +198,7 @@ function appFilterStatus(): string {
             :text="locale('STATISTICS')"
             variant="text"
             append-icon="mdi-chevron-right"
-            @click="router.push('/statistics')"
+            @click="vhApp.isConnected() ? router.push('/statistics') : null"
           />
         </v-col>
         <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
@@ -223,10 +226,9 @@ function appFilterStatus(): string {
         height="40px"
         min-width="180px"
         rounded="pill"
-        :disabled="vhApp.data.state.connectionState == AppConnectionState.Disconnecting ||
-          vhApp.data.state.connectionState === AppConnectionState.Initializing"
+        :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
         class="font-weight-bold mt-5 mb-4"
-        :class="{'connected': vhApp.data.state.connectionState === AppConnectionState.Connected}"
+        :class="{'connected': vhApp.isConnected()}"
         :text="connectButtonText()"
         @click="onConnectButtonClick"
       />

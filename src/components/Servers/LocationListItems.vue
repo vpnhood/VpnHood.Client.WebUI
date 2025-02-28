@@ -15,10 +15,16 @@ const props = defineProps<{
   isPremiumLocationSelected: boolean,
 }>();
 
-function internalConnect(serverLocation: string): void {
+function internalConnect(location: ClientServerLocationInfo): void {
   if (!vhApp.isConnectApp() && Util.isSingleLocation(props.locationsList.length))
     return;
-  ConnectManager.connect3(props.clientProfileId, serverLocation, props.isPremiumGroup, false);
+
+  // User is currently connected to the selected location
+  if (vhApp.isConnected() && isActiveItem(location)){
+    vhApp.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'), "active");
+    return;
+  }
+  ConnectManager.connect3(props.clientProfileId, location.serverLocation, props.isPremiumGroup, false);
 }
 function isActiveItem(location: ClientServerLocationInfo): boolean{
   // This situation happened in the Client app
@@ -49,7 +55,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
     :active="isActiveItem(location)"
     color="active-server"
-    @click="internalConnect(location.serverLocation)"
+    @click="internalConnect(location)"
   >
 
     <v-list-item-title
@@ -57,74 +63,61 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       :class="{'ps-4': location.isNestedCountry}"
     >
 
-      <div class="d-flex align-center">
-        <!-- Fastest item -->
-        <template v-if="Util.isLocationAutoSelected(location.countryCode)">
-          <v-icon
-            icon="mdi-lightning-bolt-outline"
-            size="31"
-            :color="!isActiveItem(location) ? 'fastest-server' : ''"
-          />
+      <!------------------------------- Location flag ------------------------------->
+        <!---- Fastest icon ---->
+        <v-icon
+          v-if="Util.isLocationAutoSelected(location.countryCode)"
+          icon="mdi-lightning-bolt-outline"
+          size="31"
+          :color="!isActiveItem(location) ? 'fastest-server' : ''"
+        />
 
-          <!-- Title and subtitle -->
-          <div :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width', 'text-truncate']">
+        <!-- Country flag -->
+        <span v-else
+          class="overflow-hidden d-inline-flex align-center justify-center item-flag me-2"
+          :class="{'nested-item': location.isNestedCountry}"
+        >
+          <img :src="vhApp.getCountryFlag(location.countryCode)" height="100%" alt="country flag"/>
+        </span>
+      <!---------------------------- End of location flag ---------------------------->
+
+      <!------------------------------- Location name -------------------------------->
+        <div :class="[{'text-caption': location.isNestedCountry},'text-truncate flex-1-1-0']">
+
+          <!---- Fastest name ---->
+          <template v-if="Util.isLocationAutoSelected(location.countryCode)" >
             <span>{{ locale('FASTEST') }}</span>
             <span class="flasher text-disabled text-caption ms-1">({{ locale('RECOMMENDED') }})</span>
-          </div>
-        </template>
-
-        <!-- Location items -->
-        <template v-else>
-          <!-- Country flag -->
-          <span
-            class="overflow-hidden d-inline-flex align-center justify-center item-flag me-2"
-            :class="{'nested-item': location.isNestedCountry}"
-          >
-            <img :src="vhApp.getCountryFlag(location.countryCode)" height="100%" alt="country flag"/>
-          </span>
-
-          <!-- Country name & State name -->
-          <template v-if="!location.isNestedCountry">
-            <div class="text-truncate" :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width']">
-              <!-- Country name -->
-              <span>{{ location.countryName }}</span>
-
-              <!-- Only if server has nested item -->
-<!--              <span
-                v-if="Util.isLocationAutoSelected(location.regionName)"
-                class="text-caption ms-1"
-                :class="[vhApp.isConnectApp() ? 'text-secondary' : 'text-primary-darken-1']"
-              >
-              ({{ locale('AUTO_SELECT') }})
-            </span>-->
-            </div>
           </template>
 
-          <!-- State name for nested items -->
-          <span v-else
-                class="text-caption text-truncate"
-                :class="[isActiveItem(location) ? 'active-item-limited-width' : 'limited-width']"
-          >
-            {{ location.regionName }}
+          <!---- Country name ---->
+          <span v-else >
+            {{ location.isNestedCountry ? location.regionName : location.countryName }}
           </span>
-        </template>
+
+        </div>
+      <!------------------------------ End of location name ---------------------------->
+
+      <!------------------------------- Location status -------------------------------->
+      <div class="d-flex align-center text-no-wrap ga-1">
+
+        <!---- Active location badge ---->
+        <v-chip v-if="isActiveItem(location)"
+                color="active-server-chip"
+                variant="flat"
+                :text="locale('ACTIVE')"
+                size="x-small"
+                tabindex="-1"
+        />
+
+        <!---- Unblockable location icon ---->
+        <v-icon v-if="location.options.hasUnblockable" icon="mdi-sword-cross" size="16"
+                :color="vhApp.premiumIconColor()" />
+
+        <!---- Premium location icon ---->
+        <premium-icon v-if="props.isPremiumGroup" :color="vhApp.premiumIconColor()" />
       </div>
-
-      <!-- Status -->
-      <v-chip
-        v-if="isActiveItem(location)"
-        color="active-server-chip"
-        variant="flat"
-        size="x-small"
-        tabindex="-1"
-        :text="locale('ACTIVE')"
-      >
-        <template v-slot:append v-if="props.isPremiumGroup">
-          <v-icon icon="mdi-crown" size="13"/>
-        </template>
-      </v-chip>
-
-      <premium-icon v-else-if="props.isPremiumGroup" :color="vhApp.premiumIconColor()" />
+      <!---------------------------- End of location status ---------------------------->
 
     </v-list-item-title>
   </v-list-item>
@@ -140,17 +133,5 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
 .item-flag.nested-item {
   width: 22px;
   height: 14px;
-}
-.limited-width{
-  max-width: calc(100vw - 135px);
-}
-.active-item-limited-width{
-  max-width: calc(100vw - 175px);
-}
-.VpnHoodConnect .limited-width{
-  max-width: calc(100vw - 110px);
-}
-.VpnHoodConnect .active-item-limited-width{
-  max-width: calc(100vw - 150px);
 }
 </style>

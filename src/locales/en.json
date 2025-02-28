@@ -291,5 +291,8 @@
   "INVALID_ACCESS_CODE": "The premium code is invalid.",
   "PREMIUM_CODE_DETAILS": "Premium code details",
   "MORE_DETAILS": "More details",
-  "PREMIUM_CODE_IS_ACTIVE": "Premium code is active"
+  "PREMIUM_CODE_IS_ACTIVE": "Premium code is active",
+  "CONNECTION_TIMEOUT_MSG": "Could not establish connection in given time.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "The connection to premium servers has timed out.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "The daily limit has been exceeded."
 }

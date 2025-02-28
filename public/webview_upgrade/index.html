@@ -23,7 +23,7 @@
             margin: auto;
             max-width: 340px;
             color: black;
-            height: 400px;
+            height: 447px;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -52,8 +52,16 @@
             color: #23c99d;
         }
         #updateText{
-            margin-bottom: 40px;
+            margin-bottom: 15px;
             color: #575757;
+        }
+        #currentVersion{
+            margin: 0;
+            color: red;
+        }
+        #requiredVersion{
+            margin: 5px 0 20px 0;
+            color: #23c99d;
         }
     </style>
   </head>
@@ -67,6 +75,8 @@
       <div id="updateCardView">
         <h2>Android System WebView must be updated</h2>
         <p id="updateText">Your Android System WebView is outdated and no longer supported. Please update it.</p>
+        <p id="currentVersion">Loading...</p>
+        <p id="requiredVersion">Loading...</p>
         <a class="download-btn" href="https://play.google.com/store/apps/details?id=com.google.android.webview" target="_blank">
           <img src="download-google-play.png" alt="Google play download button" />
         </a>
@@ -76,5 +86,17 @@
       </div>
     </div>
   </div>
+    <script>
+      let url = window.location.href;
+      let urlObj = new URL(url);
+      let currentVersion = urlObj.searchParams.get('current-version');
+      let requiredVersion = urlObj.searchParams.get('required-version');
+      document.getElementById('currentVersion').textContent = currentVersion
+        ? `Current Version: ${currentVersion}`
+        : 'Current Version: Not found';
+      document.getElementById('requiredVersion').textContent = requiredVersion
+        ? `Required Version: ${requiredVersion}`
+        : 'Required Version: Not found';
+    </script>
   </body>
 </html>

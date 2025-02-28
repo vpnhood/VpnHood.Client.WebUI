@@ -45,6 +45,8 @@ export class ErrorHandler {
         return this.httpRequestExceptionHandler(err);
       case 'UnreachableServer':
         return i18n.global.t('UNREACHABLE_SERVER_MESSAGE');
+      case 'ConnectionTimeoutException':
+        return i18n.global.t('CONNECTION_TIMEOUT_MSG');
       case 'UnreachableServerLocation':
         return this.unreachableServerLocationExceptionHandler();
       case 'LoadAdException':
@@ -98,10 +100,22 @@ export class ErrorHandler {
     if (err.data.ErrorCode === "SessionSuppressedBy")
       return i18n.global.t('SESSION_SUPPRESSED_BY_OTHER');
 
+    // User is premium by premium code
     if (err.data.ErrorCode === "AccessExpired" && VpnHoodApp.instance.isPremiumAccount(true)){
       return i18n.global.t('PREMIUM_ACCESS_EXPIRED');
     }
 
+    // User is premium by tryPremium or rewardedAd
+    if (err.data.ErrorCode === "AccessExpired"){
+      return i18n.global.t('PREMIUM_CONNECTION_EXPIRED_MSG');
+    }
+
+    // Daily limit for connect to premium exceeded
+    if (err.data.ErrorCode === "DailyLimitExceeded"){
+      return i18n.global.t('DAILY_LIMIT_EXCEEDED_MSG');
+    }
+
+    // Premium code is invalid
     if (err.data.ErrorCode === "AccessCodeRejected")
       return i18n.global.t('INVALID_ACCESS_CODE');
 

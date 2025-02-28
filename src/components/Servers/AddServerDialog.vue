@@ -46,12 +46,7 @@ async function connect(clientProfileId:string): Promise<void>{
   accessKey.value = '';
 
   // Show new server added snackbar
-  vhApp.data.uiState.generalSnackbarData.message = locale('NEW_SERVER_ADDED');
-  vhApp.data.uiState.generalSnackbarData.color = "active";
-  vhApp.data.uiState.generalSnackbarData.isTimerAvailable = false;
-  vhApp.data.uiState.generalSnackbarData.hasCloseBtn = false;
-  vhApp.data.uiState.generalSnackbarData.timeOut = 2000;
-  vhApp.data.uiState.generalSnackbarData.isShow = true;
+  vhApp.showGeneralSnackbar(locale('NEW_SERVER_ADDED'), "active", true, undefined, false);
 
   // Connect to server
   await ConnectManager.connect2(clientProfileId, false);

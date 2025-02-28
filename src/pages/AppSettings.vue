@@ -20,10 +20,10 @@ const includeLocalNetwork = computed({
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
+    return vhApp.data.settings.userSettings.useVpnAdapterIpFilter;
   },
   set: async (value: boolean) => {
-    vhApp.data.settings.userSettings.usePacketCaptureIpFilter = value;
+    vhApp.data.settings.userSettings.useVpnAdapterIpFilter = value;
     await saveSetting();
   }
 });
@@ -44,7 +44,7 @@ async function saveSetting() {
 function isFilterIpByDeviceAvailable(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)
     return true;
-  return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.usePacketCaptureIpFilter;
+  return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.useVpnAdapterIpFilter;
 }
 function isFilterIpByAppAvailable(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)

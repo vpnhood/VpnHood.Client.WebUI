@@ -221,6 +221,11 @@ interface IThemeColorNames {
   error: string,
   warning: string,
   'on-warning': string,
+
+  /*** Scrollbar for windows ***/
+  'scroll-track': string,
+  'scroll-thumb': string,
+  'scroll-thumb-hover': string,
 }
 
 const vhConnectThemeColors: IThemeColorNames = {
@@ -385,6 +390,11 @@ const vhConnectThemeColors: IThemeColorNames = {
   error: myColors.red['100'],
   warning: myColors.purple['400'],
   'on-warning': myColors.cream['100'],
+
+  /*** Scrollbar for windows ***/
+  'scroll-track': myColors.purple['500'],
+  'scroll-thumb': myColors.purple['300'],
+  'scroll-thumb-hover': myColors.purple['200'],
 }
 
 const vhClientThemeColors: IThemeColorNames = {
@@ -439,7 +449,7 @@ const vhClientThemeColors: IThemeColorNames = {
   'on-activate-code-btn': '#ffffff',
 
   'suppress-snackbar': myColors.purple['200'],
-  'on-suppress-snackbar': myColors.gray['800'],
+  'on-suppress-snackbar': myColors.purple['20'],
 
   'update-snackbar-alert': myColors.blue['20'],
   'update-snackbar-warning': myColors.green['200'],
@@ -549,6 +559,11 @@ const vhClientThemeColors: IThemeColorNames = {
   error: myColors.red['100'],
   warning: myColors.yellow['50'],
   'on-warning': myColors.yellow['300'],
+
+  /*** Scrollbar for windows ***/
+  'scroll-track': myColors.blue['20'],
+  'scroll-thumb': myColors.gray['500'],
+  'scroll-thumb-hover': myColors.green['300'],
 }
 
 

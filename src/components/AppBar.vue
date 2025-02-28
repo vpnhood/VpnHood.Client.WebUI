@@ -62,10 +62,7 @@ function isDebugDataHasValue(): boolean{
 <template>
 
   <!-- Home Page header -->
-  <v-app-bar v-if="pageInfo.name === 'Home'"
-    color="transparent"
-    elevation="0" absolute
-  >
+  <v-app-bar v-if="pageInfo.name === 'Home'" color="transparent" elevation="0" absolute>
     <v-row class="align-center mx-0">
 
       <!-- Navigation drawer button -->
@@ -122,8 +119,12 @@ function isDebugDataHasValue(): boolean{
   <v-dialog v-if="pageInfo.name === 'Home'" v-model="isShowDebugDialog" :persistent="true">
     <v-card color="background" title="Only developers" append-icon="mdi-bug-outline">
 
-      <v-card-item>
+      <!-- Support id -->
+      <template v-slot:subtitle>
+        <p class="text-disabled text-caption">{{'Support ID: ' + vhApp.data.state.clientProfile?.supportId}}</p>
+      </template>
 
+      <v-card-item>
         <!-- Debug data-1 -->
         <v-combobox
           theme="dark"

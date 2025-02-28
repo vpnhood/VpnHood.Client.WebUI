@@ -1,9 +1,9 @@
 export class GeneralSnackbarData {
   public message: string = "";
-  public color: string = "";
+  public bgColor: string = "highlight";
   public textColor: string | null = null;
+  public hasTimer: boolean | null = null;
+  public timeOut: number | null = null;
+  public hasCloseBtn: boolean | null = null;
   public isShow: boolean = false;
-  public isTimerAvailable: boolean = true;
-  public timeOut: number | null = 5000;
-  public hasCloseBtn: boolean = true;
 }

@@ -37,6 +37,33 @@ async function main(): Promise<void> {
     // Add language code as class to the body element
     window.document.body.classList.add(i18n.global.locale.value);
 
+    // Check if the platform is Windows and apply custom CSS
+    if (vuetify.display.platform.value.win) {
+      const styleElement = document.createElement('style');
+      styleElement.textContent = `
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: rgb(var(--v-theme-scroll-track));
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgb(var(--v-theme-scroll-thumb));
+      transition: all .5s ease;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgb(var(--v-theme-scroll-thumb-hover));
+    }
+  `;
+      document.head.appendChild(styleElement);
+    }
+
     // Global catch exception
     app.config.errorHandler = (err: unknown) => vpnHoodApp.processError(err);
 
