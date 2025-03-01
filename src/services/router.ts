@@ -46,7 +46,8 @@ const routes = [
     path: '/purchase-subscription',
     component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/SpecialPages/PurchaseSubscription.vue'),
     meta: {
-      title: 'Purchase Subscription'
+      title: 'Purchase Subscription',
+      gradBg: true
     }
   },
   {

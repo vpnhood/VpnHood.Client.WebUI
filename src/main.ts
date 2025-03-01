@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     // Add language code as class to the body element
     window.document.body.classList.add(i18n.global.locale.value);
 
-    // Check if the platform is Windows and apply custom CSS
+    // Check if the platform is Windows and apply custom CSS for scrollbar
     if (vuetify.display.platform.value.win) {
       const styleElement = document.createElement('style');
       styleElement.textContent = `

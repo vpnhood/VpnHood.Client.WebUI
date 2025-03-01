@@ -62,7 +62,7 @@ function isDebugDataHasValue(): boolean{
 <template>
 
   <!-- Home Page header -->
-  <v-app-bar v-if="pageInfo.name === 'Home'" color="transparent" elevation="0" absolute>
+  <v-app-bar v-if="pageInfo.name === 'Home'" color="transparent" elevation="0" :absolute="false">
     <v-row class="align-center mx-0">
 
       <!-- Navigation drawer button -->
@@ -102,7 +102,7 @@ function isDebugDataHasValue(): boolean{
   <!-- Page header -->
   <v-app-bar v-else-if="pageInfo.name"
     :flat="VpnHoodApp.instance.isConnectApp()"
-    absolute
+    :absolute="false"
     color="app-bar"
     density="compact"
   >
