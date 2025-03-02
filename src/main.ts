@@ -64,6 +64,22 @@ async function main(): Promise<void> {
       document.head.appendChild(styleElement);
     }
 
+    // Add space to the pages for handle edge-to-edge feature
+    const { topHeight, bottomHeight } = vpnHoodApp.data.state.systemBarsInfo;
+    if (topHeight > 0 || bottomHeight > 0) {
+      const topSpace = Math.ceil(topHeight / window.devicePixelRatio);
+      const bottomSpace = Math.ceil(bottomHeight / window.devicePixelRatio);
+      const styleContent = `
+        .v-main>.v-sheet {
+            ${topSpace > 0 ? `padding-top: ${topSpace}px !important;` : ''}
+            ${bottomSpace > 0 ? `padding-bottom: ${bottomSpace}px !important;` : ''}
+        }
+    `;
+      const styleElement = document.createElement('style');
+      styleElement.textContent = styleContent.trim();
+      document.head.appendChild(styleElement);
+    }
+
     // Global catch exception
     app.config.errorHandler = (err: unknown) => vpnHoodApp.processError(err);
 

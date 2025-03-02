@@ -11,7 +11,6 @@ function reloadUI() {
 <template>
   <v-sheet
     color="rgba(0, 0, 0, 0.66)"
-    height="100vh"
     class="d-flex flex-column align-center justify-center text-center"
   >
     <v-card

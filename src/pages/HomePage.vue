@@ -9,9 +9,11 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { ConnectManager } from '@/helpers/ConnectManager';
-import { ComponentName } from '@/helpers/UiConstants';
+import { ComponentName, UiConstants } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import CountDown from '@/components/CountDown.vue';
+import { computed, ref } from 'vue';
+import type { RouteLocationNormalizedLoaded } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -33,20 +35,22 @@ async function onConnectButtonClick(): Promise<void> {
   }
 
   // Connect
-  if (vhApp.data.state.canConnect){
+  if (vhApp.data.state.canConnect) {
     vhApp.data.state.connectionState = AppConnectionState.Connecting;
     await ConnectManager.connect1(false);
   }
 }
+
 function udpProtocolButtonText(): string {
   const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
   if (vhApp.data.state.connectionState === AppConnectionState.Connected &&
     !vhApp.data.state.sessionInfo?.isUdpChannelSupported) {
-    return dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP");
+    return dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP');
   }
-  return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale("PROTOCOL_DROP_QUIC") : locale("PROTOCOL_TCP"));
+  return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP'));
 }
-function isShowCountdown(): boolean{
+
+function isShowCountdown(): boolean {
   if (!vhApp.data.features.isPremiumFlagSupported)
     return false;
 
@@ -99,8 +103,8 @@ function connectButtonText(): string {
     }
 }
 
-function isIpFilterAvailable(): boolean{
-  return vhApp.data.settings.userSettings.useVpnAdapterIpFilter || vhApp.data.settings.userSettings.useAppIpFilter
+function isIpFilterAvailable(): boolean {
+  return vhApp.data.settings.userSettings.useVpnAdapterIpFilter || vhApp.data.settings.userSettings.useAppIpFilter;
 }
 
 // Return connection download and upload speed based on Mbps
@@ -122,243 +126,435 @@ function appFilterStatus(): string {
       return locale('APP_FILTER_STATUS_ALL');
   }
 }
+
+
+const isShowDebugDialog = ref<boolean>(false);
+const openDebugDialogCounter = ref<number>(0);
+
+const pageInfo = computed((): RouteLocationNormalizedLoaded => {
+  return router.currentRoute.value;
+});
+
+const debugData1 = computed<string[]>({
+  get: () => {
+    return vhApp.data.settings.userSettings.debugData1?.split(' ') ?? [];
+  },
+  set: (value: string[] | null) => {
+    vhApp.data.settings.userSettings.debugData1 = value?.join(' ') || null;
+  }
+});
+
+const debugData2 = computed<string | null>({
+  get: () => {
+    return vhApp.data.settings.userSettings.debugData2 ?? null;
+  },
+  set: (value: string | null) => {
+    vhApp.data.settings.userSettings.debugData2 = value;
+  }
+});
+
+function openDebugDialog() {
+  openDebugDialogCounter.value++;
+  if (vhApp.data.settings.userSettings.debugData1 || vhApp.data.settings.userSettings.debugData2)
+    isShowDebugDialog.value = true;
+
+  else if (openDebugDialogCounter.value === 5)
+    isShowDebugDialog.value = true;
+
+  // reset counter if no click within 1 second
+  setTimeout(() => {
+    openDebugDialogCounter.value = 0;
+  }, 3000);
+}
+async function saveDebugDataSetting(): Promise<void> {
+  await vhApp.saveUserSetting();
+  isShowDebugDialog.value = false;
+}
+function isDebugDataHasValue(): boolean {
+  return vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null;
+}
 </script>
 
 <template>
+  <v-sheet
+    id="homeContainer"
+    :class="[vhApp.data.features.isPremiumFlagSupported &&
+                (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.isConnected())) ?
+                'premium-user' : '', vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]"
+  >
 
-  <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters mx-3 pb-4">
+    <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters">
 
-    <!-- Go Premium or Countdown button -->
-    <v-col cols="12">
-      <v-row align="center">
-        <v-col cols="2"></v-col>
-        <v-col cols="8" class="text-center">
-          <!-- Countdown and extend session button -->
-          <CountDown v-if="isShowCountdown()"/>
+      <!-- Home page app bar & Go Premium or Countdown button -->
+      <v-col cols="12">
 
-          <!-- You are premium button -->
-          <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
-                  prepend-icon="mdi-crown"
-                  :text="locale('YOU_ARE_PREMIUM')"
-                  color="enable-premium"
-                  variant="tonal"
-                  tag="h6"
-                  @click="router.push('/premium-user')"
-          />
+        <!-- Home page app bar -->
+        <v-row class="align-center v-row--no-gutters mx-0">
 
-          <!-- Premium code -->
-          <v-chip v-else-if="!vhApp.data.features.isPremiumFlagSupported &&
-          vhApp.data.state.clientProfile?.hasAccessCode"
-                  prepend-icon="mdi-key"
-                  :text="locale('PREMIUM_CODE_IS_ACTIVE')"
-                  color="active"
-                  variant="tonal"
-                  tag="h6"
-                  @click="router.push('/premium-user')"
-          />
-
-          <!-- Go Premium button -->
-          <v-btn
-            v-else-if="vhApp.data.features.isPremiumFlagSupported &&
-        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-            :flat="true"
-            variant="outlined"
-            color="go-premium-btn"
-            rounded="pill"
-            size="small"
-            height="35"
-            @click="router.push('/purchase-subscription')"
-            class="ps-1 pe-3 text-capitalize"
-          >
-            <v-icon
-              icon="mdi-crown"
-              size="25"
-              class="bg-go-premium-btn rounded-circle me-2"
+          <!-- Navigation drawer button -->
+          <v-col cols="3">
+            <v-app-bar-nav-icon
+              color="home-app-bar"
+              class="ms-n3 me-0"
+              @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)"
             />
-            {{ locale('GO_PREMIUM') }}
-          </v-btn>
-        </v-col>
-        <v-col cols="2" class="text-end">
-          <v-icon v-if="isIpFilterAvailable()" icon="mdi-ip-network" size="17px"  color="white" class="opacity-40 pb-1"/>
-        </v-col>
-      </v-row>
-    </v-col>
+          </v-col>
 
-    <!-- Speed & Circle & Connect button -->
-    <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
-      <!-- Speed -->
-      <v-row
-        align-content="center"
-        justify="center" dir="ltr"
-        :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
-      >
-        <!-- Statistics -->
-        <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
-          <v-btn
-            :text="locale('STATISTICS')"
-            variant="text"
-            append-icon="mdi-chevron-right"
-            @click="vhApp.isConnected() ? router.push('/statistics') : null"
-          />
-        </v-col>
-        <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-          <v-icon color="active" size="small" icon="mdi-arrow-up-thin"/>
-          <span class="pe-1 text-body-2 text-white">
-            {{formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1)}}
+          <!-- App name -->
+          <v-col cols="6" class="text-center text-home-app-bar">
+            <h4 dir="ltr">
+              {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
+            </h4>
+          </v-col>
+
+          <!-- App mini version -->
+          <v-col cols="3" class="text-end">
+            <v-chip
+              tabindex="-1"
+              size="small"
+              density="compact"
+              :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
+              :variant="isDebugDataHasValue() ? 'flat' : 'text'"
+              :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
+              @click="openDebugDialog"
+            >
+              <span :class="{'text-white opacity-40': !isDebugDataHasValue()}">
+                {{ locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false) }}
+              </span>
+            </v-chip>
+          </v-col>
+
+        </v-row>
+
+        <!-- Go Premium or Countdown button -->
+        <v-row class="mt-0" align="center">
+          <v-col cols="2"></v-col>
+          <v-col cols="8" class="text-center">
+            <!-- Countdown and extend session button -->
+            <CountDown v-if="isShowCountdown()" />
+
+            <!-- You are premium button -->
+            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
+                    prepend-icon="mdi-crown"
+                    :text="locale('YOU_ARE_PREMIUM')"
+                    color="enable-premium"
+                    variant="tonal"
+                    tag="h6"
+                    @click="router.push('/premium-user')"
+            />
+
+            <!-- Premium code -->
+            <v-chip v-else-if="!vhApp.data.features.isPremiumFlagSupported &&
+          vhApp.data.state.clientProfile?.hasAccessCode"
+                    prepend-icon="mdi-key"
+                    :text="locale('PREMIUM_CODE_IS_ACTIVE')"
+                    color="active"
+                    variant="tonal"
+                    tag="h6"
+                    @click="router.push('/premium-user')"
+            />
+
+            <!-- Go Premium button -->
+            <v-btn
+              v-else-if="vhApp.data.features.isPremiumFlagSupported &&
+        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+              :flat="true"
+              variant="outlined"
+              color="go-premium-btn"
+              rounded="pill"
+              size="small"
+              height="35"
+              @click="router.push('/purchase-subscription')"
+              class="ps-1 pe-3 text-capitalize"
+            >
+              <v-icon
+                icon="mdi-crown"
+                size="25"
+                class="bg-go-premium-btn rounded-circle me-2"
+              />
+              {{ locale('GO_PREMIUM') }}
+            </v-btn>
+          </v-col>
+          <v-col cols="2" class="text-end">
+            <v-icon v-if="isIpFilterAvailable()" icon="mdi-ip-network" size="17px" color="white"
+                    class="opacity-40 pb-1" />
+          </v-col>
+        </v-row>
+
+      </v-col>
+
+      <!-- Speed & Circle & Connect button -->
+      <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
+
+        <!-- Statistics & Speed -->
+        <v-row
+          align-content="center"
+          justify="center" dir="ltr"
+          :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
+        >
+          <!-- Statistics -->
+          <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
+            <v-btn
+              :text="locale('STATISTICS')"
+              variant="text"
+              append-icon="mdi-chevron-right"
+              @click="vhApp.isConnected() ? router.push('/statistics') : null"
+            />
+          </v-col>
+
+          <!-- Download speed -->
+          <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
+            <v-icon color="active" size="small" icon="mdi-arrow-up-thin" />
+            <span class="pe-1 text-body-2 text-white">
+            {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1) }}
           </span>
-          <span class="text-white opacity-40 align-self-center" style="font-size: 10px">Mbps</span>
-        </v-col>
-        <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-          <v-icon color="error" size="small" icon="mdi-arrow-down-thin"/>
-          <span class="pe-1 text-body-2 text-white">
-            {{formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
+            <span class="text-white opacity-40 align-self-center" style="font-size: 10px">Mbps</span>
+          </v-col>
+
+          <!-- Upload speed -->
+          <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
+            <v-icon color="error" size="small" icon="mdi-arrow-down-thin" />
+            <span class="pe-1 text-body-2 text-white">
+            {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
           </span>
-          <span class="text-white opacity-40 order-last align-self-center" style="font-size: 10px">Mbps</span>
-        </v-col>
-      </v-row>
+            <span class="text-white opacity-40 order-last align-self-center" style="font-size: 10px">Mbps</span>
+          </v-col>
+        </v-row>
 
-      <!-- Circle -->
-      <HomeConnectionInfo />
+        <!-- Circle -->
+        <HomeConnectionInfo />
 
-      <!-- Connect button -->
-      <v-btn
-        id="connectBtn"
-        height="40px"
-        min-width="180px"
-        rounded="pill"
-        :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
-        class="font-weight-bold mt-5 mb-4"
-        :class="{'connected': vhApp.isConnected()}"
-        :text="connectButtonText()"
-        @click="onConnectButtonClick"
-      />
+        <!-- Connect button -->
+        <v-btn
+          id="connectBtn"
+          height="40px"
+          min-width="180px"
+          rounded="pill"
+          :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
+          class="font-weight-bold mt-5 mb-4"
+          :class="{'connected': vhApp.isConnected()}"
+          :text="connectButtonText()"
+          @click="onConnectButtonClick"
+        />
 
-    </v-col>
+      </v-col>
 
-    <!-- Config buttons -->
-    <v-col cols="12">
+      <!-- Config buttons -->
+      <v-col cols="12">
 
-      <!-- Servers button -->
-      <home-config-btn
-        id="serverButton"
-        prepend-icon="mdi-earth"
-        class="align-center mb-1"
-        @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
+        <!-- Servers button -->
+        <home-config-btn
+          id="serverButton"
+          prepend-icon="mdi-earth"
+          class="align-center mb-1"
+          @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
             : router.push('/servers')"
-      >
-        <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
-        <v-icon :icon="Util.getLocalizedRightChevron()" />
-        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-          {{getActiveServerNameOrLocation()}}
+        >
+          <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{ getActiveServerNameOrLocation() }}
         </span>
 
-        <template v-slot:append>
-          <!-- Country flag -->
-          <span v-if="vhApp.getActiveServerCountryFlag()"
-                class="overflow-hidden d-inline-flex align-center justify-center ms-1"
-                style="width: 23px; height: 15px; border-radius: 3px"
-          >
+          <template v-slot:append>
+            <!-- Country flag -->
+            <span v-if="vhApp.getActiveServerCountryFlag()"
+                  class="overflow-hidden d-inline-flex align-center justify-center ms-1"
+                  style="width: 23px; height: 15px; border-radius: 3px"
+            >
             <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
           </span>
 
-          <!-- Auto server -->
-          <v-chip v-else
-                  :text="locale('AUTO')"
-                  color="white"
-                  variant="tonal"
-                  size="small"
-                  density="compact"
-                  class="text-capitalize opacity-50 px-2"
-                  tabindex="-1"
-          />
-        </template>
+            <!-- Auto server -->
+            <v-chip v-else
+                    :text="locale('AUTO')"
+                    color="white"
+                    variant="tonal"
+                    size="small"
+                    density="compact"
+                    class="text-capitalize opacity-50 px-2"
+                    tabindex="-1"
+            />
+          </template>
 
-      </home-config-btn>
+        </home-config-btn>
 
-      <!-- Exclude country button -->
-      <home-config-btn
-        id="excludeCountryButton"
-        prepend-icon="mdi-call-split"
-        class="mb-1"
-        @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
-      >
-        <span>{{ locale('COUNTRIES') }}</span>
-        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <!-- Exclude country button -->
+        <home-config-btn
+          id="excludeCountryButton"
+          prepend-icon="mdi-call-split"
+          class="mb-1"
+          @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
+        >
+          <span>{{ locale('COUNTRIES') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
 
-        <!-- Text related to selected option -->
-        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-        {{vhApp.data.settings.userSettings.tunnelClientCountry
-          ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY')}}
+          <!-- Text related to selected option -->
+          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+        {{ vhApp.data.settings.userSettings.tunnelClientCountry
+            ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
         </span>
 
-        <!-- Client country flag -->
-        <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
+          <!-- Client country flag -->
+          <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode"
+                    v-slot:append>
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
                 style="width: 23px; height: 15px; border-radius: 3px"
               >
-                <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag"/>
+                <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag" />
               </span>
+          </template>
+        </home-config-btn>
+
+        <!-- App filter button -->
+        <home-config-btn
+          v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+          prepend-icon="mdi-call-split"
+          class="mb-1"
+          to="/apps-filter"
+        >
+          <span>{{ locale('APPS') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+
+          <!-- Text related to selected option -->
+          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{ appFilterStatus() }}
+        </span>
+        </home-config-btn>
+
+        <!-- Protocol button -->
+        <home-config-btn
+          prepend-icon="mdi-transit-connection-variant"
+          @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
+        >
+          <span>{{ locale('PROTOCOL_TITLE') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+
+          <!-- Text related to selected option -->
+          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          {{ udpProtocolButtonText() }}
+        </span>
+        </home-config-btn>
+
+      </v-col>
+
+    </v-row>
+
+    <!-- Components -->
+    <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
+    <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
+    <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
+
+    <!-- Developer debug data dialog -->
+    <v-dialog v-if="pageInfo.name === 'Home'" v-model="isShowDebugDialog" :persistent="true">
+      <v-card color="background" title="Only developers" append-icon="mdi-bug-outline">
+
+        <!-- Support id -->
+        <template v-slot:subtitle>
+          <p class="text-disabled text-caption">{{ 'Support ID: ' + vhApp.data.state.clientProfile?.supportId }}</p>
         </template>
-      </home-config-btn>
 
-      <!-- App filter button -->
-      <home-config-btn
-        v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
-        prepend-icon="mdi-call-split"
-        class="mb-1"
-        to="/apps-filter"
-      >
-        <span>{{ locale('APPS') }}</span>
-        <v-icon :icon="Util.getLocalizedRightChevron()" />
+        <v-card-item>
+          <!-- Debug data-1 -->
+          <v-combobox
+            theme="dark"
+            v-model="debugData1"
+            clearable
+            label="DebugData1"
+            :items="vhApp.data.features.debugCommands"
+            hide-details
+            hide-selected
+            chips
+            closable-chips
+            multiple
+            class="mb-4"
+          />
 
-        <!-- Text related to selected option -->
-        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-          {{appFilterStatus()}}
-        </span>
-      </home-config-btn>
+          <!-- Debug data-2 -->
+          <v-combobox
+            v-model="debugData2"
+            clearable
+            label="DebugData2"
+            variant="filled"
+            hide-details
+            class="mb-4"
+          />
 
-      <!-- Protocol button -->
-      <home-config-btn
-        prepend-icon="mdi-transit-connection-variant"
-        @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
-      >
-        <span>{{ locale('PROTOCOL_TITLE') }}</span>
-        <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <!-- Open log file -->
+          <btn-style-1
+            block
+            text="Open log"
+            :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
+            target="_blank"
+          />
+        </v-card-item>
 
-        <!-- Text related to selected option -->
-        <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-          {{udpProtocolButtonText()}}
-        </span>
-      </home-config-btn>
+        <!-- Close button -->
+        <v-card-actions>
+          <v-btn text="Close" @click="saveDebugDataSetting()" />
+        </v-card-actions>
 
-    </v-col>
-  </v-row>
+      </v-card>
+    </v-dialog>
 
-  <!-- Components -->
-  <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
-  <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow"/>
-  <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
-
+  </v-sheet>
 </template>
 
 <!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
+#homeContainer {
+  background: url("@/assets/images/body-bg-mobile.png"),
+  linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2))), no-repeat, center top, fixed;
+  background-size: cover;
+  position: relative;
+  z-index: 0;
+}
+#homeContainer:before,
+#homeContainer:after {
+  position: absolute;
+  content: '';
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: top;
+  opacity: 0;
+  transition: opacity 1s linear;
+}
+#homeContainer:before {
+  background-image: url("@/assets/images/premium-bg-left.webp");
+  background-position-x: left;
+}
+#homeContainer:after {
+  background-image: url("@/assets/images/premium-bg-right.webp");
+  background-position-x: right;
+}
+#homeContainer.premium-user {
+  background-image: none;
+  background-color: rgb(var(--v-theme-home-bg-grad-2));
+}
+#homeContainer.premium-user:before,
+#homeContainer.premium-user:after {
+  opacity: 1;
+  transition-duration: 2s;
+}
 #connectBtn {
   transition: all 0.4s ease;
   background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-disconnected-grad-1)),
   rgb(var(--v-theme-connect-btn-disconnected-grad-2)) 90%) !important;
   color: rgb(var(--v-theme-on-connect-btn-disconnected));
 }
-
 #connectBtn.connected {
   background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-connected)),
   rgb(var(--v-theme-connect-btn-connected)) 90%) !important;
   color: rgb(var(--v-theme-on-connect-btn-connected));
 }
-
 .config-item {
   color: rgb(var(--v-theme-on-config-btn-bg));
   background: rgba(var(--v-theme-config-btn-bg), 0.7);
@@ -369,8 +565,7 @@ function appFilterStatus(): string {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
-
-.limited-width-to-truncate{
+.limited-width-to-truncate {
   max-width: calc(100vw - 110px);
 }
 </style>

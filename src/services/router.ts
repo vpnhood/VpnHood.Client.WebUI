@@ -31,7 +31,7 @@ const routes = [
     name: 'SERVERS',
     component: () => import(/* webpackChunkName: "Servers" */ '@/pages/ServersList.vue'),
     meta: {
-      title: 'Servers'
+      title: 'Servers',
     }
   },
   {
@@ -47,7 +47,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "PurchaseSubscription" */ '@/pages/SpecialPages/PurchaseSubscription.vue'),
     meta: {
       title: 'Purchase Subscription',
-      gradBg: true
     }
   },
   {

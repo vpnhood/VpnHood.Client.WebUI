@@ -149,7 +149,7 @@ function closeCompleteDialog(showStatistics: boolean) {
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg">
+  <v-sheet color="grad-bg-container-bg" class="pt-4">
 
     <v-card :class="Util.getSpecialPageCardClass()">
 
@@ -457,76 +457,75 @@ function closeCompleteDialog(showStatistics: boolean) {
 
     </v-card>
 
-  </v-sheet>
+    <!-- Pending purchase process dialog -->
+    <v-dialog :model-value="isShowProcessDialog" :persistent="true">
+      <v-card color="general-dialog">
+        <v-card-text class="text-general-dialog-text text-body-2">
+          {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
+          <v-progress-linear :indeterminate="true" height="2" rounded="true" class="my-3" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
-  <!-- Pending purchase process dialog -->
-  <v-dialog :model-value="isShowProcessDialog" :persistent="true">
-    <v-card color="general-dialog">
-      <v-card-text class="text-general-dialog-text text-body-2">
-        {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
-        <v-progress-linear :indeterminate="true" height="2" rounded="true" class="my-3" />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+    <!-- Purchase complete dialog -->
+    <v-dialog :model-value="purchaseCompleteDialogMessage != null" :persistent="true">
+      <v-card color="active">
 
-  <!-- Purchase complete dialog -->
-  <v-dialog :model-value="purchaseCompleteDialogMessage != null" :persistent="true">
-    <v-card color="active">
+        <v-card-title class="text-center pt-4">
+          <v-icon class="text-h2">mdi-party-popper</v-icon>
+          <h2>{{ locale('CONGRATULATIONS') }}</h2>
+        </v-card-title>
 
-      <v-card-title class="text-center pt-4">
-        <v-icon class="text-h2">mdi-party-popper</v-icon>
-        <h2>{{ locale('CONGRATULATIONS') }}</h2>
-      </v-card-title>
+        <v-card-text>
+          <p>{{ purchaseCompleteDialogMessage }}</p>
 
-      <v-card-text>
-        <p>{{ purchaseCompleteDialogMessage }}</p>
-
-        <!-- TODO: use theme color -->
-        <v-alert v-if="vhApp.isPremiumAccount(true)"
-                 variant="flat"
-                 color="#17083d"
-                 density="compact"
-                 rounded="lg"
-                 class="text-caption mt-4"
-        >
+          <!-- TODO: use theme color -->
+          <v-alert v-if="vhApp.isPremiumAccount(true)"
+                   variant="flat"
+                   color="#17083d"
+                   density="compact"
+                   rounded="lg"
+                   class="text-caption mt-4"
+          >
 
           <span v-if="!isNewCode && premiumCodeDeviceCount && premiumCodeDeviceCount > 1" class="mb-2">
             {{ locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE') }}
           </span>
 
-          <ul id="activationInfo"
-              :class="[premiumCodeDeviceCount && premiumCodeDeviceCount > 1 ? 'text-error' : 'text-active']"
-              style="list-style: none;"
-          >
+            <ul id="activationInfo"
+                :class="[premiumCodeDeviceCount && premiumCodeDeviceCount > 1 ? 'text-error' : 'text-active']"
+                style="list-style: none;"
+            >
 
-            <li v-if="premiumCodeActivationDate">
-              <span>{{ locale('ACTIVATED_ON') }}:</span>
-              <span>{{ Util.getShortDate(premiumCodeActivationDate) }}</span>
-            </li>
+              <li v-if="premiumCodeActivationDate">
+                <span>{{ locale('ACTIVATED_ON') }}:</span>
+                <span>{{ Util.getShortDate(premiumCodeActivationDate) }}</span>
+              </li>
 
-            <li v-if="premiumCodeExpirationDate">
-              <span>{{ locale('EXPIRATION_DATE') }}:</span>
-              <span>{{ Util.getShortDate(premiumCodeExpirationDate) }}</span>
-            </li>
+              <li v-if="premiumCodeExpirationDate">
+                <span>{{ locale('EXPIRATION_DATE') }}:</span>
+                <span>{{ Util.getShortDate(premiumCodeExpirationDate) }}</span>
+              </li>
 
-            <li v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
-              <span>{{ locale('USED_BY') }}:</span>
-              <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{ locale('DEVICE') }}</span>
-            </li>
+              <li v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
+                <span>{{ locale('USED_BY') }}:</span>
+                <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{ locale('DEVICE') }}</span>
+              </li>
 
-          </ul>
+            </ul>
 
-        </v-alert>
+          </v-alert>
 
-      </v-card-text>
+        </v-card-text>
 
-      <v-card-actions>
-        <v-btn v-if="vhApp.isConnected()" :text="locale('STATISTICS')" @click="closeCompleteDialog(true)" />
-        <v-btn :text="locale('CLOSE')" variant="plain" @click="closeCompleteDialog(false)" />
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        <v-card-actions>
+          <v-btn v-if="vhApp.isConnected()" :text="locale('STATISTICS')" @click="closeCompleteDialog(true)" />
+          <v-btn :text="locale('CLOSE')" variant="plain" @click="closeCompleteDialog(false)" />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
+  </v-sheet>
 </template>
 
 <style scoped>

@@ -7,6 +7,7 @@ import LocationList from '@/components/Servers/LocationList.vue'
 import { ComponentName } from '@/helpers/UiConstants';
 import { computed } from 'vue';
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -23,6 +24,7 @@ const isShowAddServerDialog = computed<boolean>({
 
 <template>
   <v-sheet>
+    <app-bar/>
 
     <!-- Add server button -->
     <div v-if="vhApp.data.features.isAddAccessKeySupported" class="text-center">
