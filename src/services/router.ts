@@ -27,7 +27,7 @@ const routes = [
     }
   },
   {
-    path: '/servers',
+    path: '/settings/servers',
     name: 'SERVERS',
     component: () => import(/* webpackChunkName: "Servers" */ '@/pages/ServersList.vue'),
     meta: {
@@ -113,7 +113,17 @@ const router = createRouter({
 // Change page title
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
+  const toDepth = to.path.split('/').length;
+  const fromDepth = from.path.split('/').length;
+  console.log('to: ' + toDepth, 'from: ' + fromDepth);
+  console.log(to.meta);
+  console.log(from.meta);
+  to.meta.transition = toDepth > fromDepth ? 'fade' : '';
+  from.meta.transition = toDepth > fromDepth ? 'fade' : '';
   next();
 });
+/*router.afterEach((to, from) => {
+
+})*/
 
 export default router;

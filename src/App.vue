@@ -67,12 +67,11 @@ onMounted(async () => {
         <!-- Privacy policy page -->
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
 
-        <router-view v-else/>
-<!--        <router-view v-else v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
+        <router-view v-else v-slot="{ Component, route }">
+          <transition :name="route.meta.transition?.toString()">
             <component :is="Component" :key="$route.path"/>
           </transition>
-        </router-view>-->
+        </router-view>
 
       </v-main>
 
@@ -104,12 +103,34 @@ onMounted(async () => {
 }
 </style>
 <style>
-.fade-enter-active,
-.fade-leave-active{
-  transition: opacity 0.3s ease;
+.fade-enter-from{
+  opacity: 0;
+  transform: translateY(100px);
 }
-.fade-enter,
+.fade-enter-active{
+  transition: all 0.5s ease;
+}
+
+.fade-enter-to{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-enter{
+
+}
+/*.fade-leave-from{
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-leave-active{
+  transition: all 0.5s ease;
+}
 .fade-leave-to{
   opacity: 0;
+  transform: translateY(100px);
+}*/
+.fade-leave{
+
 }
 </style>

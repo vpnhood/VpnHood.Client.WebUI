@@ -227,44 +227,6 @@ function isDebugDataHasValue(): boolean {
 
         </v-row>
 
-<!--        <v-app-bar location="top" v-if="pageInfo.name === 'Home'" color="transparent" elevation="0" :absolute="false"
-                   height="100">
-          <v-row class="align-center mx-0">
-
-            &lt;!&ndash; Navigation drawer button &ndash;&gt;
-            <v-col cols="3" class="ps-0">
-              <v-app-bar-nav-icon
-                color="home-app-bar"
-                class="mx-0"
-                @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)"
-              />
-            </v-col>
-
-            &lt;!&ndash; App name &ndash;&gt;
-            <v-col cols="6" class="text-center text-home-app-bar px-0">
-              <h4 dir="ltr">{{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}</h4>
-            </v-col>
-
-            &lt;!&ndash; App mini version &ndash;&gt;
-            <v-col cols="3" class="text-end">
-              <v-chip
-                tabindex="-1"
-                size="small"
-                density="compact"
-                :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
-                :variant="isDebugDataHasValue() ? 'flat' : 'text'"
-                :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
-                @click="openDebugDialog"
-              >
-          <span :class="{'text-white opacity-40': !isDebugDataHasValue()}">{{locale('ABBREVIATION_VERSION') + ' ' +
-          vhApp.getAppVersion(false)
-            }}</span>
-              </v-chip>
-            </v-col>
-
-          </v-row>
-        </v-app-bar>-->
-
         <!-- Go Premium or Countdown button -->
         <v-row class="mt-0" align="center">
           <v-col cols="2"></v-col>
@@ -389,7 +351,7 @@ function isDebugDataHasValue(): boolean {
           @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
-            : router.push('/servers')"
+            : router.push('/settings/servers')"
         >
           <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
