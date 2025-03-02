@@ -8,6 +8,7 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicy from "@/pages/PrivacyPolicy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -52,11 +53,10 @@ onMounted(async () => {
   <v-app id="appContainer">
 
     <v-layout
-      id="pagesContainer"
       width="100%"
       max-width="850px"
       full-height
-      class="mx-auto"
+      :class="{'border border-highlight border-opacity-50 elevation-3 rounded-lg mx-auto my-5': !Util.isMobileDevice()}"
     >
 
       <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
@@ -68,6 +68,11 @@ onMounted(async () => {
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
 
         <router-view v-else/>
+<!--        <router-view v-else v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" :key="$route.path"/>
+          </transition>
+        </router-view>-->
 
       </v-main>
 
@@ -92,16 +97,19 @@ onMounted(async () => {
     background: url('@/assets/images/body-blur-bg.png'), rgb(var(--v-theme-app-bg)) no-repeat center top fixed;
     background-size: cover;
   }
-  #pagesContainer{
-    border: 1px rgba(var(--v-theme-highlight), .5) solid;
-    box-shadow: 0 0 20px 9px #00000047;
-    border-radius: 10px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
 }
 /********* End of Device is not mobile **********/
 #appContainer.grad-bg{
   background: rgb(var(--v-theme-grad-bg-container-bg)) !important;
+}
+</style>
+<style>
+.fade-enter-active,
+.fade-leave-active{
+  transition: opacity 0.3s ease;
+}
+.fade-enter,
+.fade-leave-to{
+  opacity: 0;
 }
 </style>

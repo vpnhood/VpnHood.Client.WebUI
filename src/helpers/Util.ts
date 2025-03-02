@@ -45,6 +45,6 @@ export class Util {
   }
 
   public static isMobileDevice(): boolean{
-    return vuetify.display.mobile.value && vuetify.display.smAndDown.value;
+    return vuetify.display.mobile.value || vuetify.display.smAndDown.value;
   }
 }

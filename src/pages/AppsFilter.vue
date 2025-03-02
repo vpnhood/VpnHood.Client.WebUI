@@ -6,7 +6,7 @@ import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
-import vuetify from '@/services/vuetify';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -25,7 +25,7 @@ const showConfirmDialog = ref<boolean>(false);
 const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
-const isShowSearchBox = ref<boolean>(!vuetify.display.mdAndUp.value);
+const isShowSearchBox = ref<boolean>(Util.isMobileDevice());
 
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)
@@ -150,7 +150,7 @@ async function actionOnConfirm() {
 
         <!-- Search button -->
         <btn-style-5
-          v-if="vuetify.display.mdAndUp.value"
+          v-if="!Util.isMobileDevice()"
           prepend-icon="mdi-magnify"
           class="d-inline-flex text-caption ms-2"
           :text="locale('SEARCH')"

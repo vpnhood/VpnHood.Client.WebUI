@@ -82,6 +82,7 @@ function navigateByRouter(address: string){
     :modelValue="modelValue"
     :location="vuetify.locale.isRtl.value? 'right' : 'left'"
     color="navigation-drawer"
+    class="rounded-te-xl rounded-be-xl overflow-hidden"
     :temporary="true"
     :disable-route-watcher="true"
     :floating="true"

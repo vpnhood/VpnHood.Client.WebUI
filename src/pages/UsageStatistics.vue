@@ -40,7 +40,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_DATE_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text>
-          <ul class="info-table unstyled">
+          <ul class="info-table">
 
             <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()" class="border-b">
               <span>{{locale('PREMIUM_BY')}}</span>
@@ -85,7 +85,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_SERVER_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text>
-          <ul v-if="vhApp.isConnected()" class="info-table unstyled">
+          <ul v-if="vhApp.isConnected()" class="info-table">
 
             <li class="border-b">
               <span>{{locale('YOUR_PROTECTED_IP')}}</span>
@@ -138,7 +138,7 @@ function calcUnit(total: number): string{
         </v-card-subtitle>
 
         <v-card-text>
-          <ul class="info-table unstyled">
+          <ul class="info-table">
             <li class="border-b">
               <span>{{locale('USED_BY')}}</span>
               <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
@@ -169,7 +169,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_SESSION_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text>
-          <ul class="info-table unstyled">
+          <ul class="info-table">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
@@ -200,7 +200,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_MONTHLY_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text>
-          <ul class="info-table unstyled">
+          <ul class="info-table">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
@@ -231,7 +231,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_TOTAL_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text class="text-disabled text-caption mt-3">
-          <ul class="info-table unstyled">
+          <ul class="info-table">
             <li class="border-b">
               <span>{{locale('USED')}}</span>
               <span class="text-highlight" dir="ltr">
