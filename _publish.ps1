@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop";
+$LastExitCode = 0;
 
 $distDir= "$PSScriptRoot/dist"
 $nugetSolutionDir = Join-Path -Path (Split-Path -parent $PSScriptRoot) -ChildPath "VpnHood.AppLib.Assets.ClassicSpa";
@@ -9,8 +10,8 @@ $spaZipFile= "$nugetProjectDir/Resources/spa.zip";
 try {
  Write-Host "Building SPA ..." -BackgroundColor Blue -ForegroundColor White;
  Push-Location -Path $PSScriptRoot;
- npm run build;
- if ($LastExitCode -ne 0) {throw "Could not build SPA Error code: $LastExitCode"; }
+# npm run build;
+ if ($LastExitCode -ne 0) {throw "Could not build SPA Error code: $_"; }
 }
 finally {
     Pop-Location;
@@ -20,13 +21,12 @@ finally {
 # zip
 # ------------------
 Write-Host "Creating Zip ..." -BackgroundColor Blue -ForegroundColor White;
-# tar.exe -C "$distDir" -a -cf "$spaZipFile" "*"
-$process = Start-Process -FilePath "tar.exe" -ArgumentList "-C `"$distDir`" -a -cf `"$spaZipFile`" *" -NoNewWindow -Wait -PassThru
-if ($process.ExitCode -ne 0) { throw "Could not create the zip file. ExitCode: $LASTEXITCODE " }
+Compress-Archive -Path "$distDir\*" -DestinationPath "$spaZipFile" -CompressionLevel NoCompression -Force
+if ($LastExitCode -ne 0) { throw "Could not create the zip file. Error: $_" }
 
 #-------------------
 # build nuget
 # ------------------
 Write-Host "Building nuget ..." -BackgroundColor Blue -ForegroundColor White;
 dotnet build $nugetProjectDir -c "Release"
-if ($LastExitCode -gt 0) { throw "Could not create the zip file. ExitCode: $LastExitCode" }
+if ($LastExitCode -gt 0) { throw "Could not create the zip file. ExitCode: $_" }
