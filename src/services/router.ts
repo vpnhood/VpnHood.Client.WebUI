@@ -113,17 +113,26 @@ const router = createRouter({
 // Change page title
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
+
+    next();
+});
+router.afterEach((to, from) => {
   const toDepth = to.path.split('/').length;
   const fromDepth = from.path.split('/').length;
   console.log('to: ' + toDepth, 'from: ' + fromDepth);
   console.log(to.meta);
   console.log(from.meta);
-  to.meta.transition = toDepth > fromDepth ? 'fade' : '';
-  from.meta.transition = toDepth > fromDepth ? 'fade' : '';
-  next();
-});
-/*router.afterEach((to, from) => {
+  // Reset transitions for both pages
+  to.meta.transition = 'test';
+  from.meta.transition = 'test';
 
-})*/
+  if (toDepth > fromDepth) {
+    // Forward navigation: apply transition to 'to' page only
+    to.meta.transition = 'fade';
+  } else if (toDepth < fromDepth) {
+    // Backward navigation: apply transition to 'from' page only
+    from.meta.transition = 'fade';
+  }
+})
 
 export default router;

@@ -68,8 +68,8 @@ onMounted(async () => {
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
 
         <router-view v-else v-slot="{ Component, route }">
-          <transition :name="route.meta.transition?.toString()">
-            <component :is="Component" :key="$route.path"/>
+          <transition :name="route.meta.transition?.toString()" mode="out-in">
+            <component :is="Component" />
           </transition>
         </router-view>
 
@@ -103,34 +103,42 @@ onMounted(async () => {
 }
 </style>
 <style>
+
 .fade-enter-from{
   opacity: 0;
-  transform: translateY(100px);
+  transform: translateY(50px);
 }
 .fade-enter-active{
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
-.fade-enter-to{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.fade-enter{
-
-}
-/*.fade-leave-from{
-  opacity: 1;
-  transform: translateY(0);
-}
 .fade-leave-active{
-  transition: all 0.5s ease;
+  transition: all 0.1s ease;
 }
 .fade-leave-to{
   opacity: 0;
-  transform: translateY(100px);
-}*/
-.fade-leave{
+}
+
+
+.test-enter-from{
+  transform: translateY(-30px);
+  opacity: 0;
+}
+.test-enter-active{
+  transition: all 0.1s ease;
+}
+
+.test-leave-active{
+  transition: all 0.3s ease;
+}
+.test-leave-to{
+  opacity: 0;
+  transform: translateY(50px);
+}
+/*.fade-leave{
 
 }
+.fade-enter{
+
+}*/
 </style>
