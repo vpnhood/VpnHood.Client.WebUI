@@ -8,9 +8,9 @@ $spaZipFile= "$nugetProjectDir/Resources/spa.zip";
 
 # build output
 try {
- Write-Host "Building SPA ..." -BackgroundColor Blue -ForegroundColor White;
+ Write-Host "Building SPA ..." -ForegroundColor Magenta;
  Push-Location -Path $PSScriptRoot;
-# npm run build;
+ npm run build;
  if ($LastExitCode -ne 0) {throw "Could not build SPA Error code: $_"; }
 }
 finally {
@@ -20,13 +20,13 @@ finally {
 #-------------------
 # zip
 # ------------------
-Write-Host "Creating Zip ..." -BackgroundColor Blue -ForegroundColor White;
+Write-Host "Creating Zip ..." -ForegroundColor Magenta;
 Compress-Archive -Path "$distDir\*" -DestinationPath "$spaZipFile" -CompressionLevel NoCompression -Force
 if ($LastExitCode -ne 0) { throw "Could not create the zip file. Error: $_" }
 
 #-------------------
 # build nuget
 # ------------------
-Write-Host "Building nuget ..." -BackgroundColor Blue -ForegroundColor White;
+Write-Host "Building nuget ..." -ForegroundColor Magenta;
 dotnet build $nugetProjectDir -c "Release"
 if ($LastExitCode -gt 0) { throw "Could not create the zip file. ExitCode: $_" }
