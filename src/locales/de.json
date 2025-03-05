@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "Server-Schlüssel hinzufügen",
   "ADD_ACCESS_KEY_SUBTITLE": "Kopieren und fügen Sie einen Server-Schlüssel ein, um einen Server hinzuzufügen.",
   "INVALID_ACCESS_KEY_FORMAT": "Der Server-Schlüssel hat ein ungültiges Format.",
+  "HOME": "Startseite",
   "SERVERS": "Server",
   "APP_FILTER": "Apps Filter",
   "APP_FILTER_DESC": "Welche Apps können VPN verwenden?",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "Der Premium-Code ist ungültig.",
   "PREMIUM_CODE_DETAILS": "Premium-Code-Details",
   "MORE_DETAILS": "Mehr Details",
-  "PREMIUM_CODE_IS_ACTIVE": "Premium-Code ist aktiv"
+  "PREMIUM_CODE_IS_ACTIVE": "Premium-Code ist aktiv",
+  "CONNECTION_TIMEOUT_MSG": "Verbindung konnte in der vorgegebenen Zeit nicht hergestellt werden.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "Ihre Premium-Verbindungszeit ist abgelaufen.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "Das tägliche Limit wurde überschritten."
 }
