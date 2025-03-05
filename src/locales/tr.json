@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "Sunucu anahtarı ekle",
   "ADD_ACCESS_KEY_SUBTITLE": "Bir sunucu eklemek için sunucu anahtarını kopyalayıp yapıştırın.",
   "INVALID_ACCESS_KEY_FORMAT": "Sunucu anahtarı geçersiz bir formatta.",
+  "HOME": "Ana Sayfa",
   "SERVERS": "Sunucular",
   "APP_FILTER": "Uygulama Filtresi",
   "APP_FILTER_DESC": "Hangi uygulamalar VPN kullanabilir?",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "Premium kod geçersiz.",
   "PREMIUM_CODE_DETAILS": "Premium kod detayları",
   "MORE_DETAILS": "Daha fazla detay",
-  "PREMIUM_CODE_IS_ACTIVE": "Premium kodu aktif"
+  "PREMIUM_CODE_IS_ACTIVE": "Premium kodu aktif",
+  "CONNECTION_TIMEOUT_MSG": "Belirtilen sürede bağlantı kurulamadı.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "Premium bağlantı süreniz doldu.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "Günlük sınır aşıldı."
 }
