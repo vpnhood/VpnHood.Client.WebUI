@@ -5,10 +5,10 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <v-sheet>
+  <v-sheet class="pt-4">
     <v-card color="transparent" class="d-flex flex-column justify-space-between fill-height">
       <div>
-        <v-card-title class="text-center pt-0 pb-2">VpnHood! CONNECT Privacy Policy</v-card-title>
+        <v-card-title class="text-center">VpnHood! CONNECT Privacy Policy</v-card-title>
         <v-divider/>
 
         <v-card-text class="text-body-2 px-2">

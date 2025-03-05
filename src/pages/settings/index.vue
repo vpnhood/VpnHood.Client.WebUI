@@ -57,11 +57,9 @@ function isIncludeLocalNetworkAvailable(): boolean {
     return true;
   return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.includeLocalNetwork;
 }
-// TODO: disconnect by change ip filter
 </script>
 
 <template>
-
   <v-sheet>
     <app-bar/>
 
@@ -69,7 +67,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
     <config-card>
       <v-card-title>{{ locale('LANGUAGE') }}</v-card-title>
       <v-card-item>
-        <btn-style-4 @click="router.push({ name: 'LANGUAGES' })">
+        <btn-style-4 @click="router.push({ name: 'LANGUAGE'})">
 
           <span>{{ locale('APP_LANGUAGE') }}</span>
 
@@ -159,7 +157,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         <btn-style-4 v-if="useIpFilterByDevice"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
-                     @click="router.push({name: 'FILTER_IP_BY_DEVICE'})"
+                     @click="router.push({name: 'FILTER_IPS_BY_DEVICE'})"
         />
 
       </v-card-item>
@@ -180,7 +178,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         <btn-style-4 v-if="useIpFilterByApp"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
-                     @click="router.push({name: 'FILTER_IP_BY_APP'})"
+                     @click="router.push({name: 'FILTER_IPS_BY_APP'})"
         />
 
       </v-card-item>

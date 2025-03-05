@@ -620,7 +620,7 @@ export default createVuetify({
       class: "text-transform-none"
     },
     VSheet: {
-      class: "pa-4 fill-height",
+      class: "px-4 pb-4 fill-height",
       color: "background",
     },
     VExpansionPanel:{

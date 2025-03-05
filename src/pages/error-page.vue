@@ -12,6 +12,7 @@ function reloadUI() {
   <v-sheet
     color="rgba(0, 0, 0, 0.66)"
     class="d-flex flex-column align-center justify-center text-center"
+    style="height: 100vh!important;"
   >
     <v-card
       rounded="lg"

@@ -27,11 +27,11 @@ declare module 'vue-router/auto-routes' {
     'EXTEND_SESSION': RouteRecordInfo<'EXTEND_SESSION', '/servers/extend-session', Record<never, never>, Record<never, never>>,
     'PROMOTE_PREMIUM': RouteRecordInfo<'PROMOTE_PREMIUM', '/servers/promote-premium', Record<never, never>, Record<never, never>>,
     'SETTINGS': RouteRecordInfo<'SETTINGS', '/settings', Record<never, never>, Record<never, never>>,
-    'FILTER_IP_BY_APP': RouteRecordInfo<'FILTER_IP_BY_APP', '/settings/filter-ip-by-app', Record<never, never>, Record<never, never>>,
-    'FILTER_IP_BY_DEVICE': RouteRecordInfo<'FILTER_IP_BY_DEVICE', '/settings/filter-ip-by-device', Record<never, never>, Record<never, never>>,
-    'LANGUAGES': RouteRecordInfo<'LANGUAGES', '/settings/languages', Record<never, never>, Record<never, never>>,
-    'USAGE_STATISTICS': RouteRecordInfo<'USAGE_STATISTICS', '/usage-statistics', Record<never, never>, Record<never, never>>,
+    'FILTER_IPS_BY_APP': RouteRecordInfo<'FILTER_IPS_BY_APP', '/settings/filter-ips-by-app', Record<never, never>, Record<never, never>>,
+    'FILTER_IPS_BY_DEVICE': RouteRecordInfo<'FILTER_IPS_BY_DEVICE', '/settings/filter-ips-by-device', Record<never, never>, Record<never, never>>,
+    'LANGUAGE': RouteRecordInfo<'LANGUAGE', '/settings/language', Record<never, never>, Record<never, never>>,
+    'STATISTICS': RouteRecordInfo<'STATISTICS', '/statistics', Record<never, never>, Record<never, never>>,
+    'ACCOUNT': RouteRecordInfo<'ACCOUNT', '/user/account', Record<never, never>, Record<never, never>>,
     'PREMIUM_USER': RouteRecordInfo<'PREMIUM_USER', '/user/premium-user', Record<never, never>, Record<never, never>>,
-    'USER_ACCOUNT': RouteRecordInfo<'USER_ACCOUNT', '/user/user-account', Record<never, never>, Record<never, never>>,
   }
 }

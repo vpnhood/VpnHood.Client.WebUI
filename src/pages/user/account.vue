@@ -135,7 +135,7 @@ function formatDate(date: Date | null | undefined): string | null {
           :append-icon="Util.getLocalizedRightChevron()"
           :text="locale('MORE_DETAILS')"
           size="small"
-          @click="router.push({name: 'USAGE_STATISTICS'})"
+          @click="router.push({name: 'STATISTICS'})"
         />
       </v-card-actions>
 

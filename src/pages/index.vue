@@ -173,7 +173,6 @@ function isDebugDataHasValue(): boolean {
 <template>
   <v-sheet
     id="homeContainer"
-    class="pt-0"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
                 (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.isConnected())) ?
                 'premium-user' : '', vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]"
@@ -294,7 +293,7 @@ function isDebugDataHasValue(): boolean {
               :text="locale('STATISTICS')"
               variant="text"
               append-icon="mdi-chevron-right"
-              @click="vhApp.isConnected() ? router.push({name: 'USAGE_STATISTICS'}) : null"
+              @click="vhApp.isConnected() ? router.push({name: 'STATISTICS'}) : null"
             />
           </v-col>
 

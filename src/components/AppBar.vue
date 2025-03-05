@@ -7,7 +7,7 @@ import { computed } from 'vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 
 const locale = i18n.global.t;
-
+const vhApp = VpnHoodApp.instance;
 const pageInfo = computed((): RouteLocationNormalizedLoaded => {
   return router.currentRoute.value;
 })
@@ -15,7 +15,11 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 
 <template>
   <!-- Page header -->
-  <div :class="[!VpnHoodApp.instance.isConnectApp() ?'elevation-1 bg-app-bar' : 'text-white', 'mb-3 mx-n4']">
+  <div
+    :class="[!vhApp.isConnectApp() ?'elevation-1 bg-app-bar' : 'text-white', 'mb-3 mx-n4']"
+    :style="(!vhApp.isConnectApp() && vhApp.getEdgeToEdgeTopHeight()) ?
+    `padding-top: ${vhApp.getEdgeToEdgeTopHeight()}px !important; margin-top: -${vhApp.getEdgeToEdgeTopHeight()}px !important;`: ''"
+  >
     <!-- Back button -->
     <v-btn :icon="Util.getLocalizedLeftChevron()" variant="text" @click="router.go(-1)" />
 

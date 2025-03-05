@@ -144,7 +144,7 @@ async function validateCode(): Promise<void> {
 
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace({name: showStatistics ? 'USAGE_STATISTICS' : 'HOME'});
+  router.replace({name: showStatistics ? 'STATISTICS' : 'HOME'});
 }
 </script>
 

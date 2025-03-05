@@ -45,6 +45,9 @@ async function main(): Promise<void> {
     ::-webkit-scrollbar {
       width: 5px;
     }
+    ::-webkit-scrollbar:hover {
+      width: 8px;
+    }
 
     ::-webkit-scrollbar-track {
       background-color: rgb(var(--v-theme-scroll-track));
@@ -64,19 +67,15 @@ async function main(): Promise<void> {
       document.head.appendChild(styleElement);
     }
 
-    // Add space to the pages for handle edge-to-edge feature
-    const { topHeight, bottomHeight } = vpnHoodApp.data.state.systemBarsInfo;
-    if (topHeight > 0 || bottomHeight > 0) {
-      const topSpace = Math.ceil(topHeight / window.devicePixelRatio);
-      const bottomSpace = Math.ceil(bottomHeight / window.devicePixelRatio);
-      const styleContent = `
-        .v-main>.v-sheet {
-            ${topSpace > 0 ? `padding-top: ${topSpace}px !important;` : ''}
-            ${bottomSpace > 0 ? `padding-bottom: ${bottomSpace}px !important;` : ''}
-        }
-    `;
+    // Add padding to the pages for handle edge-to-edge feature
+    const paddingTop = vpnHoodApp.getEdgeToEdgeTopHeight();
+    const paddingBottom = vpnHoodApp.getEdgeToEdgeBottomHeight();
+    if (paddingTop || paddingBottom) {
       const styleElement = document.createElement('style');
-      styleElement.textContent = styleContent.trim();
+      styleElement.textContent = `.v-main>.v-sheet {
+        ${ paddingTop ? `padding-top: ${paddingTop}px !important;` : ''}
+        ${ paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : ''}
+      }`;
       document.head.appendChild(styleElement);
     }
 

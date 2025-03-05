@@ -62,7 +62,7 @@ async function removeCode() {
           variant="plain"
           :text="locale('STATISTICS')"
           size="small"
-          @click="router.push({name: 'USAGE_STATISTICS'})"
+          @click="router.push({name: 'STATISTICS'})"
         />
       </v-card-actions>
     </config-card>
@@ -80,7 +80,7 @@ async function removeCode() {
           :text="locale('ACCOUNT')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push({name: 'USER_ACCOUNT'})"
+          @click="router.push({name: 'ACCOUNT'})"
         />
       </v-card-actions>
     </config-card>

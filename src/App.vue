@@ -104,17 +104,19 @@ onMounted(async () => {
 </style>
 
 <!--suppress CssUnusedSymbol -->
-<!-- TODO: review -->
 <style>
-.translate-with-fade-enter-from{
+.translate-with-fade-enter-from,
+.short-translate-leave-to{
   opacity: 0;
   transform: translateY(50px);
 }
-.translate-with-fade-enter-active{
+.translate-with-fade-enter-active,
+.short-translate-leave-active{
   transition: all 0.2s ease;
 }
 
-.translate-with-fade-leave-active{
+.translate-with-fade-leave-active,
+.short-translate-enter-active{
   transition: all 0.1s ease;
 }
 .translate-with-fade-leave-to{
@@ -124,15 +126,5 @@ onMounted(async () => {
 .short-translate-enter-from{
   transform: translateY(-30px);
   opacity: 0;
-}
-.short-translate-enter-active{
-  transition: all 0.1s ease;
-}
-.short-translate-leave-active{
-  transition: all 0.2s ease;
-}
-.short-translate-leave-to{
-  opacity: 0;
-  transform: translateY(50px);
 }
 </style>

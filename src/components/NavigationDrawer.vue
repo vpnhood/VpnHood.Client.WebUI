@@ -75,6 +75,14 @@ function navigateByRouter(to: RouteLocationRaw){
   emit('update:modelValue', false);
   router.replace(to);
 }
+function edgeToEdgeHeight(bottom: boolean): string{
+  if (bottom){
+    const paddingBottom = vhApp.getEdgeToEdgeBottomHeight();
+    return paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : '';
+  }
+  const paddingTop = vhApp.getEdgeToEdgeTopHeight();
+  return paddingTop ? `padding-top: ${paddingTop+6}px !important;` : '';
+}
 </script>
 
 <template>
@@ -87,9 +95,10 @@ function navigateByRouter(to: RouteLocationRaw){
     :temporary="true"
     :disable-route-watcher="true"
     :floating="true"
+    :style="edgeToEdgeHeight(true)"
   >
     <!-- Header -->
-    <div class="bg-navigation-drawer-header d-flex align-center pa-4">
+    <div class="bg-navigation-drawer-header d-flex align-center pa-4" :style="edgeToEdgeHeight(false)">
 
       <v-img
         :src="vhApp.getImageUrl(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
@@ -136,7 +145,7 @@ function navigateByRouter(to: RouteLocationRaw){
       <v-list-item
         v-if="vhApp.data.features.isAccountSupported"
         class="border-b"
-        @click="vhApp.data.userState.userAccount ? navigateByRouter('/account') : onSignIn()"
+        @click="vhApp.data.userState.userAccount ? navigateByRouter({name: 'ACCOUNT'}) : onSignIn()"
       >
         <v-list-item-title class="d-flex align-center">
           <v-icon icon="mdi-account" />
@@ -152,7 +161,7 @@ function navigateByRouter(to: RouteLocationRaw){
       <!-- Settings -->
       <v-list-item
         class="border-b"
-        @click="navigateByRouter('/settings')"
+        @click="navigateByRouter({name: 'SETTINGS'})"
       >
         <v-list-item-title>
           <v-icon icon="mdi-cog" />

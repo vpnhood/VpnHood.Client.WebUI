@@ -402,4 +402,21 @@ export class VpnHoodApp {
     console.log('User Account: ', this.data.userState.userAccount);
     await this.reloadSettings();
   }
+
+  public getEdgeToEdgeTopHeight(): number | null{
+    let topHeight  = this.data.state.systemBarsInfo.topHeight;
+    if (topHeight > 0)
+      topHeight = Math.ceil(topHeight / window.devicePixelRatio) + 3;
+
+    return topHeight > 0 ? topHeight : null;
+  }
+
+  public getEdgeToEdgeBottomHeight(): number | null{
+    let bottomHeight  = this.data.state.systemBarsInfo.bottomHeight;
+    if (bottomHeight > 0)
+      bottomHeight = Math.ceil(bottomHeight / window.devicePixelRatio) + 3;
+
+    return bottomHeight > 0 ? bottomHeight : null;
+  }
+
 }

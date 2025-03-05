@@ -42,7 +42,7 @@ async function showRewardedAd(){
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg">
+  <v-sheet color="grad-bg-container-bg" class="pt-4">
     <v-card :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->

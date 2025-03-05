@@ -9,6 +9,7 @@ import postcssPresetEnv from 'postcss-preset-env';
 import { version } from './package.json';
 
 // https://vite.dev/config/
+// noinspection JSUnusedGlobalSymbols
 export default defineConfig({
   resolve: {
     alias: {
