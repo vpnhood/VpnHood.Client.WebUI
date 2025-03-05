@@ -294,6 +294,6 @@
   "MORE_DETAILS": "مزيد من التفاصيل",
   "PREMIUM_CODE_IS_ACTIVE": "الكود المميز نشط",
   "CONNECTION_TIMEOUT_MSG": "تعذر إنشاء اتصال في الوقت المحدد.",
-  "PREMIUM_CONNECTION_EXPIRED_MSG": "انتهى وقت الاتصال بالخوادم المميزة.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "انتهى وقت اتصالك المميز.",
   "DAILY_LIMIT_EXCEEDED_MSG": "تم تجاوز الحد اليومي."
 }
