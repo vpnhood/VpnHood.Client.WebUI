@@ -5,7 +5,7 @@ import {ComponentRouteController} from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
-import PrivacyPolicy from "@/pages/PrivacyPolicy.vue";
+import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import { Util } from '@/helpers/Util';
@@ -102,43 +102,37 @@ onMounted(async () => {
   background: rgb(var(--v-theme-grad-bg-container-bg)) !important;
 }
 </style>
-<style>
 
-.fade-enter-from{
+<!--suppress CssUnusedSymbol -->
+<!-- TODO: review -->
+<style>
+.translate-with-fade-enter-from{
   opacity: 0;
   transform: translateY(50px);
 }
-.fade-enter-active{
-  transition: all 0.3s ease;
+.translate-with-fade-enter-active{
+  transition: all 0.2s ease;
 }
 
-.fade-leave-active{
+.translate-with-fade-leave-active{
   transition: all 0.1s ease;
 }
-.fade-leave-to{
+.translate-with-fade-leave-to{
   opacity: 0;
 }
 
-
-.test-enter-from{
+.short-translate-enter-from{
   transform: translateY(-30px);
   opacity: 0;
 }
-.test-enter-active{
+.short-translate-enter-active{
   transition: all 0.1s ease;
 }
-
-.test-leave-active{
-  transition: all 0.3s ease;
+.short-translate-leave-active{
+  transition: all 0.2s ease;
 }
-.test-leave-to{
+.short-translate-leave-to{
   opacity: 0;
   transform: translateY(50px);
 }
-/*.fade-leave{
-
-}
-.fade-enter{
-
-}*/
 </style>

@@ -28,5 +28,6 @@ if ($LastExitCode -ne 0) { throw "Could not create the zip file. Error: $_" }
 # build nuget
 # ------------------
 Write-Host "Building nuget ..." -ForegroundColor Magenta;
-dotnet build $nugetProjectDir -c "Release"
+dotnet clean $nugetProjectDir -c "Release";
+dotnet build $nugetProjectDir -c "Release" --no-incremental;
 if ($LastExitCode -gt 0) { throw "Could not create the zip file. ExitCode: $_" }

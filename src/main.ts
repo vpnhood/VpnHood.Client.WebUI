@@ -9,7 +9,7 @@ import { AppName } from '@/helpers/UiConstants'
 import vuetify from './services/vuetify'
 import i18n from './locales/i18n'
 import router from './services/router'
-import ErrorPage from "./pages/ErrorPage.vue"
+import ErrorPage from "./pages/error-page.vue"
 import './assets/styles/general.css'
 import './assets/styles/override.css'
 import './assets/styles/vpn-hood.css'

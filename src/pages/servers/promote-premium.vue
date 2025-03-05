@@ -26,7 +26,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
   // Open PurchaseSubscription page
   if (planId === MyPlanId.premiumByPurchase || planId === MyPlanId.premiumByCode){
-    await router.push('/purchase-subscription');
+    await router.push({name: 'PURCHASE_SUBSCRIPTION'});
     return;
   }
 

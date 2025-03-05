@@ -176,8 +176,8 @@ export class VpnHoodApp {
 
     try {
       // Navigate to home page
-      if (goToHome && router.currentRoute.value.path !== '/')
-        await router.replace('/');
+      if (goToHome && router.currentRoute.value.name !== 'HOME')
+        await router.replace({name: 'HOME'});
 
       if (isDiagnose) await this.diagnose();
 
@@ -231,7 +231,7 @@ export class VpnHoodApp {
 
   public async diagnose(): Promise<void> {
     if (!this.data.settings.userSettings.clientProfileId) {
-      await router.replace('/servers');
+      await router.replace({name: 'SERVERS'});
       return;
     }
     await this.apiClient.diagnose(

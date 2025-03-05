@@ -5,6 +5,7 @@ import router from '@/services/router';
 import { LanguagesCode } from '@/helpers/UiConstants';
 import { type IUiCultureInfo } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -38,6 +39,7 @@ onMounted(() => {
 
 <template>
   <v-sheet>
+    <app-bar/>
 
     <config-card>
       <v-list

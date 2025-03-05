@@ -6,6 +6,7 @@ import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -62,12 +63,13 @@ function isIncludeLocalNetworkAvailable(): boolean {
 <template>
 
   <v-sheet>
+    <app-bar/>
 
     <!-- Change language -->
     <config-card>
       <v-card-title>{{ locale('LANGUAGE') }}</v-card-title>
       <v-card-item>
-        <btn-style-4 @click="router.push({ path: '/languages' })">
+        <btn-style-4 @click="router.push({ name: 'LANGUAGES' })">
 
           <span>{{ locale('APP_LANGUAGE') }}</span>
 
@@ -119,7 +121,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         <disconnect-required-alert />
       </v-card-item>
 
-      <v-card-item @click="!isIncludeLocalNetworkAvailable() ? router.push('/purchase-subscription') : null">
+      <v-card-item @click="!isIncludeLocalNetworkAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) : null">
         <v-row class="align-center justify-space-between">
           <v-col>{{ locale('INCLUDE_LOCAL_NETWORK') }}</v-col>
           <v-col cols="auto">
@@ -145,7 +147,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       </v-card-item>
 
       <!-- Filter by device -->
-      <v-card-item @click="!isFilterIpByDeviceAvailable() ? router.push('/purchase-subscription') :  null ">
+      <v-card-item @click="!isFilterIpByDeviceAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
         <v-row class="align-center justify-space-between">
           <v-col>{{ locale('FILTER_IPS_BY_DEVICE') }}</v-col>
           <v-col cols="auto">
@@ -157,7 +159,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         <btn-style-4 v-if="useIpFilterByDevice"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
-                     @click="router.push({ path: '/filter-ips-by-device' })"
+                     @click="router.push({name: 'FILTER_IP_BY_DEVICE'})"
         />
 
       </v-card-item>
@@ -165,7 +167,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       <v-divider />
 
       <!-- Filter by App -->
-      <v-card-item @click="!isFilterIpByAppAvailable() ? router.push('/purchase-subscription') :  null ">
+      <v-card-item @click="!isFilterIpByAppAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
 
         <v-row class="align-center justify-space-between">
           <v-col>{{ locale('FILTER_IPS_BY_APP') }}</v-col>
@@ -178,7 +180,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
         <btn-style-4 v-if="useIpFilterByApp"
                      :text="locale('MANAGE_IP_ADDRESSES')"
                      :append-icon="Util.getLocalizedRightChevron()"
-                     @click="router.push({ path: '/filter-ips-by-app' })"
+                     @click="router.push({name: 'FILTER_IP_BY_APP'})"
         />
 
       </v-card-item>

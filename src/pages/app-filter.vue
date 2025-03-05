@@ -7,6 +7,7 @@ import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import { Util } from '@/helpers/Util';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -125,6 +126,7 @@ async function actionOnConfirm() {
 
 <template>
   <v-sheet>
+    <app-bar/>
 
     <!-- Disconnect required alert -->
     <disconnect-required-alert class="mb-4"/>
@@ -210,15 +212,16 @@ async function actionOnConfirm() {
         </v-list>
 
     </config-card>
-  </v-sheet>
 
-  <ConfirmDialog
-    v-model="showConfirmDialog"
-    :title="confirmDialogAction == ConfirmDialogAction.SelectAll
+    <ConfirmDialog
+      v-model="showConfirmDialog"
+      :title="confirmDialogAction == ConfirmDialogAction.SelectAll
     ? locale('SELECT_ALL_APPS_TITLE') : locale('CLEAR_ALL_APPS_TITLE')"
-    :message="locale('ARE_YOU_SURE')"
-    @confirm="actionOnConfirm()"
-  />
+      :message="locale('ARE_YOU_SURE')"
+      @confirm="actionOnConfirm()"
+    />
+
+  </v-sheet>
 </template>
 
 <!--suppress CssUnusedSymbol -->

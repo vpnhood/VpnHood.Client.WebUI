@@ -17,7 +17,7 @@ const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promote
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   switch (planId) {
     case MyPlanId.premiumByPurchase:
-      await router.push('/purchase-subscription');
+      await router.push({name: 'PURCHASE_SUBSCRIPTION'});
       break;
     case ConnectPlanId.PremiumByRewardedAd:
       if (!vhApp.data.state.sessionStatus?.canExtendByRewardedAd)
@@ -33,7 +33,7 @@ async function showRewardedAd(){
     showLoadingAdDialog.value = true;
     await vhApp.apiClient.extendByRewardedAd();
     vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "active");
-    await router.replace("/");
+    await router.replace({name: 'HOME'});
   }
   finally {
     showLoadingAdDialog.value = false;

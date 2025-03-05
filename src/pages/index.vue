@@ -13,7 +13,6 @@ import { ComponentName, UiConstants } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import CountDown from '@/components/CountDown.vue';
 import { computed, ref } from 'vue';
-import type { RouteLocationNormalizedLoaded } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -131,10 +130,6 @@ function appFilterStatus(): string {
 const isShowDebugDialog = ref<boolean>(false);
 const openDebugDialogCounter = ref<number>(0);
 
-const pageInfo = computed((): RouteLocationNormalizedLoaded => {
-  return router.currentRoute.value;
-});
-
 const debugData1 = computed<string[]>({
   get: () => {
     return vhApp.data.settings.userSettings.debugData1?.split(' ') ?? [];
@@ -241,7 +236,7 @@ function isDebugDataHasValue(): boolean {
                     color="enable-premium"
                     variant="tonal"
                     tag="h6"
-                    @click="router.push('/premium-user')"
+                    @click="router.push({name: 'PREMIUM_USER'})"
             />
 
             <!-- Premium code -->
@@ -252,7 +247,7 @@ function isDebugDataHasValue(): boolean {
                     color="active"
                     variant="tonal"
                     tag="h6"
-                    @click="router.push('/premium-user')"
+                    @click="router.push({name: 'PREMIUM_USER'})"
             />
 
             <!-- Go Premium button -->
@@ -265,7 +260,7 @@ function isDebugDataHasValue(): boolean {
               rounded="pill"
               size="small"
               height="35"
-              @click="router.push('/purchase-subscription')"
+              @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
               class="ps-1 pe-3 text-capitalize"
             >
               <v-icon
@@ -299,7 +294,7 @@ function isDebugDataHasValue(): boolean {
               :text="locale('STATISTICS')"
               variant="text"
               append-icon="mdi-chevron-right"
-              @click="vhApp.isConnected() ? router.push('/statistics') : null"
+              @click="vhApp.isConnected() ? router.push({name: 'USAGE_STATISTICS'}) : null"
             />
           </v-col>
 
@@ -351,7 +346,7 @@ function isDebugDataHasValue(): boolean {
           @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
-            : router.push('/settings/servers')"
+            : router.push({name: 'SERVERS'})"
         >
           <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
@@ -415,7 +410,7 @@ function isDebugDataHasValue(): boolean {
           v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
           prepend-icon="mdi-call-split"
           class="mb-1"
-          to="/apps-filter"
+          @click="router.push({name: 'APP_FILTER'})"
         >
           <span>{{ locale('APPS') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
@@ -450,7 +445,7 @@ function isDebugDataHasValue(): boolean {
     <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
 
     <!-- Developer debug data dialog -->
-    <v-dialog v-if="pageInfo.name === 'Home'" v-model="isShowDebugDialog" :persistent="true">
+    <v-dialog v-model="isShowDebugDialog" :persistent="true">
       <v-card color="background" title="Only developers" append-icon="mdi-bug-outline">
 
         <!-- Support id -->

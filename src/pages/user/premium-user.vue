@@ -5,6 +5,7 @@ import { Util } from '@/helpers/Util';
 import router from '@/services/router';
 import { ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -13,8 +14,8 @@ const showConfirmRemoveCode = ref<boolean>(false);
 
 async function removeCode() {
   try {
+    await router.replace({name: 'HOME'});
     await vhApp.removePremiumCode();
-    await router.replace('/');
   }
   finally {
     showConfirmRemoveCode.value = false;
@@ -24,6 +25,7 @@ async function removeCode() {
 
 <template>
   <v-sheet class="primary-bg-grad">
+    <app-bar/>
 
     <!-- Premium image -->
     <v-img
@@ -60,7 +62,7 @@ async function removeCode() {
           variant="plain"
           :text="locale('STATISTICS')"
           size="small"
-          @click="router.push('/statistics')"
+          @click="router.push({name: 'USAGE_STATISTICS'})"
         />
       </v-card-actions>
     </config-card>
@@ -78,7 +80,7 @@ async function removeCode() {
           :text="locale('ACCOUNT')"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="router.push('/account')"
+          @click="router.push({name: 'USER_ACCOUNT'})"
         />
       </v-card-actions>
     </config-card>

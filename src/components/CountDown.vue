@@ -54,7 +54,7 @@ function getCountdownColor(): string{
       :append-icon="Util.getLocalizedRightChevron()"
       size="small"
       :text="locale('EXTEND_IT')"
-      @click="router.push('/extend-session')"
+      @click="router.push({name: 'EXTEND_SESSION'})"
     />
   </v-chip>
 </template>

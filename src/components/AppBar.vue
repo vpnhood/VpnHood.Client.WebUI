@@ -15,8 +15,7 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 
 <template>
   <!-- Page header -->
-  <div v-if="pageInfo.name" :class="[{'elevation-1': !VpnHoodApp.instance.isConnectApp()}, 'bg-app-bar mb-3 mx-n4']"
-  >
+  <div :class="[!VpnHoodApp.instance.isConnectApp() ?'elevation-1 bg-app-bar' : 'text-white', 'mb-3 mx-n4']">
     <!-- Back button -->
     <v-btn :icon="Util.getLocalizedLeftChevron()" variant="text" @click="router.go(-1)" />
 

@@ -2,6 +2,7 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
+import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -25,6 +26,7 @@ function calcUnit(total: number): string{
 
 <template>
   <v-sheet v-if="vhApp.data.state.sessionInfo">
+    <app-bar/>
 
     <v-defaults-provider :defaults="{
       'VIcon':{size:'18', disabled: true},

@@ -6,6 +6,7 @@ import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import { AppName } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
+import type { RouteLocationRaw } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -70,9 +71,9 @@ async function onSignIn() {
     vhApp.data.uiState.showLoadingDialog = false;
   }
 }
-function navigateByRouter(address: string){
+function navigateByRouter(to: RouteLocationRaw){
   emit('update:modelValue', false);
-  router.replace(address);
+  router.replace(to);
 }
 </script>
 
@@ -123,7 +124,7 @@ function navigateByRouter(address: string){
         v-if="vhApp.data.features.isPremiumFlagSupported &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
         class="border-b"
-        @click="navigateByRouter('/purchase-subscription')"
+        @click="navigateByRouter({name: 'PURCHASE_SUBSCRIPTION'})"
       >
         <v-list-item-title>
           <v-icon icon="mdi-crown" />

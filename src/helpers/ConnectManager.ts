@@ -28,7 +28,7 @@ export class ConnectManager {
     promoteData.isPremiumLocation = isPremium;
 
     // Show promote dialog
-    await router.push('/promote-premium');
+    await router.push({name: 'PROMOTE_PREMIUM'});
     return true;
   }
 
@@ -40,7 +40,7 @@ export class ConnectManager {
     console.log(`ClientProfileId: ${clientProfileId}`);
 
     if (!clientProfileId) {
-      await router.push('/servers');
+      await router.push({name: 'SERVERS'});
       return;
     }
     await this.connect2(clientProfileId, isDiagnose, throwError);
@@ -55,7 +55,7 @@ export class ConnectManager {
     console.log('Detected server location: ' + serverLocation);
 
     if (!serverLocation && clientProfileInfo.selectedLocationInfo) {
-      await router.push('/servers');
+      await router.push({name: 'SERVERS'});
       return;
     }
 

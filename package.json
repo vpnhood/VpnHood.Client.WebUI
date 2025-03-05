@@ -1,6 +1,6 @@
 {
   "name": "vpnhood.spa",
-  "version": "1.0.567",
+  "version": "1.0.573",
   "private": true,
   "type": "module",
   "scripts": {
@@ -40,6 +40,7 @@
     "postcss": "^8.4.49",
     "postcss-preset-env": "^10.1.1",
     "typescript": "~5.5.4",
+    "unplugin-vue-router": "^0.11.2",
     "vite": "^6.0.3",
     "vue-tsc": "^2.1.10"
   },

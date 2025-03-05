@@ -92,11 +92,10 @@ function revertCurrentChange(): void{
 </script>
 
 <template>
-  <v-sheet>
-    <!-- Disconnecting alert -->
-    <disconnect-required-alert />
+  <!-- Disconnecting alert -->
+  <disconnect-required-alert />
 
-    <v-defaults-provider :defaults="{
+  <v-defaults-provider :defaults="{
       'VChip':{
         'density': 'compact',
         'color': 'sample-ip-filter-bg',
@@ -117,61 +116,60 @@ function revertCurrentChange(): void{
         'hideDetails': true
         }
       }"
-    >
+  >
 
-      <!-- Sample ip format -->
-      <alert-info :title="locale('INFO')">
-        <ul class="text-caption" style="list-style: none">
-          <li>
-            {{locale('SINGLE_IP')}}
-            <v-chip text="192.168.1.1"/>
-          </li>
-          <li class="py-1">
-            {{locale('RANGES_OF_IP')}}
-            <v-chip text="192.168.1.1-192.168.1.255" />
-          </li>
-          <li>
-            {{locale('CIDR_NOTATION')}}
-            <v-chip text="192.168.1.0/24" />
-          </li>
-        </ul>
-      </alert-info>
+    <!-- Sample ip format -->
+    <alert-info :title="locale('INFO')">
+      <ul class="text-caption" style="list-style: none">
+        <li>
+          {{locale('SINGLE_IP')}}
+          <v-chip text="192.168.1.1"/>
+        </li>
+        <li class="py-1">
+          {{locale('RANGES_OF_IP')}}
+          <v-chip text="192.168.1.1-192.168.1.255" />
+        </li>
+        <li>
+          {{locale('CIDR_NOTATION')}}
+          <v-chip text="192.168.1.0/24" />
+        </li>
+      </ul>
+    </alert-info>
 
-      <!-- Describe remark -->
-      <alert-note :title="locale('NOTE')" :text="locale('REMARK_IP_FILTER_DESC')" />
+    <!-- Describe remark -->
+    <alert-note :title="locale('NOTE')" :text="locale('REMARK_IP_FILTER_DESC')" />
 
-      <!-- Alert for number of IPs in the filter by device -->
-      <alert-warning v-if="props.ipFilterType === IPFilterType.FilterByDevice"
-                     :title="locale('WARNING')"
-                     :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
-      />
+    <!-- Alert for number of IPs in the filter by device -->
+    <alert-warning v-if="props.ipFilterType === IPFilterType.FilterByDevice"
+                   :title="locale('WARNING')"
+                   :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
+    />
 
-      <config-card class="mt-4">
-        <!-- Exclude list -->
-        <v-card-item>
-          <p>{{locale('IPS_TO_EXCLUDE')}}</p>
-          <v-textarea v-model="excludeIpFilters" />
-        </v-card-item>
+    <config-card class="mt-4">
+      <!-- Exclude list -->
+      <v-card-item>
+        <p>{{locale('IPS_TO_EXCLUDE')}}</p>
+        <v-textarea v-model="excludeIpFilters" />
+      </v-card-item>
 
-        <!-- Include list -->
-        <v-card-item>
-          <p>{{locale('IPS_TO_INCLUDE')}}</p>
-          <v-textarea v-model="includeIpFilters" />
-        </v-card-item>
+      <!-- Include list -->
+      <v-card-item>
+        <p>{{locale('IPS_TO_INCLUDE')}}</p>
+        <v-textarea v-model="includeIpFilters" />
+      </v-card-item>
 
-        <!-- Revert button -->
-        <v-card-item v-if="showRevertButton">
-          <btn-style-2
-            block
-            :text="locale('REVERT')"
-            @click="revertCurrentChange()"
-          />
-        </v-card-item>
+      <!-- Revert button -->
+      <v-card-item v-if="showRevertButton">
+        <btn-style-2
+          block
+          :text="locale('REVERT')"
+          @click="revertCurrentChange()"
+        />
+      </v-card-item>
 
-      </config-card>
+    </config-card>
 
-    </v-defaults-provider>
-  </v-sheet>
+  </v-defaults-provider>
 </template>
 
 <style>
