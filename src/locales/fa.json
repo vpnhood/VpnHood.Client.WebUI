@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "افزودن کلید سرور",
   "ADD_ACCESS_KEY_SUBTITLE": "کلید سرور خود را وارد کنید تا اضافه شود.",
   "INVALID_ACCESS_KEY_FORMAT": "کلید سرور نامعتبر است.",
+  "HOME": "صفحه اصلی",
   "SERVERS": "سرورها",
   "APP_FILTER": "فیلتر برنامه‌ها",
   "APP_FILTER_DESC": "کدام برنامه‌ها می‌توانند از فیلترشکن استفاده کنند؟",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "کد ویژه نامعتبر است.",
   "PREMIUM_CODE_DETAILS": "جزئیات کد ویژه",
   "MORE_DETAILS": "جزئیات بیشتر",
-  "PREMIUM_CODE_IS_ACTIVE": "کد ویژه فعال است"
+  "PREMIUM_CODE_IS_ACTIVE": "کد ویژه فعال است",
+  "CONNECTION_TIMEOUT_MSG": "امکان برقراری اتصال در زمان مشخص‌شده وجود نداشت.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "زمان اتصال ویژه شما به پایان رسیده است.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "محدودیت روزانه فراتر رفته است."
 }
