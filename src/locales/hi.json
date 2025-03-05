@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "सर्वर कुंजी जोड़ें",
   "ADD_ACCESS_KEY_SUBTITLE": "सर्वर जोड़ने के लिए सर्वर कुंजी कॉपी और पेस्ट करें।",
   "INVALID_ACCESS_KEY_FORMAT": "सर्वर कुंजी का अमान्य प्रारूप।",
+  "HOME": "होम",
   "SERVERS": "सर्वर",
   "APP_FILTER": "ऐप्स फ़िल्टर",
   "APP_FILTER_DESC": "कौन से ऐप्स VPN का उपयोग कर सकते हैं?",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "प्रीमियम कोड अवैध है।",
   "PREMIUM_CODE_DETAILS": "प्रीमियम कोड विवरण",
   "MORE_DETAILS": "अधिक विवरण",
-  "PREMIUM_CODE_IS_ACTIVE": "प्रीमियम कोड सक्रिय है"
+  "PREMIUM_CODE_IS_ACTIVE": "प्रीमियम कोड सक्रिय है",
+  "CONNECTION_TIMEOUT_MSG": "दिए गए समय में कनेक्शन स्थापित नहीं किया जा सका।",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "आपके प्रीमियम कनेक्शन का समय समाप्त हो गया है।",
+  "DAILY_LIMIT_EXCEEDED_MSG": "दैनिक सीमा पार हो गई है।"
 }
