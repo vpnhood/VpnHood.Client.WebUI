@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "Добавить ключ сервера",
   "ADD_ACCESS_KEY_SUBTITLE": "Скопируйте и вставьте ключ сервера, чтобы добавить сервер.",
   "INVALID_ACCESS_KEY_FORMAT": "Ключ сервера имеет недопустимый формат.",
+  "HOME": "Главная",
   "SERVERS": "Серверы",
   "APP_FILTER": "Фильтр приложений",
   "APP_FILTER_DESC": "Какие приложения могут использовать VPN?",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "Премиум-код недействителен.",
   "PREMIUM_CODE_DETAILS": "Детали премиум-кода",
   "MORE_DETAILS": "Больше деталей",
-  "PREMIUM_CODE_IS_ACTIVE": "Премиум-код активен"
+  "PREMIUM_CODE_IS_ACTIVE": "Премиум-код активен",
+  "CONNECTION_TIMEOUT_MSG": "Не удалось установить соединение за заданное время.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "Время вашего премиум-соединения истекло.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "Дневной лимит превышен."
 }
