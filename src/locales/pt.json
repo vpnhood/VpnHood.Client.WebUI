@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "Adicionar chave do servidor",
   "ADD_ACCESS_KEY_SUBTITLE": "Copie e cole uma chave do servidor para adicionar um servidor.",
   "INVALID_ACCESS_KEY_FORMAT": "A chave do servidor tem formato inválido.",
+  "HOME": "Página inicial",
   "SERVERS": "Servidores",
   "APP_FILTER": "Filtro de Apps",
   "APP_FILTER_DESC": "Quais apps podem usar VPN?",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "O código premium é inválido.",
   "PREMIUM_CODE_DETAILS": "Detalhes do código premium",
   "MORE_DETAILS": "Mais detalhes",
-  "PREMIUM_CODE_IS_ACTIVE": "O código premium está ativo"
+  "PREMIUM_CODE_IS_ACTIVE": "O código premium está ativo",
+  "CONNECTION_TIMEOUT_MSG": "Não foi possível estabelecer conexão no tempo determinado.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "O tempo da sua conexão premium expirou.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "O limite diário foi excedido."
 }
