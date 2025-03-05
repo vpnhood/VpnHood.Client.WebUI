@@ -40,6 +40,7 @@
   "ADD_ACCESS_KEY_TITLE": "أضف مفتاح الخادم",
   "ADD_ACCESS_KEY_SUBTITLE": "انسخ والصق مفتاح الخادم لإضافة خادم.",
   "INVALID_ACCESS_KEY_FORMAT": "مفتاح الخادم لديه تنسيق غير صالح.",
+  "HOME": "الرئيسية",
   "SERVERS": "الخوادم",
   "APP_FILTER": "تصفية التطبيقات",
   "APP_FILTER_DESC": "أي التطبيقات يمكنها استخدام VPN؟",
@@ -291,5 +292,8 @@
   "INVALID_ACCESS_CODE": "كود البريميوم غير صالح.",
   "PREMIUM_CODE_DETAILS": "تفاصيل رمز العضوية",
   "MORE_DETAILS": "مزيد من التفاصيل",
-  "PREMIUM_CODE_IS_ACTIVE": "الكود المميز نشط"
+  "PREMIUM_CODE_IS_ACTIVE": "الكود المميز نشط",
+  "CONNECTION_TIMEOUT_MSG": "تعذر إنشاء اتصال في الوقت المحدد.",
+  "PREMIUM_CONNECTION_EXPIRED_MSG": "انتهى وقت الاتصال بالخوادم المميزة.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "تم تجاوز الحد اليومي."
 }
