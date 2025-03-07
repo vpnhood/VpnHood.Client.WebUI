@@ -10,6 +10,7 @@
   "ABBREVIATION_VERSION": "版本",
   "CONNECT": "连接",
   "INITIALIZING": "初始化",
+  "STOP_INITIALIZING": "停止初始化",
   "CONNECTING": "连接",
   "CONNECTED": "已连接",
   "DISCONNECT": "断开连接",

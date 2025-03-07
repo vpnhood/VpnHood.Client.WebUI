@@ -10,6 +10,7 @@
   "ABBREVIATION_VERSION": "الإصدار ",
   "CONNECT": "اتصل",
   "INITIALIZING": "التهيئة",
+  "STOP_INITIALIZING": "توقف عن التهيئة",
   "CONNECTING": "الاتصال",
   "CONNECTED": "متصل",
   "DISCONNECT": "قطع الاتصال",
