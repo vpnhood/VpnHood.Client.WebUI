@@ -84,7 +84,7 @@ function connectButtonText(): string {
   else
     switch (vhApp.data.state.connectionState) {
       case AppConnectionState.Initializing:
-        return locale('STOP_INITIALIZING');
+        return locale('CANCEL');
       case AppConnectionState.WaitingForAd:
         return locale('DISCONNECT');
       case AppConnectionState.Connecting:
