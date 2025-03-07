@@ -7,7 +7,7 @@ import i18n from '@/locales/i18n';
 import { ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { UiConstants } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
-import vuetify from '@/services/vuetify';
+
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
@@ -42,7 +42,7 @@ async function sendReport(): Promise<void> {
       vhApp.data.settings.clientId.substring(0, 8) + '@' +
       Math.random().toString().substring(2, 10);
 
-    if (Util.isMobileDevice() || vuetify.display.platform.value.win){
+    if (!Util.isTvDevice()){
       const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
       window.open(link, 'VpnHood-BugReport');
     }
@@ -117,7 +117,7 @@ async function sendReport(): Promise<void> {
           />
 
           <!-- OpenReport -->
-          <v-btn v-if="dialogData.promptForLog && (Util.isMobileDevice() || vuetify.display.platform.value.win)"
+          <v-btn v-if="dialogData.promptForLog && (!Util.isTvDevice())"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"

@@ -26,7 +26,7 @@ const showConfirmDialog = ref<boolean>(false);
 const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
-const isShowSearchBox = ref<boolean>(Util.isMobileDevice());
+const isShowSearchBox = ref<boolean>(!Util.isTvDevice());
 
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)
@@ -152,7 +152,7 @@ async function actionOnConfirm() {
 
         <!-- Search button -->
         <btn-style-5
-          v-if="!Util.isMobileDevice()"
+          v-if="Util.isTvDevice()"
           prepend-icon="mdi-magnify"
           class="d-inline-flex text-caption ms-2"
           :text="locale('SEARCH')"

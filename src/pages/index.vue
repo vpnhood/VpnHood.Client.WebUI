@@ -84,7 +84,7 @@ function connectButtonText(): string {
   else
     switch (vhApp.data.state.connectionState) {
       case AppConnectionState.Initializing:
-        return locale('DISCONNECT');
+        return locale('STOP_INITIALIZING');
       case AppConnectionState.WaitingForAd:
         return locale('DISCONNECT');
       case AppConnectionState.Connecting:
@@ -189,6 +189,7 @@ function isDebugDataHasValue(): boolean {
           <!-- Navigation drawer button -->
           <v-col cols="3">
             <v-app-bar-nav-icon
+              tabindex="1"
               color="home-app-bar"
               class="ms-n3 me-0"
               @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)"
@@ -196,7 +197,7 @@ function isDebugDataHasValue(): boolean {
           </v-col>
 
           <!-- App name -->
-          <v-col cols="6" class="text-center text-home-app-bar">
+          <v-col cols="6" class="text-center text-home-app-bar" tabindex="-1">
             <h4 dir="ltr">
               {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
             </h4>
@@ -226,7 +227,7 @@ function isDebugDataHasValue(): boolean {
           <v-col cols="2"></v-col>
           <v-col cols="8" class="text-center">
             <!-- Countdown and extend session button -->
-            <CountDown v-if="isShowCountdown()" />
+            <CountDown v-if="isShowCountdown()" tabindex="2"/>
 
             <!-- You are premium button -->
             <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
@@ -234,6 +235,7 @@ function isDebugDataHasValue(): boolean {
                     :text="locale('YOU_ARE_PREMIUM')"
                     color="enable-premium"
                     variant="tonal"
+                    tabindex="2"
                     tag="h6"
                     @click="router.push({name: 'PREMIUM_USER'})"
             />
@@ -246,6 +248,7 @@ function isDebugDataHasValue(): boolean {
                     color="active"
                     variant="tonal"
                     tag="h6"
+                    tabindex="2"
                     @click="router.push({name: 'PREMIUM_USER'})"
             />
 
@@ -253,10 +256,10 @@ function isDebugDataHasValue(): boolean {
             <v-btn
               v-else-if="vhApp.data.features.isPremiumFlagSupported &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-              :flat="true"
               variant="outlined"
               color="go-premium-btn"
               rounded="pill"
+              tabindex="2"
               size="small"
               height="35"
               @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
@@ -270,10 +273,18 @@ function isDebugDataHasValue(): boolean {
               {{ locale('GO_PREMIUM') }}
             </v-btn>
           </v-col>
+
+          <!-- Show IP icon if IP-filter option is enabled -->
           <v-col cols="2" class="text-end">
-            <v-icon v-if="isIpFilterAvailable()" icon="mdi-ip-network" size="17px" color="white"
-                    class="opacity-40 pb-1" />
+            <v-icon v-if="isIpFilterAvailable()"
+                    icon="mdi-ip-network"
+                    size="17px"
+                    color="white"
+                    class="opacity-40 pb-1"
+                    tabindex="-1"
+            />
           </v-col>
+
         </v-row>
 
       </v-col>
@@ -284,22 +295,26 @@ function isDebugDataHasValue(): boolean {
         <!-- Statistics & Speed -->
         <v-row
           align-content="center"
-          justify="center" dir="ltr"
+          justify="center"
+          dir="ltr"
           :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
         >
           <!-- Statistics -->
           <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
             <v-btn
               :text="locale('STATISTICS')"
+              :tabindex="vhApp.isConnected() ? '3' : null"
+              dir="auto"
               variant="text"
-              append-icon="mdi-chevron-right"
+              rounded="pill"
+              :append-icon="Util.getLocalizedRightChevron()"
               @click="vhApp.isConnected() ? router.push({name: 'STATISTICS'}) : null"
             />
           </v-col>
 
           <!-- Download speed -->
           <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-            <v-icon color="active" size="small" icon="mdi-arrow-up-thin" />
+            <v-icon color="active" size="small" icon="mdi-arrow-up-thin" tabindex="-1" />
             <span class="pe-1 text-body-2 text-white">
             {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1) }}
           </span>
@@ -308,7 +323,7 @@ function isDebugDataHasValue(): boolean {
 
           <!-- Upload speed -->
           <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-            <v-icon color="error" size="small" icon="mdi-arrow-down-thin" />
+            <v-icon color="error" size="small" icon="mdi-arrow-down-thin" tabindex="-1" />
             <span class="pe-1 text-body-2 text-white">
             {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
           </span>
@@ -317,7 +332,7 @@ function isDebugDataHasValue(): boolean {
         </v-row>
 
         <!-- Circle -->
-        <HomeConnectionInfo />
+        <HomeConnectionInfo tabindex="-1" />
 
         <!-- Connect button -->
         <v-btn
@@ -325,9 +340,11 @@ function isDebugDataHasValue(): boolean {
           height="40px"
           min-width="180px"
           rounded="pill"
+          :tabindex="vhApp.isConnected() ? '4' : '3'"
           :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
           class="font-weight-bold mt-5 mb-4"
-          :class="{'connected': vhApp.isConnected()}"
+          :class="[vhApp.isConnectApp() ? 'connect-app' : 'client-app',
+          {'connected': vhApp.isConnected()}, {'tv-device': Util.isTvDevice()}]"
           :text="connectButtonText()"
           @click="onConnectButtonClick"
         />
@@ -341,6 +358,7 @@ function isDebugDataHasValue(): boolean {
         <home-config-btn
           id="serverButton"
           prepend-icon="mdi-earth"
+          tabindex="5"
           class="align-center mb-1"
           @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
@@ -381,6 +399,7 @@ function isDebugDataHasValue(): boolean {
           id="excludeCountryButton"
           prepend-icon="mdi-call-split"
           class="mb-1"
+          tabindex="6"
           @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
         >
           <span>{{ locale('COUNTRIES') }}</span>
@@ -409,6 +428,7 @@ function isDebugDataHasValue(): boolean {
           v-if="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
           prepend-icon="mdi-call-split"
           class="mb-1"
+          tabindex="7"
           @click="router.push({name: 'APP_FILTER'})"
         >
           <span>{{ locale('APPS') }}</span>
@@ -423,6 +443,7 @@ function isDebugDataHasValue(): boolean {
         <!-- Protocol button -->
         <home-config-btn
           prepend-icon="mdi-transit-connection-variant"
+          tabindex="8"
           @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
         >
           <span>{{ locale('PROTOCOL_TITLE') }}</span>
@@ -539,17 +560,48 @@ function isDebugDataHasValue(): boolean {
   opacity: 1;
   transition-duration: 2s;
 }
+/*-------------------------- Connect button -------------------------*/
+/*----------- Disconnected state ----------*/
 #connectBtn {
   transition: all 0.4s ease;
-  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-disconnected-grad-1)),
-  rgb(var(--v-theme-connect-btn-disconnected-grad-2)) 90%) !important;
   color: rgb(var(--v-theme-on-connect-btn-disconnected));
 }
+/*---- Client app ----*/
+#connectBtn.client-app {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-disconnected-grad-1)),
+  rgb(var(--v-theme-connect-btn-disconnected-grad-2)) 90%) !important;
+}
+/*---- Connect app ----*/
+#connectBtn.connect-app {
+  background: rgb(var(--v-theme-connect-btn-disconnected-grad-1)) !important;
+}
+/*---- Connect app only on TV ----*/
+#connectBtn.connect-app.tv-device:focus-visible{
+  box-shadow: rgb(253 251 155 / 64%) 0 0 18px 0;
+  border: rgba(255, 255, 255, 0.38) 1px solid;
+  background: #ffd4a8 !important;
+}
+/*----------- Connected state ----------*/
 #connectBtn.connected {
-  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-connected)),
-  rgb(var(--v-theme-connect-btn-connected)) 90%) !important;
   color: rgb(var(--v-theme-on-connect-btn-connected));
 }
+/*---- Client app ----*/
+#connectBtn.client-app.connected {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-connect-btn-connected)),
+  rgb(var(--v-theme-connect-btn-connected)) 90%) !important;
+}
+/*---- Connect app ----*/
+#connectBtn.connect-app.connected {
+  background: rgb(var(--v-theme-connect-btn-connected)) !important;
+}
+/*---- Connect app only on TV ----*/
+#connectBtn.connect-app.connected.tv-device:focus-visible{
+  box-shadow: #a4a3ff 0 0 18px 0;
+  border: rgba(255, 255, 255, 0.38) 1px solid;
+  background: rgb(162 162 255) !important;
+}
+/*-------------------------- End of connect button -------------------------*/
+
 .config-item {
   color: rgb(var(--v-theme-on-config-btn-bg));
   background: rgba(var(--v-theme-config-btn-bg), 0.7);

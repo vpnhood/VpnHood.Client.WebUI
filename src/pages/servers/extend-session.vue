@@ -47,6 +47,7 @@ async function showRewardedAd(){
 
       <!-- Back button -->
       <tonal-icon-btn
+        v-if="!Util.isTvDevice()"
         :icon="Util.getLocalizedLeftChevron()"
         class="ms-3 mt-3"
         @click="router.go(-1)"

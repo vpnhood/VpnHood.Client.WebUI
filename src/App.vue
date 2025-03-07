@@ -8,7 +8,7 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
-import { Util } from '@/helpers/Util';
+import vuetify from '@/services/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -50,13 +50,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app id="appContainer">
+  <v-app id="appContainer" :class="{'px-15': !vuetify.display.smAndDown.value}">
 
     <v-layout
       width="100%"
-      max-width="850px"
+      max-width="959px"
       full-height
-      :class="{'border border-highlight border-opacity-50 elevation-3 rounded-lg mx-auto my-5': !Util.isMobileDevice()}"
+      class="mx-auto"
+      :class="{'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': !vuetify.display.smAndDown.value}"
     >
 
       <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>

@@ -38,13 +38,13 @@ export class Util {
     const allDisplaySizeClass: string = "d-flex flex-column justify-space-between primary-bg-grad rounded-xl text-white fill-height border-opacity-50"
     const borderClassForMobileSize: string = "border border-promote-premium-border"
 
-    if (this.isMobileDevice())
+    if (vuetify.display.smAndDown.value)
       return allDisplaySizeClass + ' ' + borderClassForMobileSize;
 
     return allDisplaySizeClass
   }
 
-  public static isMobileDevice(): boolean{
-    return vuetify.display.mobile.value || vuetify.display.smAndDown.value;
+  public static isTvDevice(): boolean{
+    return !vuetify.display.platform.value.win && vuetify.display.mdAndUp.value
   }
 }

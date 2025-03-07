@@ -43,6 +43,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
       <!-- Back button -->
       <tonal-icon-btn
+        v-if="!Util.isTvDevice()"
         :icon="Util.getLocalizedLeftChevron()"
         class="ms-3 mt-3"
         @click="router.go(-1)"
@@ -65,6 +66,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <v-row v-if="isFreeAvailable()"
            dense
            v-ripple
+           :autofocus="Util.isTvDevice()"
            align="center"
            class="px-2 py-1 mx-0 rounded-lg card-on-grad-bg"
            tabindex="1"

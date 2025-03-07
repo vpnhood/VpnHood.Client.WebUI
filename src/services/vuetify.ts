@@ -691,7 +691,6 @@ export default createVuetify({
     },
     HomeConfigBtn:{
       block: true,
-      depressed: true,
       variant:'text',
       size:'small',
       class: 'config-item',

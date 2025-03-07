@@ -46,3 +46,4 @@ export enum AppPackageName {
   VpnHoodClient = 'com.vpnhood.client.android'
 }
 
+

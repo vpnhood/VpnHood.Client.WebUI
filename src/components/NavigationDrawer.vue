@@ -25,7 +25,6 @@ const closeByKeyboardEscape = (event: KeyboardEvent) => {
 };
 
 const isCheckForUpdate = ref<boolean>(false);
-const isMobileOrWindows = ref<boolean>(Util.isMobileDevice() || vuetify.display.platform.value.win.valueOf());
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal)
@@ -195,7 +194,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Whats new -->
       <v-list-item
-        v-if="isMobileOrWindows"
+        v-if="!Util.isTvDevice()"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
@@ -211,7 +210,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Send feedback -->
       <v-list-item
-        v-if="isMobileOrWindows"
+        v-if="!Util.isTvDevice()"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -227,7 +226,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Create personal server -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && isMobileOrWindows"
+        v-if="!vhApp.isConnectApp() && !Util.isTvDevice()"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -243,7 +242,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Website -->
       <v-list-item
-        v-if="isMobileOrWindows"
+        v-if="!Util.isTvDevice()"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -311,8 +310,9 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <!-- Powered by button -->
       <a
         class="d-block mb-2 text-caption text-decoration-none text-active"
-        href="https://github.com/vpnhood/VpnHood"
+        :href="!Util.isTvDevice() ? 'https://github.com/vpnhood/VpnHood' : ''"
         target="_blank"
+        tabindex="-1"
       >
         <span class="text-highlight">{{ locale('POWERED_BY') }}</span><br/>
         <span>{{locale('VPNHOOD_ENGINE')}}</span>

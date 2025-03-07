@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Util } from '@/helpers/Util';
+
 const emit = defineEmits<{
   (e: 'accept', value: boolean): void,
 }>();
@@ -7,7 +9,7 @@ const emit = defineEmits<{
 <template>
   <v-sheet class="pt-4">
     <v-card color="transparent" class="d-flex flex-column justify-space-between fill-height">
-      <div>
+      <div tabindex="-1">
         <v-card-title class="text-center">VpnHood! CONNECT Privacy Policy</v-card-title>
         <v-divider/>
 
@@ -17,6 +19,7 @@ const emit = defineEmits<{
           </p>
           <span>Please read our</span>
           <a
+            tabindex="-1"
             class="text-highlight font-weight-bold ms-1"
             href="https://www.vpnhood.com/products/vpnhood-connect/privacy-policy"
             target="_blank"
@@ -31,6 +34,8 @@ const emit = defineEmits<{
       <v-card-actions>
         <!-- Accept button -->
         <btn-style-3
+          :autofocus="Util.isTvDevice()"
+          tabindex="1"
           block
           text="Accept and continue"
           @click="emit('accept', true)"

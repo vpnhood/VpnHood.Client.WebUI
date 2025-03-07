@@ -3,7 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ref } from 'vue';
 import type { GeneralSnackbarData } from '@/components/GeneralSnackbar/GeneralSnackbarData';
 import i18n from '@/locales/i18n';
-import { Util } from '@/helpers/Util';
+import vuetify from '@/services/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -38,7 +38,7 @@ function onCloseButton(){
     :modelValue="props.modelValue"
     @update:modelValue="$emit('update:modelValue',false)"
     location="top"
-    :class="{'mt-5': !Util.isMobileDevice()}"
+    :class="{'mt-5': !vuetify.display.smAndDown.value}"
     class="pt-2"
     rounded="lg"
     vertical

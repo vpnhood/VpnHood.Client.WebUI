@@ -155,6 +155,7 @@ function closeCompleteDialog(showStatistics: boolean) {
 
       <!-- Back button -->
       <tonal-icon-btn
+        v-if="!Util.isTvDevice()"
         :icon="Util.getLocalizedLeftChevron()"
         class="position-absolute ms-3 mt-3"
         style="z-index: 999"
