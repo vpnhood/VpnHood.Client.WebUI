@@ -10,6 +10,7 @@
   "ABBREVIATION_VERSION": "v",
   "CONNECT": "Verbinden",
   "INITIALIZING": "Initialisierung",
+  "STOP_INITIALIZING": "Stoppen Sie die Initialisierung",
   "CONNECTING": "Verbindungsaufbau",
   "CONNECTED": "Verbunden",
   "DISCONNECT": "Trennen",
