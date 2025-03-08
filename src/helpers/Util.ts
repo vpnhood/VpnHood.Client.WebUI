@@ -43,8 +43,4 @@ export class Util {
 
     return allDisplaySizeClass
   }
-
-  public static isTvDevice(): boolean{
-    return !vuetify.display.platform.value.win && vuetify.display.mdAndUp.value
-  }
 }

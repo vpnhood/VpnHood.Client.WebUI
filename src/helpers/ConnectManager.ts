@@ -1,7 +1,6 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ClientProfileInfo, ConnectPlanId, ServerLocationOptions } from '@/services/VpnHood.Client.Api';
 import router from '@/services/router';
-import { Util } from '@/helpers/Util';
 
 export class ConnectManager {
   public static async showPromoteDialog(clientProfileId: string, serverLocation: string, isPremium: boolean): Promise<boolean> {
@@ -13,7 +12,7 @@ export class ConnectManager {
     // Fore developer
     console.log('Show Prompt: ' + options?.prompt);
 
-    if (!options?.prompt || Util.isTvDevice())
+    if (!options?.prompt || VpnHoodApp.instance.data.features.isTv)
       return false;
 
     // Config promote dialog

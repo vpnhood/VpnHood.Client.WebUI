@@ -6,7 +6,6 @@ import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
-import { Util } from '@/helpers/Util';
 import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
@@ -26,7 +25,7 @@ const showConfirmDialog = ref<boolean>(false);
 const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
-const isShowSearchBox = ref<boolean>(!Util.isTvDevice());
+const isShowSearchBox = ref<boolean>(!vhApp.data.features.isTv);
 
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)
@@ -152,7 +151,7 @@ async function actionOnConfirm() {
 
         <!-- Search button -->
         <btn-style-5
-          v-if="Util.isTvDevice()"
+          v-if="vhApp.data.features.isTv"
           prepend-icon="mdi-magnify"
           class="d-inline-flex text-caption ms-2"
           :text="locale('SEARCH')"

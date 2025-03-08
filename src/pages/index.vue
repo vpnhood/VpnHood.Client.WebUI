@@ -344,7 +344,7 @@ function isDebugDataHasValue(): boolean {
           :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
           class="font-weight-bold mt-5 mb-4"
           :class="[vhApp.isConnectApp() ? 'connect-app' : 'client-app',
-          {'connected': vhApp.isConnected()}, {'tv-device': Util.isTvDevice()}]"
+          {'connected': vhApp.isConnected()}, {'tv-device': vhApp.data.features.isTv}]"
           :text="connectButtonText()"
           @click="onConnectButtonClick"
         />

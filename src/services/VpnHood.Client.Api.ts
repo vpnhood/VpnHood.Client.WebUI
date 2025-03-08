@@ -1691,6 +1691,7 @@ export class AppFeatures implements IAppFeatures {
     isQuickLaunchSupported!: boolean;
     isNotificationSupported!: boolean;
     isAlwaysOnSupported!: boolean;
+    isTv!: boolean;
     gaMeasurementId?: string | null;
     clientId!: string;
     isDebugMode!: boolean;
@@ -1727,6 +1728,7 @@ export class AppFeatures implements IAppFeatures {
             this.isQuickLaunchSupported = _data["isQuickLaunchSupported"] !== undefined ? _data["isQuickLaunchSupported"] : <any>null;
             this.isNotificationSupported = _data["isNotificationSupported"] !== undefined ? _data["isNotificationSupported"] : <any>null;
             this.isAlwaysOnSupported = _data["isAlwaysOnSupported"] !== undefined ? _data["isAlwaysOnSupported"] : <any>null;
+            this.isTv = _data["isTv"] !== undefined ? _data["isTv"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
             this.isDebugMode = _data["isDebugMode"] !== undefined ? _data["isDebugMode"] : <any>null;
@@ -1767,6 +1769,7 @@ export class AppFeatures implements IAppFeatures {
         data["isQuickLaunchSupported"] = this.isQuickLaunchSupported !== undefined ? this.isQuickLaunchSupported : <any>null;
         data["isNotificationSupported"] = this.isNotificationSupported !== undefined ? this.isNotificationSupported : <any>null;
         data["isAlwaysOnSupported"] = this.isAlwaysOnSupported !== undefined ? this.isAlwaysOnSupported : <any>null;
+        data["isTv"] = this.isTv !== undefined ? this.isTv : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
         data["isDebugMode"] = this.isDebugMode !== undefined ? this.isDebugMode : <any>null;
@@ -1797,6 +1800,7 @@ export interface IAppFeatures {
     isQuickLaunchSupported: boolean;
     isNotificationSupported: boolean;
     isAlwaysOnSupported: boolean;
+    isTv: boolean;
     gaMeasurementId?: string | null;
     clientId: string;
     isDebugMode: boolean;

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Util } from '@/helpers/Util';
 
 const emit = defineEmits<{
   (e: 'accept', value: boolean): void,
@@ -34,7 +33,7 @@ const emit = defineEmits<{
       <v-card-actions>
         <!-- Accept button -->
         <btn-style-3
-          :autofocus="Util.isTvDevice()"
+          autofocus
           tabindex="1"
           block
           text="Accept and continue"

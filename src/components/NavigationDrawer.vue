@@ -5,7 +5,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import { AppName } from '@/helpers/UiConstants';
-import { Util } from '@/helpers/Util';
 import type { RouteLocationRaw } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
@@ -194,7 +193,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Whats new -->
       <v-list-item
-        v-if="!Util.isTvDevice()"
+        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
@@ -210,7 +209,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Send feedback -->
       <v-list-item
-        v-if="!Util.isTvDevice()"
+        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -226,7 +225,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Create personal server -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && !Util.isTvDevice()"
+        v-if="!vhApp.isConnectApp() && !vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -242,7 +241,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Website -->
       <v-list-item
-        v-if="!Util.isTvDevice()"
+        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -310,7 +309,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <!-- Powered by button -->
       <a
         class="d-block mb-2 text-caption text-decoration-none text-active"
-        :href="!Util.isTvDevice() ? 'https://github.com/vpnhood/VpnHood' : ''"
+        :href="!vhApp.data.features.isTv ? 'https://github.com/vpnhood/VpnHood' : ''"
         target="_blank"
         tabindex="-1"
       >

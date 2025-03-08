@@ -20,7 +20,7 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
     :style="(!vhApp.isConnectApp() && vhApp.getEdgeToEdgeTopHeight()) ?
     `padding-top: ${vhApp.getEdgeToEdgeTopHeight()}px !important; margin-top: -${vhApp.getEdgeToEdgeTopHeight()}px !important;`: ''"
   >
-    <template v-if="!Util.isTvDevice()">
+    <template v-if="!vhApp.data.features.isTv">
       <!-- Back button -->
       <v-btn :icon="Util.getLocalizedLeftChevron()" variant="text" @click="router.go(-1)" />
 
