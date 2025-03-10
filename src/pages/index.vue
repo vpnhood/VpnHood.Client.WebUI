@@ -522,7 +522,7 @@ function isDebugDataHasValue(): boolean {
 <!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
 #homeContainer {
-  background: url("@/assets/images/body-bg-mobile.png"),
+  background: url("@/assets/images/body-bg.png"),
   linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2))), no-repeat, center top, fixed;
   background-size: cover;
   position: relative;

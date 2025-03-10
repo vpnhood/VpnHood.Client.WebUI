@@ -50,7 +50,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app id="appContainer" :class="{'px-15': !vuetify.display.smAndDown.value}">
+  <v-app :class="{'px-15': !vuetify.display.smAndDown.value}" class="bg-app-bg">
 
     <v-layout
       width="100%"
@@ -88,21 +88,6 @@ onMounted(async () => {
     </v-layout>
   </v-app>
 </template>
-
-
-<!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
-<style scoped>
-@media (min-width: 960px){
-  #appContainer {
-    background: url('@/assets/images/body-blur-bg.png'), rgb(var(--v-theme-app-bg)) no-repeat center top fixed;
-    background-size: cover;
-  }
-}
-/********* End of Device is not mobile **********/
-#appContainer.grad-bg{
-  background: rgb(var(--v-theme-grad-bg-container-bg)) !important;
-}
-</style>
 
 <!--suppress CssUnusedSymbol -->
 <style>

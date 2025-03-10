@@ -123,15 +123,15 @@ function revertCurrentChange(): void{
       <ul class="text-caption" style="list-style: none">
         <li>
           {{locale('SINGLE_IP')}}
-          <v-chip text="192.168.1.1"/>
+          <v-chip text="192.168.1.1" tabindex="-1"/>
         </li>
         <li class="py-1">
           {{locale('RANGES_OF_IP')}}
-          <v-chip text="192.168.1.1-192.168.1.255" />
+          <v-chip text="192.168.1.1-192.168.1.255" tabindex="-1"/>
         </li>
         <li>
           {{locale('CIDR_NOTATION')}}
-          <v-chip text="192.168.1.0/24" />
+          <v-chip text="192.168.1.0/24"  tabindex="-1"/>
         </li>
       </ul>
     </alert-info>
