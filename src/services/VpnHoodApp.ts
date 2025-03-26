@@ -1,10 +1,6 @@
 import {
   ApiException,
   AppClient,
-  AppConnectionState,
-  AppFeatures,
-  AppSettings,
-  AppState,
   ClientProfileClient,
   ClientProfileInfo,
   ClientProfileUpdateParams,
@@ -13,12 +9,9 @@ import {
   DeviceAppInfo,
   PatchOfBoolean,
   PatchOfString,
-  SessionSuppressType,
-  UiCultureInfo
+  SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { UiState } from '@/helpers/UiState';
-import { UserState } from '@/helpers/UserState';
 import { AppName, ComponentName } from '@/helpers/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
@@ -29,32 +22,7 @@ import { logEvent, setUserId } from 'firebase/analytics';
 import { AnalyticsCustomEvent, FirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { Util } from '@/helpers/Util';
-
-// VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
-export class VpnHoodAppData {
-  public readonly serverUrl: string | undefined = import.meta.env.VITE_CLIENT_API_BASE_URL;
-  public uiState: UiState = new UiState();
-  public userState: UserState = new UserState();
-  public state: AppState;
-  public settings: AppSettings;
-  public features: AppFeatures;
-  public clientProfileInfos: ClientProfileInfo[];
-  public cultureInfos: UiCultureInfo[];
-
-  public constructor(
-    state: AppState,
-    setting: AppSettings,
-    features: AppFeatures,
-    clientProfileInfos: ClientProfileInfo[],
-    cultureInfos: UiCultureInfo[]
-  ) {
-    this.state = state;
-    this.settings = setting;
-    this.features = features;
-    this.clientProfileInfos = clientProfileInfos;
-    this.cultureInfos = cultureInfos;
-  }
-}
+import { VpnHoodAppData } from '@/services/VpnHoodAppData';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
@@ -127,7 +95,7 @@ export class VpnHoodApp {
       this.data.uiState.showUpdateSnackbar = true;
 
     // Show 'suppress to' message
-    if (this.data.state.connectionState === AppConnectionState.Connected && this.data.state.sessionInfo?.suppressedTo &&
+    if (this.data.isConnected && this.data.state.sessionInfo?.suppressedTo &&
       this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
       this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString() &&
       !this.data.uiState.generalSnackbarData.isShow) {
@@ -155,8 +123,7 @@ export class VpnHoodApp {
     isPremium: boolean,
     planId: ConnectPlanId,
     isDiagnose: boolean = false,
-    goToHome: boolean = true,
-    throwError: boolean = false
+    goToHome: boolean = true
   ): Promise<void> {
 
     // Update client profile
@@ -179,25 +146,31 @@ export class VpnHoodApp {
       if (goToHome && router.currentRoute.value.name !== 'HOME')
         await router.replace({name: 'HOME'});
 
-      if (isDiagnose) await this.diagnose();
+      this.data.uiState.uiConnectInProgress = true;
 
-      else await this.apiClient.connect(clientProfileId, serverLocation, planId);
+      if (isDiagnose)
+        await this.diagnose();
+      else
+        await this.apiClient.connect(clientProfileId, serverLocation, planId);
     }
     catch (err: unknown) {
-      if (throwError) throw err;
+      console.log(err);
     }
     finally {
       // Reload to apply latest clientProfileInfos updates
       await this.reloadSettings();
+      this.data.uiState.uiConnectInProgress = false;
     }
   }
 
   public async disconnect(): Promise<void> {
-    await this.apiClient.disconnect();
-    /*if (this.data.state.sessionStatus?.suppressedTo
-      && this.data.state.sessionStatus?.suppressedTo !== SessionSuppressType.None
-      && this.data.state.sessionStatus?.suppressedBy === SessionSuppressType.None)
-      this.data.uiState.showSuppressSnackbar = false;*/
+    try {
+      this.data.uiState.uiDisconnectInProgress = true;
+      await this.apiClient.disconnect();
+    }
+    finally {
+      this.data.uiState.uiDisconnectInProgress = false;
+    }
   }
 
   public getAppVersion(isFull: boolean): string {
@@ -234,9 +207,12 @@ export class VpnHoodApp {
       await router.replace({name: 'SERVERS'});
       return;
     }
-    await this.apiClient.diagnose(
-      this.data.settings.userSettings.clientProfileId
-    );
+    try {
+      await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
+    }
+    catch (err: unknown) {
+      console.log(err);
+    }
   }
 
   public analyticsLogEvent(eventName: string, eventParams: object) {
@@ -318,19 +294,6 @@ export class VpnHoodApp {
     return this.isConnectApp() && this.data.clientProfileInfos.length === 1;
   }
 
-  public isConnected(): boolean {
-    return this.data.state.connectionState === AppConnectionState.Connected;
-  }
-
-  public getConnectionStateText(): string {
-    if (this.data.state.connectionState === AppConnectionState.WaitingForAd)
-      return i18n.global.t('LOADING_AD');
-
-    return this.data.state.connectionState === AppConnectionState.None
-      ? i18n.global.t('DISCONNECTED')
-      : i18n.global.t(this.data.state.connectionState.toUpperCase());
-  }
-
   public async clearLastError(): Promise<void> {
     this.data.uiState.stateLastErrorMessage = null;
     await this.apiClient.clearLastError();
@@ -360,7 +323,7 @@ export class VpnHoodApp {
     if (!profileId)
       throw new Error('Could not find the profile id that have a premium code.');
 
-    if (this.isConnected())
+    if (this.data.isConnected)
       await this.disconnect();
 
     await this.clientProfileClient.update(profileId, new ClientProfileUpdateParams({

@@ -12,7 +12,7 @@ const showConnectedAnimation = ref<boolean | null>(null);
 
 function getExpireDate(): string | null {
   if ((!vhApp.data.state.clientProfile?.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
-    || vhApp.data.state.connectionState !== AppConnectionState.Connected
+    || vhApp.data.connectionState !== AppConnectionState.Connected
     || !vhApp.data.state.sessionInfo?.accessInfo?.expirationTime)
     return null;
 
@@ -38,24 +38,24 @@ function determineClass(): string {
   // VpnHoodCONNECT
   if (vhApp.isConnectApp()) {
     processConnectedAnimation();
-    return vhApp.data.state.connectionState.toLowerCase() + ' my-3' + ' animation-' +
+    return vhApp.data.connectionState.toLowerCase() + ' my-3' + ' animation-' +
       (showConnectedAnimation.value === true).toString();
   }
   // VpnHoodClient
-  return vhApp.isConnected() ? 'opacity-100' : 'opacity-30';
+  return vhApp.data.isConnected ? 'opacity-100' : 'opacity-30';
 }
 
 // Return icon based on connection state
 function stateIcon(): string | null {
-  if (vhApp.data.state.connectionState === AppConnectionState.Connected && !bandwidthUsage())
+  if (vhApp.data.isConnected && !bandwidthUsage())
     return 'mdi-check';
-  if (vhApp.data.state.connectionState === AppConnectionState.None)
+  if (vhApp.data.connectionState === AppConnectionState.None)
     return 'mdi-power-plug-off';
-  if (vhApp.data.state.connectionState === AppConnectionState.Connecting)
+  if (vhApp.data.connectionState === AppConnectionState.Connecting)
     return 'mdi-power-plug';
-  if (vhApp.data.state.connectionState === AppConnectionState.Diagnosing)
+  if (vhApp.data.connectionState === AppConnectionState.Diagnosing)
     return 'mdi-stethoscope';
-  if (vhApp.data.state.connectionState === AppConnectionState.Waiting)
+  if (vhApp.data.connectionState === AppConnectionState.Waiting)
     return 'mdi-timer-sand';
 
   return null;
@@ -90,7 +90,7 @@ function bandwidthUsage(): { Used: string; Total: string } | null {
 
 // Process connect animation state for VpnHoodCONNECT
 function processConnectedAnimation(): void {
-  if (!vhApp.isConnected()) {
+  if (!vhApp.data.isConnected) {
     showConnectedAnimation.value = false;
     return;
   }
@@ -117,10 +117,10 @@ function processConnectedAnimation(): void {
     <div class="d-flex flex-column align-center justify-center position-relative fill-height">
 
       <!-- Connection state text -->
-      <span class="text-body-2">{{ vhApp.getConnectionStateText() }}</span>
+      <span class="text-body-2">{{ vhApp.data.connectionStateText }}</span>
 
       <!-- Usage -->
-      <div class="d-flex flex-column align-center" v-if="vhApp.isConnected() && bandwidthUsage()">
+      <div class="d-flex flex-column align-center" v-if="vhApp.data.isConnected && bandwidthUsage()">
         <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ locale('OF') }}</span>
         <span class="text-total-bandwidth">{{ bandwidthUsage()?.Total }}</span>
       </div>

@@ -58,7 +58,7 @@ async function removeCode() {
           @click="showConfirmRemoveCode = true"
         />
         <v-btn
-          v-if="vhApp.isConnected()"
+          v-if="vhApp.data.isConnected"
           variant="plain"
           :text="locale('STATISTICS')"
           size="small"

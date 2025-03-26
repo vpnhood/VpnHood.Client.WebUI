@@ -20,7 +20,7 @@ function internalConnect(location: ClientServerLocationInfo): void {
     return;
 
   // User is currently connected to the selected location
-  if (vhApp.isConnected() && isActiveItem(location)){
+  if (vhApp.data.isConnected && isActiveItem(location)){
     vhApp.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'), "active");
     return;
   }

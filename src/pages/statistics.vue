@@ -79,7 +79,7 @@ function calcUnit(total: number): string{
       </config-card>
 
       <!-- Server and IP -->
-      <config-card v-if="vhApp.data.state.sessionInfo.accessInfo" :disabled="!vhApp.isConnected()">
+      <config-card v-if="vhApp.data.state.sessionInfo.accessInfo" :disabled="!vhApp.data.isConnected">
         <v-card-title>
           {{locale('SERVER_AND_IP')}}
           <v-icon icon="mdi-server-outline"/>
@@ -87,7 +87,7 @@ function calcUnit(total: number): string{
         <v-card-subtitle>{{locale('STATISTICS_SERVER_CARD_DESC')}}</v-card-subtitle>
 
         <v-card-text>
-          <ul v-if="vhApp.isConnected()" class="info-table">
+          <ul v-if="vhApp.data.isConnected" class="info-table">
 
             <li class="border-b">
               <span>{{locale('YOUR_PROTECTED_IP')}}</span>

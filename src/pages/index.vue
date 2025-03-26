@@ -28,21 +28,19 @@ async function onConnectButtonClick(): Promise<void> {
 
   // Disconnect
   if (vhApp.data.state.canDisconnect) {
-    vhApp.data.state.connectionState = AppConnectionState.Disconnecting;
     await vhApp.disconnect();
     return;
   }
 
   // Connect
   if (vhApp.data.state.canConnect) {
-    vhApp.data.state.connectionState = AppConnectionState.Connecting;
     await ConnectManager.connect1(false);
   }
 }
 
 function udpProtocolButtonText(): string {
   const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
-  if (vhApp.data.state.connectionState === AppConnectionState.Connected &&
+  if (vhApp.data.connectionState === AppConnectionState.Connected &&
     !vhApp.data.state.sessionInfo?.isUdpChannelSupported) {
     return dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP');
   }
@@ -54,7 +52,7 @@ function isShowCountdown(): boolean {
     return false;
 
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.sessionExpirationTime;
-  return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.isConnected();
+  return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.data.isConnected;
 }
 
 function getActiveServerNameOrLocation(): string {
@@ -78,11 +76,11 @@ function getActiveServerNameOrLocation(): string {
 // Return text for connect button based on connection state
 function connectButtonText(): string {
   if (!vhApp.data.state.canDiagnose &&
-    (vhApp.data.state.connectionState === AppConnectionState.Connected
-      || vhApp.data.state.connectionState === AppConnectionState.Connecting))
+    (vhApp.data.connectionState === AppConnectionState.Connected
+      || vhApp.data.connectionState === AppConnectionState.Connecting))
     return locale('STOP_DIAGNOSING');
   else
-    switch (vhApp.data.state.connectionState) {
+    switch (vhApp.data.connectionState) {
       case AppConnectionState.Initializing:
         return locale('CANCEL');
       case AppConnectionState.WaitingForAd:
@@ -174,11 +172,12 @@ function isDebugDataHasValue(): boolean {
   <v-sheet
     id="homeContainer"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
-                (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.isConnected())) ?
+                (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.data.isConnected)) ?
                 'premium-user' : '', vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]"
   >
 
-    <v-row align-content="space-between" justify="center" class="fill-height v-row--no-gutters">
+    <v-row :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined" justify="center"
+           class="fill-height v-row--no-gutters">
 
       <!-- Home page app bar & Go Premium or Countdown button -->
       <v-col cols="12">
@@ -187,7 +186,7 @@ function isDebugDataHasValue(): boolean {
         <v-row class="align-center v-row--no-gutters mx-0">
 
           <!-- Navigation drawer button -->
-          <v-col cols="3">
+          <v-col cols="3" v-if="!vhApp.data.features.isTv">
             <v-app-bar-nav-icon
               tabindex="1"
               color="home-app-bar"
@@ -197,14 +196,14 @@ function isDebugDataHasValue(): boolean {
           </v-col>
 
           <!-- App name -->
-          <v-col cols="6" class="text-center text-home-app-bar" tabindex="-1">
-            <h4 dir="ltr">
+          <v-col :cols="!vhApp.data.features.isTv ? '6' : '12' " class="text-center text-home-app-bar" tabindex="-1">
+            <h4 dir="ltr" :class="{'mt-8': vhApp.data.features.isTv}">
               {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
             </h4>
           </v-col>
 
           <!-- App mini version -->
-          <v-col cols="3" class="text-end">
+          <v-col cols="3" class="text-end" v-if="!vhApp.data.features.isTv">
             <v-chip
               tabindex="-1"
               size="small"
@@ -223,7 +222,7 @@ function isDebugDataHasValue(): boolean {
         </v-row>
 
         <!-- Go Premium or Countdown button -->
-        <v-row class="mt-0" align="center">
+        <v-row v-if="!vhApp.data.features.isTv" class="mt-0" align="center">
           <v-col cols="2"></v-col>
           <v-col cols="8" class="text-center">
             <!-- Countdown and extend session button -->
@@ -290,31 +289,32 @@ function isDebugDataHasValue(): boolean {
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
-      <v-col cols="12" :class="'text-center state-' + [vhApp.data.state.connectionState.toLowerCase()]">
+      <v-col cols="12" :class="'text-center state-' + [vhApp.data.connectionState.toLowerCase()]">
 
         <!-- Statistics & Speed -->
         <v-row
           align-content="center"
           justify="center"
           dir="ltr"
-          :class="[vhApp.isConnected() ? 'opacity-100' : 'opacity-0','mb-2']"
+          :class="[vhApp.data.isConnected ? 'opacity-100' : 'opacity-0','mb-2']"
         >
           <!-- Statistics -->
           <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
             <v-btn
               :text="locale('STATISTICS')"
-              :tabindex="vhApp.isConnected() ? '3' : null"
+              :tabindex="vhApp.data.isConnected ? '3' : null"
               dir="auto"
               variant="text"
               rounded="pill"
+              class="d-inline-flex"
               :append-icon="Util.getLocalizedRightChevron()"
-              @click="vhApp.isConnected() ? router.push({name: 'STATISTICS'}) : null"
+              @click="vhApp.data.isConnected ? router.push({name: 'STATISTICS'}) : null"
             />
           </v-col>
 
           <!-- Download speed -->
           <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-            <v-icon color="active" size="small" icon="mdi-arrow-up-thin" tabindex="-1" />
+            <v-icon color="active" size="small" icon="mdi-arrow-down-thin" tabindex="-1" />
             <span class="pe-1 text-body-2 text-white">
             {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1) }}
           </span>
@@ -323,7 +323,7 @@ function isDebugDataHasValue(): boolean {
 
           <!-- Upload speed -->
           <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
-            <v-icon color="error" size="small" icon="mdi-arrow-down-thin" tabindex="-1" />
+            <v-icon color="error" size="small" icon="mdi-arrow-up-thin" tabindex="-1" />
             <span class="pe-1 text-body-2 text-white">
             {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
           </span>
@@ -340,19 +340,19 @@ function isDebugDataHasValue(): boolean {
           height="40px"
           min-width="180px"
           rounded="pill"
-          :tabindex="vhApp.isConnected() ? '4' : '3'"
-          :disabled="vhApp.data.state.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
+          :tabindex="vhApp.data.isConnected ? '4' : '3'"
+          :disabled="vhApp.data.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
           class="font-weight-bold mt-5 mb-4"
           :class="[vhApp.isConnectApp() ? 'connect-app' : 'client-app',
-          {'connected': vhApp.isConnected()}, {'tv-device': vhApp.data.features.isTv}]"
+          {'connected': vhApp.data.isConnected}, {'tv-device': vhApp.data.features.isTv}]"
           :text="connectButtonText()"
-          @click="onConnectButtonClick"
+          @click="onConnectButtonClick()"
         />
 
       </v-col>
 
       <!-- Config buttons -->
-      <v-col cols="12">
+      <v-col cols="12" v-if="!vhApp.data.features.isTv">
 
         <!-- Servers button -->
         <home-config-btn

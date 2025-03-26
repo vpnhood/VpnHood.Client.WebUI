@@ -39,6 +39,8 @@ export class ErrorHandler {
     switch (err.exceptionTypeName) {
       case 'OperationCanceledException':
         return null;
+      case 'UserCanceledException':
+        return null;
       case 'ObjectDisposedException':
         return null;
       case 'HttpRequestException':

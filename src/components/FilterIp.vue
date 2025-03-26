@@ -49,7 +49,7 @@ const includeIpFilters = computed<string>({
 })
 
 async function saveIpList(){
-  if (vhApp.isConnected())
+  if (vhApp.data.isConnected)
     await vhApp.disconnect();
   await vhApp.apiClient.setIpFilters(new IpFilters({
     adapterIpFilterExcludes: ipFilters.value.adapterIpFilterExcludes,

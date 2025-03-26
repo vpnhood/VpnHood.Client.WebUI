@@ -21,4 +21,7 @@ export class UiState {
 
   public stateLastErrorMessage: string | null = null;
 
+  public uiConnectInProgress: boolean = false;
+  public uiDisconnectInProgress: boolean = false;
+
 }

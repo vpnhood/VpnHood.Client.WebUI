@@ -115,7 +115,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       <v-card-subtitle>{{ locale('INCLUDE_LOCAL_NETWORK_DESC') }}</v-card-subtitle>
 
       <!-- Disconnecting alert -->
-      <v-card-item v-if="vhApp.isConnected() && isIncludeLocalNetworkAvailable()">
+      <v-card-item v-if="vhApp.data.isConnected && isIncludeLocalNetworkAvailable()">
         <disconnect-required-alert />
       </v-card-item>
 
@@ -140,7 +140,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
       <v-card-subtitle>{{ locale('FILTER_IP_ADDRESSES_DESC') }}</v-card-subtitle>
 
       <!-- Disconnecting alert -->
-      <v-card-item v-if="vhApp.isConnected() && isFilterIpByDeviceAvailable()">
+      <v-card-item v-if="vhApp.data.isConnected && isFilterIpByDeviceAvailable()">
         <disconnect-required-alert />
       </v-card-item>
 

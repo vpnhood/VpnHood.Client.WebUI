@@ -28,7 +28,7 @@ const activeProtocol = computed<Protocols>({
   }
 });
 function isUdpUnsupported(): boolean {
-  return vhApp.data.state.connectionState === AppConnectionState.Connected &&
+  return vhApp.data.connectionState === AppConnectionState.Connected &&
     !vhApp.data.state.sessionInfo?.isUdpChannelSupported;
 }
 </script>

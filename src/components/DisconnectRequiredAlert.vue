@@ -5,7 +5,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 <template>
   <v-alert
-    v-if="VpnHoodApp.instance.isConnected()"
+    v-if="VpnHoodApp.instance.data.isConnected"
     :icon="false"
     :text="i18n.global.t('DISCONNECT_REQUIRED_TO_CHANGE_SETTING')"
     class="text-caption"
