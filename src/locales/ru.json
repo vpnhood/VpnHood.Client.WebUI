@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "Премиум-код активен",
   "CONNECTION_TIMEOUT_MSG": "Не удалось установить соединение за заданное время.",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Время вашего премиум-соединения истекло.",
-  "DAILY_LIMIT_EXCEEDED_MSG": "Дневной лимит превышен."
+  "DAILY_LIMIT_EXCEEDED_MSG": "Дневной лимит превышен.",
+  "PURCHASE_VIA_WEB": "Покупка через веб"
 }
