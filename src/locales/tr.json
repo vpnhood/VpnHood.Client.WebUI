@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "Premium kodu aktif",
   "CONNECTION_TIMEOUT_MSG": "Belirtilen sürede bağlantı kurulamadı.",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Premium bağlantı süreniz doldu.",
-  "DAILY_LIMIT_EXCEEDED_MSG": "Günlük sınır aşıldı."
+  "DAILY_LIMIT_EXCEEDED_MSG": "Günlük sınır aşıldı.",
+  "PURCHASE_VIA_WEB": "Web üzerinden satın al"
 }
