@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "高级代码已激活",
   "CONNECTION_TIMEOUT_MSG": "无法在给定时间内建立连接。",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "您的优质连接时间已过期。",
-  "DAILY_LIMIT_EXCEEDED_MSG": "已超过每日限额。"
+  "DAILY_LIMIT_EXCEEDED_MSG": "已超过每日限额。",
+  "PURCHASE_VIA_WEB": "通过网页购买"
 }
