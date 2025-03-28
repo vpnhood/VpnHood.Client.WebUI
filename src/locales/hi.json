@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "प्रीमियम कोड सक्रिय है",
   "CONNECTION_TIMEOUT_MSG": "दिए गए समय में कनेक्शन स्थापित नहीं किया जा सका।",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "आपके प्रीमियम कनेक्शन का समय समाप्त हो गया है।",
-  "DAILY_LIMIT_EXCEEDED_MSG": "दैनिक सीमा पार हो गई है।"
+  "DAILY_LIMIT_EXCEEDED_MSG": "दैनिक सीमा पार हो गई है।",
+  "PURCHASE_VIA_WEB": "वेब के माध्यम से खरीदारी"
 }
