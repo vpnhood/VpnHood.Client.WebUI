@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "کد ویژه فعال است",
   "CONNECTION_TIMEOUT_MSG": "امکان برقراری اتصال در زمان مشخص‌شده وجود نداشت.",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "زمان اتصال ویژه شما به پایان رسیده است.",
-  "DAILY_LIMIT_EXCEEDED_MSG": "محدودیت روزانه فراتر رفته است."
+  "DAILY_LIMIT_EXCEEDED_MSG": "محدودیت روزانه فراتر رفته است.",
+  "PURCHASE_VIA_WEB": "خرید از طریق وب"
 }
