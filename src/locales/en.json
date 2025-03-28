@@ -295,5 +295,6 @@
   "PREMIUM_CODE_IS_ACTIVE": "Premium code is active",
   "CONNECTION_TIMEOUT_MSG": "Could not establish connection in given time.",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Your premium connection time has expired.",
-  "DAILY_LIMIT_EXCEEDED_MSG": "The daily limit has been exceeded."
+  "DAILY_LIMIT_EXCEEDED_MSG": "The daily limit has been exceeded.",
+  "PURCHASE_VIA_WEB": "Purchase via Web"
 }

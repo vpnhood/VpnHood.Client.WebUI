@@ -4,6 +4,7 @@ import {
   BillingPurchaseState,
   ClientProfileUpdateParams,
   PatchOfString,
+  PurchaseUrlMode,
   SubscriptionPlan
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
@@ -19,7 +20,8 @@ import { ComponentName } from '@/helpers/UiConstants';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 // TODO: Improve this page
-const isGooglePlayAvailable = ref<boolean>(true);
+const showPurchaseViaWeb = ref<boolean>(false);
+const showPurchaseViaGoogle = ref<boolean>(false);
 const isGoogleBillingAvailable = ref<boolean>(true);
 const subscriptionPlans = ref<SubscriptionPlan[]>([]);
 const showProcessDialog = ref<boolean>(false);
@@ -95,6 +97,19 @@ onMounted(async () => {
     }
 
   }
+
+  const purchaseUrlMode = vhApp.data.state.clientProfile?.purchaseUrlMode;
+
+  // Situation to show purchase via web
+  showPurchaseViaWeb.value = (vhApp.data.state.clientProfile?.purchaseUrl &&
+    ( purchaseUrlMode == PurchaseUrlMode.WhenNoStore ||
+      purchaseUrlMode == PurchaseUrlMode.WithStore ||
+      !isGoogleBillingAvailable.value
+    )) === true;
+
+  // Situation to show purchase via Google
+  showPurchaseViaGoogle.value = isGoogleBillingAvailable.value || purchaseUrlMode !== PurchaseUrlMode.HideStore;
+
 });
 
 async function onPurchaseClick(planId: string): Promise<void> {
@@ -144,7 +159,7 @@ async function validateCode(): Promise<void> {
 
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
-  router.replace({name: showStatistics ? 'STATISTICS' : 'HOME'});
+  router.replace({ name: showStatistics ? 'STATISTICS' : 'HOME' });
 }
 </script>
 
@@ -213,11 +228,11 @@ function closeCompleteDialog(showStatistics: boolean) {
       <div class="px-5 mt-4">
 
         <!-- Purchase by google -->
-        <v-card v-if="isGooglePlayAvailable &&
+        <v-card v-if="showPurchaseViaGoogle &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
-          class="py-3 px-3 rounded-lg text-white mb-4"
-          :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
-          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+                class="py-3 px-3 rounded-lg text-white mb-4"
+                :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
+                color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <template v-if="isGoogleBillingAvailable">
             <!-- Plan title, price -->
@@ -276,6 +291,24 @@ function closeCompleteDialog(showStatistics: boolean) {
             />
           </template>
 
+        </v-card>
+
+        <!-- Alternative purchase button -->
+        <v-card v-if="showPurchaseViaWeb"
+                class="py-1 rounded-lg mb-4"
+                color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+        >
+          <v-btn
+            v-if="vhApp.data.state.clientProfile?.purchaseUrl"
+            block
+            :ripple="false"
+            color="premium-code-btn"
+            variant="text"
+            prepend-icon="mdi-web"
+            :text="locale('PURCHASE_VIA_WEB')"
+            target="_blank"
+            :href="vhApp.data.state.clientProfile?.purchaseUrl"
+          />
         </v-card>
 
         <!-- Input premium code button -->

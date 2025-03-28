@@ -1,6 +1,6 @@
 {
   "name": "vpnhood.spa",
-  "version": "1.0.624",
+  "version": "1.0.625",
   "private": true,
   "type": "module",
   "scripts": {
@@ -45,7 +45,7 @@
     "vue-tsc": "^2.1.10"
   },
   "browserslist": [
-    "chrome >= 75",
+    "chrome >= 66",
     "> 0.2%",
     "last 2 versions",
     "not dead"

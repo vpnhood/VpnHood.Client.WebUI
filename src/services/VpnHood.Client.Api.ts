@@ -2927,6 +2927,8 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     isPremiumAccount!: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode!: boolean;
+    purchaseUrl?: string | null;
+    purchaseUrlMode!: PurchaseUrlMode;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -2947,6 +2949,8 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.isPremiumAccount = _data["isPremiumAccount"] !== undefined ? _data["isPremiumAccount"] : <any>null;
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
             this.hasAccessCode = _data["hasAccessCode"] !== undefined ? _data["hasAccessCode"] : <any>null;
+            this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : <any>null;
+            this.purchaseUrlMode = _data["purchaseUrlMode"] !== undefined ? _data["purchaseUrlMode"] : <any>null;
         }
     }
 
@@ -2967,6 +2971,8 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
         data["isPremiumAccount"] = this.isPremiumAccount !== undefined ? this.isPremiumAccount : <any>null;
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
         data["hasAccessCode"] = this.hasAccessCode !== undefined ? this.hasAccessCode : <any>null;
+        data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : <any>null;
+        data["purchaseUrlMode"] = this.purchaseUrlMode !== undefined ? this.purchaseUrlMode : <any>null;
         return data;
     }
 }
@@ -2980,6 +2986,8 @@ export interface IClientProfileBaseInfo {
     isPremiumAccount: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode: boolean;
+    purchaseUrl?: string | null;
+    purchaseUrlMode: PurchaseUrlMode;
 }
 
 export class ClientServerLocationInfo extends ServerLocationInfo implements IClientServerLocationInfo {
@@ -3096,6 +3104,12 @@ export interface IServerLocationOptions {
     hasPremium: boolean;
     hasUnblockable: boolean;
     prompt: boolean;
+}
+
+export enum PurchaseUrlMode {
+    WhenNoStore = 0,
+    WithStore = 1,
+    HideStore = 2,
 }
 
 export enum VersionStatus {
@@ -3269,6 +3283,8 @@ export class ClientProfileInfo implements IClientProfileInfo {
     isForAccount!: boolean;
     accessCode?: string | null;
     locationInfos!: ClientServerLocationInfo[];
+    purchaseUrl?: string | null;
+    purchaseUrlMode!: PurchaseUrlMode;
     selectedLocationInfo?: ClientServerLocationInfo | null;
 
     constructor(data?: IClientProfileInfo) {
@@ -3313,6 +3329,8 @@ export class ClientProfileInfo implements IClientProfileInfo {
             else {
                 this.locationInfos = <any>null;
             }
+            this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : <any>null;
+            this.purchaseUrlMode = _data["purchaseUrlMode"] !== undefined ? _data["purchaseUrlMode"] : <any>null;
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
         }
     }
@@ -3347,6 +3365,8 @@ export class ClientProfileInfo implements IClientProfileInfo {
             for (let item of this.locationInfos)
                 data["locationInfos"].push(item.toJSON());
         }
+        data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : <any>null;
+        data["purchaseUrlMode"] = this.purchaseUrlMode !== undefined ? this.purchaseUrlMode : <any>null;
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
         return data;
     }
@@ -3366,6 +3386,8 @@ export interface IClientProfileInfo {
     isForAccount: boolean;
     accessCode?: string | null;
     locationInfos: ClientServerLocationInfo[];
+    purchaseUrl?: string | null;
+    purchaseUrlMode: PurchaseUrlMode;
     selectedLocationInfo?: ClientServerLocationInfo | null;
 }
 
