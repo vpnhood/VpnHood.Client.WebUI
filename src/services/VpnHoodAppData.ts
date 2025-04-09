@@ -48,7 +48,7 @@ export class VpnHoodAppData {
       orgConnectionState === AppConnectionState.Initializing ||
       orgConnectionState === AppConnectionState.Waiting
     )) {
-      return AppConnectionState.Disconnecting;
+      return AppConnectionState.None;
     }
 
     return this.state.connectionState;

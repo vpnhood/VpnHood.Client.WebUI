@@ -1298,6 +1298,54 @@ export class BillingClient {
         }
         return Promise.resolve<string>(null as any);
     }
+
+    getPurchaseOptions( cancelToken?: CancelToken): Promise<AppPurchaseOptions> {
+        let url_ = this.baseUrl + "/api/billing/purchase-options";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetPurchaseOptions(_response);
+        });
+    }
+
+    protected processGetPurchaseOptions(response: AxiosResponse): Promise<AppPurchaseOptions> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = AppPurchaseOptions.fromJS(resultData200);
+            return Promise.resolve<AppPurchaseOptions>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<AppPurchaseOptions>(null as any);
+    }
 }
 
 export class ClientProfileClient {
@@ -2927,8 +2975,6 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     isPremiumAccount!: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode!: boolean;
-    purchaseUrl?: string | null;
-    purchaseUrlMode!: PurchaseUrlMode;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -2949,8 +2995,6 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.isPremiumAccount = _data["isPremiumAccount"] !== undefined ? _data["isPremiumAccount"] : <any>null;
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
             this.hasAccessCode = _data["hasAccessCode"] !== undefined ? _data["hasAccessCode"] : <any>null;
-            this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : <any>null;
-            this.purchaseUrlMode = _data["purchaseUrlMode"] !== undefined ? _data["purchaseUrlMode"] : <any>null;
         }
     }
 
@@ -2971,8 +3015,6 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
         data["isPremiumAccount"] = this.isPremiumAccount !== undefined ? this.isPremiumAccount : <any>null;
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
         data["hasAccessCode"] = this.hasAccessCode !== undefined ? this.hasAccessCode : <any>null;
-        data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : <any>null;
-        data["purchaseUrlMode"] = this.purchaseUrlMode !== undefined ? this.purchaseUrlMode : <any>null;
         return data;
     }
 }
@@ -2986,8 +3028,6 @@ export interface IClientProfileBaseInfo {
     isPremiumAccount: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode: boolean;
-    purchaseUrl?: string | null;
-    purchaseUrlMode: PurchaseUrlMode;
 }
 
 export class ClientServerLocationInfo extends ServerLocationInfo implements IClientServerLocationInfo {
@@ -3104,12 +3144,6 @@ export interface IServerLocationOptions {
     hasPremium: boolean;
     hasUnblockable: boolean;
     prompt: boolean;
-}
-
-export enum PurchaseUrlMode {
-    WhenNoStore = 0,
-    WithStore = 1,
-    HideStore = 2,
 }
 
 export enum VersionStatus {
@@ -3391,6 +3425,12 @@ export interface IClientProfileInfo {
     selectedLocationInfo?: ClientServerLocationInfo | null;
 }
 
+export enum PurchaseUrlMode {
+    WhenNoStore = 0,
+    WithStore = 1,
+    HideStore = 2,
+}
+
 export class ConfigParams implements IConfigParams {
     availableCultures!: string[];
     strings?: AppStrings | null;
@@ -3662,6 +3702,68 @@ export class SubscriptionPlan implements ISubscriptionPlan {
 export interface ISubscriptionPlan {
     subscriptionPlanId: string;
     planPrice: string;
+}
+
+export class AppPurchaseOptions implements IAppPurchaseOptions {
+    storeName?: string | null;
+    storeError?: ApiError | null;
+    subscriptionPlans!: SubscriptionPlan[];
+    purchaseUrl?: string | null;
+
+    constructor(data?: IAppPurchaseOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.subscriptionPlans = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.storeName = _data["storeName"] !== undefined ? _data["storeName"] : <any>null;
+            this.storeError = _data["storeError"] ? ApiError.fromJS(_data["storeError"]) : <any>null;
+            if (Array.isArray(_data["subscriptionPlans"])) {
+                this.subscriptionPlans = [] as any;
+                for (let item of _data["subscriptionPlans"])
+                    this.subscriptionPlans!.push(SubscriptionPlan.fromJS(item));
+            }
+            else {
+                this.subscriptionPlans = <any>null;
+            }
+            this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppPurchaseOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppPurchaseOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["storeName"] = this.storeName !== undefined ? this.storeName : <any>null;
+        data["storeError"] = this.storeError ? this.storeError.toJSON() : <any>null;
+        if (Array.isArray(this.subscriptionPlans)) {
+            data["subscriptionPlans"] = [];
+            for (let item of this.subscriptionPlans)
+                data["subscriptionPlans"].push(item.toJSON());
+        }
+        data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : <any>null;
+        return data;
+    }
+}
+
+export interface IAppPurchaseOptions {
+    storeName?: string | null;
+    storeError?: ApiError | null;
+    subscriptionPlans: SubscriptionPlan[];
+    purchaseUrl?: string | null;
 }
 
 export class ClientProfileUpdateParams implements IClientProfileUpdateParams {

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import {
-  ApiException,
+  AppPurchaseOptions,
   BillingPurchaseState,
   ClientProfileUpdateParams,
   PatchOfString,
-  PurchaseUrlMode,
   SubscriptionPlan
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
@@ -20,6 +19,7 @@ import { ComponentName } from '@/helpers/UiConstants';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 // TODO: Improve this page
+const purchaseOptions = ref<AppPurchaseOptions | null>(null);
 const showPurchaseViaWeb = ref<boolean>(false);
 const showPurchaseViaGoogle = ref<boolean>(false);
 const isGoogleBillingAvailable = ref<boolean>(true);
@@ -71,45 +71,45 @@ const isShowProcessDialog = computed<boolean>(() => {
 });
 
 onMounted(async () => {
-  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase) {
-    try {
-      // Get products list from Google and sort based on plan prices
-      const billingClient = ClientApiFactory.instance.createBillingClient();
-      const cloneSubscriptionPlans = await billingClient.getSubscriptionPlans();
-      cloneSubscriptionPlans.sort(
-        (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
-          Number((b.planPrice).replace(/\D/g, '')));
-      subscriptionPlans.value = cloneSubscriptionPlans;
-    } catch (err: unknown) {
-      isGoogleBillingAvailable.value = false;
+  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true)
+    return;
 
-      if (!(err instanceof ApiException)) {
-        throw err;
-      }
+  // Get products list from Google
+  const billingClient = ClientApiFactory.instance.createBillingClient();
+  purchaseOptions.value = await billingClient.getPurchaseOptions();
 
-      if (err.exceptionTypeName === 'GoogleBillingException') {
-        console.log('Google play billing is unavailable.');
-      } else if (err.exceptionTypeName === 'GooglePlayUnavailableException') {
-        console.log('Google play service is unavailable.');
-      } else {
-        throw err;
-      }
-    }
+  // Show purchase via web
+  showPurchaseViaWeb.value = !!purchaseOptions.value.purchaseUrl;
 
+  // Show purchase via Google
+  showPurchaseViaGoogle.value = !!purchaseOptions.value.storeName;
+
+  // Google billing is available
+  if (purchaseOptions.value.subscriptionPlans.length > 0) {
+    // Sort plans based on plan prices
+    subscriptionPlans.value = purchaseOptions.value.subscriptionPlans.sort(
+      (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
+        Number((b.planPrice).replace(/\D/g, ''))
+    );
+    return;
   }
 
-  const purchaseUrlMode = vhApp.data.state.clientProfile?.purchaseUrlMode;
+  // Google billing is not available
+  isGoogleBillingAvailable.value = false;
 
-  // Situation to show purchase via web
-  showPurchaseViaWeb.value = (vhApp.data.state.clientProfile?.purchaseUrl &&
-    ( purchaseUrlMode == PurchaseUrlMode.WhenNoStore ||
-      purchaseUrlMode == PurchaseUrlMode.WithStore ||
-      !isGoogleBillingAvailable.value
-    )) === true;
-
-  // Situation to show purchase via Google
-  showPurchaseViaGoogle.value = isGoogleBillingAvailable.value || purchaseUrlMode !== PurchaseUrlMode.HideStore;
-
+  // Google play is unavailable
+  if (purchaseOptions.value.storeError) {
+    switch (purchaseOptions.value.storeError.typeName) {
+      case 'GoogleBillingException':
+        console.log('Google play billing is unavailable.');
+        break;
+      case 'GooglePlayUnavailableException':
+        console.log('Google play service is unavailable.');
+        break;
+      default:
+        throw purchaseOptions.value.storeError;
+    }
+  }
 });
 
 async function onPurchaseClick(planId: string): Promise<void> {
@@ -227,8 +227,15 @@ function closeCompleteDialog(showStatistics: boolean) {
       <!-- Premium by google and by code buttons -->
       <div class="px-5 mt-4">
 
+        <!-- Show skeleton loader till to load google play info -->
+        <v-skeleton-loader v-if="subscriptionPlans.length === 0"
+                           color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+                           type="heading, subtitle"
+                           class="mb-4"
+                           height="125px"
+        />
         <!-- Purchase by google -->
-        <v-card v-if="showPurchaseViaGoogle &&
+        <v-card v-else-if="showPurchaseViaGoogle &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
                 class="py-3 px-3 rounded-lg text-white mb-4"
                 :class="{'border border-error border-opacity-100': !isGoogleBillingAvailable}"
@@ -293,13 +300,14 @@ function closeCompleteDialog(showStatistics: boolean) {
 
         </v-card>
 
+
         <!-- Alternative purchase button -->
         <v-card v-if="showPurchaseViaWeb"
                 class="py-1 rounded-lg mb-4"
                 color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <v-btn
-            v-if="vhApp.data.state.clientProfile?.purchaseUrl"
+            v-if="purchaseOptions?.purchaseUrl"
             block
             :ripple="false"
             color="premium-code-btn"
@@ -307,7 +315,7 @@ function closeCompleteDialog(showStatistics: boolean) {
             prepend-icon="mdi-web"
             :text="locale('PURCHASE_VIA_WEB')"
             target="_blank"
-            :href="vhApp.data.state.clientProfile?.purchaseUrl"
+            :href="purchaseOptions.purchaseUrl"
           />
         </v-card>
 
