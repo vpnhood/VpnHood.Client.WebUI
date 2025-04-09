@@ -169,6 +169,7 @@ export class VpnHoodApp {
       await this.apiClient.disconnect();
     }
     finally {
+      await this.reloadState();
       this.data.uiState.uiDisconnectInProgress = false;
     }
   }
