@@ -27,13 +27,13 @@ async function onConnectButtonClick(): Promise<void> {
   lastConnectPressedTime = Date.now();
 
   // Disconnect
-  if (vhApp.data.state.canDisconnect) {
+  if (vhApp.data.state.canDisconnect && !vhApp.data.uiState.uiDisconnectInProgress) {
     await vhApp.disconnect();
     return;
   }
 
   // Connect
-  if (vhApp.data.state.canConnect) {
+  if (vhApp.data.state.canConnect && !vhApp.data.uiState.uiConnectInProgress) {
     await ConnectManager.connect1(false);
   }
 }
