@@ -115,7 +115,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
                 :color="vhApp.premiumIconColor()" />
 
         <!---- Premium location icon ---->
-        <premium-icon v-if="props.isPremiumGroup" :color="vhApp.premiumIconColor()" />
+        <premium-icon v-if="props.isPremiumGroup && vhApp.isConnectApp()" :color="vhApp.premiumIconColor()" />
       </div>
       <!---------------------------- End of location status ---------------------------->
 
