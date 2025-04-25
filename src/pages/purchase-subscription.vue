@@ -97,7 +97,7 @@ onMounted(async () => {
   // Google billing is not available
   isGoogleBillingAvailable.value = false;
 
-  // Google play is unavailable
+  // Google Play is unavailable
   if (purchaseOptions.value.storeError) {
     switch (purchaseOptions.value.storeError.typeName) {
       case 'GoogleBillingException':
@@ -228,7 +228,7 @@ function closeCompleteDialog(showStatistics: boolean) {
       <div class="px-5 mt-4">
 
         <!-- Show skeleton loader till to load google play info -->
-        <v-skeleton-loader v-if="subscriptionPlans.length === 0"
+        <v-skeleton-loader v-if="subscriptionPlans.length === 0 && isGoogleBillingAvailable"
                            color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
                            type="heading, subtitle"
                            class="mb-4"

@@ -111,7 +111,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
         />
 
         <!---- Unblockable location icon ---->
-        <v-icon v-if="location.options.hasUnblockable" icon="mdi-sword-cross" size="16"
+        <v-icon v-if="location.options.hasUnblockable && isPremiumGroup" icon="mdi-sword-cross" size="16"
                 :color="vhApp.premiumIconColor()" />
 
         <!---- Premium location icon ---->

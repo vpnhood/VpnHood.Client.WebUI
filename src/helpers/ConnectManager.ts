@@ -12,7 +12,7 @@ export class ConnectManager {
     // Fore developer
     console.log('Show Prompt: ' + options?.prompt);
 
-    if (!options?.prompt || VpnHoodApp.instance.data.features.isTv)
+    if (!options?.prompt)
       return false;
 
     // Config promote dialog

@@ -186,7 +186,7 @@ function isDebugDataHasValue(): boolean {
         <v-row class="align-center v-row--no-gutters mx-0">
 
           <!-- Navigation drawer button -->
-          <v-col cols="3" v-if="!vhApp.data.features.isTv">
+          <v-col cols="3">
             <v-app-bar-nav-icon
               tabindex="1"
               color="home-app-bar"
@@ -196,14 +196,14 @@ function isDebugDataHasValue(): boolean {
           </v-col>
 
           <!-- App name -->
-          <v-col :cols="!vhApp.data.features.isTv ? '6' : '12' " class="text-center text-home-app-bar" tabindex="-1">
+          <v-col cols="6" class="text-center text-home-app-bar" tabindex="-1">
             <h4 dir="ltr" :class="{'mt-8': vhApp.data.features.isTv}">
               {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
             </h4>
           </v-col>
 
           <!-- App mini version -->
-          <v-col cols="3" class="text-end" v-if="!vhApp.data.features.isTv">
+          <v-col cols="3" class="text-end">
             <v-chip
               tabindex="-1"
               size="small"
@@ -222,7 +222,7 @@ function isDebugDataHasValue(): boolean {
         </v-row>
 
         <!-- Go Premium or Countdown button -->
-        <v-row v-if="!vhApp.data.features.isTv" class="mt-0" align="center">
+        <v-row class="mt-0" align="center">
           <v-col cols="2"></v-col>
           <v-col cols="8" class="text-center">
             <!-- Countdown and extend session button -->
@@ -352,7 +352,7 @@ function isDebugDataHasValue(): boolean {
       </v-col>
 
       <!-- Config buttons -->
-      <v-col cols="12" v-if="!vhApp.data.features.isTv">
+      <v-col cols="12">
 
         <!-- Servers button -->
         <home-config-btn
