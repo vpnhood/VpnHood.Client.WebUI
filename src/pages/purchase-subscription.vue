@@ -71,10 +71,13 @@ const isShowProcessDialog = computed<boolean>(() => {
 });
 
 onMounted(async () => {
-  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true)
+  if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
+    isGoogleBillingAvailable.value = false;
+    showPurchaseViaGoogle.value = false;
     return;
+  }
 
-  // Get products list from Google
+  // Get a product list from Google
   const billingClient = ClientApiFactory.instance.createBillingClient();
   purchaseOptions.value = await billingClient.getPurchaseOptions();
 
@@ -176,6 +179,7 @@ function closeCompleteDialog(showStatistics: boolean) {
         style="z-index: 999"
         @click="router.go(-1)"
       />
+
       <!-- Title, image and features -->
       <div class="d-flex flex-column flex-grow-1">
         <h4 class="text-promote-premium-color-premium text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
