@@ -32,6 +32,7 @@
   "MANAGE_SERVERS": "सर्वर बदलें",
   "WHATS_NEW": "नया क्या है?",
   "SEND_FEEDBACK": "प्रतिक्रिया भेजें",
+  "SEND_FEEDBACK_URL": "https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link",
   "CREATE_PERSONAL_SERVER": "व्यक्तिगत सर्वर बनाएं",
   "OPEN_REPORT": "रिपोर्ट खोलें",
   "SEND_REPORT": "रिपोर्ट भेजें",
