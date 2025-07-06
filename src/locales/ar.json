@@ -32,6 +32,7 @@
   "MANAGE_SERVERS": "تغيير الخادم",
   "WHATS_NEW": "ما الجديد؟",
   "SEND_FEEDBACK": "أرسل ملاحظات",
+  "SEND_FEEDBACK_URL": "https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link",
   "CREATE_PERSONAL_SERVER": "إنشاء خادم شخصي",
   "OPEN_REPORT": "فتح التقرير",
   "SEND_REPORT": "إرسال التقرير",
