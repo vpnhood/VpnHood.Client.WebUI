@@ -213,7 +213,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
         :nav="true"
         density="compact"
         class="opacity-80"
-        href="https://docs.google.com/forms/d/e/1FAIpQLSd5AQesTSbDo23_4CkNiKmSPtPBaZIuFjAFnjqLo6XGKG5gyg/viewform?usp=sf_link"
+        :href="locale('SEND_FEEDBACK_URL')"
         @click="emit('update:modelValue',false)"
         target="_blank">
 

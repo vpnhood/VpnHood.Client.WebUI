@@ -1413,11 +1413,15 @@ export class ClientProfileClient {
         return Promise.resolve<ClientProfileInfo>(null as any);
     }
 
-    get(clientProfileId: string, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
-        let url_ = this.baseUrl + "/api/client-profiles/{clientProfileId}";
+    get(clientProfileId: string, clientProfileI: string, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
+        let url_ = this.baseUrl + "/api/client-profiles/{clientProfileI}?";
+        if (clientProfileI === undefined || clientProfileI === null)
+            throw new Error("The parameter 'clientProfileI' must be defined.");
+        url_ = url_.replace("{clientProfileI}", encodeURIComponent("" + clientProfileI));
         if (clientProfileId === undefined || clientProfileId === null)
-            throw new Error("The parameter 'clientProfileId' must be defined.");
-        url_ = url_.replace("{clientProfileId}", encodeURIComponent("" + clientProfileId));
+            throw new Error("The parameter 'clientProfileId' must be defined and cannot be null.");
+        else
+            url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1863,6 +1867,9 @@ export class AppSettings implements IAppSettings {
     clientId!: string;
     isQuickLaunchEnabled?: boolean | null;
     isNotificationEnabled?: boolean | null;
+    isStartupTrackerSent!: boolean;
+    clientIpLocation?: IpLocation | null;
+    clientIpLocationByServer?: IpLocation | null;
     configTime!: Date;
     userSettings!: UserSettings;
     appSettingsService?: AppSettingsService | null;
@@ -1885,6 +1892,9 @@ export class AppSettings implements IAppSettings {
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
             this.isQuickLaunchEnabled = _data["isQuickLaunchEnabled"] !== undefined ? _data["isQuickLaunchEnabled"] : <any>null;
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
+            this.isStartupTrackerSent = _data["isStartupTrackerSent"] !== undefined ? _data["isStartupTrackerSent"] : <any>null;
+            this.clientIpLocation = _data["clientIpLocation"] ? IpLocation.fromJS(_data["clientIpLocation"]) : <any>null;
+            this.clientIpLocationByServer = _data["clientIpLocationByServer"] ? IpLocation.fromJS(_data["clientIpLocationByServer"]) : <any>null;
             this.configTime = _data["configTime"] ? new Date(_data["configTime"].toString()) : <any>null;
             this.userSettings = _data["userSettings"] ? UserSettings.fromJS(_data["userSettings"]) : new UserSettings();
             this.appSettingsService = _data["appSettingsService"] ? AppSettingsService.fromJS(_data["appSettingsService"]) : <any>null;
@@ -1904,6 +1914,9 @@ export class AppSettings implements IAppSettings {
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
         data["isQuickLaunchEnabled"] = this.isQuickLaunchEnabled !== undefined ? this.isQuickLaunchEnabled : <any>null;
         data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
+        data["isStartupTrackerSent"] = this.isStartupTrackerSent !== undefined ? this.isStartupTrackerSent : <any>null;
+        data["clientIpLocation"] = this.clientIpLocation ? this.clientIpLocation.toJSON() : <any>null;
+        data["clientIpLocationByServer"] = this.clientIpLocationByServer ? this.clientIpLocationByServer.toJSON() : <any>null;
         data["configTime"] = this.configTime ? this.configTime.toISOString() : <any>null;
         data["userSettings"] = this.userSettings ? this.userSettings.toJSON() : <any>null;
         data["appSettingsService"] = this.appSettingsService ? this.appSettingsService.toJSON() : <any>null;
@@ -1916,16 +1929,71 @@ export interface IAppSettings {
     clientId: string;
     isQuickLaunchEnabled?: boolean | null;
     isNotificationEnabled?: boolean | null;
+    isStartupTrackerSent: boolean;
+    clientIpLocation?: IpLocation | null;
+    clientIpLocationByServer?: IpLocation | null;
     configTime: Date;
     userSettings: UserSettings;
     appSettingsService?: AppSettingsService | null;
+}
+
+export class IpLocation implements IIpLocation {
+    ipAddress!: string;
+    countryName!: string;
+    countryCode!: string;
+    regionName?: string | null;
+    cityName?: string | null;
+
+    constructor(data?: IIpLocation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ipAddress = _data["ipAddress"] !== undefined ? _data["ipAddress"] : <any>null;
+            this.countryName = _data["countryName"] !== undefined ? _data["countryName"] : <any>null;
+            this.countryCode = _data["countryCode"] !== undefined ? _data["countryCode"] : <any>null;
+            this.regionName = _data["regionName"] !== undefined ? _data["regionName"] : <any>null;
+            this.cityName = _data["cityName"] !== undefined ? _data["cityName"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): IpLocation {
+        data = typeof data === 'object' ? data : {};
+        let result = new IpLocation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ipAddress"] = this.ipAddress !== undefined ? this.ipAddress : <any>null;
+        data["countryName"] = this.countryName !== undefined ? this.countryName : <any>null;
+        data["countryCode"] = this.countryCode !== undefined ? this.countryCode : <any>null;
+        data["regionName"] = this.regionName !== undefined ? this.regionName : <any>null;
+        data["cityName"] = this.cityName !== undefined ? this.cityName : <any>null;
+        return data;
+    }
+}
+
+export interface IIpLocation {
+    ipAddress: string;
+    countryName: string;
+    countryCode: string;
+    regionName?: string | null;
+    cityName?: string | null;
 }
 
 export class UserSettings implements IUserSettings {
     isLicenseAccepted!: boolean;
     cultureCode?: string | null;
     clientProfileId?: string | null;
-    maxDatagramChannelCount!: number;
+    maxPacketChannelCount!: number;
     tunnelClientCountry!: boolean;
     appFilters!: string[];
     appFiltersMode!: FilterMode;
@@ -1960,7 +2028,7 @@ export class UserSettings implements IUserSettings {
             this.isLicenseAccepted = _data["isLicenseAccepted"] !== undefined ? _data["isLicenseAccepted"] : <any>null;
             this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
             this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
-            this.maxDatagramChannelCount = _data["maxDatagramChannelCount"] !== undefined ? _data["maxDatagramChannelCount"] : <any>null;
+            this.maxPacketChannelCount = _data["maxPacketChannelCount"] !== undefined ? _data["maxPacketChannelCount"] : <any>null;
             this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : <any>null;
             if (Array.isArray(_data["appFilters"])) {
                 this.appFilters = [] as any;
@@ -2005,7 +2073,7 @@ export class UserSettings implements IUserSettings {
         data["isLicenseAccepted"] = this.isLicenseAccepted !== undefined ? this.isLicenseAccepted : <any>null;
         data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
         data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
-        data["maxDatagramChannelCount"] = this.maxDatagramChannelCount !== undefined ? this.maxDatagramChannelCount : <any>null;
+        data["maxPacketChannelCount"] = this.maxPacketChannelCount !== undefined ? this.maxPacketChannelCount : <any>null;
         data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : <any>null;
         if (Array.isArray(this.appFilters)) {
             data["appFilters"] = [];
@@ -2037,7 +2105,7 @@ export interface IUserSettings {
     isLicenseAccepted: boolean;
     cultureCode?: string | null;
     clientProfileId?: string | null;
-    maxDatagramChannelCount: number;
+    maxPacketChannelCount: number;
     tunnelClientCountry: boolean;
     appFilters: string[];
     appFiltersMode: FilterMode;
@@ -2705,11 +2773,12 @@ export class AppSessionStatus implements IAppSessionStatus {
     connectorStat!: AppConnectorStat;
     speed!: Traffic;
     sessionTraffic!: Traffic;
+    sessionSplitTraffic!: Traffic;
     cycleTraffic!: Traffic;
     totalTraffic!: Traffic;
     tcpTunnelledCount!: number;
     tcpPassthruCount!: number;
-    datagramChannelCount!: number;
+    packetChannelCount!: number;
     isUdpMode!: boolean;
     isWaitingForAd!: boolean;
     canExtendByRewardedAd!: boolean;
@@ -2728,6 +2797,7 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.connectorStat = new AppConnectorStat();
             this.speed = new Traffic();
             this.sessionTraffic = new Traffic();
+            this.sessionSplitTraffic = new Traffic();
             this.cycleTraffic = new Traffic();
             this.totalTraffic = new Traffic();
         }
@@ -2738,11 +2808,12 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.connectorStat = _data["connectorStat"] ? AppConnectorStat.fromJS(_data["connectorStat"]) : new AppConnectorStat();
             this.speed = _data["speed"] ? Traffic.fromJS(_data["speed"]) : new Traffic();
             this.sessionTraffic = _data["sessionTraffic"] ? Traffic.fromJS(_data["sessionTraffic"]) : new Traffic();
+            this.sessionSplitTraffic = _data["sessionSplitTraffic"] ? Traffic.fromJS(_data["sessionSplitTraffic"]) : new Traffic();
             this.cycleTraffic = _data["cycleTraffic"] ? Traffic.fromJS(_data["cycleTraffic"]) : new Traffic();
             this.totalTraffic = _data["totalTraffic"] ? Traffic.fromJS(_data["totalTraffic"]) : new Traffic();
             this.tcpTunnelledCount = _data["tcpTunnelledCount"] !== undefined ? _data["tcpTunnelledCount"] : <any>null;
             this.tcpPassthruCount = _data["tcpPassthruCount"] !== undefined ? _data["tcpPassthruCount"] : <any>null;
-            this.datagramChannelCount = _data["datagramChannelCount"] !== undefined ? _data["datagramChannelCount"] : <any>null;
+            this.packetChannelCount = _data["packetChannelCount"] !== undefined ? _data["packetChannelCount"] : <any>null;
             this.isUdpMode = _data["isUdpMode"] !== undefined ? _data["isUdpMode"] : <any>null;
             this.isWaitingForAd = _data["isWaitingForAd"] !== undefined ? _data["isWaitingForAd"] : <any>null;
             this.canExtendByRewardedAd = _data["canExtendByRewardedAd"] !== undefined ? _data["canExtendByRewardedAd"] : <any>null;
@@ -2764,11 +2835,12 @@ export class AppSessionStatus implements IAppSessionStatus {
         data["connectorStat"] = this.connectorStat ? this.connectorStat.toJSON() : <any>null;
         data["speed"] = this.speed ? this.speed.toJSON() : <any>null;
         data["sessionTraffic"] = this.sessionTraffic ? this.sessionTraffic.toJSON() : <any>null;
+        data["sessionSplitTraffic"] = this.sessionSplitTraffic ? this.sessionSplitTraffic.toJSON() : <any>null;
         data["cycleTraffic"] = this.cycleTraffic ? this.cycleTraffic.toJSON() : <any>null;
         data["totalTraffic"] = this.totalTraffic ? this.totalTraffic.toJSON() : <any>null;
         data["tcpTunnelledCount"] = this.tcpTunnelledCount !== undefined ? this.tcpTunnelledCount : <any>null;
         data["tcpPassthruCount"] = this.tcpPassthruCount !== undefined ? this.tcpPassthruCount : <any>null;
-        data["datagramChannelCount"] = this.datagramChannelCount !== undefined ? this.datagramChannelCount : <any>null;
+        data["packetChannelCount"] = this.packetChannelCount !== undefined ? this.packetChannelCount : <any>null;
         data["isUdpMode"] = this.isUdpMode !== undefined ? this.isUdpMode : <any>null;
         data["isWaitingForAd"] = this.isWaitingForAd !== undefined ? this.isWaitingForAd : <any>null;
         data["canExtendByRewardedAd"] = this.canExtendByRewardedAd !== undefined ? this.canExtendByRewardedAd : <any>null;
@@ -2783,11 +2855,12 @@ export interface IAppSessionStatus {
     connectorStat: AppConnectorStat;
     speed: Traffic;
     sessionTraffic: Traffic;
+    sessionSplitTraffic: Traffic;
     cycleTraffic: Traffic;
     totalTraffic: Traffic;
     tcpTunnelledCount: number;
     tcpPassthruCount: number;
-    datagramChannelCount: number;
+    packetChannelCount: number;
     isUdpMode: boolean;
     isWaitingForAd: boolean;
     canExtendByRewardedAd: boolean;
@@ -2849,8 +2922,6 @@ export interface IAppConnectorStat {
 }
 
 export class Traffic implements ITraffic {
-    sentTraffic!: number;
-    receivedTraffic!: number;
     sent!: number;
     received!: number;
 
@@ -2865,8 +2936,6 @@ export class Traffic implements ITraffic {
 
     init(_data?: any) {
         if (_data) {
-            this.sentTraffic = _data["sentTraffic"] !== undefined ? _data["sentTraffic"] : <any>null;
-            this.receivedTraffic = _data["receivedTraffic"] !== undefined ? _data["receivedTraffic"] : <any>null;
             this.sent = _data["sent"] !== undefined ? _data["sent"] : <any>null;
             this.received = _data["received"] !== undefined ? _data["received"] : <any>null;
         }
@@ -2881,8 +2950,6 @@ export class Traffic implements ITraffic {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["sentTraffic"] = this.sentTraffic !== undefined ? this.sentTraffic : <any>null;
-        data["receivedTraffic"] = this.receivedTraffic !== undefined ? this.receivedTraffic : <any>null;
         data["sent"] = this.sent !== undefined ? this.sent : <any>null;
         data["received"] = this.received !== undefined ? this.received : <any>null;
         return data;
@@ -2890,8 +2957,6 @@ export class Traffic implements ITraffic {
 }
 
 export interface ITraffic {
-    sentTraffic: number;
-    receivedTraffic: number;
     sent: number;
     received: number;
 }
