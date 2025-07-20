@@ -12,16 +12,15 @@ import {
   SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName } from '@/helpers/UiConstants';
+import { AppName, ComponentName, type ShowErrorActions } from '@/helpers/UiConstants';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import type { Analytics } from 'firebase/analytics';
 import { logEvent, setUserId } from 'firebase/analytics';
-import { AnalyticsCustomEvent, FirebaseApp } from '@/services/Firebase';
+import { FirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
-import { Util } from '@/helpers/Util';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
 
 export class VpnHoodApp {
@@ -84,13 +83,13 @@ export class VpnHoodApp {
       await this.reloadSettings();
     }
 
-    // Show last error message if the user has not ignored
+    // Show the last error message if the user has not ignored
     if (this.data.state.lastError && this.data.uiState.stateLastErrorMessage !== this.data.state.lastError?.message) {
       this.data.uiState.stateLastErrorMessage = this.data.state.lastError.message;
       await this.processError(ApiException.fromApiError(this.data.state.lastError));
     }
 
-    // Show update message if the user has not ignored or more than 24 hours have passed
+    // Show the update message if the user has not ignored or more than 24 hours have passed
     if (this.data.state.lastPublishInfo?.packageUrl !== undefined)
       this.data.uiState.showUpdateSnackbar = true;
 
@@ -108,7 +107,7 @@ export class VpnHoodApp {
     this.data.features = config.features;
     this.data.settings = config.settings;
 
-    // Remove built-in client profile if the user is premium
+    // Remove the built-in client profile if the user is premium
     this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
       ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
       : config.clientProfileInfos;
@@ -157,7 +156,7 @@ export class VpnHoodApp {
       console.log(err);
     }
     finally {
-      // Reload to apply latest clientProfileInfos updates
+      // Reload to apply the latest clientProfileInfos updates
       await this.reloadSettings();
       this.data.uiState.uiConnectInProgress = false;
     }
@@ -186,7 +185,7 @@ export class VpnHoodApp {
     await this.apiClient.setUserSettings(this.data.settings.userSettings);
   }
 
-  // Select profile by user
+  // Select a profile by user
   public async updateClientProfile(clientProfileId: string, clientProfileUpdateParam: ClientProfileUpdateParams): Promise<void> {
     await this.clientProfileClient.update(clientProfileId, clientProfileUpdateParam);
     await this.reloadSettings();
@@ -225,7 +224,7 @@ export class VpnHoodApp {
     }
   }
 
-  // Get error message
+  // Get the error message
   public async processError(err: unknown): Promise<void> {
     // For developer
     console.error(err);
@@ -235,21 +234,17 @@ export class VpnHoodApp {
   }
 
   // Show error dialog
-  public async showErrorMessage(text: string, canDiagnose?: boolean): Promise<void> {
-    // Send error message to analytics
-    this.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, { message: text });
-
+  public async showErrorMessage(text: string, action?: ShowErrorActions): Promise<void> {
     const errorDialogData = this.data.uiState.errorDialogData;
     errorDialogData.message = text;
-    errorDialogData.canDiagnose = canDiagnose ?? this.data.state.canDiagnose;
-    errorDialogData.promptForLog = this.data.state.promptForLog;
-    errorDialogData.showChangeServerToAutoButton = text === i18n.global.t('UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO');
-    errorDialogData.removePremiumCode = text === i18n.global.t('PREMIUM_ACCESS_EXPIRED') && this.isPremiumAccount(true);
+    errorDialogData.showLogButton = this.data.state.promptForLog;
+    errorDialogData.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
+    errorDialogData.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }
 
-  // Get installed apps list on the user device
+  // Get the installed apps list on the user device
   public getInstalledApps(): Promise<DeviceAppInfo[]> {
     return this.apiClient.getInstalledApps();
   }
@@ -265,7 +260,7 @@ export class VpnHoodApp {
   getActiveServerCountryFlag(): string | null {
     const serverLocationInfo = this.data.state.sessionInfo?.serverLocationInfo ??
       this.data.state.clientProfile?.selectedLocationInfo;
-    return serverLocationInfo && !Util.isLocationAutoSelected(serverLocationInfo.countryCode)
+    return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
       : null;
   }
@@ -320,14 +315,18 @@ export class VpnHoodApp {
   }
 
   public async removePremiumCode(): Promise<void> {
-    const profileId = this.data.state.clientProfile?.clientProfileId;
-    if (!profileId)
-      throw new Error('Could not find the profile id that have a premium code.');
+    const clientProfile = this.data.state.clientProfile;
+
+    if (!clientProfile)
+      throw new Error('Could not find the profile in the state for remove premium code.');
+
+    if (!clientProfile.isPremiumAccount && !clientProfile.hasAccessCode)
+      throw new Error('The profile is not for premium account or does not have access code.');
 
     if (this.data.isConnected)
       await this.disconnect();
 
-    await this.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
+    await this.clientProfileClient.update(clientProfile.clientProfileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: null })
     }));
   }
@@ -381,6 +380,13 @@ export class VpnHoodApp {
       bottomHeight = Math.ceil(bottomHeight / window.devicePixelRatio) + 3;
 
     return bottomHeight > 0 ? bottomHeight : null;
+  }
+
+  public isLocationAutoSelected(value?: string): boolean {
+    const autoSelectValues = ['*', '*/*'];
+    const locationToCheck = value ?? this.data.state.clientProfile?.selectedLocationInfo?.serverLocation;
+
+    return autoSelectValues.includes(locationToCheck ?? '');
   }
 
 }

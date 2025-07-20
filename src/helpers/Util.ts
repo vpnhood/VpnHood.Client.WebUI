@@ -2,7 +2,7 @@ import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/services/vuetify';
 
 export class Util {
-  // Client profile have single location
+  // Client profile has a single location
   public static isSingleLocation(locationCount: number): boolean {
     return locationCount < 2;
   }
@@ -13,10 +13,6 @@ export class Util {
       x => x.countryCode !== '*' && !x.isNestedCountry
     );
     return excludeAutoSelect.length;
-  }
-
-  public static isLocationAutoSelected(value: string): boolean {
-    return value === '*' || value === '*/*';
   }
 
   public static getLocalizedRightChevron(): string {
@@ -43,4 +39,23 @@ export class Util {
 
     return allDisplaySizeClass
   }
+
+  /*public static sendTestError(): void {
+    const errorMessage = 'Something went wrong';
+    const statusCode = 401;
+    const responseBody = {
+      typeName: 'SessionException',
+      message: 'Invalid email',
+      data: {
+        ErrorCode: 'AccessExpired',
+        BillingResponseCode: 'Error',
+        PurchaseState: 'purchase state',
+        BillingMessage: 'billing message'
+      },
+    };
+    const headers = { 'Content-Type': 'application/json' };
+
+    const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
+    throw apiException;
+  }*/
 }

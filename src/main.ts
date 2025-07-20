@@ -24,20 +24,20 @@ async function main(): Promise<void> {
     const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
     const app = createApp(App);
 
-    // Set app theme
+    // Set the app theme
     vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient;
 
-    // Set default UI language
+    // Set the default UI language
     const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.currentUiCultureInfo.code);
     if (isUserSetDefaultLanguage) i18n.global.locale.value = vpnHoodApp.data.state.currentUiCultureInfo.code;
     // Set Vuetify current language
     vuetify.locale.current.value = i18n.global.locale.value;
 
 
-    // Add language code as class to the body element
+    // Add language code as a class to the body element
     window.document.body.classList.add(i18n.global.locale.value);
 
-    // Check if the platform is Windows and apply custom CSS for scrollbar
+    // Apply custom CSS for scrollbar on the Windows platform
     if (vuetify.display.platform.value.win) {
       const styleElement = document.createElement('style');
       styleElement.textContent = `

@@ -14,7 +14,7 @@ export class UiState {
   // Update message state
   public showUpdateSnackbar: boolean = false;
 
-  // Time of user ignored last error message
+  // Time of user ignored the last error message
   public configTime: Date = new Date();
 
   public showLoadingDialog: boolean = false;

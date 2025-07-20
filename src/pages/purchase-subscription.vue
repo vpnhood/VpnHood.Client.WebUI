@@ -65,7 +65,7 @@ watchEffect(() => {
 });
 
 
-// Use one dialog for purchase by google and by premium key
+// Use one dialog for purchase by Google and by premium key
 const isShowProcessDialog = computed<boolean>(() => {
   return vhApp.data.state.purchaseState === BillingPurchaseState.Processing || showProcessDialog.value;
 });
@@ -138,7 +138,7 @@ async function validateCode(): Promise<void> {
 
   const profileId = vhApp.data.state.clientProfile?.clientProfileId;
   if (!profileId)
-    throw new Error('Could not find the profile id.');
+    throw new Error(locale("PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG"));
 
   try {
     showProcessDialog.value = true;
@@ -149,7 +149,7 @@ async function validateCode(): Promise<void> {
 
     await ConnectManager.connect3(profileId, undefined, false, false, false);
 
-    if (vhApp.isPremiumAccount(true))
+    if (vhApp.data.isConnected && vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
   } catch {
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({

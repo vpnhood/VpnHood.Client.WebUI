@@ -63,17 +63,17 @@ function getActiveServerNameOrLocation(): string {
   // App is VpnHoodCONNECT
   const serverLocationInfo = vhApp.data.state.sessionInfo?.serverLocationInfo ??
     vhApp.data.state.clientProfile?.selectedLocationInfo;
-  if (!serverLocationInfo || Util.isLocationAutoSelected(serverLocationInfo.countryCode))
+  if (!serverLocationInfo || vhApp.isLocationAutoSelected(serverLocationInfo.countryCode))
     return i18n.global.t('AUTO_SELECT');
 
-  const text = Util.isLocationAutoSelected(serverLocationInfo.regionName)
+  const text = vhApp.isLocationAutoSelected(serverLocationInfo.regionName)
     ? serverLocationInfo.countryName
     : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
 
   return text.replace('United States (', 'USA (');
 }
 
-// Return text for connect button based on connection state
+// Return text for connected button based on connection state
 function connectButtonText(): string {
   if (!vhApp.data.state.canDiagnose &&
     (vhApp.data.connectionState === AppConnectionState.Connected
@@ -362,7 +362,7 @@ function isDebugDataHasValue(): boolean {
           class="align-center mb-1"
           @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
             && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
-            ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'), false)
+            ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'))
             : router.push({name: 'SERVERS'})"
         >
           <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>

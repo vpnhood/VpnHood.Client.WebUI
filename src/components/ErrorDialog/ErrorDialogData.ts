@@ -1,7 +1,6 @@
 export class ErrorDialogData {
   public message: string = '';
-  public canDiagnose: boolean = false;
-  public promptForLog: boolean = false;
+  public showDiagnoseButton: boolean = false;
+  public showLogButton: boolean = false;
   public showChangeServerToAutoButton: boolean = false;
-  public removePremiumCode: boolean = false;
 }

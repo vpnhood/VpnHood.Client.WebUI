@@ -1176,6 +1176,58 @@ export class AppClient {
         }
         return Promise.resolve<void>(null as any);
     }
+
+    processTypes(exceptionType: ExceptionType, errorCode: SessionErrorCode, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/process-types?";
+        if (exceptionType === undefined || exceptionType === null)
+            throw new Error("The parameter 'exceptionType' must be defined and cannot be null.");
+        else
+            url_ += "exceptionType=" + encodeURIComponent("" + exceptionType) + "&";
+        if (errorCode === undefined || errorCode === null)
+            throw new Error("The parameter 'errorCode' must be defined and cannot be null.");
+        else
+            url_ += "errorCode=" + encodeURIComponent("" + errorCode) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProcessTypes(_response);
+        });
+    }
+
+    protected processProcessTypes(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export class BillingClient {
@@ -1413,15 +1465,11 @@ export class ClientProfileClient {
         return Promise.resolve<ClientProfileInfo>(null as any);
     }
 
-    get(clientProfileId: string, clientProfileI: string, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
-        let url_ = this.baseUrl + "/api/client-profiles/{clientProfileI}?";
-        if (clientProfileI === undefined || clientProfileI === null)
-            throw new Error("The parameter 'clientProfileI' must be defined.");
-        url_ = url_.replace("{clientProfileI}", encodeURIComponent("" + clientProfileI));
+    get(clientProfileId: string, cancelToken?: CancelToken): Promise<ClientProfileInfo> {
+        let url_ = this.baseUrl + "/api/client-profiles/{clientProfileId}";
         if (clientProfileId === undefined || clientProfileId === null)
-            throw new Error("The parameter 'clientProfileId' must be defined and cannot be null.");
-        else
-            url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
+            throw new Error("The parameter 'clientProfileId' must be defined.");
+        url_ = url_.replace("{clientProfileId}", encodeURIComponent("" + clientProfileId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -3727,6 +3775,51 @@ export interface IDeviceAppInfo {
     appId: string;
     appName: string;
     iconPng: string;
+}
+
+export enum ExceptionType {
+    NoErrorFound = "NoErrorFoundException",
+    Maintenance = "MaintenanceException",
+    Session = "SessionException",
+    Ad = "AdException",
+    ShowAd = "ShowAdException",
+    ShowAdNoUi = "ShowAdNoUiException",
+    LoadAd = "LoadAdException",
+    NoInternet = "NoInternetException",
+    NoStableVpn = "NoStableVpnException",
+    UnreachableServer = "UnreachableServerException",
+    UnreachableServerLocation = "UnreachableServerLocationException",
+    RewardNotEarned = "RewardNotEarnedException",
+    VpnServiceNotReady = "VpnServiceNotReadyException",
+    VpnServiceUnreachable = "VpnServiceUnreachableException",
+    VpnServiceTimeout = "VpnServiceTimeoutException",
+    VpnService = "VpnServiceNotReadyException",
+    UserCanceled = "UserCanceledException",
+    ConnectionTimeout = "ConnectionTimeoutException",
+}
+
+export enum SessionErrorCode {
+    Ok = "Ok",
+    AccessError = "AccessError",
+    PlanRejected = "PlanRejected",
+    GeneralError = "GeneralError",
+    SessionClosed = "SessionClosed",
+    SessionSuppressedBy = "SessionSuppressedBy",
+    SessionError = "SessionError",
+    SessionExpired = "SessionExpired",
+    AccessExpired = "AccessExpired",
+    AccessCodeRejected = "AccessCodeRejected",
+    AccessLocked = "AccessLocked",
+    AccessTrafficOverflow = "AccessTrafficOverflow",
+    DailyLimitExceeded = "DailyLimitExceeded",
+    NoServerAvailable = "NoServerAvailable",
+    PremiumLocation = "PremiumLocation",
+    AdError = "AdError",
+    RewardedAdRejected = "RewardedAdRejected",
+    Maintenance = "Maintenance",
+    RedirectHost = "RedirectHost",
+    UnsupportedClient = "UnsupportedClient",
+    UnsupportedServer = "UnsupportedServer",
 }
 
 export class SubscriptionPlan implements ISubscriptionPlan {

@@ -46,7 +46,7 @@ async function sendReport(): Promise<void> {
       window.open(link, 'VpnHood-BugReport');
     }
 
-    // get report
+    // get the report
     const url: string = vhApp.data.serverUrl + UiConstants.logFileLocation;
     const response: Response = await fetch(url);
     const log: Blob = await response.blob();
@@ -56,7 +56,7 @@ async function sendReport(): Promise<void> {
     const spacePath: string = `logs/${reportId}.txt`;
     const storageRef = ref(storage, spacePath);
 
-    // Send report
+    // Send the report
     uploadBytes(storageRef, log).then(() => {
       console.log('Report has been sent!');
     });
@@ -80,8 +80,7 @@ async function sendReport(): Promise<void> {
 
       <v-card-text class="text-dialog-alert-text text-body-2">{{ dialogData.message }}</v-card-text>
 
-      <v-card-item v-if="dialogData.showChangeServerToAutoButton || (dialogData.canDiagnose &&
-      !vhApp.data.state.hasDiagnoseRequested) || dialogData.promptForLog">
+      <v-card-item class="py-1">
 
         <v-defaults-provider :defaults="{
           'VBtn':{
@@ -101,22 +100,15 @@ async function sendReport(): Promise<void> {
           && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
           />
 
-          <!-- Remove premium code -->
-          <v-btn v-if="dialogData.removePremiumCode"
-            variant="flat"
-            :text="locale('REMOVE_CODE')"
-            @click="vhApp.removePremiumCode(); emit('update:modelValue', false)"
-          />
-
           <!-- Diagnose -->
-          <v-btn v-if="dialogData.canDiagnose && !vhApp.data.state.hasDiagnoseRequested && !dialogData.removePremiumCode"
+          <v-btn v-if="dialogData.showDiagnoseButton"
             prepend-icon="mdi-stethoscope"
             :text="locale('DIAGNOSE')"
             @click="diagnose()"
           />
 
           <!-- OpenReport -->
-          <v-btn v-if="dialogData.promptForLog && (!vhApp.data.features.isTv)"
+          <v-btn v-if="dialogData.showLogButton && (!vhApp.data.features.isTv)"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"
@@ -124,7 +116,7 @@ async function sendReport(): Promise<void> {
           />
 
           <!-- SendReport -->
-          <v-btn v-if="dialogData.promptForLog"
+          <v-btn v-if="dialogData.showLogButton"
             prepend-icon="mdi-send-outline"
             target="_blank"
             :text="locale('SEND_REPORT')"
