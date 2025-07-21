@@ -8,7 +8,7 @@ import {
   ConnectPlanId,
   DeviceAppInfo,
   PatchOfBoolean,
-  PatchOfString,
+  PatchOfString, ServerLocationInfo,
   SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
@@ -125,32 +125,30 @@ export class VpnHoodApp {
     goToHome: boolean = true
   ): Promise<void> {
 
-    // Update client profile
-    await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
-      isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium ?? false }),
-      selectedLocation: new PatchOfString({ value: serverLocation })
-    }));
-
-    // Update user settings
-    this.data.settings.userSettings.clientProfileId = clientProfileId;
-    await this.saveUserSetting();
-
     // Just for Development info
     console.log(`Final server location:  ${serverLocation}`);
     console.log(`Plan id:  ${planId}`);
-    console.log(`Go to home:  ${planId}`);
+    console.log(`Go to home:  ${goToHome}`);
+
+    // Navigate to home page
+    if (goToHome && router.currentRoute.value.name !== 'HOME')
+      await router.replace({name: 'HOME'});
+
+    this.data.uiState.uiConnectInProgress = true;
 
     try {
-      // Navigate to home page
-      if (goToHome && router.currentRoute.value.name !== 'HOME')
-        await router.replace({name: 'HOME'});
-
-      this.data.uiState.uiConnectInProgress = true;
-
       if (isDiagnose)
         await this.diagnose();
       else
         await this.apiClient.connect(clientProfileId, serverLocation, planId);
+
+      // ClientProfile will be updated after connecting when the user is premium or the selected location is not premium.
+      await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
+        isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium ?? false }),
+        selectedLocation: new PatchOfString({ value: serverLocation })
+      }));
+      this.data.settings.userSettings.clientProfileId = clientProfileId;
+      await this.saveUserSetting();
     }
     catch (err: unknown) {
       console.log(err);
@@ -257,9 +255,18 @@ export class VpnHoodApp {
     await this.apiClient.versionCheck();
   }
 
+  getCurrentServerLocationInfo(): ServerLocationInfo | null | undefined{
+    if (this.data.isConnected){
+      return  this.data.state.sessionInfo?.serverLocationInfo ??
+        this.data.state.clientProfile?.selectedLocationInfo;
+    }
+    else {
+      return  this.data.state.clientProfile?.selectedLocationInfo;
+    }
+  }
+
   getActiveServerCountryFlag(): string | null {
-    const serverLocationInfo = this.data.state.sessionInfo?.serverLocationInfo ??
-      this.data.state.clientProfile?.selectedLocationInfo;
+    const serverLocationInfo = this.getCurrentServerLocationInfo();
     return serverLocationInfo && !this.isLocationAutoSelected(serverLocationInfo.countryCode)
       ? this.getCountryFlag(serverLocationInfo.countryCode)
       : null;
@@ -321,7 +328,7 @@ export class VpnHoodApp {
       throw new Error('Could not find the profile in the state for remove premium code.');
 
     if (!clientProfile.isPremiumAccount && !clientProfile.hasAccessCode)
-      throw new Error('The profile is not for premium account or does not have access code.');
+      throw new Error('The profile is not for premium account or does not have premium code.');
 
     if (this.data.isConnected)
       await this.disconnect();

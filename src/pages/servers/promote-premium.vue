@@ -24,7 +24,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   if (!dialogData.value.clientProfileId || !dialogData.value.serverLocation)
     throw new Error("Could not found required data.");
 
-  // Open PurchaseSubscription page
+  // Open the PurchaseSubscription page
   if (planId === MyPlanId.premiumByPurchase || planId === MyPlanId.premiumByCode){
     await router.push({name: 'PURCHASE_SUBSCRIPTION'});
     return;

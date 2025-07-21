@@ -64,6 +64,10 @@ async function sendReport(): Promise<void> {
     console.error('Oops! Could not even send the report details!', ex);
   }
 }
+async function closeDialog(): Promise<void> {
+  await vhApp.clearLastError();
+  emit('update:modelValue', false)
+}
 </script>
 
 <template>
@@ -129,7 +133,7 @@ async function sendReport(): Promise<void> {
 
       <v-card-actions >
         <!-- Close -->
-        <v-btn :text="locale('CLOSE')" @click="emit('update:modelValue', false)" />
+        <v-btn :text="locale('CLOSE')" @click="closeDialog()" />
       </v-card-actions>
 
     </v-card>

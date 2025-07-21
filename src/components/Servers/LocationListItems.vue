@@ -24,6 +24,7 @@ function internalConnect(location: ClientServerLocationInfo): void {
     vhApp.showGeneralSnackbar(i18n.global.t('ALREADY_CONNECTED_TO_LOCATION'), "active");
     return;
   }
+
   ConnectManager.connect3(props.clientProfileId, location.serverLocation, props.isPremiumGroup, false);
 }
 function isActiveItem(location: ClientServerLocationInfo): boolean{
@@ -31,16 +32,16 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
   if (!vhApp.isActiveClientProfile(props.clientProfileId))
     return false;
 
+  const serverLocation = vhApp.data.state.clientProfile?.selectedLocationInfo?.serverLocation;
+
   // Check premium items
   if (props.isPremiumLocationSelected){
-    return (location.serverLocation === vhApp.data.state.clientProfile?.selectedLocationInfo?.serverLocation &&
-        props.isPremiumGroup)
-      ?? (location.isDefault && props.isPremiumGroup);
+    return (location.serverLocation === serverLocation && props.isPremiumGroup) ??
+      (location.isDefault && props.isPremiumGroup);
   }
 
   // Check free items
-  return (location.serverLocation === vhApp.data.state.clientProfile?.selectedLocationInfo?.serverLocation &&
-      !props.isPremiumGroup) ??
+  return (location.serverLocation === serverLocation && !props.isPremiumGroup) ??
     (location.isDefault && !props.isPremiumGroup );
 }
 </script>

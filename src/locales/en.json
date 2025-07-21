@@ -296,7 +296,7 @@
   "PREMIUM_CODE_IS_ACTIVE": "Premium code is active",
   "CONNECTION_TIMEOUT_MSG": "Could not establish connection in given time. Please try again.",
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Your premium connection time has expired.",
-  "DAILY_LIMIT_EXCEEDED_MSG": "The daily limit has been exceeded.",
+  "DAILY_LIMIT_EXCEEDED_MSG": "Your daily usage limit for the selected option has been reached. Please use the other available options.",
   "PURCHASE_VIA_WEB": "Purchase via Web",
   "SHOW_AD_NO_UI_MSG": "It appeared that the app was minimized before an ad could be displayed. Ads are considered essential for keeping the app free and functional. Please try again and allow the ad to be fully displayed and completed. Your support is appreciated!",
   "NO_INTERNET_MSG": "Your internet connection appears to be offline or too slow. Please check your connection and try again in a few moments.",

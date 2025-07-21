@@ -27,7 +27,7 @@ export class ConnectManager {
     promoteData.normal = options.normal;
     promoteData.isPremiumLocation = isPremium;
 
-    // Show promote dialog
+    // Show promotes dialog
     await router.push({name: 'PROMOTE_PREMIUM'});
     return true;
   }
@@ -48,7 +48,7 @@ export class ConnectManager {
 
   public static async connect2(clientProfileId: string, isDiagnose: boolean = false): Promise<void> {
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    const serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
+    let serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
 
     // For developer
     console.log('Connect2');
@@ -59,13 +59,21 @@ export class ConnectManager {
       return;
     }
 
+    const hasPremium = clientProfileInfo.selectedLocationInfo?.options.hasPremium;
+    const hasFree = clientProfileInfo.selectedLocationInfo?.options.hasFree;
+
     let isPremiumLocation = clientProfileInfo.isPremiumLocationSelected;
 
-    if (clientProfileInfo.selectedLocationInfo?.options.hasPremium && !clientProfileInfo.selectedLocationInfo?.options.hasFree)
+    if (hasPremium && !hasFree)
       isPremiumLocation = true;
 
-    if (!clientProfileInfo.selectedLocationInfo?.options.hasPremium && clientProfileInfo.selectedLocationInfo?.options.hasFree)
+    if (!hasPremium && hasFree)
       isPremiumLocation = false;
+
+    if (isPremiumLocation && VpnHoodApp.instance.data.features.isPremiumFlagSupported && !VpnHoodApp.instance.isPremiumAccount()){
+      isPremiumLocation = false;
+      serverLocation = '*/*';
+    }
 
     await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose, undefined);
   }

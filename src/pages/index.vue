@@ -61,8 +61,8 @@ function getActiveServerNameOrLocation(): string {
     return (vhApp.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
 
   // App is VpnHoodCONNECT
-  const serverLocationInfo = vhApp.data.state.sessionInfo?.serverLocationInfo ??
-    vhApp.data.state.clientProfile?.selectedLocationInfo;
+  const serverLocationInfo = vhApp.getCurrentServerLocationInfo();
+
   if (!serverLocationInfo || vhApp.isLocationAutoSelected(serverLocationInfo.countryCode))
     return i18n.global.t('AUTO_SELECT');
 
