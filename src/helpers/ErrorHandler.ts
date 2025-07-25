@@ -137,38 +137,16 @@ export class ErrorHandler {
       case 'SessionException':
         return this.sessionExceptionHandler(err);
 
-      case 'HttpRequestException':
-        return this.httpRequestExceptionHandler(err);
-
       case 'GoogleBillingException':
         return this.googleBillingExceptionHandler(err);
+
+      case 'HttpRequestException':
+        return { text: err.message };
 
       // Default message for unhandled ApiException types
       default:
         return { text: err.message ?? err };
     }
-  }
-
-  private static async httpRequestExceptionHandler(err: ApiException): Promise<ShowErrorOptions> {
-
-    switch (err.statusCode) {
-
-      case 400:
-        // Could not connect to the server
-        //TODO: define a message
-        return { localeKey: 'CONNECTION_ERROR_MSG' };
-
-      case 401:
-        // Just for VpnHoodConnect
-        // When the SPA is signed in, but the app could not find the user account in the local storage.
-        // Invalid credential.
-        if (VpnHoodApp.instance.isConnectApp() && !VpnHoodApp.instance.data.userState.userAccount) {
-          await VpnHoodApp.instance.signOut();
-          return { localeKey: 'AUTHENTICATION_ERROR' };
-        }
-        break;
-    }
-    return { text: err.message };
   }
 
   private static async unreachableServerLocationExceptionHandler(): Promise<ShowErrorOptions> {
@@ -191,10 +169,8 @@ export class ErrorHandler {
       // User is premium (by Code or Google) and attempt to connect while the premium is expired.
       case SessionErrorCode.AccessExpired:
         if (VpnHoodApp.instance.data.features.isPremiumFlagSupported){
-          await VpnHoodApp.instance.reloadState();
-          return { localeKey: 'PREMIUM_ACCESS_EXPIRED' };
+          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: {showRemovePremium: true} };
         }
-
         return { localeKey: 'SERVER_KEY_EXPIRED' };
 
       // User is connected with a premium session (by Code, Google, Try or RewardedAd), and it's expired.

@@ -3,4 +3,5 @@ export class ErrorDialogData {
   public showDiagnoseButton: boolean = false;
   public showLogButton: boolean = false;
   public showChangeServerToAutoButton: boolean = false;
+  public showRemovePremium: boolean = false;
 }

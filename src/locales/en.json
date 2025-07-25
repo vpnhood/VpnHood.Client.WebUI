@@ -288,9 +288,11 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Maximum allowed and used traffic since initial use.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Only numbers are allowed.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "The code must be 20 characters.",
-  "PREMIUM_ACCESS_EXPIRED": "Your premium access has expired.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Your premium access has expired. To continue using the app or renew your premium access, you’ll need to switch to normal mode.",
+  "CONFIRM_TO_SWITCH_MODE_MSG": "Would you like to switch to normal mode now?",
+  "YES_SWITCH_NOW": "Yes switch now",
   "SERVER_KEY_EXPIRED": "Your server key has expired.",
-  "INVALID_ACCESS_CODE": "The premium code is invalid.",
+  "INVALID_ACCESS_CODE": "The  premium code is not valid. If you believe this is an error, please contact support.",
   "PREMIUM_CODE_DETAILS": "Premium code details",
   "MORE_DETAILS": "More details",
   "PREMIUM_CODE_IS_ACTIVE": "Premium code is active",
@@ -312,5 +314,7 @@
   "REWARDED_AD_LOAD_ERROR_MSG": "We're sorry, but there was a problem loading the ad. This could be due to the ad provider not having an ad available at the moment, or a temporary technical issue. Please try again. However, if you consistently encounter this problem, it may indicate that this type of ad isn't supported in your geographical region.",
   "REWARDED_AD_SHOW_ERROR_MSG": "There was an issue playing the ad. Please try again in a moment.",
   "NO_STABLE_VPN_MSG": "You're connected to the VPN, but your connection isn't stable. This might resolve in a few minutes. If not, please send us a diagnostic report.",
-  "VPN_SERVICE_NOT_READY_MSG": "The VPN service isn't ready. Please close and restart the app. If the issue persists, let us know."
+  "VPN_SERVICE_NOT_READY_MSG": "The VPN service isn't ready. Please close and restart the app. If the issue persists, let us know.",
+  "INVALID_PREMIUM_CODE_NUMBERS_MSG": "The code entered is invalid. Please check the numbers and try again.",
+  "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know."
 }

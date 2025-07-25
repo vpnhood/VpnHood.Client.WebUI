@@ -122,7 +122,6 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
     </div>
 
-    <!-- TODO: create component -->
     <!-- Menu items -->
     <v-list>
 

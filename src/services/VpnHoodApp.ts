@@ -238,6 +238,7 @@ export class VpnHoodApp {
     errorDialogData.showLogButton = this.data.state.promptForLog;
     errorDialogData.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
     errorDialogData.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
+    errorDialogData.showRemovePremium = action?.showRemovePremium ?? false;
 
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
   }
@@ -321,6 +322,22 @@ export class VpnHoodApp {
     return this.data.state.clientProfile?.isPremiumAccount == true;
   }
 
+  public async removePremium(): Promise<void> {
+    if (this.data.clientProfileInfos.find(x => x.isForAccount))
+      await this.removePremiumServerKey();
+    else
+      await this.removePremiumCode();
+  }
+
+  public async removePremiumServerKey(): Promise<void> {
+    const premiumClientProfileId = this.data.clientProfileInfos.find(x => x.isForAccount)?.clientProfileId;
+    if (!premiumClientProfileId)
+      throw new Error('Could not find the premium server key.');
+
+    await this.deleteClientProfile(premiumClientProfileId);
+    await this.loadAccount(true);
+  }
+
   public async removePremiumCode(): Promise<void> {
     const clientProfile = this.data.state.clientProfile;
 
@@ -342,20 +359,44 @@ export class VpnHoodApp {
     return (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount()) ? 'enable-premium' : 'disable-premium';
   }
 
-  public async signIn(showLoading: boolean = true): Promise<void> {
-    if (showLoading) this.data.uiState.showLoadingDialog = true;
-
+  public async signIn(onPurchase = false): Promise<void> {
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.signInWithGoogle();
       await this.loadAccount();
     } catch (err: unknown) {
-      if (err instanceof ApiException && err.exceptionTypeName === 'TaskCanceledException')
-        throw new Error(i18n.global.t('SIGN_IN_CANCELED_BY_USER'));
+      if (!(err instanceof ApiException)) throw err;
 
-      throw err;
-    } finally {
-      if (showLoading) this.data.uiState.showLoadingDialog = false;
+      const { exceptionTypeName, statusCode } = err;
+
+      switch (exceptionTypeName) {
+        case 'TaskCanceledException':
+          if (onPurchase) {
+            throw new Error(i18n.global.t('SIGN_IN_CANCELED_BY_USER'));
+          }
+          return; // Silent cancel if not a purchase
+
+        case 'HttpRequestException':
+          if (statusCode === 400) {
+            throw new Error(i18n.global.t('LOGIN_CONNECTION_ERROR_MSG'));
+          }
+
+          // Just for VpnHoodConnect
+          // When the SPA is signed in, but the app could not find the user account in the local storage.
+          // Invalid credential.
+          if (
+            statusCode === 401 &&
+            VpnHoodApp.instance.isConnectApp() &&
+            !VpnHoodApp.instance.data.userState.userAccount
+          ) {
+            await VpnHoodApp.instance.signOut();
+            throw new Error(i18n.global.t('AUTHENTICATION_ERROR'));
+          }
+          break;
+
+        default:
+          throw err;
+      }
     }
   }
 
@@ -365,8 +406,10 @@ export class VpnHoodApp {
     await this.loadAccount();
   }
 
-  public async loadAccount(): Promise<void> {
+  public async loadAccount(withRefresh: boolean = false): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
+    if (withRefresh)
+      await accountClient.refresh();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
     console.log('User Account: ', this.data.userState.userAccount);

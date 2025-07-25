@@ -30,6 +30,7 @@ const purchaseCompleteDialogMessage = ref<string | null>(null);
 const premiumCodeForm = ref<boolean>(false);
 const formattedPremiumCode = ref('');
 const premiumCodeRawNumber = ref<string>('');
+const invalidCodeError = ref<null|string>(null);
 
 const isNewCode = computed<boolean | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.isNew;
@@ -56,6 +57,7 @@ const codeCountRule = (value: string) => {
 
 // Keep only numbers and limit to 20 characters
 const handleInput = (event: Event) => {
+  if (invalidCodeError.value) invalidCodeError.value = null;
   const value = (event.target as HTMLInputElement).value;
   premiumCodeRawNumber.value = value.replace(/\D/g, '').slice(0, 20);
 };
@@ -63,7 +65,6 @@ const handleInput = (event: Event) => {
 watchEffect(() => {
   formattedPremiumCode.value = premiumCodeRawNumber.value.match(/.{1,4}/g)?.join('-') || '';
 });
-
 
 // Use one dialog for purchase by Google and by premium key
 const isShowProcessDialog = computed<boolean>(() => {
@@ -117,7 +118,7 @@ onMounted(async () => {
 
 async function onPurchaseClick(planId: string): Promise<void> {
   if (!vhApp.data.userState.userAccount)
-    await vhApp.signIn();
+    await vhApp.signIn(true);
 
   if (vhApp.data.userState.userAccount?.providerPlanId === planId)
     throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
@@ -141,21 +142,25 @@ async function validateCode(): Promise<void> {
     throw new Error(locale("PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG"));
 
   try {
-    showProcessDialog.value = true;
-
     await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: premiumCodeRawNumber.value.toString() })
     }));
 
-    await ConnectManager.connect3(profileId, undefined, false, false, false);
+    await validateCodeViaAccessServer(profileId);
+  }
+  catch{
+    invalidCodeError.value = locale("INVALID_PREMIUM_CODE_NUMBERS_MSG");
+  }
+}
+async function validateCodeViaAccessServer(profileId: string): Promise<void>{
+  showProcessDialog.value = true;
 
+  try {
+    await ConnectManager.connect3(profileId, undefined, false, false, false);
     if (vhApp.data.isConnected && vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
-  } catch {
-    await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({ value: null })
-    }));
-  } finally {
+  }
+  finally {
     showProcessDialog.value = false;
   }
 }
@@ -364,6 +369,7 @@ function closeCompleteDialog(showStatistics: boolean) {
                   :placeholder="locale('ENTER_YOUR_CODE')"
                   :rules="[numberOnlyRule, codeCountRule]"
                   @input="handleInput"
+                  :error-messages="invalidCodeError"
                   hide-details="auto"
                   single-line
                   clearable

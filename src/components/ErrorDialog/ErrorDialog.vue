@@ -104,6 +104,16 @@ async function closeDialog(): Promise<void> {
           && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
           />
 
+          <!-- Remove premium code or profile -->
+          <div v-if="dialogData.showRemovePremium">
+            <p class="text-dialog-alert-text text-body-2 mb-3">{{locale("CONFIRM_TO_SWITCH_MODE_MSG")}}</p>
+            <v-btn
+              variant="flat"
+              :text="locale('YES_SWITCH_NOW')"
+              @click="vhApp.removePremium(); closeDialog()"
+            />
+          </div>
+
           <!-- Diagnose -->
           <v-btn v-if="dialogData.showDiagnoseButton"
             prepend-icon="mdi-stethoscope"

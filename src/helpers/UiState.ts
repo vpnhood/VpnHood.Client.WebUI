@@ -23,5 +23,4 @@ export class UiState {
 
   public uiConnectInProgress: boolean = false;
   public uiDisconnectInProgress: boolean = false;
-
 }

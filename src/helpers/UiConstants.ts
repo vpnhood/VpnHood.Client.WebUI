@@ -49,4 +49,5 @@ export enum AppPackageName {
 export interface ShowErrorActions {
   showDiagnose?: boolean,
   showChangeServerToAuto?: boolean,
+  showRemovePremium?: boolean,
 }

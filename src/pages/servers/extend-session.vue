@@ -20,12 +20,10 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
       await router.push({name: 'PURCHASE_SUBSCRIPTION'});
       break;
     case ConnectPlanId.PremiumByRewardedAd:
-      if (!vhApp.data.state.sessionStatus?.canExtendByRewardedAd)
-        break;
       await showRewardedAd();
       break;
     default:
-      throw new Error(`Plan is not supported. PlanId: ${planId}`);
+      throw new Error(`Extend session Plan is not supported. PlanId: ${planId}`);
   }
 }
 async function showRewardedAd(){
@@ -68,6 +66,7 @@ async function showRewardedAd(){
 
         <!-- Watch rewarded ad -->
         <promote-connect-button
+          v-if="vhApp.data.state.sessionStatus?.canExtendByRewardedAd"
           :class="{'opacity-30': !vhApp.data.state.sessionStatus?.canExtendByRewardedAd}"
           icon="mdi-play-box-lock-open-outline"
           :title="locale('WATCH_REWARDED_AD')"
