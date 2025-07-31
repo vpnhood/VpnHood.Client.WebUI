@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Ihre Premium-Verbindungszeit ist abgelaufen.",
   "DAILY_LIMIT_EXCEEDED_MSG": "Ihr tägliches Nutzungslimit für die ausgewählte Option wurde erreicht. Bitte nutzen Sie die anderen verfügbaren Optionen.",
   "PURCHASE_VIA_WEB": "Kauf über das Web",
-  "SHOW_AD_NO_UI_MSG": "Die App wurde minimiert, bevor die Verbindung hergestellt werden konnte. Die kostenlose Version unterstützt keine Verbindungsherstellung im Hintergrund, und die App muss geöffnet bleiben, bis die Verbindung hergestellt ist.",
+  "SHOW_AD_NO_UI_MSG": "Die App wurde geschlossen, bevor die Verbindung hergestellt werden konnte. Die kostenlose Version unterstützt das Herstellen einer Verbindung im Hintergrund nicht, und die App muss geöffnet bleiben, bis die Verbindung hergestellt ist.",
   "NO_INTERNET_MSG": "Ihre Internetverbindung scheint offline oder zu langsam zu sein. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es in wenigen Augenblicken erneut.",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN-Dienst ist auf ein Problem gestoßen. Bitte versuchen Sie es erneut.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Diagnose ist abgeschlossen und es wurde kein Problem erkannt.",
