@@ -14,6 +14,7 @@ export enum ComponentName {
   RenameServerDialog = 'RenameServerDialog',
   ConfirmDeleteServerDialog = 'ConfirmDeleteServerDialog',
   EnterPremiumCode = 'EnterPremiumCode',
+  CustomEndpoint = 'CustomEndpoint',
 }
 
 export enum Protocols {

@@ -90,12 +90,12 @@ export class ErrorHandler {
         return { localeKey: 'VPN_SERVICE_UNREACHABLE_MSG' };
 
       // It is not clear under what circumstances this occurs.
-      case ExceptionType.VpnServiceNotReady:
-        return { localeKey: 'VPN_SERVICE_NOT_READY_MSG' };
-
-      // It is not clear under what circumstances this occurs.
       case ExceptionType.VpnServiceTimeout:
         return { localeKey: 'VPN_SERVICE_TIMEOUT_MSG' };
+
+      // It is not clear under what circumstances this occurs.
+      case ExceptionType.VpnServiceNotReady:
+        return { localeKey: 'VPN_SERVICE_NOT_READY_MSG' };
 
       // On the diagnosis
       case ExceptionType.NoStableVpn:

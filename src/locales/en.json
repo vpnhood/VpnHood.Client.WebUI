@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Your premium connection time has expired.",
   "DAILY_LIMIT_EXCEEDED_MSG": "Your daily usage limit for the selected option has been reached. Please use the other available options.",
   "PURCHASE_VIA_WEB": "Purchase via Web",
-  "SHOW_AD_NO_UI_MSG": "It appeared that the app was minimized before an ad could be displayed. Ads are considered essential for keeping the app free and functional. Please try again and allow the ad to be fully displayed and completed. Your support is appreciated!",
+  "SHOW_AD_NO_UI_MSG": "The app was minimized before the connection could complete. The free version doesn’t support background connection establishment, and the app needs to stay open until the connection is finished.",
   "NO_INTERNET_MSG": "Your internet connection appears to be offline or too slow. Please check your connection and try again in a few moments.",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN service encountered an issue. Please try again.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Diagnoser has finished and no issue has been detected",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "You're connected to the VPN, but your connection isn't stable. This might resolve in a few minutes. If not, please send us a diagnostic report.",
   "VPN_SERVICE_NOT_READY_MSG": "The VPN service isn't ready. Please try again. If the issue persists, let us know.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "The code entered is invalid. Please check the numbers and try again.",
-  "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know."
+  "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know.",
+  "CUSTOM_ENDPOINT": "Custom server address",
+  "CUSTOM_ENDPOINT_DESC": "Enter an IP address to override the server address.",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IP4 or IP6)."
+
 }

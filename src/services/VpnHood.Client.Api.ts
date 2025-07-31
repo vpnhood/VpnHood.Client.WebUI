@@ -1798,6 +1798,7 @@ export class AppFeatures implements IAppFeatures {
     debugCommands!: string[];
     isLocalNetworkSupported!: boolean;
     adjustForSystemBars!: boolean;
+    allowEndPointStrategy!: boolean;
     version!: string;
 
     constructor(data?: IAppFeatures) {
@@ -1842,6 +1843,7 @@ export class AppFeatures implements IAppFeatures {
             }
             this.isLocalNetworkSupported = _data["isLocalNetworkSupported"] !== undefined ? _data["isLocalNetworkSupported"] : <any>null;
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
+            this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
         }
     }
@@ -1880,6 +1882,7 @@ export class AppFeatures implements IAppFeatures {
         }
         data["isLocalNetworkSupported"] = this.isLocalNetworkSupported !== undefined ? this.isLocalNetworkSupported : <any>null;
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
+        data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         return data;
     }
@@ -1907,6 +1910,7 @@ export interface IAppFeatures {
     debugCommands: string[];
     isLocalNetworkSupported: boolean;
     adjustForSystemBars: boolean;
+    allowEndPointStrategy: boolean;
     version: string;
 }
 
@@ -2057,6 +2061,7 @@ export class UserSettings implements IUserSettings {
     includeLocalNetwork!: boolean;
     useAppIpFilter!: boolean;
     useVpnAdapterIpFilter!: boolean;
+    endPointStrategy!: EndPointStrategy;
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -2106,6 +2111,7 @@ export class UserSettings implements IUserSettings {
             this.includeLocalNetwork = _data["includeLocalNetwork"] !== undefined ? _data["includeLocalNetwork"] : <any>null;
             this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
             this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
+            this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
         }
     }
 
@@ -2145,6 +2151,7 @@ export class UserSettings implements IUserSettings {
         data["includeLocalNetwork"] = this.includeLocalNetwork !== undefined ? this.includeLocalNetwork : <any>null;
         data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
         data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
+        data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
         return data;
     }
 }
@@ -2169,6 +2176,7 @@ export interface IUserSettings {
     includeLocalNetwork: boolean;
     useAppIpFilter: boolean;
     useVpnAdapterIpFilter: boolean;
+    endPointStrategy: EndPointStrategy;
 }
 
 export enum FilterMode {
@@ -2257,6 +2265,14 @@ export interface IDomainFilter {
     blocks: string[];
     excludes: string[];
     includes: string[];
+}
+
+export enum EndPointStrategy {
+    Auto = "Auto",
+    DnsFirst = "DnsFirst",
+    TokenFirst = "TokenFirst",
+    DnsOnly = "DnsOnly",
+    TokenOnly = "TokenOnly",
 }
 
 export class AppSettingsService implements IAppSettingsService {
@@ -3088,6 +3104,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     isPremiumAccount!: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode!: boolean;
+    customServerEndpoints?: string[] | null;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -3108,6 +3125,14 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.isPremiumAccount = _data["isPremiumAccount"] !== undefined ? _data["isPremiumAccount"] : <any>null;
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
             this.hasAccessCode = _data["hasAccessCode"] !== undefined ? _data["hasAccessCode"] : <any>null;
+            if (Array.isArray(_data["customServerEndpoints"])) {
+                this.customServerEndpoints = [] as any;
+                for (let item of _data["customServerEndpoints"])
+                    this.customServerEndpoints!.push(item);
+            }
+            else {
+                this.customServerEndpoints = <any>null;
+            }
         }
     }
 
@@ -3128,6 +3153,11 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
         data["isPremiumAccount"] = this.isPremiumAccount !== undefined ? this.isPremiumAccount : <any>null;
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
         data["hasAccessCode"] = this.hasAccessCode !== undefined ? this.hasAccessCode : <any>null;
+        if (Array.isArray(this.customServerEndpoints)) {
+            data["customServerEndpoints"] = [];
+            for (let item of this.customServerEndpoints)
+                data["customServerEndpoints"].push(item);
+        }
         return data;
     }
 }
@@ -3141,6 +3171,7 @@ export interface IClientProfileBaseInfo {
     isPremiumAccount: boolean;
     selectedLocationInfo?: ClientServerLocationInfo | null;
     hasAccessCode: boolean;
+    customServerEndpoints?: string[] | null;
 }
 
 export class ClientServerLocationInfo extends ServerLocationInfo implements IClientServerLocationInfo {
@@ -3432,6 +3463,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
     locationInfos!: ClientServerLocationInfo[];
     purchaseUrl?: string | null;
     purchaseUrlMode!: PurchaseUrlMode;
+    customServerEndpoints?: string[] | null;
     selectedLocationInfo?: ClientServerLocationInfo | null;
 
     constructor(data?: IClientProfileInfo) {
@@ -3478,6 +3510,14 @@ export class ClientProfileInfo implements IClientProfileInfo {
             }
             this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : <any>null;
             this.purchaseUrlMode = _data["purchaseUrlMode"] !== undefined ? _data["purchaseUrlMode"] : <any>null;
+            if (Array.isArray(_data["customServerEndpoints"])) {
+                this.customServerEndpoints = [] as any;
+                for (let item of _data["customServerEndpoints"])
+                    this.customServerEndpoints!.push(item);
+            }
+            else {
+                this.customServerEndpoints = <any>null;
+            }
             this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : <any>null;
         }
     }
@@ -3514,6 +3554,11 @@ export class ClientProfileInfo implements IClientProfileInfo {
         }
         data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : <any>null;
         data["purchaseUrlMode"] = this.purchaseUrlMode !== undefined ? this.purchaseUrlMode : <any>null;
+        if (Array.isArray(this.customServerEndpoints)) {
+            data["customServerEndpoints"] = [];
+            for (let item of this.customServerEndpoints)
+                data["customServerEndpoints"].push(item);
+        }
         data["selectedLocationInfo"] = this.selectedLocationInfo ? this.selectedLocationInfo.toJSON() : <any>null;
         return data;
     }
@@ -3535,6 +3580,7 @@ export interface IClientProfileInfo {
     locationInfos: ClientServerLocationInfo[];
     purchaseUrl?: string | null;
     purchaseUrlMode: PurchaseUrlMode;
+    customServerEndpoints?: string[] | null;
     selectedLocationInfo?: ClientServerLocationInfo | null;
 }
 
@@ -3796,6 +3842,7 @@ export enum ExceptionType {
     VpnService = "VpnServiceNotReadyException",
     UserCanceled = "UserCanceledException",
     ConnectionTimeout = "ConnectionTimeoutException",
+    EndPointDiscovery = "EndPointDiscoveryException",
 }
 
 export enum SessionErrorCode {
@@ -3931,6 +3978,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
     customData?: PatchOfString | null;
     isPremiumLocationSelected?: PatchOfBoolean | null;
     accessCode?: PatchOfString | null;
+    customServerEndpoints?: PatchOfStringOf | null;
 
     constructor(data?: IClientProfileUpdateParams) {
         if (data) {
@@ -3949,6 +3997,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
             this.customData = _data["customData"] ? PatchOfString.fromJS(_data["customData"]) : <any>null;
             this.isPremiumLocationSelected = _data["isPremiumLocationSelected"] ? PatchOfBoolean.fromJS(_data["isPremiumLocationSelected"]) : <any>null;
             this.accessCode = _data["accessCode"] ? PatchOfString.fromJS(_data["accessCode"]) : <any>null;
+            this.customServerEndpoints = _data["customServerEndpoints"] ? PatchOfStringOf.fromJS(_data["customServerEndpoints"]) : <any>null;
         }
     }
 
@@ -3967,6 +4016,7 @@ export class ClientProfileUpdateParams implements IClientProfileUpdateParams {
         data["customData"] = this.customData ? this.customData.toJSON() : <any>null;
         data["isPremiumLocationSelected"] = this.isPremiumLocationSelected ? this.isPremiumLocationSelected.toJSON() : <any>null;
         data["accessCode"] = this.accessCode ? this.accessCode.toJSON() : <any>null;
+        data["customServerEndpoints"] = this.customServerEndpoints ? this.customServerEndpoints.toJSON() : <any>null;
         return data;
     }
 }
@@ -3978,6 +4028,7 @@ export interface IClientProfileUpdateParams {
     customData?: PatchOfString | null;
     isPremiumLocationSelected?: PatchOfBoolean | null;
     accessCode?: PatchOfString | null;
+    customServerEndpoints?: PatchOfStringOf | null;
 }
 
 export class PatchOfString implements IPatchOfString {
@@ -4050,6 +4101,53 @@ export class PatchOfBoolean implements IPatchOfBoolean {
 
 export interface IPatchOfBoolean {
     value: boolean;
+}
+
+export class PatchOfStringOf implements IPatchOfStringOf {
+    value?: string[] | null;
+
+    constructor(data?: IPatchOfStringOf) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["value"])) {
+                this.value = [] as any;
+                for (let item of _data["value"])
+                    this.value!.push(item);
+            }
+            else {
+                this.value = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): PatchOfStringOf {
+        data = typeof data === 'object' ? data : {};
+        let result = new PatchOfStringOf();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.value)) {
+            data["value"] = [];
+            for (let item of this.value)
+                data["value"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IPatchOfStringOf {
+    value?: string[] | null;
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {

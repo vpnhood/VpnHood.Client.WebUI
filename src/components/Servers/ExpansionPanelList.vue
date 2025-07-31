@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { Util } from '@/helpers/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import { ClientProfileInfo, ClientProfileUpdateParams, PatchOfString } from '@/services/VpnHood.Client.Api';
+import {
+  ClientProfileInfo,
+  ClientProfileUpdateParams,
+  PatchOfString,
+  PatchOfStringOf
+} from '@/services/VpnHood.Client.Api';
 import { onMounted, ref } from 'vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController'
 import { ComponentName } from '@/helpers/UiConstants';
@@ -16,6 +21,8 @@ const maximumLocationOnCollapsed: number = 8;
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
 const newClientProfileName = ref<string>("");
 const expandedPanels = ref<number[]>([]);
+const customEndpoint = ref<string | null>(null);
+const invalidIpError = ref<string | null>(null);
 
 onMounted(() => {
   // Create open state if client profile is active or has a single location
@@ -44,6 +51,14 @@ async function showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<v
   await ComponentRouteController.showComponent(ComponentName.RenameServerDialog);
 }
 
+// Show endpoint dialog
+async function showEndpointDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
+  currentClientProfileInfo.value = clientProfileInfo;
+  const endpoint = clientProfileInfo.customServerEndpoints;
+  customEndpoint.value = (endpoint && endpoint.length > 0) ? endpoint[0] : null;
+  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint);
+}
+
 // Rename server by user
 async function saveNewClientProfileName(): Promise<void> {
   await ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false);
@@ -52,6 +67,28 @@ async function saveNewClientProfileName(): Promise<void> {
     clientProfileName: new PatchOfString({ value: newClientProfileName.value })
     })
   );
+}
+// Change client profile custom endpoint
+async function saveCustomEndpoint(): Promise<void> {
+  const endpointValue = customEndpoint.value?.trim();
+  invalidIpError.value = (endpointValue && !isValidIP(endpointValue)) ? locale('CUSTOM_ENDPOINT_VALIDATION_ERROR') : null;
+  if (invalidIpError.value)
+    return;
+
+  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
+
+  const newEndpoint = endpointValue ? [endpointValue] : null;
+  const params = new ClientProfileUpdateParams({
+    customServerEndpoints: new PatchOfStringOf({ value: newEndpoint })
+  });
+
+  await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
+}
+
+function isValidIP(ip: string): boolean {
+  const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
+  const ipv6Regex = /^(([0-9a-fA-F]{1,4}):){7}([0-9a-fA-F]{1,4})$/;
+  return  ipv4Regex.test(ip) || ipv6Regex.test(ip);
 }
 </script>
 
@@ -141,22 +178,34 @@ async function saveNewClientProfileName(): Promise<void> {
                   <!-- Rename item -->
                   <v-list-item
                     v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"
-                    :title="locale('RENAME')" prepend-icon="mdi-pencil" @click="showRenameDialog(clientProfileInfo)"/>
-                  <v-divider
-                    v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"/>
+                    :title="locale('RENAME')" prepend-icon="mdi-pencil"
+                    @click="showRenameDialog(clientProfileInfo)"
+                  />
+                  <v-divider v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"/>
 
                   <!-- Diagnose item -->
                   <v-list-item
                     :title="locale('DIAGNOSE')"
                     :disabled="!vhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="ConnectManager.connect2(clientProfileInfo.clientProfileId, true)">
-                  </v-list-item>
+                    @click="ConnectManager.connect2(clientProfileInfo.clientProfileId, true)"
+                  />
                   <v-divider v-if="vhApp.data.features.isAddAccessKeySupported"/>
 
+                  <!-- Custom endpoint -->
+                  <v-list-item
+                    :title="locale('CUSTOM_ENDPOINT')"
+                    prepend-icon="mdi-ip-outline"
+                    @click="showEndpointDialog(clientProfileInfo)"
+                  />
+                  <v-divider />
+
                   <!-- Delete item -->
-                  <v-list-item v-if="vhApp.data.features.isAddAccessKeySupported" :title="locale('REMOVE')"
-                               prepend-icon="mdi-delete" @click="showConfirmDeleteDialog(clientProfileInfo)"/>
+                  <v-list-item v-if="vhApp.data.features.isAddAccessKeySupported"
+                     :title="locale('REMOVE')"
+                     prepend-icon="mdi-delete"
+                     @click="showConfirmDeleteDialog(clientProfileInfo)"
+                  />
                 </v-list>
               </v-menu>
             </v-btn>
@@ -203,14 +252,47 @@ async function saveNewClientProfileName(): Promise<void> {
 
       <v-card-actions>
 
-        <!-- Cancel rename button -->
+        <!-- Cancel button -->
         <v-btn
           :text="locale('CANCEL')"
           @click="ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false)"
         />
 
-        <!-- Save rename button -->
+        <!-- Save button -->
         <v-btn :text="locale('SAVE')" @click="saveNewClientProfileName" variant="plain"/>
+
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Endpoint dialog -->
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.CustomEndpoint).isShow" max-width="600">
+    <v-card :title="locale('CUSTOM_ENDPOINT')" color="general-dialog">
+
+      <v-card-text class="text-general-dialog-text">
+        <!-- Name text field -->
+        <v-text-field
+          v-model="customEndpoint"
+          :error-messages="invalidIpError"
+          spellcheck="false"
+          autocomplete="off"
+          color="highlight"
+          :hint="locale('CUSTOM_ENDPOINT_DESC')"
+          persistent-hint
+          :clearable="true">
+        </v-text-field>
+      </v-card-text>
+
+      <v-card-actions>
+
+        <!-- Cancel button -->
+        <v-btn
+          :text="locale('CANCEL')"
+          @click="ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false)"
+        />
+
+        <!-- Save button -->
+        <v-btn :text="locale('SAVE')" @click="saveCustomEndpoint"/>
 
       </v-card-actions>
     </v-card>

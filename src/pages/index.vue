@@ -103,6 +103,10 @@ function connectButtonText(): string {
 function isIpFilterAvailable(): boolean {
   return vhApp.data.settings.userSettings.useVpnAdapterIpFilter || vhApp.data.settings.userSettings.useAppIpFilter;
 }
+function isCustomEndpointAvailable(): boolean {
+  if (!vhApp.data.state.clientProfile?.customServerEndpoints) return false;
+  return vhApp.data.state.clientProfile?.customServerEndpoints.length > 0;
+}
 
 // Return connection download and upload speed based on Mbps
 function formatSpeed(speed: number): string | void {
@@ -274,8 +278,15 @@ function isDebugDataHasValue(): boolean {
           </v-col>
 
           <!-- Show IP icon if IP-filter option is enabled -->
-          <v-col cols="2" class="text-end">
+          <v-col cols="2" class="d-inline-flex justify-end ga-1">
             <v-icon v-if="isIpFilterAvailable()"
+                    icon="mdi-filter-cog-outline"
+                    size="17px"
+                    color="white"
+                    class="opacity-40 pb-1"
+                    tabindex="-1"
+            />
+            <v-icon v-if="isCustomEndpointAvailable()"
                     icon="mdi-ip-network"
                     size="17px"
                     color="white"
