@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Premium bağlantı süreniz doldu.",
   "DAILY_LIMIT_EXCEEDED_MSG": "Seçilen seçenek için günlük kullanım limitinize ulaşıldı. Lütfen diğer mevcut seçenekleri kullanın.",
   "PURCHASE_VIA_WEB": "Web üzerinden satın al",
-  "SHOW_AD_NO_UI_MSG": "Görünüşe göre bir reklam gösterilmeden önce uygulama küçültüldü. Uygulamanın ücretsiz ve işlevsel kalması için reklamlar temel kabul edilir. Lütfen tekrar deneyin ve reklamın tamamen görüntülenip tamamlanmasına izin verin. Desteğiniz takdir edilmektedir!",
+  "SHOW_AD_NO_UI_MSG": "Uygulama, bağlantı tamamlanmadan önce kapatıldı. Ücretsiz sürüm, arka planda bağlantı kurmayı desteklemez ve bağlantı tamamlanana kadar uygulamanın açık kalması gerekir.",
   "NO_INTERNET_MSG": "İnternet bağlantınız çevrimdışı veya çok yavaş görünüyor. Lütfen bağlantınızı kontrol edin ve birkaç dakika sonra tekrar deneyin.",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN hizmeti bir sorunla karşılaştı. Lütfen tekrar deneyin.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Tanılama tamamlandı ve hiçbir sorun tespit edilmedi.",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "VPN'e bağlısınız ancak bağlantınız stabil değil. Bu durum birkaç dakika içinde çözülebilir. Çözülmezse, lütfen bize bir tanılama raporu gönderin.",
   "VPN_SERVICE_NOT_READY_MSG": "VPN hizmeti hazır değil. Lütfen tekrar deneyin.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Girilen kod geçersiz. Lütfen numaraları kontrol edin ve tekrar deneyin.",
-  "LOGIN_CONNECTION_ERROR_MSG": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin. Sorun devam ederse bize bildirin."
+  "LOGIN_CONNECTION_ERROR_MSG": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin. Sorun devam ederse bize bildirin.",
+  "CUSTOM_ENDPOINT": "Özel sunucu adresi",
+  "CUSTOM_ENDPOINT_DESC": "Sunucu adresini geçersiz kılmak için bir IP adresi girin.",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin."
+
 }
