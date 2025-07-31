@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "您的优质连接时间已过期。",
   "DAILY_LIMIT_EXCEEDED_MSG": "您所选选项的每日使用限制已达到。请使用其他可用选项。",
   "PURCHASE_VIA_WEB": "通过网页购买",
-  "SHOW_AD_NO_UI_MSG": "应用程序在连接完成之前已最小化。免费版不支持后台建立连接，应用需要保持打开状态直到连接完成。",
+  "SHOW_AD_NO_UI_MSG": "应用程序在连接完成之前已关闭。免费版不支持在后台建立连接，并且应用程序必须保持打开状态直到连接完成。",
   "NO_INTERNET_MSG": "您的互联网连接似乎已离线或速度过慢。请检查您的连接并在几分钟后重试。",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN服务遇到问题。请再试一次。",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "诊断程序已完成，未检测到问题",
