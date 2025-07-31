@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "O tempo da sua conexão premium expirou.",
   "DAILY_LIMIT_EXCEEDED_MSG": "O seu limite diário de utilização para a opção selecionada foi atingido. Por favor, utilize as outras opções disponíveis.",
   "PURCHASE_VIA_WEB": "Compra via Web",
-  "SHOW_AD_NO_UI_MSG": "Pareceu que a aplicação foi minimizada antes que um anúncio pudesse ser exibido. Anúncios são considerados essenciais para manter a aplicação gratuita e funcional. Por favor, tente novamente e permita que o anúncio seja totalmente exibido e concluído. O seu apoio é apreciado!",
+  "SHOW_AD_NO_UI_MSG": "O app foi fechado antes que a conexão pudesse ser concluída. A versão gratuita não suporta o estabelecimento de uma conexão em segundo plano, e o app deve permanecer aberto até que a conexão seja concluída.",
   "NO_INTERNET_MSG": "A sua ligação à internet parece estar offline ou demasiado lenta. Por favor, verifique a sua ligação e tente novamente dentro de momentos.",
   "VPN_SERVICE_UNREACHABLE_MSG": "O serviço VPN encontrou um problema. Por favor, tente novamente.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "O diagnóstico terminou e nenhum problema foi detetado.",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "Está ligado à VPN, mas a sua ligação não está estável. Isto pode resolver-se em alguns minutos. Se não, por favor, envie-nos um relatório de diagnóstico.",
   "VPN_SERVICE_NOT_READY_MSG": "O serviço VPN não está pronto. Por favor, tente novamente.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "O código introduzido é inválido. Por favor, verifique os números e tente novamente.",
-  "LOGIN_CONNECTION_ERROR_MSG": "Não foi possível ligar ao servidor. Por favor, tente novamente. Se o problema persistir, informe-nos."
+  "LOGIN_CONNECTION_ERROR_MSG": "Não foi possível ligar ao servidor. Por favor, tente novamente. Se o problema persistir, informe-nos.",
+  "CUSTOM_ENDPOINT": "Endereço de servidor personalizado",
+  "CUSTOM_ENDPOINT_DESC": "Digite um endereço IP para substituir o endereço do servidor.",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, insira um endereço IP válido (IPv4 ou IPv6)."
+
 }
