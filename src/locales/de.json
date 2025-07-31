@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "Ihre Premium-Verbindungszeit ist abgelaufen.",
   "DAILY_LIMIT_EXCEEDED_MSG": "Ihr tägliches Nutzungslimit für die ausgewählte Option wurde erreicht. Bitte nutzen Sie die anderen verfügbaren Optionen.",
   "PURCHASE_VIA_WEB": "Kauf über das Web",
-  "SHOW_AD_NO_UI_MSG": "Es schien, als ob die App minimiert wurde, bevor eine Anzeige angezeigt werden konnte. Anzeigen sind wesentlich, um die App kostenlos und funktionsfähig zu halten. Bitte versuchen Sie es erneut und lassen Sie die Anzeige vollständig anzeigen und abschließen. Ihre Unterstützung wird geschätzt!",
+  "SHOW_AD_NO_UI_MSG": "Die App wurde minimiert, bevor die Verbindung hergestellt werden konnte. Die kostenlose Version unterstützt keine Verbindungsherstellung im Hintergrund, und die App muss geöffnet bleiben, bis die Verbindung hergestellt ist.",
   "NO_INTERNET_MSG": "Ihre Internetverbindung scheint offline oder zu langsam zu sein. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es in wenigen Augenblicken erneut.",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN-Dienst ist auf ein Problem gestoßen. Bitte versuchen Sie es erneut.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Diagnose ist abgeschlossen und es wurde kein Problem erkannt.",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "Sie sind mit dem VPN verbunden, aber Ihre Verbindung ist nicht stabil. Dies könnte sich in wenigen Minuten lösen. Falls nicht, senden Sie uns bitte einen Diagnosebericht.",
   "VPN_SERVICE_NOT_READY_MSG": "Der VPN-Dienst ist nicht bereit. Bitte versuchen Sie es erneut.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Der eingegebene Code ist ungültig. Bitte überprüfen Sie die Zahlen und versuchen Sie es erneut.",
-  "LOGIN_CONNECTION_ERROR_MSG": "Verbindung zum Server konnte nicht hergestellt werden. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, lassen Sie es uns wissen."
+  "LOGIN_CONNECTION_ERROR_MSG": "Verbindung zum Server konnte nicht hergestellt werden. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, lassen Sie es uns wissen.",
+  "CUSTOM_ENDPOINT": "Benutzerdefinierte Serveradresse",
+  "CUSTOM_ENDPOINT_DESC": "Geben Sie eine IP-Adresse ein, um die Serveradresse zu überschreiben.",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein."
+
 }
