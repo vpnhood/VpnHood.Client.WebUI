@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "El tiempo de tu conexión premium ha expirado.",
   "DAILY_LIMIT_EXCEEDED_MSG": "Su límite de uso diario para la opción seleccionada ha sido alcanzado. Por favor, use las otras opciones disponibles.",
   "PURCHASE_VIA_WEB": "Compra a través de la web",
-  "SHOW_AD_NO_UI_MSG": "Parece que la aplicación se minimizó antes de que se pudiera mostrar un anuncio. Los anuncios se consideran esenciales para mantener la aplicación gratuita y funcional. Por favor, intente de nuevo y permita que el anuncio se muestre y complete por completo. ¡Se agradece su apoyo!",
+  "SHOW_AD_NO_UI_MSG": "La aplicación se cerró antes de que la conexión pudiera completarse. La versión gratuita no es compatible con el establecimiento de una conexión en segundo plano, y la aplicación debe permanecer abierta hasta que la conexión se complete.",
   "NO_INTERNET_MSG": "Su conexión a internet parece estar fuera de línea o es demasiado lenta. Por favor, revise su conexión e intente de nuevo en unos momentos.",
   "VPN_SERVICE_UNREACHABLE_MSG": "El servicio VPN encontró un problema. Por favor, inténtelo de nuevo.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "El diagnóstico ha terminado y no se ha detectado ningún problema.",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "Está conectado a la VPN, pero su conexión no es estable. Esto podría resolverse en unos minutos. Si no, por favor, envíenos un informe de diagnóstico.",
   "VPN_SERVICE_NOT_READY_MSG": "El servicio VPN no está listo. Por favor, inténtelo de nuevo.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "El código introducido no es válido. Por favor, compruebe los números e intente de nuevo.",
-  "LOGIN_CONNECTION_ERROR_MSG": "No se pudo conectar al servidor. Por favor, intente de nuevo. Si el problema persiste, háganoslo saber."
+  "LOGIN_CONNECTION_ERROR_MSG": "No se pudo conectar al servidor. Por favor, intente de nuevo. Si el problema persiste, háganoslo saber.",
+  "CUSTOM_ENDPOINT": "Dirección de servidor personalizada",
+  "CUSTOM_ENDPOINT_DESC": "Introduce una dirección IP para anular la dirección del servidor.",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, introduce una dirección IP válida (IPv4 o IPv6)."
+
 }
