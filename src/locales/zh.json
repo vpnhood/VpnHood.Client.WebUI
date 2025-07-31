@@ -300,7 +300,7 @@
   "PREMIUM_CONNECTION_EXPIRED_MSG": "您的优质连接时间已过期。",
   "DAILY_LIMIT_EXCEEDED_MSG": "您所选选项的每日使用限制已达到。请使用其他可用选项。",
   "PURCHASE_VIA_WEB": "通过网页购买",
-  "SHOW_AD_NO_UI_MSG": "应用程序在显示广告前被最小化。广告对于保持应用程序免费和正常运行至关重要。请再试一次，并允许广告完全显示和完成。感谢您的支持！",
+  "SHOW_AD_NO_UI_MSG": "应用程序在连接完成之前已最小化。免费版不支持后台建立连接，应用需要保持打开状态直到连接完成。",
   "NO_INTERNET_MSG": "您的互联网连接似乎已离线或速度过慢。请检查您的连接并在几分钟后重试。",
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN服务遇到问题。请再试一次。",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "诊断程序已完成，未检测到问题",
@@ -316,5 +316,9 @@
   "NO_STABLE_VPN_MSG": "您已连接到VPN，但您的连接不稳定。这可能会在几分钟内解决。如果不行，请向我们发送诊断报告。",
   "VPN_SERVICE_NOT_READY_MSG": "VPN服务尚未准备好。请再试一次。",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "输入的代码无效。请检查数字并重试。",
-  "LOGIN_CONNECTION_ERROR_MSG": "无法连接到服务器。请重试。如果问题仍然存在，请告诉我们。"
+  "LOGIN_CONNECTION_ERROR_MSG": "无法连接到服务器。请重试。如果问题仍然存在，请告诉我们。",
+  "CUSTOM_ENDPOINT": "自定义服务器地址",
+  "CUSTOM_ENDPOINT_DESC": "输入IP地址以覆盖服务器地址。",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。"
+
 }
