@@ -319,6 +319,6 @@
   "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know.",
   "CUSTOM_ENDPOINT": "Custom server address",
   "CUSTOM_ENDPOINT_DESC": "Enter an IP address to override the server address.",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IP4 or IP6)."
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6)."
 
 }
