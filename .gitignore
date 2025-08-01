@@ -227,3 +227,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .vs
+/.env.locale

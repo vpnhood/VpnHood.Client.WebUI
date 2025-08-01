@@ -1799,6 +1799,7 @@ export class AppFeatures implements IAppFeatures {
     isLocalNetworkSupported!: boolean;
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
+    customData?: any | null;
     version!: string;
 
     constructor(data?: IAppFeatures) {
@@ -1844,6 +1845,7 @@ export class AppFeatures implements IAppFeatures {
             this.isLocalNetworkSupported = _data["isLocalNetworkSupported"] !== undefined ? _data["isLocalNetworkSupported"] : <any>null;
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
+            this.customData = _data["customData"] !== undefined ? _data["customData"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
         }
     }
@@ -1883,6 +1885,7 @@ export class AppFeatures implements IAppFeatures {
         data["isLocalNetworkSupported"] = this.isLocalNetworkSupported !== undefined ? this.isLocalNetworkSupported : <any>null;
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
+        data["customData"] = this.customData !== undefined ? this.customData : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         return data;
     }
@@ -1911,6 +1914,7 @@ export interface IAppFeatures {
     isLocalNetworkSupported: boolean;
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
+    customData?: any | null;
     version: string;
 }
 
@@ -2053,7 +2057,6 @@ export class UserSettings implements IUserSettings {
     dropUdp!: boolean;
     dropQuic!: boolean;
     allowAnonymousTracker!: boolean;
-    dnsServers?: string[] | null;
     domainFilter!: DomainFilter;
     debugData1?: string | null;
     debugData2?: string | null;
@@ -2062,6 +2065,7 @@ export class UserSettings implements IUserSettings {
     useAppIpFilter!: boolean;
     useVpnAdapterIpFilter!: boolean;
     endPointStrategy!: EndPointStrategy;
+    dnsServers?: string[] | null;
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -2096,14 +2100,6 @@ export class UserSettings implements IUserSettings {
             this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : <any>null;
             this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
             this.allowAnonymousTracker = _data["allowAnonymousTracker"] !== undefined ? _data["allowAnonymousTracker"] : <any>null;
-            if (Array.isArray(_data["dnsServers"])) {
-                this.dnsServers = [] as any;
-                for (let item of _data["dnsServers"])
-                    this.dnsServers!.push(item);
-            }
-            else {
-                this.dnsServers = <any>null;
-            }
             this.domainFilter = _data["domainFilter"] ? DomainFilter.fromJS(_data["domainFilter"]) : new DomainFilter();
             this.debugData1 = _data["debugData1"] !== undefined ? _data["debugData1"] : <any>null;
             this.debugData2 = _data["debugData2"] !== undefined ? _data["debugData2"] : <any>null;
@@ -2112,6 +2108,14 @@ export class UserSettings implements IUserSettings {
             this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
             this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
             this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
+            if (Array.isArray(_data["dnsServers"])) {
+                this.dnsServers = [] as any;
+                for (let item of _data["dnsServers"])
+                    this.dnsServers!.push(item);
+            }
+            else {
+                this.dnsServers = <any>null;
+            }
         }
     }
 
@@ -2139,11 +2143,6 @@ export class UserSettings implements IUserSettings {
         data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : <any>null;
         data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
         data["allowAnonymousTracker"] = this.allowAnonymousTracker !== undefined ? this.allowAnonymousTracker : <any>null;
-        if (Array.isArray(this.dnsServers)) {
-            data["dnsServers"] = [];
-            for (let item of this.dnsServers)
-                data["dnsServers"].push(item);
-        }
         data["domainFilter"] = this.domainFilter ? this.domainFilter.toJSON() : <any>null;
         data["debugData1"] = this.debugData1 !== undefined ? this.debugData1 : <any>null;
         data["debugData2"] = this.debugData2 !== undefined ? this.debugData2 : <any>null;
@@ -2152,6 +2151,11 @@ export class UserSettings implements IUserSettings {
         data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
         data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
         data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
+        if (Array.isArray(this.dnsServers)) {
+            data["dnsServers"] = [];
+            for (let item of this.dnsServers)
+                data["dnsServers"].push(item);
+        }
         return data;
     }
 }
@@ -2168,7 +2172,6 @@ export interface IUserSettings {
     dropUdp: boolean;
     dropQuic: boolean;
     allowAnonymousTracker: boolean;
-    dnsServers?: string[] | null;
     domainFilter: DomainFilter;
     debugData1?: string | null;
     debugData2?: string | null;
@@ -2177,6 +2180,7 @@ export interface IUserSettings {
     useAppIpFilter: boolean;
     useVpnAdapterIpFilter: boolean;
     endPointStrategy: EndPointStrategy;
+    dnsServers?: string[] | null;
 }
 
 export enum FilterMode {

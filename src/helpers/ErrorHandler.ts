@@ -37,8 +37,9 @@ export class ErrorHandler {
     // Send the error message to analytics
     VpnHoodApp.instance.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
       message: englishErrorMessage,
-      ui_language: `UI Lang: ${i18n.global.locale.value}`,
+      ui_language: i18n.global.locale.value,
       org_message: err,
+      app_version: VpnHoodApp.instance.getAppVersion(true)
     });
 
     // Show the message

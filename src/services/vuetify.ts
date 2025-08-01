@@ -733,7 +733,7 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: AppName.VpnHoodClient,
+    defaultTheme: AppName.VpnHoodConnect,
     themes: {
       VpnHoodClient: {
         dark: false,

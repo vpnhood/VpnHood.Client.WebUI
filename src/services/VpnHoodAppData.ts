@@ -12,7 +12,7 @@ import {
 import i18n from '@/locales/i18n';
 
 export class VpnHoodAppData {
-  public readonly serverUrl: string | undefined = import.meta.env.VITE_CLIENT_API_BASE_URL;
+  public readonly serverUrl: string | undefined = import.meta.env.VITE_API_BASE_URL;
   public uiState: UiState = new UiState();
   public userState: UserState = new UserState();
   public state: AppState;

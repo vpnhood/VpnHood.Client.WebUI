@@ -37,13 +37,13 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
 })
 
 onMounted(async () => {
-  // Reload 'state' every 1 second if app window is focused.
+  // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
     if (!document.hidden)
       await vhApp.reloadState();
   }, 1000);
 
-  // Get user account
+  // Get the user account
   if (vhApp.data.features.isAccountSupported)
     await vhApp.loadAccount();
 })

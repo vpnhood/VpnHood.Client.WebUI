@@ -22,6 +22,7 @@ import { logEvent, setUserId } from 'firebase/analytics';
 import { FirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
+import type { FirebaseOptions } from 'firebase/app';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
@@ -63,14 +64,19 @@ export class VpnHoodApp {
     );
     let analytics: Analytics | null = null;
 
-    // Init firebase and analytics based on app name
-    if (import.meta.env.MODE !== 'development' || import.meta.env.VITE_CLIENT_IS_INIT_FIREBASE !== 'false') {
-      analytics = FirebaseApp.initialize(config.features.uiName === AppName.VpnHoodConnect);
+    // Init firebase and analytics
+    // Note: if you want to prevent your testing and development from affecting your measurements, you must use the
+    // below Chrome extension.
+    // https://chromewebstore.google.com/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna?pli=1
+    // More info: https://firebase.google.com/docs/analytics/debugview#web
+    const firebaseOptions: FirebaseOptions | undefined = appData.features.customData.firebaseOptions;
+    if (!firebaseOptions){
+      console.log('the firebaseOptions is not set in the app features -> customData -> firebaseOptions.');
+    }
+    else {
+      analytics = FirebaseApp.initialize(appData.features.customData.firebaseOptions);
       setUserId(analytics, config.settings.clientId);
     }
-
-    if (!analytics)
-      console.log('Firebase does not initialized because the current mode is development and \'env.IS_INIT_FIREBASE\' is set to false, if you want to enable it on development, please refer to \'.env.development\' file');
 
     return new VpnHoodApp(apiClient, clientProfileClient, appData, analytics);
   }

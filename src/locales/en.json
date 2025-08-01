@@ -311,7 +311,7 @@
   "PREMIUM_LOCATION_MSG": "Your selected server is now a premium server and will be automatically updated in your list. Please select a different server.",
   "REWARD_NOT_EARNED_MSG": "It seems there was an issue and the reward for watching that ad wasn't registered. We're sorry for the inconvenience! Please give it another try.",
   "VPN_SERVICE_TIMEOUT_MSG": "The VPN service didn't start in time. Please try again.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "We're sorry, but there was a problem loading the ad. This could be due to the ad provider not having an ad available at the moment, or a temporary technical issue. Please try again. However, if you consistently encounter this problem, it may indicate that this type of ad isn't supported in your geographical region.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "No ads are currently available for display, or this ad format isn’t supported in your country. Please try again in a few minutes.",
   "REWARDED_AD_SHOW_ERROR_MSG": "There was an issue playing the ad. Please try again in a moment.",
   "NO_STABLE_VPN_MSG": "You're connected to the VPN, but your connection isn't stable. This might resolve in a few minutes. If not, please send us a diagnostic report.",
   "VPN_SERVICE_NOT_READY_MSG": "The VPN service isn't ready. Please try again. If the issue persists, let us know.",

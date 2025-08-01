@@ -4,7 +4,7 @@ import {AppClient, AccountClient, BillingClient, ClientProfileClient} from './Vp
 
 export class ClientApiFactory {
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string = import.meta.env.VITE_CLIENT_API_BASE_URL ?? window.location.origin;
+    private readonly baseUrl: string = import.meta.env.VITE_API_BASE_URL ?? window.location.origin;
 
     constructor() {
         //Define the axios default config
