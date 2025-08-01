@@ -311,7 +311,7 @@
   "PREMIUM_LOCATION_MSG": "Ihr ausgewählter Server ist jetzt ein Premium-Server und wird automatisch in Ihrer Liste aktualisiert. Bitte wählen Sie einen anderen Server aus.",
   "REWARD_NOT_EARNED_MSG": "Es scheint ein Problem gegeben zu haben und die Belohnung für das Ansehen dieser Anzeige wurde nicht registriert. Wir entschuldigen uns für die Unannehmlichkeiten! Bitte versuchen Sie es erneut.",
   "VPN_SERVICE_TIMEOUT_MSG": "Der VPN-Dienst ist nicht rechtzeitig gestartet. Bitte versuchen Sie es erneut.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "Es tut uns leid, aber es gab ein Problem beim Laden der Anzeige. Dies könnte daran liegen, dass der Anzeigenanbieter momentan keine Anzeige verfügbar hat oder an einem vorübergehenden technischen Problem. Bitte versuchen Sie es erneut. Wenn dieses Problem jedoch konsequent auftritt, könnte dies darauf hindeuten, dass dieser Anzeigentyp in Ihrer geografischen Region nicht unterstützt wird.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "Derzeit sind keine Anzeigen verfügbar. Bitte versuchen Sie es in einigen Minuten erneut.",
   "REWARDED_AD_SHOW_ERROR_MSG": "Beim Abspielen der Anzeige ist ein Problem aufgetreten. Bitte versuchen Sie es in einem Moment erneut.",
   "NO_STABLE_VPN_MSG": "Sie sind mit dem VPN verbunden, aber Ihre Verbindung ist nicht stabil. Dies könnte sich in wenigen Minuten lösen. Falls nicht, senden Sie uns bitte einen Diagnosebericht.",
   "VPN_SERVICE_NOT_READY_MSG": "Der VPN-Dienst ist nicht bereit. Bitte versuchen Sie es erneut.",
