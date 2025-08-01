@@ -311,7 +311,7 @@
   "PREMIUM_LOCATION_MSG": "Seçtiğiniz sunucu artık bir premium sunucudur ve listenizde otomatik olarak güncellenecektir. Lütfen farklı bir sunucu seçin.",
   "REWARD_NOT_EARNED_MSG": "Görünüşe göre bir sorun oluştu ve bu reklamı izlemenin ödülü kaydedilmedi. Verdiğimiz rahatsızlıktan dolayı özür dileriz! Lütfen tekrar deneyin.",
   "VPN_SERVICE_TIMEOUT_MSG": "VPN hizmeti zamanında başlamadı. Lütfen tekrar deneyin.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "Üzgünüz, ancak reklam yüklenirken bir sorun oluştu. Bu durum, reklam sağlayıcısının o anda reklamının olmamasından veya geçici bir teknik sorundan kaynaklanabilir. Lütfen tekrar deneyin. Ancak, bu sorunla sürekli karşılaşırsanız, bu tür bir reklamın coğrafi bölgenizde desteklenmediğini gösterebilir.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "Şu anda herhangi bir reklam mevcut değil. Lütfen birkaç dakika sonra tekrar deneyin.",
   "REWARDED_AD_SHOW_ERROR_MSG": "Reklam oynatılırken bir sorun oluştu. Lütfen bir süre sonra tekrar deneyin.",
   "NO_STABLE_VPN_MSG": "VPN'e bağlısınız ancak bağlantınız stabil değil. Bu durum birkaç dakika içinde çözülebilir. Çözülmezse, lütfen bize bir tanılama raporu gönderin.",
   "VPN_SERVICE_NOT_READY_MSG": "VPN hizmeti hazır değil. Lütfen tekrar deneyin.",
