@@ -311,7 +311,7 @@
   "PREMIUM_LOCATION_MSG": "您选择的服务器现在是高级服务器，将自动在您的列表中更新。请选择其他服务器。",
   "REWARD_NOT_EARNED_MSG": "似乎出了点问题，观看该广告的奖励未注册。给您带来不便，我们深表歉意！请再试一次。",
   "VPN_SERVICE_TIMEOUT_MSG": "VPN服务未能及时启动。请再试一次。",
-  "REWARDED_AD_LOAD_ERROR_MSG": "抱歉，加载广告时出现问题。这可能是由于广告提供商暂时没有可用广告，或暂时性技术问题。请重试。但是，如果您持续遇到此问题，则可能表示您所在的地理区域不支持此类广告。",
+  "REWARDED_AD_LOAD_ERROR_MSG": "目前没有可用的广告。请几分钟后再试一次。",
   "REWARDED_AD_SHOW_ERROR_MSG": "播放广告时出现问题。请稍后重试。",
   "NO_STABLE_VPN_MSG": "您已连接到VPN，但您的连接不稳定。这可能会在几分钟内解决。如果不行，请向我们发送诊断报告。",
   "VPN_SERVICE_NOT_READY_MSG": "VPN服务尚未准备好。请再试一次。",
