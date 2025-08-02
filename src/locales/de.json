@@ -305,20 +305,23 @@
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN-Dienst ist auf ein Problem gestoßen. Bitte versuchen Sie es erneut.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Diagnose ist abgeschlossen und es wurde kein Problem erkannt.",
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "Während der Aktivierung des Premium-Codes ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, kontaktieren Sie uns.",
-  "PLAN_REJECTED_MSG": "Es sieht so aus, als ob Ihr ausgewählter Verbindungstyp (Kostenlos, Anzeige ansehen oder Premium testen) nicht bestätigt wurde. Keine Sorge, wählen Sie einfach eine andere Verbindungsmethode!",
+  "PLAN_REJECTED_MSG": "Die von dir gewählte Verbindungsmethode (Gratis, Werbung ansehen oder Premium testen) wurde abgelehnt. Keine Sorge, wähle einfach eine andere Verbindungsart!",
   "MAINTENANCE_MODE_MSG": "Unsere Server befinden sich derzeit im Wartungsmodus. Wir arbeiten daran, alles wieder zum Laufen zu bringen, also versuchen Sie es bitte in Kürze erneut!",
   "NO_SERVER_AVAILABLE_MSG": "Es sieht so aus, als ob der von Ihnen gewählte Server nicht mehr verfügbar ist. Wir werden ihn automatisch aus Ihrer Liste entfernen, also wählen Sie bitte einen anderen Server, um eine Verbindung herzustellen.",
   "PREMIUM_LOCATION_MSG": "Ihr ausgewählter Server ist jetzt ein Premium-Server und wird automatisch in Ihrer Liste aktualisiert. Bitte wählen Sie einen anderen Server aus.",
   "REWARD_NOT_EARNED_MSG": "Es scheint ein Problem gegeben zu haben und die Belohnung für das Ansehen dieser Anzeige wurde nicht registriert. Wir entschuldigen uns für die Unannehmlichkeiten! Bitte versuchen Sie es erneut.",
   "VPN_SERVICE_TIMEOUT_MSG": "Der VPN-Dienst ist nicht rechtzeitig gestartet. Bitte versuchen Sie es erneut.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "Derzeit sind keine Anzeigen verfügbar. Bitte versuchen Sie es in einigen Minuten erneut.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "Derzeit sind keine Anzeigen verfügbar. Bitte versuche es in ein paar Minuten erneut.",
   "REWARDED_AD_SHOW_ERROR_MSG": "Beim Abspielen der Anzeige ist ein Problem aufgetreten. Bitte versuchen Sie es in einem Moment erneut.",
   "NO_STABLE_VPN_MSG": "Sie sind mit dem VPN verbunden, aber Ihre Verbindung ist nicht stabil. Dies könnte sich in wenigen Minuten lösen. Falls nicht, senden Sie uns bitte einen Diagnosebericht.",
   "VPN_SERVICE_NOT_READY_MSG": "Der VPN-Dienst ist nicht bereit. Bitte versuchen Sie es erneut.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Der eingegebene Code ist ungültig. Bitte überprüfen Sie die Zahlen und versuchen Sie es erneut.",
   "LOGIN_CONNECTION_ERROR_MSG": "Verbindung zum Server konnte nicht hergestellt werden. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, lassen Sie es uns wissen.",
   "CUSTOM_ENDPOINT": "Benutzerdefinierte Serveradresse",
-  "CUSTOM_ENDPOINT_DESC": "Geben Sie eine IP-Adresse ein, um die Serveradresse zu überschreiben.",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein."
+  "CUSTOM_ENDPOINT_PLACE_HOLDER": "Server-IP und Port",
+  "CUSTOM_ENDPOINT_DESC": "Gib eine Server-IP und einen Port im folgenden Format ein:",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein.",
+  "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Schnellstart ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!",
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Immer aktiv ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!"
 
 }
