@@ -305,7 +305,7 @@
   "VPN_SERVICE_UNREACHABLE_MSG": "El servicio VPN encontró un problema. Por favor, inténtelo de nuevo.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "El diagnóstico ha terminado y no se ha detectado ningún problema.",
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "Ocurrió un error durante la activación del código premium. Por favor, inténtelo de nuevo. Si el problema persiste, contáctenos.",
-  "PLAN_REJECTED_MSG": "Parece que su tipo de conexión seleccionado (Gratis, Ver Anuncio o Probar Premium) no fue confirmado. ¡No se preocupe, solo elija un método diferente para conectar!",
+  "PLAN_REJECTED_MSG": "El método de conexión que seleccionaste (Gratis, Ver anuncio o Probar Premium) fue rechazado. No te preocupes, ¡simplemente elige otro tipo para conectarte!",
   "MAINTENANCE_MODE_MSG": "Nuestros servidores están en modo de mantenimiento en este momento. Estamos trabajando para que todo vuelva a funcionar, ¡así que por favor intente de nuevo en un rato!",
   "NO_SERVER_AVAILABLE_MSG": "Parece que el servidor que eligió ya no está disponible. Lo eliminaremos automáticamente de su lista, así que por favor elija un servidor diferente para conectar.",
   "PREMIUM_LOCATION_MSG": "Su servidor seleccionado ahora es un servidor premium y se actualizará automáticamente en su lista. Por favor, seleccione un servidor diferente.",
@@ -318,7 +318,10 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "El código introducido no es válido. Por favor, compruebe los números e intente de nuevo.",
   "LOGIN_CONNECTION_ERROR_MSG": "No se pudo conectar al servidor. Por favor, intente de nuevo. Si el problema persiste, háganoslo saber.",
   "CUSTOM_ENDPOINT": "Dirección de servidor personalizada",
-  "CUSTOM_ENDPOINT_DESC": "Introduce una dirección IP para anular la dirección del servidor.",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, introduce una dirección IP válida (IPv4 o IPv6)."
+  "CUSTOM_ENDPOINT_PLACE_HOLDER": "IP y puerto del servidor",
+  "CUSTOM_ENDPOINT_DESC": "Ingresa una IP y puerto del servidor en el siguiente formato:",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, introduce una dirección IP válida (IPv4 o IPv6).",
+  "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Inicio rápido es una función premium. ¡Mejora tu plan para desbloquearla!",
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Siempre activo es una función premium. ¡Mejora tu plan para desbloquearla!"
 
 }
