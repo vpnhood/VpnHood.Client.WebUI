@@ -305,20 +305,23 @@
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN服务遇到问题。请再试一次。",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "诊断程序已完成，未检测到问题",
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "高级代码激活时发生错误。请再试一次。如果问题仍然存在，请联系我们。",
-  "PLAN_REJECTED_MSG": "您选择的连接类型（免费、观看广告或试用高级版）似乎未确认。不用担心，只需选择其他连接方式即可！",
+  "PLAN_REJECTED_MSG": "你选择的连接方式（免费、观看广告或试用高级版）已被拒绝。别担心，只需选择另一种连接方式即可！",
   "MAINTENANCE_MODE_MSG": "我们的服务器目前处于维护模式。我们正在努力恢复运行，请稍后再试！",
   "NO_SERVER_AVAILABLE_MSG": "您选择的服务器似乎不再可用。我们会自动将其从您的列表中删除，请选择其他服务器进行连接。",
   "PREMIUM_LOCATION_MSG": "您选择的服务器现在是高级服务器，将自动在您的列表中更新。请选择其他服务器。",
   "REWARD_NOT_EARNED_MSG": "似乎出了点问题，观看该广告的奖励未注册。给您带来不便，我们深表歉意！请再试一次。",
   "VPN_SERVICE_TIMEOUT_MSG": "VPN服务未能及时启动。请再试一次。",
-  "REWARDED_AD_LOAD_ERROR_MSG": "目前没有可用的广告。请几分钟后再试一次。",
+  "REWARDED_AD_LOAD_ERROR_MSG": "目前没有可用广告。请几分钟后再试。",
   "REWARDED_AD_SHOW_ERROR_MSG": "播放广告时出现问题。请稍后重试。",
   "NO_STABLE_VPN_MSG": "您已连接到VPN，但您的连接不稳定。这可能会在几分钟内解决。如果不行，请向我们发送诊断报告。",
   "VPN_SERVICE_NOT_READY_MSG": "VPN服务尚未准备好。请再试一次。",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "输入的代码无效。请检查数字并重试。",
   "LOGIN_CONNECTION_ERROR_MSG": "无法连接到服务器。请重试。如果问题仍然存在，请告诉我们。",
   "CUSTOM_ENDPOINT": "自定义服务器地址",
-  "CUSTOM_ENDPOINT_DESC": "输入IP地址以覆盖服务器地址。",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。"
+  "CUSTOM_ENDPOINT_PLACE_HOLDER": "服务器 IP 和端口",
+  "CUSTOM_ENDPOINT_DESC": "请输入以下格式的服务器 IP 和端口：",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。",
+  "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "快速启动是高级功能。升级以解锁！",
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "始终开启是高级功能。升级以解锁！"
 
 }
