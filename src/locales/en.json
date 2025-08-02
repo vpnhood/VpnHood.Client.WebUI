@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "Enter an server IP and port in the following format:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Quick Launch is a premium feature. Upgrade to unlock it!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Always on is a premium feature. Upgrade to unlock it!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Always on is a premium feature. Upgrade to unlock it!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch is a premium feature. Upgrade to unlock it!"
 
 }

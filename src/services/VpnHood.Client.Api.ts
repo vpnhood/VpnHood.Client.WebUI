@@ -1783,7 +1783,6 @@ export class AppFeatures implements IAppFeatures {
     updateInfoUrl?: string | null;
     uiName?: string | null;
     isPremiumFlagSupported!: boolean;
-    isPremiumFeaturesForced!: boolean;
     isAddAccessKeySupported!: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported!: boolean;
@@ -1800,6 +1799,7 @@ export class AppFeatures implements IAppFeatures {
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
     autoRemovePremium!: boolean;
+    premiumFeatures!: AppFeature[];
     customData?: any | null;
     version!: string;
 
@@ -1812,6 +1812,7 @@ export class AppFeatures implements IAppFeatures {
         }
         if (!data) {
             this.debugCommands = [];
+            this.premiumFeatures = [];
         }
     }
 
@@ -1823,7 +1824,6 @@ export class AppFeatures implements IAppFeatures {
             this.updateInfoUrl = _data["updateInfoUrl"] !== undefined ? _data["updateInfoUrl"] : <any>null;
             this.uiName = _data["uiName"] !== undefined ? _data["uiName"] : <any>null;
             this.isPremiumFlagSupported = _data["isPremiumFlagSupported"] !== undefined ? _data["isPremiumFlagSupported"] : <any>null;
-            this.isPremiumFeaturesForced = _data["isPremiumFeaturesForced"] !== undefined ? _data["isPremiumFeaturesForced"] : <any>null;
             this.isAddAccessKeySupported = _data["isAddAccessKeySupported"] !== undefined ? _data["isAddAccessKeySupported"] : <any>null;
             this.builtInClientProfileId = _data["builtInClientProfileId"] !== undefined ? _data["builtInClientProfileId"] : <any>null;
             this.isAccountSupported = _data["isAccountSupported"] !== undefined ? _data["isAccountSupported"] : <any>null;
@@ -1847,6 +1847,14 @@ export class AppFeatures implements IAppFeatures {
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
             this.autoRemovePremium = _data["autoRemovePremium"] !== undefined ? _data["autoRemovePremium"] : <any>null;
+            if (Array.isArray(_data["premiumFeatures"])) {
+                this.premiumFeatures = [] as any;
+                for (let item of _data["premiumFeatures"])
+                    this.premiumFeatures!.push(item);
+            }
+            else {
+                this.premiumFeatures = <any>null;
+            }
             this.customData = _data["customData"] !== undefined ? _data["customData"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
         }
@@ -1867,7 +1875,6 @@ export class AppFeatures implements IAppFeatures {
         data["updateInfoUrl"] = this.updateInfoUrl !== undefined ? this.updateInfoUrl : <any>null;
         data["uiName"] = this.uiName !== undefined ? this.uiName : <any>null;
         data["isPremiumFlagSupported"] = this.isPremiumFlagSupported !== undefined ? this.isPremiumFlagSupported : <any>null;
-        data["isPremiumFeaturesForced"] = this.isPremiumFeaturesForced !== undefined ? this.isPremiumFeaturesForced : <any>null;
         data["isAddAccessKeySupported"] = this.isAddAccessKeySupported !== undefined ? this.isAddAccessKeySupported : <any>null;
         data["builtInClientProfileId"] = this.builtInClientProfileId !== undefined ? this.builtInClientProfileId : <any>null;
         data["isAccountSupported"] = this.isAccountSupported !== undefined ? this.isAccountSupported : <any>null;
@@ -1888,6 +1895,11 @@ export class AppFeatures implements IAppFeatures {
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
         data["autoRemovePremium"] = this.autoRemovePremium !== undefined ? this.autoRemovePremium : <any>null;
+        if (Array.isArray(this.premiumFeatures)) {
+            data["premiumFeatures"] = [];
+            for (let item of this.premiumFeatures)
+                data["premiumFeatures"].push(item);
+        }
         data["customData"] = this.customData !== undefined ? this.customData : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         return data;
@@ -1901,7 +1913,6 @@ export interface IAppFeatures {
     updateInfoUrl?: string | null;
     uiName?: string | null;
     isPremiumFlagSupported: boolean;
-    isPremiumFeaturesForced: boolean;
     isAddAccessKeySupported: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported: boolean;
@@ -1918,8 +1929,17 @@ export interface IAppFeatures {
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
     autoRemovePremium: boolean;
+    premiumFeatures: AppFeature[];
     customData?: any | null;
     version: string;
+}
+
+export enum AppFeature {
+    QuickLaunch = "QuickLaunch",
+    AlwaysOn = "AlwaysOn",
+    CustomDns = "CustomDns",
+    AppIpFilter = "AppIpFilter",
+    AdapterIpFilter = "AdapterIpFilter",
 }
 
 export class AppSettings implements IAppSettings {
@@ -3843,7 +3863,7 @@ export enum ExceptionType {
     UserCanceled = "UserCanceledException",
     ConnectionTimeout = "ConnectionTimeoutException",
     EndPointDiscovery = "EndPointDiscoveryException",
-    AutoStartNotSupported = "AutoStartNotSupportedException",
+    PremiumOnly = "PremiumOnlyException",
 }
 
 export enum SessionErrorCode {

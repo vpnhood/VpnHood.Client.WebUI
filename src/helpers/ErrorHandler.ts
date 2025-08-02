@@ -1,4 +1,4 @@
-import { ApiException, ExceptionType, SessionErrorCode } from '@/services/VpnHood.Client.Api';
+import { ApiException, AppFeature, ExceptionType, SessionErrorCode } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AnalyticsCustomEvent } from '@/services/Firebase';
@@ -118,6 +118,10 @@ export class ErrorHandler {
       case ExceptionType.UnreachableServerLocation:
         return this.unreachableServerLocationExceptionHandler();
 
+      // Premium exceptions
+      case ExceptionType.PremiumOnly:
+        return this.premiumOnlyExceptionHandler(err);
+
       // Currently happened only for Rewarded Ad
       case ExceptionType.LoadAd:
         return { localeKey: 'REWARDED_AD_LOAD_ERROR_MSG' };
@@ -125,10 +129,6 @@ export class ErrorHandler {
       // Currently happened only for Rewarded Ad
       case ExceptionType.ShowAd:
         return { localeKey: 'REWARDED_AD_SHOW_ERROR_MSG' };
-
-      // Quick launch isn't supported
-      case ExceptionType.AutoStartNotSupported:
-        return { localeKey: 'QUICK_LAUNCH_NOT_SUPPORTED_MSG' };
 
       // Could not connect after a specific time
       case 'ConnectionTimeoutException':
@@ -214,6 +214,20 @@ export class ErrorHandler {
       default:
         return { text: err.message ?? err };
     }
+  }
+
+  private static premiumOnlyExceptionHandler(err: ApiException): ShowErrorOptions {
+    switch (err.data?.Feature) {
+      case AppFeature.QuickLaunch:
+        return { localeKey: 'QUICK_LAUNCH_NOT_SUPPORTED_MSG' };
+      case AppFeature.AlwaysOn:
+        return { localeKey: 'ALWAYS_ON_NOT_SUPPORTED_MSG' };
+
+      // Fallback for unhandled session error codes
+      default:
+        return { text: err.message ?? err };
+    }
+
   }
 
   private static async googleBillingExceptionHandler(err: ApiException): Promise<ShowErrorOptions> {
