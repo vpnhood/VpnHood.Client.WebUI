@@ -43,12 +43,12 @@ async function saveSetting() {
   await vhApp.saveUserSetting();
 }
 function isFilterIpByDeviceAvailable(): boolean {
-  if (!vhApp.data.features.isPremiumFlagSupported)
+  if (vhApp.data.features.isPremiumFeaturesForced)
     return true;
   return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.useVpnAdapterIpFilter;
 }
 function isFilterIpByAppAvailable(): boolean {
-  if (!vhApp.data.features.isPremiumFlagSupported)
+  if (vhApp.data.features.isPremiumFeaturesForced)
     return true;
   return vhApp.isPremiumAccount() || vhApp.data.settings.userSettings.useAppIpFilter;
 }

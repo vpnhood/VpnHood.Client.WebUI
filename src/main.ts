@@ -25,15 +25,13 @@ async function main(): Promise<void> {
     const app = createApp(App);
 
     // Set the app theme
-    vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHoodConnect;
+    vuetify.theme.global.name.value = vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient;
 
     // Set the default UI language
     const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.currentUiCultureInfo.code);
     if (isUserSetDefaultLanguage) i18n.global.locale.value = vpnHoodApp.data.state.currentUiCultureInfo.code;
     // Set Vuetify current language
     vuetify.locale.current.value = i18n.global.locale.value;
-
-    console.log(vpnHoodApp.data.features.uiName);
 
     // Add language code as a class to the body element
     window.document.body.classList.add(i18n.global.locale.value);

@@ -69,7 +69,7 @@ export class VpnHoodApp {
     // below Chrome extension.
     // https://chromewebstore.google.com/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna?pli=1
     // More info: https://firebase.google.com/docs/analytics/debugview#web
-    const firebaseOptions: FirebaseOptions | undefined = appData.features.customData.firebaseOptions;
+    const firebaseOptions: FirebaseOptions | undefined = appData.features.customData?.firebaseOptions;
     if (!firebaseOptions){
       console.log('the firebaseOptions is not set in the app features -> customData -> firebaseOptions.');
     }

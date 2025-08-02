@@ -179,36 +179,56 @@ async function actionOnConfirm() {
     </v-text-field>
 
     <!-- Filter apps option -->
-    <config-card :loading="myInstalledApps.length < 1" min-height="300px">
-        <!-- Apps list -->
-        <v-list v-if="myInstalledApps.length > 1"
-          id="appFilterList"
-          select-strategy="classic"
-          bg-color="transparent"
-          selectable
+    <config-card :loading="myInstalledApps.length < 1">
+
+      <div v-if="myInstalledApps.length < 1" class="d-flex flex-column ga-2 pa-3">
+        <v-defaults-provider :defaults="{
+          'VSkeletonLoader':{
+            'color': 'rgba(var(--v-theme-card-on-grad-bg), 0.3)',
+            'type': 'list-item-avatar'
+            }
+        }"
         >
-          <v-list-item
-            v-for="(app, index) in appList"
-            :key="app.appId"
-            :value="app.appId"
-            :title="app.appName"
-            :ripple="true"
-            :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
-            class="text-caption"
-            :class="{'border-b': myInstalledApps.length > index + 1}"
-            @click="app.isSelected = !app.isSelected; saveChange()"
-          >
-            <template v-slot:append>
-              <v-switch
-                :model-value="app.isSelected"
-                :hide-details="true"
-                tabindex="-1"
-                readonly
-                density="compact"
-              />
-            </template>
-          </v-list-item>
-        </v-list>
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+          <v-skeleton-loader />
+        </v-defaults-provider>
+      </div>
+
+      <!-- Apps list -->
+      <v-list v-else
+        id="appFilterList"
+        select-strategy="classic"
+        bg-color="transparent"
+        selectable
+      >
+        <v-list-item
+          v-for="(app, index) in appList"
+          :key="app.appId"
+          :value="app.appId"
+          :title="app.appName"
+          :ripple="true"
+          :prepend-avatar="'data:image/png;base64, ' + app.iconPng"
+          class="text-caption"
+          :class="{'border-b': myInstalledApps.length > index + 1}"
+          @click="app.isSelected = !app.isSelected; saveChange()"
+        >
+          <template v-slot:append>
+            <v-switch
+              :model-value="app.isSelected"
+              :hide-details="true"
+              tabindex="-1"
+              readonly
+              density="compact"
+            />
+          </template>
+        </v-list-item>
+      </v-list>
 
     </config-card>
 

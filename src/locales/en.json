@@ -305,20 +305,23 @@
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN service encountered an issue. Please try again.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Diagnoser has finished and no issue has been detected",
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "An error occurred during premium code activation. Please try again. If the issue persists, contact us.",
-  "PLAN_REJECTED_MSG": "It looks like your selected connection type (Free, Watch Ad, or Try Premium) wasn't confirmed. No worries, just pick a different method to connect!",
+  "PLAN_REJECTED_MSG": "The connection method you selected (Free, Watch Ad, or Try Premium) was refused. No worries, just pick a different type to connect!",
   "MAINTENANCE_MODE_MSG": "Our servers are in maintenance mode at the moment. We're working to get things back up and running, so please try again in a little while!",
   "NO_SERVER_AVAILABLE_MSG": "It looks like the server you chose isn't available anymore. We'll automatically remove it from your list, so please pick a different server to connect.",
   "PREMIUM_LOCATION_MSG": "Your selected server is now a premium server and will be automatically updated in your list. Please select a different server.",
   "REWARD_NOT_EARNED_MSG": "It seems there was an issue and the reward for watching that ad wasn't registered. We're sorry for the inconvenience! Please give it another try.",
   "VPN_SERVICE_TIMEOUT_MSG": "The VPN service didn't start in time. Please try again.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "No ads are currently available for display, or this ad format isn’t supported in your country. Please try again in a few minutes.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "No ads is currently available. Please try again in a few minutes.",
   "REWARDED_AD_SHOW_ERROR_MSG": "There was an issue playing the ad. Please try again in a moment.",
   "NO_STABLE_VPN_MSG": "You're connected to the VPN, but your connection isn't stable. This might resolve in a few minutes. If not, please send us a diagnostic report.",
   "VPN_SERVICE_NOT_READY_MSG": "The VPN service isn't ready. Please try again. If the issue persists, let us know.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "The code entered is invalid. Please check the numbers and try again.",
   "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know.",
   "CUSTOM_ENDPOINT": "Custom server address",
-  "CUSTOM_ENDPOINT_DESC": "Enter an IP address to override the server address.",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6)."
+  "CUSTOM_ENDPOINT_PLACE_HOLDER": "Server IP and port",
+  "CUSTOM_ENDPOINT_DESC": "Enter an server IP and port in the following format:",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6).",
+  "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Quick Launch is a premium feature. Upgrade to unlock it!",
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Always on is a premium feature. Upgrade to unlock it!"
 
 }

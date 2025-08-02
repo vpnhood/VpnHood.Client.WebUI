@@ -226,6 +226,9 @@ interface IThemeColorNames {
   'scroll-track': string,
   'scroll-thumb': string,
   'scroll-thumb-hover': string,
+
+
+  'skeleton-loader': string,
 }
 
 const vhConnectThemeColors: IThemeColorNames = {
@@ -238,6 +241,7 @@ const vhConnectThemeColors: IThemeColorNames = {
 
   'app-bar': myColors.purple['500'],
   'on-app-bar': '#ffffff',
+  'skeleton-loader': myColors.purple['300'],
 
   /*** Navigation drawer ***/
   'navigation-drawer': myColors.purple['400'],
@@ -407,6 +411,7 @@ const vhClientThemeColors: IThemeColorNames = {
   'app-bg': myColors.blue['400'],
   'app-bar': myColors.blue['200'],
   'on-app-bar': '#ffffff',
+  'skeleton-loader': myColors.blue['300'],
 
   /*** Navigation drawer ***/
   'navigation-drawer': "#ffffff",
@@ -733,7 +738,7 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: AppName.VpnHoodConnect,
+    defaultTheme: AppName.VpnHoodClient,
     themes: {
       VpnHoodClient: {
         dark: false,

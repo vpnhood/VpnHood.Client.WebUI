@@ -1799,6 +1799,7 @@ export class AppFeatures implements IAppFeatures {
     isLocalNetworkSupported!: boolean;
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
+    autoRemovePremium!: boolean;
     customData?: any | null;
     version!: string;
 
@@ -1845,6 +1846,7 @@ export class AppFeatures implements IAppFeatures {
             this.isLocalNetworkSupported = _data["isLocalNetworkSupported"] !== undefined ? _data["isLocalNetworkSupported"] : <any>null;
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
+            this.autoRemovePremium = _data["autoRemovePremium"] !== undefined ? _data["autoRemovePremium"] : <any>null;
             this.customData = _data["customData"] !== undefined ? _data["customData"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
         }
@@ -1885,6 +1887,7 @@ export class AppFeatures implements IAppFeatures {
         data["isLocalNetworkSupported"] = this.isLocalNetworkSupported !== undefined ? this.isLocalNetworkSupported : <any>null;
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
+        data["autoRemovePremium"] = this.autoRemovePremium !== undefined ? this.autoRemovePremium : <any>null;
         data["customData"] = this.customData !== undefined ? this.customData : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         return data;
@@ -1914,6 +1917,7 @@ export interface IAppFeatures {
     isLocalNetworkSupported: boolean;
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
+    autoRemovePremium: boolean;
     customData?: any | null;
     version: string;
 }
@@ -2383,7 +2387,6 @@ export class AppState implements IAppState {
     promptForLog!: boolean;
     logExists!: boolean;
     hasDiagnoseRequested!: boolean;
-    hasDisconnectedByUser!: boolean;
     clientCountryCode?: string | null;
     clientCountryName?: string | null;
     versionStatus!: VersionStatus;
@@ -2423,7 +2426,6 @@ export class AppState implements IAppState {
             this.promptForLog = _data["promptForLog"] !== undefined ? _data["promptForLog"] : <any>null;
             this.logExists = _data["logExists"] !== undefined ? _data["logExists"] : <any>null;
             this.hasDiagnoseRequested = _data["hasDiagnoseRequested"] !== undefined ? _data["hasDiagnoseRequested"] : <any>null;
-            this.hasDisconnectedByUser = _data["hasDisconnectedByUser"] !== undefined ? _data["hasDisconnectedByUser"] : <any>null;
             this.clientCountryCode = _data["clientCountryCode"] !== undefined ? _data["clientCountryCode"] : <any>null;
             this.clientCountryName = _data["clientCountryName"] !== undefined ? _data["clientCountryName"] : <any>null;
             this.versionStatus = _data["versionStatus"] !== undefined ? _data["versionStatus"] : <any>null;
@@ -2458,7 +2460,6 @@ export class AppState implements IAppState {
         data["promptForLog"] = this.promptForLog !== undefined ? this.promptForLog : <any>null;
         data["logExists"] = this.logExists !== undefined ? this.logExists : <any>null;
         data["hasDiagnoseRequested"] = this.hasDiagnoseRequested !== undefined ? this.hasDiagnoseRequested : <any>null;
-        data["hasDisconnectedByUser"] = this.hasDisconnectedByUser !== undefined ? this.hasDisconnectedByUser : <any>null;
         data["clientCountryCode"] = this.clientCountryCode !== undefined ? this.clientCountryCode : <any>null;
         data["clientCountryName"] = this.clientCountryName !== undefined ? this.clientCountryName : <any>null;
         data["versionStatus"] = this.versionStatus !== undefined ? this.versionStatus : <any>null;
@@ -2486,7 +2487,6 @@ export interface IAppState {
     promptForLog: boolean;
     logExists: boolean;
     hasDiagnoseRequested: boolean;
-    hasDisconnectedByUser: boolean;
     clientCountryCode?: string | null;
     clientCountryName?: string | null;
     versionStatus: VersionStatus;
@@ -2848,7 +2848,6 @@ export class AppSessionStatus implements IAppSessionStatus {
     tcpPassthruCount!: number;
     packetChannelCount!: number;
     isUdpMode!: boolean;
-    isWaitingForAd!: boolean;
     canExtendByRewardedAd!: boolean;
     sessionMaxTraffic!: number;
     sessionExpirationTime?: Date | null;
@@ -2883,7 +2882,6 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.tcpPassthruCount = _data["tcpPassthruCount"] !== undefined ? _data["tcpPassthruCount"] : <any>null;
             this.packetChannelCount = _data["packetChannelCount"] !== undefined ? _data["packetChannelCount"] : <any>null;
             this.isUdpMode = _data["isUdpMode"] !== undefined ? _data["isUdpMode"] : <any>null;
-            this.isWaitingForAd = _data["isWaitingForAd"] !== undefined ? _data["isWaitingForAd"] : <any>null;
             this.canExtendByRewardedAd = _data["canExtendByRewardedAd"] !== undefined ? _data["canExtendByRewardedAd"] : <any>null;
             this.sessionMaxTraffic = _data["sessionMaxTraffic"] !== undefined ? _data["sessionMaxTraffic"] : <any>null;
             this.sessionExpirationTime = _data["sessionExpirationTime"] ? new Date(_data["sessionExpirationTime"].toString()) : <any>null;
@@ -2910,7 +2908,6 @@ export class AppSessionStatus implements IAppSessionStatus {
         data["tcpPassthruCount"] = this.tcpPassthruCount !== undefined ? this.tcpPassthruCount : <any>null;
         data["packetChannelCount"] = this.packetChannelCount !== undefined ? this.packetChannelCount : <any>null;
         data["isUdpMode"] = this.isUdpMode !== undefined ? this.isUdpMode : <any>null;
-        data["isWaitingForAd"] = this.isWaitingForAd !== undefined ? this.isWaitingForAd : <any>null;
         data["canExtendByRewardedAd"] = this.canExtendByRewardedAd !== undefined ? this.canExtendByRewardedAd : <any>null;
         data["sessionMaxTraffic"] = this.sessionMaxTraffic !== undefined ? this.sessionMaxTraffic : <any>null;
         data["sessionExpirationTime"] = this.sessionExpirationTime ? this.sessionExpirationTime.toISOString() : <any>null;
@@ -2930,7 +2927,6 @@ export interface IAppSessionStatus {
     tcpPassthruCount: number;
     packetChannelCount: number;
     isUdpMode: boolean;
-    isWaitingForAd: boolean;
     canExtendByRewardedAd: boolean;
     sessionMaxTraffic: number;
     sessionExpirationTime?: Date | null;
@@ -3847,6 +3843,7 @@ export enum ExceptionType {
     UserCanceled = "UserCanceledException",
     ConnectionTimeout = "ConnectionTimeoutException",
     EndPointDiscovery = "EndPointDiscoveryException",
+    AutoStartNotSupported = "AutoStartNotSupportedException",
 }
 
 export enum SessionErrorCode {

@@ -70,25 +70,23 @@ async function saveNewClientProfileName(): Promise<void> {
 }
 // Change client profile custom endpoint
 async function saveCustomEndpoint(): Promise<void> {
-  const endpointValue = customEndpoint.value?.trim();
-  invalidIpError.value = (endpointValue && !isValidIP(endpointValue)) ? locale('CUSTOM_ENDPOINT_VALIDATION_ERROR') : null;
-  if (invalidIpError.value)
-    return;
-
-  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
-
-  const newEndpoint = endpointValue ? [endpointValue] : null;
-  const params = new ClientProfileUpdateParams({
-    customServerEndpoints: new PatchOfStringOf({ value: newEndpoint })
-  });
-
-  await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
+  try {
+    const endpointValue = customEndpoint.value?.trim();
+    const newEndpoint = endpointValue ? [endpointValue] : null;
+    const params = new ClientProfileUpdateParams({
+      customServerEndpoints: new PatchOfStringOf({ value: newEndpoint })
+    });
+    await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
+    closeCustomEndpointDialog();
+  }
+  catch{
+    invalidIpError.value = locale('CUSTOM_ENDPOINT_VALIDATION_ERROR');
+  }
 }
-
-function isValidIP(ip: string): boolean {
-  const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
-  const ipv6Regex = /^(([0-9a-fA-F]{1,4}):){7}([0-9a-fA-F]{1,4})$/;
-  return  ipv4Regex.test(ip) || ipv6Regex.test(ip);
+function closeCustomEndpointDialog(): void {
+  customEndpoint.value = null;
+  invalidIpError.value = null;
+  ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
 }
 </script>
 
@@ -274,13 +272,31 @@ function isValidIP(ip: string): boolean {
         <v-text-field
           v-model="customEndpoint"
           :error-messages="invalidIpError"
+          :placeholder="locale('CUSTOM_ENDPOINT_PLACE_HOLDER')"
           spellcheck="false"
           autocomplete="off"
           color="highlight"
-          :hint="locale('CUSTOM_ENDPOINT_DESC')"
-          persistent-hint
           :clearable="true">
         </v-text-field>
+        <p class="text-caption mb-2">{{locale('CUSTOM_ENDPOINT_DESC')}}</p>
+        <v-chip
+        density="compact"
+        color="sample-ip-filter-bg"
+        size="small"
+        class="px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text"
+        style="border-radius: 3px; letter-spacing: 1px;"
+        variant="flat"
+        text="IPv4: 192.0.2.1:443"
+        />
+        <v-chip
+          density="compact"
+          color="sample-ip-filter-bg"
+          size="small"
+          class="px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text"
+          style="border-radius: 3px; letter-spacing: 1px;"
+          variant="flat"
+          text="IPv6: [2001:db8::1]:443"
+        />
       </v-card-text>
 
       <v-card-actions>
@@ -288,7 +304,7 @@ function isValidIP(ip: string): boolean {
         <!-- Cancel button -->
         <v-btn
           :text="locale('CANCEL')"
-          @click="ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false)"
+          @click="closeCustomEndpointDialog()"
         />
 
         <!-- Save button -->

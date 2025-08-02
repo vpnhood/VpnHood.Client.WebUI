@@ -67,20 +67,10 @@ function isUdpUnsupported(): boolean {
           <!-- TCP -->
           <v-radio :value="Protocols.TCP" class="mb-3">
             <template v-slot:label>
-              <div class="d-flex flex-column">
-                <span>{{ locale('PROTOCOL_TCP') }}</span>
-                <span class="text-disabled text-caption">{{ locale('PROTOCOL_TCP_DESC') }}</span>
-              </div>
-            </template>
-          </v-radio>
-
-          <!-- TCP & Drop HTTP/3 -->
-          <v-radio :value="Protocols.TcpAndDropHTTP3">
-            <template v-slot:label>
               <div class="d-flex flex-column align-start">
-                <span>{{ locale('PROTOCOL_DROP_QUIC') }}</span>
+                <span>{{ locale('PROTOCOL_TCP') }}</span>
                 <span class="text-disabled text-caption">
-                  {{ locale('PROTOCOL_DROP_QUIC_DESC') }}
+                  {{ locale('PROTOCOL_TCP_DESC') }}
                   <v-chip
                     color="highlight"
                     :text="locale('DEFAULT')"
@@ -90,6 +80,16 @@ function isUdpUnsupported(): boolean {
                     tabindex="-1"
                   />
                 </span>
+              </div>
+            </template>
+          </v-radio>
+
+          <!-- TCP & Drop HTTP/3 -->
+          <v-radio :value="Protocols.TcpAndDropHTTP3">
+            <template v-slot:label>
+              <div class="d-flex flex-column">
+                <span>{{ locale('PROTOCOL_DROP_QUIC') }}</span>
+                <span class="text-disabled text-caption">{{ locale('PROTOCOL_DROP_QUIC_DESC') }}</span>
               </div>
             </template>
           </v-radio>

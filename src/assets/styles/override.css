@@ -40,3 +40,6 @@
 .v-btn--disabled {
     opacity: 0.50;
 }
+.v-skeleton-loader__bone::after {
+    background: linear-gradient(90deg, rgba(var(--v-theme-skeleton-loader), 0), rgba(var(--v-theme-skeleton-loader), 0.3), rgba(var(--v-theme-skeleton-loader), 0));
+}

@@ -93,7 +93,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
     :temporary="true"
     :disable-route-watcher="true"
     :floating="true"
-    :style="edgeToEdgeHeight(true)"
+
   >
     <!-- Header -->
     <div class="bg-navigation-drawer-header d-flex align-center pa-4" :style="edgeToEdgeHeight(false)">
@@ -109,7 +109,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <div class="ms-3">
         <!-- App name -->
-        <h4 dir="ltr" :class="vuetify.locale.isRtl.value? 'text-end' : 'text-start'">
+        <h4 dir="ltr" :class="vuetify.locale.isRtl.value? 'text-end' : 'text-start'" class="text-no-wrap">
           {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
         </h4>
 
@@ -257,7 +257,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
     </v-list>
 
     <!-- Bottom section -->
-    <div class="text-center position-fixed bottom-0 w-100">
+    <div class="text-center position-fixed bottom-0 w-100" :style="edgeToEdgeHeight(true)">
 
       <!-- Social icons -->
 <!--      <div class="d-flex justify-center ga-3 mb-5">

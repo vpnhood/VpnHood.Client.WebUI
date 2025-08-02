@@ -126,6 +126,10 @@ export class ErrorHandler {
       case ExceptionType.ShowAd:
         return { localeKey: 'REWARDED_AD_SHOW_ERROR_MSG' };
 
+      // Quick launch isn't supported
+      case ExceptionType.AutoStartNotSupported:
+        return { localeKey: 'QUICK_LAUNCH_NOT_SUPPORTED_MSG' };
+
       // Could not connect after a specific time
       case 'ConnectionTimeoutException':
         return { localeKey: 'CONNECTION_TIMEOUT_MSG', action: { showDiagnose: true } };
