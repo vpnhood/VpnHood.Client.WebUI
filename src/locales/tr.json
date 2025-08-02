@@ -305,20 +305,23 @@
   "VPN_SERVICE_UNREACHABLE_MSG": "VPN hizmeti bir sorunla karşılaştı. Lütfen tekrar deneyin.",
   "DIAGNOSE_FINISHED_NO_ERROR_MSG": "Tanılama tamamlandı ve hiçbir sorun tespit edilmedi.",
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "Premium kod aktivasyonu sırasında bir hata oluştu. Lütfen tekrar deneyin. Sorun devam ederse, bizimle iletişime geçin.",
-  "PLAN_REJECTED_MSG": "Görünüşe göre seçtiğiniz bağlantı türü (Ücretsiz, Reklam İzle veya Premium Dene) onaylanmadı. Endişelenmeyin, bağlanmak için farklı bir yöntem seçmeniz yeterli!",
+  "PLAN_REJECTED_MSG": "Seçtiğiniz bağlantı yöntemi (Ücretsiz, Reklam İzle veya Premium Deneyin) reddedildi. Endişelenmeyin, bağlanmak için farklı bir yöntem seçin!",
   "MAINTENANCE_MODE_MSG": "Sunucularımız şu anda bakım modundadır. Her şeyi tekrar çalışır hale getirmek için çalışıyoruz, bu yüzden lütfen birazdan tekrar deneyin!",
   "NO_SERVER_AVAILABLE_MSG": "Görünüşe göre seçtiğiniz sunucu artık mevcut değil. Listeden otomatik olarak kaldırılacaktır, bu yüzden lütfen bağlanmak için farklı bir sunucu seçin.",
   "PREMIUM_LOCATION_MSG": "Seçtiğiniz sunucu artık bir premium sunucudur ve listenizde otomatik olarak güncellenecektir. Lütfen farklı bir sunucu seçin.",
   "REWARD_NOT_EARNED_MSG": "Görünüşe göre bir sorun oluştu ve bu reklamı izlemenin ödülü kaydedilmedi. Verdiğimiz rahatsızlıktan dolayı özür dileriz! Lütfen tekrar deneyin.",
   "VPN_SERVICE_TIMEOUT_MSG": "VPN hizmeti zamanında başlamadı. Lütfen tekrar deneyin.",
-  "REWARDED_AD_LOAD_ERROR_MSG": "Şu anda herhangi bir reklam mevcut değil. Lütfen birkaç dakika sonra tekrar deneyin.",
+  "REWARDED_AD_LOAD_ERROR_MSG": "Şu anda mevcut reklam yok. Lütfen birkaç dakika sonra tekrar deneyin.",
   "REWARDED_AD_SHOW_ERROR_MSG": "Reklam oynatılırken bir sorun oluştu. Lütfen bir süre sonra tekrar deneyin.",
   "NO_STABLE_VPN_MSG": "VPN'e bağlısınız ancak bağlantınız stabil değil. Bu durum birkaç dakika içinde çözülebilir. Çözülmezse, lütfen bize bir tanılama raporu gönderin.",
   "VPN_SERVICE_NOT_READY_MSG": "VPN hizmeti hazır değil. Lütfen tekrar deneyin.",
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Girilen kod geçersiz. Lütfen numaraları kontrol edin ve tekrar deneyin.",
   "LOGIN_CONNECTION_ERROR_MSG": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin. Sorun devam ederse bize bildirin.",
   "CUSTOM_ENDPOINT": "Özel sunucu adresi",
-  "CUSTOM_ENDPOINT_DESC": "Sunucu adresini geçersiz kılmak için bir IP adresi girin.",
-  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin."
+  "CUSTOM_ENDPOINT_PLACE_HOLDER": "Sunucu IP'si ve portu",
+  "CUSTOM_ENDPOINT_DESC": "Aşağıdaki formatta bir sunucu IP'si ve port girin:",
+  "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin.",
+  "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Hızlı Başlatma premium bir özelliktir. Kilidini açmak için yükseltin!",
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Her zaman açık özelliği premium bir özelliktir. Kilidini açmak için yükseltin!"
 
 }
