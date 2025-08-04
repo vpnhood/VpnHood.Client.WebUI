@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "أدخل عنوان IP ومنفذ الخادم بالتنسيق التالي:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "الرجاء إدخال عنوان IP صالح (IPv4 أو IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "التشغيل السريع ميزة بريميوم. قم بالترقية للوصول إليها!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "الوضع الدائم ميزة بريميوم. قم بالترقية للوصول إليها!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "الوضع الدائم ميزة بريميوم. قم بالترقية للوصول إليها!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "ميزة \"Kill Switch\" هي ميزة مدفوعة. قم بالترقية لفتحها!"
 
 }
