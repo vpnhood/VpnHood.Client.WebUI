@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "Введите IP-адрес сервера и порт в следующем формате:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Пожалуйста, введите действительный IP-адрес (IPv4 или IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Быстрый запуск — это функция Premium. Обновите, чтобы разблокировать!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Всегда включено — это функция Premium. Обновите, чтобы разблокировать!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Всегда включено — это функция Premium. Обновите, чтобы разблокировать!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch — это премиальная функция. Обновите версию, чтобы разблокировать её!"
 
 }
