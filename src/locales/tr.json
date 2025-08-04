@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "Aşağıdaki formatta bir sunucu IP'si ve port girin:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin.",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Hızlı Başlatma premium bir özelliktir. Kilidini açmak için yükseltin!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Her zaman açık özelliği premium bir özelliktir. Kilidini açmak için yükseltin!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Her zaman açık özelliği premium bir özelliktir. Kilidini açmak için yükseltin!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch bir premium özelliktir. Kilidini açmak için yükseltme yapın!"
 
 }
