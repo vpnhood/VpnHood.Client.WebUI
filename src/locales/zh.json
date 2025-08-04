@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "请输入以下格式的服务器 IP 和端口：",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "快速启动是高级功能。升级以解锁！",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "始终开启是高级功能。升级以解锁！"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "始终开启是高级功能。升级以解锁！",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch 是一项高级功能。升级以解锁它！"
 
 }
