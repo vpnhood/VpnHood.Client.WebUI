@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "Digite um IP e porta de servidor no seguinte formato:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, insira um endereço IP válido (IPv4 ou IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Lançamento rápido é um recurso premium. Faça upgrade para desbloqueá-lo!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Sempre ativo é um recurso premium. Faça upgrade para desbloqueá-lo!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Sempre ativo é um recurso premium. Faça upgrade para desbloqueá-lo!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch é um recurso premium. Faça o upgrade para desbloqueá-lo!"
 
 }
