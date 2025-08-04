@@ -322,6 +322,7 @@
   "CUSTOM_ENDPOINT_DESC": "Gib eine Server-IP und einen Port im folgenden Format ein:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein.",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Schnellstart ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!",
-  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Immer aktiv ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!"
+  "ALWAYS_ON_NOT_SUPPORTED_MSG": "Immer aktiv ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!",
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill Switch ist eine Premium-Funktion. Upgrade, um sie freizuschalten!"
 
 }
