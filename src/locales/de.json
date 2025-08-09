@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "Sie sind im Diagnosemodus verbunden.",
   "DIAGNOSING": "Diagnose",
   "WAITING": "Warten",
+  "UNSTABLE": "Instabil",
   "ADD_SERVER": "Server hinzufügen",
   "DIAGNOSE": "Diagnose",
   "REMOVE": "Löschen",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein.",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Schnellstart ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "Immer aktiv ist eine Premium-Funktion. Upgrade erforderlich zum Freischalten!",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill Switch ist eine Premium-Funktion. Upgrade, um sie freizuschalten!"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill Switch ist eine Premium-Funktion. Upgrade, um sie freizuschalten!",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "Es scheint ein Problem mit deinem Google-Konto zu geben. Bitte stelle sicher, dass du bei einem gültigen Google-Konto angemeldet bist und dass die Google Play App auf dem neuesten Stand ist.",
+  "FEEDBACK": "Feedback",
+  "FEEDBACK_DESC": "Ich hoffe, du hast eine großartige Erfahrung gemacht. Warst du mit meiner Arbeit zufrieden?",
+  "SUBMIT": "Absenden",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "Beschreibung",
+  "USER_REVIEW_SORRY_MSG": "Tut mir leid, dass meine Arbeit nicht deinen Erwartungen entsprochen hat! Ich würde gerne wissen, was schiefgelaufen ist, damit ich es verbessern kann.",
+  "USER_REVIEW_GLAD_MSG": "Ich freue mich, dass dir meine Arbeit gefallen hat!",
+  "THANK_YOU": "Danke",
+  "SEND": "Senden"
 }
