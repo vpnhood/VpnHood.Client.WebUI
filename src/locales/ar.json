@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "أنت متصل في وضع التشخيص.",
   "DIAGNOSING": "تشخيص",
   "WAITING": "انتظار",
+  "UNSTABLE": "غير مستقر",
   "ADD_SERVER": "إضافة خادم",
   "DIAGNOSE": "تشخيص",
   "REMOVE": "حذف",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "الرجاء إدخال عنوان IP صالح (IPv4 أو IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "التشغيل السريع ميزة بريميوم. قم بالترقية للوصول إليها!",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "الوضع الدائم ميزة بريميوم. قم بالترقية للوصول إليها!",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "ميزة \"Kill Switch\" هي ميزة مدفوعة. قم بالترقية لفتحها!"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "ميزة \"Kill Switch\" هي ميزة مدفوعة. قم بالترقية لفتحها!",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "يبدو أن هناك مشكلة في حسابك على Google. يرجى التأكد من أنك سجلت الدخول إلى حساب Google صالح وأن تطبيق Google Play محدّث.",
+  "FEEDBACK": "ملاحظات",
+  "FEEDBACK_DESC": "آمل أن تكون تجربتك رائعة. هل كنت راضيًا عن عملي؟",
+  "SUBMIT": "إرسال",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "الوصف",
+  "USER_REVIEW_SORRY_MSG": "عذرًا، لم يكن عملي على المستوى المطلوب! أود أن أعرف ما الخطأ حتى أتمكن من تحسينه.",
+  "USER_REVIEW_GLAD_MSG": "أنا سعيد لأن عملي أعجبك!",
+  "THANK_YOU": "شكرًا لك",
+  "SEND": "إرسال"
 }
