@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "Teşhis modunda bağlandınız.",
   "DIAGNOSING": "Teşhis Ediliyor",
   "WAITING": "Bekliyor",
+  "UNSTABLE": "Kararsız",
   "ADD_SERVER": "Sunucu Ekle",
   "DIAGNOSE": "Teşhis Et",
   "REMOVE": "Sil",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin.",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Hızlı Başlatma premium bir özelliktir. Kilidini açmak için yükseltin!",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "Her zaman açık özelliği premium bir özelliktir. Kilidini açmak için yükseltin!",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch bir premium özelliktir. Kilidini açmak için yükseltme yapın!"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch bir premium özelliktir. Kilidini açmak için yükseltme yapın!",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "Google hesabınızla ilgili bir sorun var gibi görünüyor. Lütfen geçerli bir Google hesabına giriş yaptığınızdan ve Google Play uygulamasının güncel olduğundan emin olun.",
+  "FEEDBACK": "Geri Bildirim",
+  "FEEDBACK_DESC": "Umarım harika bir deneyim yaşıyorsunuzdur. Çalışmamdan memnun kaldınız mı?",
+  "SUBMIT": "Gönder",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "Açıklama",
+  "USER_REVIEW_SORRY_MSG": "Üzgünüm, çalışmam beklentilerinizi karşılamadı! Daha iyi hale getirebilmem için neyin yanlış gittiğini öğrenmek isterim.",
+  "USER_REVIEW_GLAD_MSG": "Çalışmamı beğenmenize sevindim!",
+  "THANK_YOU": "Teşekkürler",
+  "SEND": "Gönder"
 }
