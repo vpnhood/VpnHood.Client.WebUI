@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "Você está conectado no modo de diagnóstico.",
   "DIAGNOSING": "Diagnosticando",
   "WAITING": "Aguardando",
+  "UNSTABLE": "Instável",
   "ADD_SERVER": "Adicionar servidor",
   "DIAGNOSE": "Diagnosticar",
   "REMOVE": "Excluir",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Por favor, insira um endereço IP válido (IPv4 ou IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Lançamento rápido é um recurso premium. Faça upgrade para desbloqueá-lo!",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "Sempre ativo é um recurso premium. Faça upgrade para desbloqueá-lo!",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch é um recurso premium. Faça o upgrade para desbloqueá-lo!"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch é um recurso premium. Faça o upgrade para desbloqueá-lo!",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "Parece haver um problema com sua conta do Google. Certifique-se de que está conectado a uma conta do Google válida e que o aplicativo Google Play está atualizado.",
+  "FEEDBACK": "Feedback",
+  "FEEDBACK_DESC": "Espero que você esteja tendo uma ótima experiência. Você ficou satisfeito com meu trabalho?",
+  "SUBMIT": "Enviar",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "Descrição",
+  "USER_REVIEW_SORRY_MSG": "Desculpe por meu trabalho não ter atendido às expectativas! Gostaria de saber o que deu errado para que eu possa melhorar.",
+  "USER_REVIEW_GLAD_MSG": "Fico feliz que tenha gostado do meu trabalho!",
+  "THANK_YOU": "Obrigado",
+  "SEND": "Enviar"
 }
