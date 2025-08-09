@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "您已在诊断模式下连接。",
   "DIAGNOSING": "诊断",
   "WAITING": "等待",
+  "UNSTABLE": "不稳定",
   "ADD_SERVER": "添加服务器",
   "DIAGNOSE": "诊断",
   "REMOVE": "删除",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "快速启动是高级功能。升级以解锁！",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "始终开启是高级功能。升级以解锁！",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch 是一项高级功能。升级以解锁它！"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch 是一项高级功能。升级以解锁它！",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "您的 Google 账户似乎存在问题。请确保您已登录有效的 Google 账户，并且 Google Play 应用已是最新版本。",
+  "FEEDBACK": "反馈",
+  "FEEDBACK_DESC": "希望您拥有愉快的体验。您对我的工作满意吗？",
+  "SUBMIT": "提交",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "描述",
+  "USER_REVIEW_SORRY_MSG": "很抱歉我的工作没有达到您的期望！我希望了解哪里出了问题，以便改进。",
+  "USER_REVIEW_GLAD_MSG": "很高兴您喜欢我的工作！",
+  "THANK_YOU": "谢谢您",
+  "SEND": "发送"
 }
