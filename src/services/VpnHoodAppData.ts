@@ -46,17 +46,22 @@ export class VpnHoodAppData {
       orgConnectionState === AppConnectionState.Connected ||
       orgConnectionState === AppConnectionState.Connecting ||
       orgConnectionState === AppConnectionState.Initializing ||
-      orgConnectionState === AppConnectionState.Waiting
+      orgConnectionState === AppConnectionState.Waiting ||
+      orgConnectionState === AppConnectionState.Unstable
     )) {
       return AppConnectionState.None;
     }
 
-    return this.state.connectionState;
+    return orgConnectionState === AppConnectionState.Unstable ? AppConnectionState.Connected : orgConnectionState;
   }
 
   get connectionStateText(): string {
     if (this.connectionState === AppConnectionState.WaitingForAd) {
       return i18n.global.t('LOADING_AD');
+    }
+
+    if (this.isUnstable) {
+      return i18n.global.t('UNSTABLE');
     }
 
     return this.connectionState === AppConnectionState.None
@@ -65,6 +70,10 @@ export class VpnHoodAppData {
   }
 
   get isConnected(): boolean {
-    return this.connectionState === AppConnectionState.Connected;
+    return this.connectionState === AppConnectionState.Connected || this.connectionState === AppConnectionState.Unstable;
+  }
+
+  get isUnstable(): boolean {
+    return this.state.connectionState === AppConnectionState.Unstable;
   }
 }

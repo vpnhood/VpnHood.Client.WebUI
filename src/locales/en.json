@@ -19,6 +19,7 @@
   "CONNECTED_IN_DIAGNOSTIC_MODE": "You are connected in diagnostic mode.",
   "DIAGNOSING": "Diagnosing",
   "WAITING": "Waiting",
+  "UNSTABLE": "Unstable",
   "ADD_SERVER": "Add server",
   "DIAGNOSE": "Diagnose",
   "REMOVE": "Delete",
@@ -323,6 +324,14 @@
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6).",
   "QUICK_LAUNCH_NOT_SUPPORTED_MSG": "Quick Launch is a premium feature. Upgrade to unlock it!",
   "ALWAYS_ON_NOT_SUPPORTED_MSG": "Always on is a premium feature. Upgrade to unlock it!",
-  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch is a premium feature. Upgrade to unlock it!"
-
+  "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch is a premium feature. Upgrade to unlock it!",
+  "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "There seems to be an issue with your Google account. Please ensure that you are logged into a valid Google account and that the Google Play app is up to date.",
+  "FEEDBACK": "Feedback",
+  "FEEDBACK_DESC": "I hope you're having a great experience. Were you happy with my work?",
+  "SUBMIT": "Submit",
+  "USER_REVIEW_TEXT_PLACEHOLDER": "Description",
+  "USER_REVIEW_SORRY_MSG": "Sorry my work didn’t hit the mark! I’d love to know what went wrong so I can make it better.",
+  "USER_REVIEW_GLAD_MSG": "I'm glad you liked my work!",
+  "THANK_YOU": "Thank you",
+  "SEND": "Send"
 }

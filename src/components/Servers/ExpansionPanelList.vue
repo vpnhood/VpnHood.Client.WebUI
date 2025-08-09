@@ -2,6 +2,7 @@
 import { Util } from '@/helpers/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import {
+  ApiException,
   ClientProfileInfo,
   ClientProfileUpdateParams,
   PatchOfString,
@@ -79,14 +80,18 @@ async function saveCustomEndpoint(): Promise<void> {
     await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
     closeCustomEndpointDialog();
   }
-  catch{
+  catch(err: unknown){
+    if (err instanceof ApiException) {
+      invalidIpError.value = err.message;
+      return;
+    }
     invalidIpError.value = locale('CUSTOM_ENDPOINT_VALIDATION_ERROR');
   }
 }
 function closeCustomEndpointDialog(): void {
+  ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
   customEndpoint.value = null;
   invalidIpError.value = null;
-  ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
 }
 </script>
 

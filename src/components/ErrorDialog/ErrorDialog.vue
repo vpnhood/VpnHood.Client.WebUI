@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
 import { ConnectManager } from '@/helpers/ConnectManager';
@@ -21,6 +20,7 @@ const emit = defineEmits<{
 const dialogData = computed(() => vhApp.data.uiState.errorDialogData);
 
 async function changeLocationToAuto(clientProfileId: string): Promise<void> {
+
   await vhApp.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
     selectedLocation: new PatchOfString({value: "*/*"})
   }));
@@ -36,31 +36,16 @@ async function diagnose(): Promise<void> {
 
 async function sendReport(): Promise<void> {
   try {
-    const reportId: string =
-      new Date().toISOString().substring(0, 19).replace(/:/g, '').replace(/-/g, '') + '-' +
-      vhApp.data.settings.clientId.substring(0, 8) + '@' +
-      Math.random().toString().substring(2, 10);
+    const clientId = vhApp.data.settings.clientId.substring(0, 8);
 
-    if (!vhApp.data.features.isTv){
-      const link: string = `https://docs.google.com/forms/d/e/1FAIpQLSeOT6vs9yTqhAONM2rJg8Acae-oPZTecoVrdPrzJ-3VsgJk0A/viewform?usp=sf_link&entry.450665336=${reportId}`;
-      window.open(link, 'VpnHood-BugReport');
-    }
-
-    // get the report
+    // get the report file content.
     const url: string = vhApp.data.serverUrl + UiConstants.logFileLocation;
     const response: Response = await fetch(url);
-    const log: Blob = await response.blob();
+    const fileContent: string = await response.text();
 
-    // Create a root reference
-    const storage = getStorage();
-    const spacePath: string = `logs/${reportId}.txt`;
-    const storageRef = ref(storage, spacePath);
-
-    // Send the report
-    uploadBytes(storageRef, log).then(() => {
-      console.log('Report has been sent!');
-    });
-  } catch (ex) {
+    await vhApp.vhFirebase?.sendReport(fileContent, clientId, 'logs', vhApp.data.features.isTv);
+  }
+  catch (ex) {
     console.error('Oops! Could not even send the report details!', ex);
   }
 }
@@ -86,15 +71,16 @@ async function closeDialog(): Promise<void> {
 
       <v-card-item class="py-1">
 
-        <v-defaults-provider :defaults="{
+          <v-defaults-provider :defaults="{
           'VBtn':{
-            rounded:'pill',
-            variant: 'tonal',
-            color: 'dialog-alert-btn',
-            class: 'text-transform-none mb-3',
-            block: true
-          }
-        }">
+            'rounded':'pill',
+            'variant': 'tonal',
+            'color': 'dialog-alert-btn',
+            'class': 'text-transform-none mb-3',
+            'block': true
+            }
+        }"
+          >
 
           <!-- Change location to auto -->
           <v-btn v-if="dialogData.showChangeServerToAutoButton"

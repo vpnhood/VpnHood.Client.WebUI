@@ -6,6 +6,7 @@ import i18n from '@/locales/i18n';
 import vuetify from '@/services/vuetify';
 import { AppName } from '@/helpers/UiConstants';
 import type { RouteLocationRaw } from 'vue-router';
+import { ApiException } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -65,7 +66,12 @@ async function onSignIn() {
     emit('update:modelValue', false);
     vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();
-  } finally {
+  }
+  catch (err: unknown) {
+    if (err instanceof ApiException && err.exceptionTypeName === "NoCredentialException")
+      throw new Error(locale('GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR'));
+  }
+  finally {
     vhApp.data.uiState.showLoadingDialog = false;
   }
 }

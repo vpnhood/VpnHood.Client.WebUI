@@ -1046,7 +1046,7 @@ export class AppClient {
     }
 
     openAlwaysOnPage( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/settings/open-always-on-page";
+        let url_ = this.baseUrl + "/api/app/intents/open-always-on-page";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1090,7 +1090,7 @@ export class AppClient {
     }
 
     requestQuickLaunch( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/settings/request-quick-launch";
+        let url_ = this.baseUrl + "/api/app/intents/request-quick-launch";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1133,8 +1133,52 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
+    requestUserReview( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/intents/request-user-review";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRequestUserReview(_response);
+        });
+    }
+
+    protected processRequestUserReview(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
     requestNotification( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/settings/request-notification";
+        let url_ = this.baseUrl + "/api/app/intents/request-notification";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1227,6 +1271,109 @@ export class AppClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<void>(null as any);
+    }
+
+    setUserReview(rate: number, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/user-review?";
+        if (rate === undefined || rate === null)
+            throw new Error("The parameter 'rate' must be defined and cannot be null.");
+        else
+            url_ += "rate=" + encodeURIComponent("" + rate) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSetUserReview(_response);
+        });
+    }
+
+    protected processSetUserReview(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    getCountries( cancelToken?: CancelToken): Promise<CountryInfo[]> {
+        let url_ = this.baseUrl + "/api/app/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetCountries(_response);
+        });
+    }
+
+    protected processGetCountries(response: AxiosResponse): Promise<CountryInfo[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CountryInfo.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<CountryInfo[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<CountryInfo[]>(null as any);
     }
 }
 
@@ -1789,6 +1936,7 @@ export class AppFeatures implements IAppFeatures {
     isBillingSupported!: boolean;
     isQuickLaunchSupported!: boolean;
     isNotificationSupported!: boolean;
+    isUserReviewSupported!: boolean;
     isAlwaysOnSupported!: boolean;
     isTv!: boolean;
     gaMeasurementId?: string | null;
@@ -1798,7 +1946,7 @@ export class AppFeatures implements IAppFeatures {
     isLocalNetworkSupported!: boolean;
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
-    autoRemovePremium!: boolean;
+    autoRemoveExpiredPremium!: boolean;
     premiumFeatures!: AppFeature[];
     customData?: any | null;
     version!: string;
@@ -1830,6 +1978,7 @@ export class AppFeatures implements IAppFeatures {
             this.isBillingSupported = _data["isBillingSupported"] !== undefined ? _data["isBillingSupported"] : <any>null;
             this.isQuickLaunchSupported = _data["isQuickLaunchSupported"] !== undefined ? _data["isQuickLaunchSupported"] : <any>null;
             this.isNotificationSupported = _data["isNotificationSupported"] !== undefined ? _data["isNotificationSupported"] : <any>null;
+            this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
             this.isAlwaysOnSupported = _data["isAlwaysOnSupported"] !== undefined ? _data["isAlwaysOnSupported"] : <any>null;
             this.isTv = _data["isTv"] !== undefined ? _data["isTv"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
@@ -1846,7 +1995,7 @@ export class AppFeatures implements IAppFeatures {
             this.isLocalNetworkSupported = _data["isLocalNetworkSupported"] !== undefined ? _data["isLocalNetworkSupported"] : <any>null;
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
-            this.autoRemovePremium = _data["autoRemovePremium"] !== undefined ? _data["autoRemovePremium"] : <any>null;
+            this.autoRemoveExpiredPremium = _data["autoRemoveExpiredPremium"] !== undefined ? _data["autoRemoveExpiredPremium"] : <any>null;
             if (Array.isArray(_data["premiumFeatures"])) {
                 this.premiumFeatures = [] as any;
                 for (let item of _data["premiumFeatures"])
@@ -1881,6 +2030,7 @@ export class AppFeatures implements IAppFeatures {
         data["isBillingSupported"] = this.isBillingSupported !== undefined ? this.isBillingSupported : <any>null;
         data["isQuickLaunchSupported"] = this.isQuickLaunchSupported !== undefined ? this.isQuickLaunchSupported : <any>null;
         data["isNotificationSupported"] = this.isNotificationSupported !== undefined ? this.isNotificationSupported : <any>null;
+        data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
         data["isAlwaysOnSupported"] = this.isAlwaysOnSupported !== undefined ? this.isAlwaysOnSupported : <any>null;
         data["isTv"] = this.isTv !== undefined ? this.isTv : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
@@ -1894,7 +2044,7 @@ export class AppFeatures implements IAppFeatures {
         data["isLocalNetworkSupported"] = this.isLocalNetworkSupported !== undefined ? this.isLocalNetworkSupported : <any>null;
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
-        data["autoRemovePremium"] = this.autoRemovePremium !== undefined ? this.autoRemovePremium : <any>null;
+        data["autoRemoveExpiredPremium"] = this.autoRemoveExpiredPremium !== undefined ? this.autoRemoveExpiredPremium : <any>null;
         if (Array.isArray(this.premiumFeatures)) {
             data["premiumFeatures"] = [];
             for (let item of this.premiumFeatures)
@@ -1919,6 +2069,7 @@ export interface IAppFeatures {
     isBillingSupported: boolean;
     isQuickLaunchSupported: boolean;
     isNotificationSupported: boolean;
+    isUserReviewSupported: boolean;
     isAlwaysOnSupported: boolean;
     isTv: boolean;
     gaMeasurementId?: string | null;
@@ -1928,7 +2079,7 @@ export interface IAppFeatures {
     isLocalNetworkSupported: boolean;
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
-    autoRemovePremium: boolean;
+    autoRemoveExpiredPremium: boolean;
     premiumFeatures: AppFeature[];
     customData?: any | null;
     version: string;
@@ -1947,6 +2098,7 @@ export class AppSettings implements IAppSettings {
     clientId!: string;
     isQuickLaunchEnabled?: boolean | null;
     isNotificationEnabled?: boolean | null;
+    userReview?: UserReview | null;
     isStartupTrackerSent!: boolean;
     clientIpLocation?: IpLocation | null;
     clientIpLocationByServer?: IpLocation | null;
@@ -1972,6 +2124,7 @@ export class AppSettings implements IAppSettings {
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
             this.isQuickLaunchEnabled = _data["isQuickLaunchEnabled"] !== undefined ? _data["isQuickLaunchEnabled"] : <any>null;
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
+            this.userReview = _data["userReview"] ? UserReview.fromJS(_data["userReview"]) : <any>null;
             this.isStartupTrackerSent = _data["isStartupTrackerSent"] !== undefined ? _data["isStartupTrackerSent"] : <any>null;
             this.clientIpLocation = _data["clientIpLocation"] ? IpLocation.fromJS(_data["clientIpLocation"]) : <any>null;
             this.clientIpLocationByServer = _data["clientIpLocationByServer"] ? IpLocation.fromJS(_data["clientIpLocationByServer"]) : <any>null;
@@ -1994,6 +2147,7 @@ export class AppSettings implements IAppSettings {
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
         data["isQuickLaunchEnabled"] = this.isQuickLaunchEnabled !== undefined ? this.isQuickLaunchEnabled : <any>null;
         data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
+        data["userReview"] = this.userReview ? this.userReview.toJSON() : <any>null;
         data["isStartupTrackerSent"] = this.isStartupTrackerSent !== undefined ? this.isStartupTrackerSent : <any>null;
         data["clientIpLocation"] = this.clientIpLocation ? this.clientIpLocation.toJSON() : <any>null;
         data["clientIpLocationByServer"] = this.clientIpLocationByServer ? this.clientIpLocationByServer.toJSON() : <any>null;
@@ -2009,12 +2163,57 @@ export interface IAppSettings {
     clientId: string;
     isQuickLaunchEnabled?: boolean | null;
     isNotificationEnabled?: boolean | null;
+    userReview?: UserReview | null;
     isStartupTrackerSent: boolean;
     clientIpLocation?: IpLocation | null;
     clientIpLocationByServer?: IpLocation | null;
     configTime: Date;
     userSettings: UserSettings;
     appSettingsService?: AppSettingsService | null;
+}
+
+export class UserReview implements IUserReview {
+    rate!: number;
+    time!: Date;
+    appVersion!: string;
+
+    constructor(data?: IUserReview) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rate = _data["rate"] !== undefined ? _data["rate"] : <any>null;
+            this.time = _data["time"] ? new Date(_data["time"].toString()) : <any>null;
+            this.appVersion = _data["appVersion"] !== undefined ? _data["appVersion"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserReview {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserReview();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rate"] = this.rate !== undefined ? this.rate : <any>null;
+        data["time"] = this.time ? this.time.toISOString() : <any>null;
+        data["appVersion"] = this.appVersion !== undefined ? this.appVersion : <any>null;
+        return data;
+    }
+}
+
+export interface IUserReview {
+    rate: number;
+    time: Date;
+    appVersion: string;
 }
 
 export class IpLocation implements IIpLocation {
@@ -2304,7 +2503,8 @@ export enum EndPointStrategy {
 }
 
 export class AppSettingsService implements IAppSettingsService {
-    appSettings!: AppSettings;
+    settings!: AppSettings;
+    remoteSettings?: RemoteSettings | null;
     ipFilterSettings!: IpFilterSettings;
 
     constructor(data?: IAppSettingsService) {
@@ -2315,14 +2515,15 @@ export class AppSettingsService implements IAppSettingsService {
             }
         }
         if (!data) {
-            this.appSettings = new AppSettings();
+            this.settings = new AppSettings();
             this.ipFilterSettings = new IpFilterSettings();
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.appSettings = _data["appSettings"] ? AppSettings.fromJS(_data["appSettings"]) : new AppSettings();
+            this.settings = _data["settings"] ? AppSettings.fromJS(_data["settings"]) : new AppSettings();
+            this.remoteSettings = _data["remoteSettings"] ? RemoteSettings.fromJS(_data["remoteSettings"]) : <any>null;
             this.ipFilterSettings = _data["ipFilterSettings"] ? IpFilterSettings.fromJS(_data["ipFilterSettings"]) : new IpFilterSettings();
         }
     }
@@ -2336,15 +2537,71 @@ export class AppSettingsService implements IAppSettingsService {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["appSettings"] = this.appSettings ? this.appSettings.toJSON() : <any>null;
+        data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
+        data["remoteSettings"] = this.remoteSettings ? this.remoteSettings.toJSON() : <any>null;
         data["ipFilterSettings"] = this.ipFilterSettings ? this.ipFilterSettings.toJSON() : <any>null;
         return data;
     }
 }
 
 export interface IAppSettingsService {
-    appSettings: AppSettings;
+    settings: AppSettings;
+    remoteSettings?: RemoteSettings | null;
     ipFilterSettings: IpFilterSettings;
+}
+
+export class RemoteSettings implements IRemoteSettings {
+    preloadAds!: { [key: string]: boolean; };
+
+    constructor(data?: IRemoteSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.preloadAds = {};
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (_data["preloadAds"]) {
+                this.preloadAds = {} as any;
+                for (let key in _data["preloadAds"]) {
+                    if (_data["preloadAds"].hasOwnProperty(key))
+                        (<any>this.preloadAds)![key] = _data["preloadAds"][key] !== undefined ? _data["preloadAds"][key] : <any>null;
+                }
+            }
+            else {
+                this.preloadAds = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): RemoteSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new RemoteSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.preloadAds) {
+            data["preloadAds"] = {};
+            for (let key in this.preloadAds) {
+                if (this.preloadAds.hasOwnProperty(key))
+                    (<any>data["preloadAds"])[key] = this.preloadAds[key] !== undefined ? this.preloadAds[key] : <any>null;
+            }
+        }
+        return data;
+    }
+}
+
+export interface IRemoteSettings {
+    preloadAds: { [key: string]: boolean; };
 }
 
 export class IpFilterSettings implements IIpFilterSettings {
@@ -2414,6 +2671,7 @@ export class AppState implements IAppState {
     canDisconnect!: boolean;
     canConnect!: boolean;
     canDiagnose!: boolean;
+    isUserReviewRecommended!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
@@ -2453,6 +2711,7 @@ export class AppState implements IAppState {
             this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : <any>null;
             this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : <any>null;
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
+            this.isUserReviewRecommended = _data["isUserReviewRecommended"] !== undefined ? _data["isUserReviewRecommended"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
             this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
@@ -2487,6 +2746,7 @@ export class AppState implements IAppState {
         data["canDisconnect"] = this.canDisconnect !== undefined ? this.canDisconnect : <any>null;
         data["canConnect"] = this.canConnect !== undefined ? this.canConnect : <any>null;
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
+        data["isUserReviewRecommended"] = this.isUserReviewRecommended !== undefined ? this.isUserReviewRecommended : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
         data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
@@ -2514,6 +2774,7 @@ export interface IAppState {
     canDisconnect: boolean;
     canConnect: boolean;
     canDiagnose: boolean;
+    isUserReviewRecommended: boolean;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
@@ -2528,6 +2789,7 @@ export enum AppConnectionState {
     Diagnosing = "Diagnosing",
     Connecting = "Connecting",
     Connected = "Connected",
+    Unstable = "Unstable",
     Disconnecting = "Disconnecting",
 }
 
@@ -2541,6 +2803,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     dnsServers!: string[];
     serverVersion!: string;
     clientPublicIpAddress!: string;
+    createdTime!: Date;
 
     constructor(data?: IAppSessionInfo) {
         if (data) {
@@ -2572,6 +2835,7 @@ export class AppSessionInfo implements IAppSessionInfo {
             }
             this.serverVersion = _data["serverVersion"] !== undefined ? _data["serverVersion"] : <any>null;
             this.clientPublicIpAddress = _data["clientPublicIpAddress"] !== undefined ? _data["clientPublicIpAddress"] : <any>null;
+            this.createdTime = _data["createdTime"] ? new Date(_data["createdTime"].toString()) : <any>null;
         }
     }
 
@@ -2597,6 +2861,7 @@ export class AppSessionInfo implements IAppSessionInfo {
         }
         data["serverVersion"] = this.serverVersion !== undefined ? this.serverVersion : <any>null;
         data["clientPublicIpAddress"] = this.clientPublicIpAddress !== undefined ? this.clientPublicIpAddress : <any>null;
+        data["createdTime"] = this.createdTime ? this.createdTime.toISOString() : <any>null;
         return data;
     }
 }
@@ -2611,6 +2876,7 @@ export interface IAppSessionInfo {
     dnsServers: string[];
     serverVersion: string;
     clientPublicIpAddress: string;
+    createdTime: Date;
 }
 
 export class AccessInfo implements IAccessInfo {
@@ -2867,6 +3133,8 @@ export class AppSessionStatus implements IAppSessionStatus {
     tcpTunnelledCount!: number;
     tcpPassthruCount!: number;
     packetChannelCount!: number;
+    unstableCount!: number;
+    waitingCount!: number;
     isUdpMode!: boolean;
     canExtendByRewardedAd!: boolean;
     sessionMaxTraffic!: number;
@@ -2901,6 +3169,8 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.tcpTunnelledCount = _data["tcpTunnelledCount"] !== undefined ? _data["tcpTunnelledCount"] : <any>null;
             this.tcpPassthruCount = _data["tcpPassthruCount"] !== undefined ? _data["tcpPassthruCount"] : <any>null;
             this.packetChannelCount = _data["packetChannelCount"] !== undefined ? _data["packetChannelCount"] : <any>null;
+            this.unstableCount = _data["unstableCount"] !== undefined ? _data["unstableCount"] : <any>null;
+            this.waitingCount = _data["waitingCount"] !== undefined ? _data["waitingCount"] : <any>null;
             this.isUdpMode = _data["isUdpMode"] !== undefined ? _data["isUdpMode"] : <any>null;
             this.canExtendByRewardedAd = _data["canExtendByRewardedAd"] !== undefined ? _data["canExtendByRewardedAd"] : <any>null;
             this.sessionMaxTraffic = _data["sessionMaxTraffic"] !== undefined ? _data["sessionMaxTraffic"] : <any>null;
@@ -2927,6 +3197,8 @@ export class AppSessionStatus implements IAppSessionStatus {
         data["tcpTunnelledCount"] = this.tcpTunnelledCount !== undefined ? this.tcpTunnelledCount : <any>null;
         data["tcpPassthruCount"] = this.tcpPassthruCount !== undefined ? this.tcpPassthruCount : <any>null;
         data["packetChannelCount"] = this.packetChannelCount !== undefined ? this.packetChannelCount : <any>null;
+        data["unstableCount"] = this.unstableCount !== undefined ? this.unstableCount : <any>null;
+        data["waitingCount"] = this.waitingCount !== undefined ? this.waitingCount : <any>null;
         data["isUdpMode"] = this.isUdpMode !== undefined ? this.isUdpMode : <any>null;
         data["canExtendByRewardedAd"] = this.canExtendByRewardedAd !== undefined ? this.canExtendByRewardedAd : <any>null;
         data["sessionMaxTraffic"] = this.sessionMaxTraffic !== undefined ? this.sessionMaxTraffic : <any>null;
@@ -2946,6 +3218,8 @@ export interface IAppSessionStatus {
     tcpTunnelledCount: number;
     tcpPassthruCount: number;
     packetChannelCount: number;
+    unstableCount: number;
+    waitingCount: number;
     isUdpMode: boolean;
     canExtendByRewardedAd: boolean;
     sessionMaxTraffic: number;
@@ -3888,6 +4162,46 @@ export enum SessionErrorCode {
     RedirectHost = "RedirectHost",
     UnsupportedClient = "UnsupportedClient",
     UnsupportedServer = "UnsupportedServer",
+}
+
+export class CountryInfo implements ICountryInfo {
+    englishName!: string;
+    countryCode!: string;
+
+    constructor(data?: ICountryInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.englishName = _data["englishName"] !== undefined ? _data["englishName"] : <any>null;
+            this.countryCode = _data["countryCode"] !== undefined ? _data["countryCode"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CountryInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountryInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["englishName"] = this.englishName !== undefined ? this.englishName : <any>null;
+        data["countryCode"] = this.countryCode !== undefined ? this.countryCode : <any>null;
+        return data;
+    }
+}
+
+export interface ICountryInfo {
+    englishName: string;
+    countryCode: string;
 }
 
 export class SubscriptionPlan implements ISubscriptionPlan {

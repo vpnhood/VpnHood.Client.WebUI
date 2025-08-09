@@ -35,7 +35,7 @@ export class ErrorHandler {
       text;
 
     // Send the error message to analytics
-    VpnHoodApp.instance.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
+    VpnHoodApp.instance.vhFirebase?.analyticsLogEvent(AnalyticsCustomEvent.AlertDialogEventName, {
       message: englishErrorMessage,
       ui_language: i18n.global.locale.value,
       org_message: err,

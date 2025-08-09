@@ -13,13 +13,13 @@ import { ComponentName, UiConstants } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import CountDown from '@/components/CountDown.vue';
 import { computed, ref } from 'vue';
+import UserReviewDialog from '@/components/UserReviewDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 let lastConnectPressedTime = Date.now() - 1000;
 
 async function onConnectButtonClick(): Promise<void> {
-
   // Prevent double click
   if (lastConnectPressedTime >= Date.now() - 1000)
     return;
@@ -83,20 +83,14 @@ function connectButtonText(): string {
     switch (vhApp.data.connectionState) {
       case AppConnectionState.Initializing:
         return locale('CANCEL');
-      case AppConnectionState.WaitingForAd:
-        return locale('DISCONNECT');
-      case AppConnectionState.Connecting:
-        return locale('DISCONNECT');
-      case AppConnectionState.Waiting:
-        return locale('DISCONNECT');
-      case AppConnectionState.Connected:
-        return locale('DISCONNECT');
       case AppConnectionState.Disconnecting:
         return locale('DISCONNECTING');
       case AppConnectionState.Diagnosing:
         return locale('STOP_DIAGNOSING');
-      default:
+      case AppConnectionState.None:
         return locale('CONNECT');
+      default:
+        return locale('DISCONNECT');
     }
 }
 
@@ -127,7 +121,6 @@ function appFilterStatus(): string {
       return locale('APP_FILTER_STATUS_ALL');
   }
 }
-
 
 const isShowDebugDialog = ref<boolean>(false);
 const openDebugDialogCounter = ref<number>(0);
@@ -474,6 +467,7 @@ function isDebugDataHasValue(): boolean {
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
     <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
+    <UserReviewDialog v-model="vhApp.data.state.isUserReviewRecommended" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">

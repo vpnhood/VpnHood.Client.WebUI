@@ -45,20 +45,27 @@ function determineClass(): string {
   return vhApp.data.isConnected ? 'opacity-100' : 'opacity-30';
 }
 
-// Return icon based on connection state
+// Return icon based on the connection state
 function stateIcon(): string | null {
-  if (vhApp.data.isConnected && !bandwidthUsage())
-    return 'mdi-check';
-  if (vhApp.data.connectionState === AppConnectionState.None)
-    return 'mdi-power-plug-off';
-  if (vhApp.data.connectionState === AppConnectionState.Connecting)
-    return 'mdi-power-plug';
-  if (vhApp.data.connectionState === AppConnectionState.Diagnosing)
-    return 'mdi-stethoscope';
-  if (vhApp.data.connectionState === AppConnectionState.Waiting)
-    return 'mdi-timer-sand';
+  if (vhApp.data.isUnstable)
+    return null;
 
-  return null;
+  switch (vhApp.data.connectionState) {
+    case AppConnectionState.Connected:
+      if (!bandwidthUsage())
+        return 'mdi-check';
+      return null;
+    case AppConnectionState.None:
+      return 'mdi-power-plug-off';
+    case AppConnectionState.Connecting:
+      return 'mdi-power-plug';
+    case AppConnectionState.Diagnosing:
+      return 'mdi-stethoscope';
+    case AppConnectionState.Waiting:
+      return 'mdi-timer-sand';
+    default:
+      return null;
+  }
 }
 
 // Calculate user bandwidth usage
@@ -88,7 +95,7 @@ function bandwidthUsage(): { Used: string; Total: string } | null {
   return { Used: used, Total: total };
 }
 
-// Process connect animation state for VpnHoodCONNECT
+// Process connects animation state for VpnHoodCONNECT
 function processConnectedAnimation(): void {
   if (!vhApp.data.isConnected) {
     showConnectedAnimation.value = false;
@@ -109,7 +116,11 @@ function processConnectedAnimation(): void {
     class="text-white"
   >
 
-    <div v-if="vhApp.isConnectApp()" class="position-absolute w-100 fill-height">
+    <div v-if="vhApp.isConnectApp()"
+       class="position-absolute w-100 fill-height"
+       :class="{'flasher': vhApp.data.isUnstable}"
+       style="--duration: 2s;"
+    >
       <div id="rotateCircle"></div>
     </div>
     <div v-else id="circle"></div>
@@ -126,7 +137,7 @@ function processConnectedAnimation(): void {
       </div>
 
       <!-- Check -->
-      <v-icon v-if="stateIcon()" size="50" color="white">{{ stateIcon() }}</v-icon>
+      <v-icon v-else-if="stateIcon()" size="50" color="white">{{ stateIcon() }}</v-icon>
 
       <!-- Access Key expire date -->
       <p v-if="getExpireDate()"

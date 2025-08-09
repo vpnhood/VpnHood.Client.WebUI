@@ -67,6 +67,9 @@ interface IThemeColorNames {
   'colored-bg-light': string,
   'colored-bg-dark': string,
   'app-bg': string,
+  'rate-icon': string,
+  'rate-dialog-border': string,
+  'rate-dialog-thanks': string,
 
   'app-bar': string,
   'on-app-bar': string,
@@ -238,6 +241,9 @@ const vhConnectThemeColors: IThemeColorNames = {
   'colored-bg-light': myColors.purple['500'],
   'colored-bg-dark': myColors.purple['600'],
   'app-bg': myColors.purple['500'],
+  'rate-icon': myColors.purple['200'],
+  'rate-dialog-border': myColors.purple['200'],
+  'rate-dialog-thanks': myColors.green['200'],
 
   'app-bar': myColors.purple['500'],
   'on-app-bar': '#ffffff',
@@ -412,6 +418,9 @@ const vhClientThemeColors: IThemeColorNames = {
   'app-bar': myColors.blue['200'],
   'on-app-bar': '#ffffff',
   'skeleton-loader': myColors.blue['300'],
+  'rate-icon': myColors.blue['300'],
+  'rate-dialog-border': myColors.blue['300'],
+  'rate-dialog-thanks': myColors.green['200'],
 
   /*** Navigation drawer ***/
   'navigation-drawer': "#ffffff",
@@ -638,13 +647,13 @@ export default createVuetify({
       variant:'flat',
       rounded: 'pill',
       color: 'btn-style-1',
-      class: "text-transform-none font-weight-bold"
+      class: "text-transform-none font-weight-bold",
     },
     BtnStyle2:{
-      variant: "flat",
+      variant:'flat',
       rounded: "pill",
       color: 'btn-style-2',
-      class: "text-transform-none"
+      class: "btn-style-2 text-transform-none"
     },
     BtnStyle3:{
       variant: "flat",

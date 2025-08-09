@@ -43,3 +43,10 @@
 .v-skeleton-loader__bone::after {
     background: linear-gradient(90deg, rgba(var(--v-theme-skeleton-loader), 0), rgba(var(--v-theme-skeleton-loader), 0.3), rgba(var(--v-theme-skeleton-loader), 0));
 }
+.v-btn--disabled.btn-style-2{
+    opacity: 0.50;
+    background: inherit;
+}
+.v-btn--disabled.btn-style-2 .v-btn__overlay{
+    opacity: 0;
+}

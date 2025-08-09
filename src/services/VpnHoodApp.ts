@@ -8,7 +8,8 @@ import {
   ConnectPlanId,
   DeviceAppInfo,
   PatchOfBoolean,
-  PatchOfString, ServerLocationInfo,
+  PatchOfString,
+  ServerLocationInfo,
   SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
@@ -17,27 +18,24 @@ import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
-import type { Analytics } from 'firebase/analytics';
-import { logEvent, setUserId } from 'firebase/analytics';
-import { FirebaseApp } from '@/services/Firebase';
+import { VhFirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
-import type { FirebaseOptions } from 'firebase/app';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
   public apiClient: AppClient;
   public clientProfileClient: ClientProfileClient;
-  public analytics: Analytics | null;
+  public vhFirebase: VhFirebaseApp | null;
 
-  private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, appData: VpnHoodAppData, analytics: Analytics | null) {
+  private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
       throw new Error('VpnHoodApp has been already initialized.');
 
     this.data = reactive(appData);
     this.apiClient = apiClient;
     this.clientProfileClient = clientProfileClient;
-    this.analytics = analytics;
+    this.vhFirebase = vhFirebase;
     this.data.uiState.configTime = this.data.state.configTime;
     VpnHoodApp._instance = this;
   }
@@ -62,23 +60,10 @@ export class VpnHoodApp {
       config.clientProfileInfos,
       config.availableCultureInfos
     );
-    let analytics: Analytics | null = null;
 
-    // Init firebase and analytics
-    // Note: if you want to prevent your testing and development from affecting your measurements, you must use the
-    // below Chrome extension.
-    // https://chromewebstore.google.com/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna?pli=1
-    // More info: https://firebase.google.com/docs/analytics/debugview#web
-    const firebaseOptions: FirebaseOptions | undefined = appData.features.customData?.firebaseOptions;
-    if (!firebaseOptions){
-      console.log('the firebaseOptions is not set in the app features -> customData -> firebaseOptions.');
-    }
-    else {
-      analytics = FirebaseApp.initialize(appData.features.customData.firebaseOptions);
-      setUserId(analytics, config.settings.clientId);
-    }
+    const firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.settings.clientId);
 
-    return new VpnHoodApp(apiClient, clientProfileClient, appData, analytics);
+    return new VpnHoodApp(apiClient, clientProfileClient, appData, firebase);
   }
 
   public async reloadState(): Promise<void> {
@@ -138,7 +123,7 @@ export class VpnHoodApp {
 
     // Navigate to home page
     if (goToHome && router.currentRoute.value.name !== 'HOME')
-      await router.replace({name: 'HOME'});
+      await router.replace({ name: 'HOME' });
 
     this.data.uiState.uiConnectInProgress = true;
 
@@ -155,11 +140,9 @@ export class VpnHoodApp {
       }));
       this.data.settings.userSettings.clientProfileId = clientProfileId;
       await this.saveUserSetting();
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       console.log(err);
-    }
-    finally {
+    } finally {
       // Reload to apply the latest clientProfileInfos updates
       await this.reloadSettings();
       this.data.uiState.uiConnectInProgress = false;
@@ -170,8 +153,7 @@ export class VpnHoodApp {
     try {
       this.data.uiState.uiDisconnectInProgress = true;
       await this.apiClient.disconnect();
-    }
-    finally {
+    } finally {
       await this.reloadState();
       this.data.uiState.uiDisconnectInProgress = false;
     }
@@ -208,23 +190,13 @@ export class VpnHoodApp {
 
   public async diagnose(): Promise<void> {
     if (!this.data.settings.userSettings.clientProfileId) {
-      await router.replace({name: 'SERVERS'});
+      await router.replace({ name: 'SERVERS' });
       return;
     }
     try {
       await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
-    }
-    catch (err: unknown) {
-      console.log(err);
-    }
-  }
-
-  public analyticsLogEvent(eventName: string, eventParams: object) {
-    if (!this.analytics) return;
-    try {
-      logEvent(this.analytics, eventName, eventParams);
     } catch (err: unknown) {
-      console.error(`An error occurred while logging event to Analytics. Error: ${err}`);
+      console.log(err);
     }
   }
 
@@ -262,13 +234,12 @@ export class VpnHoodApp {
     await this.apiClient.versionCheck();
   }
 
-  getCurrentServerLocationInfo(): ServerLocationInfo | null | undefined{
-    if (this.data.isConnected){
-      return  this.data.state.sessionInfo?.serverLocationInfo ??
+  getCurrentServerLocationInfo(): ServerLocationInfo | null | undefined {
+    if (this.data.isConnected) {
+      return this.data.state.sessionInfo?.serverLocationInfo ??
         this.data.state.clientProfile?.selectedLocationInfo;
-    }
-    else {
-      return  this.data.state.clientProfile?.selectedLocationInfo;
+    } else {
+      return this.data.state.clientProfile?.selectedLocationInfo;
     }
   }
 
@@ -310,7 +281,7 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string, hasCloseButton?: boolean,): void {
+  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string, hasCloseButton?: boolean): void {
     this.data.uiState.generalSnackbarData.message = message;
     this.data.uiState.generalSnackbarData.bgColor = bgColor ?? 'highlight';
     this.data.uiState.generalSnackbarData.hasTimer = hasTimer ?? true;
@@ -422,16 +393,16 @@ export class VpnHoodApp {
     await this.reloadSettings();
   }
 
-  public getEdgeToEdgeTopHeight(): number | null{
-    let topHeight  = this.data.state.systemBarsInfo.topHeight;
+  public getEdgeToEdgeTopHeight(): number | null {
+    let topHeight = this.data.state.systemBarsInfo.topHeight;
     if (topHeight > 0)
       topHeight = Math.ceil(topHeight / window.devicePixelRatio) + 3;
 
     return topHeight > 0 ? topHeight : null;
   }
 
-  public getEdgeToEdgeBottomHeight(): number | null{
-    let bottomHeight  = this.data.state.systemBarsInfo.bottomHeight;
+  public getEdgeToEdgeBottomHeight(): number | null {
+    let bottomHeight = this.data.state.systemBarsInfo.bottomHeight;
     if (bottomHeight > 0)
       bottomHeight = Math.ceil(bottomHeight / window.devicePixelRatio) + 3;
 
