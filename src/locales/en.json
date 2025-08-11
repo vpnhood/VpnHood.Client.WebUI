@@ -156,6 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "Automatically renewed monthly.",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Cancel anytime on Google Play.",
   "ALWAYS_ON": "Always On",
+  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
   "SUPPORT": "24/7 Support",
   "ACTIVE": "Active",
   "AUTO_SELECT": "Auto Select",
@@ -333,5 +334,6 @@
   "USER_REVIEW_SORRY_MSG": "Sorry my work didn’t hit the mark! I’d love to know what went wrong so I can make it better.",
   "USER_REVIEW_GLAD_MSG": "I'm glad you liked my work!",
   "THANK_YOU": "Thank you",
-  "SEND": "Send"
+  "SEND": "Send",
+  "SYSTEM_SETTINGS": "System settings"
 }

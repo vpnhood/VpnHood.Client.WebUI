@@ -1045,8 +1045,8 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    openAlwaysOnPage( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/open-always-on-page";
+    requestAlwaysOn( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/intents/request-always-on";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1064,11 +1064,11 @@ export class AppClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processOpenAlwaysOnPage(_response);
+            return this.processRequestAlwaysOn(_response);
         });
     }
 
-    protected processOpenAlwaysOnPage(response: AxiosResponse): Promise<void> {
+    protected processRequestAlwaysOn(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1273,18 +1273,18 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    setUserReview(rate: number, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/user-review?";
-        if (rate === undefined || rate === null)
-            throw new Error("The parameter 'rate' must be defined and cannot be null.");
-        else
-            url_ += "rate=" + encodeURIComponent("" + rate) + "&";
+    setUserReview(userReview: UserReview2, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/user-review";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(userReview);
+
         let options_: AxiosRequestConfig = {
+            data: content_,
             method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
             },
             cancelToken
         };
@@ -2174,6 +2174,7 @@ export interface IAppSettings {
 
 export class UserReview implements IUserReview {
     rate!: number;
+    rating!: number;
     time!: Date;
     appVersion!: string;
 
@@ -2189,6 +2190,7 @@ export class UserReview implements IUserReview {
     init(_data?: any) {
         if (_data) {
             this.rate = _data["rate"] !== undefined ? _data["rate"] : <any>null;
+            this.rating = _data["rating"] !== undefined ? _data["rating"] : <any>null;
             this.time = _data["time"] ? new Date(_data["time"].toString()) : <any>null;
             this.appVersion = _data["appVersion"] !== undefined ? _data["appVersion"] : <any>null;
         }
@@ -2204,6 +2206,7 @@ export class UserReview implements IUserReview {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["rate"] = this.rate !== undefined ? this.rate : <any>null;
+        data["rating"] = this.rating !== undefined ? this.rating : <any>null;
         data["time"] = this.time ? this.time.toISOString() : <any>null;
         data["appVersion"] = this.appVersion !== undefined ? this.appVersion : <any>null;
         return data;
@@ -2212,6 +2215,7 @@ export class UserReview implements IUserReview {
 
 export interface IUserReview {
     rate: number;
+    rating: number;
     time: Date;
     appVersion: string;
 }
@@ -2551,7 +2555,7 @@ export interface IAppSettingsService {
 }
 
 export class RemoteSettings implements IRemoteSettings {
-    preloadAds!: { [key: string]: boolean; };
+    rejectAdBlocker!: boolean;
 
     constructor(data?: IRemoteSettings) {
         if (data) {
@@ -2560,23 +2564,11 @@ export class RemoteSettings implements IRemoteSettings {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-        if (!data) {
-            this.preloadAds = {};
-        }
     }
 
     init(_data?: any) {
         if (_data) {
-            if (_data["preloadAds"]) {
-                this.preloadAds = {} as any;
-                for (let key in _data["preloadAds"]) {
-                    if (_data["preloadAds"].hasOwnProperty(key))
-                        (<any>this.preloadAds)![key] = _data["preloadAds"][key] !== undefined ? _data["preloadAds"][key] : <any>null;
-                }
-            }
-            else {
-                this.preloadAds = <any>null;
-            }
+            this.rejectAdBlocker = _data["rejectAdBlocker"] !== undefined ? _data["rejectAdBlocker"] : <any>null;
         }
     }
 
@@ -2589,19 +2581,13 @@ export class RemoteSettings implements IRemoteSettings {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (this.preloadAds) {
-            data["preloadAds"] = {};
-            for (let key in this.preloadAds) {
-                if (this.preloadAds.hasOwnProperty(key))
-                    (<any>data["preloadAds"])[key] = this.preloadAds[key] !== undefined ? this.preloadAds[key] : <any>null;
-            }
-        }
+        data["rejectAdBlocker"] = this.rejectAdBlocker !== undefined ? this.rejectAdBlocker : <any>null;
         return data;
     }
 }
 
 export interface IRemoteSettings {
-    preloadAds: { [key: string]: boolean; };
+    rejectAdBlocker: boolean;
 }
 
 export class IpFilterSettings implements IIpFilterSettings {
@@ -4138,6 +4124,7 @@ export enum ExceptionType {
     ConnectionTimeout = "ConnectionTimeoutException",
     EndPointDiscovery = "EndPointDiscoveryException",
     PremiumOnly = "PremiumOnlyException",
+    AdBlocker = "AdBlockerException",
 }
 
 export enum SessionErrorCode {
@@ -4162,6 +4149,46 @@ export enum SessionErrorCode {
     RedirectHost = "RedirectHost",
     UnsupportedClient = "UnsupportedClient",
     UnsupportedServer = "UnsupportedServer",
+}
+
+export class UserReview2 implements IUserReview2 {
+    rating!: number;
+    reviewText!: string;
+
+    constructor(data?: IUserReview2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rating = _data["rating"] !== undefined ? _data["rating"] : <any>null;
+            this.reviewText = _data["reviewText"] !== undefined ? _data["reviewText"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserReview2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserReview2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rating"] = this.rating !== undefined ? this.rating : <any>null;
+        data["reviewText"] = this.reviewText !== undefined ? this.reviewText : <any>null;
+        return data;
+    }
+}
+
+export interface IUserReview2 {
+    rating: number;
+    reviewText: string;
 }
 
 export class CountryInfo implements ICountryInfo {

@@ -419,8 +419,8 @@ const vhClientThemeColors: IThemeColorNames = {
   'on-app-bar': '#ffffff',
   'skeleton-loader': myColors.blue['300'],
   'rate-icon': myColors.blue['300'],
-  'rate-dialog-border': myColors.blue['300'],
-  'rate-dialog-thanks': myColors.green['200'],
+  'rate-dialog-border': myColors.blue['100'],
+  'rate-dialog-thanks': myColors.green['300'],
 
   /*** Navigation drawer ***/
   'navigation-drawer': "#ffffff",
