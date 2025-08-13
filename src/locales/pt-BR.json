@@ -156,7 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "Renovado automaticamente mensalmente.",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Cancele a qualquer momento na Google Play.",
   "ALWAYS_ON": "Sempre Ativo",
-  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
+  "ALWAYS_ON_DESC": "Mantém seu dispositivo conectado à VPN o tempo todo, garantindo acesso seguro e privado à internet — mesmo após reinicializações ou mudanças de rede.",
   "SUPPORT": "Suporte 24/7",
   "ACTIVE": "Ativo",
   "AUTO_SELECT": "Seleção Auto",
@@ -335,5 +335,18 @@
   "USER_REVIEW_GLAD_MSG": "Fico feliz que tenha gostado do meu trabalho!",
   "THANK_YOU": "Obrigado",
   "SEND": "Enviar",
-  "SYSTEM_SETTINGS": "System settings"
+  "SYSTEM_SETTINGS": "Configurações do sistema",
+  "OPEN_SYSTEM_SETTINGS": "Abrir configurações do sistema",
+  "PRIVATE_DNS": "DNS <span class=\"text-promote-premium-color-premium\">privado</span>",
+  "PRIVATE_DNS_DIALOG_MSG": "Parece que o DNS privado está ativado no seu dispositivo, um recurso disponível exclusivamente no nosso plano premium.",
+  "TURN_OFF_PRIVATE_DNS_MSG": "Desative o DNS privado para continuar usando o aplicativo gratuitamente.",
+  "GO_PREMIUM_AND_UNLOCK_FEATURES": "Assine o plano premium e desbloqueie mais funcionalidades.",
+  "TURN_OFF": "Desativar",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "Para desativar o DNS privado, siga estas etapas:",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "Se isso não resolver o problema, pode haver uma falha na sua rede.",
+  "TURN_OFF_PRIVATE_DNS_STEP_1": "Abra as <strong>Configurações</strong> do seu dispositivo.",
+  "TURN_OFF_PRIVATE_DNS_STEP_2": "Toque no ícone de <strong>pesquisa</strong>.",
+  "TURN_OFF_PRIVATE_DNS_STEP_3": "Digite <strong>\"DNS\"</strong> e selecione a opção <strong>DNS privado</strong> <span class=\"text-disabled\">(Private DNS)</span>.",
+  "TURN_OFF_PRIVATE_DNS_STEP_4": "Selecione <strong>Desativar</strong>.",
+  "TURN_OFF_PRIVATE_DNS": "Desative o DNS privado"
 }
