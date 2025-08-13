@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "系统设置",
   "OPEN_SYSTEM_SETTINGS": "打开系统设置",
   "PRIVATE_DNS": "专用 <span class=\"text-promote-premium-color-premium\">DNS</span>",
-  "PRIVATE_DNS_DIALOG_MSG": "看起来您的设备已启用专用 DNS，该功能仅在我们的高级套餐中提供。",
+  "PRIVATE_DNS_DIALOG_MSG": "看起来您的设备已启用专用 DNS。此功能仅在我们的高级套餐中提供，可能会影响免费版本中的广告投放。",
   "TURN_OFF_PRIVATE_DNS_MSG": "关闭专用 DNS 以继续免费使用该应用。",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "升级至高级版，解锁更多功能。",
   "TURN_OFF": "关闭",
