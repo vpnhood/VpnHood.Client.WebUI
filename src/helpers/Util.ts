@@ -1,4 +1,4 @@
-import { ApiException, ClientProfileInfo } from '@/services/VpnHood.Client.Api';
+import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/services/vuetify';
 
 export class Util {
@@ -44,7 +44,7 @@ export class Util {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  public static sendTestError(): void {
+/*  public static sendTestError(): void {
     const errorMessage = 'Something went wrong';
     const statusCode = 401;
     const responseBody = {
@@ -61,5 +61,5 @@ export class Util {
 
     const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
     throw apiException;
-  }
+  }*/
 }

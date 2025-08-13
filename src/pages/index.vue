@@ -21,8 +21,6 @@ let lastConnectPressedTime = Date.now() - 1000;
 
 async function onConnectButtonClick(): Promise<void> {
 
-  Util.sendTestError();
-  return;
   // Prevent double click
   if (lastConnectPressedTime >= Date.now() - 1000)
     return;

@@ -29,6 +29,10 @@
     transition: all 1.5s ease;
 }
 
+#circleOuter.unstable:before{
+    animation: pulseOpacity 2s infinite;
+}
+
 .state-initializing #circleOuter:before,
 .state-initializing #circle,
 .state-diagnosing #circleOuter:before,

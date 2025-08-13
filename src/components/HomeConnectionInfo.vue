@@ -112,7 +112,7 @@ function processConnectedAnimation(): void {
 <template>
   <div
     :id="vhApp.isConnectApp() ? 'connectionCircleIndicator' : 'circleOuter'"
-    :class="determineClass()"
+    :class="[(vhApp.data.isUnstable && !vhApp.isConnectApp()) ? 'unstable' : '', determineClass()]"
     class="text-white"
   >
 
@@ -123,6 +123,8 @@ function processConnectedAnimation(): void {
     >
       <div id="rotateCircle"></div>
     </div>
+
+
     <div v-else id="circle"></div>
 
     <div class="d-flex flex-column align-center justify-center position-relative fill-height">
