@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "إعدادات النظام",
   "OPEN_SYSTEM_SETTINGS": "افتح إعدادات النظام",
   "PRIVATE_DNS": "<span class=\"text-promote-premium-color-premium\">DNS</span> خاص",
-  "PRIVATE_DNS_DIALOG_MSG": "يبدو أن DNS الخاص نشط على جهازك، وهو متاح حصريًا مع خطتنا المميزة.",
+  "PRIVATE_DNS_DIALOG_MSG": "يبدو أن DNS الخاص نشط على جهازك. هذه الميزة متوفرة حصريًا ضمن خطتنا المميزة وقد تؤثر على عرض الإعلانات في النسخة المجانية.",
   "TURN_OFF_PRIVATE_DNS_MSG": "أوقف تشغيل DNS الخاص للاستمرار في استخدام التطبيق مجانًا.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "اشترك في الخطة المميزة وافتح المزيد من الميزات.",
   "TURN_OFF": "إيقاف التشغيل",
