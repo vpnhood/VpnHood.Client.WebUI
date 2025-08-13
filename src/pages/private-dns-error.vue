@@ -21,8 +21,10 @@ const locale = i18n.global.t;
         @click="router.go(-1)"
       />
 
-      <h3 class="text-center mb-3" v-html="locale('PRIVATE_DNS')" />
-      <p class="text-center px-5">{{locale("PRIVATE_DNS_DIALOG_MSG")}}</p>
+      <div class="px-3">
+        <h3 class="text-center mb-2" v-html="locale('PRIVATE_DNS')" />
+        <p>{{locale("PRIVATE_DNS_DIALOG_MSG")}}</p>
+      </div>
 
       <v-img
         :eager="true"

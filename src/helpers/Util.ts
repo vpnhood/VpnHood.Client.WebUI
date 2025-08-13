@@ -44,7 +44,7 @@ export class Util {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-/*  public static sendTestError(): void {
+ /* public static sendTestError(): void {
     const errorMessage = 'Something went wrong';
     const statusCode = 401;
     const responseBody = {
