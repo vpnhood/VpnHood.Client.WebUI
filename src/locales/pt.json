@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "Configurações do sistema",
   "OPEN_SYSTEM_SETTINGS": "Abrir configurações do sistema",
   "PRIVATE_DNS": "DNS <span class=\"text-promote-premium-color-premium\">privado</span>",
-  "PRIVATE_DNS_DIALOG_MSG": "Parece que o DNS privado está ativo no seu dispositivo, recurso disponível exclusivamente no nosso plano premium.",
+  "PRIVATE_DNS_DIALOG_MSG": "Parece que o DNS privado está ativo no seu dispositivo. Esse recurso está disponível exclusivamente no nosso plano premium e pode interferir na exibição de anúncios na versão gratuita.",
   "TURN_OFF_PRIVATE_DNS_MSG": "Desative o DNS privado para continuar usando o aplicativo gratuitamente.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "Assine o plano premium e desbloqueie mais recursos.",
   "TURN_OFF": "Desativar",
