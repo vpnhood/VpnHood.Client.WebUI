@@ -156,7 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "स्वतः मासिक नवीकरण।",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Google Play पर कभी भी रद्द करें।",
   "ALWAYS_ON": "हमेशा चालू",
-  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
+  "ALWAYS_ON_DESC": "आपका डिवाइस हमेशा VPN से जुड़ा रहता है, जिससे पुनः प्रारंभ या नेटवर्क परिवर्तन के बाद भी सुरक्षित और निजी इंटरनेट एक्सेस सुनिश्चित होता है।",
   "SUPPORT": "24/7 समर्थन",
   "ACTIVE": "सक्रिय",
   "AUTO_SELECT": "स्वचालित चयन",
@@ -335,5 +335,18 @@
   "USER_REVIEW_GLAD_MSG": "मुझे खुशी है कि आपको मेरा काम पसंद आया!",
   "THANK_YOU": "धन्यवाद",
   "SEND": "भेजें",
-  "SYSTEM_SETTINGS": "System settings"
+  "SYSTEM_SETTINGS": "सिस्टम सेटिंग्स",
+  "OPEN_SYSTEM_SETTINGS": "सिस्टम सेटिंग्स खोलें",
+  "PRIVATE_DNS": "निजी <span class=\"text-promote-premium-color-premium\">DNS</span>",
+  "PRIVATE_DNS_DIALOG_MSG": "ऐसा लगता है कि आपके डिवाइस पर निजी DNS सक्रिय है, जो केवल हमारी प्रीमियम योजना के साथ उपलब्ध है।",
+  "TURN_OFF_PRIVATE_DNS_MSG": "ऐप को मुफ्त में उपयोग करना जारी रखने के लिए निजी DNS बंद करें।",
+  "GO_PREMIUM_AND_UNLOCK_FEATURES": "प्रीमियम पर जाएं और अधिक सुविधाओं को अनलॉक करें।",
+  "TURN_OFF": "बंद करें",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "निजी DNS बंद करने के लिए कृपया निम्न चरणों का पालन करें:",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "यदि इससे समस्या हल नहीं होती है, तो आपके नेटवर्क में कोई समस्या हो सकती है।",
+  "TURN_OFF_PRIVATE_DNS_STEP_1": "अपने डिवाइस की <strong>सेटिंग्स</strong> खोलें।",
+  "TURN_OFF_PRIVATE_DNS_STEP_2": "<strong>खोज</strong> आइकन पर टैप करें।",
+  "TURN_OFF_PRIVATE_DNS_STEP_3": "<strong>\"DNS\"</strong> टाइप करें और <strong>निजी DNS</strong> विकल्प चुनें <span class=\"text-disabled\">(Private DNS)</span>।",
+  "TURN_OFF_PRIVATE_DNS_STEP_4": "<strong>बंद करें</strong> चुनें।",
+  "TURN_OFF_PRIVATE_DNS": "निजी DNS बंद करें"
 }
