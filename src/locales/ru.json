@@ -156,6 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "Автоматически обновляется ежемесячно.",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Отменить в любое время в Google Play.",
   "ALWAYS_ON": "Всегда включен",
+  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
   "SUPPORT": "Поддержка 24/7",
   "ACTIVE": "Активный",
   "AUTO_SELECT": "Авто Выбор",
@@ -333,5 +334,19 @@
   "USER_REVIEW_SORRY_MSG": "Извините, что моя работа не оправдала ожиданий! Мне бы хотелось узнать, что пошло не так, чтобы я мог это исправить.",
   "USER_REVIEW_GLAD_MSG": "Я рад, что вам понравилась моя работа!",
   "THANK_YOU": "Спасибо",
-  "SEND": "Отправить"
+  "SEND": "Отправить",
+  "SYSTEM_SETTINGS": "System settings",
+  "OPEN_SYSTEM_SETTINGS": "Open system settings",
+  "PRIVATE_DNS": "Private <span class=\"text-promote-premium-color-premium\">DNS</span>",
+  "PRIVATE_DNS_DIALOG_MSG": "It looks like Private DNS is active on your device, which is available exclusively with our premium plan.",
+  "TURN_OFF_PRIVATE_DNS_MSG": "Turn off private DNS to continue using the app for free.",
+  "GO_PREMIUM_AND_UNLOCK_FEATURES": "Go premium and unlock more features.",
+  "TURN_OFF": "Turn off",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "To turn off your private DNS, please follow these steps:",
+  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "If that doesn't solve the issue, there may be a problem with your network.",
+  "TURN_OFF_PRIVATE_DNS_STEP_1": "Open your device's <strong>Settings</strong>.",
+  "TURN_OFF_PRIVATE_DNS_STEP_2": "Tap the <strong>search</strong> icon.",
+  "TURN_OFF_PRIVATE_DNS_STEP_3": "Type <strong>\"DNS\"</strong> and select the <strong>Private DNS</strong> option.",
+  "TURN_OFF_PRIVATE_DNS_STEP_4": "Select <strong>Off</strong>.",
+  "TURN_OFF_PRIVATE_DNS": "Turn off private DNS"
 }
