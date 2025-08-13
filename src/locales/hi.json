@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "सिस्टम सेटिंग्स",
   "OPEN_SYSTEM_SETTINGS": "सिस्टम सेटिंग्स खोलें",
   "PRIVATE_DNS": "निजी <span class=\"text-promote-premium-color-premium\">DNS</span>",
-  "PRIVATE_DNS_DIALOG_MSG": "ऐसा लगता है कि आपके डिवाइस पर निजी DNS सक्रिय है, जो केवल हमारी प्रीमियम योजना के साथ उपलब्ध है।",
+  "PRIVATE_DNS_DIALOG_MSG": "ऐसा लगता है कि आपके डिवाइस पर निजी DNS सक्रिय है। यह सुविधा केवल हमारी प्रीमियम योजना में उपलब्ध है और मुफ्त संस्करण में विज्ञापन वितरण को प्रभावित कर सकती है।",
   "TURN_OFF_PRIVATE_DNS_MSG": "ऐप को मुफ्त में उपयोग करना जारी रखने के लिए निजी DNS बंद करें।",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "प्रीमियम पर जाएं और अधिक सुविधाओं को अनलॉक करें।",
   "TURN_OFF": "बंद करें",
