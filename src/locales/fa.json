@@ -348,6 +348,5 @@
   "TURN_OFF_PRIVATE_DNS_STEP_2": "روی آیکون <strong>جستجو</strong> ضربه بزنید.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "عبارت <strong>\"DNS\"</strong> را تایپ کرده و گزینه <strong>DNS خصوصی</strong> را انتخاب کنید <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "گزینه <strong>خاموش</strong> را انتخاب کنید.",
-  "TURN_OFF_PRIVATE_DNS": "DNS خصوصی را خاموش کنید",
-  "MY_TEST": "تست من"
+  "TURN_OFF_PRIVATE_DNS": "DNS خصوصی را خاموش کنید"
 }

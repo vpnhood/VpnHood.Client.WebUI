@@ -348,6 +348,5 @@
   "TURN_OFF_PRIVATE_DNS_STEP_2": "Tap the <strong>search</strong> icon.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "Type <strong>\"DNS\"</strong> and select the <strong>Private DNS</strong> option.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "Select <strong>Off</strong>.",
-  "TURN_OFF_PRIVATE_DNS": "Turn off private DNS",
-  "MY_TEST": "My test"
+  "TURN_OFF_PRIVATE_DNS": "Turn off private DNS"
 }
