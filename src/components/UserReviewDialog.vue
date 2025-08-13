@@ -2,6 +2,8 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { ref } from 'vue';
+import { AppUserReview } from '@/services/VpnHood.Client.Api';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -37,7 +39,7 @@ async function processSubmit(isSubmitted: boolean) {
   // User chooses rate 3 and submits the dialog.
   if (selectedRate.value == 3) {
     showReviewThanks.value = true;
-    await delay(1500);
+    await Util.delay(1500);
     await submitRate();
     return;
   }
@@ -45,16 +47,18 @@ async function processSubmit(isSubmitted: boolean) {
   // User chooses rate 1 or 2 and submits the dialog.
   showReviewTextarea.value = true;
 }
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 async function submitRate() {
   try {
-    await vhApp.apiClient.setUserReview(selectedRate.value);
+    const userReview = new AppUserReview(
+      {
+        rating: selectedRate.value,
+        reviewText: userReviewText.value ?? ""
+      }
+    )
 
-    // Prevent opening the dialog again until the user review is submitted.
-    await delay(150);
-    vhApp.data.state.isUserReviewRecommended = false;
+    await vhApp.apiClient.setUserReview(userReview);
+    await vhApp.reloadState();
 
     // Show the Google Play dialog if the user rates 3.
     if (selectedRate.value == 3)
@@ -66,6 +70,11 @@ async function submitRate() {
   }
   catch (err) {
     console.error('Error submitting user review:', err);
+  }
+  finally {
+    selectedRate.value = 0;
+    userReviewText.value = null;
+    showReviewThanks.value = false;
   }
 }
 

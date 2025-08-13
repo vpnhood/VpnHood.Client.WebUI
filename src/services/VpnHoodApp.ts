@@ -27,6 +27,7 @@ export class VpnHoodApp {
   public apiClient: AppClient;
   public clientProfileClient: ClientProfileClient;
   public vhFirebase: VhFirebaseApp | null;
+  private lastReloadNumber: number = 0;
 
   private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
@@ -61,13 +62,22 @@ export class VpnHoodApp {
       config.availableCultureInfos
     );
 
-    const firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.settings.clientId);
+    let firebase: VhFirebaseApp | null = null;
+    if (!import.meta.env.DEV)
+      firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.settings.clientId);
 
     return new VpnHoodApp(apiClient, clientProfileClient, appData, firebase);
   }
 
   public async reloadState(): Promise<void> {
-    this.data.state = await this.apiClient.getState();
+    // Only reload state for the last reload.
+    this.lastReloadNumber++;
+    const reloadNumber = this.lastReloadNumber;
+    const state = await this.apiClient.getState();
+    if (reloadNumber !== this.lastReloadNumber)
+      return; // Discard old data
+    this.data.state = state;
+
     // Setting has change and must reload
     if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()) {
       this.data.uiState.configTime = this.data.state.configTime;
@@ -277,6 +287,7 @@ export class VpnHoodApp {
 
   public async clearLastError(): Promise<void> {
     this.data.uiState.stateLastErrorMessage = null;
+    this.data.state.lastError = null;
     await this.apiClient.clearLastError();
     await this.reloadState();
   }

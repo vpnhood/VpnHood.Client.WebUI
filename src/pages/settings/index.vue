@@ -63,11 +63,7 @@ function isIncludeLocalNetworkAvailable(): boolean {
   <v-sheet>
     <app-bar/>
 
-    <v-defaults-provider :defaults="{
-          'ConfigCard': {
-            'class': 'pb-2',
-          }
-        }">
+    <v-defaults-provider :defaults="{'ConfigCard': {'class': 'pb-2' }}">
 
       <!-- Change language -->
       <config-card>
@@ -161,9 +157,9 @@ function isIncludeLocalNetworkAvailable(): boolean {
 
           <!-- Manage IP button -->
           <btn-style-4 v-if="useIpFilterByDevice"
-                       :text="locale('MANAGE_IP_ADDRESSES')"
-                       :append-icon="Util.getLocalizedRightChevron()"
-                       @click="router.push({name: 'FILTER_IPS_BY_DEVICE'})"
+             :text="locale('MANAGE_IP_ADDRESSES')"
+             :append-icon="Util.getLocalizedRightChevron()"
+             @click="router.push({name: 'FILTER_IPS_BY_DEVICE'})"
           />
 
         </v-card-item>
@@ -192,30 +188,28 @@ function isIncludeLocalNetworkAvailable(): boolean {
       </config-card>
 
 
-      <config-card>
+<!--      <config-card>
 
         <v-card-title class="mb-4">
           {{ locale('SYSTEM_SETTINGS') }}
           <premium-icon v-if="vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()" />
         </v-card-title>
 
-        <btn-style-4
+        <btn-style-7
           :text="locale('ALWAYS_ON')"
-          variant="text"
           :append-icon="Util.getLocalizedRightChevron()"
           @click="vhApp.apiClient.requestAlwaysOn()"
         />
 
         <v-divider />
 
-        <btn-style-4
+        <btn-style-7
           :text="locale('ALWAYS_ON')"
-          variant="text"
           :append-icon="Util.getLocalizedRightChevron()"
           @click="vhApp.apiClient.requestAlwaysOn()"
         />
 
-      </config-card>
+      </config-card>-->
 
     </v-defaults-provider>
   </v-sheet>

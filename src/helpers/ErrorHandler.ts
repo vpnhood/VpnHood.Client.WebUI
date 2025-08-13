@@ -5,6 +5,7 @@ import { AnalyticsCustomEvent } from '@/services/Firebase';
 import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 import type { ShowErrorActions } from '@/helpers/UiConstants';
+import router from '@/services/router';
 
 interface ShowErrorOptions {
   ignoreMessage?: boolean,
@@ -41,6 +42,12 @@ export class ErrorHandler {
       org_message: err,
       app_version: VpnHoodApp.instance.getAppVersion(true)
     });
+
+    if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.features.premiumFeatures.includes(AppFeature.CustomDns)){
+      await router.push({name: 'PRIVATE_DNS_ERROR'});
+      await VpnHoodApp.instance.clearLastError();
+      return;
+    }
 
     // Show the message
     await VpnHoodApp.instance.showErrorMessage(userErrorMessage, errorOptions.action);
@@ -129,6 +136,9 @@ export class ErrorHandler {
       // Currently happened only for Rewarded Ad
       case ExceptionType.ShowAd:
         return { localeKey: 'REWARDED_AD_SHOW_ERROR_MSG' };
+
+      case ExceptionType.AdBlocker:
+        return { action:{isPrivateDnsError: true} };
 
       // Could not connect after a specific time
       case 'ConnectionTimeoutException':

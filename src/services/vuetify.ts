@@ -199,6 +199,8 @@ interface IThemeColorNames {
   'btn-style-6': string,
   'on-btn-style-6': string,
 
+  'btn-style-7': string,
+
   'switch-btn': string,
 
   'connection-circle-border': string,
@@ -375,6 +377,8 @@ const vhConnectThemeColors: IThemeColorNames = {
   'btn-style-6': '#ffffff',
   'on-btn-style-6': myColors.purple['500'],
 
+  'btn-style-7': '#ffffff',
+
   'switch-btn': myColors.purple['200'],
 
   'connection-circle-border': myColors.cream['100'],
@@ -548,6 +552,8 @@ const vhClientThemeColors: IThemeColorNames = {
   'btn-style-6': '#ffffff',
   'on-btn-style-6': myColors.blue['400'],
 
+  'btn-style-7': '#000000',
+
   'switch-btn': myColors.blue['200'],
 
   'connection-circle-border': myColors.cream['100'],
@@ -603,6 +609,7 @@ export default createVuetify({
     BtnStyle4: VBtn,
     BtnStyle5: VBtn,
     BtnStyle6: VBtn,
+    BtnStyle7: VBtn,
     TonalIconBtn: VBtn,
 
     HomeConfigBtn: VBtn,
@@ -680,9 +687,16 @@ export default createVuetify({
       color: 'btn-style-6',
       class: "text-transform-none"
     },
+    BtnStyle7:{
+      variant:'text',
+      rounded: '0',
+      color: 'btn-style-7',
+      class: "text-transform-none justify-space-between",
+      block: true
+    },
     TonalIconBtn: {
       variant: "tonal",
-      size: "30",
+      size: "40",
       color: "tonal-icon-btn"
     },
 

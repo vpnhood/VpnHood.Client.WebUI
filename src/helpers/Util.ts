@@ -1,4 +1,4 @@
-import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
+import { ApiException, ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/services/vuetify';
 
 export class Util {
@@ -40,11 +40,15 @@ export class Util {
     return allDisplaySizeClass
   }
 
-  /*public static sendTestError(): void {
+  public static delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  public static sendTestError(): void {
     const errorMessage = 'Something went wrong';
     const statusCode = 401;
     const responseBody = {
-      typeName: 'SessionException',
+      typeName: 'AdBlockerException',
       message: 'Invalid email',
       data: {
         ErrorCode: 'AccessExpired',
@@ -57,5 +61,5 @@ export class Util {
 
     const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
     throw apiException;
-  }*/
+  }
 }

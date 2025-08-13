@@ -1221,6 +1221,50 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
+    requestSystemSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/intents/request-system-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRequestSystemSettings(_response);
+        });
+    }
+
+    protected processRequestSystemSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
     processTypes(exceptionType: ExceptionType, errorCode: SessionErrorCode, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/process-types?";
         if (exceptionType === undefined || exceptionType === null)
@@ -1273,7 +1317,7 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    setUserReview(userReview: UserReview2, cancelToken?: CancelToken): Promise<void> {
+    setUserReview(userReview: AppUserReview, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/user-review";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1938,6 +1982,7 @@ export class AppFeatures implements IAppFeatures {
     isNotificationSupported!: boolean;
     isUserReviewSupported!: boolean;
     isAlwaysOnSupported!: boolean;
+    isSystemSettingsSupported!: boolean;
     isTv!: boolean;
     gaMeasurementId?: string | null;
     clientId!: string;
@@ -1980,6 +2025,7 @@ export class AppFeatures implements IAppFeatures {
             this.isNotificationSupported = _data["isNotificationSupported"] !== undefined ? _data["isNotificationSupported"] : <any>null;
             this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
             this.isAlwaysOnSupported = _data["isAlwaysOnSupported"] !== undefined ? _data["isAlwaysOnSupported"] : <any>null;
+            this.isSystemSettingsSupported = _data["isSystemSettingsSupported"] !== undefined ? _data["isSystemSettingsSupported"] : <any>null;
             this.isTv = _data["isTv"] !== undefined ? _data["isTv"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
@@ -2032,6 +2078,7 @@ export class AppFeatures implements IAppFeatures {
         data["isNotificationSupported"] = this.isNotificationSupported !== undefined ? this.isNotificationSupported : <any>null;
         data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
         data["isAlwaysOnSupported"] = this.isAlwaysOnSupported !== undefined ? this.isAlwaysOnSupported : <any>null;
+        data["isSystemSettingsSupported"] = this.isSystemSettingsSupported !== undefined ? this.isSystemSettingsSupported : <any>null;
         data["isTv"] = this.isTv !== undefined ? this.isTv : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
@@ -2071,6 +2118,7 @@ export interface IAppFeatures {
     isNotificationSupported: boolean;
     isUserReviewSupported: boolean;
     isAlwaysOnSupported: boolean;
+    isSystemSettingsSupported: boolean;
     isTv: boolean;
     gaMeasurementId?: string | null;
     clientId: string;
@@ -4151,11 +4199,11 @@ export enum SessionErrorCode {
     UnsupportedServer = "UnsupportedServer",
 }
 
-export class UserReview2 implements IUserReview2 {
+export class AppUserReview implements IAppUserReview {
     rating!: number;
     reviewText!: string;
 
-    constructor(data?: IUserReview2) {
+    constructor(data?: IAppUserReview) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4171,9 +4219,9 @@ export class UserReview2 implements IUserReview2 {
         }
     }
 
-    static fromJS(data: any): UserReview2 {
+    static fromJS(data: any): AppUserReview {
         data = typeof data === 'object' ? data : {};
-        let result = new UserReview2();
+        let result = new AppUserReview();
         result.init(data);
         return result;
     }
@@ -4186,7 +4234,7 @@ export class UserReview2 implements IUserReview2 {
     }
 }
 
-export interface IUserReview2 {
+export interface IAppUserReview {
     rating: number;
     reviewText: string;
 }

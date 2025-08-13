@@ -22,6 +22,7 @@ declare module 'vue-router/auto-routes' {
     'APP_FILTER': RouteRecordInfo<'APP_FILTER', '/app-filter', Record<never, never>, Record<never, never>>,
     'ERROR_PAGE': RouteRecordInfo<'ERROR_PAGE', '/error-page', Record<never, never>, Record<never, never>>,
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
+    'PRIVATE_DNS_ERROR': RouteRecordInfo<'PRIVATE_DNS_ERROR', '/private-dns-error', Record<never, never>, Record<never, never>>,
     'PURCHASE_SUBSCRIPTION': RouteRecordInfo<'PURCHASE_SUBSCRIPTION', '/purchase-subscription', Record<never, never>, Record<never, never>>,
     'SERVERS': RouteRecordInfo<'SERVERS', '/servers', Record<never, never>, Record<never, never>>,
     'EXTEND_SESSION': RouteRecordInfo<'EXTEND_SESSION', '/servers/extend-session', Record<never, never>, Record<never, never>>,
@@ -31,6 +32,7 @@ declare module 'vue-router/auto-routes' {
     'FILTER_IPS_BY_DEVICE': RouteRecordInfo<'FILTER_IPS_BY_DEVICE', '/settings/filter-ips-by-device', Record<never, never>, Record<never, never>>,
     'LANGUAGE': RouteRecordInfo<'LANGUAGE', '/settings/language', Record<never, never>, Record<never, never>>,
     'STATISTICS': RouteRecordInfo<'STATISTICS', '/statistics', Record<never, never>, Record<never, never>>,
+    'TURN_OFF_PRIVATE_DNS': RouteRecordInfo<'TURN_OFF_PRIVATE_DNS', '/turn-off-private-dns', Record<never, never>, Record<never, never>>,
     'ACCOUNT': RouteRecordInfo<'ACCOUNT', '/user/account', Record<never, never>, Record<never, never>>,
     'PREMIUM_USER': RouteRecordInfo<'PREMIUM_USER', '/user/premium-user', Record<never, never>, Record<never, never>>,
   }

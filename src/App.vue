@@ -19,7 +19,6 @@ const isShowErrorDialog = computed<boolean>({
   set: async (value: boolean) => {
     if (value) return; // Already is Open
     await ComponentRouteController.showComponent(ComponentName.ErrorDialog, value);
-    await vhApp.clearLastError();
   }
 })
 
