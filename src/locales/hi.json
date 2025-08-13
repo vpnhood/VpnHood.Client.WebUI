@@ -156,6 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "स्वतः मासिक नवीकरण।",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "Google Play पर कभी भी रद्द करें।",
   "ALWAYS_ON": "हमेशा चालू",
+  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
   "SUPPORT": "24/7 समर्थन",
   "ACTIVE": "सक्रिय",
   "AUTO_SELECT": "स्वचालित चयन",
@@ -333,5 +334,6 @@
   "USER_REVIEW_SORRY_MSG": "माफ़ कीजिए, मेरा काम आपकी उम्मीदों पर खरा नहीं उतरा! कृपया बताएं क्या गलत हुआ ताकि मैं इसे बेहतर बना सकूं।",
   "USER_REVIEW_GLAD_MSG": "मुझे खुशी है कि आपको मेरा काम पसंद आया!",
   "THANK_YOU": "धन्यवाद",
-  "SEND": "भेजें"
+  "SEND": "भेजें",
+  "SYSTEM_SETTINGS": "System settings"
 }
