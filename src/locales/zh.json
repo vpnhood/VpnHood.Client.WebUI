@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "系统设置",
   "OPEN_SYSTEM_SETTINGS": "打开系统设置",
   "PRIVATE_DNS": "DNS专线",
-  "PRIVATE_DNS_COLORED": "<span class=\"text-promote-premium-color-premium\"\\>DNS\\</span>专线",
+  "PRIVATE_DNS_COLORED": "<span class=\"text-promote-premium-color-premium\">DNS</span>专线",
   "PRIVATE_DNS_DIALOG_MSG": "您的设备已启用DNS专线。此功能是高级版功能，因为它会干扰免费版中的广告投放。",
   "TURN_OFF_PRIVATE_DNS_MSG": "请关闭DNS专线以继续免费使用。",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "升级至高级版，解锁更多功能。",
