@@ -22,7 +22,7 @@ const locale = i18n.global.t;
       />
 
       <div class="px-3">
-        <h3 class="text-center mb-2" v-html="locale('PRIVATE_DNS')" />
+        <h3 class="text-center mb-2" v-html="locale('PRIVATE_DNS_COLORED')" />
         <p>{{locale("PRIVATE_DNS_DIALOG_MSG")}}</p>
       </div>
 

@@ -219,6 +219,10 @@ function closeCompleteDialog(showStatistics: boolean) {
             </li>
             <li>
               <v-icon />
+              {{ locale('PRIVATE_DNS') }}
+            </li>
+            <li>
+              <v-icon />
               {{ locale('ALWAYS_ON') }}
             </li>
             <li>
