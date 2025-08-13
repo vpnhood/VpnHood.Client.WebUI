@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "تنظیمات سیستم",
   "OPEN_SYSTEM_SETTINGS": "باز کردن تنظیمات سیستم",
   "PRIVATE_DNS": "<span class=\"text-promote-premium-color-premium\">DNS</span> خصوصی",
-  "PRIVATE_DNS_DIALOG_MSG": "به نظر می‌رسد DNS خصوصی در دستگاه شما فعال است، که فقط در طرح ویژه ما در دسترس است.",
+  "PRIVATE_DNS_DIALOG_MSG": "به نظر می‌رسد DNS خصوصی در دستگاه شما فعال است. این قابلیت فقط در طرح ویژه ما موجود است و ممکن است در نمایش تبلیغات نسخه رایگان اختلال ایجاد کند.",
   "TURN_OFF_PRIVATE_DNS_MSG": "برای ادامه استفاده رایگان از برنامه، DNS خصوصی را خاموش کنید.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "به نسخه ویژه ارتقا دهید و امکانات بیشتری را فعال کنید.",
   "TURN_OFF": "خاموش کردن",
