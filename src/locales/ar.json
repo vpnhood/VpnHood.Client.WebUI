@@ -156,6 +156,7 @@
   "PLANS_ARE_AUTOMATICALLY_RENEWED": "تجدد تلقائيًا شهريًا.",
   "CANCEL_ANYTIME_ON_GOOGLE_PLAY": "يمكنك الإلغاء في أي وقت على Google Play.",
   "ALWAYS_ON": "دائما متصل",
+  "ALWAYS_ON_DESC": "Keeps your device connected to the VPN at all times, ensuring secure and private internet access—even after restarts or network changes.",
   "SUPPORT": "دعم 24/7",
   "ACTIVE": "نشط",
   "AUTO_SELECT": "تحديد تلقائي",
@@ -333,5 +334,6 @@
   "USER_REVIEW_SORRY_MSG": "عذرًا، لم يكن عملي على المستوى المطلوب! أود أن أعرف ما الخطأ حتى أتمكن من تحسينه.",
   "USER_REVIEW_GLAD_MSG": "أنا سعيد لأن عملي أعجبك!",
   "THANK_YOU": "شكرًا لك",
-  "SEND": "إرسال"
+  "SEND": "إرسال",
+  "SYSTEM_SETTINGS": "System settings"
 }
