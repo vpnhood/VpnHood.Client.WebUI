@@ -338,7 +338,7 @@
   "SYSTEM_SETTINGS": "Sistem ayarları",
   "OPEN_SYSTEM_SETTINGS": "Sistem ayarlarını aç",
   "PRIVATE_DNS": "Özel <span class=\"text-promote-premium-color-premium\">DNS</span>",
-  "PRIVATE_DNS_DIALOG_MSG": "Görünüşe göre cihazınızda Özel DNS etkin durumda ve bu özellik yalnızca premium planımızla kullanılabilir.",
+  "PRIVATE_DNS_DIALOG_MSG": "Görünüşe göre cihazınızda özel DNS etkinleştirilmiş. Bu özellik yalnızca premium planda kullanılabilir ve ücretsiz sürümde reklamların gösterilmesini engelleyebilir.",
   "TURN_OFF_PRIVATE_DNS_MSG": "Uygulamayı ücretsiz kullanmaya devam etmek için özel DNS'i kapatın.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "Premium’a geçin ve daha fazla özelliğin kilidini açın.",
   "TURN_OFF": "Kapat",
