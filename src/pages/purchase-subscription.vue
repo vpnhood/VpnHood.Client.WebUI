@@ -2,7 +2,7 @@
 import {
   AppPurchaseOptions,
   BillingPurchaseState,
-  ClientProfileUpdateParams,
+  ClientProfileUpdateParams, ConnectPlanId,
   PatchOfString,
   SubscriptionPlan
 } from '@/services/VpnHood.Client.Api';
@@ -72,6 +72,8 @@ const isShowProcessDialog = computed<boolean>(() => {
 });
 
 onMounted(async () => {
+  // TODO: Remove
+  console.log(purchaseCompleteDialogMessage.value);
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
     isGoogleBillingAvailable.value = false;
     showPurchaseViaGoogle.value = false;
@@ -151,14 +153,25 @@ async function validateCode(): Promise<void> {
   catch{
     invalidCodeError.value = locale("INVALID_PREMIUM_CODE_NUMBERS_MSG");
   }
+
 }
 async function validateCodeViaAccessServer(profileId: string): Promise<void>{
-  showProcessDialog.value = true;
-
   try {
-    await ConnectManager.connect3(profileId, undefined, false, false, false);
+    showProcessDialog.value = true;
+
+    await vhApp.connect(profileId, undefined, false, ConnectPlanId.Normal, false, false);
+
     if (vhApp.data.isConnected && vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
+
+    // TODO: Remove
+    console.log("TTTT");
+    console.log(purchaseCompleteDialogMessage.value);
+  }
+  catch (err){
+    // TODO: Remove
+    console.log(err);
+    await vhApp.removePremiumCode()
   }
   finally {
     showProcessDialog.value = false;

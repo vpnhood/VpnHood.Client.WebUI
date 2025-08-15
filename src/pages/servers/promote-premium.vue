@@ -30,8 +30,14 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
     return;
   }
 
-  await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
-    dialogData.value.isPremiumLocation, planId, false);
+  try {
+    await vhApp.connect(dialogData.value.clientProfileId, dialogData.value.serverLocation,
+      dialogData.value.isPremiumLocation, planId, false);
+  }
+  catch{
+    // Ignore message
+  }
+
 }
 
 </script>

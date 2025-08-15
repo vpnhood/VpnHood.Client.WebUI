@@ -150,9 +150,8 @@ export class VpnHoodApp {
       }));
       this.data.settings.userSettings.clientProfileId = clientProfileId;
       await this.saveUserSetting();
-    } catch (err: unknown) {
-      console.log(err);
-    } finally {
+    }
+    finally {
       // Reload to apply the latest clientProfileInfos updates
       await this.reloadSettings();
       this.data.uiState.uiConnectInProgress = false;
@@ -425,6 +424,29 @@ export class VpnHoodApp {
     const locationToCheck = value ?? this.data.state.clientProfile?.selectedLocationInfo?.serverLocation;
 
     return autoSelectValues.includes(locationToCheck ?? '');
+  }
+
+
+
+
+  public isFilterIpAvailable(): boolean {
+    return this.data.settings.userSettings.useVpnAdapterIpFilter || this.data.settings.userSettings.useAppIpFilter;
+  }
+
+  public isFilterIpByDeviceAvailable(): boolean {
+    if (!this.data.features.isPremiumFlagSupported)
+      return true;
+    return this.isPremiumAccount() || this.data.settings.userSettings.useVpnAdapterIpFilter;
+  }
+  public isFilterIpByAppAvailable(): boolean {
+    if (!this.data.features.isPremiumFlagSupported)
+      return true;
+    return this.isPremiumAccount() || this.data.settings.userSettings.useAppIpFilter;
+  }
+  public isIncludeLocalNetworkAvailable(): boolean {
+    if (!this.data.features.isPremiumFlagSupported)
+      return true;
+    return this.isPremiumAccount() || this.data.settings.userSettings.includeLocalNetwork;
   }
 
 }

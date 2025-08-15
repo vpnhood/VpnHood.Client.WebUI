@@ -3,10 +3,9 @@ import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { IpFilters } from '@/services/VpnHood.Client.Api';
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import { IPFilterType } from '@/helpers/UiConstants';
-import { onBeforeRouteLeave } from 'vue-router';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance
 const locale = i18n.global.t;
@@ -92,8 +91,6 @@ function revertCurrentChange(): void{
 </script>
 
 <template>
-  <!-- Disconnecting alert -->
-  <disconnect-required-alert />
 
   <v-defaults-provider :defaults="{
       'VChip':{
@@ -108,66 +105,63 @@ function revertCurrentChange(): void{
         'class': 'ipList',
         'dir': 'ltr',
         'density': 'compact',
-        'rows': '3',
+        'rows': '5',
         'variant': 'outlined',
         'color': 'highlight',
         'loading': isLoadingIP,
         'placeholder': locale('IP_FILTER_PLACE_HOLDER'),
-        'hideDetails': true
+        'hideDetails': true,
+        'clearable': true
         }
       }"
   >
 
     <!-- Sample ip format -->
-    <alert-info :title="locale('INFO')">
-      <ul class="text-caption" style="list-style: none">
-        <li>
-          {{locale('SINGLE_IP')}}
-          <v-chip text="192.168.1.1" tabindex="-1"/>
-        </li>
-        <li class="py-1">
-          {{locale('RANGES_OF_IP')}}
-          <v-chip text="192.168.1.1-192.168.1.255" tabindex="-1"/>
-        </li>
-        <li>
-          {{locale('CIDR_NOTATION')}}
-          <v-chip text="192.168.1.0/24"  tabindex="-1"/>
-        </li>
-      </ul>
-    </alert-info>
+   <config-card class="pa-4 mb-2">
+     <ul class="text-caption text-disabled" style="list-style: none">
+       <li>
+         {{locale('SINGLE_IP')}}
+         <v-chip text="192.168.1.1" tabindex="-1"/>
+       </li>
+       <li class="mt-2">
+         {{locale('RANGES_OF_IP')}}
+         <v-chip text="192.168.1.1-192.168.1.255" tabindex="-1"/>
+       </li>
+       <li class="mt-2">
+         {{locale('CIDR_NOTATION')}}
+         <v-chip text="192.168.1.0/24"  tabindex="-1"/>
+       </li>
+       <li class="mt-2">
+         {{locale('COMMENT')}}
+         <v-chip :text="locale('COMMENT_DESC')"  tabindex="-1"/>
+       </li>
+     </ul>
+   </config-card>
 
-    <!-- Describe remark -->
-    <alert-note :title="locale('NOTE')" :text="locale('REMARK_IP_FILTER_DESC')" />
-
-    <!-- Alert for number of IPs in the filter by device -->
-    <alert-warning v-if="props.ipFilterType === IPFilterType.FilterByDevice"
-                   :title="locale('WARNING')"
-                   :text="locale('CAUTION_INCREASE_NUMBER_OF_IP')"
-    />
-
-    <config-card class="mt-4">
-      <!-- Exclude list -->
+    <!-- Exclude list -->
+    <config-card class="pb-3 mt-4">
+      <v-card-title>{{locale('EXCLUDE_IPS')}}</v-card-title>
       <v-card-item>
-        <p>{{locale('IPS_TO_EXCLUDE')}}</p>
         <v-textarea v-model="excludeIpFilters" />
       </v-card-item>
+    </config-card>
 
-      <!-- Include list -->
+    <!-- Include list -->
+    <config-card class="pb-3 mt-4">
+      <v-card-title>{{locale('INCLUDE_IPS')}}</v-card-title>
       <v-card-item>
-        <p>{{locale('IPS_TO_INCLUDE')}}</p>
         <v-textarea v-model="includeIpFilters" />
       </v-card-item>
-
-      <!-- Revert button -->
-      <v-card-item v-if="showRevertButton">
-        <btn-style-2
-          block
-          :text="locale('REVERT')"
-          @click="revertCurrentChange()"
-        />
-      </v-card-item>
-
     </config-card>
+
+    <!-- Revert button -->
+    <btn-style-3
+      v-if="showRevertButton"
+      block
+      class="mt-4"
+      :text="locale('REVERT')"
+      @click="revertCurrentChange()"
+    />
 
   </v-defaults-provider>
 </template>

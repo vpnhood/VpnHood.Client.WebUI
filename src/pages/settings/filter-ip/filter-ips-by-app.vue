@@ -7,7 +7,6 @@ import AppBar from '@/components/AppBar.vue';
 <template>
   <v-sheet>
     <app-bar/>
-
     <filter-ip :ip-filter-type="IPFilterType.FilterByApp" />
   </v-sheet>
 </template>
