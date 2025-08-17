@@ -1,4 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router';
+import type { WritableComputedRef } from 'vue';
 
 export class UiConstants {
   static millisecondPerDay: number = 24 * 60 * 60 * 1000;
@@ -10,19 +11,12 @@ export class UiConstants {
 export enum ComponentName {
   TunnelClientCountryDialog = 'TunnelClientCountryDialog',
   NavigationDrawer = 'NavigationDrawer',
-  ProtocolDialog = 'ProtocolDialog',
   ErrorDialog = 'ErrorDialog',
   AddServerDialog = 'AddServerDialog',
   RenameServerDialog = 'RenameServerDialog',
   ConfirmDeleteServerDialog = 'ConfirmDeleteServerDialog',
   EnterPremiumCode = 'EnterPremiumCode',
   CustomEndpoint = 'CustomEndpoint',
-}
-
-export enum Protocols {
-  UDP,
-  TCP,
-  TcpAndDropHTTP3
 }
 
 export enum LanguagesCode {
@@ -54,12 +48,4 @@ export interface ShowErrorActions {
   showChangeServerToAuto?: boolean,
   showRemovePremium?: boolean,
   isPrivateDnsError?: boolean,
-}
-export interface SettingsItem {
-  title: string,
-  subtitle: string,
-  isPremium: boolean,
-  click?: RouteLocationRaw,
-  selectedItem?: string,
-  status?: boolean
 }

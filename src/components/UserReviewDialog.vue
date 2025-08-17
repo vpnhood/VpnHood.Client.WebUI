@@ -62,7 +62,7 @@ async function submitRate() {
 
     // Show the Google Play dialog if the user rates 3.
     if (selectedRate.value == 3)
-      await vhApp.apiClient.requestUserReview();
+      await vhApp.intentsClient.requestUserReview();
 
     // Production mode only
     if (!import.meta.env.DEV)

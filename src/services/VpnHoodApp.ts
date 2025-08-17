@@ -6,7 +6,7 @@ import {
   ClientProfileUpdateParams,
   ConfigParams,
   ConnectPlanId,
-  DeviceAppInfo,
+  DeviceAppInfo, IntentsClient,
   PatchOfBoolean,
   PatchOfString,
   ServerLocationInfo,
@@ -26,16 +26,18 @@ export class VpnHoodApp {
   public data: VpnHoodAppData;
   public apiClient: AppClient;
   public clientProfileClient: ClientProfileClient;
+  public intentsClient: IntentsClient;
   public vhFirebase: VhFirebaseApp | null;
   private lastReloadNumber: number = 0;
 
-  private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
+  private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
       throw new Error('VpnHoodApp has been already initialized.');
 
     this.data = reactive(appData);
     this.apiClient = apiClient;
     this.clientProfileClient = clientProfileClient;
+    this.intentsClient = intentsClient;
     this.vhFirebase = vhFirebase;
     this.data.uiState.configTime = this.data.state.configTime;
     VpnHoodApp._instance = this;
@@ -52,6 +54,7 @@ export class VpnHoodApp {
   public static async create(): Promise<VpnHoodApp> {
     const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
     const clientProfileClient: ClientProfileClient = ClientApiFactory.instance.createClientProfileClient();
+    const intentsClient: IntentsClient = ClientApiFactory.instance.createIntentClient();
     const config = await apiClient.configure(
       new ConfigParams({ availableCultures: i18n.global.availableLocales }));
     const appData = new VpnHoodAppData(
@@ -66,7 +69,7 @@ export class VpnHoodApp {
     if (!import.meta.env.DEV)
       firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.settings.clientId);
 
-    return new VpnHoodApp(apiClient, clientProfileClient, appData, firebase);
+    return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, appData, firebase);
   }
 
   public async reloadState(): Promise<void> {
@@ -91,7 +94,7 @@ export class VpnHoodApp {
     }
 
     // Show the update message if the user has not ignored or more than 24 hours have passed
-    if (this.data.state.lastPublishInfo?.packageUrl !== undefined)
+    if (this.data.state.updaterStatus?.prompt)
       this.data.uiState.showUpdateSnackbar = true;
 
     // Show 'suppress to' message

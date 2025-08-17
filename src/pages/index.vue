@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
 import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
-import ProtocolDialog from '@/components/ProtocolDialog.vue';
 import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/HomeConnectionInfo.vue';
@@ -449,7 +448,7 @@ function isDebugDataHasValue(): boolean {
         <home-config-btn
           prepend-icon="mdi-transit-connection-variant"
           tabindex="8"
-          @click="ComponentRouteController.showComponent(ComponentName.ProtocolDialog)"
+          @click="router.push({name: 'PROTOCOLS'})"
         >
           <span>{{ locale('PROTOCOL_TITLE') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
@@ -467,7 +466,6 @@ function isDebugDataHasValue(): boolean {
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
-    <ProtocolDialog v-model="ComponentRouteController.create(ComponentName.ProtocolDialog).isShow" />
     <UserReviewDialog v-model="vhApp.data.state.isUserReviewRecommended" />
 
     <!-- Developer debug data dialog -->

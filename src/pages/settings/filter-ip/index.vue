@@ -6,7 +6,6 @@ import AppBar from '@/components/AppBar.vue';
 import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-
 import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;

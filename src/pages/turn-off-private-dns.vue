@@ -36,7 +36,7 @@ const locale = i18n.global.t;
         class="w-100"
        append-icon="mdi-open-in-new"
        :text="locale('OPEN_SYSTEM_SETTINGS')"
-       @click="vhApp.apiClient.requestSystemSettings()"
+       @click="vhApp.intentsClient.openAppSystemSettings()"
       />
     </div>
 

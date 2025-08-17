@@ -1045,226 +1045,6 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    requestAlwaysOn( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/request-always-on";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRequestAlwaysOn(_response);
-        });
-    }
-
-    protected processRequestAlwaysOn(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    requestQuickLaunch( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/request-quick-launch";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRequestQuickLaunch(_response);
-        });
-    }
-
-    protected processRequestQuickLaunch(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    requestUserReview( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/request-user-review";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRequestUserReview(_response);
-        });
-    }
-
-    protected processRequestUserReview(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    requestNotification( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/request-notification";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRequestNotification(_response);
-        });
-    }
-
-    protected processRequestNotification(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    requestSystemSettings( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/intents/request-system-settings";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRequestSystemSettings(_response);
-        });
-    }
-
-    protected processRequestSystemSettings(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
     processTypes(exceptionType: ExceptionType, errorCode: SessionErrorCode, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/process-types?";
         if (exceptionType === undefined || exceptionType === null)
@@ -1810,6 +1590,372 @@ export class ClientProfileClient {
     }
 }
 
+export class IntentsClient {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    requestQuickLaunch( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/request-quick-launch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRequestQuickLaunch(_response);
+        });
+    }
+
+    protected processRequestQuickLaunch(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    requestUserReview( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/request-user-review";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRequestUserReview(_response);
+        });
+    }
+
+    protected processRequestUserReview(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    requestNotification( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/request-notification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRequestNotification(_response);
+        });
+    }
+
+    protected processRequestNotification(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    openSystemKillSwitchSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/open-system-kill-switch-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processOpenSystemKillSwitchSettings(_response);
+        });
+    }
+
+    protected processOpenSystemKillSwitchSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    openSystemAlwaysOnSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/open-system-always-on-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processOpenSystemAlwaysOnSettings(_response);
+        });
+    }
+
+    protected processOpenSystemAlwaysOnSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    openSystemSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/open-system-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processOpenSystemSettings(_response);
+        });
+    }
+
+    protected processOpenSystemSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    openAppSystemSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/open-app-system-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processOpenAppSystemSettings(_response);
+        });
+    }
+
+    protected processOpenAppSystemSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    openAppSystemNotificationSettings( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/intents/open-app-system-notification-settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processOpenAppSystemNotificationSettings(_response);
+        });
+    }
+
+    protected processOpenAppSystemNotificationSettings(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export class AppAccount implements IAppAccount {
     userId!: string;
     name?: string | null;
@@ -1971,18 +2117,21 @@ export class AppFeatures implements IAppFeatures {
     appId!: string;
     isExcludeAppsSupported!: boolean;
     isIncludeAppsSupported!: boolean;
-    updateInfoUrl?: string | null;
     uiName?: string | null;
     isPremiumFlagSupported!: boolean;
     isAddAccessKeySupported!: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported!: boolean;
     isBillingSupported!: boolean;
-    isQuickLaunchSupported!: boolean;
-    isNotificationSupported!: boolean;
+    isRequestQuickLaunchSupported!: boolean;
+    isRequestNotificationSupported!: boolean;
     isUserReviewSupported!: boolean;
-    isAlwaysOnSupported!: boolean;
+    isSystemKillSwitchSettingsSupported!: boolean;
+    isSystemAlwaysOnSettingsSupported!: boolean;
     isSystemSettingsSupported!: boolean;
+    isAppSystemSettingsSupported!: boolean;
+    isAppSystemNotificationSettingsSupported!: boolean;
+    isTcpProxySupported!: boolean;
     isTv!: boolean;
     gaMeasurementId?: string | null;
     clientId!: string;
@@ -2014,18 +2163,21 @@ export class AppFeatures implements IAppFeatures {
             this.appId = _data["appId"] !== undefined ? _data["appId"] : <any>null;
             this.isExcludeAppsSupported = _data["isExcludeAppsSupported"] !== undefined ? _data["isExcludeAppsSupported"] : <any>null;
             this.isIncludeAppsSupported = _data["isIncludeAppsSupported"] !== undefined ? _data["isIncludeAppsSupported"] : <any>null;
-            this.updateInfoUrl = _data["updateInfoUrl"] !== undefined ? _data["updateInfoUrl"] : <any>null;
             this.uiName = _data["uiName"] !== undefined ? _data["uiName"] : <any>null;
             this.isPremiumFlagSupported = _data["isPremiumFlagSupported"] !== undefined ? _data["isPremiumFlagSupported"] : <any>null;
             this.isAddAccessKeySupported = _data["isAddAccessKeySupported"] !== undefined ? _data["isAddAccessKeySupported"] : <any>null;
             this.builtInClientProfileId = _data["builtInClientProfileId"] !== undefined ? _data["builtInClientProfileId"] : <any>null;
             this.isAccountSupported = _data["isAccountSupported"] !== undefined ? _data["isAccountSupported"] : <any>null;
             this.isBillingSupported = _data["isBillingSupported"] !== undefined ? _data["isBillingSupported"] : <any>null;
-            this.isQuickLaunchSupported = _data["isQuickLaunchSupported"] !== undefined ? _data["isQuickLaunchSupported"] : <any>null;
-            this.isNotificationSupported = _data["isNotificationSupported"] !== undefined ? _data["isNotificationSupported"] : <any>null;
+            this.isRequestQuickLaunchSupported = _data["isRequestQuickLaunchSupported"] !== undefined ? _data["isRequestQuickLaunchSupported"] : <any>null;
+            this.isRequestNotificationSupported = _data["isRequestNotificationSupported"] !== undefined ? _data["isRequestNotificationSupported"] : <any>null;
             this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
-            this.isAlwaysOnSupported = _data["isAlwaysOnSupported"] !== undefined ? _data["isAlwaysOnSupported"] : <any>null;
+            this.isSystemKillSwitchSettingsSupported = _data["isSystemKillSwitchSettingsSupported"] !== undefined ? _data["isSystemKillSwitchSettingsSupported"] : <any>null;
+            this.isSystemAlwaysOnSettingsSupported = _data["isSystemAlwaysOnSettingsSupported"] !== undefined ? _data["isSystemAlwaysOnSettingsSupported"] : <any>null;
             this.isSystemSettingsSupported = _data["isSystemSettingsSupported"] !== undefined ? _data["isSystemSettingsSupported"] : <any>null;
+            this.isAppSystemSettingsSupported = _data["isAppSystemSettingsSupported"] !== undefined ? _data["isAppSystemSettingsSupported"] : <any>null;
+            this.isAppSystemNotificationSettingsSupported = _data["isAppSystemNotificationSettingsSupported"] !== undefined ? _data["isAppSystemNotificationSettingsSupported"] : <any>null;
+            this.isTcpProxySupported = _data["isTcpProxySupported"] !== undefined ? _data["isTcpProxySupported"] : <any>null;
             this.isTv = _data["isTv"] !== undefined ? _data["isTv"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
@@ -2067,18 +2219,21 @@ export class AppFeatures implements IAppFeatures {
         data["appId"] = this.appId !== undefined ? this.appId : <any>null;
         data["isExcludeAppsSupported"] = this.isExcludeAppsSupported !== undefined ? this.isExcludeAppsSupported : <any>null;
         data["isIncludeAppsSupported"] = this.isIncludeAppsSupported !== undefined ? this.isIncludeAppsSupported : <any>null;
-        data["updateInfoUrl"] = this.updateInfoUrl !== undefined ? this.updateInfoUrl : <any>null;
         data["uiName"] = this.uiName !== undefined ? this.uiName : <any>null;
         data["isPremiumFlagSupported"] = this.isPremiumFlagSupported !== undefined ? this.isPremiumFlagSupported : <any>null;
         data["isAddAccessKeySupported"] = this.isAddAccessKeySupported !== undefined ? this.isAddAccessKeySupported : <any>null;
         data["builtInClientProfileId"] = this.builtInClientProfileId !== undefined ? this.builtInClientProfileId : <any>null;
         data["isAccountSupported"] = this.isAccountSupported !== undefined ? this.isAccountSupported : <any>null;
         data["isBillingSupported"] = this.isBillingSupported !== undefined ? this.isBillingSupported : <any>null;
-        data["isQuickLaunchSupported"] = this.isQuickLaunchSupported !== undefined ? this.isQuickLaunchSupported : <any>null;
-        data["isNotificationSupported"] = this.isNotificationSupported !== undefined ? this.isNotificationSupported : <any>null;
+        data["isRequestQuickLaunchSupported"] = this.isRequestQuickLaunchSupported !== undefined ? this.isRequestQuickLaunchSupported : <any>null;
+        data["isRequestNotificationSupported"] = this.isRequestNotificationSupported !== undefined ? this.isRequestNotificationSupported : <any>null;
         data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
-        data["isAlwaysOnSupported"] = this.isAlwaysOnSupported !== undefined ? this.isAlwaysOnSupported : <any>null;
+        data["isSystemKillSwitchSettingsSupported"] = this.isSystemKillSwitchSettingsSupported !== undefined ? this.isSystemKillSwitchSettingsSupported : <any>null;
+        data["isSystemAlwaysOnSettingsSupported"] = this.isSystemAlwaysOnSettingsSupported !== undefined ? this.isSystemAlwaysOnSettingsSupported : <any>null;
         data["isSystemSettingsSupported"] = this.isSystemSettingsSupported !== undefined ? this.isSystemSettingsSupported : <any>null;
+        data["isAppSystemSettingsSupported"] = this.isAppSystemSettingsSupported !== undefined ? this.isAppSystemSettingsSupported : <any>null;
+        data["isAppSystemNotificationSettingsSupported"] = this.isAppSystemNotificationSettingsSupported !== undefined ? this.isAppSystemNotificationSettingsSupported : <any>null;
+        data["isTcpProxySupported"] = this.isTcpProxySupported !== undefined ? this.isTcpProxySupported : <any>null;
         data["isTv"] = this.isTv !== undefined ? this.isTv : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
@@ -2107,18 +2262,21 @@ export interface IAppFeatures {
     appId: string;
     isExcludeAppsSupported: boolean;
     isIncludeAppsSupported: boolean;
-    updateInfoUrl?: string | null;
     uiName?: string | null;
     isPremiumFlagSupported: boolean;
     isAddAccessKeySupported: boolean;
     builtInClientProfileId?: string | null;
     isAccountSupported: boolean;
     isBillingSupported: boolean;
-    isQuickLaunchSupported: boolean;
-    isNotificationSupported: boolean;
+    isRequestQuickLaunchSupported: boolean;
+    isRequestNotificationSupported: boolean;
     isUserReviewSupported: boolean;
-    isAlwaysOnSupported: boolean;
+    isSystemKillSwitchSettingsSupported: boolean;
+    isSystemAlwaysOnSettingsSupported: boolean;
     isSystemSettingsSupported: boolean;
+    isAppSystemSettingsSupported: boolean;
+    isAppSystemNotificationSettingsSupported: boolean;
+    isTcpProxySupported: boolean;
     isTv: boolean;
     gaMeasurementId?: string | null;
     clientId: string;
@@ -2328,6 +2486,7 @@ export class UserSettings implements IUserSettings {
     tunnelClientCountry!: boolean;
     appFilters!: string[];
     appFiltersMode!: FilterMode;
+    useTcpProxy!: boolean;
     useUdpChannel!: boolean;
     dropUdp!: boolean;
     dropQuic!: boolean;
@@ -2371,6 +2530,7 @@ export class UserSettings implements IUserSettings {
                 this.appFilters = <any>null;
             }
             this.appFiltersMode = _data["appFiltersMode"] !== undefined ? _data["appFiltersMode"] : <any>null;
+            this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : <any>null;
             this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
             this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : <any>null;
             this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
@@ -2414,6 +2574,7 @@ export class UserSettings implements IUserSettings {
                 data["appFilters"].push(item);
         }
         data["appFiltersMode"] = this.appFiltersMode !== undefined ? this.appFiltersMode : <any>null;
+        data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : <any>null;
         data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
         data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : <any>null;
         data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
@@ -2443,6 +2604,7 @@ export interface IUserSettings {
     tunnelClientCountry: boolean;
     appFilters: string[];
     appFiltersMode: FilterMode;
+    useTcpProxy: boolean;
     useUdpChannel: boolean;
     dropUdp: boolean;
     dropQuic: boolean;
@@ -2700,11 +2862,12 @@ export class AppState implements IAppState {
     hasDiagnoseRequested!: boolean;
     clientCountryCode?: string | null;
     clientCountryName?: string | null;
-    versionStatus!: VersionStatus;
-    lastPublishInfo?: PublishInfo | null;
+    updaterStatus?: AppUpdaterStatus | null;
     canDisconnect!: boolean;
     canConnect!: boolean;
     canDiagnose!: boolean;
+    canChangeTcpProxy!: boolean;
+    isTcpProxy!: boolean;
     isUserReviewRecommended!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
@@ -2740,11 +2903,12 @@ export class AppState implements IAppState {
             this.hasDiagnoseRequested = _data["hasDiagnoseRequested"] !== undefined ? _data["hasDiagnoseRequested"] : <any>null;
             this.clientCountryCode = _data["clientCountryCode"] !== undefined ? _data["clientCountryCode"] : <any>null;
             this.clientCountryName = _data["clientCountryName"] !== undefined ? _data["clientCountryName"] : <any>null;
-            this.versionStatus = _data["versionStatus"] !== undefined ? _data["versionStatus"] : <any>null;
-            this.lastPublishInfo = _data["lastPublishInfo"] ? PublishInfo.fromJS(_data["lastPublishInfo"]) : <any>null;
+            this.updaterStatus = _data["updaterStatus"] ? AppUpdaterStatus.fromJS(_data["updaterStatus"]) : <any>null;
             this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : <any>null;
             this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : <any>null;
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
+            this.canChangeTcpProxy = _data["canChangeTcpProxy"] !== undefined ? _data["canChangeTcpProxy"] : <any>null;
+            this.isTcpProxy = _data["isTcpProxy"] !== undefined ? _data["isTcpProxy"] : <any>null;
             this.isUserReviewRecommended = _data["isUserReviewRecommended"] !== undefined ? _data["isUserReviewRecommended"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
@@ -2775,11 +2939,12 @@ export class AppState implements IAppState {
         data["hasDiagnoseRequested"] = this.hasDiagnoseRequested !== undefined ? this.hasDiagnoseRequested : <any>null;
         data["clientCountryCode"] = this.clientCountryCode !== undefined ? this.clientCountryCode : <any>null;
         data["clientCountryName"] = this.clientCountryName !== undefined ? this.clientCountryName : <any>null;
-        data["versionStatus"] = this.versionStatus !== undefined ? this.versionStatus : <any>null;
-        data["lastPublishInfo"] = this.lastPublishInfo ? this.lastPublishInfo.toJSON() : <any>null;
+        data["updaterStatus"] = this.updaterStatus ? this.updaterStatus.toJSON() : <any>null;
         data["canDisconnect"] = this.canDisconnect !== undefined ? this.canDisconnect : <any>null;
         data["canConnect"] = this.canConnect !== undefined ? this.canConnect : <any>null;
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
+        data["canChangeTcpProxy"] = this.canChangeTcpProxy !== undefined ? this.canChangeTcpProxy : <any>null;
+        data["isTcpProxy"] = this.isTcpProxy !== undefined ? this.isTcpProxy : <any>null;
         data["isUserReviewRecommended"] = this.isUserReviewRecommended !== undefined ? this.isUserReviewRecommended : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
@@ -2803,11 +2968,12 @@ export interface IAppState {
     hasDiagnoseRequested: boolean;
     clientCountryCode?: string | null;
     clientCountryName?: string | null;
-    versionStatus: VersionStatus;
-    lastPublishInfo?: PublishInfo | null;
+    updaterStatus?: AppUpdaterStatus | null;
     canDisconnect: boolean;
     canConnect: boolean;
     canDiagnose: boolean;
+    canChangeTcpProxy: boolean;
+    isTcpProxy: boolean;
     isUserReviewRecommended: boolean;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
@@ -2838,6 +3004,8 @@ export class AppSessionInfo implements IAppSessionInfo {
     serverVersion!: string;
     clientPublicIpAddress!: string;
     createdTime!: Date;
+    isTcpPacketSupported!: boolean;
+    isTcpProxySupported!: boolean;
 
     constructor(data?: IAppSessionInfo) {
         if (data) {
@@ -2870,6 +3038,8 @@ export class AppSessionInfo implements IAppSessionInfo {
             this.serverVersion = _data["serverVersion"] !== undefined ? _data["serverVersion"] : <any>null;
             this.clientPublicIpAddress = _data["clientPublicIpAddress"] !== undefined ? _data["clientPublicIpAddress"] : <any>null;
             this.createdTime = _data["createdTime"] ? new Date(_data["createdTime"].toString()) : <any>null;
+            this.isTcpPacketSupported = _data["isTcpPacketSupported"] !== undefined ? _data["isTcpPacketSupported"] : <any>null;
+            this.isTcpProxySupported = _data["isTcpProxySupported"] !== undefined ? _data["isTcpProxySupported"] : <any>null;
         }
     }
 
@@ -2896,6 +3066,8 @@ export class AppSessionInfo implements IAppSessionInfo {
         data["serverVersion"] = this.serverVersion !== undefined ? this.serverVersion : <any>null;
         data["clientPublicIpAddress"] = this.clientPublicIpAddress !== undefined ? this.clientPublicIpAddress : <any>null;
         data["createdTime"] = this.createdTime ? this.createdTime.toISOString() : <any>null;
+        data["isTcpPacketSupported"] = this.isTcpPacketSupported !== undefined ? this.isTcpPacketSupported : <any>null;
+        data["isTcpProxySupported"] = this.isTcpProxySupported !== undefined ? this.isTcpProxySupported : <any>null;
         return data;
     }
 }
@@ -2911,6 +3083,8 @@ export interface IAppSessionInfo {
     serverVersion: string;
     clientPublicIpAddress: string;
     createdTime: Date;
+    isTcpPacketSupported: boolean;
+    isTcpProxySupported: boolean;
 }
 
 export class AccessInfo implements IAccessInfo {
@@ -3174,6 +3348,7 @@ export class AppSessionStatus implements IAppSessionStatus {
     sessionMaxTraffic!: number;
     sessionExpirationTime?: Date | null;
     activeClientCount?: number | null;
+    isTcpProxy!: boolean;
 
     constructor(data?: IAppSessionStatus) {
         if (data) {
@@ -3210,6 +3385,7 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.sessionMaxTraffic = _data["sessionMaxTraffic"] !== undefined ? _data["sessionMaxTraffic"] : <any>null;
             this.sessionExpirationTime = _data["sessionExpirationTime"] ? new Date(_data["sessionExpirationTime"].toString()) : <any>null;
             this.activeClientCount = _data["activeClientCount"] !== undefined ? _data["activeClientCount"] : <any>null;
+            this.isTcpProxy = _data["isTcpProxy"] !== undefined ? _data["isTcpProxy"] : <any>null;
         }
     }
 
@@ -3238,6 +3414,7 @@ export class AppSessionStatus implements IAppSessionStatus {
         data["sessionMaxTraffic"] = this.sessionMaxTraffic !== undefined ? this.sessionMaxTraffic : <any>null;
         data["sessionExpirationTime"] = this.sessionExpirationTime ? this.sessionExpirationTime.toISOString() : <any>null;
         data["activeClientCount"] = this.activeClientCount !== undefined ? this.activeClientCount : <any>null;
+        data["isTcpProxy"] = this.isTcpProxy !== undefined ? this.isTcpProxy : <any>null;
         return data;
     }
 }
@@ -3259,6 +3436,7 @@ export interface IAppSessionStatus {
     sessionMaxTraffic: number;
     sessionExpirationTime?: Date | null;
     activeClientCount?: number | null;
+    isTcpProxy: boolean;
 }
 
 export class AppConnectorStat implements IAppConnectorStat {
@@ -3615,6 +3793,54 @@ export interface IServerLocationOptions {
     hasFree: boolean;
     hasPremium: boolean;
     hasUnblockable: boolean;
+    prompt: boolean;
+}
+
+export class AppUpdaterStatus implements IAppUpdaterStatus {
+    checkedTime?: Date | null;
+    versionStatus!: VersionStatus;
+    publishInfo?: PublishInfo | null;
+    prompt!: boolean;
+
+    constructor(data?: IAppUpdaterStatus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.checkedTime = _data["checkedTime"] ? new Date(_data["checkedTime"].toString()) : <any>null;
+            this.versionStatus = _data["versionStatus"] !== undefined ? _data["versionStatus"] : <any>null;
+            this.publishInfo = _data["publishInfo"] ? PublishInfo.fromJS(_data["publishInfo"]) : <any>null;
+            this.prompt = _data["prompt"] !== undefined ? _data["prompt"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppUpdaterStatus {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppUpdaterStatus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["checkedTime"] = this.checkedTime ? this.checkedTime.toISOString() : <any>null;
+        data["versionStatus"] = this.versionStatus !== undefined ? this.versionStatus : <any>null;
+        data["publishInfo"] = this.publishInfo ? this.publishInfo.toJSON() : <any>null;
+        data["prompt"] = this.prompt !== undefined ? this.prompt : <any>null;
+        return data;
+    }
+}
+
+export interface IAppUpdaterStatus {
+    checkedTime?: Date | null;
+    versionStatus: VersionStatus;
+    publishInfo?: PublishInfo | null;
     prompt: boolean;
 }
 

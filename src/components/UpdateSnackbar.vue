@@ -32,18 +32,18 @@ async function ignoreUpdate() {
     vertical
     rounded="xl"
     :timeout="-1"
-    :color="vhApp.data.state.versionStatus === VersionStatus.Deprecated ? 'update-snackbar-warning' :
+    :color="vhApp.data.state.updaterStatus?.versionStatus === VersionStatus.Deprecated ? 'update-snackbar-warning' :
     'update-snackbar-alert'"
   >
     <p class="text-subtitle-1 mb-3">
-      {{vhApp.data.state.versionStatus === VersionStatus.Deprecated
+      {{vhApp.data.state.updaterStatus?.versionStatus === VersionStatus.Deprecated
       ? locale("VERSION_IS_DEPRECATED") : locale("VERSION_IS_OLD") }}
     </p>
 
     <!-- Direct link without google play -->
     <v-btn
-      v-if="!vhApp.data.state.lastPublishInfo?.googlePlayUrl"
-      :href="vhApp.data.state.lastPublishInfo?.installationPageUrl"
+      v-if="!vhApp.data.state.updaterStatus?.publishInfo?.googlePlayUrl"
+      :href="vhApp.data.state.updaterStatus?.publishInfo?.installationPageUrl"
       color="btn-on-update-snackbar"
       rounded="pill"
       block
@@ -54,8 +54,8 @@ async function ignoreUpdate() {
 
     <!-- Update from google play -->
     <v-btn
-      v-if="vhApp.data.state.lastPublishInfo?.googlePlayUrl"
-      :href="vhApp.data.state.lastPublishInfo?.googlePlayUrl"
+      v-if="vhApp.data.state.updaterStatus?.publishInfo?.googlePlayUrl"
+      :href="vhApp.data.state.updaterStatus.publishInfo?.googlePlayUrl"
       color="btn-on-update-snackbar"
       rounded="pill"
       block
@@ -66,7 +66,7 @@ async function ignoreUpdate() {
 
     <!-- Do not access to google play question -->
     <v-btn
-      v-if="vhApp.data.state.lastPublishInfo?.googlePlayUrl && !showAlternativeDownloadLink"
+      v-if="vhApp.data.state.updaterStatus?.publishInfo?.googlePlayUrl && !showAlternativeDownloadLink"
       class="mt-2 text-lowercase text-caption"
       @click="showAlternativeDownloadLink = true"
       variant="text"
@@ -79,7 +79,7 @@ async function ignoreUpdate() {
       <!-- Update from direct link -->
       <v-btn
         class="mt-2"
-        :href="vhApp.data.state.lastPublishInfo?.installationPageUrl"
+        :href="vhApp.data.state.updaterStatus?.publishInfo?.installationPageUrl"
         variant="tonal"
         rounded="pill"
         block
@@ -100,7 +100,7 @@ async function ignoreUpdate() {
       <!-- Compare versions -->
       <div class="text-caption">
         <p class="opacity-60"> {{ locale("CURRENT_VERSION") }} {{ vhApp.getAppVersion(true) }}</p>
-        <p> {{ locale("NEW_VERSION") }} {{ vhApp.data.state.lastPublishInfo?.version }}</p>
+        <p> {{ locale("NEW_VERSION") }} {{ vhApp.data.state.updaterStatus?.publishInfo?.version }}</p>
       </div>
 
       <!-- Ignore button -->
