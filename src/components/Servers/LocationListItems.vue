@@ -51,8 +51,8 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     v-for="(location, index) in props.locationsList"
     :key="index"
     tabindex="0"
-    :value="isPremiumGroup ? 'premium_'+location.serverLocation : 'free_'+location.serverLocation"
-    class="pa-2"
+    :value="isPremiumGroup ? `premium_${location.serverLocation}` : `free_${location.serverLocation}`"
+    class="location-item"
     :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
     :active="isActiveItem(location)"
     color="active-server"
@@ -134,5 +134,11 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
 .item-flag.nested-item {
   width: 22px;
   height: 14px;
+}
+</style>
+<!--suppress CssUnusedSymbol -->
+<style>
+.v-list-group__items .v-list-item.location-item {
+  padding-inline-start: 16px !important;
 }
 </style>

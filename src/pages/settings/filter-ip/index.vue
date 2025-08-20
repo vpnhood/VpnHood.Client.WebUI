@@ -14,7 +14,7 @@ const locale = i18n.global.t;
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.useVpnAdapterIpFilter;
+    return vhApp.data.settings.userSettings.useVpnAdapterIpFilter && vhApp.isFilterIpByAdapterAvailable();
   },
   set: async (value: boolean) => {
     vhApp.data.settings.userSettings.useVpnAdapterIpFilter = value;
@@ -24,7 +24,7 @@ const useIpFilterByDevice = computed<boolean>({
 
 const useIpFilterByApp = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.useAppIpFilter;
+    return vhApp.data.settings.userSettings.useAppIpFilter && vhApp.isFilterIpByAppAvailable();
   },
   set: async (value: boolean) => {
     vhApp.data.settings.userSettings.useAppIpFilter = value;
@@ -44,13 +44,13 @@ const useIpFilterByApp = computed<boolean>({
     <!-- Filter by device -->
     <config-card class="pb-2">
 
-      <v-card-item @click="!vhApp.isFilterIpByDeviceAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
+      <v-card-item @click="!vhApp.isFilterIpByAdapterAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('FILTER_IPS_BY_DEVICE') }}</span>
           <v-switch
             v-model="useIpFilterByDevice"
-            :disabled="!vhApp.isFilterIpByDeviceAvailable()"
+            :disabled="!vhApp.isFilterIpByAdapterAvailable()"
           />
         </div>
 

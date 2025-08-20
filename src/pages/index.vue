@@ -446,17 +446,32 @@ function isDebugDataHasValue(): boolean {
 
         <!-- Protocol button -->
         <home-config-btn
+          id="protocolButton"
           prepend-icon="mdi-transit-connection-variant"
           tabindex="8"
           @click="router.push({name: 'PROTOCOLS'})"
+          class="align-center"
         >
           <span>{{ locale('PROTOCOL_TITLE') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
-
           <!-- Text related to selected option -->
           <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-          {{ udpProtocolButtonText() }}
-        </span>
+            {{ udpProtocolButtonText() }}
+          </span>
+
+          <!-- Cloak mode -->
+          <template v-if="vhApp.data.state.isTcpProxy" v-slot:append>
+            <v-chip
+                    :text="locale('CLOAK')"
+                    color="white"
+                    variant="tonal"
+                    size="small"
+                    density="compact"
+                    class="text-capitalize opacity-50 px-2"
+                    tabindex="-1"
+            />
+          </template>
+
         </home-config-btn>
 
       </v-col>
@@ -630,7 +645,8 @@ function isDebugDataHasValue(): boolean {
 }
 
 #serverButton .v-btn__content,
-#excludeCountryButton .v-btn__content {
+#excludeCountryButton .v-btn__content,
+#protocolButton .v-btn__content{
   flex-grow: 1;
   justify-content: start;
 }

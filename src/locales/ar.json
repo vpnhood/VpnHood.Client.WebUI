@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "عطّل ميزة \"DNS خاص\" للاستمرار مجانًا.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "اشترك في الخطة المميزة وافتح المزيد من الميزات.",
   "TURN_OFF": "إيقاف التشغيل",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "لإيقاف DNS الخاص، يرجى اتباع الخطوات التالية:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "إذا لم يتم حل المشكلة، فقد تكون هناك مشكلة في الشبكة الخاصة بك.",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "لإيقاف DNS الخاص، يرجى اتباع الخطوات التالية:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "إذا لم يتم حل المشكلة، فقد تكون هناك مشكلة في الشبكة الخاصة بك.",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "افتح <strong>الإعدادات</strong> على جهازك.",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "اضغط على أيقونة <strong>البحث</strong>.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "اكتب <strong>\"DNS\"</strong> واختر خيار <strong>DNS الخاص</strong> <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "اختر <strong>إيقاف التشغيل</strong>.",
-  "TURN_OFF_PRIVATE_DNS": "أوقف تشغيل DNS الخاص"
+  "PRIVATE_DNS_TURN_OFF": "أوقف تشغيل DNS الخاص"
 }

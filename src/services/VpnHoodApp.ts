@@ -61,6 +61,7 @@ export class VpnHoodApp {
       config.state,
       config.settings,
       config.features,
+      config.intentFeatures,
       config.clientProfileInfos,
       config.availableCultureInfos
     );
@@ -146,9 +147,12 @@ export class VpnHoodApp {
       else
         await this.apiClient.connect(clientProfileId, serverLocation, planId);
 
-      // ClientProfile will be updated after connecting when the user is premium or the selected location is not premium.
+      // TODO: remove
+      console.log("isPremium");
+      console.log(isPremium);
+      // ClientProfile will be updated after connecting.
       await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
-        isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium ?? false }),
+        isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),
         selectedLocation: new PatchOfString({ value: serverLocation })
       }));
       this.data.settings.userSettings.clientProfileId = clientProfileId;
@@ -181,6 +185,7 @@ export class VpnHoodApp {
   // Save any change by user
   public async saveUserSetting(): Promise<void> {
     await this.apiClient.setUserSettings(this.data.settings.userSettings);
+    await this.reloadState();
   }
 
   // Select a profile by user
@@ -429,14 +434,14 @@ export class VpnHoodApp {
     return autoSelectValues.includes(locationToCheck ?? '');
   }
 
-
-
-
   public isFilterIpAvailable(): boolean {
-    return this.data.settings.userSettings.useVpnAdapterIpFilter || this.data.settings.userSettings.useAppIpFilter;
+    return this.isFilterIpByAdapterAvailable() || this.isFilterIpByAppAvailable();
   }
-
-  public isFilterIpByDeviceAvailable(): boolean {
+  public isFilterIpTurnOn(): boolean {
+    return (this.data.settings.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable()) ||
+      (this.data.settings.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable());
+  }
+  public isFilterIpByAdapterAvailable(): boolean {
     if (!this.data.features.isPremiumFlagSupported)
       return true;
     return this.isPremiumAccount() || this.data.settings.userSettings.useVpnAdapterIpFilter;

@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "Desactiva el DNS privado para continuar de forma gratuita.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "Hazte premium y desbloquea más funciones.",
   "TURN_OFF": "Desactivar",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "Para desactivar el DNS privado, sigue estos pasos:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "Si eso no resuelve el problema, puede que haya un inconveniente con tu red.",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "Para desactivar el DNS privado, sigue estos pasos:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "Si eso no resuelve el problema, puede que haya un inconveniente con tu red.",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "Abre las <strong>Configuraciones</strong> de tu dispositivo.",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "Toca el ícono de <strong>búsqueda</strong>.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "Escribe <strong>\"DNS\"</strong> y selecciona la opción <strong>DNS privado</strong> <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "Selecciona <strong>Desactivar</strong>.",
-  "TURN_OFF_PRIVATE_DNS": "Desactiva el DNS privado"
+  "PRIVATE_DNS_TURN_OFF": "Desactiva el DNS privado"
 }

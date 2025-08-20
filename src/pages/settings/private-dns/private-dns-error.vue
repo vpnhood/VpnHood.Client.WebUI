@@ -50,7 +50,7 @@ const locale = i18n.global.t;
           <v-col>
             <div class="d-flex align-center">
               <v-icon icon="mdi-server-off" color="promote-premium-color-free" size="25" class="me-2" />
-              <p class="text-white text-caption">{{ locale("TURN_OFF_PRIVATE_DNS_MSG") }}</p>
+              <p class="text-white text-caption">{{ locale("PRIVATE_DNS_TURN_OFF_MSG") }}</p>
             </div>
           </v-col>
           <v-col cols="auto" class="pe-0 action-btn">

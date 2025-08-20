@@ -1,9 +1,9 @@
-﻿// VpnHoodAppData must be a separate class to prevents VpnHoodApp reactive
+﻿// VpnHoodAppData must be a separate class to prevent VpnHoodApp reactive
 import { UiState } from '@/helpers/UiState';
 import { UserState } from '@/helpers/UserState';
 import {
   AppConnectionState,
-  AppFeatures,
+  AppFeatures, AppIntentFeatures,
   AppSettings,
   AppState,
   ClientProfileInfo,
@@ -18,6 +18,7 @@ export class VpnHoodAppData {
   public state: AppState;
   public settings: AppSettings;
   public features: AppFeatures;
+  public intentFeatures: AppIntentFeatures;
   public clientProfileInfos: ClientProfileInfo[];
   public cultureInfos: UiCultureInfo[];
 
@@ -25,12 +26,14 @@ export class VpnHoodAppData {
     state: AppState,
     setting: AppSettings,
     features: AppFeatures,
+    intentFeatures: AppIntentFeatures,
     clientProfileInfos: ClientProfileInfo[],
     cultureInfos: UiCultureInfo[]
   ) {
     this.state = state;
     this.settings = setting;
     this.features = features;
+    this.intentFeatures = intentFeatures;
     this.clientProfileInfos = clientProfileInfos;
     this.cultureInfos = cultureInfos;
   }

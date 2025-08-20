@@ -52,8 +52,8 @@ const cloakMode = computed({
     return vhApp.data.state.isTcpProxy;
   },
   set: async (value: boolean) => {
-    vhApp.data.settings.userSettings.useTcpProxy = value;
     vhApp.data.state.isTcpProxy = value;
+    vhApp.data.settings.userSettings.useTcpProxy = value;
     await vhApp.saveUserSetting();
   }
 });
@@ -85,9 +85,6 @@ function isUdpUnsupported(): boolean {
 
     <p class="text-disabled text-caption mb-4">{{locale("PROTOCOL_DESC")}}</p>
 
-    <!-- Disconnect required alert -->
-    <disconnect-required-alert class="mb-4"/>
-
     <!-- Cloak Mode -->
     <config-card>
       <v-card-item>
@@ -101,8 +98,12 @@ function isUdpUnsupported(): boolean {
 
     <!-- Protocols radio buttons -->
     <config-card>
+
       <!-- UDP description -->
       <v-card-item>
+        <!-- Disconnect required alert -->
+        <disconnect-required-alert class="my-3"/>
+
         <v-card-subtitle>{{locale('PROTOCOL_UDP_NOTE')}}</v-card-subtitle>
       </v-card-item>
 

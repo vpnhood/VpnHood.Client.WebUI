@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "برای ادامه استفاده رایگان، DNS خصوصی را غیرفعال کنید.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "به نسخه ویژه ارتقا دهید و امکانات بیشتری را فعال کنید.",
   "TURN_OFF": "خاموش کردن",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "برای خاموش کردن DNS خصوصی، لطفاً مراحل زیر را دنبال کنید:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "اگر مشکل حل نشد، ممکن است مشکلی در شبکه شما وجود داشته باشد.",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "برای خاموش کردن DNS خصوصی، لطفاً مراحل زیر را دنبال کنید:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "اگر مشکل حل نشد، ممکن است مشکلی در شبکه شما وجود داشته باشد.",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "باز کردن <strong>تنظیمات</strong> دستگاه.",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "روی آیکون <strong>جستجو</strong> ضربه بزنید.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "عبارت <strong>\"DNS\"</strong> را تایپ کرده و گزینه <strong>DNS خصوصی</strong> را انتخاب کنید <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "گزینه <strong>خاموش</strong> را انتخاب کنید.",
-  "TURN_OFF_PRIVATE_DNS": "DNS خصوصی را خاموش کنید"
+  "PRIVATE_DNS_TURN_OFF": "DNS خصوصی را خاموش کنید"
 }

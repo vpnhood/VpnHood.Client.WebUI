@@ -2034,6 +2034,7 @@ export interface IAppAccount {
 
 export class AppData implements IAppData {
     features!: AppFeatures;
+    intentFeatures!: AppIntentFeatures;
     settings!: AppSettings;
     state!: AppState;
     clientProfileInfos!: ClientProfileInfo[];
@@ -2048,6 +2049,7 @@ export class AppData implements IAppData {
         }
         if (!data) {
             this.features = new AppFeatures();
+            this.intentFeatures = new AppIntentFeatures();
             this.settings = new AppSettings();
             this.state = new AppState();
             this.clientProfileInfos = [];
@@ -2058,6 +2060,7 @@ export class AppData implements IAppData {
     init(_data?: any) {
         if (_data) {
             this.features = _data["features"] ? AppFeatures.fromJS(_data["features"]) : new AppFeatures();
+            this.intentFeatures = _data["intentFeatures"] ? AppIntentFeatures.fromJS(_data["intentFeatures"]) : new AppIntentFeatures();
             this.settings = _data["settings"] ? AppSettings.fromJS(_data["settings"]) : new AppSettings();
             this.state = _data["state"] ? AppState.fromJS(_data["state"]) : new AppState();
             if (Array.isArray(_data["clientProfileInfos"])) {
@@ -2089,6 +2092,7 @@ export class AppData implements IAppData {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["features"] = this.features ? this.features.toJSON() : <any>null;
+        data["intentFeatures"] = this.intentFeatures ? this.intentFeatures.toJSON() : <any>null;
         data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
         data["state"] = this.state ? this.state.toJSON() : <any>null;
         if (Array.isArray(this.clientProfileInfos)) {
@@ -2107,6 +2111,7 @@ export class AppData implements IAppData {
 
 export interface IAppData {
     features: AppFeatures;
+    intentFeatures: AppIntentFeatures;
     settings: AppSettings;
     state: AppState;
     clientProfileInfos: ClientProfileInfo[];
@@ -2123,15 +2128,8 @@ export class AppFeatures implements IAppFeatures {
     builtInClientProfileId?: string | null;
     isAccountSupported!: boolean;
     isBillingSupported!: boolean;
-    isRequestQuickLaunchSupported!: boolean;
-    isRequestNotificationSupported!: boolean;
-    isUserReviewSupported!: boolean;
-    isSystemKillSwitchSettingsSupported!: boolean;
-    isSystemAlwaysOnSettingsSupported!: boolean;
-    isSystemSettingsSupported!: boolean;
-    isAppSystemSettingsSupported!: boolean;
-    isAppSystemNotificationSettingsSupported!: boolean;
     isTcpProxySupported!: boolean;
+    isUserReviewSupported!: boolean;
     isTv!: boolean;
     gaMeasurementId?: string | null;
     clientId!: string;
@@ -2169,15 +2167,8 @@ export class AppFeatures implements IAppFeatures {
             this.builtInClientProfileId = _data["builtInClientProfileId"] !== undefined ? _data["builtInClientProfileId"] : <any>null;
             this.isAccountSupported = _data["isAccountSupported"] !== undefined ? _data["isAccountSupported"] : <any>null;
             this.isBillingSupported = _data["isBillingSupported"] !== undefined ? _data["isBillingSupported"] : <any>null;
-            this.isRequestQuickLaunchSupported = _data["isRequestQuickLaunchSupported"] !== undefined ? _data["isRequestQuickLaunchSupported"] : <any>null;
-            this.isRequestNotificationSupported = _data["isRequestNotificationSupported"] !== undefined ? _data["isRequestNotificationSupported"] : <any>null;
-            this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
-            this.isSystemKillSwitchSettingsSupported = _data["isSystemKillSwitchSettingsSupported"] !== undefined ? _data["isSystemKillSwitchSettingsSupported"] : <any>null;
-            this.isSystemAlwaysOnSettingsSupported = _data["isSystemAlwaysOnSettingsSupported"] !== undefined ? _data["isSystemAlwaysOnSettingsSupported"] : <any>null;
-            this.isSystemSettingsSupported = _data["isSystemSettingsSupported"] !== undefined ? _data["isSystemSettingsSupported"] : <any>null;
-            this.isAppSystemSettingsSupported = _data["isAppSystemSettingsSupported"] !== undefined ? _data["isAppSystemSettingsSupported"] : <any>null;
-            this.isAppSystemNotificationSettingsSupported = _data["isAppSystemNotificationSettingsSupported"] !== undefined ? _data["isAppSystemNotificationSettingsSupported"] : <any>null;
             this.isTcpProxySupported = _data["isTcpProxySupported"] !== undefined ? _data["isTcpProxySupported"] : <any>null;
+            this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
             this.isTv = _data["isTv"] !== undefined ? _data["isTv"] : <any>null;
             this.gaMeasurementId = _data["gaMeasurementId"] !== undefined ? _data["gaMeasurementId"] : <any>null;
             this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
@@ -2225,15 +2216,8 @@ export class AppFeatures implements IAppFeatures {
         data["builtInClientProfileId"] = this.builtInClientProfileId !== undefined ? this.builtInClientProfileId : <any>null;
         data["isAccountSupported"] = this.isAccountSupported !== undefined ? this.isAccountSupported : <any>null;
         data["isBillingSupported"] = this.isBillingSupported !== undefined ? this.isBillingSupported : <any>null;
-        data["isRequestQuickLaunchSupported"] = this.isRequestQuickLaunchSupported !== undefined ? this.isRequestQuickLaunchSupported : <any>null;
-        data["isRequestNotificationSupported"] = this.isRequestNotificationSupported !== undefined ? this.isRequestNotificationSupported : <any>null;
-        data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
-        data["isSystemKillSwitchSettingsSupported"] = this.isSystemKillSwitchSettingsSupported !== undefined ? this.isSystemKillSwitchSettingsSupported : <any>null;
-        data["isSystemAlwaysOnSettingsSupported"] = this.isSystemAlwaysOnSettingsSupported !== undefined ? this.isSystemAlwaysOnSettingsSupported : <any>null;
-        data["isSystemSettingsSupported"] = this.isSystemSettingsSupported !== undefined ? this.isSystemSettingsSupported : <any>null;
-        data["isAppSystemSettingsSupported"] = this.isAppSystemSettingsSupported !== undefined ? this.isAppSystemSettingsSupported : <any>null;
-        data["isAppSystemNotificationSettingsSupported"] = this.isAppSystemNotificationSettingsSupported !== undefined ? this.isAppSystemNotificationSettingsSupported : <any>null;
         data["isTcpProxySupported"] = this.isTcpProxySupported !== undefined ? this.isTcpProxySupported : <any>null;
+        data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
         data["isTv"] = this.isTv !== undefined ? this.isTv : <any>null;
         data["gaMeasurementId"] = this.gaMeasurementId !== undefined ? this.gaMeasurementId : <any>null;
         data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
@@ -2268,15 +2252,8 @@ export interface IAppFeatures {
     builtInClientProfileId?: string | null;
     isAccountSupported: boolean;
     isBillingSupported: boolean;
-    isRequestQuickLaunchSupported: boolean;
-    isRequestNotificationSupported: boolean;
-    isUserReviewSupported: boolean;
-    isSystemKillSwitchSettingsSupported: boolean;
-    isSystemAlwaysOnSettingsSupported: boolean;
-    isSystemSettingsSupported: boolean;
-    isAppSystemSettingsSupported: boolean;
-    isAppSystemNotificationSettingsSupported: boolean;
     isTcpProxySupported: boolean;
+    isUserReviewSupported: boolean;
     isTv: boolean;
     gaMeasurementId?: string | null;
     clientId: string;
@@ -2297,6 +2274,74 @@ export enum AppFeature {
     CustomDns = "CustomDns",
     AppIpFilter = "AppIpFilter",
     AdapterIpFilter = "AdapterIpFilter",
+}
+
+export class AppIntentFeatures implements IAppIntentFeatures {
+    isUserReviewSupported!: boolean;
+    isRequestQuickLaunchSupported!: boolean;
+    isRequestNotificationSupported!: boolean;
+    isSystemPrivateDnsSettingsSupported!: boolean;
+    isSystemKillSwitchSettingsSupported!: boolean;
+    isSystemAlwaysOnSettingsSupported!: boolean;
+    isSystemSettingsSupported!: boolean;
+    isAppSystemSettingsSupported!: boolean;
+    isAppSystemNotificationSettingsSupported!: boolean;
+
+    constructor(data?: IAppIntentFeatures) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
+            this.isRequestQuickLaunchSupported = _data["isRequestQuickLaunchSupported"] !== undefined ? _data["isRequestQuickLaunchSupported"] : <any>null;
+            this.isRequestNotificationSupported = _data["isRequestNotificationSupported"] !== undefined ? _data["isRequestNotificationSupported"] : <any>null;
+            this.isSystemPrivateDnsSettingsSupported = _data["isSystemPrivateDnsSettingsSupported"] !== undefined ? _data["isSystemPrivateDnsSettingsSupported"] : <any>null;
+            this.isSystemKillSwitchSettingsSupported = _data["isSystemKillSwitchSettingsSupported"] !== undefined ? _data["isSystemKillSwitchSettingsSupported"] : <any>null;
+            this.isSystemAlwaysOnSettingsSupported = _data["isSystemAlwaysOnSettingsSupported"] !== undefined ? _data["isSystemAlwaysOnSettingsSupported"] : <any>null;
+            this.isSystemSettingsSupported = _data["isSystemSettingsSupported"] !== undefined ? _data["isSystemSettingsSupported"] : <any>null;
+            this.isAppSystemSettingsSupported = _data["isAppSystemSettingsSupported"] !== undefined ? _data["isAppSystemSettingsSupported"] : <any>null;
+            this.isAppSystemNotificationSettingsSupported = _data["isAppSystemNotificationSettingsSupported"] !== undefined ? _data["isAppSystemNotificationSettingsSupported"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AppIntentFeatures {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppIntentFeatures();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
+        data["isRequestQuickLaunchSupported"] = this.isRequestQuickLaunchSupported !== undefined ? this.isRequestQuickLaunchSupported : <any>null;
+        data["isRequestNotificationSupported"] = this.isRequestNotificationSupported !== undefined ? this.isRequestNotificationSupported : <any>null;
+        data["isSystemPrivateDnsSettingsSupported"] = this.isSystemPrivateDnsSettingsSupported !== undefined ? this.isSystemPrivateDnsSettingsSupported : <any>null;
+        data["isSystemKillSwitchSettingsSupported"] = this.isSystemKillSwitchSettingsSupported !== undefined ? this.isSystemKillSwitchSettingsSupported : <any>null;
+        data["isSystemAlwaysOnSettingsSupported"] = this.isSystemAlwaysOnSettingsSupported !== undefined ? this.isSystemAlwaysOnSettingsSupported : <any>null;
+        data["isSystemSettingsSupported"] = this.isSystemSettingsSupported !== undefined ? this.isSystemSettingsSupported : <any>null;
+        data["isAppSystemSettingsSupported"] = this.isAppSystemSettingsSupported !== undefined ? this.isAppSystemSettingsSupported : <any>null;
+        data["isAppSystemNotificationSettingsSupported"] = this.isAppSystemNotificationSettingsSupported !== undefined ? this.isAppSystemNotificationSettingsSupported : <any>null;
+        return data;
+    }
+}
+
+export interface IAppIntentFeatures {
+    isUserReviewSupported: boolean;
+    isRequestQuickLaunchSupported: boolean;
+    isRequestNotificationSupported: boolean;
+    isSystemPrivateDnsSettingsSupported: boolean;
+    isSystemKillSwitchSettingsSupported: boolean;
+    isSystemAlwaysOnSettingsSupported: boolean;
+    isSystemSettingsSupported: boolean;
+    isAppSystemSettingsSupported: boolean;
+    isAppSystemNotificationSettingsSupported: boolean;
 }
 
 export class AppSettings implements IAppSettings {
@@ -2873,6 +2918,7 @@ export class AppState implements IAppState {
     systemUiCultureInfo!: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
     systemBarsInfo!: SystemBarsInfo;
+    isNotificationEnabled?: boolean | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2914,6 +2960,7 @@ export class AppState implements IAppState {
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
             this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
             this.systemBarsInfo = _data["systemBarsInfo"] ? SystemBarsInfo.fromJS(_data["systemBarsInfo"]) : new SystemBarsInfo();
+            this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
         }
     }
 
@@ -2950,6 +2997,7 @@ export class AppState implements IAppState {
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
         data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
         data["systemBarsInfo"] = this.systemBarsInfo ? this.systemBarsInfo.toJSON() : <any>null;
+        data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
         return data;
     }
 }
@@ -2979,6 +3027,7 @@ export interface IAppState {
     systemUiCultureInfo: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
     systemBarsInfo: SystemBarsInfo;
+    isNotificationEnabled?: boolean | null;
 }
 
 export enum AppConnectionState {

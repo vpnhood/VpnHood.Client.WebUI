@@ -12,7 +12,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { ConnectManager } from '@/helpers/ConnectManager';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 
@@ -46,41 +45,41 @@ const premiumCodeExpirationDate = computed<Date | null | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.expirationTime;
 });
 
-const numberOnlyRule = (value: string) => {
+const premiumCodeNumberRule = (value: string) => {
   return /^[0-9\-]*$/.test(value) || locale('PREMIUM_CODE_NUMBER_RULE_MSG');
 };
 
-const codeCountRule = (value: string) => {
+const premiumCodeCountRule = (value: string) => {
   const count = value.replace(/-/g, '').length;
   return count == 20 || locale('PREMIUM_CODE_COUNT_RULE_MSG');
 };
 
 // Keep only numbers and limit to 20 characters
-const handleInput = (event: Event) => {
+const premiumCodeHandleInput = (event: Event) => {
   if (invalidCodeError.value) invalidCodeError.value = null;
   const value = (event.target as HTMLInputElement).value;
   premiumCodeRawNumber.value = value.replace(/\D/g, '').slice(0, 20);
 };
 
+// Add a dash every 4 characters during input premium code
 watchEffect(() => {
   formattedPremiumCode.value = premiumCodeRawNumber.value.match(/.{1,4}/g)?.join('-') || '';
 });
 
-// Use one dialog for purchase by Google and by premium key
+// Use one dialog for purchase by Google and premium code
 const isShowProcessDialog = computed<boolean>(() => {
   return vhApp.data.state.purchaseState === BillingPurchaseState.Processing || showProcessDialog.value;
 });
 
 onMounted(async () => {
-  // TODO: Remove
-  console.log(purchaseCompleteDialogMessage.value);
+  // Check eligibility to purchase by Google
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
     isGoogleBillingAvailable.value = false;
     showPurchaseViaGoogle.value = false;
     return;
   }
 
-  // Get a product list from Google
+  // Get the purchase availability methods
   const billingClient = ClientApiFactory.instance.createBillingClient();
   purchaseOptions.value = await billingClient.getPurchaseOptions();
 
@@ -90,41 +89,29 @@ onMounted(async () => {
   // Show purchase via Google
   showPurchaseViaGoogle.value = !!purchaseOptions.value.storeName;
 
-  // Google billing is available
-  if (purchaseOptions.value.subscriptionPlans.length > 0) {
-    // Sort plans based on plan prices
+  // Google billing is not available
+  isGoogleBillingAvailable.value = purchaseOptions.value.subscriptionPlans.length > 0;
+
+  // Sort plans based on plan prices
+  if (isGoogleBillingAvailable.value) {
     subscriptionPlans.value = purchaseOptions.value.subscriptionPlans.sort(
       (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
         Number((b.planPrice).replace(/\D/g, ''))
     );
-    return;
   }
 
-  // Google billing is not available
-  isGoogleBillingAvailable.value = false;
-
-  // Google Play is unavailable
-  if (purchaseOptions.value.storeError) {
-    switch (purchaseOptions.value.storeError.typeName) {
-      case 'GoogleBillingException':
-        console.log('Google play billing is unavailable.');
-        break;
-      case 'GooglePlayUnavailableException':
-        console.log('Google play service is unavailable.');
-        break;
-      default:
-        throw purchaseOptions.value.storeError;
-    }
-  }
 });
 
 async function onPurchaseClick(planId: string): Promise<void> {
+  // Login if not logged in
   if (!vhApp.data.userState.userAccount)
     await vhApp.signIn(true);
 
+  // Check if the user is premium by selected plan
   if (vhApp.data.userState.userAccount?.providerPlanId === planId)
     throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
 
+  // Start google billing flow
   await purchase(planId);
 }
 
@@ -135,7 +122,7 @@ async function purchase(planId: string): Promise<void> {
   purchaseCompleteDialogMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
 }
 
-async function validateCode(): Promise<void> {
+async function validatePremiumCode(): Promise<void> {
   if (!premiumCodeRawNumber.value)
     return;
 
@@ -159,25 +146,18 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
   try {
     showProcessDialog.value = true;
 
-    await vhApp.connect(profileId, undefined, false, ConnectPlanId.Normal, false, false);
+    await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
 
     if (vhApp.data.isConnected && vhApp.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
-
-    // TODO: Remove
-    console.log("TTTT");
-    console.log(purchaseCompleteDialogMessage.value);
   }
-  catch (err){
-    // TODO: Remove
-    console.log(err);
+  catch {
     await vhApp.removePremiumCode()
   }
   finally {
     showProcessDialog.value = false;
   }
 }
-
 function closeCompleteDialog(showStatistics: boolean) {
   purchaseCompleteDialogMessage.value = null;
   router.replace({ name: showStatistics ? 'STATISTICS' : 'HOME' });
@@ -379,13 +359,13 @@ function closeCompleteDialog(showStatistics: boolean) {
 
               <v-form
                 v-model="premiumCodeForm"
-                @submit.prevent="validateCode()"
+                @submit.prevent="validatePremiumCode()"
               >
                 <v-text-field
                   v-model="formattedPremiumCode"
                   :placeholder="locale('ENTER_YOUR_CODE')"
-                  :rules="[numberOnlyRule, codeCountRule]"
-                  @input="handleInput"
+                  :rules="[premiumCodeNumberRule, premiumCodeCountRule]"
+                  @input="premiumCodeHandleInput"
                   :error-messages="invalidCodeError"
                   hide-details="auto"
                   single-line

@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "Ücretsiz devam etmek için özel DNS'i kapatın.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "Premium’a geçin ve daha fazla özelliğin kilidini açın.",
   "TURN_OFF": "Kapat",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "Özel DNS'i kapatmak için lütfen şu adımları izleyin:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "Sorun çözülmezse ağınızla ilgili bir problem olabilir.",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "Özel DNS'i kapatmak için lütfen şu adımları izleyin:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "Sorun çözülmezse ağınızla ilgili bir problem olabilir.",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "Cihazınızın <strong>Ayarlar</strong> menüsünü açın.",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "<strong>Arama</strong> simgesine dokunun.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "<strong>\"DNS\"</strong> yazın ve <strong>Özel DNS</strong> seçeneğini seçin <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "<strong>Kapalı</strong> seçeneğini seçin.",
-  "TURN_OFF_PRIVATE_DNS": "Özel DNS'i kapatın"
+  "PRIVATE_DNS_TURN_OFF": "Özel DNS'i kapatın"
 }

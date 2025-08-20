@@ -4,11 +4,11 @@ import { VpnHoodApp } from '@/services/VpnHoodApp'
 import LocationListItems from '@/components/Servers/LocationListItems.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue';
+import LocationGroup from '@/components/Servers/LocationGroup.vue';
 
 enum locationListType{
   Free = "free",
-  Premium = "premium",
-  All = "all"
+  Premium = "premium"
 }
 
 const vhApp = VpnHoodApp.instance;
@@ -24,9 +24,6 @@ const premiumLocations = props.clientProfile.locationInfos.filter(x => x.options
 
 // Group open state
 const openedListGroupsModel = ref<string[]>([locationListType.Free, locationListType.Premium]);
-
-// Location list array
-const locationLists: string[] = listHasGroup() ? [locationListType.Free, locationListType.Premium] : [locationListType.All];
 
 function listHasGroup(): boolean{
   if (freeLocations.length === 0)
@@ -46,34 +43,26 @@ function listHasGroup(): boolean{
   >
     <!-- Categorised locations -->
     <template v-if="listHasGroup()">
-      <config-card v-for="(listType, index) in locationLists" :key="index">
-        <v-card-item class="py-0">
-          <v-list-group :value="listType">
-            <!-- Group title -->
-            <template v-slot:activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                class="server-item-group text-caption px-0"
-                base-color="disabled"
-                :ripple="false"
-              >
-                <div class="d-flex align-center ga-3">
-                  <span>{{ listType === locationListType.Free ? locale('FREE_LOCATIONS') : locale('PREMIUM_LOCATIONS') }}</span>
-                  <span class="flex-grow-1 border-b border-opacity-25"></span>
-                </div>
-              </v-list-item>
-            </template>
 
-            <!-- Group items -->
-            <LocationListItems
-              :client-profile-id="props.clientProfile.clientProfileId"
-              :locations-list="listType === locationListType.Free ? freeLocations : premiumLocations"
-              :is-premium-group="listType === locationListType.Premium"
-              :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
-            />
-          </v-list-group>
-        </v-card-item>
-      </config-card>
+      <!-- Free locations group -->
+      <location-group
+        v-if="!vhApp.isPremiumAccount()"
+        :list-type="locationListType.Free"
+        :group-title="locale('FREE_LOCATIONS')"
+        :client-profile-id="props.clientProfile.clientProfileId"
+        :location-list="freeLocations"
+        :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+      />
+
+      <!-- Premium locations group -->
+      <location-group
+        :list-type="locationListType.Premium"
+        :group-title="locale('PREMIUM_LOCATIONS')"
+        :client-profile-id="props.clientProfile.clientProfileId"
+        :location-list="premiumLocations"
+        :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+      />
+
     </template>
 
 
@@ -96,8 +85,5 @@ function listHasGroup(): boolean{
 .server-item-group>.v-list-item__overlay{display: none;}
 .server-item-group .v-list-item__append > .v-icon ~ .v-list-item__spacer{
   width: 10px;
-}
-.v-list-group__items .v-list-item{
-  padding-inline-start: 7px !important;
 }
 </style>

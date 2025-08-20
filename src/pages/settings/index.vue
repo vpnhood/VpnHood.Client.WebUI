@@ -7,6 +7,7 @@ import { Util } from '@/helpers/Util';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import type { RouteLocationRaw } from 'vue-router';
+import { AppFeature } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -16,6 +17,7 @@ interface SettingsItem {
   subtitle: string,
   isPremium: boolean,
   click?: RouteLocationRaw,
+  premiumClick?: RouteLocationRaw,
   selectedItem?: string,
   status?: boolean
   isShow?: boolean,
@@ -50,39 +52,45 @@ const settingsItem: SettingsItem[] = [
   {
     title: "FILTER_IP_ADDRESSES",
     subtitle: "FILTER_IP_ADDRESSES_DESC",
-    isPremium: true,
-    status: vhApp.isFilterIpAvailable(),
-    click: {name: 'FILTER_IP'}
+    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AppIpFilter),
+    status: vhApp.isFilterIpTurnOn(),
+    click: {name: vhApp.isFilterIpAvailable() ? 'FILTER_IP' : 'PURCHASE_SUBSCRIPTION'},
   },
   {
     title: "NOTIFICATIONS",
     subtitle: "NOTIFICATIONS_DESC",
     isPremium: false,
+    status: vhApp.data.settings.isNotificationEnabled ?? undefined,
+    isShow: vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported,
     click: {name: 'NOTIFICATIONS'}
+  },
+  {
+    title: "QUICK_LAUNCH",
+    subtitle: "QUICK_LAUNCH_DESC",
+    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch),
+    isShow: false,
+    click: {name: 'FILTER_IP'}
+  },
+  {
+    title: "ALWAYS_ON",
+    subtitle: "ALWAYS_ON_DESC",
+    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn),
+    isShow: false,
+    click: {name: 'FILTER_IP'}
   },
   {
     title: "KILL_SWITCH",
     subtitle: "KILL_SWITCH_DESC",
     isPremium: false,
+    isShow: vhApp.data.intentFeatures.isSystemKillSwitchSettingsSupported,
     click: {name: 'KILL_SWITCH'}
-  },
-  {
-    title: "ALWAYS_ON",
-    subtitle: "ALWAYS_ON_DESC",
-    isPremium: true,
-    click: {name: 'FILTER_IP'}
   },
   {
     title: "PRIVATE_DNS",
     subtitle: "PRIVATE_DNS_DESC",
-    isPremium: true,
-    click: {name: 'FILTER_IP'}
-  },
-  {
-    title: "QUICK_LAUNCH",
-    subtitle: "QUICK_LAUNCH_DESC",
-    isPremium: true,
-    click: {name: 'FILTER_IP'}
+    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
+    isShow: vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported,
+    click: {name: 'PRIVATE_DNS'}
   }
 ]
 

@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "मुफ़्त में जारी रखने के लिए, निजी DNS बंद करें।",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "प्रीमियम पर जाएं और अधिक सुविधाओं को अनलॉक करें।",
   "TURN_OFF": "बंद करें",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "निजी DNS बंद करने के लिए कृपया निम्न चरणों का पालन करें:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "यदि इससे समस्या हल नहीं होती है, तो आपके नेटवर्क में कोई समस्या हो सकती है।",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "निजी DNS बंद करने के लिए कृपया निम्न चरणों का पालन करें:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "यदि इससे समस्या हल नहीं होती है, तो आपके नेटवर्क में कोई समस्या हो सकती है।",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "अपने डिवाइस की <strong>सेटिंग्स</strong> खोलें।",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "<strong>खोज</strong> आइकन पर टैप करें।",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "<strong>\"DNS\"</strong> टाइप करें और <strong>निजी DNS</strong> विकल्प चुनें <span class=\"text-disabled\">(Private DNS)</span>।",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "<strong>बंद करें</strong> चुनें।",
-  "TURN_OFF_PRIVATE_DNS": "निजी DNS बंद करें"
+  "PRIVATE_DNS_TURN_OFF": "निजी DNS बंद करें"
 }

@@ -62,20 +62,28 @@ export class ConnectManager {
     const hasPremium = clientProfileInfo.selectedLocationInfo?.options.hasPremium;
     const hasFree = clientProfileInfo.selectedLocationInfo?.options.hasFree;
 
-    let isPremiumLocation = clientProfileInfo.isPremiumLocationSelected;
+    let isPremiumLocationSelected = clientProfileInfo.isPremiumLocationSelected;
 
     if (hasPremium && !hasFree)
-      isPremiumLocation = true;
+      isPremiumLocationSelected = true;
 
     if (!hasPremium && hasFree)
-      isPremiumLocation = false;
+      isPremiumLocationSelected = false;
 
-    if (isPremiumLocation && VpnHoodApp.instance.data.features.isPremiumFlagSupported && !VpnHoodApp.instance.isPremiumAccount()){
-      isPremiumLocation = false;
+    // If the user is not premium and the selected location is premium, then set the location to auto to show the
+    // promoted dialog with the option to connect as free.
+    /*if (isPremiumLocationSelected && VpnHoodApp.instance.data.features.isPremiumFlagSupported && !VpnHoodApp.instance.isPremiumAccount()){
+      isPremiumLocationSelected = false;
+      serverLocation = '*!/!*';
+    }*/
+
+    // Force the premium user to connect to the premium location.
+    if (VpnHoodApp.instance.isPremiumAccount() && VpnHoodApp.instance.data.features.isPremiumFlagSupported && !isPremiumLocationSelected ){
+      isPremiumLocationSelected = true;
       serverLocation = '*/*';
     }
 
-    await this.connect3(clientProfileId, serverLocation, isPremiumLocation, isDiagnose, undefined);
+    await this.connect3(clientProfileId, serverLocation, isPremiumLocationSelected, isDiagnose, undefined);
   }
 
   public static async connect3(

@@ -343,11 +343,11 @@
   "TURN_OFF_PRIVATE_DNS_MSG": "Отключите приватный DNS, чтобы продолжить пользоваться бесплатно.",
   "GO_PREMIUM_AND_UNLOCK_FEATURES": "Оформите премиум-подписку и получите доступ к дополнительным функциям.",
   "TURN_OFF": "Отключить",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_DESC": "Чтобы отключить приватный DNS, выполните следующие шаги:",
-  "HOW_TO_TURN_OFF_PRIVATE_DNS_FINAL_DESC": "Если это не решит проблему, возможно, она связана с вашей сетью.",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_DESC": "Чтобы отключить приватный DNS, выполните следующие шаги:",
+  "PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC": "Если это не решит проблему, возможно, она связана с вашей сетью.",
   "TURN_OFF_PRIVATE_DNS_STEP_1": "Откройте <strong>Настройки</strong> вашего устройства.",
   "TURN_OFF_PRIVATE_DNS_STEP_2": "Нажмите на значок <strong>поиска</strong>.",
   "TURN_OFF_PRIVATE_DNS_STEP_3": "Введите <strong>\"DNS\"</strong> и выберите опцию <strong>Приватный DNS</strong> <span class=\"text-disabled\">(Private DNS)</span>.",
   "TURN_OFF_PRIVATE_DNS_STEP_4": "Выберите <strong>Отключить</strong>.",
-  "TURN_OFF_PRIVATE_DNS": "Отключите приватный DNS"
+  "PRIVATE_DNS_TURN_OFF": "Отключите приватный DNS"
 }
