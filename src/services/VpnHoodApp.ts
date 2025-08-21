@@ -147,9 +147,6 @@ export class VpnHoodApp {
       else
         await this.apiClient.connect(clientProfileId, serverLocation, planId);
 
-      // TODO: remove
-      console.log("isPremium");
-      console.log(isPremium);
       // ClientProfile will be updated after connecting.
       await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
         isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),

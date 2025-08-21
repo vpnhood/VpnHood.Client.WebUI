@@ -40,8 +40,6 @@ onMounted(async () => {
   setInterval(async () => {
     if (!document.hidden)
       vhApp.edgeToEdge();
-    console.log("vhApp.data.settings.isNotificationEnabled");
-    console.log(vhApp.data.settings.isNotificationEnabled);
       await vhApp.reloadState();
   }, 1000);
 
