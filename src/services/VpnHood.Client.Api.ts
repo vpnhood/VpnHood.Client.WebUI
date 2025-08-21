@@ -2545,6 +2545,8 @@ export class UserSettings implements IUserSettings {
     useVpnAdapterIpFilter!: boolean;
     endPointStrategy!: EndPointStrategy;
     dnsServers?: string[] | null;
+    useProxyServer!: boolean;
+    proxyServers!: ProxyServerEndPoint[];
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -2556,6 +2558,7 @@ export class UserSettings implements IUserSettings {
         if (!data) {
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
+            this.proxyServers = [];
         }
     }
 
@@ -2595,6 +2598,15 @@ export class UserSettings implements IUserSettings {
             }
             else {
                 this.dnsServers = <any>null;
+            }
+            this.useProxyServer = _data["useProxyServer"] !== undefined ? _data["useProxyServer"] : <any>null;
+            if (Array.isArray(_data["proxyServers"])) {
+                this.proxyServers = [] as any;
+                for (let item of _data["proxyServers"])
+                    this.proxyServers!.push(ProxyServerEndPoint.fromJS(item));
+            }
+            else {
+                this.proxyServers = <any>null;
             }
         }
     }
@@ -2637,6 +2649,12 @@ export class UserSettings implements IUserSettings {
             for (let item of this.dnsServers)
                 data["dnsServers"].push(item);
         }
+        data["useProxyServer"] = this.useProxyServer !== undefined ? this.useProxyServer : <any>null;
+        if (Array.isArray(this.proxyServers)) {
+            data["proxyServers"] = [];
+            for (let item of this.proxyServers)
+                data["proxyServers"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2663,6 +2681,8 @@ export interface IUserSettings {
     useVpnAdapterIpFilter: boolean;
     endPointStrategy: EndPointStrategy;
     dnsServers?: string[] | null;
+    useProxyServer: boolean;
+    proxyServers: ProxyServerEndPoint[];
 }
 
 export enum FilterMode {
@@ -2759,6 +2779,62 @@ export enum EndPointStrategy {
     TokenFirst = "TokenFirst",
     DnsOnly = "DnsOnly",
     TokenOnly = "TokenOnly",
+}
+
+export class ProxyServerEndPoint implements IProxyServerEndPoint {
+    proxyServerType!: ProxyServerType;
+    address?: string | null;
+    port!: number;
+    username?: string | null;
+    password?: string | null;
+
+    constructor(data?: IProxyServerEndPoint) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.proxyServerType = _data["proxyServerType"] !== undefined ? _data["proxyServerType"] : <any>null;
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ProxyServerEndPoint {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProxyServerEndPoint();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["proxyServerType"] = this.proxyServerType !== undefined ? this.proxyServerType : <any>null;
+        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["port"] = this.port !== undefined ? this.port : <any>null;
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data;
+    }
+}
+
+export interface IProxyServerEndPoint {
+    proxyServerType: ProxyServerType;
+    address?: string | null;
+    port: number;
+    username?: string | null;
+    password?: string | null;
+}
+
+export enum ProxyServerType {
+    Socks5 = "Socks5",
 }
 
 export class AppSettingsService implements IAppSettingsService {
@@ -4437,6 +4513,7 @@ export enum ExceptionType {
     NoInternet = "NoInternetException",
     NoStableVpn = "NoStableVpnException",
     UnreachableServer = "UnreachableServerException",
+    UnreachableProxyServer = "UnreachableProxyServerException",
     UnreachableServerLocation = "UnreachableServerLocationException",
     RewardNotEarned = "RewardNotEarnedException",
     VpnServiceNotReady = "VpnServiceNotReadyException",

@@ -66,17 +66,7 @@ async function main(): Promise<void> {
       document.head.appendChild(styleElement);
     }
 
-    // Add padding to the pages for handle edge-to-edge feature
-    const paddingTop = vpnHoodApp.getEdgeToEdgeTopHeight();
-    const paddingBottom = vpnHoodApp.getEdgeToEdgeBottomHeight();
-    if (paddingTop || paddingBottom) {
-      const styleElement = document.createElement('style');
-      styleElement.textContent = `.v-main>.v-sheet {
-        ${ paddingTop ? `padding-top: ${paddingTop}px !important;` : ''}
-        ${ paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : ''}
-      }`;
-      document.head.appendChild(styleElement);
-    }
+    vpnHoodApp.edgeToEdge();
 
     // Global catch exception
     app.config.errorHandler = (err: unknown) => vpnHoodApp.processError(err);

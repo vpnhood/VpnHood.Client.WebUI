@@ -68,7 +68,7 @@ onMounted(async () => {
 function sortApps(installedApps: IMyInstalledApps[]) {
   const isFutureAppSelected = myInstalledApps.value.some(x => x.appId === "$" && x.isSelected);
   installedApps.sort((a, b) => {
-    // First condition displays first the enabled apps
+    // The first condition displays first the enabled apps
     // Second condition displays first the disabled apps
     if (a.isSelected !== b.isSelected) return isFutureAppSelected
       ? Number(a.isSelected) - Number(b.isSelected)

@@ -64,32 +64,25 @@ const props = defineProps<{
       </config-card>
 
       <!-- Go premium button -->
-      <v-row v-else
-        dense
-        v-ripple
-        align="center"
-        class="px-2 py-1 mx-0 mb-3 rounded-lg card-on-grad-bg flex-grow-0"
-        @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
-      >
-        <v-col>
-          <div class="d-flex align-center">
-            <v-icon icon="mdi-crown" color="promote-premium-color-premium" size="25" class="me-2" />
-            <p class="text-white text-caption">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
-          </div>
-        </v-col>
+      <config-card v-else class="pb-2">
 
-        <v-col cols="auto" class="action-btn pe-0">
-          <v-chip
-            variant="flat"
-            color="promote-premium-color-premium"
-            class="font-weight-bold"
+        <!-- Description -->
+        <v-card-item>
+          <p class="text-white">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
+        </v-card-item>
+
+        <!-- Button -->
+        <v-card-item>
+          <btn-style-1
+            prepend-icon="mdi-crown"
+            block
             :text="locale('GO_PREMIUM')"
-            size="small"
-            tabindex="-1"
+            tabindex="0"
+            @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
           />
-        </v-col>
+        </v-card-item>
 
-      </v-row>
+      </config-card>
     </v-card>
   </v-sheet>
 </template>

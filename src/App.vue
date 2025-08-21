@@ -39,6 +39,9 @@ onMounted(async () => {
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
     if (!document.hidden)
+      vhApp.edgeToEdge();
+    console.log("vhApp.data.settings.isNotificationEnabled");
+    console.log(vhApp.data.settings.isNotificationEnabled);
       await vhApp.reloadState();
   }, 1000);
 
@@ -63,7 +66,6 @@ onMounted(async () => {
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
       <v-main class="fill-height">
-
         <!-- Privacy policy page -->
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
 

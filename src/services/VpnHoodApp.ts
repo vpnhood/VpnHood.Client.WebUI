@@ -427,6 +427,31 @@ export class VpnHoodApp {
     return bottomHeight > 0 ? bottomHeight : null;
   }
 
+  //Add padding to the pages for handle edge-to-edge feature
+  public edgeToEdge(): void {
+    const paddingTop = this.getEdgeToEdgeTopHeight();
+    const paddingBottom = this.getEdgeToEdgeBottomHeight();
+
+    // Unique ID for the injected style
+    const styleId = 'edge-to-edge-style';
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    if (paddingTop || paddingBottom) {
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.textContent = `
+      .v-main > .v-sheet {
+        ${paddingTop ? `padding-top: ${paddingTop}px !important;` : ''}
+        ${paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : ''}
+      }
+    `;
+      document.head.appendChild(styleElement);
+    }
+  }
+
   public isLocationAutoSelected(value?: string): boolean {
     const autoSelectValues = ['*', '*/*'];
     const locationToCheck = value ?? this.data.state.clientProfile?.selectedLocationInfo?.serverLocation;

@@ -175,6 +175,7 @@
   "APP_NOTIFICATIONS_COLORED": "App <span class=\"text-promote-premium-color-premium\">Notifications</span>",
   "NOTIFICATIONS_DESC": "Quickly monitor and control VPN from notification bar.",
   "TURN_ON_NOTIFICATION": "Turn on notification",
+  "TURN_OFF_NOTIFICATION": "Turn off notification",
   "NOTIFICATION_HOW_TO_TURN_ON_STEP_1": "Open the app’s notification settings.",
   "NOTIFICATION_HOW_TO_TURN_ON_STEP_2": "Turn on <strong>\"Allow notifications\"</strong>",
   "PRIVATE_DNS": "Private DNS",

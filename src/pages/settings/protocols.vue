@@ -1,6 +1,5 @@
 ﻿<script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -101,9 +100,6 @@ function isUdpUnsupported(): boolean {
 
       <!-- UDP description -->
       <v-card-item>
-        <!-- Disconnect required alert -->
-        <disconnect-required-alert class="my-3"/>
-
         <v-card-subtitle>{{locale('PROTOCOL_UDP_NOTE')}}</v-card-subtitle>
       </v-card-item>
 

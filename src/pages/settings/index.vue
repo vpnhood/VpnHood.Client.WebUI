@@ -8,6 +8,7 @@ import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
+import { LanguagesCode } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -23,6 +24,7 @@ interface SettingsItem {
   isShow?: boolean,
   isDisconnectRequired?: boolean,
   model?: WritableComputedRef<boolean, boolean>,
+  languageMoreAction?: boolean
 }
 
 const includeLocalNetwork = computed({
@@ -39,7 +41,8 @@ const settingsItem: SettingsItem[] = [
     subtitle: "APP_LANGUAGE_DESC",
     isPremium: false,
     selectedItem: vhApp.data.state.currentUiCultureInfo.nativeName,
-    click: {name: 'LANGUAGE'}
+    click: {name: 'LANGUAGE'},
+    languageMoreAction: i18n.global.locale.value !== LanguagesCode.English
   },
   {
     title: "LOCAL_NETWORK",
@@ -60,7 +63,7 @@ const settingsItem: SettingsItem[] = [
     title: "NOTIFICATIONS",
     subtitle: "NOTIFICATIONS_DESC",
     isPremium: false,
-    status: vhApp.data.settings.isNotificationEnabled ?? undefined,
+    status: vhApp.data.state.isNotificationEnabled ?? undefined,
     isShow: vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported,
     click: {name: 'NOTIFICATIONS'}
   },
@@ -102,50 +105,48 @@ const settingsItem: SettingsItem[] = [
 
     <template v-for="(item, index) in settingsItem" :key="index">
 
-      <config-card
-        v-if="item.isShow !== undefined ? item.isShow : true"
-        class="pa-3"
-        @click="item.click ? router.push(item.click) : null"
-      >
+      <config-card v-if="item.isShow !== undefined ? item.isShow : true" class="pa-3">
 
-        <!-- Title, selected item and status (If available) and premium icon (If available) -->
-        <div class="d-flex align-center justify-space-between pb-1">
+        <div @click="item.click ? router.push(item.click) : null" >
+          <!-- Title, selected item and status (If available) and premium icon (If available) -->
+          <div class="d-flex align-center justify-space-between pb-1">
 
-          <!-- Title, selected item and status (If available) -->
-          <div class="d-flex align-center justify-space-between ga-2">
-            <span>{{ locale(item.title) }}</span>
+            <!-- Title, selected item and status (If available) -->
+            <div class="d-flex align-center justify-space-between ga-2">
+              <span>{{ locale(item.title) }}</span>
 
-            <!-- Selected item if available -->
-            <v-chip v-if="item.selectedItem"
-              :text="item.selectedItem"
-              size="small"
-              variant="tonal"
-              density="comfortable"
-              color="switch-btn"
-            />
+              <!-- Selected item if available -->
+              <v-chip v-if="item.selectedItem"
+                :text="item.selectedItem"
+                size="small"
+                variant="tonal"
+                density="comfortable"
+                color="switch-btn"
+              />
 
-            <!-- Status if available -->
-            <v-chip v-else-if="item.status !== undefined"
-              :text="item.status ? locale('ON') : locale('OFF')"
-              size="small"
-              variant="tonal"
-              density="comfortable"
-              :disabled="!item.status"
-              :color="item.status ? 'enable-premium' : ''"
-            />
+              <!-- Status if available -->
+              <v-chip v-else-if="item.status !== undefined"
+                :text="item.status ? locale('ON') : locale('OFF')"
+                size="small"
+                variant="tonal"
+                density="comfortable"
+                :disabled="!item.status"
+                :color="item.status ? 'enable-premium' : ''"
+              />
+
+            </div>
+
+            <!-- Premium icon for premium features -->
+            <premium-icon v-if="item.isPremium && vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()" />
 
           </div>
 
-          <!-- Premium icon for premium features -->
-          <premium-icon v-if="item.isPremium && vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()" />
-
+          <!-- Item description (Show chevron icon if the item does not have the model) -->
+          <v-card-subtitle class="d-flex align-center justify-space-between ga-3 pa-0">
+            {{ locale(item.subtitle) }}
+            <v-icon v-if="item.model === undefined" :icon="Util.getLocalizedRightChevron()"/>
+          </v-card-subtitle>
         </div>
-
-        <!-- Item description (Show chevron icon if the item does not have the model) -->
-        <v-card-subtitle class="d-flex align-center justify-space-between ga-3 pa-0">
-          {{ locale(item.subtitle) }}
-          <v-icon v-if="item.model === undefined" :icon="Util.getLocalizedRightChevron()"/>
-        </v-card-subtitle>
 
         <!-- Disconnecting alert -->
         <disconnect-required-alert v-if="item.isDisconnectRequired" class="my-2"/>
@@ -154,6 +155,24 @@ const settingsItem: SettingsItem[] = [
         <div v-if="item.model" class="d-flex align-center justify-space-between">
           <span>{{ locale('INCLUDE_LOCAL_NETWORK') }}</span>
           <v-switch v-model="includeLocalNetwork" :disabled="!vhApp.isIncludeLocalNetworkAvailable()" />
+        </div>
+
+        <!-- Language contribute link -->
+        <div v-if="item.languageMoreAction" class="text-caption">
+          <v-divider class="my-3"/>
+
+          <!-- Description -->
+          <p class="text-disabled mb-2">{{ locale('CONTRIBUTE_EDIT_LANGUAGES_DESC') }}</p>
+
+          <!-- Link -->
+          <a
+            class="text-highlight text-decoration-none"
+            href="https://explore.transifex.com/vpnhood/vpnhood-client"
+            target="_blank"
+          >
+            {{ locale('CONTRIBUTE_EDIT_LANGUAGES_Title') }}
+            <v-icon icon="mdi-open-in-new" />
+          </a>
         </div>
 
       </config-card>
