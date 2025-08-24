@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"Zuverlässiger",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Cloak-Modus",
-  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">Tarn</span>modus",
+  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">Cloak</span> Modus",
   "CLOAK_MODE_DESC_1": "Umgeht VPN-Sperren, indem dein VPN-Datenverkehr als regulärer Webverkehr getarnt wird, wodurch er gegen Deep Packet Inspection (DPI) resistent wird. Dies kann die <span class=\"text-highlight\">Geschwindigkeit verringern</span> und den <span class=\"text-highlight\">Stromverbrauch erhöhen</span>.",
   "CLOAK_MODE_DESC_2": "Der Tarnmodus sorgt für zuverlässigen Zugriff in eingeschränkten Netzwerken. Tarnmodus ist exklusiv für VpnHood verfügbar.",
   "CLOAK_MODE_SHORT_DESC": "Umgeht VPN-Sperren, indem dein VPN-Datenverkehr als regulärer Webverkehr getarnt wird.",
