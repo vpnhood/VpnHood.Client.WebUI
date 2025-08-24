@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"更可靠",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Cloak 模式",
-  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">隐匿</span>模式",
+  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">Cloak</span> 模式",
   "CLOAK_MODE_DESC_1": "通过将 VPN 流量伪装成普通网页流量来绕过 VPN 封锁，使其能够抵抗深度包检测（DPI）。这可能会稍微<span class=\"text-highlight\">降低速度</span>并<span class=\"text-highlight\">增加电量消耗</span>。",
   "CLOAK_MODE_DESC_2": "隐匿模式可确保在受限网络中可靠访问。隐匿模式是 VpnHood 独有功能。",
   "CLOAK_MODE_SHORT_DESC": "通过将 VPN 流量伪装成普通网页流量来绕过 VPN 封锁。",
