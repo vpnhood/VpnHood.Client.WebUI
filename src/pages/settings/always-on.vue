@@ -19,7 +19,7 @@ const locale = i18n.global.t;
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_2',{appName: vhApp.isConnectApp() ? AppName.VpnHoodConnect : AppName.VpnHoodClient, icon: '⚙️'}),
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_3')
     ]"
-    button-text="ALWAYS_ON_TURN_ON"
+    button-text="OPEN_SYSTEM_SETTINGS"
     :button-click="()=>vhApp.intentsClient.requestQuickLaunch()"
     :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn)"
     :is-action-button-available="true"
