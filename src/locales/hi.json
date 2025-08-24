@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"अधिक विश्वसनीय",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Cloak मोड",
-  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">क्लोक</span> मोड",
+  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">Cloak</span> मोड",
   "CLOAK_MODE_DESC_1": "VPN ट्रैफ़िक को सामान्य वेब ट्रैफ़िक की तरह दिखाकर VPN ब्लॉकों को पार करता है, जिससे यह डीप पैकेट इंस्पेक्शन (DPI) के प्रति प्रतिरोधी बन जाता है। इससे <span class=\"text-highlight\">गति थोड़ी कम</span> हो सकती है और <span class=\"text-highlight\">पावर की खपत बढ़</span> सकती है।",
   "CLOAK_MODE_DESC_2": "क्लोक मोड प्रतिबंधित नेटवर्क में विश्वसनीय पहुँच सुनिश्चित करता है। क्लोक मोड केवल VpnHood के लिए उपलब्ध है।",
   "CLOAK_MODE_SHORT_DESC": "VPN ट्रैफ़िक को सामान्य वेब ट्रैफ़िक की तरह दिखाकर VPN ब्लॉकों को पार करता है।",
