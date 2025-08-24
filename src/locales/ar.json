@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"أكثر موثوقية",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "وضع Cloak",
-  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">التمويه</span> وضع",
+  "CLOAK_MODE_COLORED": "<span class=\"text-promote-premium-color-premium\">Cloak</span> وضع",
   "CLOAK_MODE_DESC_1": "يتجاوز حظر VPN عن طريق تمويه حركة مرور VPN الخاصة بك لتبدو كأنها حركة مرور ويب عادية، مما يجعلها مقاومة للفحص العميق للحزم (DPI). قد يؤدي ذلك إلى <span class=\"text-highlight\">انخفاض السرعة</span> و<span class=\"text-highlight\">زيادة استهلاك الطاقة</span> بشكل طفيف.",
   "CLOAK_MODE_DESC_2": "يضمن وضع التمويه الوصول الموثوق في الشبكات المقيدة. وضع التمويه حصري لتطبيق VpnHood.",
   "CLOAK_MODE_SHORT_DESC": "يتجاوز حظر VPN عن طريق تمويه حركة مرور VPN الخاصة بك لتبدو كأنها حركة مرور ويب عادية.",
