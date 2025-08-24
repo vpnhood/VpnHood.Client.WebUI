@@ -2,6 +2,7 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
+import { AppFeature } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -21,6 +22,7 @@ const locale = i18n.global.t;
     ]"
     button-text="OPEN_SYSTEM_SETTINGS"
     :button-click="()=>vhApp.intentsClient.openSystemSettings()"
-    :is-premium="true"
+    :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns)"
+    :is-action-button-available="true"
   />
 </template>

@@ -39,7 +39,7 @@ async function onConnectButtonClick(): Promise<void> {
 }
 
 function udpProtocolButtonText(): string {
-  const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
+  const { dropQuic, useUdpChannel } = vhApp.data.userSettings;
   if (vhApp.data.connectionState === AppConnectionState.Connected &&
     !vhApp.data.state.sessionInfo?.isUdpChannelSupported) {
     return dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP');
@@ -95,7 +95,7 @@ function connectButtonText(): string {
 }
 
 function isIpFilterAvailable(): boolean {
-  return vhApp.data.settings.userSettings.useVpnAdapterIpFilter || vhApp.data.settings.userSettings.useAppIpFilter;
+  return vhApp.data.userSettings.useVpnAdapterIpFilter || vhApp.data.userSettings.useAppIpFilter;
 }
 function isCustomEndpointAvailable(): boolean {
   if (!vhApp.data.state.clientProfile?.customServerEndpoints) return false;
@@ -109,10 +109,10 @@ function formatSpeed(speed: number): string | void {
 
 // Return status of filtered apps by user (Only in mobile)
 function appFilterStatus(): string {
-  let appFilters = vhApp.data.settings.userSettings.appFilters;
+  let appFilters = vhApp.data.userSettings.appFilters;
   if (!appFilters) appFilters = [];
 
-  switch (vhApp.data.settings.userSettings.appFiltersMode) {
+  switch (vhApp.data.userSettings.appFiltersMode) {
     case FilterMode.Exclude:
       return locale('APP_FILTER_STATUS_EXCLUDE', { x: appFilters.length });
     case FilterMode.Include:
@@ -125,27 +125,31 @@ function appFilterStatus(): string {
 const isShowDebugDialog = ref<boolean>(false);
 const openDebugDialogCounter = ref<number>(0);
 
+const isShowUserReview = computed((): boolean => {
+  return vhApp.data.state.userReviewRecommended !== 0;
+})
+
 const debugData1 = computed<string[]>({
   get: () => {
-    return vhApp.data.settings.userSettings.debugData1?.split(' ') ?? [];
+    return vhApp.data.userSettings.debugData1?.split(' ') ?? [];
   },
   set: (value: string[] | null) => {
-    vhApp.data.settings.userSettings.debugData1 = value?.join(' ') || null;
+    vhApp.data.userSettings.debugData1 = value?.join(' ') || null;
   }
 });
 
 const debugData2 = computed<string | null>({
   get: () => {
-    return vhApp.data.settings.userSettings.debugData2 ?? null;
+    return vhApp.data.userSettings.debugData2 ?? null;
   },
   set: (value: string | null) => {
-    vhApp.data.settings.userSettings.debugData2 = value;
+    vhApp.data.userSettings.debugData2 = value;
   }
 });
 
 function openDebugDialog() {
   openDebugDialogCounter.value++;
-  if (vhApp.data.settings.userSettings.debugData1 || vhApp.data.settings.userSettings.debugData2)
+  if (vhApp.data.userSettings.debugData1 || vhApp.data.userSettings.debugData2)
     isShowDebugDialog.value = true;
 
   else if (openDebugDialogCounter.value === 5)
@@ -161,7 +165,7 @@ async function saveDebugDataSetting(): Promise<void> {
   isShowDebugDialog.value = false;
 }
 function isDebugDataHasValue(): boolean {
-  return vhApp.data.settings.userSettings.debugData1 !== null || vhApp.data.settings.userSettings.debugData2 !== null;
+  return vhApp.data.userSettings.debugData1 !== null || vhApp.data.userSettings.debugData2 !== null;
 }
 </script>
 
@@ -170,7 +174,7 @@ function isDebugDataHasValue(): boolean {
     id="homeContainer"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
                 (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.data.isConnected)) ?
-                'premium-user' : '', vhApp.data.features.uiName, vhApp.data.settings.userSettings.cultureCode]"
+                'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
   >
 
     <v-row :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined" justify="center"
@@ -411,12 +415,12 @@ function isDebugDataHasValue(): boolean {
 
           <!-- Text related to selected option -->
           <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-        {{ vhApp.data.settings.userSettings.tunnelClientCountry
+        {{ vhApp.data.userSettings.tunnelClientCountry
             ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
         </span>
 
           <!-- Client country flag -->
-          <template v-if="!vhApp.data.settings.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode"
+          <template v-if="!vhApp.data.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode"
                     v-slot:append>
               <span
                 class="overflow-hidden d-inline-flex align-center justify-center ms-1"
@@ -481,7 +485,7 @@ function isDebugDataHasValue(): boolean {
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
-    <UserReviewDialog v-model="vhApp.data.state.isUserReviewRecommended" />
+    <UserReviewDialog v-model="isShowUserReview" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">

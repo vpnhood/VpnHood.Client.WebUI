@@ -3,11 +3,12 @@ import { UiState } from '@/helpers/UiState';
 import { UserState } from '@/helpers/UserState';
 import {
   AppConnectionState,
-  AppFeatures, AppIntentFeatures,
-  AppSettings,
+  AppFeatures,
+  AppIntentFeatures,
   AppState,
   ClientProfileInfo,
-  UiCultureInfo
+  UiCultureInfo,
+  UserSettings
 } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 
@@ -16,7 +17,7 @@ export class VpnHoodAppData {
   public uiState: UiState = new UiState();
   public userState: UserState = new UserState();
   public state: AppState;
-  public settings: AppSettings;
+  public userSettings: UserSettings;
   public features: AppFeatures;
   public intentFeatures: AppIntentFeatures;
   public clientProfileInfos: ClientProfileInfo[];
@@ -24,14 +25,14 @@ export class VpnHoodAppData {
 
   public constructor(
     state: AppState,
-    setting: AppSettings,
+    userSettings: UserSettings,
     features: AppFeatures,
     intentFeatures: AppIntentFeatures,
     clientProfileInfos: ClientProfileInfo[],
     cultureInfos: UiCultureInfo[]
   ) {
     this.state = state;
-    this.settings = setting;
+    this.userSettings = userSettings;
     this.features = features;
     this.intentFeatures = intentFeatures;
     this.clientProfileInfos = clientProfileInfos;

@@ -36,7 +36,7 @@ async function diagnose(): Promise<void> {
 
 async function sendReport(): Promise<void> {
   try {
-    const clientId = vhApp.data.settings.clientId.substring(0, 8);
+    const clientId = vhApp.data.features.clientId.substring(0, 8);
 
     // get the report file content.
     const url: string = vhApp.data.serverUrl + UiConstants.logFileLocation;

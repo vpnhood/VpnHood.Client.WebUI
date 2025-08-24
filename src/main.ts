@@ -66,6 +66,8 @@ async function main(): Promise<void> {
       document.head.appendChild(styleElement);
     }
 
+    // To compensate for the delay in applying edge to edge on the first run, call it in this section as well;
+    // otherwise it is called every second on the App.vue.
     vpnHoodApp.edgeToEdge();
 
     // Global catch exception

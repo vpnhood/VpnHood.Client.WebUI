@@ -17,10 +17,10 @@ const emit = defineEmits<{
 
 const tunnelClientCountry = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.tunnelClientCountry;
+    return vhApp.data.userSettings.tunnelClientCountry;
   } ,
   set: async (value: boolean): Promise<void> => {
-    vhApp.data.settings.userSettings.tunnelClientCountry = value;
+    vhApp.data.userSettings.tunnelClientCountry = value;
     await vhApp.saveUserSetting();
   }
 });

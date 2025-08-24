@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"Más confiable",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Modo Cloak",
-  "CLOAK_MODE_DESC": "Evita bloqueos de VPN al disfrazar el tráfico como navegación web común, haciéndolo resistente a la inspección profunda de paquetes (DPI). Esto puede reducir ligeramente la velocidad y aumentar el consumo de batería, pero garantiza acceso confiable en redes restringidas. El modo Cloak es exclusivo de VpnHood.",
+  "CLOAK_MODE_SHORT_DESC": "Evita bloqueos de VPN al disfrazar el tráfico como navegación web común, haciéndolo resistente a la inspección profunda de paquetes (DPI). Esto puede reducir ligeramente la velocidad y aumentar el consumo de batería, pero garantiza acceso confiable en redes restringidas. El modo Cloak es exclusivo de VpnHood.",
   "SELECTED_APPS": "Aplicaciones seleccionadas",
   "NEW_SERVER_ADDED": "Se ha añadido un nuevo servidor.",
   "LOCAL_NETWORK": "Red local",

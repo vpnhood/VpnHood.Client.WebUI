@@ -23,4 +23,7 @@ export class UiState {
 
   public uiConnectInProgress: boolean = false;
   public uiDisconnectInProgress: boolean = false;
+
+  public edgeToEdgeTop: number | null = null;
+  public edgeToEdgeBottom: number | null = null;
 }

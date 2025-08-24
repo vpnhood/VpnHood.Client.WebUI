@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"Zuverlässiger",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Cloak-Modus",
-  "CLOAK_MODE_DESC": "Umgeht VPN-Sperren, indem dein VPN-Datenverkehr als regulärer Webverkehr getarnt wird, wodurch er gegen Deep Packet Inspection (DPI) resistent ist. Dies kann die Geschwindigkeit leicht verringern und den Stromverbrauch erhöhen, sorgt aber für zuverlässigen Zugriff in eingeschränkten Netzwerken. Cloak-Modus ist exklusiv für VpnHood.",
+  "CLOAK_MODE_SHORT_DESC": "Umgeht VPN-Sperren, indem dein VPN-Datenverkehr als regulärer Webverkehr getarnt wird, wodurch er gegen Deep Packet Inspection (DPI) resistent ist. Dies kann die Geschwindigkeit leicht verringern und den Stromverbrauch erhöhen, sorgt aber für zuverlässigen Zugriff in eingeschränkten Netzwerken. Cloak-Modus ist exklusiv für VpnHood.",
   "SELECTED_APPS": "Ausgewählte Apps",
   "NEW_SERVER_ADDED": "Ein neuer Server wurde hinzugefügt.",
   "LOCAL_NETWORK": "Lokales Netzwerk",

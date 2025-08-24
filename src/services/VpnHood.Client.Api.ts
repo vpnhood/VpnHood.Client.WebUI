@@ -2035,8 +2035,8 @@ export interface IAppAccount {
 export class AppData implements IAppData {
     features!: AppFeatures;
     intentFeatures!: AppIntentFeatures;
-    settings!: AppSettings;
     state!: AppState;
+    userSettings!: UserSettings;
     clientProfileInfos!: ClientProfileInfo[];
     availableCultureInfos!: UiCultureInfo[];
 
@@ -2050,8 +2050,8 @@ export class AppData implements IAppData {
         if (!data) {
             this.features = new AppFeatures();
             this.intentFeatures = new AppIntentFeatures();
-            this.settings = new AppSettings();
             this.state = new AppState();
+            this.userSettings = new UserSettings();
             this.clientProfileInfos = [];
             this.availableCultureInfos = [];
         }
@@ -2061,8 +2061,8 @@ export class AppData implements IAppData {
         if (_data) {
             this.features = _data["features"] ? AppFeatures.fromJS(_data["features"]) : new AppFeatures();
             this.intentFeatures = _data["intentFeatures"] ? AppIntentFeatures.fromJS(_data["intentFeatures"]) : new AppIntentFeatures();
-            this.settings = _data["settings"] ? AppSettings.fromJS(_data["settings"]) : new AppSettings();
             this.state = _data["state"] ? AppState.fromJS(_data["state"]) : new AppState();
+            this.userSettings = _data["userSettings"] ? UserSettings.fromJS(_data["userSettings"]) : new UserSettings();
             if (Array.isArray(_data["clientProfileInfos"])) {
                 this.clientProfileInfos = [] as any;
                 for (let item of _data["clientProfileInfos"])
@@ -2093,8 +2093,8 @@ export class AppData implements IAppData {
         data = typeof data === 'object' ? data : {};
         data["features"] = this.features ? this.features.toJSON() : <any>null;
         data["intentFeatures"] = this.intentFeatures ? this.intentFeatures.toJSON() : <any>null;
-        data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
         data["state"] = this.state ? this.state.toJSON() : <any>null;
+        data["userSettings"] = this.userSettings ? this.userSettings.toJSON() : <any>null;
         if (Array.isArray(this.clientProfileInfos)) {
             data["clientProfileInfos"] = [];
             for (let item of this.clientProfileInfos)
@@ -2112,8 +2112,8 @@ export class AppData implements IAppData {
 export interface IAppData {
     features: AppFeatures;
     intentFeatures: AppIntentFeatures;
-    settings: AppSettings;
     state: AppState;
+    userSettings: UserSettings;
     clientProfileInfos: ClientProfileInfo[];
     availableCultureInfos: UiCultureInfo[];
 }
@@ -2278,6 +2278,7 @@ export enum AppFeature {
 
 export class AppIntentFeatures implements IAppIntentFeatures {
     isUserReviewSupported!: boolean;
+    isQuickLaunchSupported!: boolean;
     isRequestQuickLaunchSupported!: boolean;
     isRequestNotificationSupported!: boolean;
     isSystemPrivateDnsSettingsSupported!: boolean;
@@ -2299,6 +2300,7 @@ export class AppIntentFeatures implements IAppIntentFeatures {
     init(_data?: any) {
         if (_data) {
             this.isUserReviewSupported = _data["isUserReviewSupported"] !== undefined ? _data["isUserReviewSupported"] : <any>null;
+            this.isQuickLaunchSupported = _data["isQuickLaunchSupported"] !== undefined ? _data["isQuickLaunchSupported"] : <any>null;
             this.isRequestQuickLaunchSupported = _data["isRequestQuickLaunchSupported"] !== undefined ? _data["isRequestQuickLaunchSupported"] : <any>null;
             this.isRequestNotificationSupported = _data["isRequestNotificationSupported"] !== undefined ? _data["isRequestNotificationSupported"] : <any>null;
             this.isSystemPrivateDnsSettingsSupported = _data["isSystemPrivateDnsSettingsSupported"] !== undefined ? _data["isSystemPrivateDnsSettingsSupported"] : <any>null;
@@ -2320,6 +2322,7 @@ export class AppIntentFeatures implements IAppIntentFeatures {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["isUserReviewSupported"] = this.isUserReviewSupported !== undefined ? this.isUserReviewSupported : <any>null;
+        data["isQuickLaunchSupported"] = this.isQuickLaunchSupported !== undefined ? this.isQuickLaunchSupported : <any>null;
         data["isRequestQuickLaunchSupported"] = this.isRequestQuickLaunchSupported !== undefined ? this.isRequestQuickLaunchSupported : <any>null;
         data["isRequestNotificationSupported"] = this.isRequestNotificationSupported !== undefined ? this.isRequestNotificationSupported : <any>null;
         data["isSystemPrivateDnsSettingsSupported"] = this.isSystemPrivateDnsSettingsSupported !== undefined ? this.isSystemPrivateDnsSettingsSupported : <any>null;
@@ -2334,6 +2337,7 @@ export class AppIntentFeatures implements IAppIntentFeatures {
 
 export interface IAppIntentFeatures {
     isUserReviewSupported: boolean;
+    isQuickLaunchSupported: boolean;
     isRequestQuickLaunchSupported: boolean;
     isRequestNotificationSupported: boolean;
     isSystemPrivateDnsSettingsSupported: boolean;
@@ -2342,631 +2346,6 @@ export interface IAppIntentFeatures {
     isSystemSettingsSupported: boolean;
     isAppSystemSettingsSupported: boolean;
     isAppSystemNotificationSettingsSupported: boolean;
-}
-
-export class AppSettings implements IAppSettings {
-    version!: number;
-    clientId!: string;
-    isQuickLaunchEnabled?: boolean | null;
-    isNotificationEnabled?: boolean | null;
-    userReview?: UserReview | null;
-    isStartupTrackerSent!: boolean;
-    clientIpLocation?: IpLocation | null;
-    clientIpLocationByServer?: IpLocation | null;
-    configTime!: Date;
-    userSettings!: UserSettings;
-    appSettingsService?: AppSettingsService | null;
-
-    constructor(data?: IAppSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.userSettings = new UserSettings();
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
-            this.clientId = _data["clientId"] !== undefined ? _data["clientId"] : <any>null;
-            this.isQuickLaunchEnabled = _data["isQuickLaunchEnabled"] !== undefined ? _data["isQuickLaunchEnabled"] : <any>null;
-            this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
-            this.userReview = _data["userReview"] ? UserReview.fromJS(_data["userReview"]) : <any>null;
-            this.isStartupTrackerSent = _data["isStartupTrackerSent"] !== undefined ? _data["isStartupTrackerSent"] : <any>null;
-            this.clientIpLocation = _data["clientIpLocation"] ? IpLocation.fromJS(_data["clientIpLocation"]) : <any>null;
-            this.clientIpLocationByServer = _data["clientIpLocationByServer"] ? IpLocation.fromJS(_data["clientIpLocationByServer"]) : <any>null;
-            this.configTime = _data["configTime"] ? new Date(_data["configTime"].toString()) : <any>null;
-            this.userSettings = _data["userSettings"] ? UserSettings.fromJS(_data["userSettings"]) : new UserSettings();
-            this.appSettingsService = _data["appSettingsService"] ? AppSettingsService.fromJS(_data["appSettingsService"]) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): AppSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new AppSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["version"] = this.version !== undefined ? this.version : <any>null;
-        data["clientId"] = this.clientId !== undefined ? this.clientId : <any>null;
-        data["isQuickLaunchEnabled"] = this.isQuickLaunchEnabled !== undefined ? this.isQuickLaunchEnabled : <any>null;
-        data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
-        data["userReview"] = this.userReview ? this.userReview.toJSON() : <any>null;
-        data["isStartupTrackerSent"] = this.isStartupTrackerSent !== undefined ? this.isStartupTrackerSent : <any>null;
-        data["clientIpLocation"] = this.clientIpLocation ? this.clientIpLocation.toJSON() : <any>null;
-        data["clientIpLocationByServer"] = this.clientIpLocationByServer ? this.clientIpLocationByServer.toJSON() : <any>null;
-        data["configTime"] = this.configTime ? this.configTime.toISOString() : <any>null;
-        data["userSettings"] = this.userSettings ? this.userSettings.toJSON() : <any>null;
-        data["appSettingsService"] = this.appSettingsService ? this.appSettingsService.toJSON() : <any>null;
-        return data;
-    }
-}
-
-export interface IAppSettings {
-    version: number;
-    clientId: string;
-    isQuickLaunchEnabled?: boolean | null;
-    isNotificationEnabled?: boolean | null;
-    userReview?: UserReview | null;
-    isStartupTrackerSent: boolean;
-    clientIpLocation?: IpLocation | null;
-    clientIpLocationByServer?: IpLocation | null;
-    configTime: Date;
-    userSettings: UserSettings;
-    appSettingsService?: AppSettingsService | null;
-}
-
-export class UserReview implements IUserReview {
-    rate!: number;
-    rating!: number;
-    time!: Date;
-    appVersion!: string;
-
-    constructor(data?: IUserReview) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.rate = _data["rate"] !== undefined ? _data["rate"] : <any>null;
-            this.rating = _data["rating"] !== undefined ? _data["rating"] : <any>null;
-            this.time = _data["time"] ? new Date(_data["time"].toString()) : <any>null;
-            this.appVersion = _data["appVersion"] !== undefined ? _data["appVersion"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): UserReview {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserReview();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["rate"] = this.rate !== undefined ? this.rate : <any>null;
-        data["rating"] = this.rating !== undefined ? this.rating : <any>null;
-        data["time"] = this.time ? this.time.toISOString() : <any>null;
-        data["appVersion"] = this.appVersion !== undefined ? this.appVersion : <any>null;
-        return data;
-    }
-}
-
-export interface IUserReview {
-    rate: number;
-    rating: number;
-    time: Date;
-    appVersion: string;
-}
-
-export class IpLocation implements IIpLocation {
-    ipAddress!: string;
-    countryName!: string;
-    countryCode!: string;
-    regionName?: string | null;
-    cityName?: string | null;
-
-    constructor(data?: IIpLocation) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.ipAddress = _data["ipAddress"] !== undefined ? _data["ipAddress"] : <any>null;
-            this.countryName = _data["countryName"] !== undefined ? _data["countryName"] : <any>null;
-            this.countryCode = _data["countryCode"] !== undefined ? _data["countryCode"] : <any>null;
-            this.regionName = _data["regionName"] !== undefined ? _data["regionName"] : <any>null;
-            this.cityName = _data["cityName"] !== undefined ? _data["cityName"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): IpLocation {
-        data = typeof data === 'object' ? data : {};
-        let result = new IpLocation();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ipAddress"] = this.ipAddress !== undefined ? this.ipAddress : <any>null;
-        data["countryName"] = this.countryName !== undefined ? this.countryName : <any>null;
-        data["countryCode"] = this.countryCode !== undefined ? this.countryCode : <any>null;
-        data["regionName"] = this.regionName !== undefined ? this.regionName : <any>null;
-        data["cityName"] = this.cityName !== undefined ? this.cityName : <any>null;
-        return data;
-    }
-}
-
-export interface IIpLocation {
-    ipAddress: string;
-    countryName: string;
-    countryCode: string;
-    regionName?: string | null;
-    cityName?: string | null;
-}
-
-export class UserSettings implements IUserSettings {
-    isLicenseAccepted!: boolean;
-    cultureCode?: string | null;
-    clientProfileId?: string | null;
-    maxPacketChannelCount!: number;
-    tunnelClientCountry!: boolean;
-    appFilters!: string[];
-    appFiltersMode!: FilterMode;
-    useTcpProxy!: boolean;
-    useUdpChannel!: boolean;
-    dropUdp!: boolean;
-    dropQuic!: boolean;
-    allowAnonymousTracker!: boolean;
-    domainFilter!: DomainFilter;
-    debugData1?: string | null;
-    debugData2?: string | null;
-    logAnonymous!: boolean;
-    includeLocalNetwork!: boolean;
-    useAppIpFilter!: boolean;
-    useVpnAdapterIpFilter!: boolean;
-    endPointStrategy!: EndPointStrategy;
-    dnsServers?: string[] | null;
-    useProxyServer!: boolean;
-    proxyServers!: ProxyServerEndPoint[];
-
-    constructor(data?: IUserSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.appFilters = [];
-            this.domainFilter = new DomainFilter();
-            this.proxyServers = [];
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isLicenseAccepted = _data["isLicenseAccepted"] !== undefined ? _data["isLicenseAccepted"] : <any>null;
-            this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
-            this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
-            this.maxPacketChannelCount = _data["maxPacketChannelCount"] !== undefined ? _data["maxPacketChannelCount"] : <any>null;
-            this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : <any>null;
-            if (Array.isArray(_data["appFilters"])) {
-                this.appFilters = [] as any;
-                for (let item of _data["appFilters"])
-                    this.appFilters!.push(item);
-            }
-            else {
-                this.appFilters = <any>null;
-            }
-            this.appFiltersMode = _data["appFiltersMode"] !== undefined ? _data["appFiltersMode"] : <any>null;
-            this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : <any>null;
-            this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
-            this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : <any>null;
-            this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
-            this.allowAnonymousTracker = _data["allowAnonymousTracker"] !== undefined ? _data["allowAnonymousTracker"] : <any>null;
-            this.domainFilter = _data["domainFilter"] ? DomainFilter.fromJS(_data["domainFilter"]) : new DomainFilter();
-            this.debugData1 = _data["debugData1"] !== undefined ? _data["debugData1"] : <any>null;
-            this.debugData2 = _data["debugData2"] !== undefined ? _data["debugData2"] : <any>null;
-            this.logAnonymous = _data["logAnonymous"] !== undefined ? _data["logAnonymous"] : <any>null;
-            this.includeLocalNetwork = _data["includeLocalNetwork"] !== undefined ? _data["includeLocalNetwork"] : <any>null;
-            this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
-            this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
-            this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
-            if (Array.isArray(_data["dnsServers"])) {
-                this.dnsServers = [] as any;
-                for (let item of _data["dnsServers"])
-                    this.dnsServers!.push(item);
-            }
-            else {
-                this.dnsServers = <any>null;
-            }
-            this.useProxyServer = _data["useProxyServer"] !== undefined ? _data["useProxyServer"] : <any>null;
-            if (Array.isArray(_data["proxyServers"])) {
-                this.proxyServers = [] as any;
-                for (let item of _data["proxyServers"])
-                    this.proxyServers!.push(ProxyServerEndPoint.fromJS(item));
-            }
-            else {
-                this.proxyServers = <any>null;
-            }
-        }
-    }
-
-    static fromJS(data: any): UserSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isLicenseAccepted"] = this.isLicenseAccepted !== undefined ? this.isLicenseAccepted : <any>null;
-        data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
-        data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
-        data["maxPacketChannelCount"] = this.maxPacketChannelCount !== undefined ? this.maxPacketChannelCount : <any>null;
-        data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : <any>null;
-        if (Array.isArray(this.appFilters)) {
-            data["appFilters"] = [];
-            for (let item of this.appFilters)
-                data["appFilters"].push(item);
-        }
-        data["appFiltersMode"] = this.appFiltersMode !== undefined ? this.appFiltersMode : <any>null;
-        data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : <any>null;
-        data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
-        data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : <any>null;
-        data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
-        data["allowAnonymousTracker"] = this.allowAnonymousTracker !== undefined ? this.allowAnonymousTracker : <any>null;
-        data["domainFilter"] = this.domainFilter ? this.domainFilter.toJSON() : <any>null;
-        data["debugData1"] = this.debugData1 !== undefined ? this.debugData1 : <any>null;
-        data["debugData2"] = this.debugData2 !== undefined ? this.debugData2 : <any>null;
-        data["logAnonymous"] = this.logAnonymous !== undefined ? this.logAnonymous : <any>null;
-        data["includeLocalNetwork"] = this.includeLocalNetwork !== undefined ? this.includeLocalNetwork : <any>null;
-        data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
-        data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
-        data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
-        if (Array.isArray(this.dnsServers)) {
-            data["dnsServers"] = [];
-            for (let item of this.dnsServers)
-                data["dnsServers"].push(item);
-        }
-        data["useProxyServer"] = this.useProxyServer !== undefined ? this.useProxyServer : <any>null;
-        if (Array.isArray(this.proxyServers)) {
-            data["proxyServers"] = [];
-            for (let item of this.proxyServers)
-                data["proxyServers"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IUserSettings {
-    isLicenseAccepted: boolean;
-    cultureCode?: string | null;
-    clientProfileId?: string | null;
-    maxPacketChannelCount: number;
-    tunnelClientCountry: boolean;
-    appFilters: string[];
-    appFiltersMode: FilterMode;
-    useTcpProxy: boolean;
-    useUdpChannel: boolean;
-    dropUdp: boolean;
-    dropQuic: boolean;
-    allowAnonymousTracker: boolean;
-    domainFilter: DomainFilter;
-    debugData1?: string | null;
-    debugData2?: string | null;
-    logAnonymous: boolean;
-    includeLocalNetwork: boolean;
-    useAppIpFilter: boolean;
-    useVpnAdapterIpFilter: boolean;
-    endPointStrategy: EndPointStrategy;
-    dnsServers?: string[] | null;
-    useProxyServer: boolean;
-    proxyServers: ProxyServerEndPoint[];
-}
-
-export enum FilterMode {
-    All = "All",
-    Exclude = "Exclude",
-    Include = "Include",
-}
-
-export class DomainFilter implements IDomainFilter {
-    blocks!: string[];
-    excludes!: string[];
-    includes!: string[];
-
-    constructor(data?: IDomainFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.blocks = [];
-            this.excludes = [];
-            this.includes = [];
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["blocks"])) {
-                this.blocks = [] as any;
-                for (let item of _data["blocks"])
-                    this.blocks!.push(item);
-            }
-            else {
-                this.blocks = <any>null;
-            }
-            if (Array.isArray(_data["excludes"])) {
-                this.excludes = [] as any;
-                for (let item of _data["excludes"])
-                    this.excludes!.push(item);
-            }
-            else {
-                this.excludes = <any>null;
-            }
-            if (Array.isArray(_data["includes"])) {
-                this.includes = [] as any;
-                for (let item of _data["includes"])
-                    this.includes!.push(item);
-            }
-            else {
-                this.includes = <any>null;
-            }
-        }
-    }
-
-    static fromJS(data: any): DomainFilter {
-        data = typeof data === 'object' ? data : {};
-        let result = new DomainFilter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.blocks)) {
-            data["blocks"] = [];
-            for (let item of this.blocks)
-                data["blocks"].push(item);
-        }
-        if (Array.isArray(this.excludes)) {
-            data["excludes"] = [];
-            for (let item of this.excludes)
-                data["excludes"].push(item);
-        }
-        if (Array.isArray(this.includes)) {
-            data["includes"] = [];
-            for (let item of this.includes)
-                data["includes"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface IDomainFilter {
-    blocks: string[];
-    excludes: string[];
-    includes: string[];
-}
-
-export enum EndPointStrategy {
-    Auto = "Auto",
-    DnsFirst = "DnsFirst",
-    TokenFirst = "TokenFirst",
-    DnsOnly = "DnsOnly",
-    TokenOnly = "TokenOnly",
-}
-
-export class ProxyServerEndPoint implements IProxyServerEndPoint {
-    proxyServerType!: ProxyServerType;
-    address?: string | null;
-    port!: number;
-    username?: string | null;
-    password?: string | null;
-
-    constructor(data?: IProxyServerEndPoint) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.proxyServerType = _data["proxyServerType"] !== undefined ? _data["proxyServerType"] : <any>null;
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-            this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
-            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
-            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): ProxyServerEndPoint {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProxyServerEndPoint();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["proxyServerType"] = this.proxyServerType !== undefined ? this.proxyServerType : <any>null;
-        data["address"] = this.address !== undefined ? this.address : <any>null;
-        data["port"] = this.port !== undefined ? this.port : <any>null;
-        data["username"] = this.username !== undefined ? this.username : <any>null;
-        data["password"] = this.password !== undefined ? this.password : <any>null;
-        return data;
-    }
-}
-
-export interface IProxyServerEndPoint {
-    proxyServerType: ProxyServerType;
-    address?: string | null;
-    port: number;
-    username?: string | null;
-    password?: string | null;
-}
-
-export enum ProxyServerType {
-    Socks5 = "Socks5",
-}
-
-export class AppSettingsService implements IAppSettingsService {
-    settings!: AppSettings;
-    remoteSettings?: RemoteSettings | null;
-    ipFilterSettings!: IpFilterSettings;
-
-    constructor(data?: IAppSettingsService) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.settings = new AppSettings();
-            this.ipFilterSettings = new IpFilterSettings();
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.settings = _data["settings"] ? AppSettings.fromJS(_data["settings"]) : new AppSettings();
-            this.remoteSettings = _data["remoteSettings"] ? RemoteSettings.fromJS(_data["remoteSettings"]) : <any>null;
-            this.ipFilterSettings = _data["ipFilterSettings"] ? IpFilterSettings.fromJS(_data["ipFilterSettings"]) : new IpFilterSettings();
-        }
-    }
-
-    static fromJS(data: any): AppSettingsService {
-        data = typeof data === 'object' ? data : {};
-        let result = new AppSettingsService();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
-        data["remoteSettings"] = this.remoteSettings ? this.remoteSettings.toJSON() : <any>null;
-        data["ipFilterSettings"] = this.ipFilterSettings ? this.ipFilterSettings.toJSON() : <any>null;
-        return data;
-    }
-}
-
-export interface IAppSettingsService {
-    settings: AppSettings;
-    remoteSettings?: RemoteSettings | null;
-    ipFilterSettings: IpFilterSettings;
-}
-
-export class RemoteSettings implements IRemoteSettings {
-    rejectAdBlocker!: boolean;
-
-    constructor(data?: IRemoteSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.rejectAdBlocker = _data["rejectAdBlocker"] !== undefined ? _data["rejectAdBlocker"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): RemoteSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new RemoteSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["rejectAdBlocker"] = this.rejectAdBlocker !== undefined ? this.rejectAdBlocker : <any>null;
-        return data;
-    }
-}
-
-export interface IRemoteSettings {
-    rejectAdBlocker: boolean;
-}
-
-export class IpFilterSettings implements IIpFilterSettings {
-    appIpFilterIncludes!: string;
-    appIpFilterExcludes!: string;
-    adapterIpFilterIncludes!: string;
-    adapterIpFilterExcludes!: string;
-
-    constructor(data?: IIpFilterSettings) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.appIpFilterIncludes = _data["appIpFilterIncludes"] !== undefined ? _data["appIpFilterIncludes"] : <any>null;
-            this.appIpFilterExcludes = _data["appIpFilterExcludes"] !== undefined ? _data["appIpFilterExcludes"] : <any>null;
-            this.adapterIpFilterIncludes = _data["adapterIpFilterIncludes"] !== undefined ? _data["adapterIpFilterIncludes"] : <any>null;
-            this.adapterIpFilterExcludes = _data["adapterIpFilterExcludes"] !== undefined ? _data["adapterIpFilterExcludes"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): IpFilterSettings {
-        data = typeof data === 'object' ? data : {};
-        let result = new IpFilterSettings();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["appIpFilterIncludes"] = this.appIpFilterIncludes !== undefined ? this.appIpFilterIncludes : <any>null;
-        data["appIpFilterExcludes"] = this.appIpFilterExcludes !== undefined ? this.appIpFilterExcludes : <any>null;
-        data["adapterIpFilterIncludes"] = this.adapterIpFilterIncludes !== undefined ? this.adapterIpFilterIncludes : <any>null;
-        data["adapterIpFilterExcludes"] = this.adapterIpFilterExcludes !== undefined ? this.adapterIpFilterExcludes : <any>null;
-        return data;
-    }
-}
-
-export interface IIpFilterSettings {
-    appIpFilterIncludes: string;
-    appIpFilterExcludes: string;
-    adapterIpFilterIncludes: string;
-    adapterIpFilterExcludes: string;
 }
 
 export class AppState implements IAppState {
@@ -2989,7 +2368,8 @@ export class AppState implements IAppState {
     canDiagnose!: boolean;
     canChangeTcpProxy!: boolean;
     isTcpProxy!: boolean;
-    isUserReviewRecommended!: boolean;
+    userReviewRecommended!: number;
+    isQuickLaunchRecommended!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
@@ -3031,7 +2411,8 @@ export class AppState implements IAppState {
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
             this.canChangeTcpProxy = _data["canChangeTcpProxy"] !== undefined ? _data["canChangeTcpProxy"] : <any>null;
             this.isTcpProxy = _data["isTcpProxy"] !== undefined ? _data["isTcpProxy"] : <any>null;
-            this.isUserReviewRecommended = _data["isUserReviewRecommended"] !== undefined ? _data["isUserReviewRecommended"] : <any>null;
+            this.userReviewRecommended = _data["userReviewRecommended"] !== undefined ? _data["userReviewRecommended"] : <any>null;
+            this.isQuickLaunchRecommended = _data["isQuickLaunchRecommended"] !== undefined ? _data["isQuickLaunchRecommended"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
             this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
@@ -3068,7 +2449,8 @@ export class AppState implements IAppState {
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
         data["canChangeTcpProxy"] = this.canChangeTcpProxy !== undefined ? this.canChangeTcpProxy : <any>null;
         data["isTcpProxy"] = this.isTcpProxy !== undefined ? this.isTcpProxy : <any>null;
-        data["isUserReviewRecommended"] = this.isUserReviewRecommended !== undefined ? this.isUserReviewRecommended : <any>null;
+        data["userReviewRecommended"] = this.userReviewRecommended !== undefined ? this.userReviewRecommended : <any>null;
+        data["isQuickLaunchRecommended"] = this.isQuickLaunchRecommended !== undefined ? this.isQuickLaunchRecommended : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
         data["systemUiCultureInfo"] = this.systemUiCultureInfo ? this.systemUiCultureInfo.toJSON() : <any>null;
         data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
@@ -3098,7 +2480,8 @@ export interface IAppState {
     canDiagnose: boolean;
     canChangeTcpProxy: boolean;
     isTcpProxy: boolean;
-    isUserReviewRecommended: boolean;
+    userReviewRecommended: number;
+    isQuickLaunchRecommended: boolean;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
     purchaseState?: BillingPurchaseState | null;
@@ -4124,6 +3507,328 @@ export class SystemBarsInfo implements ISystemBarsInfo {
 export interface ISystemBarsInfo {
     topHeight: number;
     bottomHeight: number;
+}
+
+export class UserSettings implements IUserSettings {
+    isLicenseAccepted!: boolean;
+    isTcpProxyPrompted!: boolean;
+    isQuickLaunchPrompted!: boolean;
+    cultureCode?: string | null;
+    clientProfileId?: string | null;
+    maxPacketChannelCount!: number;
+    tunnelClientCountry!: boolean;
+    appFilters!: string[];
+    appFiltersMode!: FilterMode;
+    useTcpProxy!: boolean;
+    useUdpChannel!: boolean;
+    dropUdp!: boolean;
+    dropQuic!: boolean;
+    allowAnonymousTracker!: boolean;
+    domainFilter!: DomainFilter;
+    debugData1?: string | null;
+    debugData2?: string | null;
+    logAnonymous!: boolean;
+    includeLocalNetwork!: boolean;
+    useAppIpFilter!: boolean;
+    useVpnAdapterIpFilter!: boolean;
+    endPointStrategy!: EndPointStrategy;
+    dnsServers?: string[] | null;
+    useProxyServer!: boolean;
+    proxyServers!: ProxyServerEndPoint[];
+
+    constructor(data?: IUserSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.appFilters = [];
+            this.domainFilter = new DomainFilter();
+            this.proxyServers = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isLicenseAccepted = _data["isLicenseAccepted"] !== undefined ? _data["isLicenseAccepted"] : <any>null;
+            this.isTcpProxyPrompted = _data["isTcpProxyPrompted"] !== undefined ? _data["isTcpProxyPrompted"] : <any>null;
+            this.isQuickLaunchPrompted = _data["isQuickLaunchPrompted"] !== undefined ? _data["isQuickLaunchPrompted"] : <any>null;
+            this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : <any>null;
+            this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : <any>null;
+            this.maxPacketChannelCount = _data["maxPacketChannelCount"] !== undefined ? _data["maxPacketChannelCount"] : <any>null;
+            this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : <any>null;
+            if (Array.isArray(_data["appFilters"])) {
+                this.appFilters = [] as any;
+                for (let item of _data["appFilters"])
+                    this.appFilters!.push(item);
+            }
+            else {
+                this.appFilters = <any>null;
+            }
+            this.appFiltersMode = _data["appFiltersMode"] !== undefined ? _data["appFiltersMode"] : <any>null;
+            this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : <any>null;
+            this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
+            this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : <any>null;
+            this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
+            this.allowAnonymousTracker = _data["allowAnonymousTracker"] !== undefined ? _data["allowAnonymousTracker"] : <any>null;
+            this.domainFilter = _data["domainFilter"] ? DomainFilter.fromJS(_data["domainFilter"]) : new DomainFilter();
+            this.debugData1 = _data["debugData1"] !== undefined ? _data["debugData1"] : <any>null;
+            this.debugData2 = _data["debugData2"] !== undefined ? _data["debugData2"] : <any>null;
+            this.logAnonymous = _data["logAnonymous"] !== undefined ? _data["logAnonymous"] : <any>null;
+            this.includeLocalNetwork = _data["includeLocalNetwork"] !== undefined ? _data["includeLocalNetwork"] : <any>null;
+            this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
+            this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
+            this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
+            if (Array.isArray(_data["dnsServers"])) {
+                this.dnsServers = [] as any;
+                for (let item of _data["dnsServers"])
+                    this.dnsServers!.push(item);
+            }
+            else {
+                this.dnsServers = <any>null;
+            }
+            this.useProxyServer = _data["useProxyServer"] !== undefined ? _data["useProxyServer"] : <any>null;
+            if (Array.isArray(_data["proxyServers"])) {
+                this.proxyServers = [] as any;
+                for (let item of _data["proxyServers"])
+                    this.proxyServers!.push(ProxyServerEndPoint.fromJS(item));
+            }
+            else {
+                this.proxyServers = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): UserSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isLicenseAccepted"] = this.isLicenseAccepted !== undefined ? this.isLicenseAccepted : <any>null;
+        data["isTcpProxyPrompted"] = this.isTcpProxyPrompted !== undefined ? this.isTcpProxyPrompted : <any>null;
+        data["isQuickLaunchPrompted"] = this.isQuickLaunchPrompted !== undefined ? this.isQuickLaunchPrompted : <any>null;
+        data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : <any>null;
+        data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : <any>null;
+        data["maxPacketChannelCount"] = this.maxPacketChannelCount !== undefined ? this.maxPacketChannelCount : <any>null;
+        data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : <any>null;
+        if (Array.isArray(this.appFilters)) {
+            data["appFilters"] = [];
+            for (let item of this.appFilters)
+                data["appFilters"].push(item);
+        }
+        data["appFiltersMode"] = this.appFiltersMode !== undefined ? this.appFiltersMode : <any>null;
+        data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : <any>null;
+        data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
+        data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : <any>null;
+        data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
+        data["allowAnonymousTracker"] = this.allowAnonymousTracker !== undefined ? this.allowAnonymousTracker : <any>null;
+        data["domainFilter"] = this.domainFilter ? this.domainFilter.toJSON() : <any>null;
+        data["debugData1"] = this.debugData1 !== undefined ? this.debugData1 : <any>null;
+        data["debugData2"] = this.debugData2 !== undefined ? this.debugData2 : <any>null;
+        data["logAnonymous"] = this.logAnonymous !== undefined ? this.logAnonymous : <any>null;
+        data["includeLocalNetwork"] = this.includeLocalNetwork !== undefined ? this.includeLocalNetwork : <any>null;
+        data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
+        data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
+        data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
+        if (Array.isArray(this.dnsServers)) {
+            data["dnsServers"] = [];
+            for (let item of this.dnsServers)
+                data["dnsServers"].push(item);
+        }
+        data["useProxyServer"] = this.useProxyServer !== undefined ? this.useProxyServer : <any>null;
+        if (Array.isArray(this.proxyServers)) {
+            data["proxyServers"] = [];
+            for (let item of this.proxyServers)
+                data["proxyServers"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IUserSettings {
+    isLicenseAccepted: boolean;
+    isTcpProxyPrompted: boolean;
+    isQuickLaunchPrompted: boolean;
+    cultureCode?: string | null;
+    clientProfileId?: string | null;
+    maxPacketChannelCount: number;
+    tunnelClientCountry: boolean;
+    appFilters: string[];
+    appFiltersMode: FilterMode;
+    useTcpProxy: boolean;
+    useUdpChannel: boolean;
+    dropUdp: boolean;
+    dropQuic: boolean;
+    allowAnonymousTracker: boolean;
+    domainFilter: DomainFilter;
+    debugData1?: string | null;
+    debugData2?: string | null;
+    logAnonymous: boolean;
+    includeLocalNetwork: boolean;
+    useAppIpFilter: boolean;
+    useVpnAdapterIpFilter: boolean;
+    endPointStrategy: EndPointStrategy;
+    dnsServers?: string[] | null;
+    useProxyServer: boolean;
+    proxyServers: ProxyServerEndPoint[];
+}
+
+export enum FilterMode {
+    All = "All",
+    Exclude = "Exclude",
+    Include = "Include",
+}
+
+export class DomainFilter implements IDomainFilter {
+    blocks!: string[];
+    excludes!: string[];
+    includes!: string[];
+
+    constructor(data?: IDomainFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.blocks = [];
+            this.excludes = [];
+            this.includes = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["blocks"])) {
+                this.blocks = [] as any;
+                for (let item of _data["blocks"])
+                    this.blocks!.push(item);
+            }
+            else {
+                this.blocks = <any>null;
+            }
+            if (Array.isArray(_data["excludes"])) {
+                this.excludes = [] as any;
+                for (let item of _data["excludes"])
+                    this.excludes!.push(item);
+            }
+            else {
+                this.excludes = <any>null;
+            }
+            if (Array.isArray(_data["includes"])) {
+                this.includes = [] as any;
+                for (let item of _data["includes"])
+                    this.includes!.push(item);
+            }
+            else {
+                this.includes = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): DomainFilter {
+        data = typeof data === 'object' ? data : {};
+        let result = new DomainFilter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.blocks)) {
+            data["blocks"] = [];
+            for (let item of this.blocks)
+                data["blocks"].push(item);
+        }
+        if (Array.isArray(this.excludes)) {
+            data["excludes"] = [];
+            for (let item of this.excludes)
+                data["excludes"].push(item);
+        }
+        if (Array.isArray(this.includes)) {
+            data["includes"] = [];
+            for (let item of this.includes)
+                data["includes"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IDomainFilter {
+    blocks: string[];
+    excludes: string[];
+    includes: string[];
+}
+
+export enum EndPointStrategy {
+    Auto = "Auto",
+    DnsFirst = "DnsFirst",
+    TokenFirst = "TokenFirst",
+    DnsOnly = "DnsOnly",
+    TokenOnly = "TokenOnly",
+}
+
+export class ProxyServerEndPoint implements IProxyServerEndPoint {
+    proxyServerType!: ProxyServerType;
+    address?: string | null;
+    port!: number;
+    username?: string | null;
+    password?: string | null;
+
+    constructor(data?: IProxyServerEndPoint) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.proxyServerType = _data["proxyServerType"] !== undefined ? _data["proxyServerType"] : <any>null;
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ProxyServerEndPoint {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProxyServerEndPoint();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["proxyServerType"] = this.proxyServerType !== undefined ? this.proxyServerType : <any>null;
+        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["port"] = this.port !== undefined ? this.port : <any>null;
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data;
+    }
+}
+
+export interface IProxyServerEndPoint {
+    proxyServerType: ProxyServerType;
+    address?: string | null;
+    port: number;
+    username?: string | null;
+    password?: string | null;
+}
+
+export enum ProxyServerType {
+    Socks5 = "Socks5",
 }
 
 export class ClientProfileInfo implements IClientProfileInfo {

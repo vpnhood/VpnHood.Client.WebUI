@@ -38,7 +38,7 @@ const appList = computed<IMyInstalledApps[]>(() => {
 onMounted(async () => {
   if (vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported) {
     const installedApps = await vhApp.getInstalledApps();
-    const filterMode = vhApp.data.settings.userSettings.appFiltersMode;
+    const filterMode = vhApp.data.userSettings.appFiltersMode;
 
     // Add isSelected to all apps item
     myInstalledApps.value = installedApps.map(app => {
@@ -48,8 +48,8 @@ onMounted(async () => {
         appName: app.appName,
         iconPng: app.iconPng,
         isSelected: (filterMode === FilterMode.All)
-          || (filterMode === FilterMode.Include && vhApp.data.settings.userSettings.appFilters.some(x => x === app.appId))
-          || (filterMode === FilterMode.Exclude && vhApp.data.settings.userSettings.appFilters.every(x => x !== app.appId))
+          || (filterMode === FilterMode.Include && vhApp.data.userSettings.appFilters.some(x => x === app.appId))
+          || (filterMode === FilterMode.Exclude && vhApp.data.userSettings.appFilters.every(x => x !== app.appId))
       };
       return myApp;
     });
@@ -87,8 +87,8 @@ async function saveChange(){
   // All apps
   const isAllSelectedApp = myInstalledApps.value.every(x => x.isSelected);
   if (isAllSelectedApp) {
-    vhApp.data.settings.userSettings.appFiltersMode = FilterMode.All;
-    vhApp.data.settings.userSettings.appFilters = [];
+    vhApp.data.userSettings.appFiltersMode = FilterMode.All;
+    vhApp.data.userSettings.appFilters = [];
     await vhApp.saveUserSetting();
     return;
   }
@@ -96,8 +96,8 @@ async function saveChange(){
   // All apps except selected
   const isFutureAppSelected = myInstalledApps.value.some(x => x.appId === "$" && x.isSelected);
   if (isFutureAppSelected) {
-    vhApp.data.settings.userSettings.appFiltersMode = FilterMode.Exclude;
-    vhApp.data.settings.userSettings.appFilters = myInstalledApps.value
+    vhApp.data.userSettings.appFiltersMode = FilterMode.Exclude;
+    vhApp.data.userSettings.appFilters = myInstalledApps.value
       .filter(x => !x.isSelected && x.appId !== "$")
       .map(x => x.appId);
     await vhApp.saveUserSetting();
@@ -105,8 +105,8 @@ async function saveChange(){
   }
 
   // Only selected apps
-  vhApp.data.settings.userSettings.appFiltersMode = FilterMode.Include;
-  vhApp.data.settings.userSettings.appFilters = myInstalledApps.value
+  vhApp.data.userSettings.appFiltersMode = FilterMode.Include;
+  vhApp.data.userSettings.appFilters = myInstalledApps.value
     .filter(x => x.isSelected && x.appId !== "$")
     .map(x => x.appId);
   await vhApp.saveUserSetting();

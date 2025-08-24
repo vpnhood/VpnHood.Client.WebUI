@@ -15,6 +15,7 @@ const props = defineProps<{
   buttonText: string,
   buttonClick: ()=>void,
   isPremium: boolean,
+  isActionButtonAvailable: boolean,
 }>();
 </script>
 
@@ -49,18 +50,23 @@ const props = defineProps<{
 
       <!-- Tutorial steps -->
       <config-card v-if="!props.isPremium || vhApp.isPremiumAccount()" class="pb-2">
+
+        <!-- Help steps -->
         <v-card-item>
           <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
             <li v-for="(item, index) in props.listStep" :key="index" v-html="item"/>
           </ol>
         </v-card-item>
-        <v-card-item>
+
+        <!-- If request with API is available -->
+        <v-card-item v-if="props.isActionButtonAvailable">
           <btn-style-1
             :text="locale(props.buttonText)"
             block
             @click="props.buttonClick()"
           />
         </v-card-item>
+
       </config-card>
 
       <!-- Go premium button -->

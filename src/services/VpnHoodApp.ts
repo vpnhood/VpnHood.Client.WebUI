@@ -59,7 +59,7 @@ export class VpnHoodApp {
       new ConfigParams({ availableCultures: i18n.global.availableLocales }));
     const appData = new VpnHoodAppData(
       config.state,
-      config.settings,
+      config.userSettings,
       config.features,
       config.intentFeatures,
       config.clientProfileInfos,
@@ -68,7 +68,7 @@ export class VpnHoodApp {
 
     let firebase: VhFirebaseApp | null = null;
     if (!import.meta.env.DEV)
-      firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.settings.clientId);
+      firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.features.clientId);
 
     return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, appData, firebase);
   }
@@ -94,6 +94,10 @@ export class VpnHoodApp {
       await this.processError(ApiException.fromApiError(this.data.state.lastError));
     }
 
+    // Show the Quick launch page
+    if (this.data.state.isQuickLaunchRecommended)
+      await router.push({name: 'QUICK_LAUNCH'});
+
     // Show the update message if the user has not ignored or more than 24 hours have passed
     if (this.data.state.updaterStatus?.prompt)
       this.data.uiState.showUpdateSnackbar = true;
@@ -110,7 +114,7 @@ export class VpnHoodApp {
   private async reloadSettings(): Promise<void> {
     const config = await this.apiClient.getConfig();
     this.data.features = config.features;
-    this.data.settings = config.settings;
+    this.data.userSettings = config.userSettings;
 
     // Remove the built-in client profile if the user is premium
     this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
@@ -118,7 +122,7 @@ export class VpnHoodApp {
       : config.clientProfileInfos;
 
     if (config.clientProfileInfos.length === 0)
-      this.data.settings.userSettings.clientProfileId = null;
+      this.data.userSettings.clientProfileId = null;
   }
 
   public async connect(
@@ -152,7 +156,7 @@ export class VpnHoodApp {
         isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),
         selectedLocation: new PatchOfString({ value: serverLocation })
       }));
-      this.data.settings.userSettings.clientProfileId = clientProfileId;
+      this.data.userSettings.clientProfileId = clientProfileId;
       await this.saveUserSetting();
     }
     finally {
@@ -181,7 +185,7 @@ export class VpnHoodApp {
 
   // Save any change by user
   public async saveUserSetting(): Promise<void> {
-    await this.apiClient.setUserSettings(this.data.settings.userSettings);
+    await this.apiClient.setUserSettings(this.data.userSettings);
     await this.reloadState();
   }
 
@@ -203,12 +207,12 @@ export class VpnHoodApp {
   }
 
   public async diagnose(): Promise<void> {
-    if (!this.data.settings.userSettings.clientProfileId) {
+    if (!this.data.userSettings.clientProfileId) {
       await router.replace({ name: 'SERVERS' });
       return;
     }
     try {
-      await this.apiClient.diagnose(this.data.settings.userSettings.clientProfileId);
+      await this.apiClient.diagnose(this.data.userSettings.clientProfileId);
     } catch (err: unknown) {
       console.log(err);
     }
@@ -278,7 +282,7 @@ export class VpnHoodApp {
   }
 
   public isActiveClientProfile(clientProfileId: string): boolean {
-    return clientProfileId === this.data.settings.userSettings.clientProfileId;
+    return clientProfileId === this.data.userSettings.clientProfileId;
   }
 
   public isConnectApp(): boolean {
@@ -429,24 +433,31 @@ export class VpnHoodApp {
     const paddingTop = this.getEdgeToEdgeTopHeight();
     const paddingBottom = this.getEdgeToEdgeBottomHeight();
 
+    if (paddingTop === this.data.uiState.edgeToEdgeTop && paddingBottom === this.data.uiState.edgeToEdgeBottom)
+      return;
+
+    this.data.uiState.edgeToEdgeTop = paddingTop;
+    this.data.uiState.edgeToEdgeBottom = paddingBottom;
+
     // Unique ID for the injected style
     const styleId = 'edge-to-edge-style';
+
+    // Find and remove existing style element
     const existingStyle = document.getElementById(styleId);
     if (existingStyle) {
       existingStyle.remove();
     }
 
-    if (paddingTop || paddingBottom) {
-      const styleElement = document.createElement('style');
-      styleElement.id = styleId;
-      styleElement.textContent = `
+    const styleElement = document.createElement('style');
+    styleElement.id = styleId;
+    styleElement.textContent = `
       .v-main > .v-sheet {
         ${paddingTop ? `padding-top: ${paddingTop}px !important;` : ''}
         ${paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : ''}
       }
     `;
-      document.head.appendChild(styleElement);
-    }
+    document.head.appendChild(styleElement);
+
   }
 
   public isLocationAutoSelected(value?: string): boolean {
@@ -460,23 +471,23 @@ export class VpnHoodApp {
     return this.isFilterIpByAdapterAvailable() || this.isFilterIpByAppAvailable();
   }
   public isFilterIpTurnOn(): boolean {
-    return (this.data.settings.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable()) ||
-      (this.data.settings.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable());
+    return (this.data.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable()) ||
+      (this.data.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable());
   }
   public isFilterIpByAdapterAvailable(): boolean {
     if (!this.data.features.isPremiumFlagSupported)
       return true;
-    return this.isPremiumAccount() || this.data.settings.userSettings.useVpnAdapterIpFilter;
+    return this.isPremiumAccount() || this.data.userSettings.useVpnAdapterIpFilter;
   }
   public isFilterIpByAppAvailable(): boolean {
     if (!this.data.features.isPremiumFlagSupported)
       return true;
-    return this.isPremiumAccount() || this.data.settings.userSettings.useAppIpFilter;
+    return this.isPremiumAccount() || this.data.userSettings.useAppIpFilter;
   }
   public isIncludeLocalNetworkAvailable(): boolean {
     if (!this.data.features.isPremiumFlagSupported)
       return true;
-    return this.isPremiumAccount() || this.data.settings.userSettings.includeLocalNetwork;
+    return this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork;
   }
 
 }

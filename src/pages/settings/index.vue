@@ -28,9 +28,9 @@ interface SettingsItem {
 }
 
 const includeLocalNetwork = computed({
-  get: () => vhApp.data.settings.userSettings.includeLocalNetwork,
+  get: () => vhApp.data.userSettings.includeLocalNetwork,
   set: async (value: boolean) => {
-    vhApp.data.settings.userSettings.includeLocalNetwork = value;
+    vhApp.data.userSettings.includeLocalNetwork = value;
     await vhApp.saveUserSetting();
   }
 });
@@ -71,15 +71,15 @@ const settingsItem: SettingsItem[] = [
     title: "QUICK_LAUNCH",
     subtitle: "QUICK_LAUNCH_DESC",
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch),
-    isShow: false,
-    click: {name: 'FILTER_IP'}
+    isShow: vhApp.data.intentFeatures.isQuickLaunchSupported,
+    click: {name: 'QUICK_LAUNCH'}
   },
   {
     title: "ALWAYS_ON",
     subtitle: "ALWAYS_ON_DESC",
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn),
-    isShow: false,
-    click: {name: 'FILTER_IP'}
+    isShow: vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported,
+    click: {name: 'ALWAYS_ON'}
   },
   {
     title: "KILL_SWITCH",

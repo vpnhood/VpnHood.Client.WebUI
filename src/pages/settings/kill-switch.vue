@@ -21,5 +21,6 @@ const locale = i18n.global.t;
     button-text="KILL_SWITCH_TURN_ON"
     :button-click="()=>vhApp.intentsClient.openSystemKillSwitchSettings()"
     :is-premium="false"
+    :is-action-button-available="true"
   />
 </template>

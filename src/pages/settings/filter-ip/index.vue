@@ -14,20 +14,20 @@ const locale = i18n.global.t;
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.useVpnAdapterIpFilter && vhApp.isFilterIpByAdapterAvailable();
+    return vhApp.data.userSettings.useVpnAdapterIpFilter && vhApp.isFilterIpByAdapterAvailable();
   },
   set: async (value: boolean) => {
-    vhApp.data.settings.userSettings.useVpnAdapterIpFilter = value;
+    vhApp.data.userSettings.useVpnAdapterIpFilter = value;
     await vhApp.saveUserSetting();
   }
 });
 
 const useIpFilterByApp = computed<boolean>({
   get: () => {
-    return vhApp.data.settings.userSettings.useAppIpFilter && vhApp.isFilterIpByAppAvailable();
+    return vhApp.data.userSettings.useAppIpFilter && vhApp.isFilterIpByAppAvailable();
   },
   set: async (value: boolean) => {
-    vhApp.data.settings.userSettings.useAppIpFilter = value;
+    vhApp.data.userSettings.useAppIpFilter = value;
     await vhApp.saveUserSetting();
   }
 });

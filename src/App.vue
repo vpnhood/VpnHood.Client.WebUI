@@ -27,10 +27,10 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
     if (!vhApp.isConnectApp())
       return false;
 
-    return !vhApp.data.settings.userSettings.isLicenseAccepted;
+    return !vhApp.data.userSettings.isLicenseAccepted;
   },
   set: async (value: boolean) => {
-    VpnHoodApp.instance.data.settings.userSettings.isLicenseAccepted = value;
+    VpnHoodApp.instance.data.userSettings.isLicenseAccepted = value;
     await VpnHoodApp.instance.saveUserSetting();
   }
 })

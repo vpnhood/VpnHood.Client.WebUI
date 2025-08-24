@@ -69,7 +69,7 @@
   "PROTOCOL_DROP_QUIC_DESC":"更可靠",
   "CLOAK": "Cloak",
   "CLOAK_MODE": "Cloak 模式",
-  "CLOAK_MODE_DESC": "通过将 VPN 流量伪装成普通网页流量来绕过 VPN 封锁，使其能够抵抗深度包检测（DPI）。虽然这可能略微降低速度并增加电量消耗，但能确保在受限网络中可靠访问。Cloak 模式是 VpnHood 独有功能。",
+  "CLOAK_MODE_SHORT_DESC": "通过将 VPN 流量伪装成普通网页流量来绕过 VPN 封锁，使其能够抵抗深度包检测（DPI）。虽然这可能略微降低速度并增加电量消耗，但能确保在受限网络中可靠访问。Cloak 模式是 VpnHood 独有功能。",
   "SELECTED_APPS": "选定的应用程序",
   "NEW_SERVER_ADDED": "已添加新服务器。",
   "LOCAL_NETWORK": "本地网络",

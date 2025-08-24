@@ -4,6 +4,8 @@ import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
+import router from '@/services/router';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -51,22 +53,25 @@ const cloakMode = computed({
     return vhApp.data.state.isTcpProxy;
   },
   set: async (value: boolean) => {
+    if (!vhApp.data.userSettings.isTcpProxyPrompted)
+      await router.push({name: 'CLOAK_MODE'});
+
     vhApp.data.state.isTcpProxy = value;
-    vhApp.data.settings.userSettings.useTcpProxy = value;
+    vhApp.data.userSettings.useTcpProxy = value;
     await vhApp.saveUserSetting();
   }
 });
 
 const activeProtocol = computed<Protocols>({
   get: () => {
-    const { dropQuic, useUdpChannel } = vhApp.data.settings.userSettings;
+    const { dropQuic, useUdpChannel } = vhApp.data.userSettings;
     if (isUdpUnsupported()) {
       return dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP;
     }
     return useUdpChannel ? Protocols.UDP : (dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP);
   },
   set: async (value: Protocols) => {
-    const userSettings = vhApp.data.settings.userSettings;
+    const userSettings = vhApp.data.userSettings;
     userSettings.useUdpChannel = value === Protocols.UDP;
     userSettings.dropQuic = value === Protocols.TcpAndDropHTTP3;
     await vhApp.saveUserSetting();
@@ -92,7 +97,18 @@ function isUdpUnsupported(): boolean {
           <v-switch v-model="cloakMode"  :disabled="!vhApp.data.state.canChangeTcpProxy"/>
         </div>
       </v-card-item>
-      <v-card-subtitle class="mb-3">{{locale("CLOAK_MODE_DESC")}}</v-card-subtitle>
+      <v-card-subtitle class="mb-3">
+        <p>{{locale("CLOAK_MODE_SHORT_DESC")}}</p>
+        <v-btn
+          :text="locale('LEARN_MORE')"
+          variant="plain"
+          class="pa-0 opacity-100"
+          :ripple="false"
+          color="highlight"
+          :append-icon="Util.getLocalizedRightChevron()"
+          @click="router.push({name: 'CLOAK_MODE'})"
+        />
+      </v-card-subtitle>
     </config-card>
 
     <!-- Protocols radio buttons -->

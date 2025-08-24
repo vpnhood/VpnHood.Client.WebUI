@@ -19,12 +19,12 @@ const myLocales = ref<IUiCultureInfo[]>([
 
 const defaultLanguage = computed<string>({
   get: () => {
-    return !vhApp.data.settings.userSettings.cultureCode
+    return !vhApp.data.userSettings.cultureCode
       ? LanguagesCode.SystemDefault
-      : vhApp.data.settings.userSettings.cultureCode;
+      : vhApp.data.userSettings.cultureCode;
   },
   set: async (value: string) => {
-    vhApp.data.settings.userSettings.cultureCode = value === LanguagesCode.SystemDefault ? null : value;
+    vhApp.data.userSettings.cultureCode = value === LanguagesCode.SystemDefault ? null : value;
     await vhApp.saveUserSetting();
     router.go(0);
   }

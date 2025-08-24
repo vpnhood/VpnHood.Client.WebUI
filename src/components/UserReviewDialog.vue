@@ -49,6 +49,9 @@ async function processSubmit(isSubmitted: boolean) {
 }
 
 async function submitRate() {
+  // Close dialog
+  vhApp.data.state.userReviewRecommended = 0;
+
   try {
     const userReview = new AppUserReview(
       {
@@ -79,8 +82,13 @@ async function submitRate() {
 }
 
 async function sendToFirebase(): Promise<void> {
-  const clientId = vhApp.data.settings.clientId.substring(0, 8);
+  const clientId = vhApp.data.features.clientId.substring(0, 8);
   await vhApp.vhFirebase?.sendRate(userReviewText.value, clientId, 'rates', selectedRate.value);
+}
+
+function isShowCloseBtn(): boolean{
+  return !((!showReviewTextarea.value && vhApp.data.state.userReviewRecommended == 2) || showReviewThanks.value);
+
 }
 
 </script>
@@ -95,7 +103,7 @@ async function sendToFirebase(): Promise<void> {
 
       <!-- Close button -->
       <tonal-icon-btn
-        v-if="!showReviewThanks"
+        v-if="isShowCloseBtn()"
         icon="mdi-close"
         class="position-absolute ms-3 mt-3"
         style="z-index: 999"
