@@ -68,3 +68,6 @@
     10px 0 30px green;
 }
 /*** --------------------End of Home Circle Section-------------------- ***/
+.v-theme--VpnHoodClient #cloakMode .text-highlight{
+    color: #23c99d!important;
+}

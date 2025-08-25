@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
+  <v-sheet id="cloakMode" color="grad-bg-container-bg" class="pt-4">
 
     <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
 
@@ -44,8 +44,12 @@ onMounted(() => {
         class="mx-auto"
       />
 
-      <p v-html="locale('CLOAK_MODE_DESC_1')" style="line-height: 25px;" />
-      <p class="mt-3" style="line-height: 25px;">{{locale('CLOAK_MODE_DESC_2')}}</p>
+      <card-on-grad>
+        <v-card-item>
+          <p v-html="locale('CLOAK_MODE_DESC_1')" style="line-height: 25px;" />
+          <p class="mt-3" style="line-height: 25px;">{{locale('CLOAK_MODE_DESC_2')}}</p>
+        </v-card-item>
+      </card-on-grad>
 
     </v-card>
   </v-sheet>

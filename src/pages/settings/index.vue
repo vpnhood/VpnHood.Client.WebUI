@@ -102,7 +102,6 @@ const settingsItem: SettingsItem[] = [
 <template>
   <v-sheet>
     <app-bar/>
-
     <template v-for="(item, index) in settingsItem" :key="index">
 
       <config-card v-if="item.isShow !== undefined ? item.isShow : true" class="pa-3">

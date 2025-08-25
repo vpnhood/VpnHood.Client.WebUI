@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import vuetify from '@/services/vuetify';
+import vuetify from '@/theme/vuetify';
 import { AppName } from '@/helpers/UiConstants';
 import type { RouteLocationRaw } from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';

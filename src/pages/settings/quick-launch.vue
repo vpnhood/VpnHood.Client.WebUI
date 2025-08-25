@@ -4,7 +4,6 @@ import i18n from '@/locales/i18n';
 import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
 import { onMounted } from 'vue';
-import { AppName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -16,7 +15,7 @@ const supportedRequestQuickLaunchSteps = [
 const unsupportedRequestQuickLaunchSteps = [
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_1'),
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_2'),
-  locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_3',{appName: vhApp.isConnectApp() ? AppName.VpnHoodConnect : AppName.VpnHoodClient}),
+  locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_3',{appName: vhApp.data.features.appName}),
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_4'),
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_5')
 ]

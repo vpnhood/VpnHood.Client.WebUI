@@ -1,5 +1,5 @@
 import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
-import vuetify from '@/services/vuetify';
+import vuetify from '@/theme/vuetify';
 
 export class Util {
   // Client profile has a single location

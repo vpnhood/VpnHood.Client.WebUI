@@ -8,7 +8,7 @@ import LoadingDialog from "@/components/LoadingDialog.vue";
 import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
-import vuetify from '@/services/vuetify';
+import vuetify from '@/theme/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 

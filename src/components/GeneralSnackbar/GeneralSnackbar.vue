@@ -3,7 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ref } from 'vue';
 import type { GeneralSnackbarData } from '@/components/GeneralSnackbar/GeneralSnackbarData';
 import i18n from '@/locales/i18n';
-import vuetify from '@/services/vuetify';
+import vuetify from '@/theme/vuetify';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;

@@ -49,7 +49,7 @@ const props = defineProps<{
       />
 
       <!-- Tutorial steps -->
-      <config-card v-if="!props.isPremium || vhApp.isPremiumAccount()" class="pb-2">
+      <card-on-grad v-if="!props.isPremium || vhApp.isPremiumAccount()" class="pb-2">
 
         <!-- Help steps -->
         <v-card-item>
@@ -61,16 +61,17 @@ const props = defineProps<{
         <!-- If request with API is available -->
         <v-card-item v-if="props.isActionButtonAvailable">
           <btn-style-1
+            color="promote-premium-color-premium"
             :text="locale(props.buttonText)"
             block
             @click="props.buttonClick()"
           />
         </v-card-item>
 
-      </config-card>
+      </card-on-grad>
 
       <!-- Go premium button -->
-      <config-card v-else class="pb-2">
+      <card-on-grad v-else class="pb-2">
 
         <!-- Description -->
         <v-card-item>
@@ -81,6 +82,7 @@ const props = defineProps<{
         <v-card-item>
           <btn-style-1
             prepend-icon="mdi-crown"
+            color="promote-premium-color-premium"
             block
             :text="locale('GO_PREMIUM')"
             tabindex="0"
@@ -88,7 +90,7 @@ const props = defineProps<{
           />
         </v-card-item>
 
-      </config-card>
+      </card-on-grad>
     </v-card>
   </v-sheet>
 </template>

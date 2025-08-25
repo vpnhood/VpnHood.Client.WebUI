@@ -3,7 +3,6 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
-import { AppName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -16,7 +15,7 @@ const locale = i18n.global.t;
     image="always-on.webp"
     :list-step="[
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_1'),
-      locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_2',{appName: vhApp.isConnectApp() ? AppName.VpnHoodConnect : AppName.VpnHoodClient, icon: '⚙️'}),
+      locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_2',{appName: vhApp.data.features.appName, icon: '⚙️'}),
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_3')
     ]"
     button-text="OPEN_SYSTEM_SETTINGS"
