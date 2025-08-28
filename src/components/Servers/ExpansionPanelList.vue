@@ -273,35 +273,40 @@ function closeCustomEndpointDialog(): void {
     <v-card :title="locale('CUSTOM_ENDPOINT')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
-        <!-- Name text field -->
-        <v-text-field
-          v-model="customEndpoint"
-          :error-messages="invalidIpError"
-          :placeholder="locale('CUSTOM_ENDPOINT_PLACE_HOLDER')"
-          spellcheck="false"
-          autocomplete="off"
-          color="highlight"
-          :clearable="true">
-        </v-text-field>
+        <!-- IP text field -->
+        <v-locale-provider :rtl="false">
+          <v-text-field
+            v-model="customEndpoint"
+            :error-messages="invalidIpError"
+            :placeholder="locale('CUSTOM_ENDPOINT_PLACE_HOLDER')"
+            spellcheck="false"
+            autocomplete="off"
+            color="highlight"
+            :clearable="true">
+          </v-text-field>
+        </v-locale-provider>
+
         <p class="text-caption mb-2">{{locale('CUSTOM_ENDPOINT_DESC')}}</p>
-        <v-chip
-        density="compact"
-        color="sample-ip-filter-bg"
-        size="small"
-        class="px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text"
-        style="border-radius: 3px; letter-spacing: 1px;"
-        variant="flat"
-        text="IPv4: 192.0.2.1:443"
-        />
-        <v-chip
-          density="compact"
-          color="sample-ip-filter-bg"
-          size="small"
-          class="px-1 ms-1 border  border-opacity-25 text-sample-ip-filter-text"
-          style="border-radius: 3px; letter-spacing: 1px;"
-          variant="flat"
-          text="IPv6: [2001:db8::1]:443"
-        />
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            density="compact"
+            color="sample-ip-filter-bg"
+            size="small"
+            class="px-1 border border-opacity-25 text-sample-ip-filter-text"
+            style="border-radius: 3px; letter-spacing: 1px;"
+            variant="flat"
+            text="IPv4: 192.0.2.1:443"
+          />
+          <v-chip
+            density="compact"
+            color="sample-ip-filter-bg"
+            size="small"
+            class="px-1 border border-opacity-25 text-sample-ip-filter-text"
+            style="border-radius: 3px; letter-spacing: 1px;"
+            variant="flat"
+            text="IPv6: [2001:db8::1]:443"
+          />
+        </div>
       </v-card-text>
 
       <v-card-actions>

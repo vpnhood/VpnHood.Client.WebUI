@@ -3,11 +3,12 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const isShowSkipBtn = ref<boolean>(false);
 const supportedRequestQuickLaunchSteps = [
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_1'),
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_2')
@@ -21,6 +22,7 @@ const unsupportedRequestQuickLaunchSteps = [
 ]
 
 onMounted(() => {
+  isShowSkipBtn.value = vhApp.data.state.isQuickLaunchRecommended;
   if (!vhApp.data.userSettings.isQuickLaunchPrompted){
     vhApp.data.userSettings.isQuickLaunchPrompted = true;
     vhApp.saveUserSetting();
@@ -38,5 +40,6 @@ onMounted(() => {
     :button-click="()=>vhApp.intentsClient.requestQuickLaunch()"
     :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch)"
     :is-action-button-available="vhApp.data.intentFeatures.isRequestQuickLaunchSupported"
+    :is-show-skip-btn="isShowSkipBtn"
   />
 </template>

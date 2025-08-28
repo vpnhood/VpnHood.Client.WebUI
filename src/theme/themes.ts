@@ -149,8 +149,8 @@ export const vhConnectThemeColors = defineTheme({
   note: myColors.purple['400'],
   'on-note': myColors.purple['100'],
   error: myColors.red['100'],
-  warning: myColors.purple['400'],
-  'on-warning': myColors.cream['100'],
+  warning: myColors.purple['100'],
+  'on-warning': myColors.purple['600'],
 
   'scroll-track': myColors.purple['500'],
   'scroll-thumb': myColors.purple['300'],

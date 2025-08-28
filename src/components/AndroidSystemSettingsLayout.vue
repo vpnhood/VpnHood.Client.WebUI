@@ -16,6 +16,7 @@ const props = defineProps<{
   buttonClick: ()=>void,
   isPremium: boolean,
   isActionButtonAvailable: boolean,
+  isShowSkipBtn?: boolean
 }>();
 </script>
 
@@ -25,8 +26,7 @@ const props = defineProps<{
     <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
 
       <!-- Back button -->
-      <tonal-icon-btn
-        v-if="!vhApp.data.features.isTv"
+      <tonal-icon-btn v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
         class="mt-3 "
         @click="router.go(-1)"
@@ -58,13 +58,22 @@ const props = defineProps<{
           </ol>
         </v-card-item>
 
-        <!-- If request with API is available -->
+        <!-- Open related settings button (If request with API is available) -->
         <v-card-item v-if="props.isActionButtonAvailable">
-          <btn-style-1
+          <btn-style-1 v-if="props.isActionButtonAvailable"
             color="promote-premium-color-premium"
             :text="locale(props.buttonText)"
             block
             @click="props.buttonClick()"
+          />
+        </v-card-item>
+
+        <!-- Skip button -->
+        <v-card-item v-if="props.isShowSkipBtn">
+          <btn-style-2
+           :text="locale('SKIP')"
+           block
+           @click="router.go(-1)"
           />
         </v-card-item>
 
@@ -91,6 +100,7 @@ const props = defineProps<{
         </v-card-item>
 
       </card-on-grad>
+
     </v-card>
   </v-sheet>
 </template>

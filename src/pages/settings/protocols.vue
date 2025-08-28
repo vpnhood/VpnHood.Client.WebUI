@@ -78,8 +78,7 @@ const activeProtocol = computed<Protocols>({
   }
 });
 function isUdpUnsupported(): boolean {
-  return vhApp.data.connectionState === AppConnectionState.Connected &&
-    !vhApp.data.state.sessionInfo?.isUdpChannelSupported;
+  return vhApp.data.isConnected && !vhApp.data.state.sessionInfo?.isUdpChannelSupported;
 }
 </script>
 
@@ -91,12 +90,20 @@ function isUdpUnsupported(): boolean {
 
     <!-- Cloak Mode -->
     <config-card>
+
       <v-card-item>
-        <div class="d-flex align-center justify-space-between">
+        <!-- Enforced by server alert -->
+        <alert-warning v-if="vhApp.data.isConnected || !vhApp.data.state.canChangeTcpProxy" :text="locale('ENFORCED_BY_SERVER')" />
+
+        <!-- Switch button -->
+        <div class="d-flex align-center justify-space-between" :class="{'text-disabled': !vhApp.data.state.canChangeTcpProxy}">
           <span>{{ locale('CLOAK_MODE') }}</span>
           <v-switch v-model="cloakMode"  :disabled="!vhApp.data.state.canChangeTcpProxy"/>
         </div>
+
       </v-card-item>
+
+      <!-- Description and learn more button -->
       <v-card-subtitle class="mb-3">
         <p>{{locale("CLOAK_MODE_SHORT_DESC")}}</p>
         <v-btn
@@ -109,6 +116,7 @@ function isUdpUnsupported(): boolean {
           @click="router.push({name: 'CLOAK_MODE'})"
         />
       </v-card-subtitle>
+
     </config-card>
 
     <!-- Protocols radio buttons -->
@@ -120,12 +128,10 @@ function isUdpUnsupported(): boolean {
       </v-card-item>
 
       <!-- UDP not supported alert -->
-      <alert-warning
-        v-if="isUdpUnsupported()"
-        class="mb-3"
-        :title="locale('WARNING')"
-        :text="locale('UDP_NOT_SUPPORTED_MESSAGE')"
-      />
+      <v-card-item v-if="isUdpUnsupported()" class="py-0">
+        <alert-warning :text="locale('UDP_NOT_SUPPORTED_MESSAGE')" />
+      </v-card-item>
+
 
       <!-- Radio buttons for protocols -->
       <v-card-item>

@@ -373,11 +373,12 @@ function isDebugDataHasValue(): boolean {
             ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'))
             : router.push({name: 'SERVERS'})"
         >
-          <span tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}</span>
+          <span class="config-btn-title" tabindex="-1">{{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER')
+            }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-          {{ getActiveServerNameOrLocation() }}
-        </span>
+          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+            {{ getActiveServerNameOrLocation() }}
+          </span>
 
           <template v-slot:append>
             <!-- Country flag -->
@@ -410,11 +411,11 @@ function isDebugDataHasValue(): boolean {
           tabindex="6"
           @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
         >
-          <span>{{ locale('COUNTRIES') }}</span>
+          <span class="config-btn-title">{{ locale('COUNTRIES') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
-          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
         {{ vhApp.data.userSettings.tunnelClientCountry
             ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
         </span>
@@ -439,11 +440,11 @@ function isDebugDataHasValue(): boolean {
           tabindex="7"
           @click="router.push({name: 'APP_FILTER'})"
         >
-          <span>{{ locale('APPS') }}</span>
+          <span class="config-btn-title">{{ locale('APPS') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
-          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
           {{ appFilterStatus() }}
         </span>
         </home-config-btn>
@@ -456,10 +457,11 @@ function isDebugDataHasValue(): boolean {
           @click="router.push({name: 'PROTOCOLS'})"
           class="align-center"
         >
-          <span>{{ locale('PROTOCOL_TITLE') }}</span>
+          <span class="config-btn-title">{{ locale('PROTOCOL_TITLE') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
           <!-- Text related to selected option -->
-          <span class="text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          <span
+            class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
             {{ udpProtocolButtonText() }}
           </span>
 
@@ -637,6 +639,10 @@ function isDebugDataHasValue(): boolean {
 }
 .limited-width-to-truncate {
   max-width: calc(100vw - 110px);
+}
+.config-btn-title,
+.config-btn-value{
+  padding-inline-start: 2px;
 }
 </style>
 

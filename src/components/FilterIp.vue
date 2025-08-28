@@ -103,7 +103,6 @@ function revertCurrentChange(): void{
         },
       'VTextarea':{
         'class': 'ipList',
-        'dir': 'ltr',
         'density': 'compact',
         'rows': '5',
         'variant': 'outlined',
@@ -142,7 +141,9 @@ function revertCurrentChange(): void{
     <config-card class="pb-3 mt-4">
       <v-card-title>{{locale('EXCLUDE_IPS')}}</v-card-title>
       <v-card-item>
-        <v-textarea v-model="excludeIpFilters" />
+        <v-locale-provider :rtl="false">
+          <v-textarea v-model="excludeIpFilters"/>
+        </v-locale-provider>
       </v-card-item>
     </config-card>
 
@@ -150,7 +151,9 @@ function revertCurrentChange(): void{
     <config-card class="pb-3 mt-4">
       <v-card-title>{{locale('INCLUDE_IPS')}}</v-card-title>
       <v-card-item>
-        <v-textarea v-model="includeIpFilters" />
+        <v-locale-provider :rtl="false">
+          <v-textarea v-model="includeIpFilters"/>
+        </v-locale-provider>
       </v-card-item>
     </config-card>
 

@@ -19,7 +19,7 @@ const locale = i18n.global.t;
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_3')
     ]"
     button-text="OPEN_SYSTEM_SETTINGS"
-    :button-click="()=>vhApp.intentsClient.requestQuickLaunch()"
+    :button-click="()=>vhApp.intentsClient.openSystemAlwaysOnSettings()"
     :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn)"
     :is-action-button-available="true"
   />
