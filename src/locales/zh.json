@@ -25,6 +25,7 @@
   "REMOVE": "删除",
   "RENAME": "重命名",
   "CANCEL": "取消",
+  "SKIP": "跳过",
   "CLOSE": "关闭",
   "SAVE": "保存",
   "OK": "确定",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "输入 <strong>\"DNS\"</strong> 并选择 <strong>DNS 私有</strong> (Private DNS) 选项。",
   "PRIVATE_DNS_TURN_ON_STEP_4": "选择 <strong>DNS 私有提供商主机名</strong>。",
   "PRIVATE_DNS_TURN_ON_STEP_5": "输入你想使用的 DNS。",
-  "LEARN_MORE": "了解更多"
+  "LEARN_MORE": "了解更多",
+  "ENFORCED_BY_SERVER": "由服务器强制执行。"
 }
