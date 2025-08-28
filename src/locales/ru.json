@@ -25,6 +25,7 @@
   "REMOVE": "Удалить",
   "RENAME": "Переименовать",
   "CANCEL": "Отмена",
+  "SKIP": "Пропустить",
   "CLOSE": "Закрыть",
   "SAVE": "Сохранить",
   "OK": "ОК",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Введите <strong>«DNS»</strong> и выберите опцию <strong>Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Выберите <strong>Имя хоста поставщика Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Введите желаемый DNS.",
-  "LEARN_MORE": "Подробнее"
+  "LEARN_MORE": "Подробнее",
+  "ENFORCED_BY_SERVER": "Принудительно применяется сервером."
 }
