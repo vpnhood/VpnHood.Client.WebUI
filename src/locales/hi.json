@@ -25,6 +25,7 @@
   "REMOVE": "हटाएं",
   "RENAME": "नाम बदलें",
   "CANCEL": "रद्द करें",
+  "SKIP": "छोड़ें",
   "CLOSE": "बंद करें",
   "SAVE": "सहेजें",
   "OK": "ठीक है",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "<strong>\"DNS\"</strong> टाइप करें और <strong>DNS प्राइवेट</strong> (Private DNS) विकल्प चुनें",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS provider hostname</strong> चुनें",
   "PRIVATE_DNS_TURN_ON_STEP_5": "अपना पसंदीदा DNS दर्ज करें",
-  "LEARN_MORE": "और जानें"
+  "LEARN_MORE": "और जानें",
+  "ENFORCED_BY_SERVER": "सर्वर द्वारा अनिवार्य।"
 }
