@@ -25,6 +25,7 @@
   "REMOVE": "حذف",
   "RENAME": "تغییر نام",
   "CANCEL": "انصراف",
+  "SKIP": "رد کردن",
   "CLOSE": "بستن",
   "SAVE": "ذخیره",
   "OK": "تایید",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "کلمه <strong>«DNS»</strong> را تایپ کرده و گزینه <strong>DNS خصوصی</strong> را انتخاب کنید.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>نام میزبان ارائه کننده DNS خصوصی</strong> را انتخاب کنید.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "DNS دلخواه خود را وارد کنید.",
-  "LEARN_MORE": "اطلاعات بیشتر"
+  "LEARN_MORE": "اطلاعات بیشتر",
+  "ENFORCED_BY_SERVER": "توسط سرور اعمال شده است."
 }
