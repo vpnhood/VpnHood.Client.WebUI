@@ -25,6 +25,7 @@
   "REMOVE": "Eliminar",
   "RENAME": "Renombrar",
   "CANCEL": "Cancelar",
+  "SKIP": "Omitir",
   "CLOSE": "Cerrar",
   "SAVE": "Guardar",
   "OK": "OK",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Escribe <strong>\"DNS\"</strong> y selecciona la opción <strong>Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Selecciona <strong>Nombre de host del proveedor de Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Ingresa el DNS deseado.",
-  "LEARN_MORE": "Más información"
+  "LEARN_MORE": "Más información",
+  "ENFORCED_BY_SERVER": "Impuesto por el servidor."
 }
