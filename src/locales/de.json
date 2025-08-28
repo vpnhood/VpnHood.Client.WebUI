@@ -25,6 +25,7 @@
   "REMOVE": "Löschen",
   "RENAME": "Umbenennen",
   "CANCEL": "Abbrechen",
+  "SKIP": "Überspringen",
   "CLOSE": "Schließen",
   "SAVE": "Speichern",
   "OK": "OK",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Gib <strong>\"DNS\"</strong> ein und wähle die Option <strong>DNS privat</strong> (Private DNS).",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Wähle <strong>Hostname des DNS-privat-Anbieters</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Gib deinen gewünschten DNS ein.",
-  "LEARN_MORE": "Mehr erfahren"
+  "LEARN_MORE": "Mehr erfahren",
+  "ENFORCED_BY_SERVER": "Vom Server erzwungen."
 }
