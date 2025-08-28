@@ -25,6 +25,7 @@
   "REMOVE": "Sil",
   "RENAME": "Yeniden Adlandır",
   "CANCEL": "İptal",
+  "SKIP": "Atla",
   "CLOSE": "Kapat",
   "SAVE": "Kaydet",
   "OK": "Tamam",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "<strong>\"DNS\"</strong> yazın ve <strong>Private DNS</strong> seçeneğini seçin.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS sağlayıcısının ana bilgisayar adı</strong> seçeneğini seçin.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "İstediğiniz DNS’i girin.",
-  "LEARN_MORE": "Daha fazla bilgi"
+  "LEARN_MORE": "Daha fazla bilgi",
+  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu kılınmıştır."
 }
