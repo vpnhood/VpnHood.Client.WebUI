@@ -25,6 +25,7 @@
   "REMOVE": "حذف",
   "RENAME": "إعادة تسمية",
   "CANCEL": "إلغاء",
+  "SKIP": "تخطي",
   "CLOSE": "إغلاق",
   "SAVE": "حفظ",
   "OK": "حسنا",
@@ -396,5 +397,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "اكتب <strong>\"DNS\"</strong> واختر خيار <strong>DNS الخاص</strong> (Private DNS).",
   "PRIVATE_DNS_TURN_ON_STEP_4": "اختر <strong>اسم مضيف مزود DNS الخاص</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "أدخل DNS المطلوب.",
-  "LEARN_MORE": "مزيد من المعلومات"
+  "LEARN_MORE": "مزيد من المعلومات",
+  "ENFORCED_BY_SERVER": "يتم فرضه من قبل الخادم."
 }
