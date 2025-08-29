@@ -91,6 +91,7 @@ const settingsItem: SettingsItem[] = [
   {
     title: "PRIVATE_DNS",
     subtitle: "PRIVATE_DNS_DESC",
+    status: vhApp.data.state.systemPrivateDns?.isActive,
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
     isShow: vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported,
     click: {name: 'PRIVATE_DNS'}

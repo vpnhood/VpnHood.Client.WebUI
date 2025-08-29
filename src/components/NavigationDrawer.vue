@@ -96,10 +96,9 @@ function edgeToEdgeHeight(bottom: boolean): string{
     :location="vuetify.locale.isRtl.value? 'right' : 'left'"
     color="navigation-drawer"
     class="rounded-te-xl rounded-be-xl overflow-hidden"
-    :temporary="true"
-    :disable-route-watcher="true"
-    :floating="true"
-
+    temporary
+    disable-route-watcher
+    floating
   >
     <!-- Header -->
     <div class="bg-navigation-drawer-header d-flex align-center pa-4" :style="edgeToEdgeHeight(false)">

@@ -38,42 +38,42 @@ const props = defineProps<{
         <p>{{locale(props.description)}}</p>
       </div>
 
-      <!-- Feature image -->
-      <v-img
-        :eager="true"
-        :src="vhApp.getImageUrl(props.image)"
-        alt="Symbol image"
-        width="100%"
-        max-width="500px"
-        class="mx-auto"
-      />
+        <!-- Feature image -->
+        <v-img
+          :eager="true"
+          :src="vhApp.getImageUrl(props.image)"
+          alt="Symbol image"
+          width="100%"
+          max-width="500px"
+          class="mx-auto"
+        />
 
       <!-- Tutorial steps -->
       <card-on-grad v-if="!props.isPremium || vhApp.isPremiumAccount()" class="pb-2">
 
         <!-- Help steps -->
-        <v-card-item>
+          <v-card-item>
           <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
-            <li v-for="(item, index) in props.listStep" :key="index" v-html="item"/>
-          </ol>
-        </v-card-item>
+              <li v-for="(item, index) in props.listStep" :key="index" v-html="item"/>
+            </ol>
+          </v-card-item>
 
         <!-- Open related settings button (If request with API is available) -->
         <v-card-item v-if="props.isActionButtonAvailable">
-          <btn-style-1 v-if="props.isActionButtonAvailable"
-            color="promote-premium-color-premium"
-            :text="locale(props.buttonText)"
-            block
-            @click="props.buttonClick()"
+          <btn-style-1
+           color="promote-premium-color-premium"
+           :text="locale(props.buttonText)"
+           block
+           @click="props.buttonClick()"
           />
         </v-card-item>
 
         <!-- Skip button -->
         <v-card-item v-if="props.isShowSkipBtn">
           <btn-style-2
-           :text="locale('SKIP')"
-           block
-           @click="router.go(-1)"
+            :text="locale('SKIP')"
+            block
+            @click="router.go(-1)"
           />
         </v-card-item>
 

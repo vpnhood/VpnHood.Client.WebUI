@@ -1,6 +1,5 @@
 ﻿<script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
-import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
@@ -93,7 +92,7 @@ function isUdpUnsupported(): boolean {
 
       <v-card-item>
         <!-- Enforced by server alert -->
-        <alert-warning v-if="vhApp.data.isConnected || !vhApp.data.state.canChangeTcpProxy" :text="locale('ENFORCED_BY_SERVER')" />
+        <alert-warning v-if="vhApp.data.isConnected && !vhApp.data.state.canChangeTcpProxy" :text="locale('ENFORCED_BY_SERVER')" />
 
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between" :class="{'text-disabled': !vhApp.data.state.canChangeTcpProxy}">

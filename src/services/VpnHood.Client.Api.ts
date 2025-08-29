@@ -1603,7 +1603,7 @@ export class IntentsClient {
 
     }
 
-    requestQuickLaunch( cancelToken?: CancelToken): Promise<void> {
+    requestQuickLaunch( cancelToken?: CancelToken): Promise<boolean> {
         let url_ = this.baseUrl + "/api/intents/request-quick-launch";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1611,6 +1611,7 @@ export class IntentsClient {
             method: "POST",
             url: url_,
             headers: {
+                "Accept": "application/json"
             },
             cancelToken
         };
@@ -1626,7 +1627,7 @@ export class IntentsClient {
         });
     }
 
-    protected processRequestQuickLaunch(response: AxiosResponse): Promise<void> {
+    protected processRequestQuickLaunch(response: AxiosResponse): Promise<boolean> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1638,13 +1639,17 @@ export class IntentsClient {
         }
         if (status === 200) {
             const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<boolean>(null as any);
     }
 
     requestUserReview( cancelToken?: CancelToken): Promise<void> {
@@ -1691,7 +1696,7 @@ export class IntentsClient {
         return Promise.resolve<void>(null as any);
     }
 
-    requestNotification( cancelToken?: CancelToken): Promise<void> {
+    requestNotification( cancelToken?: CancelToken): Promise<boolean> {
         let url_ = this.baseUrl + "/api/intents/request-notification";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1699,6 +1704,7 @@ export class IntentsClient {
             method: "POST",
             url: url_,
             headers: {
+                "Accept": "application/json"
             },
             cancelToken
         };
@@ -1714,7 +1720,7 @@ export class IntentsClient {
         });
     }
 
-    protected processRequestNotification(response: AxiosResponse): Promise<void> {
+    protected processRequestNotification(response: AxiosResponse): Promise<boolean> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1726,13 +1732,17 @@ export class IntentsClient {
         }
         if (status === 200) {
             const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<boolean>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<boolean>(null as any);
     }
 
     openSystemKillSwitchSettings( cancelToken?: CancelToken): Promise<void> {
@@ -2379,6 +2389,7 @@ export class AppState implements IAppState {
     purchaseState?: BillingPurchaseState | null;
     systemBarsInfo!: SystemBarsInfo;
     isNotificationEnabled?: boolean | null;
+    systemPrivateDns?: PrivateDns | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2422,6 +2433,7 @@ export class AppState implements IAppState {
             this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : <any>null;
             this.systemBarsInfo = _data["systemBarsInfo"] ? SystemBarsInfo.fromJS(_data["systemBarsInfo"]) : new SystemBarsInfo();
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
+            this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : <any>null;
         }
     }
 
@@ -2460,6 +2472,7 @@ export class AppState implements IAppState {
         data["purchaseState"] = this.purchaseState !== undefined ? this.purchaseState : <any>null;
         data["systemBarsInfo"] = this.systemBarsInfo ? this.systemBarsInfo.toJSON() : <any>null;
         data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
+        data["systemPrivateDns"] = this.systemPrivateDns ? this.systemPrivateDns.toJSON() : <any>null;
         return data;
     }
 }
@@ -2491,6 +2504,7 @@ export interface IAppState {
     purchaseState?: BillingPurchaseState | null;
     systemBarsInfo: SystemBarsInfo;
     isNotificationEnabled?: boolean | null;
+    systemPrivateDns?: PrivateDns | null;
 }
 
 export enum AppConnectionState {
@@ -3511,6 +3525,46 @@ export class SystemBarsInfo implements ISystemBarsInfo {
 export interface ISystemBarsInfo {
     topHeight: number;
     bottomHeight: number;
+}
+
+export class PrivateDns implements IPrivateDns {
+    isActive!: boolean;
+    provider?: string | null;
+
+    constructor(data?: IPrivateDns) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isActive = _data["isActive"] !== undefined ? _data["isActive"] : <any>null;
+            this.provider = _data["provider"] !== undefined ? _data["provider"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PrivateDns {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrivateDns();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isActive"] = this.isActive !== undefined ? this.isActive : <any>null;
+        data["provider"] = this.provider !== undefined ? this.provider : <any>null;
+        return data;
+    }
+}
+
+export interface IPrivateDns {
+    isActive: boolean;
+    provider?: string | null;
 }
 
 export class UserSettings implements IUserSettings {

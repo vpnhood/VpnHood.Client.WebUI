@@ -18,11 +18,12 @@ const locale = i18n.global.t;
 
     </div>
 
-    <p class="text-disabled">{{locale("PRIVATE_DNS_HOW_TO_TURN_OFF_DESC")}}</p>
+    <div class="px-3">
+      <p>{{locale("PRIVATE_DNS_HOW_TO_TURN_OFF_DESC")}}</p>
 
       <v-card color="config-card-bg" class="my-5" rounded="xl">
         <v-card-item>
-          <ol class="ms-5 d-flex flex-column ga-5 py-3 text-medium-emphasis" style="line-height: 28px">
+          <ol class="ms-5 d-flex flex-column ga-2 py-3 text-disabled text-caption" style="line-height: 28px">
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_1')"/>
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_2')"/>
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_3')"/>
@@ -31,15 +32,16 @@ const locale = i18n.global.t;
         </v-card-item>
       </v-card>
 
-    <div v-if="vhApp.data.intentFeatures.isSystemSettingsSupported" class="text-center">
-      <btn-style-3
-        class="w-100"
-       append-icon="mdi-open-in-new"
-       :text="locale('OPEN_SYSTEM_SETTINGS')"
-       @click="vhApp.intentsClient.openSystemSettings()"
-      />
-    </div>
+      <div v-if="vhApp.data.intentFeatures.isSystemSettingsSupported" class="text-center">
+        <btn-style-3
+          class="w-100"
+          append-icon="mdi-open-in-new"
+          :text="locale('OPEN_SYSTEM_SETTINGS')"
+          @click="vhApp.intentsClient.openSystemSettings()"
+        />
+      </div>
 
-    <p class="text-disabled mt-5">{{locale("PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC")}}</p>
+      <p class="mt-5">{{locale("PRIVATE_DNS_HOW_TO_TURN_OFF_FINAL_DESC")}}</p>
+    </div>
   </v-sheet>
 </template>

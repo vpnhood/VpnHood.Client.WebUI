@@ -6,6 +6,7 @@
 /*noinspection CssUnusedSymbol*/
 .v-navigation-drawer__scrim,
 .v-overlay__scrim {
+    background-color: black;
     opacity: 0.6;
     transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
 }
@@ -41,6 +42,7 @@
     opacity: 0.50;
 }
 .v-skeleton-loader__bone::after {
+    /*noinspection CssUnresolvedCustomProperty*/
     background: linear-gradient(90deg, rgba(var(--v-theme-skeleton-loader), 0), rgba(var(--v-theme-skeleton-loader), 0.3), rgba(var(--v-theme-skeleton-loader), 0));
 }
 .v-btn--disabled.btn-style-2{

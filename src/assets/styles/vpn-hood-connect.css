@@ -1,8 +1,3 @@
-/*** ------------------- Vuetify override ------------------- ***/
-.v-navigation-drawer__scrim,
-.v-overlay__scrim{
-    background-color: black;
-}
 /*** -------------------- General -------------------- ***/
 .primary-bg-grad{
     /*noinspection CssUnresolvedCustomProperty*/
