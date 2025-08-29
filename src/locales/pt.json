@@ -192,6 +192,7 @@
   "QUICK_LAUNCH_COLORED": "<span class=\"text-promote-premium-color-premium\">Arranque</span> rápido",
   "QUICK_LAUNCH_DESC": "Ligue-se à VPN instantaneamente a partir da barra de notificações com um único toque.",
   "QUICK_LAUNCH_TURN_ON": "Ative o arranque rápido",
+  "QUICK_LAUNCH_TURN_ON_ERROR": "Não foi possível adicionar o Quick Launch. Tente novamente mais tarde ou adicione-o manualmente.",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_1": "Toque no botão abaixo.",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_2": "Toque no botão <strong>Adicionar</strong>.",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_1": "Deslize para baixo a partir do topo do ecrã para abrir o painel de definições rápidas.",
