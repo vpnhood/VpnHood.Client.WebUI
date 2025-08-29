@@ -192,6 +192,7 @@
   "QUICK_LAUNCH_COLORED": "<span class=\"text-promote-premium-color-premium\">快速</span>启动",
   "QUICK_LAUNCH_DESC": "通过通知栏一键快速连接 VPN。",
   "QUICK_LAUNCH_TURN_ON": "启用快速启动",
+  "QUICK_LAUNCH_TURN_ON_ERROR": "无法添加快速启动。请稍后重试或手动添加。",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_1": "点击下方按钮。",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_STEP_2": "点击 <strong>添加</strong>按钮。",
   "QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_1": "从屏幕顶部下滑以打开快速设置面板。",
