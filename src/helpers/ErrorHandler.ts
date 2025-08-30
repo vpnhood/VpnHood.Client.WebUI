@@ -86,6 +86,9 @@ export class ErrorHandler {
       case ExceptionType.UnreachableServer:
         return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
 
+      case ExceptionType.RequestQuickLaunch:
+        return { localeKey: 'QUICK_LAUNCH_TURN_ON_ERROR' };
+
       // No internet or slow
       case ExceptionType.NoInternet:
         return { localeKey: 'NO_INTERNET_MSG', action: { showDiagnose: true } };

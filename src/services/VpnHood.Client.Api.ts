@@ -4288,6 +4288,7 @@ export enum ExceptionType {
     EndPointDiscovery = "EndPointDiscoveryException",
     PremiumOnly = "PremiumOnlyException",
     AdBlocker = "AdBlockerException",
+    RequestQuickLaunch = "RequestQuickLaunchException",
 }
 
 export enum SessionErrorCode {
