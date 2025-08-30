@@ -178,7 +178,6 @@
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_1": "Abre la configuración de VPN en tu dispositivo.",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_2": "Busca <strong>{appName}</strong> y toca <span class=\"text-subtitle-2\">{icon}</span>",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_3": "Activa <strong>Always-on VPN</strong> y <strong>Bloquear conexiones sin VPN</strong>",
-  "KILL_SWITCH_TURN_ON": "Activa el Kill Switch",
   "NOTIFICATIONS": "Notificaciones",
   "APP_NOTIFICATIONS_COLORED": "<span class=\"text-promote-premium-color-premium\">Notificaciones</span> de la app",
   "NOTIFICATIONS_DESC": "Monitorea y controla la VPN rápidamente desde la barra de notificaciones.",
@@ -399,5 +398,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_4": "Selecciona <strong>Nombre de host del proveedor de Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Ingresa el DNS deseado.",
   "LEARN_MORE": "Más información",
-  "ENFORCED_BY_SERVER": "Impuesto por el servidor."
+  "ENFORCED_BY_SERVER": "Impuesto por el servidor.",
+  "OPEN_VPN_SETTINGS": "Abrir configuración de VPN"
 }
