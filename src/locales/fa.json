@@ -178,7 +178,6 @@
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_1": "تنظیمات VPN دستگاه خود را باز کنید.",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_2": "<strong>{appName}</strong> را پیدا کرده و روی <span class=\"text-subtitle-2\">{icon}</span> ضربه بزنید.",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_3": "<strong>Always-on VPN</strong> و <strong>مسدود کردن اتصال‌های بدون VPN</strong> را فعال کنید.",
-  "KILL_SWITCH_TURN_ON": "Kill Switch را فعال کنید.",
   "NOTIFICATIONS": "اعلان‌ها",
   "APP_NOTIFICATIONS_COLORED": "اعلان‌های <span class=\"text-promote-premium-color-premium\">اپ</span>",
   "NOTIFICATIONS_DESC": "VPN را به‌سرعت از طریق نوار اعلان کنترل و بررسی کنید.",
@@ -399,5 +398,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>نام میزبان ارائه کننده DNS خصوصی</strong> را انتخاب کنید.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "DNS دلخواه خود را وارد کنید.",
   "LEARN_MORE": "اطلاعات بیشتر",
-  "ENFORCED_BY_SERVER": "توسط سرور اعمال شده است."
+  "ENFORCED_BY_SERVER": "توسط سرور اعمال شده است.",
+  "OPEN_VPN_SETTINGS": "باز کردن تنظیمات VPN"
 }
