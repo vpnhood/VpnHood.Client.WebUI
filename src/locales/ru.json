@@ -178,7 +178,6 @@
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_1": "Откройте настройки VPN на вашем устройстве.",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_2": "Найдите <strong>{appName}</strong> и нажмите <span class=\"text-subtitle-2\">{icon}</span>",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_3": "Включите <strong>Always-on VPN</strong> и <strong>Блокировать соединения без VPN</strong>",
-  "KILL_SWITCH_TURN_ON": "Включите Kill Switch",
   "NOTIFICATIONS": "Уведомления",
   "APP_NOTIFICATIONS_COLORED": "<span class=\"text-promote-premium-color-premium\">Уведомления</span> приложения",
   "NOTIFICATIONS_DESC": "Быстро управляйте VPN через панель уведомлений.",
@@ -399,5 +398,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_4": "Выберите <strong>Имя хоста поставщика Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Введите желаемый DNS.",
   "LEARN_MORE": "Подробнее",
-  "ENFORCED_BY_SERVER": "Принудительно применяется сервером."
+  "ENFORCED_BY_SERVER": "Принудительно применяется сервером.",
+  "OPEN_VPN_SETTINGS": "Открыть настройки VPN"
 }
