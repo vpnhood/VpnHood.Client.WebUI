@@ -178,7 +178,6 @@
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_1": "Cihazınızda VPN ayarlarını açın.",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_2": "<strong>{appName}</strong> uygulamasını bulun ve <span class=\"text-subtitle-2\">{icon}</span> simgesine dokunun",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_3": "<strong>Always-on VPN</strong> ve <strong>VPN olmadan bağlantıları engelle</strong> seçeneklerini etkinleştirin",
-  "KILL_SWITCH_TURN_ON": "Kill Switch’i etkinleştirin",
   "NOTIFICATIONS": "Bildirimler",
   "APP_NOTIFICATIONS_COLORED": "Uygulama <span class=\"text-promote-premium-color-premium\">bildirimleri</span>",
   "NOTIFICATIONS_DESC": "VPN’i bildirim çubuğundan hızlıca izleyin ve yönetin.",
@@ -399,5 +398,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS sağlayıcısının ana bilgisayar adı</strong> seçeneğini seçin.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "İstediğiniz DNS’i girin.",
   "LEARN_MORE": "Daha fazla bilgi",
-  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu kılınmıştır."
+  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu kılınmıştır.",
+  "OPEN_VPN_SETTINGS": "VPN ayarlarını aç"
 }
