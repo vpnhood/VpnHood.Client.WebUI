@@ -178,7 +178,6 @@
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_1": "अपने डिवाइस की VPN सेटिंग्स खोलें।",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_2": "<strong>{appName}</strong> ढूंढें और <span class=\"text-subtitle-2\">{icon}</span> पर टैप करें",
   "KILL_SWITCH_HOW_TO_TURN_ON_STEP_3": "<strong>Always-on VPN</strong>VPN के बिना कनेक्शन ब्लॉक करें</strong को चालू करें",
-  "KILL_SWITCH_TURN_ON": "Kill Switch चालू करें",
   "NOTIFICATIONS": "सूचनाएं",
   "APP_NOTIFICATIONS_COLORED": "ऐप-<span class=\"text-promote-premium-color-premium\">सूचनाएं</span>",
   "NOTIFICATIONS_DESC": "नोटिफिकेशन बार से VPN को तुरंत मॉनिटर और कंट्रोल करें।",
@@ -399,5 +398,6 @@
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS provider hostname</strong> चुनें",
   "PRIVATE_DNS_TURN_ON_STEP_5": "अपना पसंदीदा DNS दर्ज करें",
   "LEARN_MORE": "और जानें",
-  "ENFORCED_BY_SERVER": "सर्वर द्वारा अनिवार्य।"
+  "ENFORCED_BY_SERVER": "सर्वर द्वारा अनिवार्य।",
+  "OPEN_VPN_SETTINGS": "VPN सेटिंग्स खोले"
 }
