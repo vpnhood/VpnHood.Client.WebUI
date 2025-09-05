@@ -371,7 +371,7 @@
   "KILL_SWITCH_NOT_SUPPORTED_MSG": "Kill switch is a premium feature. Upgrade to unlock it!",
   "GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR": "There seems to be an issue with your Google account. Please ensure that you are logged into a valid Google account and that the Google Play app is up to date.",
   "FEEDBACK": "Feedback",
-  "FEEDBACK_DESC": "I hope you're having a great experience. Were you happy with my work?",
+  "FEEDBACK_DESC": "Your feedback motivates us to keep making VpnHood better. How would you rate your experience?",
   "SUBMIT": "Submit",
   "USER_REVIEW_TEXT_PLACEHOLDER": "Description",
   "USER_REVIEW_SORRY_MSG": "Sorry my work didn’t hit the mark! I’d love to know what went wrong so I can make it better.",
