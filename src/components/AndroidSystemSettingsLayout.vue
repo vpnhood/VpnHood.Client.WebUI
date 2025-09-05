@@ -41,7 +41,7 @@ const props = defineProps<{
         <!-- Feature image -->
         <v-img
           :eager="true"
-          :src="vhApp.getImageUrl(props.image)"
+          :src="vhApp.getAssetPath(props.image)"
           alt="Symbol image"
           width="100%"
           max-width="500px"

@@ -104,7 +104,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
     <div class="bg-navigation-drawer-header d-flex align-center pa-4" :style="edgeToEdgeHeight(false)">
 
       <v-img
-        :src="vhApp.getImageUrl(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
+        :src="vhApp.getAssetPath(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
         :eager="true"
         alt="logo"
         max-width="50"

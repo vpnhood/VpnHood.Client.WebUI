@@ -55,7 +55,7 @@ async function showRewardedAd(){
 
       <v-img
         :eager="true"
-        :src="vhApp.getImageUrl('extend-session.webp')"
+        :src="vhApp.getAssetPath('extend-session.webp')"
         alt="Session Icon"
         width="100%"
         max-width="400px"

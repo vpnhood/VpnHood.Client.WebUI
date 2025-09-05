@@ -30,7 +30,7 @@ async function removeCode() {
     <!-- Premium image -->
     <v-img
       :eager="true"
-      :src="vhApp.getImageUrl('you-are-premium.webp')"
+      :src="vhApp.getAssetPath('you-are-premium.webp')"
       alt="Premium Image"
       width="100%"
       max-width="371px"

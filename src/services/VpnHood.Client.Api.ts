@@ -1199,6 +1199,54 @@ export class AppClient {
         }
         return Promise.resolve<CountryInfo[]>(null as any);
     }
+
+    dismissInternalAd(result: string, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/dismiss-internal-ad?";
+        if (result === undefined || result === null)
+            throw new Error("The parameter 'result' must be defined and cannot be null.");
+        else
+            url_ += "result=" + encodeURIComponent("" + result) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDismissInternalAd(_response);
+        });
+    }
+
+    protected processDismissInternalAd(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export class BillingClient {
@@ -2150,6 +2198,7 @@ export class AppFeatures implements IAppFeatures {
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
     autoRemoveExpiredPremium!: boolean;
+    isAdSupported!: boolean;
     premiumFeatures!: AppFeature[];
     customData?: any | null;
     version!: string;
@@ -2197,6 +2246,7 @@ export class AppFeatures implements IAppFeatures {
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : <any>null;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : <any>null;
             this.autoRemoveExpiredPremium = _data["autoRemoveExpiredPremium"] !== undefined ? _data["autoRemoveExpiredPremium"] : <any>null;
+            this.isAdSupported = _data["isAdSupported"] !== undefined ? _data["isAdSupported"] : <any>null;
             if (Array.isArray(_data["premiumFeatures"])) {
                 this.premiumFeatures = [] as any;
                 for (let item of _data["premiumFeatures"])
@@ -2244,6 +2294,7 @@ export class AppFeatures implements IAppFeatures {
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : <any>null;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : <any>null;
         data["autoRemoveExpiredPremium"] = this.autoRemoveExpiredPremium !== undefined ? this.autoRemoveExpiredPremium : <any>null;
+        data["isAdSupported"] = this.isAdSupported !== undefined ? this.isAdSupported : <any>null;
         if (Array.isArray(this.premiumFeatures)) {
             data["premiumFeatures"] = [];
             for (let item of this.premiumFeatures)
@@ -2277,6 +2328,7 @@ export interface IAppFeatures {
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
     autoRemoveExpiredPremium: boolean;
+    isAdSupported: boolean;
     premiumFeatures: AppFeature[];
     customData?: any | null;
     version: string;
@@ -2390,6 +2442,7 @@ export class AppState implements IAppState {
     systemBarsInfo!: SystemBarsInfo;
     isNotificationEnabled?: boolean | null;
     systemPrivateDns?: PrivateDns | null;
+    isWaitingForInternalAd?: boolean | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2434,6 +2487,7 @@ export class AppState implements IAppState {
             this.systemBarsInfo = _data["systemBarsInfo"] ? SystemBarsInfo.fromJS(_data["systemBarsInfo"]) : new SystemBarsInfo();
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
             this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : <any>null;
+            this.isWaitingForInternalAd = _data["isWaitingForInternalAd"] !== undefined ? _data["isWaitingForInternalAd"] : <any>null;
         }
     }
 
@@ -2473,6 +2527,7 @@ export class AppState implements IAppState {
         data["systemBarsInfo"] = this.systemBarsInfo ? this.systemBarsInfo.toJSON() : <any>null;
         data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
         data["systemPrivateDns"] = this.systemPrivateDns ? this.systemPrivateDns.toJSON() : <any>null;
+        data["isWaitingForInternalAd"] = this.isWaitingForInternalAd !== undefined ? this.isWaitingForInternalAd : <any>null;
         return data;
     }
 }
@@ -2505,6 +2560,7 @@ export interface IAppState {
     systemBarsInfo: SystemBarsInfo;
     isNotificationEnabled?: boolean | null;
     systemPrivateDns?: PrivateDns | null;
+    isWaitingForInternalAd?: boolean | null;
 }
 
 export enum AppConnectionState {
@@ -3834,8 +3890,8 @@ export enum EndPointStrategy {
 }
 
 export class ProxyServerEndPoint implements IProxyServerEndPoint {
-    proxyServerType!: ProxyServerType;
-    address?: string | null;
+    type!: ProxyServerType;
+    host!: string;
     port!: number;
     username?: string | null;
     password?: string | null;
@@ -3851,8 +3907,8 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
 
     init(_data?: any) {
         if (_data) {
-            this.proxyServerType = _data["proxyServerType"] !== undefined ? _data["proxyServerType"] : <any>null;
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.type = _data["type"] !== undefined ? _data["type"] : <any>null;
+            this.host = _data["host"] !== undefined ? _data["host"] : <any>null;
             this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
             this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
@@ -3868,8 +3924,8 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["proxyServerType"] = this.proxyServerType !== undefined ? this.proxyServerType : <any>null;
-        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["type"] = this.type !== undefined ? this.type : <any>null;
+        data["host"] = this.host !== undefined ? this.host : <any>null;
         data["port"] = this.port !== undefined ? this.port : <any>null;
         data["username"] = this.username !== undefined ? this.username : <any>null;
         data["password"] = this.password !== undefined ? this.password : <any>null;
@@ -3878,8 +3934,8 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
 }
 
 export interface IProxyServerEndPoint {
-    proxyServerType: ProxyServerType;
-    address?: string | null;
+    type: ProxyServerType;
+    host: string;
     port: number;
     username?: string | null;
     password?: string | null;
@@ -3887,6 +3943,9 @@ export interface IProxyServerEndPoint {
 
 export enum ProxyServerType {
     Socks5 = "Socks5",
+    Socks4 = "Socks4",
+    Http = "Http",
+    Https = "Https",
 }
 
 export class ClientProfileInfo implements IClientProfileInfo {

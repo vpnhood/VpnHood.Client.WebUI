@@ -37,7 +37,7 @@ onMounted(() => {
       <!-- Feature image -->
       <v-img
         :eager="true"
-        :src="vhApp.getImageUrl('cloak-mode.webp')"
+        :src="vhApp.getAssetPath('cloak-mode.webp')"
         alt="Symbol image"
         width="100%"
         max-width="500px"

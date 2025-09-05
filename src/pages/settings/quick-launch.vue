@@ -4,6 +4,7 @@ import i18n from '@/locales/i18n';
 import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
 import { onMounted, ref } from 'vue';
+import router from '@/services/router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -21,6 +22,12 @@ const unsupportedRequestQuickLaunchSteps = [
   locale('QUICK_LAUNCH_HOW_TO_TURN_ON_ALTERNATIVE_STEP_5')
 ]
 
+async function addQuickLaunchHandler() {
+  const result = await vhApp.intentsClient.requestQuickLaunch();
+  if (result)
+    router.go(-1);
+}
+
 onMounted(() => {
   isShowSkipBtn.value = vhApp.data.state.isQuickLaunchRecommended;
   if (!vhApp.data.userSettings.isQuickLaunchPrompted){
@@ -37,7 +44,7 @@ onMounted(() => {
     image="quick-launch.webp"
     :list-step=" vhApp.data.intentFeatures.isRequestQuickLaunchSupported ? supportedRequestQuickLaunchSteps : unsupportedRequestQuickLaunchSteps"
     button-text="QUICK_LAUNCH_TURN_ON"
-    :button-click="()=>vhApp.intentsClient.requestQuickLaunch()"
+    :button-click="()=>addQuickLaunchHandler()"
     :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch)"
     :is-action-button-available="vhApp.data.intentFeatures.isRequestQuickLaunchSupported"
     :is-show-skip-btn="isShowSkipBtn"

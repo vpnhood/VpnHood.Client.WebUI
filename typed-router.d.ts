@@ -21,7 +21,7 @@ declare module 'vue-router/auto-routes' {
     'HOME': RouteRecordInfo<'HOME', '/', Record<never, never>, Record<never, never>>,
     'APP_FILTER': RouteRecordInfo<'APP_FILTER', '/app-filter', Record<never, never>, Record<never, never>>,
     'ERROR_PAGE': RouteRecordInfo<'ERROR_PAGE', '/error-page', Record<never, never>, Record<never, never>>,
-    'LOCAL_AD': RouteRecordInfo<'LOCAL_AD', '/local-ad', Record<never, never>, Record<never, never>>,
+    'INTERNAL_AD': RouteRecordInfo<'INTERNAL_AD', '/internal-ad', Record<never, never>, Record<never, never>>,
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
     'PURCHASE_SUBSCRIPTION': RouteRecordInfo<'PURCHASE_SUBSCRIPTION', '/purchase-subscription', Record<never, never>, Record<never, never>>,
     'SERVERS': RouteRecordInfo<'SERVERS', '/servers', Record<never, never>, Record<never, never>>,

@@ -352,7 +352,7 @@
   "PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG": "An error occurred during premium code activation. Please try again. If the issue persists, contact us.",
   "PLAN_REJECTED_MSG": "The connection method you selected (Free, Watch Ad, or Try Premium) was refused. No worries, just pick a different type to connect!",
   "MAINTENANCE_MODE_MSG": "Our servers are in maintenance mode at the moment. We're working to get things back up and running, so please try again in a little while!",
-  "NO_SERVER_AVAILABLE_MSG": "It looks like the server you chose isn't available anymore. We'll automatically remove it from your list, so please pick a different server to connect.",
+  "NO_SERVER_AVAILABLE_MSG": "No servers are available in the selected location. Please try again later or choose another location.",
   "PREMIUM_LOCATION_MSG": "Your selected server is now a premium server and will be automatically updated in your list. Please select a different server.",
   "REWARD_NOT_EARNED_MSG": "It seems there was an issue and the reward for watching that ad wasn't registered. We're sorry for the inconvenience! Please give it another try.",
   "VPN_SERVICE_TIMEOUT_MSG": "The VPN service didn't start in time. Please try again.",

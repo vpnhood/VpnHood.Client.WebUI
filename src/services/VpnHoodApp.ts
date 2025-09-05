@@ -94,8 +94,11 @@ export class VpnHoodApp {
       await this.processError(ApiException.fromApiError(this.data.state.lastError));
     }
 
-    // Show the Quick launch page
-    if (this.data.state.isQuickLaunchRecommended)
+    // Show the internal ad
+    if (this.data.state.isWaitingForInternalAd)
+      await router.replace({name: 'INTERNAL_AD'});
+    // Show the Quick launch page if the internal ad is not shown
+    else if (this.data.state.isQuickLaunchRecommended)
       await router.push({name: 'QUICK_LAUNCH'});
 
     // Show the update message if the user has not ignored or more than 24 hours have passed
@@ -277,8 +280,8 @@ export class VpnHoodApp {
     }
   }
 
-  public getImageUrl(imageName: string): string {
-    return new URL(`../assets/images/${imageName}`, import.meta.url).href;
+  public getAssetPath(fileName: string): string {
+    return new URL(`../assets/images/${fileName}`, import.meta.url).href;
   }
 
   public isActiveClientProfile(clientProfileId: string): boolean {
