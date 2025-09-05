@@ -20,10 +20,6 @@ let lastConnectPressedTime = Date.now() - 1000;
 
 async function onConnectButtonClick(): Promise<void> {
 
-  // TODO: remove
-  await router.push({name: 'INTERNAL_AD'});
-  return;
-
   // Prevent double click
   if (lastConnectPressedTime >= Date.now() - 1000)
     return;
