@@ -4,6 +4,7 @@ import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
 import { ConnectManager } from '@/helpers/ConnectManager';
+import PremiumIcon from '@/components/PremiumIcon.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -116,7 +117,8 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
                 :color="vhApp.premiumIconColor()" />
 
         <!---- Premium location icon ---->
-        <premium-icon v-if="props.isPremiumGroup && vhApp.isConnectApp()" :color="vhApp.premiumIconColor()" />
+        <premium-icon :is-premium="props.isPremiumGroup"/>
+
       </div>
       <!---------------------------- End of location status ---------------------------->
 

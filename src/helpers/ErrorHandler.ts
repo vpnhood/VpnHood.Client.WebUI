@@ -45,7 +45,7 @@ export class ErrorHandler {
 
     // Private DNS error
     if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.features.premiumFeatures.includes(AppFeature.CustomDns)){
-      await router.push({name: 'PRIVATE_DNS_ERROR'});
+      await router.push({name: 'ERROR_PRIVATE_DNS'});
       await VpnHoodApp.instance.clearLastError();
       return;
     }

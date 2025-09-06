@@ -44,6 +44,11 @@ export class Util {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  public static isNullOrUndefined(value: unknown): boolean {
+    return value === null || value === undefined;
+  }
+
+
 /*  public static sendTestError(): void {
     const errorMessage = 'Something went wrong';
     const statusCode = 401;

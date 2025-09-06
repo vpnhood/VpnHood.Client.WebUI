@@ -204,6 +204,7 @@
   "ACTIVE": "Active",
   "AUTO_SELECT": "Auto Select",
   "AUTO": "Auto",
+  "CUSTOM": "Custom",
   "FASTEST": "Fastest",
   "LOCATION": "Location",
   "LOADING_AD": "Loading Ad",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Type <strong>\"DNS\"</strong> and select the <strong>Private DNS</strong> option.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Select <strong>Private DNS provider hostname</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Enter your desired DNS.",
+  "ADAPTER_DNS": "Adapter DNS",
+  "ADAPTER_DNS_DESC": "Change the default DNS server by specifying your own.",
   "LEARN_MORE": "Learn more",
   "ENFORCED_BY_SERVER": "Enforced by the server.",
-  "OPEN_VPN_SETTINGS": "Open VPN settings"
+  "OPEN_VPN_SETTINGS": "Open VPN settings",
+  "DNS": "DNS",
+  "DNS_DESC": "Manage how website addresses are resolved by configuring Private DNS and Adapter DNS.",
+  "ADAPTER_DNS_AUTO_DESC": "Managed by VPN server.",
+  "ADAPTER_DNS_CUSTOM_DESC": "Enter your own DNS server.",
+  "DNS1_REQUIRED": "Please enter a valid IP address for DNS 1.",
+  "INVALID_IP": "Please enter a valid IPv4 or IPv6 address.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "To change DNS settings, you need to turn off Private DNS."
 }

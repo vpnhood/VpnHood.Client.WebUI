@@ -58,7 +58,6 @@ export const vuetifyDefaults = {
     VSwitch: { class: 'px-2', color: 'switch-btn', density: 'compact', hideDetails: true },
   },
   HomeConfigBtn: { block: true, variant: 'text', size: 'small', class: 'config-item' },
-  PremiumIcon: { icon: 'mdi-crown', size: '18' },
 
   AlertWarning: { ...baseAlert, type: 'warning' },
   AlertNote: { ...baseAlert, type: 'note' },

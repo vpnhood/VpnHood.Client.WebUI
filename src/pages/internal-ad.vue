@@ -1,10 +1,11 @@
 ﻿<script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from 'vue'
-import router from '@/services/router'
-import LoadingDialog from '@/components/LoadingDialog.vue'
-import i18n from '@/locales/i18n'
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import router from '@/services/router';
+import LoadingDialog from '@/components/LoadingDialog.vue';
+import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { onBeforeRouteLeave } from 'vue-router';
+import { ShowAdResult } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -14,7 +15,7 @@ const isLoading = ref<boolean>(false);
 const isVideoPlayed = ref<boolean>(false);
 const isVideoEnded = ref<boolean>(false);
 const remainingTimeSecond = ref<number>(0);
-const allowLeave = ref(false);
+const allowLeavePage = ref(false);
 
 function getVideo() {
   return videoElement.value;
@@ -22,13 +23,17 @@ function getVideo() {
 
 function onVideoLoaded() {
   const video = getVideo();
-  if (!video) return;
+  if (!video){
+    onVideoFailed();
+    return;
+  }
   remainingTimeSecond.value = Math.floor(video.duration);
   isLoading.value = false;
 }
 
 function onVideoFailed(){
-  internalAdDismissed(false, true);
+  const error = getVideo()?.error;
+  internalAdDismissed(false, "Video loading failed. Error: " + error?.message);
 }
 
 function onVideoEnded() {
@@ -42,6 +47,7 @@ function onVideoPlaying() {
 function updateRemainingTime() {
   const video = getVideo();
   if (!video) return;
+
   const duration = video.duration;
   const currentTime = video.currentTime;
   remainingTimeSecond.value = Math.max(0, Math.ceil(duration - currentTime));
@@ -58,26 +64,23 @@ function handleVisibilityChange() {
   }
 }
 
-async function internalAdDismissed(learnMore: boolean, videoFailed: boolean = false) {
+async function internalAdDismissed(learnMore: boolean, adError: string | null = null) {
 
   // If the video is still playing and debug mode is not enabled, don't allow navigation
   if (remainingTimeSecond.value > 0 && !vhApp.data.features.isDebugMode)
     return;
 
-  allowLeave.value = true;
+  allowLeavePage.value = true;
   await router.replace({ name: learnMore ? 'PURCHASE_SUBSCRIPTION' : 'HOME' });
 
-  let dismissReason = 'ok';
-  if (videoFailed)
-    dismissReason = 'videoFailed';
-  else if (learnMore)
-    dismissReason = 'learnMore';
-
-  await vhApp.apiClient.dismissInternalAd(dismissReason);
+  if (adError)
+    await vhApp.apiClient.internalAdError(adError);
+  else
+    await vhApp.apiClient.internalAdDismiss(learnMore ? ShowAdResult.Clicked : ShowAdResult.Closed);
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  if (allowLeave.value) {
+  if (allowLeavePage.value) {
     next(); // allow navigation
   } else {
     next(false); // block back button
@@ -137,7 +140,6 @@ onBeforeUnmount(() => {
         playsinline
       >
         <source :src="vhApp.getAssetPath('internal-ad.mp4')" type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
 
       <!-- Buttons -->

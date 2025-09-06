@@ -1200,8 +1200,8 @@ export class AppClient {
         return Promise.resolve<CountryInfo[]>(null as any);
     }
 
-    dismissInternalAd(result: string, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/app/dismiss-internal-ad?";
+    internalAdDismiss(result: ShowAdResult, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/internal-ad/dismiss?";
         if (result === undefined || result === null)
             throw new Error("The parameter 'result' must be defined and cannot be null.");
         else
@@ -1223,11 +1223,59 @@ export class AppClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processDismissInternalAd(_response);
+            return this.processInternalAdDismiss(_response);
         });
     }
 
-    protected processDismissInternalAd(response: AxiosResponse): Promise<void> {
+    protected processInternalAdDismiss(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    internalAdError(errorMessage: string, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/internal-ad/error?";
+        if (errorMessage === undefined || errorMessage === null)
+            throw new Error("The parameter 'errorMessage' must be defined and cannot be null.");
+        else
+            url_ += "errorMessage=" + encodeURIComponent("" + errorMessage) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processInternalAdError(_response);
+        });
+    }
+
+    protected processInternalAdError(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -2443,6 +2491,7 @@ export class AppState implements IAppState {
     isNotificationEnabled?: boolean | null;
     systemPrivateDns?: PrivateDns | null;
     isWaitingForInternalAd?: boolean | null;
+    stateProgress?: number | null;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2488,6 +2537,7 @@ export class AppState implements IAppState {
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : <any>null;
             this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : <any>null;
             this.isWaitingForInternalAd = _data["isWaitingForInternalAd"] !== undefined ? _data["isWaitingForInternalAd"] : <any>null;
+            this.stateProgress = _data["stateProgress"] !== undefined ? _data["stateProgress"] : <any>null;
         }
     }
 
@@ -2528,6 +2578,7 @@ export class AppState implements IAppState {
         data["isNotificationEnabled"] = this.isNotificationEnabled !== undefined ? this.isNotificationEnabled : <any>null;
         data["systemPrivateDns"] = this.systemPrivateDns ? this.systemPrivateDns.toJSON() : <any>null;
         data["isWaitingForInternalAd"] = this.isWaitingForInternalAd !== undefined ? this.isWaitingForInternalAd : <any>null;
+        data["stateProgress"] = this.stateProgress !== undefined ? this.stateProgress : <any>null;
         return data;
     }
 }
@@ -2561,6 +2612,7 @@ export interface IAppState {
     isNotificationEnabled?: boolean | null;
     systemPrivateDns?: PrivateDns | null;
     isWaitingForInternalAd?: boolean | null;
+    stateProgress?: number | null;
 }
 
 export enum AppConnectionState {
@@ -2569,6 +2621,8 @@ export enum AppConnectionState {
     Waiting = "Waiting",
     WaitingForAd = "WaitingForAd",
     Diagnosing = "Diagnosing",
+    FindingReachableServer = "FindingReachableServer",
+    FindingBestServer = "FindingBestServer",
     Connecting = "Connecting",
     Connected = "Connected",
     Unstable = "Unstable",
@@ -3646,9 +3700,10 @@ export class UserSettings implements IUserSettings {
     useAppIpFilter!: boolean;
     useVpnAdapterIpFilter!: boolean;
     endPointStrategy!: EndPointStrategy;
-    dnsServers?: string[] | null;
     useProxyServer!: boolean;
     proxyServers!: ProxyServerEndPoint[];
+    dnsMode!: DnsMode;
+    dnsServers!: string[];
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -3661,6 +3716,7 @@ export class UserSettings implements IUserSettings {
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
             this.proxyServers = [];
+            this.dnsServers = [];
         }
     }
 
@@ -3695,14 +3751,6 @@ export class UserSettings implements IUserSettings {
             this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
             this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
             this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
-            if (Array.isArray(_data["dnsServers"])) {
-                this.dnsServers = [] as any;
-                for (let item of _data["dnsServers"])
-                    this.dnsServers!.push(item);
-            }
-            else {
-                this.dnsServers = <any>null;
-            }
             this.useProxyServer = _data["useProxyServer"] !== undefined ? _data["useProxyServer"] : <any>null;
             if (Array.isArray(_data["proxyServers"])) {
                 this.proxyServers = [] as any;
@@ -3711,6 +3759,15 @@ export class UserSettings implements IUserSettings {
             }
             else {
                 this.proxyServers = <any>null;
+            }
+            this.dnsMode = _data["dnsMode"] !== undefined ? _data["dnsMode"] : <any>null;
+            if (Array.isArray(_data["dnsServers"])) {
+                this.dnsServers = [] as any;
+                for (let item of _data["dnsServers"])
+                    this.dnsServers!.push(item);
+            }
+            else {
+                this.dnsServers = <any>null;
             }
         }
     }
@@ -3750,16 +3807,17 @@ export class UserSettings implements IUserSettings {
         data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
         data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
         data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
-        if (Array.isArray(this.dnsServers)) {
-            data["dnsServers"] = [];
-            for (let item of this.dnsServers)
-                data["dnsServers"].push(item);
-        }
         data["useProxyServer"] = this.useProxyServer !== undefined ? this.useProxyServer : <any>null;
         if (Array.isArray(this.proxyServers)) {
             data["proxyServers"] = [];
             for (let item of this.proxyServers)
                 data["proxyServers"].push(item.toJSON());
+        }
+        data["dnsMode"] = this.dnsMode !== undefined ? this.dnsMode : <any>null;
+        if (Array.isArray(this.dnsServers)) {
+            data["dnsServers"] = [];
+            for (let item of this.dnsServers)
+                data["dnsServers"].push(item);
         }
         return data;
     }
@@ -3788,9 +3846,10 @@ export interface IUserSettings {
     useAppIpFilter: boolean;
     useVpnAdapterIpFilter: boolean;
     endPointStrategy: EndPointStrategy;
-    dnsServers?: string[] | null;
     useProxyServer: boolean;
     proxyServers: ProxyServerEndPoint[];
+    dnsMode: DnsMode;
+    dnsServers: string[];
 }
 
 export enum FilterMode {
@@ -3946,6 +4005,11 @@ export enum ProxyServerType {
     Socks4 = "Socks4",
     Http = "Http",
     Https = "Https",
+}
+
+export enum DnsMode {
+    Default = "Default",
+    AdapterDns = "AdapterDns",
 }
 
 export class ClientProfileInfo implements IClientProfileInfo {
@@ -4452,6 +4516,11 @@ export class CountryInfo implements ICountryInfo {
 export interface ICountryInfo {
     englishName: string;
     countryCode: string;
+}
+
+export enum ShowAdResult {
+    Closed = "Closed",
+    Clicked = "Clicked",
 }
 
 export class SubscriptionPlan implements ISubscriptionPlan {

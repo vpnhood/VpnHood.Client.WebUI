@@ -7,8 +7,9 @@ import { Util } from '@/helpers/Util';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import type { RouteLocationRaw } from 'vue-router';
-import { AppFeature } from '@/services/VpnHood.Client.Api';
+import { AppFeature, DnsMode } from '@/services/VpnHood.Client.Api';
 import { LanguagesCode } from '@/helpers/UiConstants';
+import PremiumIcon from '@/components/PremiumIcon.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -20,7 +21,11 @@ interface SettingsItem {
   click?: RouteLocationRaw,
   premiumClick?: RouteLocationRaw,
   selectedItem?: string,
-  status?: boolean
+  status?: {
+    state?: boolean,
+    onText: string,
+    offText: string,
+  },
   isShow?: boolean,
   isDisconnectRequired?: boolean,
   model?: WritableComputedRef<boolean, boolean>,
@@ -56,14 +61,22 @@ const settingsItem: SettingsItem[] = [
     title: "FILTER_IP_ADDRESSES",
     subtitle: "FILTER_IP_ADDRESSES_DESC",
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AppIpFilter),
-    status: vhApp.isFilterIpTurnOn(),
-    click: {name: vhApp.isFilterIpAvailable() ? 'FILTER_IP' : 'PURCHASE_SUBSCRIPTION'},
+    status: {
+      state: vhApp.isFilterIpTurnOn(),
+      onText: locale('ON'),
+      offText: locale('OFF')
+    },
+    click: {name: 'FILTER_IP'}
   },
   {
     title: "NOTIFICATIONS",
     subtitle: "NOTIFICATIONS_DESC",
     isPremium: false,
-    status: vhApp.data.state.isNotificationEnabled ?? undefined,
+    status: {
+      state: vhApp.data.state.isNotificationEnabled ?? undefined,
+      onText: locale('ON'),
+      offText: locale('OFF')
+    },
     isShow: vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported,
     click: {name: 'NOTIFICATIONS'}
   },
@@ -89,12 +102,15 @@ const settingsItem: SettingsItem[] = [
     click: {name: 'KILL_SWITCH'}
   },
   {
-    title: "PRIVATE_DNS",
-    subtitle: "PRIVATE_DNS_DESC",
-    status: vhApp.data.state.systemPrivateDns?.isActive,
+    title: "DNS",
+    subtitle: "DNS_DESC",
+    status: {
+      state: vhApp.data.state.systemPrivateDns?.isActive || vhApp.data.userSettings.dnsMode === DnsMode.AdapterDns,
+      onText: locale('CUSTOM'),
+      offText: locale('DEFAULT')
+    },
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
-    isShow: vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported,
-    click: {name: 'PRIVATE_DNS'}
+    click: {name: 'DNS'}
   }
 ]
 
@@ -108,6 +124,7 @@ const settingsItem: SettingsItem[] = [
       <config-card v-if="item.isShow !== undefined ? item.isShow : true" class="pa-3">
 
         <div @click="item.click ? router.push(item.click) : null" >
+
           <!-- Title, selected item and status (If available) and premium icon (If available) -->
           <div class="d-flex align-center justify-space-between pb-1">
 
@@ -125,19 +142,19 @@ const settingsItem: SettingsItem[] = [
               />
 
               <!-- Status if available -->
-              <v-chip v-else-if="item.status !== undefined"
-                :text="item.status ? locale('ON') : locale('OFF')"
+              <v-chip v-else-if="item.status?.state !== undefined"
+                :text="item.status.state ? item.status.onText : item.status.offText"
                 size="small"
                 variant="tonal"
                 density="comfortable"
-                :disabled="!item.status"
-                :color="item.status ? 'enable-premium' : ''"
+                :disabled="!item.status.state"
+                :color="item.status.state ? 'enable-premium' : ''"
               />
 
             </div>
 
             <!-- Premium icon for premium features -->
-            <premium-icon v-if="item.isPremium && vhApp.data.features.isPremiumFlagSupported" :color="vhApp.premiumIconColor()" />
+            <premium-icon :is-premium="item.isPremium" />
 
           </div>
 
@@ -146,6 +163,7 @@ const settingsItem: SettingsItem[] = [
             {{ locale(item.subtitle) }}
             <v-icon v-if="item.model === undefined" :icon="Util.getLocalizedRightChevron()"/>
           </v-card-subtitle>
+
         </div>
 
         <!-- Disconnecting alert -->

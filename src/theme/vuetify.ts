@@ -19,7 +19,6 @@ export default createVuetify({
     rtl: { ar: true, fa: true, isRtl: true },
   },
   aliases: {
-    PremiumIcon: VIcon,
     TonalIconBtn: VBtn,
     HomeConfigBtn: VBtn,
     ConfigCard: VCard,
