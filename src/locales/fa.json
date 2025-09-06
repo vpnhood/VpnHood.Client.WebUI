@@ -204,6 +204,7 @@
   "ACTIVE": "فعال",
   "AUTO_SELECT": "انتخاب خودکار",
   "AUTO": "خودکار",
+  "CUSTOM": "سفارشی",
   "FASTEST": "سریع‌ترین",
   "LOCATION": "مکان",
   "LOADING_AD": "آماده سازی تبلیغ",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "کلمه <strong>«DNS»</strong> را تایپ کرده و گزینه <strong>DNS خصوصی</strong> را انتخاب کنید.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>نام میزبان ارائه کننده DNS خصوصی</strong> را انتخاب کنید.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "DNS دلخواه خود را وارد کنید.",
+  "ADAPTER_DNS": "DNS آداپتور",
+  "ADAPTER_DNS_DESC": "سرور DNS پیش‌فرض را با مشخص کردن سرور دلخواه خود تغییر دهید.",
   "LEARN_MORE": "اطلاعات بیشتر",
   "ENFORCED_BY_SERVER": "توسط سرور اعمال شده است.",
-  "OPEN_VPN_SETTINGS": "باز کردن تنظیمات VPN"
+  "OPEN_VPN_SETTINGS": "باز کردن تنظیمات VPN",
+  "DNS": "DNS",
+  "DNS_DESC": "نحوه‌ی تبدیل آدرس‌های وب‌سایت را با پیکربندی DNS خصوصی و DNS آداپتور مدیریت کنید.",
+  "ADAPTER_DNS_AUTO_DESC": "توسط سرور VPN مدیریت می‌شود.",
+  "ADAPTER_DNS_CUSTOM_DESC": "سرور DNS دلخواه خود را وارد کنید.",
+  "DNS1_REQUIRED": "لطفاً یک آدرس IP معتبر برای DNS 1 وارد کنید.",
+  "INVALID_IP": "لطفاً یک آدرس معتبر IPv4 یا IPv6 وارد کنید.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "برای تغییر تنظیمات DNS، باید DNS خصوصی را خاموش کنید."
 }
