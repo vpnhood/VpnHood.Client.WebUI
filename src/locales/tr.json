@@ -204,6 +204,7 @@
   "ACTIVE": "Aktif",
   "AUTO_SELECT": "Otomatik Seç",
   "AUTO": "Oto",
+  "CUSTOM": "Özel",
   "FASTEST": "En hızlı",
   "LOCATION": "Konum",
   "LOADING_AD": "Reklam Yükleniyor",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "<strong>\"DNS\"</strong> yazın ve <strong>Private DNS</strong> seçeneğini seçin.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS sağlayıcısının ana bilgisayar adı</strong> seçeneğini seçin.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "İstediğiniz DNS’i girin.",
+  "ADAPTER_DNS": "Adaptör DNS",
+  "ADAPTER_DNS_DESC": "Varsayılan DNS sunucusunu kendi sunucunuzu belirterek değiştirin.",
   "LEARN_MORE": "Daha fazla bilgi",
   "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu kılınmıştır.",
-  "OPEN_VPN_SETTINGS": "VPN ayarlarını aç"
+  "OPEN_VPN_SETTINGS": "VPN ayarlarını aç",
+  "DNS": "DNS",
+  "DNS_DESC": "Web sitesi adreslerinin nasıl çözüleceğini Özel DNS ve Adaptör DNS ayarlarıyla yönetin.",
+  "ADAPTER_DNS_AUTO_DESC": "VPN sunucusu tarafından yönetiliyor.",
+  "ADAPTER_DNS_CUSTOM_DESC": "Kendi DNS sunucunuzu girin.",
+  "DNS1_REQUIRED": "Lütfen DNS 1 için geçerli bir IP adresi girin.",
+  "INVALID_IP": "Lütfen geçerli bir IPv4 veya IPv6 adresi girin.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "DNS ayarlarını değiştirmek için Özel DNS’i kapatmanız gerekir."
 }
