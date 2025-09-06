@@ -204,6 +204,7 @@
   "ACTIVE": "Ativo",
   "AUTO_SELECT": "Seleção auto",
   "AUTO": "Auto",
+  "CUSTOM": "Personalizado",
   "FASTEST": "Mais rápido",
   "LOCATION": "Localização",
   "LOADING_AD": "Carregando Anúncio",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Digite <strong>\"DNS\"</strong> e selecione a opção <strong>DNS privado</strong> (Private DNS).",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Selecione <strong>Private DNS provider hostname</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Digite o DNS desejado.",
+  "ADAPTER_DNS": "DNS do adaptador",
+  "ADAPTER_DNS_DESC": "Altere o servidor DNS padrão especificando o seu próprio.",
   "LEARN_MORE": "Saber mais",
   "ENFORCED_BY_SERVER": "Imposto pelo servidor.",
-  "OPEN_VPN_SETTINGS": "Abrir definições de VPN"
+  "OPEN_VPN_SETTINGS": "Abrir definições de VPN",
+  "DNS": "DNS",
+  "DNS_DESC": "Gerencie como os endereços de sites são resolvidos configurando o DNS privado e o DNS do adaptador.",
+  "ADAPTER_DNS_AUTO_DESC": "Gerenciado pelo servidor VPN.",
+  "ADAPTER_DNS_CUSTOM_DESC": "Insira seu próprio servidor DNS.",
+  "DNS1_REQUIRED": "Por favor, insira um endereço IP válido para o DNS 1.",
+  "INVALID_IP": "Por favor, insira um endereço IPv4 ou IPv6 válido.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "Para alterar as configurações de DNS, você precisa desativar o DNS privado."
 }
