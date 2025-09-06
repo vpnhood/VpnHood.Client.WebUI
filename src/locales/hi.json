@@ -204,6 +204,7 @@
   "ACTIVE": "सक्रिय",
   "AUTO_SELECT": "स्वचालित चयन",
   "AUTO": "स्वचालित",
+  "CUSTOM": "कस्टम",
   "FASTEST": "सबसे तेज़",
   "LOCATION": "स्थान",
   "LOADING_AD": "विज्ञापन लोड हो रहा है",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "<strong>\"DNS\"</strong> टाइप करें और <strong>DNS प्राइवेट</strong> (Private DNS) विकल्प चुनें",
   "PRIVATE_DNS_TURN_ON_STEP_4": "<strong>Private DNS provider hostname</strong> चुनें",
   "PRIVATE_DNS_TURN_ON_STEP_5": "अपना पसंदीदा DNS दर्ज करें",
+  "ADAPTER_DNS": "एडैप्टर DNS",
+  "ADAPTER_DNS_DESC": "डिफ़ॉल्ट DNS सर्वर को बदलें और अपना स्वयं का सर्वर निर्दिष्ट करें।",
   "LEARN_MORE": "और जानें",
   "ENFORCED_BY_SERVER": "सर्वर द्वारा अनिवार्य।",
-  "OPEN_VPN_SETTINGS": "VPN सेटिंग्स खोले"
+  "OPEN_VPN_SETTINGS": "VPN सेटिंग्स खोले",
+  "DNS": "DNS",
+  "DNS_DESC": "वेबसाइट पतों को कैसे हल किया जाए, इसे प्राइवेट DNS और एडैप्टर DNS को कॉन्फ़िगर करके प्रबंधित करें।",
+  "ADAPTER_DNS_AUTO_DESC": "VPN सर्वर द्वारा प्रबंधित।",
+  "ADAPTER_DNS_CUSTOM_DESC": "अपना स्वयं का DNS सर्वर दर्ज करें।",
+  "DNS1_REQUIRED": "कृपया DNS 1 के लिए एक वैध IP पता दर्ज करें।",
+  "INVALID_IP": "कृपया एक वैध IPv4 या IPv6 पता दर्ज करें।",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "DNS सेटिंग्स बदलने के लिए, आपको प्राइवेट DNS बंद करना होगा।"
 }
