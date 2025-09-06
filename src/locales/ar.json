@@ -204,6 +204,7 @@
   "ACTIVE": "نشط",
   "AUTO_SELECT": "تحديد تلقائي",
   "AUTO": "تلقائي",
+  "CUSTOM": "مخصص",
   "FASTEST": "الأسرع",
   "LOCATION": "الموقع",
   "LOADING_AD": "تحميل الإعلان",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "اكتب <strong>\"DNS\"</strong> واختر خيار <strong>DNS الخاص</strong> (Private DNS).",
   "PRIVATE_DNS_TURN_ON_STEP_4": "اختر <strong>اسم مضيف مزود DNS الخاص</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "أدخل DNS المطلوب.",
+  "ADAPTER_DNS": "محول DNS",
+  "ADAPTER_DNS_DESC": "غيّر خادم DNS الافتراضي عن طريق تحديد خادمك الخاص.",
   "LEARN_MORE": "مزيد من المعلومات",
   "ENFORCED_BY_SERVER": "يتم فرضه من قبل الخادم.",
-  "OPEN_VPN_SETTINGS": "افتح إعدادات VPN"
+  "OPEN_VPN_SETTINGS": "افتح إعدادات VPN",
+  "DNS": "DNS",
+  "DNS_DESC": "قم بإدارة كيفية حل عناوين المواقع من خلال إعداد DNS الخاص ومحول DNS.",
+  "ADAPTER_DNS_AUTO_DESC": "يتم التحكم به بواسطة خادم VPN.",
+  "ADAPTER_DNS_CUSTOM_DESC": "أدخل خادم DNS الخاص بك.",
+  "DNS1_REQUIRED": "يرجى إدخال عنوان IP صالح لـ DNS 1.",
+  "INVALID_IP": "يرجى إدخال عنوان IPv4 أو IPv6 صالح.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "لتغيير إعدادات DNS، تحتاج إلى إيقاف DNS الخاص."
 }
