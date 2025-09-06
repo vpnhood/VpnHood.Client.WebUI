@@ -204,6 +204,7 @@
   "ACTIVE": "Активный",
   "AUTO_SELECT": "Авто Выбор",
   "AUTO": "Авто",
+  "CUSTOM": "Пользовательский",
   "FASTEST": "Самый быстрый",
   "LOCATION": "Местоположение",
   "LOADING_AD": "Загрузка Рекламы",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "Введите <strong>«DNS»</strong> и выберите опцию <strong>Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_4": "Выберите <strong>Имя хоста поставщика Private DNS</strong>.",
   "PRIVATE_DNS_TURN_ON_STEP_5": "Введите желаемый DNS.",
+  "ADAPTER_DNS": "DNS адаптера",
+  "ADAPTER_DNS_DESC": "Измените DNS-сервер по умолчанию, указав свой собственный.",
   "LEARN_MORE": "Подробнее",
   "ENFORCED_BY_SERVER": "Принудительно применяется сервером.",
-  "OPEN_VPN_SETTINGS": "Открыть настройки VPN"
+  "OPEN_VPN_SETTINGS": "Открыть настройки VPN",
+  "DNS": "DNS",
+  "DNS_DESC": "Управляйте разрешением адресов веб-сайтов, настраивая приватный DNS и DNS адаптера.",
+  "ADAPTER_DNS_AUTO_DESC": "Управляется VPN-сервером.",
+  "ADAPTER_DNS_CUSTOM_DESC": "Введите свой собственный DNS-сервер.",
+  "DNS1_REQUIRED": "Пожалуйста, введите действительный IP-адрес для DNS 1.",
+  "INVALID_IP": "Пожалуйста, введите действительный адрес IPv4 или IPv6.",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "Чтобы изменить настройки DNS, необходимо отключить приватный DNS."
 }
