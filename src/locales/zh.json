@@ -204,6 +204,7 @@
   "ACTIVE": "活跃",
   "AUTO_SELECT": "自动选择",
   "AUTO": "自动",
+  "CUSTOM": "自定义",
   "FASTEST": "最快",
   "LOCATION": "位置",
   "LOADING_AD": "加载广告",
@@ -397,7 +398,16 @@
   "PRIVATE_DNS_TURN_ON_STEP_3": "输入 <strong>\"DNS\"</strong> 并选择 <strong>DNS 私有</strong> (Private DNS) 选项。",
   "PRIVATE_DNS_TURN_ON_STEP_4": "选择 <strong>DNS 私有提供商主机名</strong>。",
   "PRIVATE_DNS_TURN_ON_STEP_5": "输入你想使用的 DNS。",
+  "ADAPTER_DNS": "适配器 DNS",
+  "ADAPTER_DNS_DESC": "通过指定您自己的 DNS 服务器来更改默认 DNS。",
   "LEARN_MORE": "了解更多",
   "ENFORCED_BY_SERVER": "由服务器强制执行。",
-  "OPEN_VPN_SETTINGS": "打开 VPN 设置"
+  "OPEN_VPN_SETTINGS": "打开 VPN 设置",
+  "DNS": "DNS",
+  "DNS_DESC": "通过配置专用 DNS 和适配器 DNS 来管理网站地址的解析方式。",
+  "ADAPTER_DNS_AUTO_DESC": "由 VPN 服务器管理。",
+  "ADAPTER_DNS_CUSTOM_DESC": "输入您自己的 DNS 服务器。",
+  "DNS1_REQUIRED": "请输入 DNS 1 的有效 IP 地址。",
+  "INVALID_IP": "请输入有效的 IPv4 或 IPv6 地址。",
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "要更改 DNS 设置，您需要关闭专用 DNS。"
 }
