@@ -36,6 +36,7 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
 })
 
 onMounted(async () => {
+
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
     if (!document.hidden)

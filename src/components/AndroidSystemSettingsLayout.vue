@@ -54,7 +54,12 @@ const props = defineProps<{
         <!-- Help steps -->
           <v-card-item>
           <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
-              <li v-for="(item, index) in props.listStep" :key="index" v-html="item"/>
+              <li
+                v-for="(item, index) in props.listStep"
+                :key="index"
+                v-html="item"
+                :class="{'border-b pb-2': index < props.listStep.length - 1}"
+              />
             </ol>
           </v-card-item>
 

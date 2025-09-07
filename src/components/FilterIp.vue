@@ -139,8 +139,8 @@ function revertCurrentChange(): void{
 
     <!-- Exclude list -->
     <config-card class="pb-3 mt-4">
-      <v-card-title>{{locale('EXCLUDE_IPS')}}</v-card-title>
       <v-card-item>
+        <p>{{locale('EXCLUDE_IPS')}}</p>
         <v-locale-provider :rtl="false">
           <v-textarea v-model="excludeIpFilters"/>
         </v-locale-provider>
@@ -149,8 +149,8 @@ function revertCurrentChange(): void{
 
     <!-- Include list -->
     <config-card class="pb-3 mt-4">
-      <v-card-title>{{locale('INCLUDE_IPS')}}</v-card-title>
       <v-card-item>
+        <p>{{locale('INCLUDE_IPS')}}</p>
         <v-locale-provider :rtl="false">
           <v-textarea v-model="includeIpFilters"/>
         </v-locale-provider>

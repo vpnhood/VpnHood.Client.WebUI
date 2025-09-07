@@ -2633,6 +2633,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     accessInfo?: AccessInfo | null;
     isUdpChannelSupported!: boolean;
     isDnsServersAccepted!: boolean;
+    isLocalNetworkAllowed!: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
     isPremiumSession!: boolean;
     suppressedTo!: SessionSuppressType;
@@ -2660,6 +2661,7 @@ export class AppSessionInfo implements IAppSessionInfo {
             this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : <any>null;
             this.isUdpChannelSupported = _data["isUdpChannelSupported"] !== undefined ? _data["isUdpChannelSupported"] : <any>null;
             this.isDnsServersAccepted = _data["isDnsServersAccepted"] !== undefined ? _data["isDnsServersAccepted"] : <any>null;
+            this.isLocalNetworkAllowed = _data["isLocalNetworkAllowed"] !== undefined ? _data["isLocalNetworkAllowed"] : <any>null;
             this.serverLocationInfo = _data["serverLocationInfo"] ? ServerLocationInfo.fromJS(_data["serverLocationInfo"]) : <any>null;
             this.isPremiumSession = _data["isPremiumSession"] !== undefined ? _data["isPremiumSession"] : <any>null;
             this.suppressedTo = _data["suppressedTo"] !== undefined ? _data["suppressedTo"] : <any>null;
@@ -2691,6 +2693,7 @@ export class AppSessionInfo implements IAppSessionInfo {
         data["accessInfo"] = this.accessInfo ? this.accessInfo.toJSON() : <any>null;
         data["isUdpChannelSupported"] = this.isUdpChannelSupported !== undefined ? this.isUdpChannelSupported : <any>null;
         data["isDnsServersAccepted"] = this.isDnsServersAccepted !== undefined ? this.isDnsServersAccepted : <any>null;
+        data["isLocalNetworkAllowed"] = this.isLocalNetworkAllowed !== undefined ? this.isLocalNetworkAllowed : <any>null;
         data["serverLocationInfo"] = this.serverLocationInfo ? this.serverLocationInfo.toJSON() : <any>null;
         data["isPremiumSession"] = this.isPremiumSession !== undefined ? this.isPremiumSession : <any>null;
         data["suppressedTo"] = this.suppressedTo !== undefined ? this.suppressedTo : <any>null;
@@ -2712,6 +2715,7 @@ export interface IAppSessionInfo {
     accessInfo?: AccessInfo | null;
     isUdpChannelSupported: boolean;
     isDnsServersAccepted: boolean;
+    isLocalNetworkAllowed: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
     isPremiumSession: boolean;
     suppressedTo: SessionSuppressType;

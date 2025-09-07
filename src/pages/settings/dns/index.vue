@@ -71,6 +71,9 @@ watch(dns2, (newVal) => {
   if (formatted !== newVal) dns2.value = formatted;
 });
 
+function isShowEnforcedByServerAlert() {
+  return vhApp.data.isConnected && selectedDnsMode.value == DnsMode.AdapterDns &&  !vhApp.data.state.sessionInfo?.isDnsServersAccepted
+}
 </script>
 
 <template>
@@ -78,7 +81,11 @@ watch(dns2, (newVal) => {
     <app-bar/>
 
     <!-- Private DNS card -->
-    <config-card @click="router.push({name: 'PRIVATE_DNS'})" class="pa-3">
+    <config-card
+      v-if="vhApp.data.intentFeatures.isSystemSettingsSupported"
+      @click="router.push({name: 'PRIVATE_DNS'})"
+      class="pa-3"
+    >
         <!-- Title, status and premium icon -->
         <div class="d-flex align-center justify-space-between pb-1">
 
@@ -114,7 +121,7 @@ watch(dns2, (newVal) => {
     </config-card>
 
 
-    <config-card class="pa-3" >
+    <config-card class="pa-3" :disabled="!vhApp.isPremiumAccount()">
 
       <!-- Title, status and premium icon -->
       <div class="d-flex align-center justify-space-between pb-1">
@@ -127,12 +134,15 @@ watch(dns2, (newVal) => {
 
       <v-card-subtitle class="ga-3 pa-0">{{ locale('ADAPTER_DNS_DESC') }}</v-card-subtitle>
 
+      <!-- Enforced by server alert -->
+      <alert-warning v-if="isShowEnforcedByServerAlert()" :text="locale('ENFORCED_BY_SERVER')" />
+
       <alert-warning v-if="isPrivateDnsActive" :text="locale('ADAPTER_DNS_DISABLE_ALERT_MSG')" class="my-3" />
 
       <v-radio-group
         v-model="selectedDnsMode"
+        :disabled="isPrivateDnsActive || isShowEnforcedByServerAlert()"
         :hide-details="true"
-        :disabled="isPrivateDnsActive"
         color="highlight"
         class="my-5"
       >

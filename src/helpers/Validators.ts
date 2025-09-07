@@ -1,4 +1,5 @@
-﻿export const ipRegex: RegExp = /^(?:(?:\d{1,3}\.){3}\d{1,3}|(?:[a-fA-F0-9]{1,4}:){1,7}[a-fA-F0-9]{1,4})$/;
+﻿export const ipRegex: RegExp =
+  /^((([0-9]{1,3}\.){3}[0-9]{1,3})|(([a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}|([a-fA-F0-9]{1,4}:){1,7}:|([a-fA-F0-9]{1,4}:){1,6}:[a-fA-F0-9]{1,4}|([a-fA-F0-9]{1,4}:){1,5}(:[a-fA-F0-9]{1,4}){1,2}|([a-fA-F0-9]{1,4}:){1,4}(:[a-fA-F0-9]{1,4}){1,3}|([a-fA-F0-9]{1,4}:){1,3}(:[a-fA-F0-9]{1,4}){1,4}|([a-fA-F0-9]{1,4}:){1,2}(:[a-fA-F0-9]{1,4}){1,5}|[a-fA-F0-9]{1,4}:((:[a-fA-F0-9]{1,4}){1,6})|:((:[a-fA-F0-9]{1,4}){1,7}|:)|::ffff:(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\.(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})){3}))$/;
 
 export function validateIp(value: string | null, errorMessage = 'Invalid IP address'): true | string {
   if (!value || value.trim() === '') return true;
@@ -6,19 +7,16 @@ export function validateIp(value: string | null, errorMessage = 'Invalid IP addr
 }
 
 export function formatIpInput(value: string): string {
-  const raw = value.replace(/\s+/g, '').toLowerCase();
+  const raw = value.trim().toLowerCase();
 
-  // If it contains colons or hex characters, treat as IPv6
-  if (/[a-f:]/.test(raw)) {
-    return formatIPv6(raw);
+  if (raw.includes(':')) {
+    return formatIPv6(raw); // preserves compressed IPv6
   }
 
-  // If it already looks like a valid IPv4, leave it alone
   if (/^(\d{1,3}\.){0,3}\d{1,3}$/.test(raw)) {
     return raw;
   }
 
-  // Otherwise, format as raw IPv4
   return formatIPv4(raw);
 }
 
@@ -45,22 +43,21 @@ function formatIPv4(value: string): string {
 }
 
 function formatIPv6(value: string): string {
-  // Preserve valid IPv6 input
-  if (/^([a-fA-F0-9]{1,4}:){1,7}[a-fA-F0-9]{1,4}$/.test(value)) return value;
+  const trimmed = value.trim();
 
-  const hex = value.replace(/[^a-f0-9]/gi, '');
+  // If input contains colons, assume it's structured IPv6 and leave it alone
+  if (trimmed.includes(':')) {
+    return trimmed;
+  }
+
+  // Otherwise, format raw hex into expanded IPv6
+  const hex = trimmed.replace(/[^a-fA-F0-9]/g, '');
   const parts: string[] = [];
 
   for (let i = 0; i < hex.length && parts.length < 8;) {
     const remaining = hex.length - i;
-
-    if (remaining >= 4) {
-      parts.push(hex.slice(i, i + 4));
-      i += 4;
-    } else {
-      parts.push(hex.slice(i));
-      break;
-    }
+    parts.push(hex.slice(i, i + Math.min(4, remaining)));
+    i += 4;
   }
 
   return parts.join(':');

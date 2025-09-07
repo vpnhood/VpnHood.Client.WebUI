@@ -20,6 +20,6 @@ const locale = i18n.global.t;
     button-text="OPEN_VPN_SETTINGS"
     :button-click="()=>vhApp.intentsClient.openSystemKillSwitchSettings()"
     :is-premium="false"
-    :is-action-button-available="true"
+    :is-action-button-available="vhApp.data.intentFeatures.isSystemKillSwitchSettingsSupported"
   />
 </template>

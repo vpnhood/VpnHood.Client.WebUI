@@ -28,6 +28,8 @@ interface SettingsItem {
   },
   isShow?: boolean,
   isDisconnectRequired?: boolean,
+  isShowEnforcedByServerAlert?: boolean,
+  isDisabled?: boolean,
   model?: WritableComputedRef<boolean, boolean>,
   languageMoreAction?: boolean
 }
@@ -55,6 +57,8 @@ const settingsItem: SettingsItem[] = [
     isPremium: false,
     isShow: vhApp.data.features.isLocalNetworkSupported,
     isDisconnectRequired: true,
+    isDisabled: !vhApp.isIncludeLocalNetworkAvailable(),
+    isShowEnforcedByServerAlert: vhApp.data.isConnected && !vhApp.data.state.sessionInfo?.isLocalNetworkAllowed,
     model: includeLocalNetwork
   },
   {
@@ -166,13 +170,16 @@ const settingsItem: SettingsItem[] = [
 
         </div>
 
+        <!-- Enforced by server alert -->
+        <alert-warning v-if="item.isShowEnforcedByServerAlert" :text="locale('ENFORCED_BY_SERVER')" class="my-2" />
+
         <!-- Disconnecting alert -->
-        <disconnect-required-alert v-if="item.isDisconnectRequired" class="my-2"/>
+        <disconnect-required-alert v-else-if="item.isDisconnectRequired" class="my-2"/>
 
         <!-- If the item has a model (Direct action) -->
         <div v-if="item.model" class="d-flex align-center justify-space-between">
           <span>{{ locale('INCLUDE_LOCAL_NETWORK') }}</span>
-          <v-switch v-model="includeLocalNetwork" :disabled="!vhApp.isIncludeLocalNetworkAvailable()" />
+          <v-switch v-model="includeLocalNetwork" :disabled="item.isDisabled" />
         </div>
 
         <!-- Language contribute link -->

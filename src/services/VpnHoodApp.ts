@@ -488,9 +488,17 @@ export class VpnHoodApp {
     return this.isPremiumAccount() || this.data.userSettings.useAppIpFilter;
   }
   public isIncludeLocalNetworkAvailable(): boolean {
-    if (!this.data.features.isPremiumFlagSupported)
-      return true;
-    return this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork;
+    const isLocalNetworkAllowed: boolean | undefined = this.data.state.sessionInfo?.isLocalNetworkAllowed;
+
+    if (this.data.isConnected){
+      if (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork)
+        return  isLocalNetworkAllowed !== undefined ? isLocalNetworkAllowed : true;
+
+      return false;
+    }
+    else {
+      return !this.data.features.isPremiumFlagSupported || this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork;
+    }
   }
 
 }
