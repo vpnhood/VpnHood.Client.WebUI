@@ -24,8 +24,9 @@ async function main(): Promise<void> {
     const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
     const app = createApp(App);
 
-    // Set the app theme
-    vuetify.theme.change(vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient);
+    // Set the app theme using Vuetify 3 API
+    const themeName = vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient;
+    vuetify.theme.global.name.value = themeName;
 
     // Set the default UI language
     const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.currentUiCultureInfo.code);

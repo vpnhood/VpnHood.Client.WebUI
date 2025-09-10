@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VpnHood Theme System Examples</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .example {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .theme-dark {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .theme-light {
+            background: #ffffff;
+            color: #000000;
+        }
+        .demo-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+        }
+        .theme-dark .demo-card {
+            border-color: #444;
+            background: #2a2a2a;
+        }
+        .button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .theme-dark .btn-primary {
+            background: #0d6efd;
+        }
+        .theme-dark .btn-secondary {
+            background: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?? VpnHood Theme System Examples</h1>
+        
+        <div class="example">
+            <h2>1. Basic Theme Usage</h2>
+            <p>Simple theme switching in your Vue components:</p>
+            <div class="code-block">
+&lt;script setup lang="ts"&gt;
+import { useTheme } from '@/composables/useTheme';
+
+const { isDark, currentThemeName, toggleTheme } = useTheme();
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;p&gt;Current theme: {{ currentThemeName }}&lt;/p&gt;
+    &lt;button @click="toggleTheme"&gt;Toggle Theme&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>2. Page-Specific Theme Override</h2>
+            <p>Force a specific theme for certain pages (e.g., documentation always light):</p>
+            <div class="code-block">
+&lt;template&gt;
+  &lt;!-- This page will always use light theme --&gt;
+  &lt;ThemeProvider page-theme-override="light"&gt;
+    &lt;v-container&gt;
+      &lt;h1&gt;Documentation Page&lt;/h1&gt;
+      &lt;!-- Always displays in light theme --&gt;
+    &lt;/v-container&gt;
+  &lt;/ThemeProvider&gt;
+&lt;/template&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>3. Component-Level Theme Override</h2>
+            <p>Force specific sections to use a different theme:</p>
+            <div class="code-block">
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- Normal theme section --&gt;
+    &lt;v-card class="bg-general-dialog"&gt;
+      &lt;v-card-title&gt;Normal Theme&lt;/v-card-title&gt;
+    &lt;/v-card&gt;
+    
+    &lt;!-- Force dark theme for this section --&gt;
+    &lt;ThemeProvider force-theme="dark"&gt;
+      &lt;v-card class="bg-general-dialog"&gt;
+        &lt;v-card-title&gt;Always Dark Section&lt;/v-card-title&gt;
+      &lt;/v-card&gt;
+    &lt;/ThemeProvider&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>4. Theme Controls</h2>
+            <p>Provide users with theme control options:</p>
+            <div class="code-block">
+&lt;!-- Simple toggle button --&gt;
+&lt;ThemeToggle show-toggle-button /&gt;
+
+&lt;!-- Full theme mode selector --&gt;
+&lt;ThemeToggle 
+  show-mode-selector 
+  show-status 
+/&gt;
+
+&lt;!-- Custom implementation --&gt;
+&lt;v-btn-toggle v-model="selectedTheme" mandatory&gt;
+  &lt;v-btn value="auto"&gt;Auto&lt;/v-btn&gt;
+  &lt;v-btn value="light"&gt;Light&lt;/v-btn&gt;
+  &lt;v-btn value="dark"&gt;Dark&lt;/v-btn&gt;
+  &lt;v-btn value="system"&gt;System&lt;/v-btn&gt;
+&lt;/v-btn-toggle&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>5. Visual Demo</h2>
+            <p>See how themes affect the appearance:</p>
+            
+            <div class="demo-section">
+                <h3>Light Theme Example</h3>
+                <div class="theme-light demo-card">
+                    <h4>Light Theme Card</h4>
+                    <p>This card demonstrates light theme styling with appropriate contrast.</p>
+                    <button class="button btn-primary">Primary Button</button>
+                    <button class="button btn-secondary">Secondary Button</button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>Dark Theme Example</h3>
+                <div class="theme-dark demo-card">
+                    <h4>Dark Theme Card</h4>
+                    <p>This card demonstrates dark theme styling with appropriate contrast.</p>
+                    <button class="button btn-primary">Primary Button</button>
+                    <button class="button btn-secondary">Secondary Button</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>6. Conditional Styling</h2>
+            <p>Apply different styles based on the current theme:</p>
+            <div class="code-block">
+&lt;template&gt;
+  &lt;div :class="getThemeClass()"&gt;
+    &lt;div class="adaptive-element"&gt;
+      This element adapts to the theme
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.theme-light .adaptive-element {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  color: #333333;
+}
+
+.theme-dark .adaptive-element {
+  background: #1e1e1e;
+  border: 1px solid #404040;
+  color: #ffffff;
+}
+&lt;/style&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>7. Navigation Integration</h2>
+            <p>The theme system is integrated into the navigation drawer:</p>
+            <div class="code-block">
+&lt;!-- Already integrated in NavigationDrawer.vue --&gt;
+&lt;v-list-item class="border-b"&gt;
+  &lt;v-list-item-title class="d-flex align-center justify-space-between"&gt;
+    &lt;div class="d-flex align-center"&gt;
+      &lt;v-icon icon="mdi-palette" /&gt;
+      &lt;span class="ms-3"&gt;Theme: {{ currentThemeName }}&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;ThemeToggle show-toggle-button size="small" /&gt;
+  &lt;/v-list-item-title&gt;
+&lt;/v-list-item&gt;
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>8. Best Practices Summary</h2>
+            <ul>
+                <li><strong>Use semantic color names:</strong> <code>bg-general-dialog</code> instead of <code>bg-white</code></li>
+                <li><strong>Provide user control:</strong> Always include theme toggle options</li>
+                <li><strong>Respect system preferences:</strong> Use 'system' mode when appropriate</li>
+                <li><strong>Handle special cases:</strong> Use page overrides for documentation or specific content</li>
+                <li><strong>Test both themes:</strong> Ensure your content works in both light and dark modes</li>
+                <li><strong>Use ThemeProvider:</strong> Wrap components that need specific theme behavior</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Simple demo functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('VpnHood Theme System Examples loaded');
+        });
+    </script>
+</body>
+</html>

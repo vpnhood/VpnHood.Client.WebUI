@@ -9,8 +9,10 @@ import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
+import { initializeGlobalTheme, useTheme } from '@/composables/useTheme';
 
 const vhApp = VpnHoodApp.instance;
+const { getThemeClass } = useTheme();
 
 const isShowErrorDialog = computed<boolean>({
   get: () => {
@@ -35,13 +37,25 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
   }
 })
 
+// Computed class list for v-app
+const appClasses = computed(() => {
+  const classes = ['bg-app-bg', getThemeClass()];
+  if (!vuetify.display.smAndDown.value) {
+    classes.push('px-15');
+  }
+  return classes;
+});
+
 onMounted(async () => {
+  // Initialize theme system
+  initializeGlobalTheme();
 
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
-    if (!document.hidden)
+    if (!document.hidden) {
       vhApp.edgeToEdge();
       await vhApp.reloadState();
+    }
   }, 1000);
 
   // Get the user account
@@ -51,7 +65,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app :class="{'px-15': !vuetify.display.smAndDown.value}" class="bg-app-bg">
+  <v-app :class="appClasses">
 
     <v-layout
       width="100%"
@@ -91,11 +105,19 @@ onMounted(async () => {
 
 <!--suppress CssUnusedSymbol -->
 <style>
-.translate-with-fade-enter-from,
-.short-translate-leave-to{
+/* Theme-aware transitions and animations */
+.theme-light .translate-with-fade-enter-from,
+.theme-light .short-translate-leave-to {
   opacity: 0;
   transform: translateY(50px);
 }
+
+.theme-dark .translate-with-fade-enter-from,
+.theme-dark .short-translate-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
 .translate-with-fade-enter-active,
 .short-translate-leave-active{
   transition: all 0.2s ease;
@@ -105,6 +127,7 @@ onMounted(async () => {
 .short-translate-enter-active{
   transition: all 0.1s ease;
 }
+
 .translate-with-fade-leave-to{
   opacity: 0;
 }
@@ -112,5 +135,18 @@ onMounted(async () => {
 .short-translate-enter-from{
   transform: translateY(-30px);
   opacity: 0;
+}
+
+/* Theme-specific styling */
+.theme-light {
+  --scroll-track: rgb(var(--v-theme-scroll-track));
+  --scroll-thumb: rgb(var(--v-theme-scroll-thumb));
+  --scroll-thumb-hover: rgb(var(--v-theme-scroll-thumb-hover));
+}
+
+.theme-dark {
+  --scroll-track: rgb(var(--v-theme-scroll-track));
+  --scroll-thumb: rgb(var(--v-theme-scroll-thumb));
+  --scroll-thumb-hover: rgb(var(--v-theme-scroll-thumb-hover));
 }
 </style>

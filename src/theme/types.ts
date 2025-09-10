@@ -1,8 +1,10 @@
-﻿// Strict union of ALL theme color tokens used in your vuetify.ts
+import { AppName } from '@/helpers/UiConstants';
+
+// Strict union of ALL theme color tokens used in your vuetify.ts
 export type ThemeColorKey =
   | 'background' | 'on-background' | 'colored-bg-light' | 'colored-bg-dark' | 'app-bg'
   | 'rate-icon' | 'rate-dialog-border' | 'rate-dialog-thanks'
-  | 'app-bar' | 'on-app-bar'
+  | 'app-bar' | 'on-app-bar' | 'skeleton-loader'
   | 'navigation-drawer' | 'navigation-drawer-header' | 'navigation-drawer-version'
   | 'home-app-bar'
   | 'home-bg-grad-1' | 'home-bg-grad-2'
@@ -38,13 +40,41 @@ export type ThemeColorKey =
   | 'btn-style-5' | 'on-btn-style-5'
   | 'btn-style-6' | 'on-btn-style-6'
   | 'btn-style-7'
-  | 'switch-btn'
-  | 'connection-circle-border'
+  | 'switch-btn' | 'connection-circle-border'
   | 'active' | 'on-active' | 'highlight' | 'enable-premium' | 'disable-premium'
   | 'disconnect-warning' | 'on-disconnect-warning'
   | 'version-on-home-debug' | 'on-version-on-home-debug'
   | 'info' | 'on-info' | 'note' | 'on-note' | 'error' | 'warning' | 'on-warning'
-  | 'scroll-track' | 'scroll-thumb' | 'scroll-thumb-hover'
-  | 'skeleton-loader';
+  | 'scroll-track' | 'scroll-thumb' | 'scroll-thumb-hover';
 
+// Theme color names type (Record of all theme color keys to string values)
 export type ThemeColorNames = Record<ThemeColorKey, string>;
+
+// Theme configuration interface
+export interface ThemeConfig {
+  name: string;
+  dark: boolean;
+  colors: ThemeColorNames;
+  variables?: Record<string, string | number>;
+}
+
+// Available theme types
+export type AvailableThemes = AppName.VpnHoodClient | AppName.VpnHoodConnect;
+
+// Theme mode options
+export type ThemeMode = 'light' | 'dark' | 'auto' | 'system';
+
+// Theme context
+export interface ThemeContext {
+  currentTheme: AvailableThemes;
+  isDark: boolean;
+  mode: ThemeMode;
+  systemPrefersDark: boolean;
+}
+
+// Page theme override settings
+export interface PageThemeOverride {
+  routeName: string;
+  theme: AvailableThemes;
+  condition?: () => boolean; // Optional condition for when to apply
+}

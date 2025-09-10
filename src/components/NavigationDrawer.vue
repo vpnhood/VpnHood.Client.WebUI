@@ -7,9 +7,12 @@ import vuetify from '@/theme/vuetify';
 import { AppName } from '@/helpers/UiConstants';
 import type { RouteLocationRaw } from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';
+import ThemeToggle from '@/components/ThemeToggle.vue';
+import { useTheme } from '@/composables/useTheme';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const { currentThemeName } = useTheme();
 
 const props = defineProps<{
   modelValue: boolean
@@ -157,6 +160,20 @@ function edgeToEdgeHeight(bottom: boolean): string{
               {{vhApp.data.userState.userAccount.email}}
             </span>
           </span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Theme selector -->
+      <v-list-item class="border-b">
+        <v-list-item-title class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <v-icon icon="mdi-palette" />
+            <span class="ms-3">Theme: {{ currentThemeName }}</span>
+          </div>
+          <ThemeToggle 
+            show-toggle-button
+            size="small"
+          />
         </v-list-item-title>
       </v-list-item>
 
