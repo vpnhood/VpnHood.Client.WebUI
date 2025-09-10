@@ -43,7 +43,7 @@ async function removeCode() {
     </div>
 
     <!-- user is premium by code -->
-    <config-card v-if="vhApp.isPremiumAccount(true)">
+    <config-card v-if="vhApp.data.isPremiumAccount(true)">
 
       <v-card-title class="text-wrap">{{locale('WOULD_YOU_LIKE_TO_CHANGE')}}</v-card-title>
 
@@ -68,7 +68,7 @@ async function removeCode() {
     </config-card>
 
     <!-- user is premium by purchase subscription from google play -->
-    <config-card v-else-if="vhApp.isPremiumAccount()">
+    <config-card v-else-if="vhApp.data.isPremiumAccount()">
 
       <v-card-title class="text-wrap">{{locale('WOULD_YOU_LIKE_TO_CHANGE')}}</v-card-title>
 

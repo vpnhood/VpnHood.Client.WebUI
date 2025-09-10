@@ -22,7 +22,7 @@ function checkIconVisibility(){
 <template>
   <v-icon
     v-if="checkIconVisibility()"
-    :color="vhApp.premiumIconColor()"
+    :color="vhApp.data.premiumIconColor"
     icon="mdi-crown"
     size="18"
   />

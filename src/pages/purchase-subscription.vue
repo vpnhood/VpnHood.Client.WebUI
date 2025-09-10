@@ -148,7 +148,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
 
     await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
 
-    if (vhApp.data.isConnected && vhApp.isPremiumAccount(true))
+    if (vhApp.data.isConnected && vhApp.data.isPremiumAccount(true))
       purchaseCompleteDialogMessage.value = locale('PREMIUM_CODE_PROCESS_IS_COMPLETE_MESSAGE');
   }
   catch {
@@ -529,7 +529,7 @@ function closeCompleteDialog(showStatistics: boolean) {
           <p>{{ purchaseCompleteDialogMessage }}</p>
 
           <!-- TODO: use theme color -->
-          <v-alert v-if="vhApp.isPremiumAccount(true)"
+          <v-alert v-if="vhApp.data.isPremiumAccount(true)"
                    variant="flat"
                    color="#17083d"
                    density="compact"

@@ -16,6 +16,8 @@
   "DISCONNECTED": "Disconnected",
   "DISCONNECTING": "Disconnecting",
   "STOP_DIAGNOSING": "Stop Diagnosing",
+  "FINDING_BEST_SERVER": "Finding best server",
+  "FINDING_REACHABLE_SERVER": "Finding reachable server",
   "CONNECTED_IN_DIAGNOSTIC_MODE": "You are connected in diagnostic mode.",
   "DIAGNOSING": "Diagnosing",
   "WAITING": "Waiting",
@@ -409,5 +411,6 @@
   "ADAPTER_DNS_CUSTOM_DESC": "Enter your own DNS server.",
   "DNS1_REQUIRED": "Please enter a valid IP address for DNS 1.",
   "INVALID_IP": "Please enter a valid IPv4 or IPv6 address.",
-  "ADAPTER_DNS_DISABLE_ALERT_MSG": "To change DNS settings, you need to turn off Private DNS."
+  "ADAPTER_DNS_DISABLE_ALERT_MSG": "To change DNS settings, you need to turn off Private DNS.",
+  "VPN_SERVICE_REVOKED_MSG": "VPN connection has been revoked by the system or another VPN app."
 }

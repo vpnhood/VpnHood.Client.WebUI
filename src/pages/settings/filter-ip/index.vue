@@ -14,7 +14,7 @@ const locale = i18n.global.t;
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return vhApp.data.userSettings.useVpnAdapterIpFilter && vhApp.isFilterIpByAdapterAvailable();
+    return vhApp.data.isFilterIpByAdapterAvailable;
   },
   set: async (value: boolean) => {
     vhApp.data.userSettings.useVpnAdapterIpFilter = value;
@@ -24,7 +24,7 @@ const useIpFilterByDevice = computed<boolean>({
 
 const useIpFilterByApp = computed<boolean>({
   get: () => {
-    return vhApp.data.userSettings.useAppIpFilter && vhApp.isFilterIpByAppAvailable();
+    return vhApp.data.userSettings.useAppIpFilter && vhApp.data.isFilterIpByAppAvailable;
   },
   set: async (value: boolean) => {
     vhApp.data.userSettings.useAppIpFilter = value;
@@ -44,13 +44,14 @@ const useIpFilterByApp = computed<boolean>({
     <!-- Filter by device -->
     <config-card class="pb-2">
 
-      <v-card-item @click="!vhApp.isFilterIpByAdapterAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
+      <v-card-item @click="!vhApp.data.isFilterIpByAdapterAvailable ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :
+       null ">
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('FILTER_IPS_BY_DEVICE') }}</span>
           <v-switch
             v-model="useIpFilterByDevice"
-            :disabled="!vhApp.isFilterIpByAdapterAvailable()"
+            :disabled="!vhApp.data.isFilterIpByAdapterAvailable"
           />
         </div>
 
@@ -72,13 +73,13 @@ const useIpFilterByApp = computed<boolean>({
     <!-- Filter by App -->
     <config-card>
 
-      <v-card-item @click="!vhApp.isFilterIpByAppAvailable() ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
+      <v-card-item @click="!vhApp.data.isFilterIpByAppAvailable ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('FILTER_IPS_BY_APP') }}</span>
           <v-switch
             v-model="useIpFilterByApp"
-            :disabled="!vhApp.isFilterIpByAppAvailable()"
+            :disabled="!vhApp.data.isFilterIpByAppAvailable"
           />
         </div>
       </v-card-item>

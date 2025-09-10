@@ -52,15 +52,13 @@ function stateIcon(): string | null {
 
   switch (vhApp.data.connectionState) {
     case AppConnectionState.Connected:
+      if (!vhApp.data.state.canDiagnose)
+        return 'mdi-stethoscope';
       if (!bandwidthUsage())
         return 'mdi-check';
       return null;
     case AppConnectionState.None:
       return 'mdi-power-plug-off';
-    case AppConnectionState.Connecting:
-      return 'mdi-power-plug';
-    case AppConnectionState.Diagnosing:
-      return 'mdi-stethoscope';
     case AppConnectionState.Waiting:
       return 'mdi-timer-sand';
     default:
@@ -107,6 +105,7 @@ function processConnectedAnimation(): void {
   if (showConnectedAnimation.value === false)
     showConnectedAnimation.value = true;
 }
+const knowledge = ref(33)
 </script>
 
 <template>
@@ -130,7 +129,24 @@ function processConnectedAnimation(): void {
     <div class="d-flex flex-column align-center justify-center position-relative fill-height">
 
       <!-- Connection state text -->
-      <span class="text-body-2">{{ vhApp.data.connectionStateText }}</span>
+      <span class="text-caption">{{ vhApp.data.connectionStateText }}</span>
+
+      <!-- Progress bar for connecting state -->
+      <div v-if="vhApp.data.state.stateProgress" class="w-50 text-center text-caption position-absolute" style="bottom: 10px;">
+        <v-progress-linear
+          v-model="vhApp.data.state.stateProgress"
+          color="enable-premium"
+          bg-opacity="0.1"
+          height="5"
+          rounded="pill"
+          rounded-bar
+          width="80"
+          class="mx-auto"
+        >
+        </v-progress-linear>
+        <span style="font-size: 10px;">{{ knowledge }}%</span>
+      </div>
+
 
       <!-- Usage -->
       <div class="d-flex flex-column align-center" v-if="vhApp.data.isConnected && bandwidthUsage()">
@@ -139,7 +155,7 @@ function processConnectedAnimation(): void {
       </div>
 
       <!-- Check -->
-      <v-icon v-else-if="stateIcon()" size="50" color="white">{{ stateIcon() }}</v-icon>
+      <v-icon v-else-if="stateIcon()" size="40" color="white">{{ stateIcon() }}</v-icon>
 
       <!-- Access Key expire date -->
       <p v-if="getExpireDate()"

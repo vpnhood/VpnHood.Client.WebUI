@@ -40,7 +40,7 @@ const props = defineProps<{
 
         <!-- Feature image -->
         <v-img
-          :eager="true"
+          eager
           :src="vhApp.getAssetPath(props.image)"
           alt="Symbol image"
           width="100%"
@@ -49,7 +49,7 @@ const props = defineProps<{
         />
 
       <!-- Tutorial steps -->
-      <card-on-grad v-if="!props.isPremium || vhApp.isPremiumAccount()" class="pb-2">
+      <card-on-grad v-if="!props.isPremium || vhApp.data.isPremiumAccount()" class="pb-2">
 
         <!-- Help steps -->
           <v-card-item>

@@ -2492,6 +2492,7 @@ export class AppState implements IAppState {
     systemPrivateDns?: PrivateDns | null;
     isWaitingForInternalAd?: boolean | null;
     stateProgress?: number | null;
+    isDiagnosing!: boolean;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2538,6 +2539,7 @@ export class AppState implements IAppState {
             this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : <any>null;
             this.isWaitingForInternalAd = _data["isWaitingForInternalAd"] !== undefined ? _data["isWaitingForInternalAd"] : <any>null;
             this.stateProgress = _data["stateProgress"] !== undefined ? _data["stateProgress"] : <any>null;
+            this.isDiagnosing = _data["isDiagnosing"] !== undefined ? _data["isDiagnosing"] : <any>null;
         }
     }
 
@@ -2579,6 +2581,7 @@ export class AppState implements IAppState {
         data["systemPrivateDns"] = this.systemPrivateDns ? this.systemPrivateDns.toJSON() : <any>null;
         data["isWaitingForInternalAd"] = this.isWaitingForInternalAd !== undefined ? this.isWaitingForInternalAd : <any>null;
         data["stateProgress"] = this.stateProgress !== undefined ? this.stateProgress : <any>null;
+        data["isDiagnosing"] = this.isDiagnosing !== undefined ? this.isDiagnosing : <any>null;
         return data;
     }
 }
@@ -2613,6 +2616,7 @@ export interface IAppState {
     systemPrivateDns?: PrivateDns | null;
     isWaitingForInternalAd?: boolean | null;
     stateProgress?: number | null;
+    isDiagnosing: boolean;
 }
 
 export enum AppConnectionState {
@@ -4416,6 +4420,7 @@ export enum ExceptionType {
     PremiumOnly = "PremiumOnlyException",
     AdBlocker = "AdBlockerException",
     RequestQuickLaunch = "RequestQuickLaunchException",
+    VpnServiceRevoked = "VpnServiceRevokedException",
 }
 
 export enum SessionErrorCode {

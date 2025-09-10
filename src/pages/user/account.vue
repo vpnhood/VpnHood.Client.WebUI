@@ -34,11 +34,11 @@ function formatDate(date: Date | null | undefined): string | null {
 </script>
 
 <template>
-  <v-sheet :class="{'primary-bg-grad' : vhApp.isPremiumAccount()}">
+  <v-sheet :class="{'primary-bg-grad' : vhApp.data.isPremiumAccount()}">
     <app-bar/>
 
     <!-- Premium image -->
-    <div v-if="vhApp.isPremiumAccount()" class="text-center">
+    <div v-if="vhApp.data.isPremiumAccount()" class="text-center">
       <v-img
         :eager="true"
         :src="vhApp.getAssetPath('you-are-premium.webp')"
@@ -65,7 +65,7 @@ function formatDate(date: Date | null | undefined): string | null {
       <v-card-actions>
         <btn-style-1
           :text="locale('SIGN_OUT')"
-          :color="vhApp.isPremiumAccount() ? 'active' : 'highlight'"
+          :color="vhApp.data.isPremiumAccount() ? 'active' : 'highlight'"
           class="ms-auto"
           size="small"
           @click="showConfirmSignOut = true"
@@ -75,7 +75,7 @@ function formatDate(date: Date | null | undefined): string | null {
     </config-card>
 
     <!-- Premium code details -->
-    <config-card v-if="vhApp.isPremiumAccount(true)">
+    <config-card v-if="vhApp.data.isPremiumAccount(true)">
 
       <v-card-title>{{locale('PREMIUM_CODE_DETAILS')}}</v-card-title>
 
@@ -142,7 +142,7 @@ function formatDate(date: Date | null | undefined): string | null {
     </config-card>
 
     <!-- Subscriptions details -->
-    <config-card v-else-if="vhApp.isPremiumAccount()">
+    <config-card v-else-if="vhApp.data.isPremiumAccount()">
 
       <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
 

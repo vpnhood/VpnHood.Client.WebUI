@@ -31,6 +31,7 @@ declare module 'vue-router/auto-routes' {
     'ALWAYS_ON': RouteRecordInfo<'ALWAYS_ON', '/settings/always-on', Record<never, never>, Record<never, never>>,
     'CLOAK_MODE': RouteRecordInfo<'CLOAK_MODE', '/settings/cloak-mode', Record<never, never>, Record<never, never>>,
     'DNS': RouteRecordInfo<'DNS', '/settings/dns', Record<never, never>, Record<never, never>>,
+    'DNS_GO_PREMIUM': RouteRecordInfo<'DNS_GO_PREMIUM', '/settings/dns/dns-go-premium', Record<never, never>, Record<never, never>>,
     'PRIVATE_DNS': RouteRecordInfo<'PRIVATE_DNS', '/settings/dns/private-dns', Record<never, never>, Record<never, never>>,
     'ERROR_PRIVATE_DNS': RouteRecordInfo<'ERROR_PRIVATE_DNS', '/settings/dns/private-dns/error-private-dns', Record<never, never>, Record<never, never>>,
     'TURN_OFF_PRIVATE_DNS': RouteRecordInfo<'TURN_OFF_PRIVATE_DNS', '/settings/dns/private-dns/turn-off-private-dns', Record<never, never>, Record<never, never>>,

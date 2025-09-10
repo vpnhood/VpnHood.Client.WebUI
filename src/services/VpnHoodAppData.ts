@@ -60,12 +60,15 @@ export class VpnHoodAppData {
   }
 
   get connectionStateText(): string {
-    if (this.connectionState === AppConnectionState.WaitingForAd) {
-      return i18n.global.t('LOADING_AD');
-    }
-
-    if (this.isUnstable) {
-      return i18n.global.t('UNSTABLE');
+    switch (this.connectionState) {
+      case AppConnectionState.WaitingForAd:
+        return i18n.global.t('LOADING_AD');
+      case AppConnectionState.FindingReachableServer:
+        return i18n.global.t('FINDING_REACHABLE_SERVER');
+      case AppConnectionState.FindingBestServer:
+        return i18n.global.t('FINDING_BEST_SERVER');
+      case AppConnectionState.Unstable:
+        return i18n.global.t('UNSTABLE');
     }
 
     return this.connectionState === AppConnectionState.None
@@ -79,5 +82,48 @@ export class VpnHoodAppData {
 
   get isUnstable(): boolean {
     return this.state.connectionState === AppConnectionState.Unstable;
+  }
+
+  get isPremiumFeatureAvailable(): boolean {
+    return !this.features.isPremiumFlagSupported || this.isPremiumAccount();
+  }
+
+  get premiumIconColor(): string {
+    return this.isPremiumFeatureAvailable ? 'enable-premium' : 'disable-premium';
+  }
+
+  // TODO: optimize this methods
+  get isFilterIpAvailable(): boolean {
+    return this.isFilterIpByAdapterAvailable || this.isFilterIpByAppAvailable;
+  }
+  get isFilterIpTurnOn(): boolean {
+    return (this.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable) ||
+      (this.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable);
+  }
+  get isFilterIpByAdapterAvailable(): boolean {
+    if (!this.features.isPremiumFlagSupported)
+      return true;
+    return this.isPremiumAccount() || this.userSettings.useVpnAdapterIpFilter;
+  }
+  get isFilterIpByAppAvailable(): boolean {
+    if (!this.features.isPremiumFlagSupported)
+      return true;
+    return this.isPremiumAccount() || this.userSettings.useAppIpFilter;
+  }
+
+  public isLocalNetworkAvailable(): boolean {
+    if (!this.isConnected)
+      return true;
+
+    return this.state.sessionInfo?.isLocalNetworkAllowed ?? true;
+  }
+
+  public isPremiumAccount(byPremiumCode: boolean = false): boolean {
+    // User is premium by code
+    if (byPremiumCode)
+      return (this.state.clientProfile?.isPremiumAccount == true) && (this.state.clientProfile?.hasAccessCode == true);
+
+    // User purchased subscription from Google Play
+    return this.state.clientProfile?.isPremiumAccount == true;
   }
 }

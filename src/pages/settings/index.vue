@@ -57,8 +57,8 @@ const settingsItem: SettingsItem[] = [
     isPremium: false,
     isShow: vhApp.data.features.isLocalNetworkSupported,
     isDisconnectRequired: true,
-    isDisabled: !vhApp.isIncludeLocalNetworkAvailable(),
-    isShowEnforcedByServerAlert: vhApp.data.isConnected && !vhApp.data.state.sessionInfo?.isLocalNetworkAllowed,
+    isDisabled: !vhApp.data.isLocalNetworkAvailable,
+    isShowEnforcedByServerAlert: !vhApp.data.isLocalNetworkAvailable,
     model: includeLocalNetwork
   },
   {
@@ -66,7 +66,7 @@ const settingsItem: SettingsItem[] = [
     subtitle: "FILTER_IP_ADDRESSES_DESC",
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AppIpFilter),
     status: {
-      state: vhApp.isFilterIpTurnOn(),
+      state: vhApp.data.isFilterIpTurnOn,
       onText: locale('ON'),
       offText: locale('OFF')
     },
@@ -114,7 +114,7 @@ const settingsItem: SettingsItem[] = [
       offText: locale('DEFAULT')
     },
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
-    click: {name: 'DNS'}
+    click: {name: vhApp.data.isPremiumAccount() ? 'DNS' : 'DNS_GO_PREMIUM'}
   }
 ]
 

@@ -34,7 +34,7 @@ function calcUnit(total: number): string{
     }">
 
       <!-- Date -->
-      <config-card v-if="vhApp.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
+      <config-card v-if="vhApp.data.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
         <v-card-title>
           {{locale('DATE')}}
           <v-icon icon="mdi-calendar-range"/>
@@ -44,10 +44,10 @@ function calcUnit(total: number): string{
         <v-card-text>
           <ul class="info-table">
 
-            <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()" class="border-b">
+            <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount()" class="border-b">
               <span>{{locale('PREMIUM_BY')}}</span>
               <span class="text-active">
-                {{locale(vhApp.isPremiumAccount(true) ? 'PREMIUM_CODE' : 'PURCHASE_SUBSCRIPTION')}}
+                {{locale(vhApp.data.isPremiumAccount(true) ? 'PREMIUM_CODE' : 'PURCHASE_SUBSCRIPTION')}}
               </span>
             </li>
 
@@ -130,7 +130,7 @@ function calcUnit(total: number): string{
       </config-card>
 
       <!-- Devices -->
-      <config-card v-if="vhApp.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
+      <config-card v-if="vhApp.data.isPremiumAccount() && vhApp.data.state.sessionInfo.accessInfo">
         <v-card-title>
           {{locale('DEVICES')}}
           <v-icon icon="mdi-cellphone-link"/>
@@ -225,7 +225,7 @@ function calcUnit(total: number): string{
       </config-card>
 
       <!-- Total traffic -->
-      <config-card v-if="vhApp.isPremiumAccount()">
+      <config-card v-if="vhApp.data.isPremiumAccount()">
         <v-card-title>
           {{locale('TOTAL_TRAFFIC')}}
           <v-icon icon="mdi-chart-timeline-variant"/>

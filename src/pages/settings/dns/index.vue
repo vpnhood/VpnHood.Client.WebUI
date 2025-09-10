@@ -120,8 +120,8 @@ function isShowEnforcedByServerAlert() {
 
     </config-card>
 
-
-    <config-card class="pa-3" :disabled="!vhApp.isPremiumAccount()">
+    <!-- Custom DNS card -->
+    <config-card class="pa-3" :disabled="!vhApp.data.isPremiumAccount()">
 
       <!-- Title, status and premium icon -->
       <div class="d-flex align-center justify-space-between pb-1">

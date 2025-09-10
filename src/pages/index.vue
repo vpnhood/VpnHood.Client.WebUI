@@ -52,7 +52,7 @@ function isShowCountdown(): boolean {
     return false;
 
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.sessionExpirationTime;
-  return !vhApp.isPremiumAccount() && hasExpireTime && vhApp.data.isConnected;
+  return !vhApp.data.isPremiumAccount && hasExpireTime && vhApp.data.isConnected;
 }
 
 function getActiveServerNameOrLocation(): string {
@@ -75,9 +75,7 @@ function getActiveServerNameOrLocation(): string {
 
 // Return text for connected button based on connection state
 function connectButtonText(): string {
-  if (!vhApp.data.state.canDiagnose &&
-    (vhApp.data.connectionState === AppConnectionState.Connected
-      || vhApp.data.connectionState === AppConnectionState.Connecting))
+  if (vhApp.data.state.isDiagnosing)
     return locale('STOP_DIAGNOSING');
   else
     switch (vhApp.data.connectionState) {
@@ -173,8 +171,9 @@ function isDebugDataHasValue(): boolean {
   <v-sheet
     id="homeContainer"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
-                (vhApp.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.data.isConnected)) ?
-                'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
+                (vhApp.data.isPremiumAccount ||(vhApp.data.state.sessionInfo?.isPremiumSession &&
+                vhApp.data.isConnected)) ?
+                'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode, 'position-relative']"
   >
 
     <v-row :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined" justify="center"
@@ -230,7 +229,7 @@ function isDebugDataHasValue(): boolean {
             <CountDown v-if="isShowCountdown()" tabindex="2"/>
 
             <!-- You are premium button -->
-            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.isPremiumAccount()"
+            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount"
                     prepend-icon="mdi-crown"
                     :text="locale('YOU_ARE_PREMIUM')"
                     color="enable-premium"

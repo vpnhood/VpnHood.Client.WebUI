@@ -101,6 +101,7 @@ export class VpnHoodApp {
     else if (this.data.state.isQuickLaunchRecommended)
       await router.push({name: 'QUICK_LAUNCH'});
 
+
     // Show the update message if the user has not ignored or more than 24 hours have passed
     if (this.data.state.updaterStatus?.prompt)
       this.data.uiState.showUpdateSnackbar = true;
@@ -312,15 +313,6 @@ export class VpnHoodApp {
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
-  public isPremiumAccount(byPremiumCode: boolean = false): boolean {
-    // User is premium by code
-    if (byPremiumCode)
-      return (this.data.state.clientProfile?.isPremiumAccount == true) && (this.data.state.clientProfile?.hasAccessCode == true);
-
-    // User purchased subscription from Google Play
-    return this.data.state.clientProfile?.isPremiumAccount == true;
-  }
-
   public async removePremium(): Promise<void> {
     if (this.data.clientProfileInfos.find(x => x.isForAccount))
       await this.removePremiumServerKey();
@@ -352,10 +344,6 @@ export class VpnHoodApp {
     await this.clientProfileClient.update(clientProfile.clientProfileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: null })
     }));
-  }
-
-  public premiumIconColor(): string {
-    return (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount()) ? 'enable-premium' : 'disable-premium';
   }
 
   public async signIn(onPurchase = false): Promise<void> {
@@ -460,7 +448,6 @@ export class VpnHoodApp {
       }
     `;
     document.head.appendChild(styleElement);
-
   }
 
   public isLocationAutoSelected(value?: string): boolean {
@@ -468,37 +455,6 @@ export class VpnHoodApp {
     const locationToCheck = value ?? this.data.state.clientProfile?.selectedLocationInfo?.serverLocation;
 
     return autoSelectValues.includes(locationToCheck ?? '');
-  }
-
-  public isFilterIpAvailable(): boolean {
-    return this.isFilterIpByAdapterAvailable() || this.isFilterIpByAppAvailable();
-  }
-  public isFilterIpTurnOn(): boolean {
-    return (this.data.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable()) ||
-      (this.data.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable());
-  }
-  public isFilterIpByAdapterAvailable(): boolean {
-    if (!this.data.features.isPremiumFlagSupported)
-      return true;
-    return this.isPremiumAccount() || this.data.userSettings.useVpnAdapterIpFilter;
-  }
-  public isFilterIpByAppAvailable(): boolean {
-    if (!this.data.features.isPremiumFlagSupported)
-      return true;
-    return this.isPremiumAccount() || this.data.userSettings.useAppIpFilter;
-  }
-  public isIncludeLocalNetworkAvailable(): boolean {
-    const isLocalNetworkAllowed: boolean | undefined = this.data.state.sessionInfo?.isLocalNetworkAllowed;
-
-    if (this.data.isConnected){
-      if (!this.data.features.isPremiumFlagSupported || this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork)
-        return  isLocalNetworkAllowed !== undefined ? isLocalNetworkAllowed : true;
-
-      return false;
-    }
-    else {
-      return !this.data.features.isPremiumFlagSupported || this.isPremiumAccount() || this.data.userSettings.includeLocalNetwork;
-    }
   }
 
 }

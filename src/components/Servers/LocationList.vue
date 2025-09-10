@@ -46,7 +46,7 @@ function listHasGroup(): boolean{
 
       <!-- Free locations group -->
       <location-group
-        v-if="!vhApp.isPremiumAccount()"
+        v-if="!vhApp.data.isPremiumAccount"
         :list-type="locationListType.Free"
         :group-title="locale('FREE_LOCATIONS')"
         :client-profile-id="props.clientProfile.clientProfileId"

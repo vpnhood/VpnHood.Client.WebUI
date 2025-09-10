@@ -71,12 +71,16 @@ async function internalAdDismissed(learnMore: boolean, adError: string | null = 
     return;
 
   allowLeavePage.value = true;
-  await router.replace({ name: learnMore ? 'PURCHASE_SUBSCRIPTION' : 'HOME' });
 
   if (adError)
     await vhApp.apiClient.internalAdError(adError);
   else
     await vhApp.apiClient.internalAdDismiss(learnMore ? ShowAdResult.Clicked : ShowAdResult.Closed);
+
+  vhApp.data.state.isWaitingForInternalAd = false;
+  await vhApp.reloadState();
+
+  await router.replace({ name: learnMore ? 'PURCHASE_SUBSCRIPTION' : 'HOME' });
 }
 
 onBeforeRouteLeave((to, from, next) => {

@@ -125,6 +125,9 @@ export class ErrorHandler {
       case ExceptionType.Maintenance:
         return { localeKey: 'MAINTENANCE_MODE_MSG' };
 
+      case ExceptionType.VpnServiceRevoked:
+        return { localeKey: 'VPN_SERVICE_REVOKED_MSG' };
+
       // Could not connect to any server in the selected location
       case ExceptionType.UnreachableServerLocation:
         return this.unreachableServerLocationExceptionHandler();
