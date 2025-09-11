@@ -17,7 +17,7 @@
   "DISCONNECTING": "Disconnecting",
   "STOP_DIAGNOSING": "Stop Diagnosing",
   "FINDING_BEST_SERVER": "Finding best server",
-  "FINDING_REACHABLE_SERVER": "Finding reachable server",
+  "FINDING_NETWORK": "Finding network",
   "CONNECTED_IN_DIAGNOSTIC_MODE": "You are connected in diagnostic mode.",
   "DIAGNOSING": "Diagnosing",
   "WAITING": "Waiting",

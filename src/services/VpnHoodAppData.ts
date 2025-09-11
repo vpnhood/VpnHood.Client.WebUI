@@ -64,7 +64,7 @@ export class VpnHoodAppData {
       case AppConnectionState.WaitingForAd:
         return i18n.global.t('LOADING_AD');
       case AppConnectionState.FindingReachableServer:
-        return i18n.global.t('FINDING_REACHABLE_SERVER');
+        return i18n.global.t('FINDING_NETWORK');
       case AppConnectionState.FindingBestServer:
         return i18n.global.t('FINDING_BEST_SERVER');
       case AppConnectionState.Unstable:
