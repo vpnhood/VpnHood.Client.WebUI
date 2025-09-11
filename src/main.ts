@@ -68,7 +68,7 @@ async function main(): Promise<void> {
 
     // To compensate for the delay in applying edge to edge on the first run, call it in this section as well;
     // otherwise it is called every second on the App.vue.
-    vpnHoodApp.edgeToEdge();
+    vpnHoodApp.data.edgeToEdge();
 
     // Global catch exception
     app.config.errorHandler = (err: unknown) => vpnHoodApp.processError(err);

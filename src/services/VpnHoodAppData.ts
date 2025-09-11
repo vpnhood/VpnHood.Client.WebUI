@@ -97,18 +97,72 @@ export class VpnHoodAppData {
     return this.isFilterIpByAdapterAvailable || this.isFilterIpByAppAvailable;
   }
   get isFilterIpTurnOn(): boolean {
-    return (this.userSettings.useVpnAdapterIpFilter && this.isFilterIpByAdapterAvailable) ||
-      (this.userSettings.useAppIpFilter && this.isFilterIpByAppAvailable);
+    return this.userSettings.useVpnAdapterIpFilter || this.userSettings.useAppIpFilter;
   }
   get isFilterIpByAdapterAvailable(): boolean {
     if (!this.features.isPremiumFlagSupported)
       return true;
     return this.isPremiumAccount() || this.userSettings.useVpnAdapterIpFilter;
   }
+
   get isFilterIpByAppAvailable(): boolean {
     if (!this.features.isPremiumFlagSupported)
       return true;
     return this.isPremiumAccount() || this.userSettings.useAppIpFilter;
+  }
+
+  get getEdgeToEdgeTopHeight(): number | null {
+    let topHeight = this.state.systemBarsInfo.topHeight;
+    if (topHeight > 0)
+      topHeight = Math.ceil(topHeight / window.devicePixelRatio) + 3;
+
+    return topHeight > 0 ? topHeight : null;
+  }
+
+  get getEdgeToEdgeBottomHeight(): number | null {
+    let bottomHeight = this.state.systemBarsInfo.bottomHeight;
+    if (bottomHeight > 0)
+      bottomHeight = Math.ceil(bottomHeight / window.devicePixelRatio) + 3;
+
+    return bottomHeight > 0 ? bottomHeight : null;
+  }
+
+  //Add padding to the pages for handle edge-to-edge feature
+  public edgeToEdge(): void {
+    const paddingTop = this.getEdgeToEdgeTopHeight;
+    const paddingBottom = this.getEdgeToEdgeBottomHeight;
+
+    if (paddingTop === this.uiState.edgeToEdgeTop && paddingBottom === this.uiState.edgeToEdgeBottom)
+      return;
+
+    this.uiState.edgeToEdgeTop = paddingTop;
+    this.uiState.edgeToEdgeBottom = paddingBottom;
+
+    // Unique ID for the injected style
+    const styleId = 'edge-to-edge-style';
+
+    // Find and remove existing style element
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const styleElement = document.createElement('style');
+    styleElement.id = styleId;
+    styleElement.textContent = `
+      .v-main > .v-sheet {
+        ${paddingTop ? `padding-top: ${paddingTop}px !important;` : ''}
+        ${paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : ''}
+      }
+    `;
+    document.head.appendChild(styleElement);
+  }
+
+  public isLocationAutoSelected(value?: string): boolean {
+    const autoSelectValues = ['*', '*/*'];
+    const locationToCheck = value ?? this.state.clientProfile?.selectedLocationInfo?.serverLocation;
+
+    return autoSelectValues.includes(locationToCheck ?? '');
   }
 
   public isLocalNetworkAvailable(): boolean {

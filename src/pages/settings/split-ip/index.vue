@@ -14,7 +14,7 @@ const locale = i18n.global.t;
 
 const useIpFilterByDevice = computed<boolean>({
   get: () => {
-    return vhApp.data.isFilterIpByAdapterAvailable;
+    return vhApp.data.userSettings.useVpnAdapterIpFilter;
   },
   set: async (value: boolean) => {
     vhApp.data.userSettings.useVpnAdapterIpFilter = value;
@@ -24,7 +24,7 @@ const useIpFilterByDevice = computed<boolean>({
 
 const useIpFilterByApp = computed<boolean>({
   get: () => {
-    return vhApp.data.userSettings.useAppIpFilter && vhApp.data.isFilterIpByAppAvailable;
+    return vhApp.data.userSettings.useAppIpFilter;
   },
   set: async (value: boolean) => {
     vhApp.data.userSettings.useAppIpFilter = value;
@@ -44,11 +44,10 @@ const useIpFilterByApp = computed<boolean>({
     <!-- Filter by device -->
     <config-card class="pb-2">
 
-      <v-card-item @click="!vhApp.data.isFilterIpByAdapterAvailable ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :
-       null ">
+      <v-card-item>
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('FILTER_IPS_BY_DEVICE') }}</span>
+          <span>{{ locale('FILTER_IPS_BY_ADAPTER') }}</span>
           <v-switch
             v-model="useIpFilterByDevice"
             :disabled="!vhApp.data.isFilterIpByAdapterAvailable"
@@ -64,7 +63,7 @@ const useIpFilterByApp = computed<boolean>({
         <btn-style-4
           :text="locale('MANAGE_IP_ADDRESSES')"
           :append-icon="Util.getLocalizedRightChevron()"
-          @click="router.push({name: 'FILTER_IPS_BY_DEVICE'})"
+          @click="router.push({name: 'SPLIT_IPS_BY_ADAPTER'})"
         />
       </v-card-item>
 
@@ -73,10 +72,10 @@ const useIpFilterByApp = computed<boolean>({
     <!-- Filter by App -->
     <config-card>
 
-      <v-card-item @click="!vhApp.data.isFilterIpByAppAvailable ? router.push({name: 'PURCHASE_SUBSCRIPTION'}) :  null ">
+      <v-card-item>
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('FILTER_IPS_BY_APP') }}</span>
+          <span>{{ locale('SPLIT_IPS_BY_APP') }}</span>
           <v-switch
             v-model="useIpFilterByApp"
             :disabled="!vhApp.data.isFilterIpByAppAvailable"
@@ -89,7 +88,7 @@ const useIpFilterByApp = computed<boolean>({
         <btn-style-4
           :text="locale('MANAGE_IP_ADDRESSES')"
           :append-icon="Util.getLocalizedRightChevron()"
-          @click="router.push({name: 'FILTER_IPS_BY_APP'})"
+          @click="router.push({name: 'SPLIT_IPS_BY_APP'})"
         />
       </v-card-item>
 

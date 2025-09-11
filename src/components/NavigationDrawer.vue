@@ -81,10 +81,10 @@ function navigateByRouter(to: RouteLocationRaw){
 }
 function edgeToEdgeHeight(bottom: boolean): string{
   if (bottom){
-    const paddingBottom = vhApp.getEdgeToEdgeBottomHeight();
+    const paddingBottom = vhApp.data.getEdgeToEdgeBottomHeight;
     return paddingBottom ? `padding-bottom: ${paddingBottom}px !important;` : '';
   }
-  const paddingTop = vhApp.getEdgeToEdgeTopHeight();
+  const paddingTop = vhApp.data.getEdgeToEdgeTopHeight;
   return paddingTop ? `padding-top: ${paddingTop+6}px !important;` : '';
 }
 </script>

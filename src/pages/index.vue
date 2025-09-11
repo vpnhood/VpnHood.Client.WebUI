@@ -63,10 +63,10 @@ function getActiveServerNameOrLocation(): string {
   // App is VpnHoodCONNECT
   const serverLocationInfo = vhApp.getCurrentServerLocationInfo();
 
-  if (!serverLocationInfo || vhApp.isLocationAutoSelected(serverLocationInfo.countryCode))
+  if (!serverLocationInfo || vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode))
     return i18n.global.t('AUTO_SELECT');
 
-  const text = vhApp.isLocationAutoSelected(serverLocationInfo.regionName)
+  const text = vhApp.data.isLocationAutoSelected(serverLocationInfo.regionName)
     ? serverLocationInfo.countryName
     : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
 
@@ -90,10 +90,6 @@ function connectButtonText(): string {
       default:
         return locale('DISCONNECT');
     }
-}
-
-function isIpFilterAvailable(): boolean {
-  return vhApp.data.userSettings.useVpnAdapterIpFilter || vhApp.data.userSettings.useAppIpFilter;
 }
 function isCustomEndpointAvailable(): boolean {
   if (!vhApp.data.state.clientProfile?.customServerEndpoints) return false;
@@ -171,7 +167,7 @@ function isDebugDataHasValue(): boolean {
   <v-sheet
     id="homeContainer"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
-                (vhApp.data.isPremiumAccount ||(vhApp.data.state.sessionInfo?.isPremiumSession &&
+                (vhApp.data.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession &&
                 vhApp.data.isConnected)) ?
                 'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode, 'position-relative']"
   >
@@ -229,7 +225,7 @@ function isDebugDataHasValue(): boolean {
             <CountDown v-if="isShowCountdown()" tabindex="2"/>
 
             <!-- You are premium button -->
-            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount"
+            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount()"
                     prepend-icon="mdi-crown"
                     :text="locale('YOU_ARE_PREMIUM')"
                     color="enable-premium"
@@ -275,7 +271,7 @@ function isDebugDataHasValue(): boolean {
 
           <!-- Show IP icon if IP-filter option is enabled -->
           <v-col cols="2" class="d-inline-flex justify-end ga-1">
-            <v-icon v-if="isIpFilterAvailable()"
+            <v-icon v-if="vhApp.data.isFilterIpTurnOn"
                     icon="mdi-filter-cog-outline"
                     size="17px"
                     color="white"

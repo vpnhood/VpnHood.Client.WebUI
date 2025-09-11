@@ -122,14 +122,14 @@ function closeCustomEndpointDialog(): void {
         <template v-for="(serverLocationInfo, index) in clientProfileInfo.locationInfos">
             <span
               v-if="!serverLocationInfo.isNestedCountry
-                && !vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)
+                && !vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode)
                 && index <= maximumLocationOnCollapsed"
               :key="index"
               class="rounded-circle overflow-hidden d-inline-flex align-center me-1 justify-center border"
               style="width: 25px; height: 25px;"
             >
               <!-- Auto select icon -->
-              <v-icon v-if="vhApp.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
+              <v-icon v-if="vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
                       color="fastest-server" size="27"></v-icon>
 
               <!-- Country flag -->

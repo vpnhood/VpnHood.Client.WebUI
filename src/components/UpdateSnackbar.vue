@@ -34,7 +34,7 @@ async function ignoreUpdate() {
     :timeout="-1"
     :color="vhApp.data.state.updaterStatus?.versionStatus === VersionStatus.Deprecated ? 'update-snackbar-warning' :
     'update-snackbar-alert'"
-    :style="`margin-top: ${vhApp.getEdgeToEdgeTopHeight()}px;`"
+    :style="`margin-top: ${vhApp.data.getEdgeToEdgeTopHeight}px;`"
   >
     <p class="text-subtitle-1 mb-3">
       {{vhApp.data.state.updaterStatus?.versionStatus === VersionStatus.Deprecated

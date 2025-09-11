@@ -17,8 +17,8 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
   <!-- Page header -->
   <div
     :class="[!vhApp.isConnectApp() ?'elevation-1 bg-app-bar' : 'text-white', 'mb-3 mx-n4']"
-    :style="(!vhApp.isConnectApp() && vhApp.getEdgeToEdgeTopHeight()) ?
-    `padding-top: ${vhApp.getEdgeToEdgeTopHeight()}px !important; margin-top: -${vhApp.getEdgeToEdgeTopHeight()}px !important;`: ''"
+    :style="(!vhApp.isConnectApp() && vhApp.data.getEdgeToEdgeTopHeight) ?
+    `padding-top: ${vhApp.data.getEdgeToEdgeTopHeight}px !important; margin-top: -${vhApp.data.getEdgeToEdgeTopHeight}px !important;`: ''"
   >
     <template v-if="!vhApp.data.features.isTv">
       <!-- Back button -->

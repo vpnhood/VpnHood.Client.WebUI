@@ -11,8 +11,8 @@ const locale = i18n.global.t;
 const showConnectedAnimation = ref<boolean | null>(null);
 
 function getExpireDate(): string | null {
-  if ((!vhApp.data.state.clientProfile?.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
-    || vhApp.data.connectionState !== AppConnectionState.Connected
+  if ((!vhApp.data.isPremiumAccount() && !vhApp.data.features.isPremiumFlagSupported)
+    || !vhApp.data.isConnected
     || !vhApp.data.state.sessionInfo?.accessInfo?.expirationTime)
     return null;
 
@@ -105,7 +105,6 @@ function processConnectedAnimation(): void {
   if (showConnectedAnimation.value === false)
     showConnectedAnimation.value = true;
 }
-const knowledge = ref(33)
 </script>
 
 <template>
@@ -132,7 +131,10 @@ const knowledge = ref(33)
       <span class="text-caption">{{ vhApp.data.connectionStateText }}</span>
 
       <!-- Progress bar for connecting state -->
-      <div v-if="vhApp.data.state.stateProgress" class="w-50 text-center text-caption position-absolute" style="bottom: 10px;">
+      <div v-if="vhApp.data.state.stateProgress !== null"
+           class="w-50 text-center text-caption position-absolute"
+           style="bottom: 10px;"
+      >
         <v-progress-linear
           v-model="vhApp.data.state.stateProgress"
           color="enable-premium"
@@ -144,7 +146,7 @@ const knowledge = ref(33)
           class="mx-auto"
         >
         </v-progress-linear>
-        <span style="font-size: 10px;">{{ knowledge }}%</span>
+        <span style="font-size: 10px;">{{ vhApp.data.state.stateProgress }}%</span>
       </div>
 
 

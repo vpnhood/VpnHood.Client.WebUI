@@ -68,7 +68,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
       <!------------------------------- Location flag ------------------------------->
         <!---- Fastest icon ---->
         <v-icon
-          v-if="vhApp.isLocationAutoSelected(location.countryCode)"
+          v-if="vhApp.data.isLocationAutoSelected(location.countryCode)"
           icon="mdi-lightning-bolt-outline"
           size="31"
           :color="!isActiveItem(location) ? 'fastest-server' : ''"
@@ -87,7 +87,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
         <div :class="[{'text-caption': location.isNestedCountry},'text-truncate flex-1-1-0']">
 
           <!---- Fastest name ---->
-          <template v-if="vhApp.isLocationAutoSelected(location.countryCode)" >
+          <template v-if="vhApp.data.isLocationAutoSelected(location.countryCode)" >
             <span>{{ locale('FASTEST') }}</span>
             <span class="flasher text-disabled text-caption ms-1">({{ locale('RECOMMENDED') }})</span>
           </template>

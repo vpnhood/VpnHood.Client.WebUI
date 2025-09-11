@@ -62,15 +62,15 @@ const settingsItem: SettingsItem[] = [
     model: includeLocalNetwork
   },
   {
-    title: "FILTER_IP_ADDRESSES",
-    subtitle: "FILTER_IP_ADDRESSES_DESC",
+    title: "SPLIT_IP_ADDRESSES",
+    subtitle: "SPLIT_IP_ADDRESSES_DESC",
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AppIpFilter),
     status: {
       state: vhApp.data.isFilterIpTurnOn,
       onText: locale('ON'),
       offText: locale('OFF')
     },
-    click: {name: 'FILTER_IP'}
+    click: {name: vhApp.data.isPremiumAccount() ? 'SPLIT_IP' : 'SPLIT_IP_GO_PREMIUM'}
   },
   {
     title: "NOTIFICATIONS",
