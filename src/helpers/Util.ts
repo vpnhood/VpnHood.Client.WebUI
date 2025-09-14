@@ -48,7 +48,7 @@ export class Util {
     return value === null || value === undefined;
   }
 
-
+// For developers sends test error
 /*  public static sendTestError(): void {
     const errorMessage = 'Something went wrong';
     const statusCode = 401;
