@@ -33,7 +33,9 @@ Open it and configure the `VITE_API_BASE_URL` to match your environment.
 | **Windows** | `VITE_API_BASE_URL=http://my-vpnhood:9571` | `VITE_API_BASE_URL=http://my-vpnhood-connect:9571` |
 | **Android** | `VITE_API_BASE_URL=http://<YOUR_DEVICE-IP>:9581` | `VITE_API_BASE_URL=http://<YOUR_DEVICE-IP>:9571` |
 
-> 💡 **Note:** Replace `<YOUR_DEVICE-IP>` with the actual IP address of the device running the VpnHood app.
+> 💡 **Important:**
+> * Replace `<YOUR_DEVICE-IP>` with the IP address of the device hosting the VpnHood app.
+> * If you are connecting from a separate device, the VpnHood app must be running in **debug configuration**.
 
 ---
 
@@ -60,7 +62,7 @@ npm run build
 ```sh
 vite build
 ```
-This command generates the compiled files in the dist directory.
+This command generates the compiled files in the `dist` directory.
 
 ## 📦 Packaging
 
