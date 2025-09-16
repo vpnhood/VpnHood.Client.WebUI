@@ -114,7 +114,7 @@ const settingsItem: SettingsItem[] = [
       offText: locale('DEFAULT')
     },
     isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
-    click: {name: vhApp.data.isPremiumAccount() ? 'DNS' : 'DNS_GO_PREMIUM'}
+    click: {name: vhApp.data.isPremiumFeatureAllowed(AppFeature.CustomDns) ? 'DNS' : 'DNS_GO_PREMIUM'}
   }
 ]
 

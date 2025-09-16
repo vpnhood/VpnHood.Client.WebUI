@@ -2,7 +2,7 @@
 import { UiState } from '@/helpers/UiState';
 import { UserState } from '@/helpers/UserState';
 import {
-  AppConnectionState,
+  AppConnectionState, AppFeature,
   AppFeatures,
   AppIntentFeatures,
   AppState,
@@ -179,5 +179,14 @@ export class VpnHoodAppData {
 
     // User purchased subscription from Google Play
     return this.state.clientProfile?.isPremiumAccount == true;
+  }
+
+  public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {
+    // not a premium feature
+    if (!this.features.premiumFeatures.includes(appFeature))
+      return true;
+
+    // check if the current profile is premium
+    return this.isPremiumAccount();
   }
 }

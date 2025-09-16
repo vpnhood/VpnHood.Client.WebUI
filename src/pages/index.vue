@@ -48,9 +48,13 @@ function udpProtocolButtonText(): string {
 }
 
 function isShowCountdown(): boolean {
+  // Client app should not show countdown.
   if (!vhApp.data.features.isPremiumFlagSupported)
     return false;
 
+  // Do not display the expiry countdown for premium users. The expiration status of a premium account is
+  // already shown elsewhere in the app. The countdown timer should only be visible for users on rewarded
+  // ads or trial account.
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.sessionExpirationTime;
   return !vhApp.data.isPremiumAccount && hasExpireTime && vhApp.data.isConnected;
 }
