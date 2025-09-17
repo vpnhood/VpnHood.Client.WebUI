@@ -171,7 +171,7 @@ function isDebugDataHasValue(): boolean {
   <v-sheet
     id="homeContainer"
     :class="[vhApp.data.features.isPremiumFlagSupported &&
-                (vhApp.data.isPremiumAccount() ||(vhApp.data.state.sessionInfo?.isPremiumSession &&
+                (vhApp.data.isPremiumAccount ||(vhApp.data.state.sessionInfo?.isPremiumSession &&
                 vhApp.data.isConnected)) ?
                 'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode, 'position-relative']"
   >
@@ -229,7 +229,7 @@ function isDebugDataHasValue(): boolean {
             <CountDown v-if="isShowCountdown()" tabindex="2"/>
 
             <!-- You are premium button -->
-            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount()"
+            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount"
                     prepend-icon="mdi-crown"
                     :text="locale('YOU_ARE_PREMIUM')"
                     color="enable-premium"

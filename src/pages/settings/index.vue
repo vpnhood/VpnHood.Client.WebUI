@@ -70,7 +70,7 @@ const settingsItem: SettingsItem[] = [
       onText: locale('ON'),
       offText: locale('OFF')
     },
-    click: {name: vhApp.data.isPremiumAccount() ? 'SPLIT_IP' : 'SPLIT_IP_GO_PREMIUM'}
+    click: {name: vhApp.data.isPremiumAccount ? 'SPLIT_IP' : 'SPLIT_IP_GO_PREMIUM'}
   },
   {
     title: "NOTIFICATIONS",

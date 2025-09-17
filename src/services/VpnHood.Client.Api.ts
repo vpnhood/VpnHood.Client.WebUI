@@ -1295,6 +1295,54 @@ export class AppClient {
         }
         return Promise.resolve<void>(null as any);
     }
+
+    removePremium(profileId: string, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/remove-premium?";
+        if (profileId === undefined || profileId === null)
+            throw new Error("The parameter 'profileId' must be defined and cannot be null.");
+        else
+            url_ += "profileId=" + encodeURIComponent("" + profileId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRemovePremium(_response);
+        });
+    }
+
+    protected processRemovePremium(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export class BillingClient {
@@ -2625,6 +2673,7 @@ export enum AppConnectionState {
     Waiting = "Waiting",
     WaitingForAd = "WaitingForAd",
     Diagnosing = "Diagnosing",
+    ValidatingProxies = "ValidatingProxies",
     FindingReachableServer = "FindingReachableServer",
     FindingBestServer = "FindingBestServer",
     Connecting = "Connecting",
@@ -3708,9 +3757,9 @@ export class UserSettings implements IUserSettings {
     useAppIpFilter!: boolean;
     useVpnAdapterIpFilter!: boolean;
     endPointStrategy!: EndPointStrategy;
-    useProxyServer!: boolean;
-    proxyServers!: ProxyServerEndPoint[];
     dnsMode!: DnsMode;
+    proxy!: ProxySettings;
+    allowRemoteAccess!: boolean;
     dnsServers!: string[];
 
     constructor(data?: IUserSettings) {
@@ -3723,7 +3772,7 @@ export class UserSettings implements IUserSettings {
         if (!data) {
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
-            this.proxyServers = [];
+            this.proxy = new ProxySettings();
             this.dnsServers = [];
         }
     }
@@ -3759,16 +3808,9 @@ export class UserSettings implements IUserSettings {
             this.useAppIpFilter = _data["useAppIpFilter"] !== undefined ? _data["useAppIpFilter"] : <any>null;
             this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
             this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
-            this.useProxyServer = _data["useProxyServer"] !== undefined ? _data["useProxyServer"] : <any>null;
-            if (Array.isArray(_data["proxyServers"])) {
-                this.proxyServers = [] as any;
-                for (let item of _data["proxyServers"])
-                    this.proxyServers!.push(ProxyServerEndPoint.fromJS(item));
-            }
-            else {
-                this.proxyServers = <any>null;
-            }
             this.dnsMode = _data["dnsMode"] !== undefined ? _data["dnsMode"] : <any>null;
+            this.proxy = _data["proxy"] ? ProxySettings.fromJS(_data["proxy"]) : new ProxySettings();
+            this.allowRemoteAccess = _data["allowRemoteAccess"] !== undefined ? _data["allowRemoteAccess"] : <any>null;
             if (Array.isArray(_data["dnsServers"])) {
                 this.dnsServers = [] as any;
                 for (let item of _data["dnsServers"])
@@ -3815,13 +3857,9 @@ export class UserSettings implements IUserSettings {
         data["useAppIpFilter"] = this.useAppIpFilter !== undefined ? this.useAppIpFilter : <any>null;
         data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
         data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
-        data["useProxyServer"] = this.useProxyServer !== undefined ? this.useProxyServer : <any>null;
-        if (Array.isArray(this.proxyServers)) {
-            data["proxyServers"] = [];
-            for (let item of this.proxyServers)
-                data["proxyServers"].push(item.toJSON());
-        }
         data["dnsMode"] = this.dnsMode !== undefined ? this.dnsMode : <any>null;
+        data["proxy"] = this.proxy ? this.proxy.toJSON() : <any>null;
+        data["allowRemoteAccess"] = this.allowRemoteAccess !== undefined ? this.allowRemoteAccess : <any>null;
         if (Array.isArray(this.dnsServers)) {
             data["dnsServers"] = [];
             for (let item of this.dnsServers)
@@ -3854,9 +3892,9 @@ export interface IUserSettings {
     useAppIpFilter: boolean;
     useVpnAdapterIpFilter: boolean;
     endPointStrategy: EndPointStrategy;
-    useProxyServer: boolean;
-    proxyServers: ProxyServerEndPoint[];
     dnsMode: DnsMode;
+    proxy: ProxySettings;
+    allowRemoteAccess: boolean;
     dnsServers: string[];
 }
 
@@ -3956,14 +3994,81 @@ export enum EndPointStrategy {
     TokenOnly = "TokenOnly",
 }
 
-export class ProxyServerEndPoint implements IProxyServerEndPoint {
-    type!: ProxyServerType;
+export enum DnsMode {
+    Default = "Default",
+    AdapterDns = "AdapterDns",
+}
+
+export class ProxySettings implements IProxySettings {
+    mode!: ProxyMode;
+    nodes!: ProxyNode[];
+
+    constructor(data?: IProxySettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.nodes = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.mode = _data["mode"] !== undefined ? _data["mode"] : <any>null;
+            if (Array.isArray(_data["nodes"])) {
+                this.nodes = [] as any;
+                for (let item of _data["nodes"])
+                    this.nodes!.push(ProxyNode.fromJS(item));
+            }
+            else {
+                this.nodes = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): ProxySettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProxySettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["mode"] = this.mode !== undefined ? this.mode : <any>null;
+        if (Array.isArray(this.nodes)) {
+            data["nodes"] = [];
+            for (let item of this.nodes)
+                data["nodes"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IProxySettings {
+    mode: ProxyMode;
+    nodes: ProxyNode[];
+}
+
+export enum ProxyMode {
+    Disabled = 0,
+    System = 1,
+    Remote = 2,
+    Custom = 3,
+}
+
+export class ProxyNode implements IProxyNode {
+    isEnabled!: boolean;
+    protocol!: ProxyProtocol;
     host!: string;
     port!: number;
     username?: string | null;
     password?: string | null;
 
-    constructor(data?: IProxyServerEndPoint) {
+    constructor(data?: IProxyNode) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3974,7 +4079,8 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
 
     init(_data?: any) {
         if (_data) {
-            this.type = _data["type"] !== undefined ? _data["type"] : <any>null;
+            this.isEnabled = _data["isEnabled"] !== undefined ? _data["isEnabled"] : <any>null;
+            this.protocol = _data["protocol"] !== undefined ? _data["protocol"] : <any>null;
             this.host = _data["host"] !== undefined ? _data["host"] : <any>null;
             this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
@@ -3982,16 +4088,17 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
         }
     }
 
-    static fromJS(data: any): ProxyServerEndPoint {
+    static fromJS(data: any): ProxyNode {
         data = typeof data === 'object' ? data : {};
-        let result = new ProxyServerEndPoint();
+        let result = new ProxyNode();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["type"] = this.type !== undefined ? this.type : <any>null;
+        data["isEnabled"] = this.isEnabled !== undefined ? this.isEnabled : <any>null;
+        data["protocol"] = this.protocol !== undefined ? this.protocol : <any>null;
         data["host"] = this.host !== undefined ? this.host : <any>null;
         data["port"] = this.port !== undefined ? this.port : <any>null;
         data["username"] = this.username !== undefined ? this.username : <any>null;
@@ -4000,24 +4107,20 @@ export class ProxyServerEndPoint implements IProxyServerEndPoint {
     }
 }
 
-export interface IProxyServerEndPoint {
-    type: ProxyServerType;
+export interface IProxyNode {
+    isEnabled: boolean;
+    protocol: ProxyProtocol;
     host: string;
     port: number;
     username?: string | null;
     password?: string | null;
 }
 
-export enum ProxyServerType {
-    Socks5 = "Socks5",
+export enum ProxyProtocol {
     Socks4 = "Socks4",
+    Socks5 = "Socks5",
     Http = "Http",
     Https = "Https",
-}
-
-export enum DnsMode {
-    Default = "Default",
-    AdapterDns = "AdapterDns",
 }
 
 export class ClientProfileInfo implements IClientProfileInfo {

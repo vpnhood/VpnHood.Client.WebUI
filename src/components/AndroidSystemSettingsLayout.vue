@@ -49,7 +49,7 @@ const props = defineProps<{
         />
 
       <!-- Tutorial steps -->
-      <card-on-grad v-if="!props.isPremium || vhApp.data.isPremiumAccount()" class="pb-2">
+      <card-on-grad v-if="!props.isPremium || vhApp.data.isPremiumAccount" class="pb-2">
 
         <!-- Help steps -->
           <v-card-item>

@@ -84,31 +84,20 @@ export class VpnHoodAppData {
     return this.state.connectionState === AppConnectionState.Unstable;
   }
 
-  get isPremiumFeatureAvailable(): boolean {
-    return !this.features.isPremiumFlagSupported || this.isPremiumAccount();
-  }
-
   get premiumIconColor(): string {
-    return this.isPremiumFeatureAvailable ? 'enable-premium' : 'disable-premium';
+    return (!this.features.isPremiumFlagSupported || this.isPremiumAccount) ? 'enable-premium' : 'disable-premium';
   }
 
-  // TODO: optimize this methods
-  get isFilterIpAvailable(): boolean {
-    return this.isFilterIpByAdapterAvailable || this.isFilterIpByAppAvailable;
-  }
   get isFilterIpTurnOn(): boolean {
     return this.userSettings.useVpnAdapterIpFilter || this.userSettings.useAppIpFilter;
   }
-  get isFilterIpByAdapterAvailable(): boolean {
-    if (!this.features.isPremiumFlagSupported)
-      return true;
-    return this.isPremiumAccount() || this.userSettings.useVpnAdapterIpFilter;
+
+  get isPremiumAccount(): boolean {
+    return this.state.clientProfile?.isPremiumAccount == true;
   }
 
-  get isFilterIpByAppAvailable(): boolean {
-    if (!this.features.isPremiumFlagSupported)
-      return true;
-    return this.isPremiumAccount() || this.userSettings.useAppIpFilter;
+  get hasPremiumCode(): boolean{
+    return this.state.clientProfile?.hasAccessCode == true
   }
 
   get getEdgeToEdgeTopHeight(): number | null {
@@ -172,21 +161,12 @@ export class VpnHoodAppData {
     return this.state.sessionInfo?.isLocalNetworkAllowed ?? true;
   }
 
-  public isPremiumAccount(byPremiumCode: boolean = false): boolean {
-    // User is premium by code
-    if (byPremiumCode)
-      return (this.state.clientProfile?.isPremiumAccount == true) && (this.state.clientProfile?.hasAccessCode == true);
-
-    // User purchased subscription from Google Play
-    return this.state.clientProfile?.isPremiumAccount == true;
-  }
-
   public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {
     // not a premium feature
     if (!this.features.premiumFeatures.includes(appFeature))
       return true;
 
     // check if the current profile is premium
-    return this.isPremiumAccount();
+    return this.isPremiumAccount;
   }
 }

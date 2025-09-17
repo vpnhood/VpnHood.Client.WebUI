@@ -12,7 +12,7 @@ const showConnectedAnimation = ref<boolean | null>(null);
 
 function getExpireDate(): string | null {
   // Do not show the Expire date for CONNECT App
-  if ((!vhApp.data.isPremiumAccount() && !vhApp.data.features.isPremiumFlagSupported)
+  if ((!vhApp.data.isPremiumAccount && !vhApp.data.features.isPremiumFlagSupported)
     || !vhApp.data.isConnected
     || !vhApp.data.state.sessionInfo?.accessInfo?.expirationTime)
     return null;

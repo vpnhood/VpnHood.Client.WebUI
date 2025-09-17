@@ -7,12 +7,13 @@ import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
+import { AppFeature } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 
-const useIpFilterByDevice = computed<boolean>({
+const useIpFilterByAdapter = computed<boolean>({
   get: () => {
     return vhApp.data.userSettings.useVpnAdapterIpFilter;
   },
@@ -49,8 +50,8 @@ const useIpFilterByApp = computed<boolean>({
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('FILTER_IPS_BY_ADAPTER') }}</span>
           <v-switch
-            v-model="useIpFilterByDevice"
-            :disabled="!vhApp.data.isFilterIpByAdapterAvailable"
+            v-model="useIpFilterByAdapter"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AdapterIpFilter)"
           />
         </div>
 
@@ -59,7 +60,7 @@ const useIpFilterByApp = computed<boolean>({
       </v-card-item>
 
       <!-- Manage IP button -->
-      <v-card-item v-if="useIpFilterByDevice">
+      <v-card-item v-if="useIpFilterByAdapter">
         <btn-style-4
           :text="locale('MANAGE_IP_ADDRESSES')"
           :append-icon="Util.getLocalizedRightChevron()"
@@ -78,7 +79,7 @@ const useIpFilterByApp = computed<boolean>({
           <span>{{ locale('SPLIT_IPS_BY_APP') }}</span>
           <v-switch
             v-model="useIpFilterByApp"
-            :disabled="!vhApp.data.isFilterIpByAppAvailable"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AppIpFilter)"
           />
         </div>
       </v-card-item>
