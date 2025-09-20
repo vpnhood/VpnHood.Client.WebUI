@@ -43,49 +43,49 @@ const carouselItems: CarouselItem[] = [
   {
     image: "ultra-fast-server.webp",
     title: "ULTRA_FAST_SPEED",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "ULTRA_FAST_SPEED_DESC",
     height: "200px",
   },
   {
     image: "no-ads.webp",
     title: "REMOVE_AD",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "REMOVE_AD_DESC",
     height: "200px",
   },
   {
     image: "more-location.webp",
     title: "MORE_LOCATIONS",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "MORE_LOCATIONS_DESC",
     height: "200px",
   },
   {
     image: "split-ip.webp",
     title: "SPLIT_IP_ADDRESSES",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "SPLIT_IP_ADDRESSES_PREMIUM_DESC",
     height: "200px",
   },
   {
     image: "private-dns.webp",
-    title: "PRIVATE_DNS",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    title: "PRIVATE_AND_CUSTOM_DNS",
+    description: "PRIVATE_AND_CUSTOM_DNS_DESC",
     height: "200px",
   },
   {
     image: "quick-launch.webp",
     title: "QUICK_LAUNCH",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "QUICK_LAUNCH_DESC",
     height: "200px",
   },
   {
     image: "always-on.webp",
     title: "ALWAYS_ON",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "ALWAYS_ON_PREMIUM_DESC",
     height: "200px",
   },
   {
     image: "support.webp",
     title: "24_7_SUPPORT",
-    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    description: "24_7_SUPPORT_DESC",
     height: "200px",
   },
 ]
@@ -261,7 +261,7 @@ function closeCompleteDialog(showStatistics: boolean) {
           <v-carousel-item v-for="item in carouselItems" :key="item.title" eager>
             <template v-slot:default>
 
-              <div v-if="item.title === 'ULTRA_FAST_SPEED'" id="rocketWrapper" class="mx-auto">
+              <div v-if="item.title === 'ULTRA_FAST_SPEED'" id="rocketWrapper" class="mx-auto mb-4">
                 <div id="rocket" class="animation-translate-y mx-auto" />
                 <div id="rocketSmoke" class="mx-auto" />
               </div>
@@ -276,7 +276,7 @@ function closeCompleteDialog(showStatistics: boolean) {
                 class="mx-auto mb-5"
               />
                 <h3 class="mb-2">{{locale(item.title)}}</h3>
-                <p class="text-subtitle-2 text-medium-emphasis">{{locale(item.description)}}</p>
+                <p class="text-subtitle-2 text-medium-emphasis px-3">{{locale(item.description)}}</p>
             </template>
           </v-carousel-item>
         </v-carousel>
@@ -645,7 +645,7 @@ function closeCompleteDialog(showStatistics: boolean) {
   background: url('@/assets/images/rocket-bg.webp') no-repeat top center;
   background-size: contain;
   width: 100%;
-  height: 57%;
+  height: 55%;
   min-height: 150px;
   max-height: 335px;
 }
@@ -664,7 +664,7 @@ function closeCompleteDialog(showStatistics: boolean) {
   background: url('@/assets/images/rocket.webp') no-repeat top center;
   background-size: contain;
   width: 100%;
-  height: 41%;
+  height: 56%;
   bottom: 35%;
   z-index: 1;
 }
@@ -673,7 +673,7 @@ function closeCompleteDialog(showStatistics: boolean) {
   background: url('@/assets/images/rocket-smoke.webp') no-repeat top center;
   background-size: contain;
   width: 42%;
-  height: 29%;
+  height: 35%;
   bottom: 16%;
   z-index: 2;
 }

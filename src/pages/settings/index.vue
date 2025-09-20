@@ -192,7 +192,7 @@ const settingsItem: SettingsItem[] = [
           <!-- Link -->
           <a
             class="text-highlight text-decoration-none"
-            href="https://explore.transifex.com/vpnhood/vpnhood-client"
+            href="https://github.com/vpnhood/VpnHood.Client.WebUI/tree/main/src/locales"
             target="_blank"
           >
             {{ locale('CONTRIBUTE_EDIT_LANGUAGES_Title') }}

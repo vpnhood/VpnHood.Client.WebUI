@@ -10,15 +10,12 @@ const locale = i18n.global.t;
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
-
-    <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
+  <v-sheet :class="Util.getSpecialPageCardClass()">
 
      <div>
        <!-- Back button -->
        <tonal-icon-btn v-if="!vhApp.data.features.isTv"
          :icon="Util.getLocalizedLeftChevron()"
-         class="mt-3 "
          @click="router.go(-1)"
        />
 
@@ -61,7 +58,6 @@ const locale = i18n.global.t;
 
       </card-on-grad>
 
-    </v-card>
   </v-sheet>
 </template>
 

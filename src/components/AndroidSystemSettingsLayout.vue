@@ -21,94 +21,90 @@ const props = defineProps<{
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
+  <v-sheet :class="Util.getSpecialPageCardClass()">
 
-    <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
+    <div>
+      <!-- Back button -->
+      <tonal-icon-btn v-if="!vhApp.data.features.isTv"
+        :icon="Util.getLocalizedLeftChevron()"
+        @click="router.go(-1)"
+      />
 
-      <div>
-        <!-- Back button -->
-        <tonal-icon-btn v-if="!vhApp.data.features.isTv"
-                        :icon="Util.getLocalizedLeftChevron()"
-                        class="mt-3 "
-                        @click="router.go(-1)"
-        />
-
-        <!-- Title and Description -->
-        <div class="text-center">
-          <h3 class="mb-2" v-html="locale(props.title)" />
-          <p>{{locale(props.description)}}</p>
-        </div>
+      <!-- Title and Description -->
+      <div class="text-center">
+        <h3 class="mb-2" v-html="locale(props.title)" />
+        <p>{{locale(props.description)}}</p>
       </div>
+    </div>
 
-        <!-- Feature image -->
-        <v-img
-          eager
-          :src="Util.getAssetPath(props.image)"
-          alt="Symbol image"
-          width="100%"
-          max-height="250px"
-          class="mx-auto"
+      <!-- Feature image -->
+      <v-img
+        eager
+        :src="Util.getAssetPath(props.image)"
+        alt="Symbol image"
+        width="100%"
+        max-height="250px"
+        class="mx-auto"
+      />
+
+    <!-- Tutorial steps -->
+    <card-on-grad v-if="!props.isPremium || vhApp.data.isPremiumAccount" class="pb-2">
+
+      <!-- Help steps -->
+        <v-card-item>
+        <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
+            <li
+              v-for="(item, index) in props.listStep"
+              :key="index"
+              v-html="item"
+              :class="{'border-b pb-2': index < props.listStep.length - 1}"
+            />
+          </ol>
+        </v-card-item>
+
+      <!-- Open related settings button (If request with API is available) -->
+      <v-card-item v-if="props.isActionButtonAvailable">
+        <btn-style-1
+         color="promote-premium-color-premium"
+         :text="locale(props.buttonText)"
+         block
+         @click="props.buttonClick()"
         />
+      </v-card-item>
 
-      <!-- Tutorial steps -->
-      <card-on-grad v-if="!props.isPremium || vhApp.data.isPremiumAccount" class="pb-2">
+      <!-- Skip button -->
+      <v-card-item v-if="props.isShowSkipBtn">
+        <btn-style-2
+          :text="locale('SKIP')"
+          block
+          @click="router.go(-1)"
+        />
+      </v-card-item>
 
-        <!-- Help steps -->
-          <v-card-item>
-          <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
-              <li
-                v-for="(item, index) in props.listStep"
-                :key="index"
-                v-html="item"
-                :class="{'border-b pb-2': index < props.listStep.length - 1}"
-              />
-            </ol>
-          </v-card-item>
+    </card-on-grad>
 
-        <!-- Open related settings button (If request with API is available) -->
-        <v-card-item v-if="props.isActionButtonAvailable">
-          <btn-style-1
-           color="promote-premium-color-premium"
-           :text="locale(props.buttonText)"
-           block
-           @click="props.buttonClick()"
-          />
-        </v-card-item>
+    <!-- Go premium button -->
+    <card-on-grad v-else class="pb-2">
 
-        <!-- Skip button -->
-        <v-card-item v-if="props.isShowSkipBtn">
-          <btn-style-2
-            :text="locale('SKIP')"
-            block
-            @click="router.go(-1)"
-          />
-        </v-card-item>
+      <!-- Description -->
+      <v-card-item>
+        <p class="text-white">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
+      </v-card-item>
 
-      </card-on-grad>
+      <!-- Button -->
+      <v-card-item>
+        <btn-style-1
+          prepend-icon="mdi-crown"
+          color="promote-premium-color-premium"
+          block
+          :text="locale('GO_PREMIUM')"
+          tabindex="0"
+          @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
+        />
+      </v-card-item>
 
-      <!-- Go premium button -->
-      <card-on-grad v-else class="pb-2">
+    </card-on-grad>
 
-        <!-- Description -->
-        <v-card-item>
-          <p class="text-white">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
-        </v-card-item>
-
-        <!-- Button -->
-        <v-card-item>
-          <btn-style-1
-            prepend-icon="mdi-crown"
-            color="promote-premium-color-premium"
-            block
-            :text="locale('GO_PREMIUM')"
-            tabindex="0"
-            @click="router.push({name: 'PURCHASE_SUBSCRIPTION'})"
-          />
-        </v-card-item>
-
-      </card-on-grad>
-
-    </v-card>
   </v-sheet>
 </template>
 

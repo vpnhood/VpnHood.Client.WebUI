@@ -17,15 +17,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-sheet id="cloakMode" color="grad-bg-container-bg" class="pt-4">
+  <v-sheet id="cloakMode" :class="Util.getSpecialPageCardClass()">
 
-    <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
-
+    <div>
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        class="mt-3 "
         @click="router.go(-1)"
       />
 
@@ -33,24 +31,24 @@ onMounted(() => {
       <div class="text-center">
         <h3 class="mb-2" v-html="locale('CLOAK_MODE_COLORED')" />
       </div>
+    </div>
 
-      <!-- Feature image -->
-      <v-img
-        :eager="true"
-        :src="Util.getAssetPath('cloak-mode.webp')"
-        alt="Symbol image"
-        width="100%"
-        max-height="250px"
-        class="mx-auto"
-      />
+    <!-- Feature image -->
+    <v-img
+      :eager="true"
+      :src="Util.getAssetPath('cloak-mode.webp')"
+      alt="Symbol image"
+      width="100%"
+      max-height="250px"
+      class="mx-auto"
+    />
 
-      <card-on-grad>
-        <v-card-item>
-          <p v-html="locale('CLOAK_MODE_DESC_1')" style="line-height: 25px;" />
-          <p class="mt-3" style="line-height: 25px;">{{locale('CLOAK_MODE_DESC_2')}}</p>
-        </v-card-item>
-      </card-on-grad>
+    <card-on-grad>
+      <v-card-item>
+        <p v-html="locale('CLOAK_MODE_DESC_1')" style="line-height: 25px;" />
+        <p class="mt-3" style="line-height: 25px;">{{locale('CLOAK_MODE_DESC_2')}}</p>
+      </v-card-item>
+    </card-on-grad>
 
-    </v-card>
   </v-sheet>
 </template>

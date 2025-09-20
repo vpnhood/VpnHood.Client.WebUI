@@ -40,56 +40,55 @@ async function showRewardedAd(){
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
-    <v-card :class="Util.getSpecialPageCardClass()">
+  <v-sheet :class="Util.getSpecialPageCardClass()">
 
+    <div>
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        class="ms-3 mt-3"
         @click="router.go(-1)"
       />
 
       <h3 class="mt-5 text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />
+    </div>
 
-      <v-img
-        :eager="true"
-        :src="Util.getAssetPath('extend-session.webp')"
-        alt="Session Icon"
-        width="100%"
-        max-width="400px"
-        class="mx-auto"
+    <v-img
+      :eager="true"
+      :src="Util.getAssetPath('extend-session.webp')"
+      alt="Session Icon"
+      width="100%"
+      max-width="400px"
+      class="mx-auto"
+    />
+
+    <div class="px-3">
+
+      <!-- Watch rewarded ad -->
+      <promote-connect-button
+        v-if="vhApp.data.state.sessionStatus?.canExtendByRewardedAd"
+        :class="{'opacity-30': !vhApp.data.state.sessionStatus?.canExtendByRewardedAd}"
+        icon="mdi-play-box-lock-open-outline"
+        :title="locale('WATCH_REWARDED_AD')"
+        :description="locale('EXTEND_BY_REWARDED_AD_DESC', {minutes:
+            vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByRewardedAd})"
+        :button-text="locale('SHOW_AD')"
+        :button-action-plan="ConnectPlanId.PremiumByRewardedAd"
+        @action-by-plan="actionByConnectPlan"
       />
 
-      <div class="px-3">
+      <!-- Go premium -->
+      <promote-connect-button
+        v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
+        icon="mdi-crown-circle-outline"
+        :title="locale('GO_PREMIUM')"
+        :description="locale('GO_PREMIUM_DESC')"
+        :button-text="locale('UPGRADE')"
+        :button-action-plan="MyPlanId.premiumByPurchase"
+        @action-by-plan="actionByConnectPlan"
+      />
 
-        <!-- Watch rewarded ad -->
-        <promote-connect-button
-          v-if="vhApp.data.state.sessionStatus?.canExtendByRewardedAd"
-          :class="{'opacity-30': !vhApp.data.state.sessionStatus?.canExtendByRewardedAd}"
-          icon="mdi-play-box-lock-open-outline"
-          :title="locale('WATCH_REWARDED_AD')"
-          :description="locale('EXTEND_BY_REWARDED_AD_DESC', {minutes:
-              vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByRewardedAd})"
-          :button-text="locale('SHOW_AD')"
-          :button-action-plan="ConnectPlanId.PremiumByRewardedAd"
-          @action-by-plan="actionByConnectPlan"
-        />
-
-        <!-- Go premium -->
-        <promote-connect-button
-          v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
-          icon="mdi-crown-circle-outline"
-          :title="locale('GO_PREMIUM')"
-          :description="locale('GO_PREMIUM_DESC')"
-          :button-text="locale('UPGRADE')"
-          :button-action-plan="MyPlanId.premiumByPurchase"
-          @action-by-plan="actionByConnectPlan"
-        />
-
-      </div>
-    </v-card>
+    </div>
 
     <!--TODO: Use general dialog-->
     <v-dialog v-model="showLoadingAdDialog" :persistent="true">
