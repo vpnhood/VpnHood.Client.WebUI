@@ -1,7 +1,7 @@
 /*** -------------------- General -------------------- ***/
 .primary-bg-grad{
     /*noinspection CssUnresolvedCustomProperty*/
-    background: linear-gradient(to bottom, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
+    background: linear-gradient(to top, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
 }
 /*** --------------------Home Circle Section-------------------- ***/
 #connectionCircleIndicator{

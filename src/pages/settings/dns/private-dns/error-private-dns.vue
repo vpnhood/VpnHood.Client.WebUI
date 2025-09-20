@@ -28,7 +28,7 @@ const locale = i18n.global.t;
 
       <v-img
         :eager="true"
-        :src="vhApp.getAssetPath('private-dns.webp')"
+        :src="Util.getAssetPath('private-dns.webp')"
         alt="DNS Icon"
         width="100%"
         max-width="500px"

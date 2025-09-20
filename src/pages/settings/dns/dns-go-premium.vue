@@ -14,26 +14,28 @@ const locale = i18n.global.t;
 
     <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
 
-      <!-- Back button -->
-      <tonal-icon-btn v-if="!vhApp.data.features.isTv"
-        :icon="Util.getLocalizedLeftChevron()"
-        class="mt-3 "
-        @click="router.go(-1)"
-      />
+      <div>
+        <!-- Back button -->
+        <tonal-icon-btn v-if="!vhApp.data.features.isTv"
+                        :icon="Util.getLocalizedLeftChevron()"
+                        class="mt-3 "
+                        @click="router.go(-1)"
+        />
 
-      <!-- Title and Description -->
-      <div class="text-center">
-        <h3 class="mb-2 text-promote-premium-color-premium" >{{locale('DNS')}}</h3>
-        <p>{{locale('DNS_DESC')}}</p>
+        <!-- Title and Description -->
+        <div class="text-center">
+          <h3 class="mb-2 text-promote-premium-color-premium" >{{locale('DNS')}}</h3>
+          <p>{{locale('DNS_DESC')}}</p>
+        </div>
       </div>
 
       <!-- Feature image -->
       <v-img
         eager
-        :src="vhApp.getAssetPath('private-dns.webp')"
+        :src="Util.getAssetPath('private-dns.webp')"
         alt="Symbol image"
         width="100%"
-        max-width="500px"
+        max-height="250px"
         class="mx-auto"
       />
 

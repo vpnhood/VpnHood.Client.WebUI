@@ -25,26 +25,28 @@ const props = defineProps<{
 
     <v-card :class="Util.getSpecialPageCardClass()" class="px-3 pb-3">
 
-      <!-- Back button -->
-      <tonal-icon-btn v-if="!vhApp.data.features.isTv"
-        :icon="Util.getLocalizedLeftChevron()"
-        class="mt-3 "
-        @click="router.go(-1)"
-      />
+      <div>
+        <!-- Back button -->
+        <tonal-icon-btn v-if="!vhApp.data.features.isTv"
+                        :icon="Util.getLocalizedLeftChevron()"
+                        class="mt-3 "
+                        @click="router.go(-1)"
+        />
 
-      <!-- Title and Description -->
-      <div class="text-center">
-        <h3 class="mb-2" v-html="locale(props.title)" />
-        <p>{{locale(props.description)}}</p>
+        <!-- Title and Description -->
+        <div class="text-center">
+          <h3 class="mb-2" v-html="locale(props.title)" />
+          <p>{{locale(props.description)}}</p>
+        </div>
       </div>
 
         <!-- Feature image -->
         <v-img
           eager
-          :src="vhApp.getAssetPath(props.image)"
+          :src="Util.getAssetPath(props.image)"
           alt="Symbol image"
           width="100%"
-          max-width="500px"
+          max-height="250px"
           class="mx-auto"
         />
 

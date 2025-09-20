@@ -6,6 +6,7 @@ import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { onBeforeRouteLeave } from 'vue-router';
 import { ShowAdResult } from '@/services/VpnHood.Client.Api';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -143,7 +144,7 @@ onBeforeUnmount(() => {
         preload="auto"
         playsinline
       >
-        <source :src="vhApp.getAssetPath('internal-ad.mp4')" type="video/mp4" />
+        <source :src="Util.getAssetPath('internal-ad.mp4')" type="video/mp4" />
       </video>
 
       <!-- Buttons -->

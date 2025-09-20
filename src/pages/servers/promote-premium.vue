@@ -43,30 +43,27 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
-
-    <v-card :class="Util.getSpecialPageCardClass()">
+  <v-sheet :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        class="ms-3 mt-3"
         @click="router.go(-1)"
       />
 
-      <h3 class="text-center mt-5" v-html="dialogTitle" />
+      <h3 class="text-center" v-html="dialogTitle" />
 
       <v-img
         :eager="true"
-        :src="vhApp.getAssetPath(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
+        :src="Util.getAssetPath(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
         alt="Servers Icon"
         width="100%"
         max-width="500px"
         class="mx-auto"
       />
 
-      <div class="px-3">
+      <div>
 
         <!-- Continue as Free -->
         <v-row v-if="isFreeAvailable()"
@@ -142,6 +139,5 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
       </div>
 
-    </v-card>
   </v-sheet>
 </template>

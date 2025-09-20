@@ -7,6 +7,7 @@ import vuetify from '@/theme/vuetify';
 import { AppName } from '@/helpers/UiConstants';
 import type { RouteLocationRaw } from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';
+import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -104,7 +105,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
     <div class="bg-navigation-drawer-header d-flex align-center pa-4" :style="edgeToEdgeHeight(false)">
 
       <v-img
-        :src="vhApp.getAssetPath(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
+        :src="Util.getAssetPath(`${vhApp.data.features.uiName ?? AppName.VpnHoodClient}-logo.png`)"
         :eager="true"
         alt="logo"
         max-width="50"

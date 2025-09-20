@@ -3758,7 +3758,7 @@ export class UserSettings implements IUserSettings {
     useVpnAdapterIpFilter!: boolean;
     endPointStrategy!: EndPointStrategy;
     dnsMode!: DnsMode;
-    proxy!: ProxySettings;
+    appProxy!: AppProxySettings;
     allowRemoteAccess!: boolean;
     dnsServers!: string[];
 
@@ -3772,7 +3772,7 @@ export class UserSettings implements IUserSettings {
         if (!data) {
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
-            this.proxy = new ProxySettings();
+            this.appProxy = new AppProxySettings();
             this.dnsServers = [];
         }
     }
@@ -3809,7 +3809,7 @@ export class UserSettings implements IUserSettings {
             this.useVpnAdapterIpFilter = _data["useVpnAdapterIpFilter"] !== undefined ? _data["useVpnAdapterIpFilter"] : <any>null;
             this.endPointStrategy = _data["endPointStrategy"] !== undefined ? _data["endPointStrategy"] : <any>null;
             this.dnsMode = _data["dnsMode"] !== undefined ? _data["dnsMode"] : <any>null;
-            this.proxy = _data["proxy"] ? ProxySettings.fromJS(_data["proxy"]) : new ProxySettings();
+            this.appProxy = _data["appProxy"] ? AppProxySettings.fromJS(_data["appProxy"]) : new AppProxySettings();
             this.allowRemoteAccess = _data["allowRemoteAccess"] !== undefined ? _data["allowRemoteAccess"] : <any>null;
             if (Array.isArray(_data["dnsServers"])) {
                 this.dnsServers = [] as any;
@@ -3858,7 +3858,7 @@ export class UserSettings implements IUserSettings {
         data["useVpnAdapterIpFilter"] = this.useVpnAdapterIpFilter !== undefined ? this.useVpnAdapterIpFilter : <any>null;
         data["endPointStrategy"] = this.endPointStrategy !== undefined ? this.endPointStrategy : <any>null;
         data["dnsMode"] = this.dnsMode !== undefined ? this.dnsMode : <any>null;
-        data["proxy"] = this.proxy ? this.proxy.toJSON() : <any>null;
+        data["appProxy"] = this.appProxy ? this.appProxy.toJSON() : <any>null;
         data["allowRemoteAccess"] = this.allowRemoteAccess !== undefined ? this.allowRemoteAccess : <any>null;
         if (Array.isArray(this.dnsServers)) {
             data["dnsServers"] = [];
@@ -3893,7 +3893,7 @@ export interface IUserSettings {
     useVpnAdapterIpFilter: boolean;
     endPointStrategy: EndPointStrategy;
     dnsMode: DnsMode;
-    proxy: ProxySettings;
+    appProxy: AppProxySettings;
     allowRemoteAccess: boolean;
     dnsServers: string[];
 }
@@ -3999,11 +3999,11 @@ export enum DnsMode {
     AdapterDns = "AdapterDns",
 }
 
-export class ProxySettings implements IProxySettings {
+export class AppProxySettings implements IAppProxySettings {
     mode!: ProxyMode;
     nodes!: ProxyNode[];
 
-    constructor(data?: IProxySettings) {
+    constructor(data?: IAppProxySettings) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4029,9 +4029,9 @@ export class ProxySettings implements IProxySettings {
         }
     }
 
-    static fromJS(data: any): ProxySettings {
+    static fromJS(data: any): AppProxySettings {
         data = typeof data === 'object' ? data : {};
-        let result = new ProxySettings();
+        let result = new AppProxySettings();
         result.init(data);
         return result;
     }
@@ -4048,7 +4048,7 @@ export class ProxySettings implements IProxySettings {
     }
 }
 
-export interface IProxySettings {
+export interface IAppProxySettings {
     mode: ProxyMode;
     nodes: ProxyNode[];
 }

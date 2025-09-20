@@ -31,13 +31,7 @@ export class Util {
   }
 
   public static getSpecialPageCardClass(): string{
-    const allDisplaySizeClass: string = "d-flex flex-column justify-space-between primary-bg-grad rounded-xl text-white fill-height border-opacity-50"
-    const borderClassForMobileSize: string = "border border-promote-premium-border"
-
-    if (vuetify.display.smAndDown.value)
-      return allDisplaySizeClass + ' ' + borderClassForMobileSize;
-
-    return allDisplaySizeClass
+    return "d-flex flex-column justify-space-between primary-bg-grad text-white fill-height"
   }
 
   public static delay(ms: number) {
@@ -46,6 +40,10 @@ export class Util {
 
   public static isNullOrUndefined(value: unknown): boolean {
     return value === null || value === undefined;
+  }
+
+  public static getAssetPath(fileName: string): string {
+    return new URL(`../assets/images/${fileName}`, import.meta.url).href;
   }
 
 // For developers sends test error

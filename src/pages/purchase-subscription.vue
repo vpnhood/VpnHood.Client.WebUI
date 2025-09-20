@@ -30,11 +30,69 @@ const premiumCodeForm = ref<boolean>(false);
 const formattedPremiumCode = ref('');
 const premiumCodeRawNumber = ref<string>('');
 const invalidCodeError = ref<null|string>(null);
+const isShowCarouselArrow = ref<boolean>(true);
+
+interface CarouselItem {
+  image: string,
+  title: string,
+  description: string,
+  height: string,
+}
+
+const carouselItems: CarouselItem[] = [
+  {
+    image: "ultra-fast-server.webp",
+    title: "ULTRA_FAST_SPEED",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "no-ads.webp",
+    title: "REMOVE_AD",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "more-location.webp",
+    title: "MORE_LOCATIONS",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "split-ip.webp",
+    title: "SPLIT_IP_ADDRESSES",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "private-dns.webp",
+    title: "PRIVATE_DNS",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "quick-launch.webp",
+    title: "QUICK_LAUNCH",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "always-on.webp",
+    title: "ALWAYS_ON",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+  {
+    image: "support.webp",
+    title: "24_7_SUPPORT",
+    description: "EXTEND_BY_REWARDED_AD_NOTE",
+    height: "200px",
+  },
+]
 
 const isNewCode = computed<boolean | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.isNew;
 });
-
 const premiumCodeDeviceCount = computed<number | undefined>(() => {
   return vhApp.data.state.sessionInfo?.accessInfo?.devicesSummary?.deviceCount;
 });
@@ -72,6 +130,11 @@ const isShowProcessDialog = computed<boolean>(() => {
 });
 
 onMounted(async () => {
+  // Hide the carousel arrow after 3 seconds
+  setTimeout(() => {
+    isShowCarouselArrow.value = false;
+  }, 6000);
+
   // Check eligibility to purchase by Google
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
     isGoogleBillingAvailable.value = false;
@@ -165,73 +228,73 @@ function closeCompleteDialog(showStatistics: boolean) {
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
-
-    <v-card :class="Util.getSpecialPageCardClass()">
+  <v-sheet :class="Util.getSpecialPageCardClass()">
 
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        class="position-absolute ms-3 mt-3"
+        class="position-absolute"
         style="z-index: 999"
         @click="router.go(-1)"
       />
 
-      <!-- Title, image and features -->
+      <div class="d-flex align-center justify-center flex-grow-1">
+        <v-carousel
+          id="featuresCarousel"
+          :show-arrows="isShowCarouselArrow"
+          delimiter-icon="mdi-circle"
+          color="highlight"
+          height="380"
+          hide-delimiter-background
+          class="text-white text-center"
+        >
+          <!-- Carousel arrows -->
+          <template v-slot:prev="{ props }">
+            <v-btn color="highlight" icon="mdi-chevron-left" size="40" variant="text" @click="props.onClick" />
+          </template>
+          <template v-slot:next="{ props }">
+            <v-btn color="highlight" icon="mdi-chevron-right" size="40" variant="text" @click="props.onClick" />
+          </template>
+
+          <!-- Carousel items -->
+          <v-carousel-item v-for="item in carouselItems" :key="item.title" eager>
+            <template v-slot:default>
+
+              <div v-if="item.title === 'ULTRA_FAST_SPEED'" id="rocketWrapper" class="mx-auto">
+                <div id="rocket" class="animation-translate-y mx-auto" />
+                <div id="rocketSmoke" class="mx-auto" />
+              </div>
+
+              <v-img
+                v-else
+                eager
+                :src="Util.getAssetPath(item.image)"
+                alt="Symbol image"
+                width="100%"
+                :height="item.height"
+                class="mx-auto mb-5"
+              />
+                <h3 class="mb-2">{{locale(item.title)}}</h3>
+                <p class="text-subtitle-2 text-medium-emphasis">{{locale(item.description)}}</p>
+            </template>
+          </v-carousel-item>
+        </v-carousel>
+      </div>
+
+
+
+<!--      &lt;!&ndash; Title, image and features &ndash;&gt;
       <div class="d-flex flex-column flex-grow-1">
         <h4 class="text-promote-premium-color-premium text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
         <div id="rocketWrapper" class="mx-auto">
           <div id="rocket" class="animation-translate-y mx-auto" />
           <div id="rocketSmoke" class="mx-auto" />
         </div>
-        <v-defaults-provider :defaults="{
-          'VIcon': {
-            'icon': 'mdi-check-circle',
-            'color': 'premium-features-icon',
-            'size': '18',
-            'class': 'me-2',
-          }
-        }">
-          <ul id="featuresList" class="text-capitalize text-body-2 text-white px-5 mt-4" style="list-style: none;">
-            <li>
-              <v-icon />
-              {{ locale('ULTRA_FAST_SPEED') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('REMOVE_AD') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('MORE_LOCATIONS') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('FILTER_IP_ADDRESSES') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('PRIVATE_DNS') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('ALWAYS_ON') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('QUICK_LAUNCH') }}
-            </li>
-            <li>
-              <v-icon />
-              {{ locale('SUPPORT') }}
-            </li>
-          </ul>
-        </v-defaults-provider>
-      </div>
+      </div>-->
 
       <!-- Premium by google and by code buttons -->
-      <div class="px-5 mt-4">
+      <div class="mt-4">
 
         <!-- Show skeleton loader till to load google play info -->
         <v-skeleton-loader v-if="subscriptionPlans.length === 0 && isGoogleBillingAvailable"
@@ -327,7 +390,7 @@ function closeCompleteDialog(showStatistics: boolean) {
 
         <!-- Input premium code button -->
         <v-card v-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByCode"
-                class="py-1 rounded-lg mb-4"
+                class="py-1 rounded-lg"
                 color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         >
           <v-btn
@@ -504,7 +567,6 @@ function closeCompleteDialog(showStatistics: boolean) {
                 </v-list-item>
               </v-list>-->
 
-    </v-card>
 
     <!-- Pending purchase process dialog -->
     <v-dialog :model-value="isShowProcessDialog" :persistent="true">
@@ -624,5 +686,23 @@ function closeCompleteDialog(showStatistics: boolean) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+</style>
+
+<!--suppress CssUnusedSymbol -->
+<style>
+#featuresCarousel .v-carousel__controls .v-btn--icon .v-icon{
+  --v-icon-size-multiplier:.8;
+}
+#featuresCarousel .v-carousel__controls__item{
+  margin: 0 3px;
+}
+#featuresCarousel .v-btn--icon.v-btn--density-default {
+  width: calc(var(--v-btn-height) + 6px);
+  height: calc(var(--v-btn-height) + 6px);
+}
+#featuresCarousel .v-window__controls{
+  padding: 0;
+  animation: pulseOpacity .9s infinite;
 }
 </style>

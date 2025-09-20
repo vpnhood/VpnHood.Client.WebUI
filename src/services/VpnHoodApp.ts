@@ -281,10 +281,6 @@ export class VpnHoodApp {
     }
   }
 
-  public getAssetPath(fileName: string): string {
-    return new URL(`../assets/images/${fileName}`, import.meta.url).href;
-  }
-
   public isActiveClientProfile(clientProfileId: string): boolean {
     return clientProfileId === this.data.userSettings.clientProfileId;
   }

@@ -41,7 +41,7 @@ function formatDate(date: Date | null | undefined): string | null {
     <div v-if="vhApp.data.isPremiumAccount" class="text-center">
       <v-img
         :eager="true"
-        :src="vhApp.getAssetPath('you-are-premium.webp')"
+        :src="Util.getAssetPath('you-are-premium.webp')"
         alt="Premium Image"
         width="100%"
         max-width="371px"
@@ -205,7 +205,7 @@ function formatDate(date: Date | null | undefined): string | null {
       <v-card-text class="d-flex align-center justify-space-between">
         <v-img
           :eager="true"
-          :src="vhApp.getAssetPath('free-to-premium-account-icon.webp')"
+          :src="Util.getAssetPath('free-to-premium-account-icon.webp')"
           alt="Go Premium Image"
           width="100%"
           max-width="92px"
