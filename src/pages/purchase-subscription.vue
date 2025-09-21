@@ -251,10 +251,11 @@ function closeCompleteDialog(showStatistics: boolean) {
         >
           <!-- Carousel arrows -->
           <template v-slot:prev="{ props }">
-            <v-btn color="highlight" icon="mdi-chevron-left" size="40" variant="text" @click="props.onClick" />
+            <v-btn color="highlight" :icon="Util.getLocalizedLeftChevron()" size="40" variant="text" @click="props.onClick" />
           </template>
           <template v-slot:next="{ props }">
-            <v-btn color="highlight" icon="mdi-chevron-right" size="40" variant="text" @click="props.onClick" />
+            <v-btn color="highlight" :icon="Util.getLocalizedRightChevron()" size="40" variant="text"
+                   @click="props.onClick" />
           </template>
 
           <!-- Carousel items -->
