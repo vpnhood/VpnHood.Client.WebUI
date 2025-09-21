@@ -703,6 +703,6 @@ function closeCompleteDialog(showStatistics: boolean) {
 }
 #featuresCarousel .v-window__controls{
   padding: 0;
-  animation: pulseOpacity .9s infinite;
+  animation: pulseOpacity 2s infinite;
 }
 </style>
