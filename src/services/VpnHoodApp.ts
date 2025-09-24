@@ -24,18 +24,18 @@ import { VpnHoodAppData } from '@/services/VpnHoodAppData';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
-  public apiClient: AppClient;
+  public appClient: AppClient;
   public clientProfileClient: ClientProfileClient;
   public intentsClient: IntentsClient;
   public vhFirebase: VhFirebaseApp | null;
   private lastReloadNumber: number = 0;
 
-  private constructor(apiClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
+  private constructor(appClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
       throw new Error('VpnHoodApp has been already initialized.');
 
     this.data = reactive(appData);
-    this.apiClient = apiClient;
+    this.appClient = appClient;
     this.clientProfileClient = clientProfileClient;
     this.intentsClient = intentsClient;
     this.vhFirebase = vhFirebase;
@@ -77,7 +77,7 @@ export class VpnHoodApp {
     // Only reload state for the last reload.
     this.lastReloadNumber++;
     const reloadNumber = this.lastReloadNumber;
-    const state = await this.apiClient.getState();
+    const state = await this.appClient.getState();
     if (reloadNumber !== this.lastReloadNumber)
       return; // Discard old data
     this.data.state = state;
@@ -116,7 +116,7 @@ export class VpnHoodApp {
   }
 
   private async reloadSettings(): Promise<void> {
-    const config = await this.apiClient.getConfig();
+    const config = await this.appClient.getConfig();
     this.data.features = config.features;
     this.data.userSettings = config.userSettings;
 
@@ -153,7 +153,7 @@ export class VpnHoodApp {
       if (isDiagnose)
         await this.diagnose();
       else
-        await this.apiClient.connect(clientProfileId, serverLocation, planId);
+        await this.appClient.connect(clientProfileId, serverLocation, planId);
 
       // ClientProfile will be updated after connecting.
       await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
@@ -173,7 +173,7 @@ export class VpnHoodApp {
   public async disconnect(): Promise<void> {
     try {
       this.data.uiState.uiDisconnectInProgress = true;
-      await this.apiClient.disconnect();
+      await this.appClient.disconnect();
     } finally {
       await this.reloadState();
       this.data.uiState.uiDisconnectInProgress = false;
@@ -189,7 +189,7 @@ export class VpnHoodApp {
 
   // Save any change by user
   public async saveUserSetting(): Promise<void> {
-    await this.apiClient.setUserSettings(this.data.userSettings);
+    await this.appClient.setUserSettings(this.data.userSettings);
     await this.reloadState();
   }
 
@@ -211,13 +211,10 @@ export class VpnHoodApp {
   }
 
   public async diagnose(): Promise<void> {
-    if (!this.data.userSettings.clientProfileId) {
-      await router.replace({ name: 'SERVERS' });
-      return;
-    }
     try {
-      await this.apiClient.diagnose(this.data.userSettings.clientProfileId);
-    } catch (err: unknown) {
+      await this.appClient.diagnose(this.data.userSettings.clientProfileId);
+    }
+    catch (err: unknown) {
       console.log(err);
     }
   }
@@ -245,15 +242,15 @@ export class VpnHoodApp {
 
   // Get the installed apps list on the user device
   public getInstalledApps(): Promise<DeviceAppInfo[]> {
-    return this.apiClient.getInstalledApps();
+    return this.appClient.getInstalledApps();
   }
 
   public async postPoneUpdate(): Promise<void> {
-    await this.apiClient.versionCheckPostpone();
+    await this.appClient.versionCheckPostpone();
   }
 
   public async checkForUpdate(): Promise<void> {
-    await this.apiClient.versionCheck();
+    await this.appClient.versionCheck();
   }
 
   getCurrentServerLocationInfo(): ServerLocationInfo | null | undefined {
@@ -296,7 +293,7 @@ export class VpnHoodApp {
   public async clearLastError(): Promise<void> {
     this.data.uiState.stateLastErrorMessage = null;
     this.data.state.lastError = null;
-    await this.apiClient.clearLastError();
+    await this.appClient.clearLastError();
     await this.reloadState();
   }
 
@@ -343,11 +340,13 @@ export class VpnHoodApp {
   }
 
   public async signIn(onPurchase = false): Promise<void> {
+    this.data.uiState.showLoadingDialog = true;
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.signInWithGoogle();
       await this.loadAccount();
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;
 
       const { exceptionTypeName, statusCode } = err;
@@ -380,6 +379,9 @@ export class VpnHoodApp {
         default:
           throw err;
       }
+    }
+    finally {
+      this.data.uiState.showLoadingDialog = false;
     }
   }
 

@@ -29,7 +29,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
 async function showRewardedAd(){
   try {
     showLoadingAdDialog.value = true;
-    await vhApp.apiClient.extendByRewardedAd();
+    await vhApp.appClient.extendByRewardedAd();
     vhApp.showGeneralSnackbar(locale("EXTEND_BY_REWARDED_AD_CONFIRM_MSG"), "active");
     await router.replace({name: 'HOME'});
   }

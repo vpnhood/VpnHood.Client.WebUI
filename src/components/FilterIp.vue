@@ -50,7 +50,7 @@ const includeIpFilters = computed<string>({
 async function saveIpList(){
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.apiClient.setIpFilters(new IpFilters({
+  await vhApp.appClient.setIpFilters(new IpFilters({
     adapterIpFilterExcludes: ipFilters.value.adapterIpFilterExcludes,
     adapterIpFilterIncludes: ipFilters.value.adapterIpFilterIncludes,
     appIpFilterExcludes: ipFilters.value.appIpFilterExcludes,
@@ -60,7 +60,7 @@ async function saveIpList(){
 }
 
 onMounted(async () => {
-  ipFilters.value = await vhApp.apiClient.getIpFilters();
+  ipFilters.value = await vhApp.appClient.getIpFilters();
   savedIps = new IpFilters(ipFilters.value);
   isLoadingIP.value = false;
 })

@@ -20,7 +20,7 @@ const locale = i18n.global.t;
     ]"
     button-text="OPEN_VPN_SETTINGS"
     :button-click="()=>vhApp.intentsClient.openSystemAlwaysOnSettings()"
-    :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn)"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.AlwaysOn)"
     :is-action-button-available="vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported"
   />
 </template>

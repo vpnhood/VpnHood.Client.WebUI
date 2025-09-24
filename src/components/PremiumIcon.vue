@@ -13,7 +13,7 @@ function checkIconVisibility(){
   if (typeof props.isPremium === 'boolean')
     isPremium = props.isPremium;
   else
-    isPremium = vhApp.data.features.premiumFeatures.includes(props.isPremium)
+    isPremium = vhApp.data.isPremiumFeature(props.isPremium)
 
   return isPremium;
 }

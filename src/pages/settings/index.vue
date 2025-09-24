@@ -64,9 +64,9 @@ const settingsItem: SettingsItem[] = [
   {
     title: "SPLIT_IP_ADDRESSES",
     subtitle: "SPLIT_IP_ADDRESSES_DESC",
-    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AppIpFilter),
+    isPremium: vhApp.data.isPremiumFeature(AppFeature.AppIpFilter),
     status: {
-      state: vhApp.data.isFilterIpTurnOn,
+      state: vhApp.data.isSplitIpInUse,
       onText: locale('ON'),
       offText: locale('OFF')
     },
@@ -77,7 +77,7 @@ const settingsItem: SettingsItem[] = [
     subtitle: "NOTIFICATIONS_DESC",
     isPremium: false,
     status: {
-      state: vhApp.data.state.isNotificationEnabled ?? undefined,
+      state: vhApp.data.isNotificationEnabled,
       onText: locale('ON'),
       offText: locale('OFF')
     },
@@ -87,14 +87,14 @@ const settingsItem: SettingsItem[] = [
   {
     title: "QUICK_LAUNCH",
     subtitle: "QUICK_LAUNCH_DESC",
-    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch),
+    isPremium: vhApp.data.isPremiumFeature(AppFeature.QuickLaunch),
     isShow: vhApp.data.intentFeatures.isQuickLaunchSupported,
     click: {name: 'QUICK_LAUNCH'}
   },
   {
     title: "ALWAYS_ON",
     subtitle: "ALWAYS_ON_DESC",
-    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.AlwaysOn),
+    isPremium: vhApp.data.isPremiumFeature(AppFeature.AlwaysOn),
     isShow: vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported,
     click: {name: 'ALWAYS_ON'}
   },
@@ -109,11 +109,11 @@ const settingsItem: SettingsItem[] = [
     title: "DNS",
     subtitle: "DNS_DESC",
     status: {
-      state: vhApp.data.state.systemPrivateDns?.isActive || vhApp.data.userSettings.dnsMode === DnsMode.AdapterDns,
+      state: vhApp.data.isDnsInUse,
       onText: locale('CUSTOM'),
       offText: locale('DEFAULT')
     },
-    isPremium: vhApp.data.features.premiumFeatures.includes(AppFeature.CustomDns),
+    isPremium: vhApp.data.isPremiumFeature(AppFeature.CustomDns),
     click: {name: vhApp.data.isPremiumFeatureAllowed(AppFeature.CustomDns) ? 'DNS' : 'DNS_GO_PREMIUM'}
   }
 ]

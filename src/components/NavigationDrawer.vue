@@ -5,7 +5,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/theme/vuetify';
 import { AppName } from '@/helpers/UiConstants';
-import type { RouteLocationRaw } from 'vue-router';
+import { type RouteLocationRaw} from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';
 import { Util } from '@/helpers/Util';
 
@@ -65,20 +65,17 @@ async function checkForUpdate() {
 async function onSignIn() {
   try {
     emit('update:modelValue', false);
-    vhApp.data.uiState.showLoadingDialog = true;
     await vhApp.signIn();
   }
   catch (err: unknown) {
     if (err instanceof ApiException && err.exceptionTypeName === "NoCredentialException")
       throw new Error(locale('GOOGLE_PLAY_LOGIN_NO_CREDENTIAL_ERROR'));
-  }
-  finally {
-    vhApp.data.uiState.showLoadingDialog = false;
+    else
+      throw err;
   }
 }
-function navigateByRouter(to: RouteLocationRaw){
-  emit('update:modelValue', false);
-  router.replace(to);
+async function navigateByRouter(to: RouteLocationRaw){
+  await router.replace(to);
 }
 function edgeToEdgeHeight(bottom: boolean): string{
   if (bottom){
@@ -176,7 +173,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <v-list-item
         class="border-b"
         :disabled="!vhApp.data.state.canDiagnose"
-        @click="diagnose"
+        @click="diagnose()"
       >
         <v-list-item-title>
           <v-icon icon="mdi-stethoscope" />
@@ -187,7 +184,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <!-- Check for update -->
       <v-list-item
         class="border-b"
-        @click="checkForUpdate"
+        @click="checkForUpdate()"
       >
         <v-list-item-title>
           <v-progress-circular v-if="isCheckForUpdate" :width="2" :size="21.59" :indeterminate="true" color="highlight" />

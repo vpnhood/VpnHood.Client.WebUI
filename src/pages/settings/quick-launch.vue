@@ -45,7 +45,7 @@ onMounted(() => {
     :list-step=" vhApp.data.intentFeatures.isRequestQuickLaunchSupported ? supportedRequestQuickLaunchSteps : unsupportedRequestQuickLaunchSteps"
     button-text="QUICK_LAUNCH_TURN_ON"
     :button-click="()=>addQuickLaunchHandler()"
-    :is-premium="vhApp.data.features.premiumFeatures.includes(AppFeature.QuickLaunch)"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.QuickLaunch)"
     :is-action-button-available="vhApp.data.intentFeatures.isRequestQuickLaunchSupported"
     :is-show-skip-btn="isShowSkipBtn"
   />

@@ -60,7 +60,7 @@ async function submitRate() {
       }
     )
 
-    await vhApp.apiClient.setUserReview(userReview);
+    await vhApp.appClient.setUserReview(userReview);
     await vhApp.reloadState();
 
     // Show the Google Play dialog if the user rates 3.

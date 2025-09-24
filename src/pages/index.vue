@@ -13,6 +13,8 @@ import { Util } from '@/helpers/Util';
 import CountDown from '@/components/CountDown.vue';
 import { computed, ref } from 'vue';
 import UserReviewDialog from '@/components/UserReviewDialog.vue';
+import HomeBadge from '@/components/HomeBadge.vue';
+import BadgeDialog from '@/components/BadgeDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -94,10 +96,6 @@ function connectButtonText(): string {
       default:
         return locale('DISCONNECT');
     }
-}
-function isCustomEndpointAvailable(): boolean {
-  if (!vhApp.data.state.clientProfile?.customServerEndpoints) return false;
-  return vhApp.data.state.clientProfile?.customServerEndpoints.length > 0;
 }
 
 // Return connection download and upload speed based on Mbps
@@ -223,8 +221,10 @@ function isDebugDataHasValue(): boolean {
 
         <!-- Go Premium or Countdown button -->
         <v-row class="mt-0" align="center">
-          <v-col cols="2"></v-col>
-          <v-col cols="8" class="text-center">
+          <v-col cols="12" class="text-center position-relative">
+            <!-- Show some features icon if available -->
+            <home-badge/>
+
             <!-- Countdown and extend session button -->
             <CountDown v-if="isShowCountdown()" tabindex="2"/>
 
@@ -272,25 +272,6 @@ function isDebugDataHasValue(): boolean {
               {{ locale('GO_PREMIUM') }}
             </v-btn>
           </v-col>
-
-          <!-- Show IP icon if IP-filter option is enabled -->
-          <v-col cols="2" class="d-inline-flex justify-end ga-1">
-            <v-icon v-if="vhApp.data.isFilterIpTurnOn"
-                    icon="mdi-filter-cog-outline"
-                    size="17px"
-                    color="white"
-                    class="opacity-40 pb-1"
-                    tabindex="-1"
-            />
-            <v-icon v-if="isCustomEndpointAvailable()"
-                    icon="mdi-ip-network"
-                    size="17px"
-                    color="white"
-                    class="opacity-40 pb-1"
-                    tabindex="-1"
-            />
-          </v-col>
-
         </v-row>
 
       </v-col>
@@ -487,6 +468,7 @@ function isDebugDataHasValue(): boolean {
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
     <UserReviewDialog v-model="isShowUserReview" />
+    <badge-dialog v-model="ComponentRouteController.create(ComponentName.BadgeDialog).isShow" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">

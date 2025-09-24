@@ -6,7 +6,7 @@ import {
   AppFeatures,
   AppIntentFeatures,
   AppState,
-  ClientProfileInfo,
+  ClientProfileInfo, DnsMode,
   UiCultureInfo,
   UserSettings
 } from '@/services/VpnHood.Client.Api';
@@ -88,8 +88,17 @@ export class VpnHoodAppData {
     return (!this.features.isPremiumFlagSupported || this.isPremiumAccount) ? 'enable-premium' : 'disable-premium';
   }
 
-  get isFilterIpTurnOn(): boolean {
+  get isSplitIpInUse(): boolean {
     return this.userSettings.useVpnAdapterIpFilter || this.userSettings.useAppIpFilter;
+  }
+
+  get isDnsInUse(): boolean{
+    return this.state.systemPrivateDns?.isActive || this.userSettings.dnsMode === DnsMode.AdapterDns;
+  }
+
+  get isCustomEndpointInUse(): boolean {
+    const customServerEndpoints = this.state.clientProfile?.customServerEndpoints;
+    return !!customServerEndpoints && customServerEndpoints.length > 0;
   }
 
   get isPremiumAccount(): boolean {
@@ -116,6 +125,9 @@ export class VpnHoodAppData {
     return bottomHeight > 0 ? bottomHeight : null;
   }
 
+  get isNotificationEnabled(): boolean{
+    return this.state.isNotificationEnabled === true
+  }
   //Add padding to the pages for handle edge-to-edge feature
   public edgeToEdge(): void {
     const paddingTop = this.getEdgeToEdgeTopHeight;
@@ -161,9 +173,13 @@ export class VpnHoodAppData {
     return this.state.sessionInfo?.isLocalNetworkAllowed ?? true;
   }
 
+  public isPremiumFeature(appFeature: AppFeature): boolean {
+    return this.features.premiumFeatures.includes(appFeature)
+  }
+
   public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {
     // not a premium feature
-    if (!this.features.premiumFeatures.includes(appFeature))
+    if (!this.isPremiumFeature(appFeature))
       return true;
 
     // check if the current profile is premium

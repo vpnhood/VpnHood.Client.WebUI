@@ -16,7 +16,7 @@ const locale = i18n.global.t;
     locale('NOTIFICATION_HOW_TO_TURN_ON_STEP_1'),
     locale('NOTIFICATION_HOW_TO_TURN_ON_STEP_2')
     ]"
-    :button-text="vhApp.data.state.isNotificationEnabled ? 'TURN_OFF_NOTIFICATION': 'TURN_ON_NOTIFICATION'"
+    :button-text="vhApp.data.isNotificationEnabled ? 'TURN_OFF_NOTIFICATION': 'TURN_ON_NOTIFICATION'"
     :button-click="()=>vhApp.intentsClient.openAppSystemNotificationSettings()"
     :is-premium="false"
     :is-action-button-available="vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported"

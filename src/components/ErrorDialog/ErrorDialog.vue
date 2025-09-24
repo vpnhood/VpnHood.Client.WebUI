@@ -19,18 +19,21 @@ const emit = defineEmits<{
 
 const dialogData = computed(() => vhApp.data.uiState.errorDialogData);
 
-async function changeLocationToAuto(clientProfileId: string): Promise<void> {
+async function changeLocationToAuto(): Promise<void> {
+  const clientProfileId = vhApp.data.userSettings.clientProfileId;
+  if(!clientProfileId)
+    throw new Error(locale("CHANGE_LOCATION_TO_AUTO_ERROR"));
 
   await vhApp.clientProfileClient.update(clientProfileId, new ClientProfileUpdateParams({
     selectedLocation: new PatchOfString({value: "*/*"})
   }));
-  emit('update:modelValue', false);
+
+  await closeDialog();
   await ConnectManager.connect1(false);
 }
 
 async function diagnose(): Promise<void> {
-  emit('update:modelValue', false);
-  await vhApp.clearLastError();
+  await closeDialog();
   await vhApp.diagnose();
 }
 
@@ -49,8 +52,14 @@ async function sendReport(): Promise<void> {
     console.error('Oops! Could not even send the report details!', ex);
   }
 }
+
+async function removePremiumCode(): Promise<void> {
+  await vhApp.removePremium();
+  await closeDialog();
+}
 async function closeDialog(): Promise<void> {
   emit('update:modelValue', false);
+  await vhApp.reloadState();
   await vhApp.clearLastError();
 }
 </script>
@@ -92,8 +101,7 @@ async function closeDialog(): Promise<void> {
           <v-btn v-if="dialogData.showChangeServerToAutoButton"
             variant="flat"
             :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
-            @click="vhApp.data.state.clientProfile?.clientProfileId
-          && changeLocationToAuto(vhApp.data.state.clientProfile.clientProfileId)"
+            @click="changeLocationToAuto()"
           />
 
           <!-- Remove premium code or profile -->
@@ -102,7 +110,7 @@ async function closeDialog(): Promise<void> {
             <v-btn
               variant="flat"
               :text="locale('YES_SWITCH_NOW')"
-              @click="vhApp.removePremium(); closeDialog()"
+              @click="removePremiumCode()"
             />
           </div>
 

@@ -1,1 +1,16 @@
 ﻿This translation is used for VPN app UI
+
+Return the resource value if the key exactly matches any of the following:
+- "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC"
+- "VPN_HOOD_APP_NAME"
+- "VPN_HOOD_CONNECT_APP_NAME"
+- "SEND_FEEDBACK_URL"
+- "PROTOCOL_UDP"
+- "PROTOCOL_TCP"
+- "KILL_SWITCH"
+- "KILL_SWITCH_COLORED"
+- "VPNHOOD_ENGINE"
+- "DNS"
+
+Return the resource word if it exactly matches any of the following:
+- "Kill Switch"

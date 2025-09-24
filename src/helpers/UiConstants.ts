@@ -14,6 +14,7 @@ export enum ComponentName {
   ConfirmDeleteServerDialog = 'ConfirmDeleteServerDialog',
   EnterPremiumCode = 'EnterPremiumCode',
   CustomEndpoint = 'CustomEndpoint',
+  BadgeDialog = 'BadgeDialog',
 }
 
 export enum LanguagesCode {

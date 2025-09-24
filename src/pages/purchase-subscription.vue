@@ -7,7 +7,7 @@ import {
   SubscriptionPlan
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watchEffect } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
@@ -17,6 +17,7 @@ import { ComponentName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+
 // TODO: Improve this page
 const purchaseOptions = ref<AppPurchaseOptions | null>(null);
 const showPurchaseViaWeb = ref<boolean>(false);
@@ -129,11 +130,26 @@ const isShowProcessDialog = computed<boolean>(() => {
   return vhApp.data.state.purchaseState === BillingPurchaseState.Processing || showProcessDialog.value;
 });
 
+// preload the rocket images
+onBeforeMount(() => {
+  const preloadImages = [
+    Util.getAssetPath('rocket-bg.webp'),
+    Util.getAssetPath('rocket-smoke.webp'),
+    Util.getAssetPath('rocket.webp'),
+  ];
+
+  preloadImages.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+})
+
 onMounted(async () => {
+
   // Hide the carousel arrow after 3 seconds
-  setTimeout(() => {
+ /* setTimeout(() => {
     isShowCarouselArrow.value = false;
-  }, 6000);
+  }, 6000);*/
 
   // Check eligibility to purchase by Google
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
@@ -179,10 +195,17 @@ async function onPurchaseClick(planId: string): Promise<void> {
 }
 
 async function purchase(planId: string): Promise<void> {
-  const billingClient = ClientApiFactory.instance.createBillingClient();
-  await billingClient.purchase(planId);
-  await vhApp.loadAccount();
-  purchaseCompleteDialogMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
+  vhApp.data.uiState.showLoadingDialog = true;
+  try {
+    const billingClient = ClientApiFactory.instance.createBillingClient();
+    await billingClient.purchase(planId);
+    await vhApp.loadAccount();
+    vhApp.data.uiState.showLoadingDialog = false;
+    purchaseCompleteDialogMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
+  }
+  finally {
+    vhApp.data.uiState.showLoadingDialog = false;
+  }
 }
 
 async function validatePremiumCode(): Promise<void> {
@@ -284,16 +307,6 @@ function closeCompleteDialog(showStatistics: boolean) {
       </div>
 
 
-
-<!--      &lt;!&ndash; Title, image and features &ndash;&gt;
-      <div class="d-flex flex-column flex-grow-1">
-        <h4 class="text-promote-premium-color-premium text-uppercase text-center mt-4">{{ locale('GO_PREMIUM') }}</h4>
-        <div id="rocketWrapper" class="mx-auto">
-          <div id="rocket" class="animation-translate-y mx-auto" />
-          <div id="rocketSmoke" class="mx-auto" />
-        </div>
-      </div>-->
-
       <!-- Premium by google and by code buttons -->
       <div class="mt-4">
 
@@ -304,6 +317,7 @@ function closeCompleteDialog(showStatistics: boolean) {
                            class="mb-4"
                            height="125px"
         />
+
         <!-- Purchase by google -->
         <v-card v-else-if="showPurchaseViaGoogle &&
         vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase"
@@ -369,7 +383,6 @@ function closeCompleteDialog(showStatistics: boolean) {
           </template>
 
         </v-card>
-
 
         <!-- Alternative purchase button -->
         <v-card v-if="showPurchaseViaWeb"
@@ -651,10 +664,6 @@ function closeCompleteDialog(showStatistics: boolean) {
   max-height: 335px;
 }
 
-.v-theme--VpnHoodClient #rocketWrapper {
-  background-image: url('@/assets/images/rocket-bg-client.webp');
-}
-
 #rocket, #rocketSmoke {
   position: absolute;
   left: 0;
@@ -679,10 +688,6 @@ function closeCompleteDialog(showStatistics: boolean) {
   z-index: 2;
 }
 
-#featuresList > li {
-  padding: 2px 0;
-}
-
 #activationInfo > li {
   display: flex;
   justify-content: space-between;
@@ -701,9 +706,9 @@ function closeCompleteDialog(showStatistics: boolean) {
 #featuresCarousel .v-btn--icon.v-btn--density-default {
   width: calc(var(--v-btn-height) + 6px);
   height: calc(var(--v-btn-height) + 6px);
-}
+}/*
 #featuresCarousel .v-window__controls{
   padding: 0;
   animation: pulseOpacity 2s infinite;
-}
+}*/
 </style>

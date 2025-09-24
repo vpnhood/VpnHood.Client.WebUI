@@ -74,9 +74,9 @@ async function internalAdDismissed(learnMore: boolean, adError: string | null = 
   allowLeavePage.value = true;
 
   if (adError)
-    await vhApp.apiClient.internalAdError(adError);
+    await vhApp.appClient.internalAdError(adError);
   else
-    await vhApp.apiClient.internalAdDismiss(learnMore ? ShowAdResult.Clicked : ShowAdResult.Closed);
+    await vhApp.appClient.internalAdDismiss(learnMore ? ShowAdResult.Clicked : ShowAdResult.Closed);
 
   vhApp.data.state.isWaitingForInternalAd = false;
   await vhApp.reloadState();
