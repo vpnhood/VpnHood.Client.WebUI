@@ -31,7 +31,7 @@ const locale = i18n.global.t;
         :src="Util.getAssetPath('private-dns.webp')"
         alt="DNS Icon"
         width="100%"
-        max-width="500px"
+        max-height="250px"
         class="mx-auto"
       />
 
@@ -66,10 +66,10 @@ const locale = i18n.global.t;
         </v-row>
 
         <!-- Divider -->
-        <div class="d-flex align-center justify-center w-50 my-5 mx-auto">
-          <div class="w-100 border-b border-active"></div>
+        <div class="d-flex align-center justify-center w-50 my-3 mx-auto">
+          <div class="w-100 border-b border-active border-opacity-25"></div>
           <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
-          <div class="w-100 border-b border-active"></div>
+          <div class="w-100 border-b border-active border-opacity-25"></div>
         </div>
 
         <v-row

@@ -98,9 +98,9 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
         <!-- Divider -->
         <div v-if="isFreeAvailable()" class="d-flex align-center justify-center w-50 my-5 mx-auto">
-          <div class="w-100 border-b border-active"></div>
+          <div class="w-100 border-b border-active border-opacity-25"></div>
           <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
-          <div class="w-100 border-b border-active"></div>
+          <div class="w-100 border-b border-active border-opacity-25"></div>
         </div>
 
         <!-- Watch rewarded ad -->

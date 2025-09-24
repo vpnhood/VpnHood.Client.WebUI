@@ -62,7 +62,7 @@ async function showRewardedAd(){
       class="mx-auto"
     />
 
-    <div class="px-3">
+    <div>
 
       <!-- Watch rewarded ad -->
       <promote-connect-button
