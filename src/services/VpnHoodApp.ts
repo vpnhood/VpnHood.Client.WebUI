@@ -292,8 +292,8 @@ export class VpnHoodApp {
 
   public async clearLastError(): Promise<void> {
     this.data.uiState.stateLastErrorMessage = null;
-    this.data.state.lastError = null;
     await this.appClient.clearLastError();
+    this.data.state.lastError = null;
     await this.reloadState();
   }
 

@@ -9,10 +9,9 @@ const locale = i18n.global.t;
 </script>
 
 <template>
-  <v-sheet color="grad-bg-container-bg" class="pt-4">
+  <grad-sheet>
 
-    <v-card :class="Util.getSpecialPageCardClass()">
-
+    <div>
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
@@ -25,6 +24,7 @@ const locale = i18n.global.t;
         <h3 class="text-center mb-2" v-html="locale('PRIVATE_DNS_COLORED')" />
         <p>{{locale("PRIVATE_DNS_DIALOG_MSG")}}</p>
       </div>
+    </div>
 
       <v-img
         :eager="true"
@@ -99,6 +99,6 @@ const locale = i18n.global.t;
         </v-row>
 
       </div>
-    </v-card>
-  </v-sheet>
+
+  </grad-sheet>
 </template>

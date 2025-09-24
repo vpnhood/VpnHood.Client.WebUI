@@ -53,14 +53,13 @@ async function sendReport(): Promise<void> {
   }
 }
 
-async function removePremiumCode(): Promise<void> {
+async function removePremium(): Promise<void> {
   await vhApp.removePremium();
   await closeDialog();
 }
 async function closeDialog(): Promise<void> {
-  emit('update:modelValue', false);
-  await vhApp.reloadState();
   await vhApp.clearLastError();
+  emit('update:modelValue', false);
 }
 </script>
 
@@ -110,7 +109,7 @@ async function closeDialog(): Promise<void> {
             <v-btn
               variant="flat"
               :text="locale('YES_SWITCH_NOW')"
-              @click="removePremiumCode()"
+              @click="removePremium()"
             />
           </div>
 

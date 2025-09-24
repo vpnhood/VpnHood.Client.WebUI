@@ -10,7 +10,7 @@ const locale = i18n.global.t;
 </script>
 
 <template>
-  <v-sheet :class="Util.getSpecialPageCardClass()">
+  <grad-sheet>
 
       <div>
         <!-- Back button -->
@@ -58,7 +58,7 @@ const locale = i18n.global.t;
 
       </card-on-grad>
 
-  </v-sheet>
+  </grad-sheet>
 </template>
 
 

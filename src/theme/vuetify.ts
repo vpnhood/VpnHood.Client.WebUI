@@ -4,7 +4,7 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { en, fa } from 'vuetify/locale';
-import { VCard, VIcon, VAlert, VBtn } from 'vuetify/components';
+import { VCard, VAlert, VBtn, VSheet } from 'vuetify/components';
 import { AppName } from '@/helpers/UiConstants';
 import { vhClientThemeColors, vhConnectThemeColors } from '@/theme/themes';
 import { vuetifyDefaults, buttonAliases } from '@/theme/defaults';
@@ -19,6 +19,7 @@ export default createVuetify({
     rtl: { ar: true, fa: true, isRtl: true },
   },
   aliases: {
+    GradSheet: VSheet,
     TonalIconBtn: VBtn,
     HomeConfigBtn: VBtn,
     ConfigCard: VCard,

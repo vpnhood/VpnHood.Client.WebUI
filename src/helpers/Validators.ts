@@ -1,30 +1,39 @@
-﻿export const ipRegex: RegExp =
+﻿export class Validators {
+
+  public static validateIp(value: string | null, errorMessage = 'Invalid IP address'): true | string {
+    if (!value || value.trim() === '') return true;
+    return ipRegex.test(value.trim()) ? true : errorMessage;
+  }
+
+  public static formatIpInput(value: string): string {
+    const raw = value.trim().toLowerCase();
+
+    if (raw.includes(':')) {
+      return formatIPv6(raw); // preserves compressed IPv6
+    }
+
+    if (/^(\d{1,3}\.){0,3}\d{1,3}$/.test(raw)) {
+      return raw;
+    }
+
+    return formatIPv4(raw);
+  }
+
+  public static isEmptyString(value: string): boolean{
+    return value.trim() === '';
+  }
+
+  public static isNullOrUndefined(value: unknown): boolean {
+    return value === null || value === undefined;
+  }
+
+}
+
+const ipRegex: RegExp =
   /^((([0-9]{1,3}\.){3}[0-9]{1,3})|(([a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}|([a-fA-F0-9]{1,4}:){1,7}:|([a-fA-F0-9]{1,4}:){1,6}:[a-fA-F0-9]{1,4}|([a-fA-F0-9]{1,4}:){1,5}(:[a-fA-F0-9]{1,4}){1,2}|([a-fA-F0-9]{1,4}:){1,4}(:[a-fA-F0-9]{1,4}){1,3}|([a-fA-F0-9]{1,4}:){1,3}(:[a-fA-F0-9]{1,4}){1,4}|([a-fA-F0-9]{1,4}:){1,2}(:[a-fA-F0-9]{1,4}){1,5}|[a-fA-F0-9]{1,4}:((:[a-fA-F0-9]{1,4}){1,6})|:((:[a-fA-F0-9]{1,4}){1,7}|:)|::ffff:(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\.(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})){3}))$/;
 
-export function validateIp(value: string | null, errorMessage = 'Invalid IP address'): true | string {
-  if (!value || value.trim() === '') return true;
-  return ipRegex.test(value.trim()) ? true : errorMessage;
-}
-
-export function formatIpInput(value: string): string {
-  const raw = value.trim().toLowerCase();
-
-  if (raw.includes(':')) {
-    return formatIPv6(raw); // preserves compressed IPv6
-  }
-
-  if (/^(\d{1,3}\.){0,3}\d{1,3}$/.test(raw)) {
-    return raw;
-  }
-
-  return formatIPv4(raw);
-}
-
-export function isEmptyString(value: string): boolean{
-  return value.trim() === '';
-}
-
 function formatIPv4(value: string): string {
+  // noinspection RegExpSimplifiable
   const segments = value.split('.').map(s => s.replace(/[^\d]/g, '')).filter(Boolean);
   const parts: string[] = [];
 

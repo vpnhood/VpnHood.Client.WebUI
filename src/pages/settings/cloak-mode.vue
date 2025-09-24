@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-sheet id="cloakMode" :class="Util.getSpecialPageCardClass()">
+  <grad-sheet id="cloakMode">
 
     <div>
       <!-- Back button -->
@@ -28,9 +28,7 @@ onMounted(() => {
       />
 
       <!-- Title and Description -->
-      <div class="text-center">
-        <h3 class="mb-2" v-html="locale('CLOAK_MODE_COLORED')" />
-      </div>
+      <h3 class="text-center mb-2" v-html="locale('CLOAK_MODE_COLORED')" />
     </div>
 
     <!-- Feature image -->
@@ -50,5 +48,5 @@ onMounted(() => {
       </v-card-item>
     </card-on-grad>
 
-  </v-sheet>
+  </grad-sheet>
 </template>

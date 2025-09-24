@@ -6,6 +6,7 @@ import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/Goog
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 import type { ShowErrorActions } from '@/helpers/UiConstants';
 import router from '@/services/router';
+import { Validators } from '@/helpers/Validators';
 
 interface ShowErrorOptions {
   ignoreMessage?: boolean,
@@ -21,7 +22,10 @@ export class ErrorHandler {
     const errorOptions: ShowErrorOptions = await this.getErrorMessage(err);
 
     // Do not show any message
-    if (errorOptions.ignoreMessage) return;
+    if (errorOptions.ignoreMessage){
+      await VpnHoodApp.instance.clearLastError();
+      return;
+    }
 
     const text = errorOptions.text ?? '';
 
@@ -109,7 +113,6 @@ export class ErrorHandler {
       case ExceptionType.VpnServiceNotReady:
         return { localeKey: 'VPN_SERVICE_NOT_READY_MSG' };
 
-      // On the diagnosis
       case ExceptionType.NoStableVpn:
         return { localeKey: 'NO_STABLE_VPN_MSG' };
 
@@ -267,7 +270,7 @@ export class ErrorHandler {
 
       case GooglePlayBillingResponseCode.Error:
         if (purchaseState === '')
-          return { text: `${billingMessage}` };
+          return { text: `${Validators.isEmptyString(billingMessage as string) ? i18n.global.t('GOOGLE_BILLING_NETWORK_ERROR') : billingMessage}` };
         return {
           localeKey: 'ORDER_PROCESSING_FAILED',
           text: `${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`

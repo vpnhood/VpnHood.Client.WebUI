@@ -251,7 +251,7 @@ function closeCompleteDialog(showStatistics: boolean) {
 </script>
 
 <template>
-  <v-sheet :class="Util.getSpecialPageCardClass()">
+  <grad-sheet>
 
       <!-- Back button -->
       <tonal-icon-btn
@@ -650,7 +650,7 @@ function closeCompleteDialog(showStatistics: boolean) {
       </v-card>
     </v-dialog>
 
-  </v-sheet>
+  </grad-sheet>
 </template>
 
 <style scoped>

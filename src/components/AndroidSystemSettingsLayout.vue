@@ -21,7 +21,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <v-sheet :class="Util.getSpecialPageCardClass()">
+  <grad-sheet>
 
     <div>
       <!-- Back button -->
@@ -105,7 +105,7 @@ const props = defineProps<{
 
     </card-on-grad>
 
-  </v-sheet>
+  </grad-sheet>
 </template>
 
 

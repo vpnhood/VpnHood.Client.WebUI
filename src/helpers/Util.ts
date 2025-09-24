@@ -30,16 +30,8 @@ export class Util {
     return formattedDate;
   }
 
-  public static getSpecialPageCardClass(): string{
-    return "d-flex flex-column justify-space-between primary-bg-grad text-white fill-height"
-  }
-
   public static delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  public static isNullOrUndefined(value: unknown): boolean {
-    return value === null || value === undefined;
   }
 
   public static getAssetPath(fileName: string): string {

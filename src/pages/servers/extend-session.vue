@@ -40,7 +40,7 @@ async function showRewardedAd(){
 </script>
 
 <template>
-  <v-sheet :class="Util.getSpecialPageCardClass()">
+  <grad-sheet>
 
     <div>
       <!-- Back button -->
@@ -102,5 +102,5 @@ async function showRewardedAd(){
       </v-card>
     </v-dialog>
 
-  </v-sheet>
+  </grad-sheet>
 </template>

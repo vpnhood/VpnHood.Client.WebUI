@@ -30,6 +30,7 @@ export const vuetifyDefaults = {
   },
   VBtn: { class: 'text-transform-none' },
   VSheet: { class: 'px-4 pb-4 fill-height', color: 'background' },
+  GradSheet: { class: 'd-flex flex-column justify-space-between primary-bg-grad text-white fill-height px-4 pb-4' },
   VExpansionPanel: { ConfigCard: { color: 'config-card-on-expansion-panel' } },
 
   BtnStyle1: { variant: 'flat', rounded: 'pill', color: 'btn-style-1', class: 'text-transform-none font-weight-bold' },

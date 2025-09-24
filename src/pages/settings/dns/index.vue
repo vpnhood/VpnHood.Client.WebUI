@@ -8,7 +8,7 @@ import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormali
 import { AppFeature, DnsMode } from '@/services/VpnHood.Client.Api';
 import PremiumIcon from '@/components/PremiumIcon.vue';
 import { computed, ref, watch } from 'vue';
-import { formatIpInput, isEmptyString, validateIp } from '@/helpers/Validators';
+import { Validators } from '@/helpers/Validators';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -22,18 +22,18 @@ const dns1Error = ref<string | null>(null);
 const selectedDnsMode = ref<DnsMode>(vhApp.data.userSettings.dnsMode);
 
 const validateDns1 = (value: string | null): true | string => {
-  if (isAdapterDnsAvailable.value && (!value || isEmptyString(value))) {
+  if (isAdapterDnsAvailable.value && (!value || Validators.isEmptyString(value))) {
     return locale('DNS1_REQUIRED');
   }
-  return validateIp(value, locale('INVALID_IP'));
+  return Validators.validateIp(value, locale('INVALID_IP'));
 };
 
 const dns1Rules = [validateDns1];
-const dns2Rules = [(value: string | null) => validateIp(value, locale('INVALID_IP'))];
+const dns2Rules = [(value: string | null) => Validators.validateIp(value, locale('INVALID_IP'))];
 
 async function saveSettings() {
   vhApp.data.userSettings.dnsMode = selectedDnsMode.value;
-  vhApp.data.userSettings.dnsServers = [dns1.value, dns2.value].filter((v): v is string => !!v && !isEmptyString(v));
+  vhApp.data.userSettings.dnsServers = [dns1.value, dns2.value].filter((v): v is string => !!v && !Validators.isEmptyString(v));
   await vhApp.saveUserSetting();
 }
 
@@ -61,13 +61,13 @@ onBeforeRouteLeave(
 // Dns1 Live formatting
 watch(dns1, (newVal) => {
   if (!newVal) return;
-  const formatted = formatIpInput(newVal);
+  const formatted = Validators.formatIpInput(newVal);
   if (formatted !== newVal) dns1.value = formatted;
 });
 // Dns2 Live formatting
 watch(dns2, (newVal) => {
   if (!newVal) return;
-  const formatted = formatIpInput(newVal);
+  const formatted = Validators.formatIpInput(newVal);
   if (formatted !== newVal) dns2.value = formatted;
 });
 

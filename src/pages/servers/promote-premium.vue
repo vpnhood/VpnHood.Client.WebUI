@@ -43,8 +43,9 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 </script>
 
 <template>
-  <v-sheet :class="Util.getSpecialPageCardClass()">
+  <grad-sheet>
 
+    <div>
       <!-- Back button -->
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
@@ -53,6 +54,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
       />
 
       <h3 class="text-center" v-html="dialogTitle" />
+    </div>
 
       <v-img
         :eager="true"
@@ -139,5 +141,5 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
       </div>
 
-  </v-sheet>
+  </grad-sheet>
 </template>
