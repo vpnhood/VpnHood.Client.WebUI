@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "i18n:unused": "node scripts/find-unused-i18n-keys.mjs"
   },
   "dependencies": {
     "@mdi/font": "7.3.67",
