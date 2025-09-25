@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { ChannelProtocol } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
 import router from '@/services/router';
@@ -9,73 +10,100 @@ import { Util } from '@/helpers/Util';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-enum Protocols {
-  UDP,
-  TCP,
-  TcpAndDropHTTP3
-}
-
 interface ProtocolsItem {
-  value: Protocols,
+  value: ChannelProtocol,
   title: string,
   subtitle: string,
   isDefault: boolean,
-  isDisabled: boolean
+  isVisible: boolean,
+  isDisabled: boolean,
+  disabledReason?: string
 }
 
-const protocolsItem: ProtocolsItem[] = [
-  {
-    value: Protocols.UDP,
-    title: "PROTOCOL_UDP",
-    subtitle: "PROTOCOL_UDP_DESC",
-    isDefault: false,
-    isDisabled: isUdpUnsupported()
-  },
-  {
-    value: Protocols.TCP,
-    title: "PROTOCOL_TCP",
-    subtitle: "PROTOCOL_TCP_DESC",
-    isDefault: true,
-    isDisabled: false
-  },
-  {
-    value: Protocols.TcpAndDropHTTP3,
-    title: "PROTOCOL_DROP_QUIC",
-    subtitle: "PROTOCOL_DROP_QUIC_DESC",
-    isDefault: false,
-    isDisabled: false
-  }
-]
+// Configuration (static meta) for each channel protocol
+const allProtocolsConfig: Record<string, { title: string; subtitle: string; isDefault: boolean; }> = {
+  [ChannelProtocol.Udp]: { title: 'PROTOCOL_UDP', subtitle: 'PROTOCOL_UDP_DESC', isDefault: false },
+  [ChannelProtocol.Tcp]: { title: 'PROTOCOL_TCP', subtitle: 'PROTOCOL_TCP_DESC', isDefault: true },
+  [ChannelProtocol.TcpProxyAndUdp]: { title: 'PROTOCOL_TCP_PROXY_AND_UDP', subtitle: 'PROTOCOL_TCP_PROXY_AND_UDP_DESC', isDefault: false },
+  [ChannelProtocol.TcpProxy]: { title: 'PROTOCOL_TCP_PROXY', subtitle: 'PROTOCOL_TCP_PROXY_DESC', isDefault: false },
+  [ChannelProtocol.TcpProxyAndDropQuic]: { title: 'PROTOCOL_TCP_PROXY_AND_DROP_QUIC', subtitle: 'PROTOCOL_TCP_PROXY_AND_DROP_QUIC_DESC', isDefault: false },
+};
 
+const protocolsItem = computed<ProtocolsItem[]>(() => {
+  const supported = (vhApp.data.features.channelProtocols || []) as ChannelProtocol[];
+  const serverSupported = (vhApp.data.state.serverChannelProtocols || []) as ChannelProtocol[];
+
+  return Object.keys(allProtocolsConfig)
+    .filter(key => supported.includes(key as ChannelProtocol)) // only those supported by features
+    .map(key => {
+      const cfg = allProtocolsConfig[key];
+      const protocol = key as ChannelProtocol;
+      const isServer = serverSupported.includes(protocol);
+      return {
+        value: protocol,
+        title: cfg.title,
+        subtitle: cfg.subtitle,
+        isDefault: cfg.isDefault,
+        isVisible: true,
+        isDisabled: !isServer,
+        disabledReason: !isServer ? locale('SERVER_NOT_SUPPORTED') : undefined,
+      } as ProtocolsItem;
+    });
+});
+
+// Check if protocol is TcpProxy-based
+function isTcpProxyProtocol(protocol: ChannelProtocol | undefined | null): boolean {
+  if (!protocol) return false;
+  return [ChannelProtocol.TcpProxy, ChannelProtocol.TcpProxyAndUdp, ChannelProtocol.TcpProxyAndDropQuic].includes(protocol);
+}
+
+// Cloak mode reflects whether current selected protocol is a TcpProxy variant.
+// Toggle switches between a preferred non-proxy protocol and a proxy variant.
 const cloakMode = computed({
-  get: () => {
-    return vhApp.data.state.isTcpProxy;
-  },
+  get: () => isTcpProxyProtocol(vhApp.data.userSettings.channelProtocol),
   set: async (value: boolean) => {
-    if (!vhApp.data.userSettings.isTcpProxyPrompted)
-      await router.push({name: 'CLOAK_MODE'});
-
-    vhApp.data.state.isTcpProxy = value;
-    vhApp.data.userSettings.useTcpProxy = value;
-    await vhApp.saveUserSetting();
-  }
-});
-
-const activeProtocol = computed<Protocols>({
-  get: () => {
-    const { dropQuic, useUdpChannel } = vhApp.data.userSettings;
-    if (isUdpUnsupported()) {
-      return dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP;
+    const current = vhApp.data.userSettings.channelProtocol as ChannelProtocol | undefined;
+    if (value) {
+      // Enabling cloak: move to closest TcpProxy variant based on current base protocol
+      if (!vhApp.data.userSettings.isTcpProxyPrompted)
+        await router.push({ name: 'CLOAK_MODE' });
+      if (current === ChannelProtocol.Udp) {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxyAndUdp;
+      } else if (current === ChannelProtocol.TcpProxyAndDropQuic) {
+        // already cloaked with strongest option
+      } else if (current === ChannelProtocol.TcpProxyAndUdp || current === ChannelProtocol.TcpProxy) {
+        // already a cloak variant
+      } else if (current === ChannelProtocol.Tcp) {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxy;
+      } else {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxy; // fallback
+      }
+    } else {
+      // Disabling cloak: revert to non-proxy analogue
+      if (current === ChannelProtocol.TcpProxyAndUdp) {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Udp;
+      } else if (current === ChannelProtocol.TcpProxyAndDropQuic) {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Tcp; // fallback (no drop quic analogue without proxy?)
+      } else if (current === ChannelProtocol.TcpProxy) {
+        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Tcp;
+      }
     }
-    return useUdpChannel ? Protocols.UDP : (dropQuic ? Protocols.TcpAndDropHTTP3 : Protocols.TCP);
-  },
-  set: async (value: Protocols) => {
-    const userSettings = vhApp.data.userSettings;
-    userSettings.useUdpChannel = value === Protocols.UDP;
-    userSettings.dropQuic = value === Protocols.TcpAndDropHTTP3;
     await vhApp.saveUserSetting();
   }
 });
+
+const activeProtocol = computed<ChannelProtocol>({
+  get: () => (vhApp.data.userSettings.channelProtocol || ChannelProtocol.Tcp) as ChannelProtocol,
+  set: async (value: ChannelProtocol) => {
+    if (isTcpProxyProtocol(value) && !vhApp.data.userSettings.isTcpProxyPrompted) {
+      await router.push({ name: 'CLOAK_MODE' });
+      return;
+    }
+    vhApp.data.userSettings.channelProtocol = value;
+    await vhApp.saveUserSetting();
+  }
+});
+
 function isUdpUnsupported(): boolean {
   return vhApp.data.isConnected && !vhApp.data.state.sessionInfo?.isUdpChannelSupported;
 }
@@ -91,13 +119,10 @@ function isUdpUnsupported(): boolean {
     <config-card>
 
       <v-card-item>
-        <!-- Enforced by server alert -->
-        <alert-warning v-if="vhApp.data.isConnected && !vhApp.data.state.canChangeTcpProxy" :text="locale('ENFORCED_BY_SERVER')" />
-
         <!-- Switch button -->
-        <div class="d-flex align-center justify-space-between" :class="{'text-disabled': !vhApp.data.state.canChangeTcpProxy}">
+        <div class="d-flex align-center justify-space-between">
           <span>{{ locale('CLOAK_MODE') }}</span>
-          <v-switch v-model="cloakMode"  :disabled="!vhApp.data.state.canChangeTcpProxy"/>
+          <v-switch v-model="cloakMode"/>
         </div>
 
       </v-card-item>
@@ -152,6 +177,11 @@ function isUdpUnsupported(): boolean {
 
                   <!-- Protocol short description -->
                   {{ locale(item.subtitle) }}
+
+                  <!-- Server not supported message -->
+                  <span v-if="item.isDisabled && item.disabledReason">
+                    - {{ item.disabledReason }}
+                  </span>
 
                   <!-- Default protocol -->
                   <v-chip

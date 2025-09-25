@@ -446,7 +446,7 @@ function isDebugDataHasValue(): boolean {
           </span>
 
           <!-- Cloak mode -->
-          <template v-if="vhApp.data.state.isTcpProxy" v-slot:append>
+          <template v-if="vhApp.data.userSettings.useTcpProxy" v-slot:append>
             <v-chip
                     :text="locale('CLOAK')"
                     color="white"
