@@ -2296,6 +2296,7 @@ export class AppFeatures implements IAppFeatures {
     autoRemoveExpiredPremium!: boolean;
     isAdSupported!: boolean;
     premiumFeatures!: AppFeature[];
+    channelProtocols!: ChannelProtocol[];
     customData?: any | null;
     version!: string;
 
@@ -2309,6 +2310,7 @@ export class AppFeatures implements IAppFeatures {
         if (!data) {
             this.debugCommands = [];
             this.premiumFeatures = [];
+            this.channelProtocols = [];
         }
     }
 
@@ -2350,6 +2352,14 @@ export class AppFeatures implements IAppFeatures {
             }
             else {
                 this.premiumFeatures = <any>null;
+            }
+            if (Array.isArray(_data["channelProtocols"])) {
+                this.channelProtocols = [] as any;
+                for (let item of _data["channelProtocols"])
+                    this.channelProtocols!.push(item);
+            }
+            else {
+                this.channelProtocols = <any>null;
             }
             this.customData = _data["customData"] !== undefined ? _data["customData"] : <any>null;
             this.version = _data["version"] !== undefined ? _data["version"] : <any>null;
@@ -2396,6 +2406,11 @@ export class AppFeatures implements IAppFeatures {
             for (let item of this.premiumFeatures)
                 data["premiumFeatures"].push(item);
         }
+        if (Array.isArray(this.channelProtocols)) {
+            data["channelProtocols"] = [];
+            for (let item of this.channelProtocols)
+                data["channelProtocols"].push(item);
+        }
         data["customData"] = this.customData !== undefined ? this.customData : <any>null;
         data["version"] = this.version !== undefined ? this.version : <any>null;
         return data;
@@ -2426,6 +2441,7 @@ export interface IAppFeatures {
     autoRemoveExpiredPremium: boolean;
     isAdSupported: boolean;
     premiumFeatures: AppFeature[];
+    channelProtocols: ChannelProtocol[];
     customData?: any | null;
     version: string;
 }
@@ -2436,6 +2452,14 @@ export enum AppFeature {
     CustomDns = "CustomDns",
     AppIpFilter = "AppIpFilter",
     AdapterIpFilter = "AdapterIpFilter",
+}
+
+export enum ChannelProtocol {
+    Udp = 0,
+    Tcp = 1,
+    TcpProxyAndUdp = 2,
+    TcpProxy = 3,
+    TcpProxyAndDropQuic = 4,
 }
 
 export class AppIntentFeatures implements IAppIntentFeatures {
@@ -2528,8 +2552,6 @@ export class AppState implements IAppState {
     canDisconnect!: boolean;
     canConnect!: boolean;
     canDiagnose!: boolean;
-    canChangeTcpProxy!: boolean;
-    isTcpProxy!: boolean;
     userReviewRecommended!: number;
     isQuickLaunchRecommended!: boolean;
     currentUiCultureInfo!: UiCultureInfo;
@@ -2541,6 +2563,8 @@ export class AppState implements IAppState {
     isWaitingForInternalAd?: boolean | null;
     stateProgress?: number | null;
     isDiagnosing!: boolean;
+    serverChannelProtocols!: ChannelProtocol[];
+    channelProtocol!: ChannelProtocol;
 
     constructor(data?: IAppState) {
         if (data) {
@@ -2553,6 +2577,7 @@ export class AppState implements IAppState {
             this.currentUiCultureInfo = new UiCultureInfo();
             this.systemUiCultureInfo = new UiCultureInfo();
             this.systemBarsInfo = new SystemBarsInfo();
+            this.serverChannelProtocols = [];
         }
     }
 
@@ -2575,8 +2600,6 @@ export class AppState implements IAppState {
             this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : <any>null;
             this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : <any>null;
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : <any>null;
-            this.canChangeTcpProxy = _data["canChangeTcpProxy"] !== undefined ? _data["canChangeTcpProxy"] : <any>null;
-            this.isTcpProxy = _data["isTcpProxy"] !== undefined ? _data["isTcpProxy"] : <any>null;
             this.userReviewRecommended = _data["userReviewRecommended"] !== undefined ? _data["userReviewRecommended"] : <any>null;
             this.isQuickLaunchRecommended = _data["isQuickLaunchRecommended"] !== undefined ? _data["isQuickLaunchRecommended"] : <any>null;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
@@ -2588,6 +2611,15 @@ export class AppState implements IAppState {
             this.isWaitingForInternalAd = _data["isWaitingForInternalAd"] !== undefined ? _data["isWaitingForInternalAd"] : <any>null;
             this.stateProgress = _data["stateProgress"] !== undefined ? _data["stateProgress"] : <any>null;
             this.isDiagnosing = _data["isDiagnosing"] !== undefined ? _data["isDiagnosing"] : <any>null;
+            if (Array.isArray(_data["serverChannelProtocols"])) {
+                this.serverChannelProtocols = [] as any;
+                for (let item of _data["serverChannelProtocols"])
+                    this.serverChannelProtocols!.push(item);
+            }
+            else {
+                this.serverChannelProtocols = <any>null;
+            }
+            this.channelProtocol = _data["channelProtocol"] !== undefined ? _data["channelProtocol"] : <any>null;
         }
     }
 
@@ -2617,8 +2649,6 @@ export class AppState implements IAppState {
         data["canDisconnect"] = this.canDisconnect !== undefined ? this.canDisconnect : <any>null;
         data["canConnect"] = this.canConnect !== undefined ? this.canConnect : <any>null;
         data["canDiagnose"] = this.canDiagnose !== undefined ? this.canDiagnose : <any>null;
-        data["canChangeTcpProxy"] = this.canChangeTcpProxy !== undefined ? this.canChangeTcpProxy : <any>null;
-        data["isTcpProxy"] = this.isTcpProxy !== undefined ? this.isTcpProxy : <any>null;
         data["userReviewRecommended"] = this.userReviewRecommended !== undefined ? this.userReviewRecommended : <any>null;
         data["isQuickLaunchRecommended"] = this.isQuickLaunchRecommended !== undefined ? this.isQuickLaunchRecommended : <any>null;
         data["currentUiCultureInfo"] = this.currentUiCultureInfo ? this.currentUiCultureInfo.toJSON() : <any>null;
@@ -2630,6 +2660,12 @@ export class AppState implements IAppState {
         data["isWaitingForInternalAd"] = this.isWaitingForInternalAd !== undefined ? this.isWaitingForInternalAd : <any>null;
         data["stateProgress"] = this.stateProgress !== undefined ? this.stateProgress : <any>null;
         data["isDiagnosing"] = this.isDiagnosing !== undefined ? this.isDiagnosing : <any>null;
+        if (Array.isArray(this.serverChannelProtocols)) {
+            data["serverChannelProtocols"] = [];
+            for (let item of this.serverChannelProtocols)
+                data["serverChannelProtocols"].push(item);
+        }
+        data["channelProtocol"] = this.channelProtocol !== undefined ? this.channelProtocol : <any>null;
         return data;
     }
 }
@@ -2652,8 +2688,6 @@ export interface IAppState {
     canDisconnect: boolean;
     canConnect: boolean;
     canDiagnose: boolean;
-    canChangeTcpProxy: boolean;
-    isTcpProxy: boolean;
     userReviewRecommended: number;
     isQuickLaunchRecommended: boolean;
     currentUiCultureInfo: UiCultureInfo;
@@ -2665,6 +2699,8 @@ export interface IAppState {
     isWaitingForInternalAd?: boolean | null;
     stateProgress?: number | null;
     isDiagnosing: boolean;
+    serverChannelProtocols: ChannelProtocol[];
+    channelProtocol: ChannelProtocol;
 }
 
 export enum AppConnectionState {
@@ -2684,7 +2720,6 @@ export enum AppConnectionState {
 
 export class AppSessionInfo implements IAppSessionInfo {
     accessInfo?: AccessInfo | null;
-    isUdpChannelSupported!: boolean;
     isDnsServersAccepted!: boolean;
     isLocalNetworkAllowed!: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
@@ -2694,6 +2729,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     serverVersion!: string;
     clientPublicIpAddress!: string;
     createdTime!: Date;
+    isUdpChannelSupported!: boolean;
     isTcpPacketSupported!: boolean;
     isTcpProxySupported!: boolean;
 
@@ -2712,7 +2748,6 @@ export class AppSessionInfo implements IAppSessionInfo {
     init(_data?: any) {
         if (_data) {
             this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : <any>null;
-            this.isUdpChannelSupported = _data["isUdpChannelSupported"] !== undefined ? _data["isUdpChannelSupported"] : <any>null;
             this.isDnsServersAccepted = _data["isDnsServersAccepted"] !== undefined ? _data["isDnsServersAccepted"] : <any>null;
             this.isLocalNetworkAllowed = _data["isLocalNetworkAllowed"] !== undefined ? _data["isLocalNetworkAllowed"] : <any>null;
             this.serverLocationInfo = _data["serverLocationInfo"] ? ServerLocationInfo.fromJS(_data["serverLocationInfo"]) : <any>null;
@@ -2729,6 +2764,7 @@ export class AppSessionInfo implements IAppSessionInfo {
             this.serverVersion = _data["serverVersion"] !== undefined ? _data["serverVersion"] : <any>null;
             this.clientPublicIpAddress = _data["clientPublicIpAddress"] !== undefined ? _data["clientPublicIpAddress"] : <any>null;
             this.createdTime = _data["createdTime"] ? new Date(_data["createdTime"].toString()) : <any>null;
+            this.isUdpChannelSupported = _data["isUdpChannelSupported"] !== undefined ? _data["isUdpChannelSupported"] : <any>null;
             this.isTcpPacketSupported = _data["isTcpPacketSupported"] !== undefined ? _data["isTcpPacketSupported"] : <any>null;
             this.isTcpProxySupported = _data["isTcpProxySupported"] !== undefined ? _data["isTcpProxySupported"] : <any>null;
         }
@@ -2744,7 +2780,6 @@ export class AppSessionInfo implements IAppSessionInfo {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["accessInfo"] = this.accessInfo ? this.accessInfo.toJSON() : <any>null;
-        data["isUdpChannelSupported"] = this.isUdpChannelSupported !== undefined ? this.isUdpChannelSupported : <any>null;
         data["isDnsServersAccepted"] = this.isDnsServersAccepted !== undefined ? this.isDnsServersAccepted : <any>null;
         data["isLocalNetworkAllowed"] = this.isLocalNetworkAllowed !== undefined ? this.isLocalNetworkAllowed : <any>null;
         data["serverLocationInfo"] = this.serverLocationInfo ? this.serverLocationInfo.toJSON() : <any>null;
@@ -2758,6 +2793,7 @@ export class AppSessionInfo implements IAppSessionInfo {
         data["serverVersion"] = this.serverVersion !== undefined ? this.serverVersion : <any>null;
         data["clientPublicIpAddress"] = this.clientPublicIpAddress !== undefined ? this.clientPublicIpAddress : <any>null;
         data["createdTime"] = this.createdTime ? this.createdTime.toISOString() : <any>null;
+        data["isUdpChannelSupported"] = this.isUdpChannelSupported !== undefined ? this.isUdpChannelSupported : <any>null;
         data["isTcpPacketSupported"] = this.isTcpPacketSupported !== undefined ? this.isTcpPacketSupported : <any>null;
         data["isTcpProxySupported"] = this.isTcpProxySupported !== undefined ? this.isTcpProxySupported : <any>null;
         return data;
@@ -2766,7 +2802,6 @@ export class AppSessionInfo implements IAppSessionInfo {
 
 export interface IAppSessionInfo {
     accessInfo?: AccessInfo | null;
-    isUdpChannelSupported: boolean;
     isDnsServersAccepted: boolean;
     isLocalNetworkAllowed: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
@@ -2776,6 +2811,7 @@ export interface IAppSessionInfo {
     serverVersion: string;
     clientPublicIpAddress: string;
     createdTime: Date;
+    isUdpChannelSupported: boolean;
     isTcpPacketSupported: boolean;
     isTcpProxySupported: boolean;
 }
@@ -3036,12 +3072,11 @@ export class AppSessionStatus implements IAppSessionStatus {
     packetChannelCount!: number;
     unstableCount!: number;
     waitingCount!: number;
-    isUdpMode!: boolean;
     canExtendByRewardedAd!: boolean;
     sessionMaxTraffic!: number;
     sessionExpirationTime?: Date | null;
     activeClientCount?: number | null;
-    isTcpProxy!: boolean;
+    channelProtocol!: ChannelProtocol;
 
     constructor(data?: IAppSessionStatus) {
         if (data) {
@@ -3073,12 +3108,11 @@ export class AppSessionStatus implements IAppSessionStatus {
             this.packetChannelCount = _data["packetChannelCount"] !== undefined ? _data["packetChannelCount"] : <any>null;
             this.unstableCount = _data["unstableCount"] !== undefined ? _data["unstableCount"] : <any>null;
             this.waitingCount = _data["waitingCount"] !== undefined ? _data["waitingCount"] : <any>null;
-            this.isUdpMode = _data["isUdpMode"] !== undefined ? _data["isUdpMode"] : <any>null;
             this.canExtendByRewardedAd = _data["canExtendByRewardedAd"] !== undefined ? _data["canExtendByRewardedAd"] : <any>null;
             this.sessionMaxTraffic = _data["sessionMaxTraffic"] !== undefined ? _data["sessionMaxTraffic"] : <any>null;
             this.sessionExpirationTime = _data["sessionExpirationTime"] ? new Date(_data["sessionExpirationTime"].toString()) : <any>null;
             this.activeClientCount = _data["activeClientCount"] !== undefined ? _data["activeClientCount"] : <any>null;
-            this.isTcpProxy = _data["isTcpProxy"] !== undefined ? _data["isTcpProxy"] : <any>null;
+            this.channelProtocol = _data["channelProtocol"] !== undefined ? _data["channelProtocol"] : <any>null;
         }
     }
 
@@ -3102,12 +3136,11 @@ export class AppSessionStatus implements IAppSessionStatus {
         data["packetChannelCount"] = this.packetChannelCount !== undefined ? this.packetChannelCount : <any>null;
         data["unstableCount"] = this.unstableCount !== undefined ? this.unstableCount : <any>null;
         data["waitingCount"] = this.waitingCount !== undefined ? this.waitingCount : <any>null;
-        data["isUdpMode"] = this.isUdpMode !== undefined ? this.isUdpMode : <any>null;
         data["canExtendByRewardedAd"] = this.canExtendByRewardedAd !== undefined ? this.canExtendByRewardedAd : <any>null;
         data["sessionMaxTraffic"] = this.sessionMaxTraffic !== undefined ? this.sessionMaxTraffic : <any>null;
         data["sessionExpirationTime"] = this.sessionExpirationTime ? this.sessionExpirationTime.toISOString() : <any>null;
         data["activeClientCount"] = this.activeClientCount !== undefined ? this.activeClientCount : <any>null;
-        data["isTcpProxy"] = this.isTcpProxy !== undefined ? this.isTcpProxy : <any>null;
+        data["channelProtocol"] = this.channelProtocol !== undefined ? this.channelProtocol : <any>null;
         return data;
     }
 }
@@ -3124,12 +3157,11 @@ export interface IAppSessionStatus {
     packetChannelCount: number;
     unstableCount: number;
     waitingCount: number;
-    isUdpMode: boolean;
     canExtendByRewardedAd: boolean;
     sessionMaxTraffic: number;
     sessionExpirationTime?: Date | null;
     activeClientCount?: number | null;
-    isTcpProxy: boolean;
+    channelProtocol: ChannelProtocol;
 }
 
 export class AppConnectorStat implements IAppConnectorStat {
@@ -3744,10 +3776,8 @@ export class UserSettings implements IUserSettings {
     tunnelClientCountry!: boolean;
     appFilters!: string[];
     appFiltersMode!: FilterMode;
-    useTcpProxy!: boolean;
-    useUdpChannel!: boolean;
+    channelProtocol!: ChannelProtocol;
     dropUdp!: boolean;
-    dropQuic!: boolean;
     allowAnonymousTracker!: boolean;
     domainFilter!: DomainFilter;
     debugData1?: string | null;
@@ -3761,6 +3791,9 @@ export class UserSettings implements IUserSettings {
     proxySettings!: AppProxySettings;
     allowRemoteAccess!: boolean;
     dnsServers!: string[];
+    dropQuic!: boolean;
+    useUdpChannel!: boolean;
+    useTcpProxy!: boolean;
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -3795,10 +3828,8 @@ export class UserSettings implements IUserSettings {
                 this.appFilters = <any>null;
             }
             this.appFiltersMode = _data["appFiltersMode"] !== undefined ? _data["appFiltersMode"] : <any>null;
-            this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : <any>null;
-            this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
+            this.channelProtocol = _data["channelProtocol"] !== undefined ? _data["channelProtocol"] : <any>null;
             this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : <any>null;
-            this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
             this.allowAnonymousTracker = _data["allowAnonymousTracker"] !== undefined ? _data["allowAnonymousTracker"] : <any>null;
             this.domainFilter = _data["domainFilter"] ? DomainFilter.fromJS(_data["domainFilter"]) : new DomainFilter();
             this.debugData1 = _data["debugData1"] !== undefined ? _data["debugData1"] : <any>null;
@@ -3819,6 +3850,9 @@ export class UserSettings implements IUserSettings {
             else {
                 this.dnsServers = <any>null;
             }
+            this.dropQuic = _data["dropQuic"] !== undefined ? _data["dropQuic"] : <any>null;
+            this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : <any>null;
+            this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : <any>null;
         }
     }
 
@@ -3844,10 +3878,8 @@ export class UserSettings implements IUserSettings {
                 data["appFilters"].push(item);
         }
         data["appFiltersMode"] = this.appFiltersMode !== undefined ? this.appFiltersMode : <any>null;
-        data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : <any>null;
-        data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
+        data["channelProtocol"] = this.channelProtocol !== undefined ? this.channelProtocol : <any>null;
         data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : <any>null;
-        data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
         data["allowAnonymousTracker"] = this.allowAnonymousTracker !== undefined ? this.allowAnonymousTracker : <any>null;
         data["domainFilter"] = this.domainFilter ? this.domainFilter.toJSON() : <any>null;
         data["debugData1"] = this.debugData1 !== undefined ? this.debugData1 : <any>null;
@@ -3865,6 +3897,9 @@ export class UserSettings implements IUserSettings {
             for (let item of this.dnsServers)
                 data["dnsServers"].push(item);
         }
+        data["dropQuic"] = this.dropQuic !== undefined ? this.dropQuic : <any>null;
+        data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : <any>null;
+        data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : <any>null;
         return data;
     }
 }
@@ -3879,10 +3914,8 @@ export interface IUserSettings {
     tunnelClientCountry: boolean;
     appFilters: string[];
     appFiltersMode: FilterMode;
-    useTcpProxy: boolean;
-    useUdpChannel: boolean;
+    channelProtocol: ChannelProtocol;
     dropUdp: boolean;
-    dropQuic: boolean;
     allowAnonymousTracker: boolean;
     domainFilter: DomainFilter;
     debugData1?: string | null;
@@ -3896,6 +3929,9 @@ export interface IUserSettings {
     proxySettings: AppProxySettings;
     allowRemoteAccess: boolean;
     dnsServers: string[];
+    dropQuic: boolean;
+    useUdpChannel: boolean;
+    useTcpProxy: boolean;
 }
 
 export enum FilterMode {
@@ -4070,6 +4106,7 @@ export class ProxyNode implements IProxyNode {
     port!: number;
     username?: string | null;
     password?: string | null;
+    url!: string;
 
     constructor(data?: IProxyNode) {
         if (data) {
@@ -4088,6 +4125,7 @@ export class ProxyNode implements IProxyNode {
             this.port = _data["port"] !== undefined ? _data["port"] : <any>null;
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
             this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+            this.url = _data["url"] !== undefined ? _data["url"] : <any>null;
         }
     }
 
@@ -4106,6 +4144,7 @@ export class ProxyNode implements IProxyNode {
         data["port"] = this.port !== undefined ? this.port : <any>null;
         data["username"] = this.username !== undefined ? this.username : <any>null;
         data["password"] = this.password !== undefined ? this.password : <any>null;
+        data["url"] = this.url !== undefined ? this.url : <any>null;
         return data;
     }
 }
@@ -4117,6 +4156,7 @@ export interface IProxyNode {
     port: number;
     username?: string | null;
     password?: string | null;
+    url: string;
 }
 
 export enum ProxyProtocol {

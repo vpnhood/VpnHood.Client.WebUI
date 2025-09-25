@@ -48,7 +48,7 @@ const useIpFilterByApp = computed<boolean>({
       <v-card-item>
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('FILTER_IPS_BY_ADAPTER') }}</span>
+          <span>{{ locale('SPLIT_IPS_BY_ADAPTER') }}</span>
           <v-switch
             v-model="useIpFilterByAdapter"
             :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AdapterIpFilter)"

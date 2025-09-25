@@ -108,7 +108,7 @@ function revertCurrentChange(): void{
         'variant': 'outlined',
         'color': 'highlight',
         'loading': isLoadingIP,
-        'placeholder': locale('IP_FILTER_PLACE_HOLDER'),
+        'placeholder': locale('SPLIT_IP_PLACE_HOLDER'),
         'hideDetails': true,
         'clearable': true
         }

@@ -170,7 +170,7 @@ export class VpnHoodAppData {
     if (!this.isConnected)
       return true;
 
-    return this.state.sessionInfo?.isLocalNetworkAllowed ?? true;
+    return this.state.sessionInfo?.isLocalNetworkAllowed === true;
   }
 
   public isPremiumFeature(appFeature: AppFeature): boolean {
