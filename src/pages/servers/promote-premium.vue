@@ -51,6 +51,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
         @click="router.go(-1)"
+        class="mt-3"
       />
 
       <h3 class="text-center" v-html="dialogTitle" />

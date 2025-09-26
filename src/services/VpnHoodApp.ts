@@ -29,6 +29,7 @@ export class VpnHoodApp {
   public intentsClient: IntentsClient;
   public vhFirebase: VhFirebaseApp | null;
   private lastReloadNumber: number = 0;
+  private isSaving: boolean = false;
 
   private constructor(appClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
@@ -74,6 +75,9 @@ export class VpnHoodApp {
   }
 
   public async reloadState(): Promise<void> {
+    if (this.isSaving)
+      return;
+
     // Only reload state for the last reload.
     this.lastReloadNumber++;
     const reloadNumber = this.lastReloadNumber;
@@ -189,7 +193,14 @@ export class VpnHoodApp {
 
   // Save any change by user
   public async saveUserSetting(): Promise<void> {
-    await this.appClient.setUserSettings(this.data.userSettings);
+    try {
+      this.isSaving = true;
+      await this.appClient.setUserSettings(this.data.userSettings);
+    }
+    finally {
+      this.isSaving = false;
+    }
+
     await this.reloadState();
   }
 

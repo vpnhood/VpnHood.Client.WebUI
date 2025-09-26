@@ -3,10 +3,15 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import AppBar from '@/components/AppBar.vue';
+import { ChannelProtocol } from '@/services/VpnHood.Client.Api';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const isUdpSupported = computed(() => {
+  return vhApp.data.isProtocolEnabled(ChannelProtocol.Udp);
+})
 function calcUsage(received: number | undefined, sent: number | undefined): string {
   if (received === undefined || sent === undefined) return '0';
   return calcUnit(received + sent);
@@ -116,8 +121,8 @@ function calcUnit(total: number): string{
 
             <li>
               <span>{{locale('UDP_SUPPORTED')}}</span>
-              <span :class="[vhApp.data.state.sessionInfo.isUdpChannelSupported ? 'text-active' : 'text-error']">
-                {{locale(vhApp.data.state.sessionInfo.isUdpChannelSupported ? 'YES' : 'NO')}}
+              <span :class="[isUdpSupported ? 'text-active' : 'text-error']">
+                {{locale(isUdpSupported ? 'YES' : 'NO')}}
               </span>
             </li>
 

@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
 import { onMounted, ref } from 'vue';
 import router from '@/services/router';
@@ -38,7 +38,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <android-system-settings-layout
+  <feature-page-layout
     title="QUICK_LAUNCH_COLORED"
     description="QUICK_LAUNCH_DESC"
     image="quick-launch.webp"

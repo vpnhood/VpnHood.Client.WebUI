@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
@@ -9,7 +9,7 @@ const locale = i18n.global.t;
 </script>
 
 <template>
-  <android-system-settings-layout
+  <feature-page-layout
     title="ALWAYS_ON_COLORED"
     description="ALWAYS_ON_DESC"
     image="always-on.webp"

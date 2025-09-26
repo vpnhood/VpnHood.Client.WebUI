@@ -40,15 +40,6 @@ async function onConnectButtonClick(): Promise<void> {
   }
 }
 
-function udpProtocolButtonText(): string {
-  const { dropQuic, useUdpChannel } = vhApp.data.userSettings;
-  if (vhApp.data.connectionState === AppConnectionState.Connected &&
-    !vhApp.data.state.sessionInfo?.isUdpChannelSupported) {
-    return dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP');
-  }
-  return useUdpChannel ? locale('PROTOCOL_UDP') : (dropQuic ? locale('PROTOCOL_DROP_QUIC') : locale('PROTOCOL_TCP'));
-}
-
 function isShowCountdown(): boolean {
   // Client app should not show countdown.
   if (!vhApp.data.features.isPremiumFlagSupported)
@@ -442,7 +433,7 @@ function isDebugDataHasValue(): boolean {
           <!-- Text related to selected option -->
           <span
             class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ udpProtocolButtonText() }}
+            {{ locale(Util.protocolTitle(vhApp.data.getActiveProtocol)) }}
           </span>
 
           <!-- Cloak mode -->

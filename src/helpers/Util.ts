@@ -1,4 +1,4 @@
-import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
+import { ChannelProtocol, ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/theme/vuetify';
 
 export class Util {
@@ -36,6 +36,17 @@ export class Util {
 
   public static getAssetPath(fileName: string): string {
     return new URL(`../assets/images/${fileName}`, import.meta.url).href;
+  }
+
+  public static protocolTitle(protocol: ChannelProtocol): string{
+    switch (protocol) {
+      case ChannelProtocol.Udp:
+        return "PROTOCOL_UDP";
+      case ChannelProtocol.Tcp:
+        return "PROTOCOL_TCP";
+      case ChannelProtocol.Quic:
+        return "PROTOCOL_QUIC";
+    }
   }
 
 // For developers sends test error

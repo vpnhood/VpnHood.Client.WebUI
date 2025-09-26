@@ -48,6 +48,7 @@ async function showRewardedAd(){
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
         @click="router.go(-1)"
+        class="mt-3"
       />
 
       <h3 class="mt-5 text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />

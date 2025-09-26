@@ -1,14 +1,14 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import AndroidSystemSettingsLayout from '@/components/AndroidSystemSettingsLayout.vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 </script>
 
 <template>
-  <android-system-settings-layout
+  <feature-page-layout
     title="APP_NOTIFICATIONS_COLORED"
     description="NOTIFICATIONS_DESC"
     image="notifications.webp"

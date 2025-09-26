@@ -1,12 +1,10 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import i18n from '@/locales/i18n';
-import { Util } from '@/helpers/Util';
-import router from '@/services/router';
 import { onMounted } from 'vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
-const locale = i18n.global.t;
+
 
 onMounted(() => {
   if (!vhApp.data.userSettings.isTcpProxyPrompted){
@@ -17,36 +15,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <grad-sheet id="cloakMode">
-
-    <div>
-      <!-- Back button -->
-      <tonal-icon-btn
-        v-if="!vhApp.data.features.isTv"
-        :icon="Util.getLocalizedLeftChevron()"
-        @click="router.go(-1)"
-      />
-
-      <!-- Title and Description -->
-      <h3 class="text-center mb-2" v-html="locale('CLOAK_MODE_COLORED')" />
-    </div>
-
-    <!-- Feature image -->
-    <v-img
-      :eager="true"
-      :src="Util.getAssetPath('cloak-mode.webp')"
-      alt="Symbol image"
-      width="100%"
-      max-height="250px"
-      class="mx-auto"
-    />
-
-    <card-on-grad>
-      <v-card-item>
-        <p v-html="locale('CLOAK_MODE_DESC_1')" style="line-height: 25px;" />
-        <p class="mt-3" style="line-height: 25px;">{{locale('CLOAK_MODE_DESC_2')}}</p>
-      </v-card-item>
-    </card-on-grad>
-
-  </grad-sheet>
+  <feature-page-layout
+    title="CLOAK_MODE_COLORED"
+    image="cloak-mode.webp"
+    :is-premium="false"
+    :is-action-button-available="false"
+  />
 </template>

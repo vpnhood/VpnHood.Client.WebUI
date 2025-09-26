@@ -257,7 +257,7 @@ function closeCompleteDialog(showStatistics: boolean) {
       <tonal-icon-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        class="position-absolute"
+        class="position-absolute mt-3"
         style="z-index: 999"
         @click="router.go(-1)"
       />

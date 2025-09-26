@@ -1,112 +1,83 @@
 ﻿<script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { ChannelProtocol } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
+import { ChannelProtocol } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-interface ProtocolsItem {
+interface ProtocolItem {
   value: ChannelProtocol,
   title: string,
   subtitle: string,
   isDefault: boolean,
-  isVisible: boolean,
-  isDisabled: boolean,
-  disabledReason?: string
+  isShow: boolean,
+  isEnabled: boolean
 }
 
-// Configuration (static meta) for each channel protocol
-const allProtocolsConfig: Record<string, { title: string; subtitle: string; isDefault: boolean; }> = {
-  [ChannelProtocol.Udp]: { title: 'PROTOCOL_UDP', subtitle: 'PROTOCOL_UDP_DESC', isDefault: false },
-  [ChannelProtocol.Tcp]: { title: 'PROTOCOL_TCP', subtitle: 'PROTOCOL_TCP_DESC', isDefault: true },
-  [ChannelProtocol.TcpProxyAndUdp]: { title: 'PROTOCOL_TCP_PROXY_AND_UDP', subtitle: 'PROTOCOL_TCP_PROXY_AND_UDP_DESC', isDefault: false },
-  [ChannelProtocol.TcpProxy]: { title: 'PROTOCOL_TCP_PROXY', subtitle: 'PROTOCOL_TCP_PROXY_DESC', isDefault: false },
-  [ChannelProtocol.TcpProxyAndDropQuic]: { title: 'PROTOCOL_TCP_PROXY_AND_DROP_QUIC', subtitle: 'PROTOCOL_TCP_PROXY_AND_DROP_QUIC_DESC', isDefault: false },
-};
-
-const protocolsItem = computed<ProtocolsItem[]>(() => {
-  const supported = (vhApp.data.features.channelProtocols || []) as ChannelProtocol[];
-  const serverSupported = (vhApp.data.state.serverChannelProtocols || []) as ChannelProtocol[];
-
-  return Object.keys(allProtocolsConfig)
-    .filter(key => supported.includes(key as ChannelProtocol)) // only those supported by features
-    .map(key => {
-      const cfg = allProtocolsConfig[key];
-      const protocol = key as ChannelProtocol;
-      const isServer = serverSupported.includes(protocol);
-      return {
-        value: protocol,
-        title: cfg.title,
-        subtitle: cfg.subtitle,
-        isDefault: cfg.isDefault,
-        isVisible: true,
-        isDisabled: !isServer,
-        disabledReason: !isServer ? locale('SERVER_NOT_SUPPORTED') : undefined,
-      } as ProtocolsItem;
-    });
-});
-
-// Check if protocol is TcpProxy-based
-function isTcpProxyProtocol(protocol: ChannelProtocol | undefined | null): boolean {
-  if (!protocol) return false;
-  return [ChannelProtocol.TcpProxy, ChannelProtocol.TcpProxyAndUdp, ChannelProtocol.TcpProxyAndDropQuic].includes(protocol);
+function createProtocolItem(protocol: ChannelProtocol, subtitle: string, isDefault = false): ProtocolItem {
+  return {
+    value: protocol,
+    title: Util.protocolTitle(protocol),
+    isShow: vhApp.data.isShowProtocol(protocol),
+    isEnabled: vhApp.data.isProtocolEnabled(protocol),
+    subtitle,
+    isDefault,
+  };
 }
 
-// Cloak mode reflects whether current selected protocol is a TcpProxy variant.
-// Toggle switches between a preferred non-proxy protocol and a proxy variant.
-const cloakMode = computed({
-  get: () => isTcpProxyProtocol(vhApp.data.userSettings.channelProtocol),
-  set: async (value: boolean) => {
-    const current = vhApp.data.userSettings.channelProtocol as ChannelProtocol | undefined;
-    if (value) {
-      // Enabling cloak: move to closest TcpProxy variant based on current base protocol
-      if (!vhApp.data.userSettings.isTcpProxyPrompted)
-        await router.push({ name: 'CLOAK_MODE' });
-      if (current === ChannelProtocol.Udp) {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxyAndUdp;
-      } else if (current === ChannelProtocol.TcpProxyAndDropQuic) {
-        // already cloaked with strongest option
-      } else if (current === ChannelProtocol.TcpProxyAndUdp || current === ChannelProtocol.TcpProxy) {
-        // already a cloak variant
-      } else if (current === ChannelProtocol.Tcp) {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxy;
-      } else {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.TcpProxy; // fallback
-      }
-    } else {
-      // Disabling cloak: revert to non-proxy analogue
-      if (current === ChannelProtocol.TcpProxyAndUdp) {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Udp;
-      } else if (current === ChannelProtocol.TcpProxyAndDropQuic) {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Tcp; // fallback (no drop quic analogue without proxy?)
-      } else if (current === ChannelProtocol.TcpProxy) {
-        vhApp.data.userSettings.channelProtocol = ChannelProtocol.Tcp;
-      }
-    }
-    await vhApp.saveUserSetting();
-  }
-});
+const protocolItems: ProtocolItem[] = [
+  createProtocolItem(ChannelProtocol.Tcp, "PROTOCOL_TCP_DESC", true),
+  createProtocolItem(ChannelProtocol.Udp, "PROTOCOL_UDP_DESC"),
+  createProtocolItem(ChannelProtocol.Quic, "PROTOCOL_QUIC_DESC"),
+];
 
 const activeProtocol = computed<ChannelProtocol>({
-  get: () => (vhApp.data.userSettings.channelProtocol || ChannelProtocol.Tcp) as ChannelProtocol,
+  get: () => {
+    return vhApp.data.getActiveProtocol;
+  },
   set: async (value: ChannelProtocol) => {
-    if (isTcpProxyProtocol(value) && !vhApp.data.userSettings.isTcpProxyPrompted) {
-      await router.push({ name: 'CLOAK_MODE' });
-      return;
-    }
     vhApp.data.userSettings.channelProtocol = value;
+    vhApp.data.state.channelProtocol = value;
     await vhApp.saveUserSetting();
   }
 });
 
-function isUdpUnsupported(): boolean {
-  return vhApp.data.isConnected && !vhApp.data.state.sessionInfo?.isUdpChannelSupported;
-}
+const cloakMode = computed({
+  get: () => {
+    return vhApp.data.state.sessionStatus?.isTcpProxy ?? vhApp.data.userSettings.useTcpProxy;
+  },
+  set: async (value: boolean) => {
+    if (!vhApp.data.userSettings.isTcpProxyPrompted)
+      await router.push({name: 'CLOAK_MODE'});
+
+    // Update session status to reflect the change immediately
+    if (vhApp.data.state.sessionStatus)
+      vhApp.data.state.sessionStatus.isTcpProxy = value;
+
+    vhApp.data.userSettings.useTcpProxy = value;
+    await vhApp.saveUserSetting();
+  }
+});
+
+const dropQuic = computed({
+  get: () => {
+    return vhApp.data.userSettings.dropQuic;
+  },
+  set: async (value: boolean) => {
+    vhApp.data.userSettings.dropQuic = value;
+    await vhApp.saveUserSetting();
+  }
+});
+
+const isCloakModeEnabled = computed(() => {
+  return vhApp.data.state.sessionInfo ? vhApp.data.state.sessionInfo.canChangeTcpProxy : true;
+})
+
 </script>
 
 <template>
@@ -116,15 +87,25 @@ function isUdpUnsupported(): boolean {
     <p class="text-disabled text-caption mb-4">{{locale("PROTOCOL_DESC")}}</p>
 
     <!-- Cloak Mode -->
-    <config-card>
+    <config-card :class="{'opacity-60': !isCloakModeEnabled}">
 
+      <!-- Switch button -->
       <v-card-item>
-        <!-- Switch button -->
-        <div class="d-flex align-center justify-space-between">
+        <div v-if="vhApp.data.features.isTcpProxySupported" class="d-flex align-center justify-space-between">
           <span>{{ locale('CLOAK_MODE') }}</span>
-          <v-switch v-model="cloakMode"/>
+          <v-switch v-model="cloakMode"  :disabled="!isCloakModeEnabled"/>
         </div>
 
+        <!-- Not supported by server badge -->
+        <v-chip
+          v-if="!isCloakModeEnabled"
+          color="on-note"
+          :text="locale('NOT_SUPPORTED_BY_SERVER')"
+          size="small"
+          variant="tonal"
+          density="comfortable"
+          tabindex="-1"
+        />
       </v-card-item>
 
       <!-- Description and learn more button -->
@@ -143,63 +124,93 @@ function isUdpUnsupported(): boolean {
 
     </config-card>
 
-    <!-- Protocols radio buttons -->
+    <!-- Block QUIC -->
     <config-card>
 
-      <!-- UDP description -->
       <v-card-item>
-        <v-card-subtitle>{{locale('PROTOCOL_UDP_NOTE')}}</v-card-subtitle>
+        <!-- Switch button -->
+        <div class="d-flex align-center justify-space-between">
+          <span>{{ locale('PROTOCOL_BLOCK_QUIC') }}</span>
+          <v-switch v-model="dropQuic" />
+        </div>
       </v-card-item>
 
-      <!-- UDP not supported alert -->
-      <v-card-item v-if="isUdpUnsupported()" class="py-0">
-        <alert-warning :text="locale('UDP_NOT_SUPPORTED_MESSAGE')" />
-      </v-card-item>
+      <!-- Description and learn more button -->
+      <v-card-subtitle class="mb-3">
+        <p>{{locale("PROTOCOL_BLOCK_QUIC_DESC")}}</p>
+      </v-card-subtitle>
 
+    </config-card>
+
+    <!-- Protocols radio buttons -->
+    <config-card class="pt-3">
 
       <!-- Radio buttons for protocols -->
-      <v-card-item>
+      <v-card-item class="ps-2">
         <v-radio-group :hide-details="true" v-model="activeProtocol" color="highlight">
-          <v-radio
-            v-for="item in protocolsItem"
-            :key="item.value"
-            :value="item.value"
-            :disabled="item.isDisabled"
-            class="mb-3"
-          >
-            <template v-slot:label>
-              <div class="d-flex flex-column align-start">
+          <template v-for="item in protocolItems" :key="item.value">
+            <v-radio
+              v-if="item.isShow"
+              :value="item.value"
+              :disabled="!item.isEnabled"
+              class="protocol-radio mb-3"
+            >
+              <template v-slot:label>
+                <div class="d-flex flex-column align-start">
+                  <!-- Radio label -->
+                  <div class="mb-1">
+                    <!-- Protocol name -->
+                    <span class="me-2">{{ locale(item.title) }}</span>
 
-                <!-- Protocol name -->
-                <span>{{ locale(item.title) }}</span>
+                    <!-- Default protocol badge -->
+                    <v-chip
+                      v-if="item.isDefault"
+                      color="highlight"
+                      :text="locale('DEFAULT')"
+                      size="small"
+                      variant="tonal"
+                      density="comfortable"
+                      tabindex="-1"
+                      class="me-1"
+                    />
 
-                <span class="text-disabled text-caption">
+                    <!-- Not supported by server badge -->
+                    <v-chip
+                      v-if="!vhApp.data.isProtocolEnabled(item.value)"
+                      color="on-note"
+                      :text="locale('NOT_SUPPORTED_BY_SERVER')"
+                      size="small"
+                      variant="tonal"
+                      density="comfortable"
+                      tabindex="-1"
+                    />
+                  </div>
 
                   <!-- Protocol short description -->
-                  {{ locale(item.subtitle) }}
-
-                  <!-- Server not supported message -->
-                  <span v-if="item.isDisabled && item.disabledReason">
-                    - {{ item.disabledReason }}
-                  </span>
-
-                  <!-- Default protocol -->
-                  <v-chip
-                    v-if="item.isDefault"
-                    color="highlight"
-                    :text="locale('DEFAULT')"
-                    size="small"
-                    variant="tonal"
-                    density="comfortable"
-                    tabindex="-1"
-                  />
-
-                </span>
-              </div>
-            </template>
-          </v-radio>
+                  <p class="text-disabled text-caption">{{ locale(item.subtitle) }}</p>
+                </div>
+              </template>
+            </v-radio>
+          </template>
         </v-radio-group>
       </v-card-item>
     </config-card>
   </v-sheet>
 </template>
+
+<style scoped>
+.protocol-radio {
+  align-items: start;
+}
+</style>
+
+<!--suppress CssUnusedSymbol -->
+<style>
+.protocol-radio.v-selection-control--disabled .v-selection-control__input > .v-icon{
+  opacity: 0.5;
+}
+
+.protocol-radio>.v-selection-control__wrapper{
+  transform: translateY(-7px);
+}
+</style>

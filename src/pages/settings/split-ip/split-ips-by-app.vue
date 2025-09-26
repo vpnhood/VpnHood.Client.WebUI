@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FilterIp from '@/components/FilterIp.vue';
+import SplitIpInput from '@/components/SplitIpInput.vue';
 import { IPFilterType } from '@/helpers/UiConstants';
 import AppBar from '@/components/AppBar.vue';
 </script>
@@ -7,6 +7,6 @@ import AppBar from '@/components/AppBar.vue';
 <template>
   <v-sheet>
     <app-bar/>
-    <filter-ip :ip-filter-type="IPFilterType.FilterByApp" />
+    <split-ip-input :ip-filter-type="IPFilterType.FilterByApp" />
   </v-sheet>
 </template>

@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -8,20 +9,19 @@ const props = defineProps<{
   isPremium: AppFeature | boolean
 }>();
 
-function checkIconVisibility(){
-  let isPremium: boolean;
-  if (typeof props.isPremium === 'boolean')
-    isPremium = props.isPremium;
-  else
-    isPremium = vhApp.data.isPremiumFeature(props.isPremium)
+const shouldShowIcon = computed(() =>
+  vhApp.data.features.isPremiumFlagSupported &&
+  (typeof props.isPremium === 'boolean'
+    ? props.isPremium
+    : vhApp.data.isPremiumFeature(props.isPremium))
+);
 
-  return isPremium;
-}
+
 </script>
 
 <template>
   <v-icon
-    v-if="checkIconVisibility()"
+    v-if="shouldShowIcon"
     :color="vhApp.data.premiumIconColor"
     icon="mdi-crown"
     size="18"

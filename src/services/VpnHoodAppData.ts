@@ -5,7 +5,7 @@ import {
   AppConnectionState, AppFeature,
   AppFeatures,
   AppIntentFeatures,
-  AppState,
+  AppState, ChannelProtocol,
   ClientProfileInfo, DnsMode,
   UiCultureInfo,
   UserSettings
@@ -22,6 +22,7 @@ export class VpnHoodAppData {
   public intentFeatures: AppIntentFeatures;
   public clientProfileInfos: ClientProfileInfo[];
   public cultureInfos: UiCultureInfo[];
+  public locale = i18n.global.t;
 
   public constructor(
     state: AppState,
@@ -61,19 +62,31 @@ export class VpnHoodAppData {
 
   get connectionStateText(): string {
     switch (this.connectionState) {
+      case AppConnectionState.None:
+        return this.locale('DISCONNECTED');
+      case AppConnectionState.Initializing:
+        return this.locale('INITIALIZING');
+      case AppConnectionState.Waiting:
+        return this.locale('WAITING');
+      case AppConnectionState.Diagnosing:
+        return this.locale('DIAGNOSING');
+      case AppConnectionState.ValidatingProxies:
+        return this.locale('VALIDATING_PROXIES');
+      case AppConnectionState.Connecting:
+        return this.locale('CONNECTING');
+      case AppConnectionState.Connected:
+        return this.locale('CONNECTED');
+      case AppConnectionState.Disconnecting:
+        return this.locale('DISCONNECTING');
       case AppConnectionState.WaitingForAd:
-        return i18n.global.t('LOADING_AD');
+        return this.locale('LOADING_AD');
       case AppConnectionState.FindingReachableServer:
-        return i18n.global.t('FINDING_NETWORK');
+        return this.locale('FINDING_NETWORK');
       case AppConnectionState.FindingBestServer:
-        return i18n.global.t('FINDING_BEST_SERVER');
+        return this.locale('FINDING_BEST_SERVER');
       case AppConnectionState.Unstable:
-        return i18n.global.t('UNSTABLE');
+        return this.locale('UNSTABLE');
     }
-
-    return this.connectionState === AppConnectionState.None
-      ? i18n.global.t('DISCONNECTED')
-      : i18n.global.t(this.connectionState.toUpperCase());
   }
 
   get isConnected(): boolean {
@@ -128,6 +141,23 @@ export class VpnHoodAppData {
   get isNotificationEnabled(): boolean{
     return this.state.isNotificationEnabled === true
   }
+
+  get getActiveProtocol(): ChannelProtocol{
+    if (this.isConnected)
+      return this.state.channelProtocol;
+    return this.userSettings.channelProtocol;
+  }
+
+  public isProtocolEnabled(protocol: ChannelProtocol): boolean {
+    if (this.state.sessionInfo)
+      return this.state.sessionInfo.channelProtocols.includes(protocol);
+    return this.isShowProtocol(protocol);
+  }
+
+  public isShowProtocol(protocol: ChannelProtocol): boolean {
+    return this.features.channelProtocols.includes(protocol);
+  }
+
   //Add padding to the pages for handle edge-to-edge feature
   public edgeToEdge(): void {
     const paddingTop = this.getEdgeToEdgeTopHeight;
