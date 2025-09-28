@@ -10,7 +10,7 @@ const props = defineProps<{
 }>();
 
 const shouldShowIcon = computed(() =>
-  vhApp.data.features.isPremiumFlagSupported &&
+  vhApp.data.features.isPremiumFlagSupported && !vhApp.data.isPremiumAccount &&
   (typeof props.isPremium === 'boolean'
     ? props.isPremium
     : vhApp.data.isPremiumFeature(props.isPremium))

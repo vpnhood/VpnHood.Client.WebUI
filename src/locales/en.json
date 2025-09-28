@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "Overcomes VPN blocks by disguising your VPN traffic as regular web traffic.",
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
-  "LOCAL_NETWORK": "Local network",
-  "INCLUDE_LOCAL_NETWORK": "Include Local Network (LAN)",
-  "INCLUDE_LOCAL_NETWORK_DESC": "Send my local network packets to VPN servers.",
+  "SPLIT_LOCAL_NETWORK": "Split local network",
+  "SPLIT_LOCAL_NETWORK_DESC": "Send my local network (LAN) packets to VPN servers.",
   "createServer": "Create a Personal Server",
   "TUNNEL_MY_COUNTRY": "Tunnel My Country",
   "TUNNEL_MY_COUNTRY_DESC": "Do you want to tunnel traffic hosted in your country?",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "VPN connection has been revoked by the system or another VPN app.",
   "IN_USE_FEATURES": "In use features",
   "IN_USE_FEATURES_DESC": "The following features are customized and may impact your connectivity.",
-  "VALIDATING_PROXIES": "Validating proxies"
+  "VALIDATING_PROXIES": "Validating proxies",
+  "CONNECTIVITY": "Connectivity",
+  "APP_SETTINGS": "App Settings",
+  "PRIVACY_AND_SECURITY": "Privacy & Security",
+  "ENFORCED_BY_SERVER": "Enforced by the server"
 }

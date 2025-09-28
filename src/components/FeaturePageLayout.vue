@@ -46,12 +46,11 @@ function actionButtonClick(): void | null {
 
       <!-- Feature image -->
       <v-img
-        eager
         :src="Util.getAssetPath(props.image)"
         alt="Symbol image"
         width="100%"
-        max-height="250px"
-        class="mx-auto"
+        max-height="240px"
+        class="mx-auto my-4"
       />
 
     <!-- Cloak mode page -->

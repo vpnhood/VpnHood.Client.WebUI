@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "आपके VPN ट्रैफ़िक को सामान्य वेब ट्रैफ़िक का रूप देकर VPN ब्लॉक को बायपास करता है।",
   "SELECTED_APPS": "चयनित ऐप्स",
   "NEW_SERVER_ADDED": "एक नया सर्वर जोड़ा गया है।",
-  "LOCAL_NETWORK": "स्थानीय नेटवर्क",
-  "INCLUDE_LOCAL_NETWORK": "स्थानीय नेटवर्क (LAN) शामिल करें",
-  "INCLUDE_LOCAL_NETWORK_DESC": "मेरे स्थानीय नेटवर्क पैकेट्स को VPN सर्वरों को भेजें।",
+  "SPLIT_LOCAL_NETWORK": "लोकल नेटवर्क विभाजित करें",
+  "SPLIT_LOCAL_NETWORK_DESC": "अपने लोकल नेटवर्क (LAN) ट्रैफिक को VPN सर्वर पर भेजें।",
   "createServer": "एक व्यक्तिगत सर्वर बनाएं",
   "TUNNEL_MY_COUNTRY": "मेरे देश का टनल",
   "TUNNEL_MY_COUNTRY_DESC": "क्या आप अपने देश में मेजबानी की गई ट्रैफ़िक का टनल करना चाहते हैं?",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "VPN कनेक्शन को सिस्टम या किसी अन्य VPN ऐप द्वारा रद्द कर दिया गया है",
   "IN_USE_FEATURES": "सक्रिय सुविधाएँ",
   "IN_USE_FEATURES_DESC": "निम्नलिखित सुविधाएँ कस्टमाइज़्ड हैं और आपकी कनेक्टिविटी को प्रभावित कर सकती हैं।",
-  "VALIDATING_PROXIES": "प्रॉक्सी की पुष्टि हो रही है"
+  "VALIDATING_PROXIES": "प्रॉक्सी की पुष्टि हो रही है",
+  "CONNECTIVITY": "कनेक्टिविटी",
+  "APP_SETTINGS": "ऐप सेटिंग्स",
+  "PRIVACY_AND_SECURITY": "गोपनीयता और सुरक्षा",
+  "ENFORCED_BY_SERVER": "सर्वर द्वारा लागू"
 }

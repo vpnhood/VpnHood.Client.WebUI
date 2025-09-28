@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "Обходит блокировки VPN, маскируя ваш трафик под обычный веб-трафик.",
   "SELECTED_APPS": "Выбранные приложения",
   "NEW_SERVER_ADDED": "Добавлен новый сервер.",
-  "LOCAL_NETWORK": "Локальная сеть",
-  "INCLUDE_LOCAL_NETWORK": "Включить локальную сеть (LAN)",
-  "INCLUDE_LOCAL_NETWORK_DESC": "Отправьте пакеты моей локальной сети на серверы VPN.",
+  "SPLIT_LOCAL_NETWORK": "Разделение локальной сети",
+  "SPLIT_LOCAL_NETWORK_DESC": "Направлять трафик локальной сети (LAN) через VPN-серверы.",
   "createServer": "Создать личный сервер",
   "TUNNEL_MY_COUNTRY": "Туннель моей страны",
   "TUNNEL_MY_COUNTRY_DESC": "Хотите ли вы туннелировать трафик, размещенный в вашей стране?",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "Подключение VPN было отозвано системой или другим VPN-приложением.",
   "IN_USE_FEATURES": "Используемые функции",
   "IN_USE_FEATURES_DESC": "Эти настройки изменены и могут повлиять на ваше подключение.",
-  "VALIDATING_PROXIES": "Проверка прокси"
+  "VALIDATING_PROXIES": "Проверка прокси",
+  "CONNECTIVITY": "Подключение",
+  "APP_SETTINGS": "Настройки приложения",
+  "PRIVACY_AND_SECURITY": "Конфиденциальность и безопасность",
+  "ENFORCED_BY_SERVER": "Задано сервером"
 }

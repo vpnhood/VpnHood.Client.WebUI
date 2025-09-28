@@ -66,9 +66,13 @@ const cloakMode = computed({
 
 const dropQuic = computed({
   get: () => {
-    return vhApp.data.userSettings.dropQuic;
+    return vhApp.data.state.sessionStatus?.isDropQuic ?? vhApp.data.userSettings.dropQuic;
   },
   set: async (value: boolean) => {
+
+    if (vhApp.data.state.sessionStatus)
+      vhApp.data.state.sessionStatus.isDropQuic = value;
+
     vhApp.data.userSettings.dropQuic = value;
     await vhApp.saveUserSetting();
   }
@@ -87,65 +91,58 @@ const isCloakModeEnabled = computed(() => {
     <p class="text-disabled text-caption mb-4">{{locale("PROTOCOL_DESC")}}</p>
 
     <!-- Cloak Mode -->
-    <config-card :class="{'opacity-60': !isCloakModeEnabled}">
+    <config-card v-if="vhApp.data.features.isTcpProxySupported" class="pb-3">
 
       <!-- Switch button -->
-      <v-card-item>
-        <div v-if="vhApp.data.features.isTcpProxySupported" class="d-flex align-center justify-space-between">
+      <v-card-item class="pb-0">
+        <div
+          class="d-flex align-center justify-space-between"
+          :class="{'opacity-60': !isCloakModeEnabled}"
+        >
           <span>{{ locale('CLOAK_MODE') }}</span>
           <v-switch v-model="cloakMode"  :disabled="!isCloakModeEnabled"/>
         </div>
 
-        <!-- Not supported by server badge -->
-        <v-chip
-          v-if="!isCloakModeEnabled"
-          color="on-note"
-          :text="locale('NOT_SUPPORTED_BY_SERVER')"
-          size="small"
-          variant="tonal"
-          density="comfortable"
-          tabindex="-1"
-        />
+
+        <!-- Enforced by server alert -->
+        <alert-warning v-if="!isCloakModeEnabled"  :text="locale('ENFORCED_BY_SERVER')" class="mb-2" />
+
+
+        <!-- Description and learn more button -->
+        <v-card-subtitle class="pb-0">
+          <p>{{locale("CLOAK_MODE_SHORT_DESC")}}</p>
+          <v-btn
+            :text="locale('LEARN_MORE')"
+            variant="text"
+            class="pa-0"
+            :ripple="false"
+            color="highlight"
+            :append-icon="Util.getLocalizedRightChevron()"
+            @click="router.push({name: 'CLOAK_MODE'})"
+          />
+        </v-card-subtitle>
       </v-card-item>
 
-      <!-- Description and learn more button -->
-      <v-card-subtitle class="mb-3">
-        <p>{{locale("CLOAK_MODE_SHORT_DESC")}}</p>
-        <v-btn
-          :text="locale('LEARN_MORE')"
-          variant="plain"
-          class="pa-0 opacity-100"
-          :ripple="false"
-          color="highlight"
-          :append-icon="Util.getLocalizedRightChevron()"
-          @click="router.push({name: 'CLOAK_MODE'})"
-        />
-      </v-card-subtitle>
+      <!-- Block QUIC -->
+      <v-card-item v-if="cloakMode">
+        <v-divider opacity=".1" class="mb-2"/>
 
-    </config-card>
-
-    <!-- Block QUIC -->
-    <config-card>
-
-      <v-card-item>
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('PROTOCOL_BLOCK_QUIC') }}</span>
           <v-switch v-model="dropQuic" />
         </div>
-      </v-card-item>
 
-      <!-- Description and learn more button -->
-      <v-card-subtitle class="mb-3">
-        <p>{{locale("PROTOCOL_BLOCK_QUIC_DESC")}}</p>
-      </v-card-subtitle>
+        <!-- Description and learn more button -->
+        <v-card-subtitle class="pb-0">
+          <p>{{locale("PROTOCOL_BLOCK_QUIC_DESC")}}</p>
+        </v-card-subtitle>
+      </v-card-item>
 
     </config-card>
 
     <!-- Protocols radio buttons -->
     <config-card class="pt-3">
-
-      <!-- Radio buttons for protocols -->
       <v-card-item class="ps-2">
         <v-radio-group :hide-details="true" v-model="activeProtocol" color="highlight">
           <template v-for="item in protocolItems" :key="item.value">
@@ -195,6 +192,7 @@ const isCloakModeEnabled = computed(() => {
         </v-radio-group>
       </v-card-item>
     </config-card>
+
   </v-sheet>
 </template>
 

@@ -9,6 +9,8 @@ import { AppFeature, DnsMode } from '@/services/VpnHood.Client.Api';
 import PremiumIcon from '@/components/PremiumIcon.vue';
 import { computed, ref, watch } from 'vue';
 import { Validators } from '@/helpers/Validators';
+import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -77,8 +79,20 @@ function isShowEnforcedByServerAlert() {
 </script>
 
 <template>
-  <v-sheet>
+
+  <feature-page-layout
+    v-if="!vhApp.data.isPremiumFeatureAllowed(AppFeature.CustomDns)"
+    title="DNS"
+    description="DNS_DESC"
+    image="private-dns.webp"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"
+    :is-action-button-available="false"
+  />
+
+  <v-sheet v-else>
     <app-bar/>
+
+    <small-feature-image-and-description image="private-dns.webp" description="DNS_DESC" />
 
     <!-- Private DNS card -->
     <config-card
@@ -121,7 +135,7 @@ function isShowEnforcedByServerAlert() {
     </config-card>
 
     <!-- Custom DNS card -->
-    <config-card class="pa-3" :disabled="!vhApp.data.isPremiumAccount">
+    <config-card class="pa-3">
 
       <!-- Title, status and premium icon -->
       <div class="d-flex align-center justify-space-between pb-1">
@@ -141,7 +155,7 @@ function isShowEnforcedByServerAlert() {
 
       <v-radio-group
         v-model="selectedDnsMode"
-        :disabled="isPrivateDnsActive || isShowEnforcedByServerAlert()"
+        :disabled="isShowEnforcedByServerAlert()"
         :hide-details="true"
         color="highlight"
         class="my-5"

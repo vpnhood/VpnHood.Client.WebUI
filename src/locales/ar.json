@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "يتجاوز حجب الـ VPN عبر تمويه اتصالك ليبدو كتصفح عادي للإنترنت.",
   "SELECTED_APPS": "التطبيقات المحددة",
   "NEW_SERVER_ADDED": "تمت إضافة خادم جديد.",
-  "LOCAL_NETWORK": "الشبكة المحلية",
-  "INCLUDE_LOCAL_NETWORK": "تضمين الشبكة المحلية (LAN)",
-  "INCLUDE_LOCAL_NETWORK_DESC": "إرسال حزم الشبكة المحلية الخاصة بي إلى خوادم VPN.",
+  "SPLIT_LOCAL_NETWORK": "فصل الشبكة المحلية",
+  "SPLIT_LOCAL_NETWORK_DESC": "إرسال حزم شبكتي المحلية (LAN) إلى خوادم VPN.",
   "createServer": "إنشاء خادم شخصي",
   "TUNNEL_MY_COUNTRY": "نفق بلدي",
   "TUNNEL_MY_COUNTRY_DESC": "هل تريد توجيه حركة المرور المستضافة في بلدك؟",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "تم إلغاء اتصال VPN بواسطة النظام أو تطبيق VPN آخر",
   "IN_USE_FEATURES": "الميزات النشطة",
   "IN_USE_FEATURES_DESC": "الميزات التالية مخصصة وقد تؤثر على اتصالك.",
-  "VALIDATING_PROXIES": "جارٍ التحقق من الخوادم الوكيلة"
+  "VALIDATING_PROXIES": "جارٍ التحقق من الخوادم الوكيلة",
+  "CONNECTIVITY": "الاتصال",
+  "APP_SETTINGS": "إعدادات التطبيق",
+  "PRIVACY_AND_SECURITY": "الخصوصية والأمان",
+  "ENFORCED_BY_SERVER": "مفروض من الخادم"
 }

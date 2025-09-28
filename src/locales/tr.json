@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "VPN trafiğinizi normal web trafiği olarak kamufle ederek VPN engellerini aşar.",
   "SELECTED_APPS": "Seçili Uygulamalar",
   "NEW_SERVER_ADDED": "Yeni bir sunucu eklendi.",
-  "LOCAL_NETWORK": "Yerel ağ",
-  "INCLUDE_LOCAL_NETWORK": "Yerel Ağı (LAN) Dahil Et",
-  "INCLUDE_LOCAL_NETWORK_DESC": "Yerel ağ paketlerimi VPN sunucularına gönder.",
+  "SPLIT_LOCAL_NETWORK": "Yerel Ağı Böl",
+  "SPLIT_LOCAL_NETWORK_DESC": "Yerel ağ (LAN) trafiğiniz VPN sunucularına gönderilir.",
   "createServer": "Kişisel Sunucu Oluştur",
   "TUNNEL_MY_COUNTRY": "Ülkemi Tünelle",
   "TUNNEL_MY_COUNTRY_DESC": "Ülkenizde barındırılan trafiği tünelleme istiyor musunuz?",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "VPN bağlantısı sistem veya başka bir VPN uygulaması tarafından iptal edildi",
   "IN_USE_FEATURES": "Aktif Özellikler",
   "IN_USE_FEATURES_DESC": "Aşağıdaki özel ayarlar bağlantınızı etkileyebilir.",
-  "VALIDATING_PROXIES": "Proxy'ler doğrulanıyor"
+  "VALIDATING_PROXIES": "Proxy'ler doğrulanıyor",
+  "CONNECTIVITY": "Bağlantı",
+  "APP_SETTINGS": "Uygulama Ayarları",
+  "PRIVACY_AND_SECURITY": "Gizlilik ve Güvenlik",
+  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu"
 }

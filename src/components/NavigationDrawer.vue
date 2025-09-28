@@ -263,23 +263,19 @@ function edgeToEdgeHeight(bottom: boolean): string{
     <div class="text-center position-fixed bottom-0 w-100" :style="edgeToEdgeHeight(true)">
 
       <!-- Social icons -->
-<!--      <div class="d-flex justify-center ga-3 mb-5">
+      <div class="d-flex justify-center ga-3 mb-5">
 
-        &lt;!&ndash; Website &ndash;&gt;
+        <!-- LinkedIn -->
         <v-btn
-          icon
+          icon="mdi-linkedin"
           size="small"
           variant="tonal"
           density="comfortable"
-          href="https://www.vpnhood.com"
+          href="https://www.linkedin.com/company/vpnhood"
           target="_blank"
-        >
-          <template v-slot:default>
-            <Icon icon="proicons:globe" width="20" />
-          </template>
-        </v-btn>
+        />
 
-        &lt;!&ndash; Instagram &ndash;&gt;
+<!--        &lt;!&ndash; Instagram &ndash;&gt;
         <v-btn
           icon
           size="small"
@@ -305,8 +301,8 @@ function edgeToEdgeHeight(bottom: boolean): string{
           <template v-slot:default>
             <Icon icon="proicons:x-twitter" width="17" />
           </template>
-        </v-btn>
-      </div>-->
+        </v-btn>-->
+      </div>
 
       <!-- Powered by button -->
       <a

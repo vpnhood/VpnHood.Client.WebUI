@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "将您的VPN流量伪装成常规网络流量，以突破VPN封锁。",
   "SELECTED_APPS": "选定的应用程序",
   "NEW_SERVER_ADDED": "已添加新服务器。",
-  "LOCAL_NETWORK": "本地网络",
-  "INCLUDE_LOCAL_NETWORK": "包括本地网络（LAN）",
-  "INCLUDE_LOCAL_NETWORK_DESC": "将我的本地网络数据包发送到VPN服务器。",
+  "SPLIT_LOCAL_NETWORK": "本地网络分流",
+  "SPLIT_LOCAL_NETWORK_DESC": "将您的本地网络 (LAN) 流量通过 VPN 发送。",
   "createServer": "创建个人服务器",
   "TUNNEL_MY_COUNTRY": "隧道我的国家",
   "TUNNEL_MY_COUNTRY_DESC": "您是否希望隧道托管在您国家的流量？",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "VPN 连接已被系统或其他 VPN 应用撤销",
   "IN_USE_FEATURES": "已启用功能",
   "IN_USE_FEATURES_DESC": "以下为自定义功能，可能会影响您的网络连接。",
-  "VALIDATING_PROXIES": "正在验证代理"
+  "VALIDATING_PROXIES": "正在验证代理",
+  "CONNECTIVITY": "网络连接",
+  "APP_SETTINGS": "应用设置",
+  "PRIVACY_AND_SECURITY": "隐私与安全",
+  "ENFORCED_BY_SERVER": "由服务器强制"
 }

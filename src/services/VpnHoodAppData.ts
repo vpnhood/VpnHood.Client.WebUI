@@ -208,8 +208,9 @@ export class VpnHoodAppData {
   }
 
   public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {
+
     // not a premium feature
-    if (!this.isPremiumFeature(appFeature))
+    if (!this.isPremiumFeature(appFeature) || !this.features.isPremiumFlagSupported)
       return true;
 
     // check if the current profile is premium

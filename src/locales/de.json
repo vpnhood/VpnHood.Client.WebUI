@@ -79,9 +79,8 @@
   "CLOAK_MODE_SHORT_DESC": "Tarnt Ihren VPN-Verkehr als normalen Web-Traffic, um VPN-Sperren zu umgehen.",
   "SELECTED_APPS": "Ausgewählte Apps",
   "NEW_SERVER_ADDED": "Ein neuer Server wurde hinzugefügt.",
-  "LOCAL_NETWORK": "Lokales Netzwerk",
-  "INCLUDE_LOCAL_NETWORK": "Lokales Netzwerk (LAN) einbeziehen",
-  "INCLUDE_LOCAL_NETWORK_DESC": "Senden Sie meine lokalen Netzwerkpakete an VPN-Server.",
+  "SPLIT_LOCAL_NETWORK": "Lokales Netzwerk aufteilen",
+  "SPLIT_LOCAL_NETWORK_DESC": "Verkehr im lokalen Netzwerk (LAN) über das VPN leiten.",
   "createServer": "Einen persönlichen Server erstellen",
   "TUNNEL_MY_COUNTRY": "Tunnel Mein Land",
   "TUNNEL_MY_COUNTRY_DESC": "Möchten Sie den in Ihrem Land gehosteten Verkehr tunneln?",
@@ -427,5 +426,9 @@
   "VPN_SERVICE_REVOKED_MSG": "VPN-Verbindung wurde vom System oder einer anderen VPN-App widerrufen",
   "IN_USE_FEATURES": "Aktive Funktionen",
   "IN_USE_FEATURES_DESC": "Folgende angepasste Funktionen können Ihre Verbindung beeinträchtigen.",
-  "VALIDATING_PROXIES": "Prüfe Proxys..."
+  "VALIDATING_PROXIES": "Prüfe Proxys...",
+  "CONNECTIVITY": "Verbindung",
+  "APP_SETTINGS": "App-Einstellungen",
+  "PRIVACY_AND_SECURITY": "Datenschutz & Sicherheit",
+  "ENFORCED_BY_SERVER": "Vom Server festgelegt"
 }

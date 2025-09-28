@@ -8,6 +8,8 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
+import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
+import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -36,8 +38,20 @@ const useIpFilterByApp = computed<boolean>({
 </script>
 
 <template>
-  <v-sheet>
+
+  <feature-page-layout
+    v-if="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AdapterIpFilter)"
+    title="SPLIT_IP_ADDRESSES_COLORED"
+    description="SPLIT_IP_ADDRESSES_DESC"
+    image="split-ip.webp"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.AdapterIpFilter)"
+    :is-action-button-available="false"
+  />
+
+  <v-sheet v-else>
     <app-bar/>
+
+    <small-feature-image-and-description image="split-ip.webp" description="SPLIT_IP_ADDRESSES_DESC" />
 
     <!-- Disconnecting alert -->
     <disconnect-required-alert class="mb-4"/>
