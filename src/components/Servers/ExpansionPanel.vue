@@ -14,10 +14,10 @@ import { ComponentName } from '@/helpers/UiConstants';
 import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
 import { ConnectManager } from '@/helpers/ConnectManager';
+import ExpansionPanelCollapsed from '@/components/Servers/ExpansionPanelCollapsed.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const maximumLocationOnCollapsed: number = 8;
 
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
 const newClientProfileName = ref<string>("");
@@ -69,6 +69,7 @@ async function saveNewClientProfileName(): Promise<void> {
     })
   );
 }
+
 // Change client profile custom endpoint
 async function saveCustomEndpoint(): Promise<void> {
   try {
@@ -78,7 +79,7 @@ async function saveCustomEndpoint(): Promise<void> {
       customServerEndpoints: new PatchOfStringOf({ value: newEndpoint })
     });
     await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
-    closeCustomEndpointDialog();
+    await closeCustomEndpointDialog();
   }
   catch(err: unknown){
     if (err instanceof ApiException) {
@@ -88,10 +89,15 @@ async function saveCustomEndpoint(): Promise<void> {
     invalidIpError.value = locale('CUSTOM_ENDPOINT_VALIDATION_ERROR');
   }
 }
-function closeCustomEndpointDialog(): void {
-  ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
-  customEndpoint.value = null;
-  invalidIpError.value = null;
+
+async function closeCustomEndpointDialog(): Promise<void> {
+  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
+}
+
+function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
+  if (!Util.isSingleLocation(clientProfileInfo.locationInfos.length))
+    return;
+  ConnectManager.connect2(clientProfileInfo.clientProfileId, false);
 }
 </script>
 
@@ -102,77 +108,60 @@ function closeCustomEndpointDialog(): void {
     v-model="expandedPanels[index]"
     flat
     rounded="xl"
-    bg-color="expansion-panels"
+    bg-color="config-card-bg"
     class="mb-4"
   >
     <v-expansion-panel
       :readonly="Util.isSingleLocation(clientProfileInfo.locationInfos.length)"
       hide-actions
-      class="pa-4"
-      @click="Util.isSingleLocation(clientProfileInfo.locationInfos.length) ?
-      ConnectManager.connect2(clientProfileInfo.clientProfileId, false) : ''"
+      class="py-4"
+      @click="expansionPanelClick(clientProfileInfo)"
     >
 
       <!-- Country flag on collapse state -->
-      <div v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)
-            && expandedPanels[index] !== 0"
-        class="d-flex align-center bg-expansion-panels-servers-list py-3 px-2 text-start rounded-lg"
+      <expansion-panel-collapsed
+        v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length) && expandedPanels[index] !== 0"
         @click="expandedPanels[index] = 0"
-      >
-        <template v-for="(serverLocationInfo, index) in clientProfileInfo.locationInfos">
-            <span
-              v-if="!serverLocationInfo.isNestedCountry
-                && !vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode)
-                && index <= maximumLocationOnCollapsed"
-              :key="index"
-              class="rounded-circle overflow-hidden d-inline-flex align-center me-1 justify-center border"
-              style="width: 25px; height: 25px;"
-            >
-              <!-- Auto select icon -->
-              <v-icon v-if="vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode)" icon="mdi-earth"
-                      color="fastest-server" size="27"></v-icon>
-
-              <!-- Country flag -->
-              <img v-else :src="vhApp.getCountryFlag(serverLocationInfo.countryCode)" height="100%"
-                   alt="country flag"/>
-            </span>
-        </template>
-        <span v-if="Util.calcLocationCount(clientProfileInfo) > maximumLocationOnCollapsed"
-              class="text-caption text-lowercase ps-3">
-            +{{ Util.calcLocationCount(clientProfileInfo) - maximumLocationOnCollapsed }}
-          </span>
-      </div>
+        :client-profile-info="clientProfileInfo"
+      />
 
       <!-- Profile title row -->
       <template v-slot:title>
-        <v-row class="align-center">
+        <v-row class="align-center mx-0">
 
           <!-- Radio button -->
-          <v-col cols="auto py-0">
-            <div
-              :class="[vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)
-                ? 'border-active-profile-radio'
-                : 'border-inactive-profile-radio'
-                , 'd-flex align-center justify-center border border-opacity-100 rounded-circle text-active-profile-radio']"
-              style="width: 25px; height: 25px; border-width: 3px !important;"
-            >
-              <!-- Check icon if is active client profile -->
-              <v-icon v-if="vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
-                      icon="mdi-check-bold" size="15"/>
-            </div>
+          <v-col cols="auto">
+              <!-- Active -->
+              <v-icon
+                v-if="vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)"
+                icon="mdi-check-circle-outline"
+                size="28"
+                color="active-profile-radio"
+              />
+
+              <!-- Inactive -->
+              <v-icon
+                v-else
+                icon="mdi-circle-outline"
+                size="28"
+                color="inactive-profile-radio"
+                opacity=".6"
+              />
           </v-col>
 
           <!-- Profile name -->
-          <v-col class="px-0 py-0 text-truncate limited-width-to-truncate">
-            <h4 class="text-truncate text-capitalize">
+          <v-col class="px-0 text-truncate limited-width-to-truncate">
+            <h4
+              class="text-truncate text-capitalize"
+              :class="{'opacity-60': !vhApp.isActiveClientProfile(clientProfileInfo.clientProfileId)}"
+            >
               {{ clientProfileInfo.clientProfileName }}
             </h4>
           </v-col>
 
-          <!-- Menu button and Expand/Collapse button -->
-          <v-col cols="auto" class="py-0">
-            <!-- Menu button -->
-            <v-btn :icon="true" density="compact" variant="plain" color="profile-menu-btn">
+          <!-- Menu button -->
+          <v-col cols="auto">
+            <v-btn :icon="true" density="compact" variant="plain">
               <v-icon>mdi-dots-vertical</v-icon>
               <v-menu activator="parent">
                 <!-- Menu items -->
@@ -205,31 +194,31 @@ function closeCustomEndpointDialog(): void {
 
                   <!-- Delete item -->
                   <v-list-item v-if="vhApp.data.features.isAddAccessKeySupported"
-                     :title="locale('REMOVE')"
-                     prepend-icon="mdi-delete"
-                     @click="showConfirmDeleteDialog(clientProfileInfo)"
+                               :title="locale('REMOVE')"
+                               prepend-icon="mdi-delete"
+                               @click="showConfirmDeleteDialog(clientProfileInfo)"
                   />
                 </v-list>
               </v-menu>
             </v-btn>
+          </v-col>
 
-            <!-- Expand/Collapse button -->
-            <template v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)">
-              <v-icon v-if="expandedPanels[index] === 0" size="28" icon="mdi-minus-circle-outline" />
-              <v-icon v-else icon="mdi-plus-circle-outline" size="28" />
-            </template>
+          <!-- Expand/Collapse button -->
+          <v-col v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)" cols="auto" class="ps-0">
+              <v-icon v-if="expandedPanels[index] === 0" size="27" opacity=".6" icon="mdi-minus-circle-outline" />
+              <v-icon v-else icon="mdi-plus-circle-outline" opacity=".6" size="27" />
           </v-col>
 
         </v-row>
       </template>
 
-      <!-- Profile region -->
+      <!-- Countries list -->
       <template v-slot:text>
         <LocationList :client-profile="clientProfileInfo"/>
       </template>
 
       <!-- Support id &  -->
-      <div class="d-flex align-center justify-space-between text-disabled text-caption px-1 mt-2">
+      <div class="d-flex align-center justify-space-between text-disabled text-caption px-4 mt-2">
         <span>SID:{{ clientProfileInfo.supportId }}</span>
         <span>{{ clientProfileInfo.hostNames[0] }}</span>
       </div>
@@ -312,13 +301,10 @@ function closeCustomEndpointDialog(): void {
       <v-card-actions>
 
         <!-- Cancel button -->
-        <v-btn
-          :text="locale('CANCEL')"
-          @click="closeCustomEndpointDialog()"
-        />
+        <v-btn :text="locale('CANCEL')" @click="closeCustomEndpointDialog()" />
 
         <!-- Save button -->
-        <v-btn :text="locale('SAVE')" @click="saveCustomEndpoint"/>
+        <v-btn :text="locale('SAVE')" @click="saveCustomEndpoint()"/>
 
       </v-card-actions>
     </v-card>

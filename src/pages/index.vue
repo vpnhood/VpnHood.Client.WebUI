@@ -481,6 +481,7 @@ function isDebugDataHasValue(): boolean {
             hide-details
             hide-selected
             chips
+            :list-props="{bgColor: 'app-bar'}"
             closable-chips
             multiple
             class="mb-4"

@@ -1,7 +1,9 @@
 ﻿<script setup lang="ts">
-import LocationListItems from '@/components/Servers/LocationListItems.vue';
+import LocationListItem from '@/components/Servers/LocationListItem.vue';
 import type { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
 
+const vhApp = VpnHoodApp.instance;
 const componentProps = defineProps<{
   listType: string,
   groupTitle: string,
@@ -12,7 +14,7 @@ const componentProps = defineProps<{
 </script>
 
 <template>
-    <config-card>
+    <config-card :color="vhApp.isSingleServerMode() ? 'config-card-on-expansion-panel' : 'expansion-panels-collapsed'">
         <v-list-group :value="componentProps.listType">
 
           <!-- Group title -->
@@ -21,7 +23,6 @@ const componentProps = defineProps<{
               v-bind="props"
               class="server-item-group text-caption"
               base-color="disabled"
-
             >
               <div class="d-flex align-center ga-3">
                 <span>{{ componentProps.groupTitle }}</span>
@@ -31,7 +32,7 @@ const componentProps = defineProps<{
           </template>
 
           <!-- Group items -->
-          <LocationListItems
+          <LocationListItem
             :client-profile-id="componentProps.clientProfileId"
             :locations-list="componentProps.locationList"
             :is-premium-group="componentProps.listType === 'premium'"

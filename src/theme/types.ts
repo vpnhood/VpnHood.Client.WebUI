@@ -1,6 +1,6 @@
 ﻿// Strict union of ALL theme color tokens used in your vuetify.ts
 export type ThemeColorKey =
-  | 'background' | 'on-background' | 'colored-bg-light' | 'colored-bg-dark' | 'app-bg'
+  | 'background' | 'surface' | 'on-background' | 'colored-bg-light' | 'colored-bg-dark' | 'app-bg'
   | 'rate-icon' | 'rate-dialog-border' | 'rate-dialog-thanks'
   | 'app-bar' | 'on-app-bar'
   | 'navigation-drawer' | 'navigation-drawer-header' | 'navigation-drawer-version'
@@ -20,8 +20,8 @@ export type ThemeColorKey =
   | 'expire-date-alert' | 'expire-date-warning'
   | 'config-btn-bg' | 'on-config-btn-bg'
   | 'active-server' | 'fastest-server' | 'active-server-chip' | 'on-active-server-chip'
-  | 'expansion-panels' | 'on-expansion-panels' | 'expansion-panels-servers-list'
-  | 'active-profile-radio' | 'inactive-profile-radio' | 'profile-menu-btn'
+  | 'expansion-panels-collapsed'
+  | 'active-profile-radio' | 'inactive-profile-radio'
   | 'config-card-bg' | 'zebra-on-config-card-bg' | 'config-card-on-expansion-panel'
   | 'dialog-light' | 'on-dialog-light' | 'dialog-light-text'
   | 'dialog-dark' | 'on-dialog-dark' | 'dialog-dark-text'
@@ -39,7 +39,7 @@ export type ThemeColorKey =
   | 'btn-style-6' | 'on-btn-style-6'
   | 'btn-style-7'
   | 'switch-btn'
-  | 'connection-circle-border'
+  | 'connection-circle-border' | 'connection-circle-shine'
   | 'active' | 'on-active' | 'highlight' | 'enable-premium' | 'disable-premium'
   | 'disconnect-warning' | 'on-disconnect-warning'
   | 'version-on-home-debug' | 'on-version-on-home-debug'

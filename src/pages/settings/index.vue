@@ -65,8 +65,8 @@ function isShowConnectivitySectionTitle(): boolean {
 
     <!-- Local network -->
     <settings-item
-      title="SPLIT_LOCAL_NETWORK"
-      subtitle="SPLIT_LOCAL_NETWORK_DESC"
+      title="ACCESS_LOCAL_NETWORK"
+      subtitle="ACCESS_LOCAL_NETWORK_DESC"
       :isPremium=false
       :status="{
         state: !vhApp.data.userSettings.includeLocalNetwork,
@@ -74,7 +74,7 @@ function isShowConnectivitySectionTitle(): boolean {
         offText: 'OFF'
       }"
       :is-show="vhApp.data.features.isLocalNetworkSupported"
-      :click="{name: 'SPLIT_LOCAL_NETWORK'}"
+      :click="{name: 'ACCESS_LOCAL_NETWORK'}"
     />
 
     <!-- DNS -->

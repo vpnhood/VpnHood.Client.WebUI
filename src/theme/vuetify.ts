@@ -34,12 +34,12 @@ export default createVuetify({
     defaultTheme: AppName.VpnHoodClient,
     themes: {
       VpnHoodClient: {
-        dark: false,
+        dark: true,
         colors: vhClientThemeColors,
         variables: {
           'medium-emphasis-opacity': '0.8',
-          'border-opacity': '0.07',
-          'disabled-opacity': '0.7',
+          'border-opacity': '0.03',
+          'disabled-opacity': '0.6',
         },
       },
       VpnHoodConnect: {

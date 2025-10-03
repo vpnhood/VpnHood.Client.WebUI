@@ -36,14 +36,9 @@ function alertForExpire(): boolean {
   return diffDays <= 3;
 }
 function determineClass(): string {
-  // VpnHoodCONNECT
-  if (vhApp.isConnectApp()) {
-    processConnectedAnimation();
-    return vhApp.data.connectionState.toLowerCase() + ' my-3' + ' animation-' +
-      (showConnectedAnimation.value === true).toString();
-  }
-  // VpnHoodClient
-  return vhApp.data.isConnected ? 'opacity-100' : 'opacity-30';
+  processConnectedAnimation();
+  return vhApp.data.connectionState.toLowerCase() + ' my-3' + ' animation-' +
+    (showConnectedAnimation.value === true).toString();
 }
 
 // Return icon based on the connection state
@@ -110,12 +105,12 @@ function processConnectedAnimation(): void {
 
 <template>
   <div
-    :id="vhApp.isConnectApp() ? 'connectionCircleIndicator' : 'circleOuter'"
-    :class="[(vhApp.data.isUnstable && !vhApp.isConnectApp()) ? 'unstable' : '', determineClass()]"
+    id="connectionCircleIndicator"
+    :class="determineClass()"
     class="text-white"
   >
 
-    <div v-if="vhApp.isConnectApp()"
+    <div
        class="position-absolute w-100 fill-height"
        :class="{'flasher': vhApp.data.isUnstable}"
        style="--duration: 2s;"
@@ -123,8 +118,6 @@ function processConnectedAnimation(): void {
       <div id="rotateCircle"></div>
     </div>
 
-
-    <div v-else id="circle"></div>
 
     <div class="d-flex flex-column align-center justify-center position-relative fill-height">
 

@@ -22,7 +22,7 @@ const splitLocalNetwork = computed({
   <v-sheet>
     <app-bar/>
 
-    <small-feature-image-and-description image="split-ip.webp" description="SPLIT_LOCAL_NETWORK_DESC" />
+    <small-feature-image-and-description image="access-local-network.webp" description="ACCESS_LOCAL_NETWORK_DESC" />
 
     <!-- Enforced by server alert -->
     <alert-warning v-if="!vhApp.data.isLocalNetworkAvailable" :text="locale('ENFORCED_BY_SERVER')" class="my-2" />
@@ -35,7 +35,7 @@ const splitLocalNetwork = computed({
       <v-card-item>
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('SPLIT_LOCAL_NETWORK') }}</span>
+          <span>{{ locale('ACCESS_LOCAL_NETWORK') }}</span>
           <v-switch
             v-model="splitLocalNetwork"
             :disabled="!vhApp.data.isLocalNetworkAvailable"
@@ -43,7 +43,7 @@ const splitLocalNetwork = computed({
         </div>
 
         <!-- Alert for number of IPs in the filter by device -->
-        <p class="text-caption text-disabled">{{locale("SPLIT_LOCAL_NETWORK_DESC") }}</p>
+        <p class="text-caption text-disabled">{{locale("ACCESS_LOCAL_NETWORK_FEATURE_DESC") }}</p>
       </v-card-item>
 
     </config-card>

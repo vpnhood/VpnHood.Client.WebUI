@@ -45,6 +45,12 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
   return (location.serverLocation === serverLocation && !props.isPremiumGroup) ??
     (location.isDefault && !props.isPremiumGroup );
 }
+function listItemClass(index: number): string{
+  const defaultClass = "location-item";
+  if (Util.isSingleLocation(props.locationsList.length))
+    return defaultClass + " mx-4 rounded-lg bg-expansion-panels-collapsed";
+  return index !== (props.locationsList.length - 1) ? defaultClass + " border-b" : defaultClass;
+}
 </script>
 
 <template>
@@ -53,8 +59,7 @@ function isActiveItem(location: ClientServerLocationInfo): boolean{
     :key="index"
     tabindex="0"
     :value="isPremiumGroup ? `premium_${location.serverLocation}` : `free_${location.serverLocation}`"
-    class="location-item"
-    :class="{'border-b': !Util.isSingleLocation(props.locationsList.length) && index !== (props.locationsList.length - 1)}"
+    :class="listItemClass(index)"
     :active="isActiveItem(location)"
     color="active-server"
     @click="internalConnect(location)"

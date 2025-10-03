@@ -143,7 +143,6 @@ function actionButtonClick(): void | null {
       <!-- Open related settings button (If request with API is available) -->
       <v-card-item v-if="props.isActionButtonAvailable">
         <btn-style-1
-         color="promote-premium-color-premium"
          :text="locale(props.buttonText ?? '')"
          block
          @click="actionButtonClick()"
@@ -173,7 +172,6 @@ function actionButtonClick(): void | null {
       <v-card-item>
         <btn-style-1
           prepend-icon="mdi-crown"
-          color="promote-premium-color-premium"
           block
           :text="locale('GO_PREMIUM')"
           tabindex="0"

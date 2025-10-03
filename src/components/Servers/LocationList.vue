@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
-import LocationListItems from '@/components/Servers/LocationListItems.vue'
+import LocationListItem from '@/components/Servers/LocationListItem.vue'
 import i18n from '@/locales/i18n'
 import { ref } from 'vue';
 import LocationGroup from '@/components/Servers/LocationGroup.vue';
@@ -25,12 +25,17 @@ const premiumLocations = props.clientProfile.locationInfos.filter(x => x.options
 // Group open state
 const openedListGroupsModel = ref<string[]>([locationListType.Free, locationListType.Premium]);
 
-function listHasGroup(): boolean{
+function isListHasGroup(): boolean{
   if (freeLocations.length === 0)
     return false;
   return premiumLocations.length > 0;
 }
 
+function isShowLocationGroups(): boolean{
+  if (!isListHasGroup())
+    return false;
+  return !vhApp.data.features.isPremiumFlagSupported || !vhApp.data.isPremiumAccount
+}
 </script>
 
 <template>
@@ -39,14 +44,13 @@ function listHasGroup(): boolean{
     v-model:opened="openedListGroupsModel"
     open-strategy="multiple"
     bg-color="transparent"
-    :class="{'rounded-lg': !vhApp.isConnectApp()}"
+    :class="{'px-4 pb-2': isShowLocationGroups() && !vhApp.isSingleServerMode()}"
   >
     <!-- Categorised locations -->
-    <template v-if="listHasGroup()">
+    <template v-if="isShowLocationGroups()">
 
       <!-- Free locations group -->
       <location-group
-        v-if="!vhApp.data.isPremiumAccount"
         :list-type="locationListType.Free"
         :group-title="locale('FREE_LOCATIONS')"
         :client-profile-id="props.clientProfile.clientProfileId"
@@ -65,16 +69,28 @@ function listHasGroup(): boolean{
 
     </template>
 
-
-    <!-- If the locations does not have both the Free and Premium category -->
-    <config-card v-else>
-      <LocationListItems
-        :client-profile-id="props.clientProfile.clientProfileId"
-        :locations-list="props.clientProfile.locationInfos"
-        :is-premium-group="premiumLocations.length > 0"
-        :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+    <!-- Only the Premium locations must be shown -->
+    <config-card
+      v-else-if="isListHasGroup() && !isShowLocationGroups()"
+      color="config-card-on-expansion-panel"
+    >
+      <LocationListItem
+       :client-profile-id="props.clientProfile.clientProfileId"
+       :locations-list="premiumLocations"
+       :is-premium-group="premiumLocations.length > 0"
+       :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
       />
     </config-card>
+
+
+    <!-- The locations does not have groups -->
+    <LocationListItem v-else
+      :client-profile-id="props.clientProfile.clientProfileId"
+      :locations-list="props.clientProfile.locationInfos"
+      :is-premium-group="premiumLocations.length > 0"
+      :is-premium-location-selected="props.clientProfile.isPremiumLocationSelected ?? false"
+    />
+
 
   </v-list>
 

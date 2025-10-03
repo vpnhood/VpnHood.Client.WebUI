@@ -15,11 +15,7 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 
 <template>
   <!-- Page header -->
-  <div
-    :class="[!vhApp.isConnectApp() ?'elevation-1 bg-app-bar' : 'text-white', 'mb-3 mx-n4']"
-    :style="(!vhApp.isConnectApp() && vhApp.data.getEdgeToEdgeTopHeight) ?
-    `padding-top: ${vhApp.data.getEdgeToEdgeTopHeight}px !important; margin-top: -${vhApp.data.getEdgeToEdgeTopHeight}px !important;`: ''"
-  >
+  <div class="text-white mb-3 mx-n4">
     <template v-if="!vhApp.data.features.isTv">
       <!-- Back button -->
       <v-btn :icon="Util.getLocalizedLeftChevron()" variant="text" @click="router.go(-1)" />

@@ -7,6 +7,7 @@ const defineTheme = <T extends ThemeColorNames>(t: T) => t;
 // -- VpnHood Connect (dark) -- EXACT COPY of your values, but split out of vuetify.ts
 export const vhConnectThemeColors = defineTheme({
   background: myColors.purple['500'],
+  surface: myColors.purple['500'],
   'on-background':'#ffffff',
   'colored-bg-light': myColors.purple['500'],
   'colored-bg-dark': myColors.purple['600'],
@@ -74,12 +75,9 @@ export const vhConnectThemeColors = defineTheme({
   'active-server-chip': myColors.green['200'],
   'on-active-server-chip': myColors.purple['500'],
 
-  'expansion-panels': myColors.purple['400'],
-  'on-expansion-panels': '#ffffff',
-  'expansion-panels-servers-list': myColors.purple['400'],
+  'expansion-panels-collapsed': myColors.purple['400'],
   'active-profile-radio': myColors.green['300'],
   'inactive-profile-radio': myColors.gray['300'],
-  'profile-menu-btn': myColors.gray['400'],
 
   'config-card-bg': myColors.purple['400'],
   'zebra-on-config-card-bg': myColors.purple['500'],
@@ -131,6 +129,7 @@ export const vhConnectThemeColors = defineTheme({
 
   'switch-btn': myColors.purple['200'],
   'connection-circle-border': myColors.cream['100'],
+  'connection-circle-shine': myColors.green['200'],
 
   active: myColors.green['200'],
   'on-active': myColors.purple['500'],
@@ -159,20 +158,21 @@ export const vhConnectThemeColors = defineTheme({
 
 // -- VpnHood Client (light) -- EXACT COPY of your values
 export const vhClientThemeColors = defineTheme({
-  background: myColors.blue['20'],
-  'on-background': '#000000',
-  'colored-bg-light': myColors.blue['300'],
-  'colored-bg-dark': myColors.blue['400'],
+  background: myColors.blue['330'],
+  surface: myColors.blue['330'],
+  'on-background': '#ffffff',
+  'colored-bg-light': myColors.blue['330'],
+  'colored-bg-dark': myColors.blue['500'],
   'app-bg': myColors.blue['400'],
-  'app-bar': myColors.blue['200'],
+  'app-bar': myColors.blue['330'],
   'on-app-bar': '#ffffff',
   'skeleton-loader': myColors.blue['300'],
   'rate-icon': myColors.blue['300'],
   'rate-dialog-border': myColors.blue['100'],
-  'rate-dialog-thanks': myColors.green['300'],
+  'rate-dialog-thanks': myColors.green['200'],
 
-  'navigation-drawer': "#ffffff",
-  'navigation-drawer-header': myColors.blue['300'],
+  'navigation-drawer': myColors.blue['290'],
+  'navigation-drawer-header': myColors.blue['330'],
   'navigation-drawer-version': myColors.green['200'],
 
   'home-app-bar': '#ffffff',
@@ -186,11 +186,11 @@ export const vhClientThemeColors = defineTheme({
   'on-connect-btn-disconnected': myColors.blue['400'],
   'on-connect-btn-connected': '#ffffff',
 
-  'count-down-normal': myColors.green['300'],
+  'count-down-normal': myColors.green['200'],
   'count-down-alert': myColors.yellow['200'],
   'count-down-warning': myColors.red['100'],
 
-  'go-premium-btn': myColors.green['300'],
+  'go-premium-btn': myColors.green['200'],
   'on-go-premium-btn': myColors.blue['200'],
 
   'promote-premium-border': myColors.blue['100'],
@@ -221,21 +221,18 @@ export const vhClientThemeColors = defineTheme({
   'config-btn-bg': myColors.blue['300'],
   'on-config-btn-bg': myColors.blue['100'],
 
-  'active-server': myColors.green['300'],
-  'fastest-server': myColors.blue['200'],
-  'active-server-chip': myColors.green['300'],
-  'on-active-server-chip': '#ffffff',
+  'active-server': myColors.green['200'],
+  'fastest-server': myColors.blue['100'],
+  'active-server-chip': myColors.green['200'],
+  'on-active-server-chip': myColors.blue['500'],
 
-  'expansion-panels': '#ffffff',
-  'on-expansion-panels': myColors.blue['400'],
-  'expansion-panels-servers-list': myColors.blue['20'],
-  'active-profile-radio': myColors.green['300'],
+  'expansion-panels-collapsed': myColors.blue['280'],
+  'active-profile-radio': myColors.green['200'],
   'inactive-profile-radio': myColors.gray['300'],
-  'profile-menu-btn': myColors.gray['400'],
 
-  'config-card-bg': '#ffffff',
+  'config-card-bg': myColors.blue['290'],
   'zebra-on-config-card-bg': myColors.blue['400'],
-  'config-card-on-expansion-panel': myColors.blue['20'],
+  'config-card-on-expansion-panel': myColors.blue['290'],
 
   'dialog-light': myColors.green['200'],
   'on-dialog-light': '#ffffff',
@@ -247,23 +244,23 @@ export const vhClientThemeColors = defineTheme({
 
   'grad-bg-container-bg': myColors.blue['500'],
   'tonal-icon-btn': myColors.blue['100'],
-  'card-on-grad-bg': myColors.blue['200'],
+  'card-on-grad-bg': myColors.blue['330'],
   'on-card-on-grad-bg': '#ffffff',
 
-  'general-dialog': "#ffffff",
-  'on-general-dialog': myColors.blue['300'],
-  'general-dialog-text': '#000000',
+  'general-dialog': myColors.blue['330'],
+  'on-general-dialog': myColors.blue['100'],
+  'general-dialog-text': myColors.gray['200'],
 
   'dialog-alert': '#ffffff',
   'on-dialog-alert': myColors.blue['400'],
   'dialog-alert-text': myColors.gray['800'],
   'dialog-alert-btn': myColors.blue['400'],
 
-  'sample-ip-filter-bg': myColors.green['400'],
-  'sample-ip-filter-text': myColors.gray['100'],
+  'sample-ip-filter-bg': myColors.gray['800'],
+  'sample-ip-filter-text': myColors.gray['400'],
 
-  'btn-style-1': myColors.blue['300'],
-  'on-btn-style-1': '#ffffff',
+  'btn-style-1': myColors.green['200'],
+  'on-btn-style-1': myColors.blue['500'],
 
   'btn-style-2': myColors.blue['100'],
   'on-btn-style-2': '#ffffff',
@@ -271,23 +268,24 @@ export const vhClientThemeColors = defineTheme({
   'btn-style-3': myColors.cream['100'],
   'on-btn-style-3': myColors.purple['500'],
 
-  'btn-style-4': myColors.blue['200'],
+  'btn-style-4': myColors.blue['100'],
 
-  'btn-style-5': myColors.gray['800'],
+  'btn-style-5': myColors.gray['300'],
   'on-btn-style-5': '#ffffff',
 
-  'btn-style-6': '#ffffff',
+  'btn-style-6': myColors.blue['100'],
   'on-btn-style-6': myColors.blue['400'],
 
   'btn-style-7': '#000000',
 
-  'switch-btn': myColors.blue['200'],
-  'connection-circle-border': myColors.cream['100'],
+  'switch-btn': myColors.blue['100'],
+  'connection-circle-border': myColors.blue['100'],
+  'connection-circle-shine': myColors.green['50'],
 
-  active: myColors.green['300'],
+  active: myColors.green['200'],
   'on-active': myColors.blue['400'],
-  highlight: myColors.blue['200'],
-  'enable-premium': myColors.blue['200'],
+  highlight: myColors.blue['100'],
+  'enable-premium': myColors.green['200'],
   'disable-premium': myColors.yellow['200'],
 
   'disconnect-warning': myColors.yellow['50'],
