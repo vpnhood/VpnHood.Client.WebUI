@@ -15,13 +15,21 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 
 <template>
   <!-- Page header -->
-  <div class="text-white mb-3 mx-n4">
+  <div class="d-flex align-center justify-center position-relative text-white mb-5 pt-6 pb-3">
     <template v-if="!vhApp.data.features.isTv">
       <!-- Back button -->
-      <v-btn :icon="Util.getLocalizedLeftChevron()" variant="text" @click="router.go(-1)" />
+      <v-btn
+        :icon="Util.getLocalizedLeftChevron()"
+        variant="text"
+        width="43px"
+        height="43px"
+        position="absolute"
+        style="border-radius: 18px; border: 1px solid #ffffff2e; inset-inline-start: 0;"
+        @click="router.go(-1)"
+      />
 
       <!-- Page title -->
-      <span class="text-body-1">{{locale(pageInfo.name.toString())}}</span>
+      <p class="text-capitalize text-body-1">{{locale(pageInfo.name.toString())}}</p>
     </template>
 
   </div>

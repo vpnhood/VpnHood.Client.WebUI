@@ -27,6 +27,7 @@ const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
 const isShowSearchBox = ref<boolean>(!vhApp.data.features.isTv);
 
+
 const appList = computed<IMyInstalledApps[]>(() => {
   if (search.value == null)
     return myInstalledApps.value;
@@ -40,7 +41,7 @@ onMounted(async () => {
     const installedApps = await vhApp.getInstalledApps();
     const filterMode = vhApp.data.userSettings.appFiltersMode;
 
-    // Add isSelected to all apps item
+    // Add isSelected to all app items
     myInstalledApps.value = installedApps.map(app => {
       // noinspection OverlyComplexBooleanExpressionJS
       const myApp: IMyInstalledApps = {
@@ -130,75 +131,74 @@ async function actionOnConfirm() {
     <!-- Disconnect required alert -->
     <disconnect-required-alert class="mb-4"/>
 
-    <!-- Select all apps button -->
-    <!-- DO NOT remove the 'd-inline-flex' class to support legacy browser -->
-    <div class="mb-5">
-        <!-- Select all apps button -->
-        <btn-style-5
-          prepend-icon="mdi-select-all"
-          class="d-inline-flex text-caption me-2"
-          :text="locale('SELECT_ALL')"
-          @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
-        />
-
-        <!-- Remove all apps button -->
-        <btn-style-5
-          prepend-icon="mdi-select-remove"
-          class="d-inline-flex text-caption"
-          :text="locale('CLEAR_ALL')"
-          @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
-        />
-
-        <!-- Search button -->
-        <btn-style-5
-          v-if="vhApp.data.features.isTv"
-          prepend-icon="mdi-magnify"
-          class="d-inline-flex text-caption ms-2"
-          :text="locale('SEARCH')"
-          @click="isShowSearchBox = !isShowSearchBox"
-        />
-
-    </div>
-
-    <!-- Search box -->
-    <v-text-field
-      v-if="isShowSearchBox"
-      v-model="search"
-      single-line
-      clearable
-      hide-details
-      prepend-inner-icon="mdi-magnify"
-      variant="outlined"
-      density="compact"
-      rounded="pill"
-      color="highlight"
-      id="appSearchField"
-      :placeholder="locale('SEARCH')"
-      class="mb-5"
-    >
-    </v-text-field>
-
     <!-- Filter apps option -->
-    <config-card :loading="myInstalledApps.length < 1">
+    <config-card :loading="myInstalledApps.length < 1" class="pt-3">
+      <v-card-item>
+        <div class="d-flex flex-wrap ga-2">
 
-      <div v-if="myInstalledApps.length < 1" class="d-flex flex-column ga-2 pa-3">
-        <v-defaults-provider :defaults="{
+          <!-- Select all apps button -->
+          <btn-style-5
+            prepend-icon="mdi-select-all"
+            class="flex-grow-1 text-caption"
+            :text="locale('SELECT_ALL')"
+            @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
+          />
+
+          <!-- Remove all apps button -->
+          <btn-style-5
+            prepend-icon="mdi-select-remove"
+            class="flex-grow-1 text-caption"
+            :text="locale('CLEAR_ALL')"
+            @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
+          />
+
+          <!-- Search button -->
+          <btn-style-5
+            v-if="!isShowSearchBox"
+            prepend-icon="mdi-magnify"
+            class="flex-grow-1 text-caption"
+            :text="locale('SEARCH')"
+            @click="isShowSearchBox = !isShowSearchBox"
+          />
+
+        </div>
+      </v-card-item>
+
+      <v-card-item>
+        <!-- Search box -->
+        <v-text-field
+          v-if="isShowSearchBox"
+          v-model="search"
+          single-line
+          clearable
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          rounded="pill"
+          color="highlight"
+          id="appSearchField"
+          :placeholder="locale('SEARCH')"
+        >
+        </v-text-field>
+      </v-card-item>
+
+      <v-defaults-provider v-if="myInstalledApps.length < 1" :defaults="{
           'VSkeletonLoader':{
             'color': 'rgba(var(--v-theme-card-on-grad-bg), 0.3)',
             'type': 'list-item-avatar'
             }
         }"
-        >
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-          <v-skeleton-loader />
-        </v-defaults-provider>
-      </div>
+      >
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+        <v-skeleton-loader />
+      </v-defaults-provider>
 
       <!-- Apps list -->
       <v-list v-else

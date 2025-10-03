@@ -123,6 +123,11 @@ export class VpnHoodAppData {
   }
 
   get getEdgeToEdgeTopHeight(): number | null {
+
+    // Only available in the production mode.
+    if (import.meta.env.DEV)
+      return null;
+
     let topHeight = this.state.systemBarsInfo.topHeight;
     if (topHeight > 0)
       topHeight = Math.ceil(topHeight / window.devicePixelRatio) + 3;
@@ -131,6 +136,11 @@ export class VpnHoodAppData {
   }
 
   get getEdgeToEdgeBottomHeight(): number | null {
+
+    // Only available in the production mode.
+    if (import.meta.env.DEV)
+      return null;
+
     let bottomHeight = this.state.systemBarsInfo.bottomHeight;
     if (bottomHeight > 0)
       bottomHeight = Math.ceil(bottomHeight / window.devicePixelRatio) + 3;
@@ -160,6 +170,11 @@ export class VpnHoodAppData {
 
   //Add padding to the pages for handle edge-to-edge feature
   public edgeToEdge(): void {
+
+    // Only available in the production mode.
+    if (import.meta.env.DEV)
+      return;
+
     const paddingTop = this.getEdgeToEdgeTopHeight;
     const paddingBottom = this.getEdgeToEdgeBottomHeight;
 

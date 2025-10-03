@@ -5,7 +5,6 @@ import "regenerator-runtime/runtime";
 import {createApp} from 'vue'
 import App from './App.vue'
 import { VpnHoodApp } from './services/VpnHoodApp'
-import { AppName } from '@/helpers/UiConstants'
 import vuetify from './theme/vuetify'
 import i18n from './locales/i18n'
 import router from './services/router'

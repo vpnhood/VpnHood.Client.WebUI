@@ -31,9 +31,11 @@ const tunnelClientCountry = computed<boolean>({
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue',$event)"
   >
-    <v-card color="general-dialog" :title="locale('TUNNEL_MY_COUNTRY')">
-
-      <v-card-text class="text-disabled text-caption">{{ locale("TUNNEL_MY_COUNTRY_DESC") }}</v-card-text>
+    <v-card color="general-dialog">
+      <v-card-item>
+        <v-card-title class="text-capitalize">{{locale('SPLIT_MY_COUNTRY')}}</v-card-title>
+        <p class="text-disabled text-caption">{{ locale("SPLIT_MY_COUNTRY_DESC") }}</p>
+      </v-card-item>
 
       <v-card-item>
 
@@ -42,21 +44,12 @@ const tunnelClientCountry = computed<boolean>({
 
         <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="text-general-dialog-text" color="highlight">
 
-          <v-radio :value="true" class="mb-3">
+          <v-radio :value="false" class="mb-3">
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("TUNNEL_MY_COUNTRY_ON") }}</span>
-                <span class="text-disabled text-caption">{{ locale("TUNNEL_MY_COUNTRY_ON_DESC") }}</span>
-              </div>
-            </template>
-          </v-radio>
-
-          <v-radio :value="false">
-            <template v-slot:label>
-              <div class="d-flex flex-column">
-                <span>{{ locale("TUNNEL_MY_COUNTRY_OFF") }}</span>
+                <span>{{ locale("YES") }}</span>
                 <span class="text-disabled text-caption">
-                  {{ locale("TUNNEL_MY_COUNTRY_OFF_DESC") }}
+                  {{ locale("SPLIT_MY_COUNTRY_ON_DESC") }}
                   <v-chip
                     color="highlight"
                     :text="locale('RECOMMENDED')"
@@ -66,6 +59,15 @@ const tunnelClientCountry = computed<boolean>({
                     tabindex="-1"
                   />
                 </span>
+              </div>
+            </template>
+          </v-radio>
+
+          <v-radio :value="true">
+            <template v-slot:label>
+              <div class="d-flex flex-column">
+                <span>{{ locale("NO") }}</span>
+                <span class="text-disabled text-caption">{{ locale("SPLIT_MY_COUNTRY_OFF_DESC") }}</span>
               </div>
             </template>
           </v-radio>

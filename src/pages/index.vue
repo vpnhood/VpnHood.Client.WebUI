@@ -382,13 +382,12 @@ function isDebugDataHasValue(): boolean {
           tabindex="6"
           @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)"
         >
-          <span class="config-btn-title">{{ locale('COUNTRIES') }}</span>
+          <span class="config-btn-title">{{ locale('SPLIT_MY_COUNTRY') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
           <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-        {{ vhApp.data.userSettings.tunnelClientCountry
-            ? locale('IP_FILTER_ALL') : locale('IP_FILTER_STATUS_EXCLUDE_CLIENT_COUNTRY') }}
+          {{ locale( vhApp.data.userSettings.tunnelClientCountry ? 'NO' : 'YES') }}
         </span>
 
           <!-- Client country flag -->
@@ -411,7 +410,7 @@ function isDebugDataHasValue(): boolean {
           tabindex="7"
           @click="router.push({name: 'APP_FILTER'})"
         >
-          <span class="config-btn-title">{{ locale('APPS') }}</span>
+          <span class="config-btn-title">{{ locale('SPLIT_APPS') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
