@@ -4,7 +4,7 @@ import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import router from '@/services/router';
 import { ref } from 'vue';
-import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;

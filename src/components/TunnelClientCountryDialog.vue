@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { computed } from 'vue';
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
+import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-
+const isTunnelCountry = ref<boolean>(vhApp.data.userSettings.tunnelClientCountry);
 const props = defineProps<{
   modelValue: boolean,
 }>();
@@ -15,15 +14,19 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
 }>();
 
-const tunnelClientCountry = computed<boolean>({
-  get: () => {
-    return vhApp.data.userSettings.tunnelClientCountry;
-  } ,
-  set: async (value: boolean): Promise<void> => {
-    vhApp.data.userSettings.tunnelClientCountry = value;
-    await vhApp.saveUserSetting();
+async function onChangeSetting(value: boolean | null): Promise<void>{
+  if (vhApp.data.isConnected){
+    const result = await vhApp.showConfirmDialog(locale('DISCONNECT_ALERT'), locale('DISCONNECT_ALERT_DESC'));
+    if (!result){
+      isTunnelCountry.value = vhApp.data.userSettings.tunnelClientCountry;
+      return;
+    }
   }
-});
+
+  if (value === null) return;
+  vhApp.data.userSettings.tunnelClientCountry = value;
+  await vhApp.saveUserSetting();
+}
 </script>
 
 <template>
@@ -39,10 +42,13 @@ const tunnelClientCountry = computed<boolean>({
 
       <v-card-item>
 
-        <!-- Disconnecting alert -->
-        <disconnect-required-alert class="mb-4"/>
-
-        <v-radio-group v-model="tunnelClientCountry" :hide-details="true" class="text-general-dialog-text" color="highlight">
+        <v-radio-group
+          v-model="isTunnelCountry"
+          @update:modelValue="onChangeSetting"
+          :hide-details="true"
+          class="text-general-dialog-text"
+          color="highlight"
+        >
 
           <v-radio :value="false" class="mb-3">
             <template v-slot:label>

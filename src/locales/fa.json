@@ -107,6 +107,8 @@
   "OFF": "خاموش",
   "ERROR": "خطا",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "هر تغییری باعث قطع اتصال شما می‌شود.",
+  "DISCONNECT_ALERT": "هشدار قطع اتصال",
+  "DISCONNECT_ALERT_DESC": "این تغییر اتصال فعلی VPN شما را قطع می‌کند. ادامه می‌دهید؟",
   "OOPS": "اوووه!",
   "LOAD_APP_ERROR_DESC": "مشکلی در اجرای برنامه وجود دارد",
   "RELOAD_APP": "اجرای دوباره برنامه",

@@ -107,6 +107,8 @@
   "OFF": "Desligado",
   "ERROR": "Erro",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Você será desconectado por qualquer alteração.",
+  "DISCONNECT_ALERT": "Alerta de Desconexão",
+  "DISCONNECT_ALERT_DESC": "Sua VPN será desconectada para aplicar esta alteração. Continuar?",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "Houve um problema ao executar o aplicativo",
   "RELOAD_APP": "Recarregar aplicativo",

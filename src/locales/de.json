@@ -107,6 +107,8 @@
   "OFF": "Aus",
   "ERROR": "Fehler",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Sie werden durch Änderungen getrennt.",
+  "DISCONNECT_ALERT": "Trennwarnung",
+  "DISCONNECT_ALERT_DESC": "Diese Änderung trennt Ihre VPN-Verbindung. Fortfahren?",
   "OOPS": "Ups!",
   "LOAD_APP_ERROR_DESC": "Es gab ein Problem beim Ausführen der App",
   "RELOAD_APP": "App neu laden",

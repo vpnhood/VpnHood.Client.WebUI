@@ -5,14 +5,13 @@ import "regenerator-runtime/runtime";
 import {createApp} from 'vue'
 import App from './App.vue'
 import { VpnHoodApp } from './services/VpnHoodApp'
+import { AppName } from '@/helpers/UiConstants'
 import vuetify from './theme/vuetify'
 import i18n from './locales/i18n'
 import router from './services/router'
 import ErrorPage from "./pages/error-page.vue"
 import './assets/styles/general.css'
 import './assets/styles/override.css'
-import './assets/styles/vpn-hood-client.css'
-import './assets/styles/vpn-hood-connect.css'
 import './assets/styles/rtl.css'
 
 async function main(): Promise<void> {
@@ -24,7 +23,7 @@ async function main(): Promise<void> {
     const app = createApp(App);
 
     // Set the app theme
-    vuetify.theme.change(vpnHoodApp.data.features.uiName ?? 'VpnHoodClientDark');
+    vuetify.theme.change(vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient);
 
     // Set the default UI language
     const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.currentUiCultureInfo.code);

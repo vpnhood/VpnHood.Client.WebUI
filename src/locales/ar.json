@@ -107,6 +107,8 @@
   "OFF": "إيقاف",
   "ERROR": "خطأ",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "لن يتم اتصالك بأي تغييرات.",
+  "DISCONNECT_ALERT": "تنبيه قطع الاتصال",
+  "DISCONNECT_ALERT_DESC": "سيؤدي هذا التغيير إلى قطع اتصال VPN الحالي. هل تريد المتابعة؟",
   "OOPS": "عفوًا!",
   "LOAD_APP_ERROR_DESC": "كانت هناك مشكلة في تشغيل التطبيق",
   "RELOAD_APP": "إعادة تحميل التطبيق",

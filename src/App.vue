@@ -9,6 +9,7 @@ import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -80,13 +81,16 @@ onMounted(async () => {
       </v-main>
 
       <!-- Global Loading dialog -->
-      <LoadingDialog v-model="vhApp.data.uiState.showLoadingDialog"/>
+      <loading-dialog v-model="vhApp.data.uiState.showLoadingDialog"/>
 
       <!-- Global alert dialog -->
       <error-dialog v-model="isShowErrorDialog"/>
 
       <!-- Global snackbar -->
-      <GeneralSnackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"/>
+      <general-snackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"/>
+
+      <!-- General confirm dialog -->
+      <confirm-dialog v-model="vhApp.data.uiState.confirmDialogData.isShow" />
 
     </v-layout>
   </v-app>

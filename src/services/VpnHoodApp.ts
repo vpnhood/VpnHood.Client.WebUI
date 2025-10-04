@@ -21,6 +21,7 @@ import router from '@/services/router';
 import { VhFirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
+import { createDeferred, type Deferred } from '@/helpers/Deferred';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
@@ -28,6 +29,7 @@ export class VpnHoodApp {
   public clientProfileClient: ClientProfileClient;
   public intentsClient: IntentsClient;
   public vhFirebase: VhFirebaseApp | null;
+  public confirmDialogDeferred: Deferred<boolean> | null = null;
   private lastReloadNumber: number = 0;
   private isSaving: boolean = false;
 
@@ -410,6 +412,16 @@ export class VpnHoodApp {
     // For developer
     console.log('User Account: ', this.data.userState.userAccount);
     await this.reloadSettings();
+  }
+
+  public showConfirmDialog(title: string, message: string): Promise<boolean> {
+    const confirmDialogData = this.data.uiState.confirmDialogData;
+    confirmDialogData.isShow = true;
+    confirmDialogData.title = title;
+    confirmDialogData.message = message;
+
+    this.confirmDialogDeferred = createDeferred<boolean>();
+    return this.confirmDialogDeferred.promise;
   }
 
 }

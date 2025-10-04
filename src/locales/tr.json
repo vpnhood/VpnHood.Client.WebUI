@@ -107,6 +107,8 @@
   "OFF": "Kapalı",
   "ERROR": "Hata",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "Herhangi bir değişiklikten dolayı bağlantınız kesilecektir.",
+  "DISCONNECT_ALERT": "Bağlantıyı Kesme Uyarısı",
+  "DISCONNECT_ALERT_DESC": "Bu değişiklik mevcut VPN bağlantınızı kesecektir. Devam edilsin mi?",
   "OOPS": "Hata!",
   "LOAD_APP_ERROR_DESC": "Uygulamanın çalıştırılmasında bir sorun oldu",
   "RELOAD_APP": "Uygulamayı Yeniden Yükle",

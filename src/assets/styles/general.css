@@ -73,7 +73,8 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     /*noinspection CssUnresolvedCustomProperty*/
     background: linear-gradient(to top, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
 }
-/*** --------------------Home Circle Section-------------------- ***/
+
+/*** -------------------- Home Circle Section -------------------- ***/
 #connectionCircleIndicator{
     position: relative;
     width: 150px;
@@ -221,4 +222,8 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
         border-color: white;
     }
 }
-/*** --------------------End of Home Circle Section-------------------- ***/
+
+/*** -------------------- VpnHood! Client -------------------- ***/
+.v-theme--VpnHoodClient .v-chip--disabled{
+    opacity: 0.5;
+}

@@ -4,7 +4,6 @@ import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
-import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 
@@ -17,12 +16,7 @@ interface IMyInstalledApps {
   iconPng: string;
   isSelected: boolean;
 }
-enum ConfirmDialogAction {
-  SelectAll,
-  ClearAll
-}
-const showConfirmDialog = ref<boolean>(false);
-const confirmDialogAction = ref<ConfirmDialogAction>(ConfirmDialogAction.SelectAll);
+
 const myInstalledApps = ref<IMyInstalledApps[]>([]);
 const search = ref<string | null>(null);
 const isShowSearchBox = ref<boolean>(!vhApp.data.features.isTv);
@@ -113,14 +107,21 @@ async function saveChange(){
   await vhApp.saveUserSetting();
 }
 
-async function actionOnConfirm() {
-  if (confirmDialogAction.value === ConfirmDialogAction.SelectAll)
-    myInstalledApps.value.forEach(app => {app.isSelected = true});
-  else
-    myInstalledApps.value.forEach(app => {app.isSelected = false});
-
-  sortApps(myInstalledApps.value);
-  await saveChange();
+async function onSelectAll(){
+    const result = await vhApp.showConfirmDialog(locale('SELECT_ALL_APPS_TITLE'), locale('ARE_YOU_SURE'));
+    if (result) {
+      myInstalledApps.value.forEach(app => {app.isSelected = true});
+      sortApps(myInstalledApps.value);
+      await saveChange();
+    }
+}
+async function onClearAll(){
+    const result = await vhApp.showConfirmDialog(locale('CLEAR_ALL_APPS_TITLE'), locale('ARE_YOU_SURE'));
+    if (result) {
+      myInstalledApps.value.forEach(app => {app.isSelected = false});
+      sortApps(myInstalledApps.value);
+      await saveChange();
+    }
 }
 </script>
 
@@ -141,15 +142,15 @@ async function actionOnConfirm() {
             prepend-icon="mdi-select-all"
             class="flex-grow-1 text-caption"
             :text="locale('SELECT_ALL')"
-            @click="confirmDialogAction = ConfirmDialogAction.SelectAll; showConfirmDialog = true"
+            @click="onSelectAll()"
           />
 
-          <!-- Remove all apps button -->
+          <!-- Clear all apps button -->
           <btn-style-5
             prepend-icon="mdi-select-remove"
             class="flex-grow-1 text-caption"
             :text="locale('CLEAR_ALL')"
-            @click="confirmDialogAction = ConfirmDialogAction.ClearAll; showConfirmDialog = true"
+            @click="onClearAll()"
           />
 
           <!-- Search button -->
@@ -231,14 +232,6 @@ async function actionOnConfirm() {
       </v-list>
 
     </config-card>
-
-    <ConfirmDialog
-      v-model="showConfirmDialog"
-      :title="confirmDialogAction == ConfirmDialogAction.SelectAll
-    ? locale('SELECT_ALL_APPS_TITLE') : locale('CLEAR_ALL_APPS_TITLE')"
-      :message="locale('ARE_YOU_SURE')"
-      @confirm="actionOnConfirm()"
-    />
 
   </v-sheet>
 </template>

@@ -107,6 +107,8 @@
   "OFF": "बंद",
   "ERROR": "त्रुटि",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "किसी भी परिवर्तन से आप डिस्कनेक्ट हो जाएंगे।",
+  "DISCONNECT_ALERT": "डिस्कनेक्ट अलर्ट",
+  "DISCONNECT_ALERT_DESC": "यह बदलाव आपके मौजूदा वीपीएन को डिस्कनेक्ट कर देगा। जारी रखें?",
   "OOPS": "ओह!",
   "LOAD_APP_ERROR_DESC": "ऐप चलाने में एक समस्या थी",
   "RELOAD_APP": "ऐप पुनः लोड करें",

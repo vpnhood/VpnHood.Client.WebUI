@@ -5,7 +5,7 @@ import { Util } from '@/helpers/Util';
 import { AppPackageName } from '@/helpers/UiConstants';
 import { ref } from 'vue';
 import router from '@/services/router';
-import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;

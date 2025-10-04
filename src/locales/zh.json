@@ -107,6 +107,8 @@
   "OFF": "关闭",
   "ERROR": "错误",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "任何更改将导致断开连接。",
+  "DISCONNECT_ALERT": "断开提醒",
+  "DISCONNECT_ALERT_DESC": "此操作将断开您当前的 VPN 连接。是否继续？",
   "OOPS": "哎呀！",
   "LOAD_APP_ERROR_DESC": "运行应用程序时出现问题",
   "RELOAD_APP": "重新加载应用程序",

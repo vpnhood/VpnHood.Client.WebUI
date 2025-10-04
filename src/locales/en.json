@@ -107,6 +107,8 @@
   "OFF": "Off",
   "ERROR": "Error",
   "DISCONNECT_REQUIRED_TO_CHANGE_SETTING": "You will be disconnected by any changes.",
+  "DISCONNECT_ALERT": "Disconnect Alert",
+  "DISCONNECT_ALERT_DESC": "This change will disconnect your current VPN. Continue?",
   "OOPS": "Oooops!",
   "LOAD_APP_ERROR_DESC": "There was a problem running the App",
   "RELOAD_APP": "Reload App",
