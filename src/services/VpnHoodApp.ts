@@ -6,9 +6,11 @@ import {
   ClientProfileUpdateParams,
   ConfigParams,
   ConnectPlanId,
-  DeviceAppInfo, IntentsClient,
+  DeviceAppInfo,
+  IntentsClient,
   PatchOfBoolean,
   PatchOfString,
+  ProxyNodeClient,
   ServerLocationInfo,
   SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
@@ -28,12 +30,13 @@ export class VpnHoodApp {
   public appClient: AppClient;
   public clientProfileClient: ClientProfileClient;
   public intentsClient: IntentsClient;
+  public proxyNodeClient: ProxyNodeClient;
   public vhFirebase: VhFirebaseApp | null;
   public confirmDialogDeferred: Deferred<boolean> | null = null;
   private lastReloadNumber: number = 0;
   private isSaving: boolean = false;
 
-  private constructor(appClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
+  private constructor(appClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, proxyNodeClient: ProxyNodeClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
     if (VpnHoodApp._instance)
       throw new Error('VpnHoodApp has been already initialized.');
 
@@ -41,6 +44,7 @@ export class VpnHoodApp {
     this.appClient = appClient;
     this.clientProfileClient = clientProfileClient;
     this.intentsClient = intentsClient;
+  this.proxyNodeClient = proxyNodeClient;
     this.vhFirebase = vhFirebase;
     this.data.uiState.configTime = this.data.state.configTime;
     VpnHoodApp._instance = this;
@@ -58,6 +62,7 @@ export class VpnHoodApp {
     const apiClient: AppClient = ClientApiFactory.instance.createAppClient();
     const clientProfileClient: ClientProfileClient = ClientApiFactory.instance.createClientProfileClient();
     const intentsClient: IntentsClient = ClientApiFactory.instance.createIntentClient();
+  const proxyNodeClient: ProxyNodeClient = ClientApiFactory.instance.createProxyNodeClient();
     const config = await apiClient.configure(
       new ConfigParams({ availableCultures: i18n.global.availableLocales }));
     const appData = new VpnHoodAppData(
@@ -73,7 +78,7 @@ export class VpnHoodApp {
     if (!import.meta.env.DEV)
       firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.features.clientId);
 
-    return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, appData, firebase);
+    return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, proxyNodeClient, appData, firebase);
   }
 
   public async reloadState(): Promise<void> {

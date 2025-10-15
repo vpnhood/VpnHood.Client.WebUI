@@ -1,13 +1,30 @@
 <script lang="ts" setup>
 import i18n from '@/locales/i18n';
 import AppBar from '@/components/AppBar.vue';
-import { AppFeature } from '@/services/VpnHood.Client.Api';
+import { AppFeature, AppProxyMode } from '@/services/VpnHood.Client.Api';
 import { LanguagesCode } from '@/helpers/UiConstants';
 import SettingsItem from '@/components/SettingsItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import SettingsSectionTitle from '@/components/SettingsSectionTitle.vue';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
+
+const proxyModeLabel = computed(() => {
+  const localeCode = i18n.global.locale.value;
+  const mode = vhApp.data.userSettings.proxySettings?.mode ?? AppProxyMode.Disabled;
+  let key = 'PROXY_MODE_DISABLED';
+  switch (mode) {
+    case AppProxyMode.System:
+      key = 'PROXY_MODE_SYSTEM';
+      break;
+    case AppProxyMode.Custom:
+      key = 'PROXY_MODE_CUSTOM';
+      break;
+  }
+  const label = i18n.global.t(key);
+  return localeCode ? label : label;
+});
 
 function isShowConnectivitySectionTitle(): boolean {
   return vhApp.data.intentFeatures.isQuickLaunchSupported ||
@@ -89,6 +106,16 @@ function isShowConnectivitySectionTitle(): boolean {
       :isPremium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"
       :is-show="vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported"
       :click="{name: 'DNS'}"
+    />
+
+    <!-- Proxies -->
+    <settings-item
+      title="PROXIES"
+      subtitle="PROXIES_DESC"
+      :isPremium="false"
+      :is-show="vhApp.data.features.isTcpProxySupported"
+      :selectedItem="proxyModeLabel"
+      :click="{name: 'PROXIES'}"
     />
 
 
