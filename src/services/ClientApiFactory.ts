@@ -4,7 +4,8 @@ import { AppClient, AccountClient, BillingClient, ClientProfileClient, IntentsCl
 
 export class ClientApiFactory {
     private readonly axiosInstance: AxiosInstance;
-    private readonly baseUrl: string = import.meta.env.VITE_API_BASE_URL ?? window.location.origin;
+    private readonly baseUrl: string = ClientApiFactory.removeTrailingSlashes(
+        import.meta.env.VITE_API_BASE_URL ?? window.location.origin);
 
     constructor() {
         //Define the axios default config
@@ -25,6 +26,10 @@ export class ClientApiFactory {
             this._instance = new ClientApiFactory();
 
         return this._instance;
+    }
+
+    private static removeTrailingSlashes(url: string): string {
+        return url.replace(/\/+$/, '');
     }
 
     public createAppClient(): AppClient {
