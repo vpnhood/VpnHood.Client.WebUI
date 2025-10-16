@@ -25,6 +25,8 @@ declare module 'vue-router/auto-routes' {
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
     'PROXIES': RouteRecordInfo<'PROXIES', '/proxies', Record<never, never>, Record<never, never>>,
     '[ID]': RouteRecordInfo<'[ID]', '/proxies/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    'PROXYINFOTAB': RouteRecordInfo<'PROXYINFOTAB', '/proxies/ProxyInfoTab', Record<never, never>, Record<never, never>>,
+    'PROXYSTATUSTAB': RouteRecordInfo<'PROXYSTATUSTAB', '/proxies/ProxyStatusTab', Record<never, never>, Record<never, never>>,
     'PURCHASE_SUBSCRIPTION': RouteRecordInfo<'PURCHASE_SUBSCRIPTION', '/purchase-subscription', Record<never, never>, Record<never, never>>,
     'SERVERS': RouteRecordInfo<'SERVERS', '/servers', Record<never, never>, Record<never, never>>,
     'EXTEND_SESSION': RouteRecordInfo<'EXTEND_SESSION', '/servers/extend-session', Record<never, never>, Record<never, never>>,

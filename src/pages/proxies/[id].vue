@@ -3,9 +3,11 @@ import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ProxyNode, ProxyProtocol, ProxyNodeDefaults } from '@/services/VpnHood.Client.Api';
+import { ProxyNode, ProxyProtocol, ProxyNodeDefaults, type ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
 import router from '@/services/router';
+import ProxyInfoTab from './ProxyInfoTab.vue';
+import ProxyStatusTab from './ProxyStatusTab.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -32,6 +34,8 @@ const portError = ref<string | null>(null);
 const isSaving = ref(false);
 const isDeleting = ref(false);
 const isParsing = ref(false);
+const currentTab = ref<'info' | 'status'>('info');
+const proxyStatus = ref<ProxyNodeStatus | null>(null);
 
 const initialValues = ref({
     host: '',
@@ -51,12 +55,6 @@ const isDirty = computed(() => {
            isEnabled.value !== initialValues.value.isEnabled;
 });
 
-const protocolItems = computed(() => ([
-    { value: ProxyProtocol.Http, title: locale('PROXY_PROTOCOL_HTTP') },
-    { value: ProxyProtocol.Socks4, title: locale('PROXY_PROTOCOL_SOCKS4') },
-    { value: ProxyProtocol.Socks5, title: locale('PROXY_PROTOCOL_SOCKS5') }
-]));
-
 let navigationUnregister: (() => void) | null = null;
 
 onMounted(async () => {
@@ -68,6 +66,7 @@ onMounted(async () => {
             const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
             if (match) {
                 applyProxy(match.node);
+                proxyStatus.value = match.status;
                 saveInitialValues();
             } else {
                 await router.replace({ path: '/proxies' });
@@ -207,7 +206,7 @@ async function saveProxy(): Promise<void> {
             await vhApp.proxyNodeClient.update(payload.id, payload);
         }
         saveInitialValues();
-        await router.push({ path: '/proxies' });
+        await router.replace({ path: '/proxies' });
     } catch (err: unknown) {
         await vhApp.processError(err);
     } finally {
@@ -230,7 +229,7 @@ async function deleteProxy(): Promise<void> {
     try {
         isDeleting.value = true;
         await vhApp.proxyNodeClient.delete(proxyId.value);
-        await router.push({ path: '/proxies' });
+        await router.replace({ path: '/proxies' });
     } catch (err: unknown) {
         await vhApp.processError(err);
     } finally {
@@ -247,7 +246,7 @@ async function cancel(): Promise<void> {
         if (!confirmed)
             return;
     }
-    await router.push({ path: '/proxies' });
+    await router.replace({ path: '/proxies' });
 }
 </script>
 
@@ -256,32 +255,31 @@ async function cancel(): Promise<void> {
         <app-bar />
 
         <config-card class="pa-3">
-            <v-card-item class="pb-4">
-                <div class="d-flex align-center justify-space-between">
-                    <span>{{ locale('PROXY_ENABLED') }}</span>
-                    <v-switch v-model="isEnabled" color="highlight" hide-details />
-                </div>
-            </v-card-item>
+            <v-tabs v-model="currentTab" color="highlight" align-tabs="center">
+                <v-tab value="info">{{ locale('PROXY_TAB_INFO') }}</v-tab>
+                <v-tab value="status" v-if="!isNew">{{ locale('PROXY_TAB_STATUS') }}</v-tab>
+            </v-tabs>
 
-            <v-card-item class="pt-0">
-                <v-text-field v-model="host" :label="locale('PROXY_HOST')" :error="!!hostError" :error-messages="hostError"
-                variant="outlined" density="comfortable" rounded="lg" color="highlight" class="mt-4"
-                @blur="handleHostBlur" :loading="isParsing" />
+            <v-window v-model="currentTab" class="mt-4">
+                <v-window-item value="info">
+                    <ProxyInfoTab
+                        v-model:host="host"
+                        v-model:port="port"
+                        v-model:protocol="protocol"
+                        v-model:username="username"
+                        v-model:password="password"
+                        v-model:isEnabled="isEnabled"
+                        :host-error="hostError"
+                        :port-error="portError"
+                        :is-parsing="isParsing"
+                        @host-blur="handleHostBlur"
+                    />
+                </v-window-item>
 
-                <v-text-field v-model="port" :label="locale('PROXY_PORT')" :error="!!portError"
-                    :error-messages="portError" type="number" variant="outlined" density="comfortable" rounded="lg"
-                    color="highlight" class="mt-4" />
-
-                <v-select v-model="protocol" :items="protocolItems" item-title="title" item-value="value"
-                    variant="outlined" density="comfortable" rounded="lg" color="highlight"
-                    :label="locale('PROXY_PROTOCOL')" />
-
-                <v-text-field v-model="username" :label="locale('PROXY_USERNAME')" variant="outlined"
-                    density="comfortable" rounded="lg" color="highlight" class="mt-4" />
-
-                <v-text-field v-model="password" :label="locale('PROXY_PASSWORD')" variant="outlined"
-                    density="comfortable" rounded="lg" color="highlight" class="mt-4" type="password" />
-            </v-card-item>
+                <v-window-item value="status" v-if="!isNew">
+                    <ProxyStatusTab :status="proxyStatus" />
+                </v-window-item>
+            </v-window>
 
             <v-card-actions class="pt-4">
                 <v-btn v-if="!isNew" variant="text" color="error" class="text-transform-none" 

@@ -83,6 +83,25 @@ function formatProxySubtitle(proxy: AppProxyNodeInfo): string {
   return parts.join(' · ');
 }
 
+function getStatusQuality(penalty: number | undefined): { text: string, color: string } {
+  if (penalty === undefined || penalty === null) {
+    return { text: locale('PROXY_STATUS_NO_DATA'), color: '' };
+  }
+  if (penalty === 0) {
+    return { text: locale('PROXY_STATUS_EXCELLENT'), color: 'success' };
+  }
+  if (penalty < 10) {
+    return { text: locale('PROXY_STATUS_GOOD'), color: 'enable-premium' };
+  }
+  if (penalty < 20) {
+    return { text: locale('PROXY_STATUS_NORMAL'), color: 'warning' };
+  }
+  if (penalty < 100) {
+    return { text: locale('PROXY_STATUS_BAD'), color: 'error' };
+  }
+  return { text: locale('PROXY_STATUS_VERY_BAD'), color: 'error' };
+}
+
 function openProxy(proxyId?: string): void {
   if (proxyId) {
     router.push({ path: `/proxies/${proxyId}` });
@@ -117,6 +136,17 @@ function openProxy(proxyId?: string): void {
     </config-card>
 
     <config-card v-if="isCustomMode" class="mt-4 pa-0">
+      <v-card-actions class="pa-3 pb-0">
+        <btn-style-4
+          block
+          :text="locale('PROXY_ADD')"
+          :append-icon="Util.getLocalizedRightChevron()"
+          @click="openProxy()"
+        />
+      </v-card-actions>
+
+      <v-divider class="mt-3" />
+
       <v-progress-linear v-if="isLoading" color="highlight" indeterminate />
 
       <template v-else>
@@ -135,6 +165,15 @@ function openProxy(proxyId?: string): void {
           >
             <template #append>
               <v-chip
+                v-if="proxy.status?.penalty !== undefined"
+                :text="getStatusQuality(proxy.status.penalty).text"
+                size="small"
+                variant="tonal"
+                density="comfortable"
+                :color="getStatusQuality(proxy.status.penalty).color"
+                class="me-2"
+              />
+              <v-chip
                 :text="proxy.node.isEnabled ? locale('ON') : locale('OFF')"
                 size="small"
                 variant="tonal"
@@ -147,17 +186,6 @@ function openProxy(proxyId?: string): void {
           </v-list-item>
         </v-list>
       </template>
-
-      <v-divider class="mt-3" />
-
-      <v-card-actions class="pa-3">
-        <btn-style-4
-          block
-          :text="locale('PROXY_ADD')"
-          :append-icon="Util.getLocalizedRightChevron()"
-          @click="openProxy()"
-        />
-      </v-card-actions>
     </config-card>
   </v-sheet>
 </template>
