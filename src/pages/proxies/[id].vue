@@ -23,12 +23,17 @@ const proxyId = computed(() => {
 });
 const isNew = computed(() => !proxyId.value);
 
-const host = ref('');
-const port = ref('');
-const username = ref('');
-const password = ref('');
-const protocol = ref<ProxyProtocol>(ProxyProtocol.Http);
-const isEnabled = ref(true);
+const proxy = ref<ProxyNode>(new ProxyNode({
+    id: '',
+    host: '',
+    port: 0,
+    protocol: ProxyProtocol.Http,
+    isEnabled: true,
+    username: null,
+    password: null,
+    url: ''
+}));
+
 const hostError = ref<string | null>(null);
 const portError = ref<string | null>(null);
 const isSaving = ref(false);
@@ -37,61 +42,48 @@ const isParsing = ref(false);
 const currentTab = ref<'info' | 'status'>('info');
 const proxyStatus = ref<ProxyNodeStatus | null>(null);
 
-const initialValues = ref({
-    host: '',
-    port: '',
-    username: '',
-    password: '',
-    protocol: ProxyProtocol.Http,
-    isEnabled: true
-});
+const initialProxy = ref<string>('');
 
 const isDirty = computed(() => {
-    return host.value !== initialValues.value.host ||
-           port.value !== initialValues.value.port ||
-           username.value !== initialValues.value.username ||
-           password.value !== initialValues.value.password ||
-           protocol.value !== initialValues.value.protocol ||
-           isEnabled.value !== initialValues.value.isEnabled;
+    return JSON.stringify(proxy.value) !== initialProxy.value;
 });
 
 let navigationUnregister: (() => void) | null = null;
 
 onMounted(async () => {
-    if (!proxyId.value) {
-        saveInitialValues();
-    } else {
-        try {
-            const response = await vhApp.proxyNodeClient.list();
-            const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
-            if (match) {
-                applyProxy(match.node);
-                proxyStatus.value = match.status;
-                saveInitialValues();
-            } else {
-                await router.replace({ path: '/proxies' });
-            }
-        } catch (err: unknown) {
-            await vhApp.processError(err);
+
+    if (proxyId.value) {
+        const response = await vhApp.proxyNodeClient.list();
+        const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
+        if (match) {
+            proxy.value = new ProxyNode(match.node);
+            proxyStatus.value = match.status;
+        } else {
+            router.back();
+            return;
         }
     }
 
-    // Register navigation guard
-    navigationUnregister = router.beforeEach(async (to, from, next) => {
-        if (from.path.startsWith('/proxies/') && !to.path.startsWith('/proxies/')) {
-            if (isDirty.value && !isSaving.value && !isDeleting.value) {
-                const confirmed = await vhApp.showConfirmDialog(
-                    locale('WARNING'),
-                    locale('UNSAVED_CHANGES_MESSAGE')
-                );
-                if (!confirmed) {
-                    next(false);
-                    return;
+    saveInitialProxy();
+
+    // Register navigation guard - only for add mode
+    if (isNew.value) {
+        navigationUnregister = router.beforeEach(async (to, from, next) => {
+            if (from.path.startsWith('/proxies/') && !to.path.startsWith('/proxies/')) {
+                if (isDirty.value && !isSaving.value) {
+                    const confirmed = await vhApp.showConfirmDialog(
+                        locale('WARNING'),
+                        locale('UNSAVED_CHANGES_MESSAGE')
+                    );
+                    if (!confirmed) {
+                        next(false);
+                        return;
+                    }
                 }
             }
-        }
-        next();
-    });
+            next();
+        });
+    }
 });
 
 onUnmounted(() => {
@@ -100,43 +92,27 @@ onUnmounted(() => {
     }
 });
 
-function applyProxy(node: ProxyNode): void {
-    host.value = node.host ?? '';
-    port.value = node.port ? node.port.toString() : '';
-    username.value = node.username ?? '';
-    password.value = node.password ?? '';
-    protocol.value = node.protocol ?? ProxyProtocol.Http;
-    isEnabled.value = node.isEnabled ?? true;
-}
-
-function saveInitialValues(): void {
-    initialValues.value = {
-        host: host.value,
-        port: port.value,
-        username: username.value,
-        password: password.value,
-        protocol: protocol.value,
-        isEnabled: isEnabled.value
-    };
+function saveInitialProxy(): void {
+    initialProxy.value = JSON.stringify(proxy.value);
 }
 
 async function handleHostBlur(): Promise<void> {
-    if (!host.value || Validators.isEmptyString(host.value) || isParsing.value)
+    if (!proxy.value.host || Validators.isEmptyString(proxy.value.host) || isParsing.value)
         return;
 
     try {
         isParsing.value = true;
-        
-        const defaults = new ProxyNodeDefaults();
-        defaults.protocol = protocol.value;
-        defaults.port = port.value ? Number(port.value) : null;
-        defaults.username = username.value || null;
-        defaults.password = password.value || null;
-        defaults.isEnabled = isEnabled.value;
 
-        const result = await vhApp.proxyNodeClient.parse(host.value.trim(), defaults);
+        const defaults = new ProxyNodeDefaults();
+        defaults.protocol = proxy.value.protocol;
+        defaults.port = proxy.value.port || null;
+        defaults.username = proxy.value.username;
+        defaults.password = proxy.value.password;
+        defaults.isEnabled = proxy.value.isEnabled;
+
+        const result = await vhApp.proxyNodeClient.parse(proxy.value.host.trim(), defaults);
         if (result?.node) {
-            applyProxy(result.node);
+            proxy.value = new ProxyNode(result.node);
         }
     } catch (err: unknown) {
         // Silently ignore parse errors, keep current values
@@ -149,15 +125,15 @@ async function handleHostBlur(): Promise<void> {
 function validate(): boolean {
     let valid = true;
 
-    if (!host.value || Validators.isEmptyString(host.value)) {
+    if (!proxy.value.host || Validators.isEmptyString(proxy.value.host)) {
         hostError.value = locale('PROXY_REQUIRED_HOST');
         valid = false;
     } else {
         hostError.value = null;
     }
 
-    if (port.value) {
-        const numericPort = Number(port.value);
+    if (proxy.value.port) {
+        const numericPort = proxy.value.port;
         if (Number.isNaN(numericPort) || numericPort < 1 || numericPort > 65535) {
             portError.value = locale('PROXY_INVALID_PORT');
             valid = false;
@@ -171,32 +147,15 @@ function validate(): boolean {
     return valid;
 }
 
-function buildProxyUrl(node: ProxyNode): string {
-    const protocolScheme = node.protocol.toLowerCase();
-    const credentials = node.username
-        ? `${encodeURIComponent(node.username)}${node.password ? `:${encodeURIComponent(node.password)}` : ''}@`
-        : '';
-    return `${protocolScheme}://${credentials}${node.host}:${node.port}`;
-}
-
-function createPayload(): ProxyNode {
-    const node = new ProxyNode();
-    node.id = proxyId.value ?? (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : Math.random().toString(36).substring(2));
-    node.host = host.value.trim();
-    node.port = port.value ? Number(port.value) : 0;
-    node.protocol = protocol.value;
-    node.isEnabled = isEnabled.value;
-    node.username = username.value && !Validators.isEmptyString(username.value) ? username.value.trim() : null;
-    node.password = password.value && !Validators.isEmptyString(password.value) ? password.value : null;
-    node.url = buildProxyUrl(node);
-    return node;
-}
-
 async function saveProxy(): Promise<void> {
     if (!validate())
         return;
 
-    const payload = createPayload();
+    const payload = new ProxyNode(proxy.value);
+    payload.host = payload.host?.trim() ?? '';
+    if (payload.username)
+        payload.username = payload.username.trim();
+
 
     try {
         isSaving.value = true;
@@ -205,10 +164,8 @@ async function saveProxy(): Promise<void> {
         } else {
             await vhApp.proxyNodeClient.update(payload.id, payload);
         }
-        saveInitialValues();
-        await router.replace({ path: '/proxies' });
-    } catch (err: unknown) {
-        await vhApp.processError(err);
+        saveInitialProxy();
+        router.back();
     } finally {
         isSaving.value = false;
     }
@@ -229,7 +186,7 @@ async function deleteProxy(): Promise<void> {
     try {
         isDeleting.value = true;
         await vhApp.proxyNodeClient.delete(proxyId.value);
-        await router.replace({ path: '/proxies' });
+        router.back();
     } catch (err: unknown) {
         await vhApp.processError(err);
     } finally {
@@ -237,22 +194,19 @@ async function deleteProxy(): Promise<void> {
     }
 }
 
-async function cancel(): Promise<void> {
-    if (isDirty.value) {
-        const confirmed = await vhApp.showConfirmDialog(
-            locale('WARNING'),
-            locale('UNSAVED_CHANGES_MESSAGE')
-        );
-        if (!confirmed)
-            return;
+async function handleBack(): Promise<void> {
+    // In edit mode, save changes automatically on back
+    if (!isNew.value && isDirty.value) {
+        await saveProxy();
+    } else {
+        router.back();
     }
-    await router.replace({ path: '/proxies' });
 }
 </script>
 
 <template>
     <v-sheet>
-        <app-bar />
+        <app-bar @back="handleBack" />
 
         <config-card class="pa-3">
             <v-tabs v-model="currentTab" color="highlight" align-tabs="center">
@@ -262,18 +216,8 @@ async function cancel(): Promise<void> {
 
             <v-window v-model="currentTab" class="mt-4">
                 <v-window-item value="info">
-                    <ProxyInfoTab
-                        v-model:host="host"
-                        v-model:port="port"
-                        v-model:protocol="protocol"
-                        v-model:username="username"
-                        v-model:password="password"
-                        v-model:isEnabled="isEnabled"
-                        :host-error="hostError"
-                        :port-error="portError"
-                        :is-parsing="isParsing"
-                        @host-blur="handleHostBlur"
-                    />
+                    <ProxyInfoTab v-model:proxy="proxy" :host-error="hostError" :port-error="portError"
+                        :is-parsing="isParsing" @host-blur="handleHostBlur" />
                 </v-window-item>
 
                 <v-window-item value="status" v-if="!isNew">
@@ -281,17 +225,17 @@ async function cancel(): Promise<void> {
                 </v-window-item>
             </v-window>
 
-            <v-card-actions class="pt-4">
-                <v-btn v-if="!isNew" variant="text" color="error" class="text-transform-none" 
-                    :disabled="isSaving || isDeleting" :loading="isDeleting" @click="deleteProxy">
-                    {{ locale('REMOVE') }}
-                </v-btn>
-                <v-btn variant="text" class="text-transform-none" :disabled="isSaving || isDeleting" @click="cancel">
-                    {{ locale('CANCEL') }}
-                </v-btn>
+            <v-card-actions class="pt-4" v-if="isNew">
                 <v-spacer />
-                <v-btn color="highlight" class="text-transform-none" :loading="isSaving" :disabled="isDeleting" @click="saveProxy">
+                <v-btn color="highlight" class="text-transform-none" :loading="isSaving" @click="saveProxy">
                     {{ locale('OK') }}
+                </v-btn>
+            </v-card-actions>
+
+            <v-card-actions class="pt-4" v-else>
+                <v-btn variant="text" color="error" class="text-transform-none" :disabled="isSaving || isDeleting"
+                    :loading="isDeleting" @click="deleteProxy">
+                    {{ locale('REMOVE') }}
                 </v-btn>
             </v-card-actions>
         </config-card>

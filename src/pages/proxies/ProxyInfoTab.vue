@@ -1,29 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
-import { ProxyProtocol } from '@/services/VpnHood.Client.Api';
+import { ProxyNode, ProxyProtocol } from '@/services/VpnHood.Client.Api';
 
 const locale = i18n.global.t;
 
-defineProps<{
-    host: string;
-    port: string;
-    protocol: ProxyProtocol;
-    username: string;
-    password: string;
-    isEnabled: boolean;
+const props = defineProps<{
+    proxy: ProxyNode;
     hostError: string | null;
     portError: string | null;
     isParsing: boolean;
 }>();
 
 const emit = defineEmits<{
-    'update:host': [value: string];
-    'update:port': [value: string];
-    'update:protocol': [value: ProxyProtocol];
-    'update:username': [value: string];
-    'update:password': [value: string];
-    'update:isEnabled': [value: boolean];
+    'update:proxy': [value: ProxyNode];
     'hostBlur': [];
 }>();
 
@@ -32,6 +22,12 @@ const protocolItems = computed(() => ([
     { value: ProxyProtocol.Socks4, title: locale('PROXY_PROTOCOL_SOCKS4') },
     { value: ProxyProtocol.Socks5, title: locale('PROXY_PROTOCOL_SOCKS5') }
 ]));
+
+function updateField<K extends keyof ProxyNode>(field: K, value: ProxyNode[K]): void {
+    const updated = new ProxyNode(props.proxy);
+    updated[field] = value;
+    emit('update:proxy', updated);
+}
 </script>
 
 <template>
@@ -39,8 +35,8 @@ const protocolItems = computed(() => ([
         <div class="d-flex align-center justify-space-between">
             <span>{{ locale('PROXY_ENABLED') }}</span>
             <v-switch
-                :model-value="isEnabled"
-                @update:model-value="$event !== null && emit('update:isEnabled', $event)"
+                :model-value="proxy.isEnabled"
+                @update:model-value="$event !== null && updateField('isEnabled', $event)"
                 color="highlight"
                 hide-details
             />
@@ -49,8 +45,8 @@ const protocolItems = computed(() => ([
 
     <v-card-item class="pt-0">
         <v-text-field
-            :model-value="host"
-            @update:model-value="emit('update:host', $event)"
+            :model-value="proxy.host"
+            @update:model-value="updateField('host', $event)"
             :label="locale('PROXY_HOST')"
             :error="!!hostError"
             :error-messages="hostError"
@@ -64,8 +60,8 @@ const protocolItems = computed(() => ([
         />
 
         <v-text-field
-            :model-value="port"
-            @update:model-value="emit('update:port', $event)"
+            :model-value="proxy.port?.toString() ?? ''"
+            @update:model-value="updateField('port', $event ? Number($event) : 0)"
             :label="locale('PROXY_PORT')"
             :error="!!portError"
             :error-messages="portError"
@@ -78,8 +74,8 @@ const protocolItems = computed(() => ([
         />
 
         <v-select
-            :model-value="protocol"
-            @update:model-value="emit('update:protocol', $event)"
+            :model-value="proxy.protocol"
+            @update:model-value="updateField('protocol', $event)"
             :items="protocolItems"
             item-title="title"
             item-value="value"
@@ -91,8 +87,8 @@ const protocolItems = computed(() => ([
         />
 
         <v-text-field
-            :model-value="username"
-            @update:model-value="emit('update:username', $event)"
+            :model-value="proxy.username ?? ''"
+            @update:model-value="updateField('username', $event || null)"
             :label="locale('PROXY_USERNAME')"
             variant="outlined"
             density="comfortable"
@@ -102,8 +98,8 @@ const protocolItems = computed(() => ([
         />
 
         <v-text-field
-            :model-value="password"
-            @update:model-value="emit('update:password', $event)"
+            :model-value="proxy.password ?? ''"
+            @update:model-value="updateField('password', $event || null)"
             :label="locale('PROXY_PASSWORD')"
             variant="outlined"
             density="comfortable"

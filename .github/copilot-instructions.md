@@ -2,4 +2,5 @@
 - Follow the existing code style
 - Localize all user-facing strings in en.json (i18n)
 - Don't add any item in i18n files except en.json
+- Let global error handler handle errors (vhApp.processError)
 
