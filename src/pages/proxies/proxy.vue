@@ -1,3 +1,10 @@
+<route lang="json">
+{
+    "name": "PROXY",
+    "path": "/proxies/:id"
+}
+</route>
+
 <script setup lang="ts">
 import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
@@ -202,7 +209,7 @@ async function handleBack(): Promise<void> {
         router.back();
     }
 }
-</script>
+ </script>
 
 <template>
     <v-sheet>
