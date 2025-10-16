@@ -83,11 +83,12 @@ function formatProxySubtitle(proxy: AppProxyNodeInfo): string {
   return parts.join(' · ');
 }
 
-function openProxy(proxy?: AppProxyNodeInfo): void {
-  router.push({
-    name: 'PROXY',
-    query: proxy ? { id: proxy.node.id } : undefined
-  });
+function openProxy(proxyId?: string): void {
+  if (proxyId) {
+    router.push({ path: `/proxies/${proxyId}` });
+  } else {
+    router.push({ path: '/proxies/new' });
+  }
 }
 </script>
 
@@ -129,7 +130,7 @@ function openProxy(proxy?: AppProxyNodeInfo): void {
             :key="proxy.node.id"
             :title="proxy.node.host"
             :subtitle="formatProxySubtitle(proxy)"
-            @click="openProxy(proxy)"
+            @click="openProxy(proxy.node.id)"
             rounded="lg"
           >
             <template #append>

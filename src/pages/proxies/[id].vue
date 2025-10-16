@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -13,10 +13,11 @@ const locale = i18n.global.t;
 const currentRoute = computed(() => router.currentRoute.value);
 
 const proxyId = computed(() => {
-    const queryValue = currentRoute.value.query.id;
-    if (Array.isArray(queryValue))
-        return queryValue[0] ?? null;
-    return (queryValue as string | undefined) ?? null;
+    const params = currentRoute.value.params as { id?: string };
+    const pathId = params.id;
+    if (!pathId || pathId === 'new')
+        return null;
+    return pathId;
 });
 const isNew = computed(() => !proxyId.value);
 
@@ -32,26 +33,71 @@ const isSaving = ref(false);
 const isDeleting = ref(false);
 const isParsing = ref(false);
 
+const initialValues = ref({
+    host: '',
+    port: '',
+    username: '',
+    password: '',
+    protocol: ProxyProtocol.Http,
+    isEnabled: true
+});
+
+const isDirty = computed(() => {
+    return host.value !== initialValues.value.host ||
+           port.value !== initialValues.value.port ||
+           username.value !== initialValues.value.username ||
+           password.value !== initialValues.value.password ||
+           protocol.value !== initialValues.value.protocol ||
+           isEnabled.value !== initialValues.value.isEnabled;
+});
+
 const protocolItems = computed(() => ([
     { value: ProxyProtocol.Http, title: locale('PROXY_PROTOCOL_HTTP') },
     { value: ProxyProtocol.Socks4, title: locale('PROXY_PROTOCOL_SOCKS4') },
     { value: ProxyProtocol.Socks5, title: locale('PROXY_PROTOCOL_SOCKS5') }
 ]));
 
-onMounted(async () => {
-    if (!proxyId.value)
-        return;
+let navigationUnregister: (() => void) | null = null;
 
-    try {
-        const response = await vhApp.proxyNodeClient.list();
-        const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
-        if (match) {
-            applyProxy(match.node);
-        } else {
-            await router.replace({ name: 'PROXIES' });
+onMounted(async () => {
+    if (!proxyId.value) {
+        saveInitialValues();
+    } else {
+        try {
+            const response = await vhApp.proxyNodeClient.list();
+            const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
+            if (match) {
+                applyProxy(match.node);
+                saveInitialValues();
+            } else {
+                await router.replace({ path: '/proxies' });
+            }
+        } catch (err: unknown) {
+            await vhApp.processError(err);
         }
-    } catch (err: unknown) {
-        await vhApp.processError(err);
+    }
+
+    // Register navigation guard
+    navigationUnregister = router.beforeEach(async (to, from, next) => {
+        if (from.path.startsWith('/proxies/') && !to.path.startsWith('/proxies/')) {
+            if (isDirty.value && !isSaving.value && !isDeleting.value) {
+                const confirmed = await vhApp.showConfirmDialog(
+                    locale('WARNING'),
+                    locale('UNSAVED_CHANGES_MESSAGE')
+                );
+                if (!confirmed) {
+                    next(false);
+                    return;
+                }
+            }
+        }
+        next();
+    });
+});
+
+onUnmounted(() => {
+    if (navigationUnregister) {
+        navigationUnregister();
     }
 });
 
@@ -62,6 +108,17 @@ function applyProxy(node: ProxyNode): void {
     password.value = node.password ?? '';
     protocol.value = node.protocol ?? ProxyProtocol.Http;
     isEnabled.value = node.isEnabled ?? true;
+}
+
+function saveInitialValues(): void {
+    initialValues.value = {
+        host: host.value,
+        port: port.value,
+        username: username.value,
+        password: password.value,
+        protocol: protocol.value,
+        isEnabled: isEnabled.value
+    };
 }
 
 async function handleHostBlur(): Promise<void> {
@@ -149,7 +206,8 @@ async function saveProxy(): Promise<void> {
         } else {
             await vhApp.proxyNodeClient.update(payload.id, payload);
         }
-        router.back();
+        saveInitialValues();
+        await router.push({ path: '/proxies' });
     } catch (err: unknown) {
         await vhApp.processError(err);
     } finally {
@@ -161,10 +219,18 @@ async function deleteProxy(): Promise<void> {
     if (isNew.value || !proxyId.value)
         return;
 
+    const confirmed = await vhApp.showConfirmDialog(
+        locale('CONFIRM_REMOVE_SERVER'),
+        locale('ARE_YOU_SURE')
+    );
+
+    if (!confirmed)
+        return;
+
     try {
         isDeleting.value = true;
         await vhApp.proxyNodeClient.delete(proxyId.value);
-        router.back();
+        await router.push({ path: '/proxies' });
     } catch (err: unknown) {
         await vhApp.processError(err);
     } finally {
@@ -172,8 +238,16 @@ async function deleteProxy(): Promise<void> {
     }
 }
 
-function cancel(): void {
-    router.back();
+async function cancel(): Promise<void> {
+    if (isDirty.value) {
+        const confirmed = await vhApp.showConfirmDialog(
+            locale('WARNING'),
+            locale('UNSAVED_CHANGES_MESSAGE')
+        );
+        if (!confirmed)
+            return;
+    }
+    await router.push({ path: '/proxies' });
 }
 </script>
 

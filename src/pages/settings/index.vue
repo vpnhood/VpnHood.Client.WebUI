@@ -115,7 +115,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :isPremium="false"
       :is-show="vhApp.data.features.isTcpProxySupported"
       :selectedItem="proxyModeLabel"
-      :click="{name: 'PROXIES'}"
+      :click="{path: '/proxies'}"
     />
 
 

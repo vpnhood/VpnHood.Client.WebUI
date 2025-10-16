@@ -287,8 +287,11 @@ export class VpnHoodApp {
       : null;
   }
 
-  public getCountryFlag(countryCode: string): string {
+  public getCountryFlag(countryCode: string | null | undefined): string {
     try {
+      if (!countryCode || countryCode.trim() === '') {
+        return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href;
+      }
       return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href;
     } catch (error: unknown) {
       console.log(error);
