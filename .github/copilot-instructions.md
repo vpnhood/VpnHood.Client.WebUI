@@ -1,0 +1,5 @@
+- Don't use inline styles
+- Follow the existing code style
+- Localize all user-facing strings in en.json (i18n)
+- Don't add any item in i18n files except en.json
+
