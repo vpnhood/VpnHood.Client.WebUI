@@ -41,7 +41,7 @@ const featuresList: Features[] = [
     title: "DNS",
     pageLink: {name: "DNS"},
     isInUse: vhApp.data.isDnsInUse
-  },
+  }
 ]
 
 async function navigateByRouter(to: RouteLocationRaw){
