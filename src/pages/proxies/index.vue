@@ -6,7 +6,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { AppProxyMode, AppProxyNodeInfo, AppProxySettings } from '@/services/VpnHood.Client.Api';
+import { AppProxyMode, AppProxyNodeInfo } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -44,12 +44,12 @@ const modeItems = computed(() => ([
 
 
 
-async function loadProxies(): Promise<void> {
+async function loadProxies(showLoading = true): Promise<void> {
     if (isLoading.value)
         return;
 
     try {
-        isLoading.value = true;
+        isLoading.value = showLoading;
         const response = await vhApp.proxyNodeClient.list();
         proxies.value = Array.isArray(response) ? response : [];
     } catch (err: unknown) {
@@ -62,13 +62,17 @@ async function loadProxies(): Promise<void> {
 
 function startPeriodicRefresh(): void {
     if (refreshInterval) return;
-    
-    refreshInterval = setInterval(() => {
-        // Only refresh if page is visible and in custom mode
-        if (!document.hidden && isCustomMode.value) {
-            loadProxies();
+
+    refreshInterval = setInterval(async () => {
+        // Only refresh if page is visible and in custom mode and connected
+        if (!document.hidden && isCustomMode.value && vhApp.data.isConnected) {
+            try {
+                await loadProxies(false); // Don't show loading indicator on periodic refresh
+            } catch {
+                // Ignore errors on periodic refresh
+            }
         }
-    }, 4000);
+    }, 3000);
 }
 
 function stopPeriodicRefresh(): void {
@@ -103,7 +107,7 @@ onUnmounted(() => {
 // Watch mode changes to start/stop refresh
 watch(isCustomMode, (isCustom) => {
     if (isCustom) {
-        loadProxies();
+        loadProxies(true);
         startPeriodicRefresh();
     } else {
         stopPeriodicRefresh();
@@ -150,12 +154,8 @@ function openProxy(proxyId?: string): void {
                 </v-card-text>
 
                 <v-list v-else lines="two" density="comfortable">
-                    <ProxyListItem 
-                        v-for="proxy in proxies" 
-                        :key="proxy.node.id" 
-                        :proxy="proxy" 
-                        @click="openProxy(proxy.node.id)" 
-                    />
+                    <ProxyListItem v-for="proxy in proxies" :key="proxy.node.id" :proxy="proxy"
+                        @click="openProxy(proxy.node.id)" />
                 </v-list>
             </template>
         </config-card>

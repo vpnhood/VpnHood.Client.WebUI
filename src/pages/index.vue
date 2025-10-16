@@ -145,7 +145,7 @@ function openDebugDialog() {
   // reset counter if no click within 1 second
   setTimeout(() => {
     openDebugDialogCounter.value = 0;
-  }, 3000);
+  }, 1000);
 }
 async function saveDebugDataSetting(): Promise<void> {
   await vhApp.saveUserSetting();
