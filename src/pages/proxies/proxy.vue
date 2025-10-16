@@ -1,16 +1,14 @@
-<route lang="json">
-{
+<route lang="json">{
     "name": "PROXY",
     "path": "/proxies/:id"
-}
-</route>
+}</route>
 
 <script setup lang="ts">
 import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ProxyNode, ProxyProtocol, ProxyNodeDefaults, type ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
+import { ProxyNode, ProxyProtocol, type ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
 import router from '@/services/router';
 import ProxyInfoTab from './ProxyInfoTab.vue';
@@ -45,10 +43,8 @@ const hostError = ref<string | null>(null);
 const portError = ref<string | null>(null);
 const isSaving = ref(false);
 const isDeleting = ref(false);
-const isParsing = ref(false);
 const currentTab = ref<'info' | 'status'>('info');
 const proxyStatus = ref<ProxyNodeStatus | null>(null);
-
 const initialProxy = ref<string>('');
 
 const isDirty = computed(() => {
@@ -73,24 +69,40 @@ onMounted(async () => {
 
     saveInitialProxy();
 
-    // Register navigation guard - only for add mode
-    if (isNew.value) {
-        navigationUnregister = router.beforeEach(async (to, from, next) => {
-            if (from.path.startsWith('/proxies/') && !to.path.startsWith('/proxies/')) {
-                if (isDirty.value && !isSaving.value) {
-                    const confirmed = await vhApp.showConfirmDialog(
-                        locale('WARNING'),
-                        locale('UNSAVED_CHANGES_MESSAGE')
-                    );
-                    if (!confirmed) {
-                        next(false);
-                        return;
-                    }
+    // Register navigation guard
+    navigationUnregister = router.beforeEach(async (to, from, next) => {
+        if (!from.path.startsWith('/proxies/') || to.path.startsWith('/proxies/')) {
+            next();
+            return;
+        }
+
+        // Leaving proxies detail page
+        if (!isNew.value) {
+            // Edit mode: auto-save silently if dirty
+            if (isDirty.value && !isSaving.value) {
+                try {
+                    await saveProxy();
+                } catch {
+                    // Let global error handler show it via saveProxy
                 }
             }
             next();
-        });
-    }
+            return;
+        }
+
+        // Add mode: prompt if dirty
+        if (isDirty.value && !isSaving.value) {
+            const confirmed = await vhApp.showConfirmDialog(
+                locale('WARNING'),
+                locale('UNSAVED_CHANGES_MESSAGE')
+            );
+            if (!confirmed) {
+                next(false);
+                return;
+            }
+        }
+        next();
+    });
 });
 
 onUnmounted(() => {
@@ -103,52 +115,22 @@ function saveInitialProxy(): void {
     initialProxy.value = JSON.stringify(proxy.value);
 }
 
-async function handleHostBlur(): Promise<void> {
-    if (!proxy.value.host || Validators.isEmptyString(proxy.value.host) || isParsing.value)
-        return;
-
-    try {
-        isParsing.value = true;
-
-        const defaults = new ProxyNodeDefaults();
-        defaults.protocol = proxy.value.protocol;
-        defaults.port = proxy.value.port || null;
-        defaults.username = proxy.value.username;
-        defaults.password = proxy.value.password;
-        defaults.isEnabled = proxy.value.isEnabled;
-
-        const result = await vhApp.proxyNodeClient.parse(proxy.value.host.trim(), defaults);
-        if (result?.node) {
-            proxy.value = new ProxyNode(result.node);
-        }
-    } catch (err: unknown) {
-        // Silently ignore parse errors, keep current values
-        console.warn('Proxy parse failed:', err);
-    } finally {
-        isParsing.value = false;
-    }
-}
-
 function validate(): boolean {
     let valid = true;
 
+    hostError.value = null;
     if (!proxy.value.host || Validators.isEmptyString(proxy.value.host)) {
         hostError.value = locale('PROXY_REQUIRED_HOST');
         valid = false;
-    } else {
-        hostError.value = null;
     }
 
+    portError.value = null;
     if (proxy.value.port) {
         const numericPort = proxy.value.port;
         if (Number.isNaN(numericPort) || numericPort < 1 || numericPort > 65535) {
             portError.value = locale('PROXY_INVALID_PORT');
             valid = false;
-        } else {
-            portError.value = null;
         }
-    } else {
-        portError.value = null;
     }
 
     return valid;
@@ -162,7 +144,6 @@ async function saveProxy(): Promise<void> {
     payload.host = payload.host?.trim() ?? '';
     if (payload.username)
         payload.username = payload.username.trim();
-
 
     try {
         isSaving.value = true;
@@ -182,20 +163,13 @@ async function deleteProxy(): Promise<void> {
     if (isNew.value || !proxyId.value)
         return;
 
-    const confirmed = await vhApp.showConfirmDialog(
-        locale('CONFIRM_REMOVE_SERVER'),
-        locale('ARE_YOU_SURE')
-    );
-
-    if (!confirmed)
+    if (!await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_SERVER'), locale('ARE_YOU_SURE')))
         return;
 
     try {
         isDeleting.value = true;
         await vhApp.proxyNodeClient.delete(proxyId.value);
         router.back();
-    } catch (err: unknown) {
-        await vhApp.processError(err);
     } finally {
         isDeleting.value = false;
     }
@@ -209,7 +183,7 @@ async function handleBack(): Promise<void> {
         router.back();
     }
 }
- </script>
+</script>
 
 <template>
     <v-sheet>
@@ -223,8 +197,7 @@ async function handleBack(): Promise<void> {
 
             <v-window v-model="currentTab" class="mt-4">
                 <v-window-item value="info">
-                    <ProxyInfoTab v-model:proxy="proxy" :host-error="hostError" :port-error="portError"
-                        :is-parsing="isParsing" @host-blur="handleHostBlur" />
+                    <ProxyInfoTab :proxy="proxy" :host-error="hostError" :port-error="portError" />
                 </v-window-item>
 
                 <v-window-item value="status" v-if="!isNew">
