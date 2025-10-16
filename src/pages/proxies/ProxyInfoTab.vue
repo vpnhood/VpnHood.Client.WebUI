@@ -18,9 +18,10 @@ const emit = defineEmits<{
 }>();
 
 const protocolItems = computed(() => ([
-    { value: ProxyProtocol.Http, title: locale('PROXY_PROTOCOL_HTTP') },
-    { value: ProxyProtocol.Socks4, title: locale('PROXY_PROTOCOL_SOCKS4') },
-    { value: ProxyProtocol.Socks5, title: locale('PROXY_PROTOCOL_SOCKS5') }
+    { value: ProxyProtocol.Http, title: "http" },
+    { value: ProxyProtocol.Https, title: "https" },
+    { value: ProxyProtocol.Socks4, title: "socks4" },
+    { value: ProxyProtocol.Socks5, title: "socks5" }
 ]));
 
 function updateField<K extends keyof ProxyNode>(field: K, value: ProxyNode[K]): void {
