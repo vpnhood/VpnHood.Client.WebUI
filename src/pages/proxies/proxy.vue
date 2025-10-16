@@ -4,7 +4,7 @@
 }</route>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, onUnmounted } from 'vue';
+import { onMounted, computed, ref, onUnmounted, callWithAsyncErrorHandling } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -71,37 +71,44 @@ onMounted(async () => {
 
     // Register navigation guard
     navigationUnregister = router.beforeEach(async (to, from, next) => {
-        if (!from.path.startsWith('/proxies/') || to.path.startsWith('/proxies/')) {
+        if (!isDirty.value || isSaving.value || !from.path.startsWith('/proxies/')) {
             next();
             return;
         }
 
-        // Leaving proxies detail page
-        if (!isNew.value) {
-            // Edit mode: auto-save silently if dirty
-            if (isDirty.value && !isSaving.value) {
-                try {
-                    await saveProxy();
-                } catch {
-                    // Let global error handler show it via saveProxy
-                }
-            }
-            next();
-            return;
-        }
-
-        // Add mode: prompt if dirty
-        if (isDirty.value && !isSaving.value) {
+        // Add mode: prompt if dirty for new entries
+        if (isNew.value) {
             const confirmed = await vhApp.showConfirmDialog(
                 locale('WARNING'),
                 locale('UNSAVED_CHANGES_MESSAGE')
             );
-            if (!confirmed) {
-                next(false);
-                return;
-            }
+
+            next(confirmed);
+            return;
         }
-        next();
+
+        // Edit mode: prompt if could not validate successfully
+        if (!validate()) {
+            const confirmed = await vhApp.showConfirmDialog(
+                locale('WARNING'),
+                locale('UNSAVED_CHANGES_MESSAGE')
+            );
+            next(confirmed);
+            return;
+        }
+        
+        // In edit mode, save changes automatically on navigation
+        try {
+            await save();
+            next();
+        } catch {
+            const confirmed = await vhApp.showConfirmDialog(
+                locale('WARNING'),
+                locale('UNSAVED_CHANGES_MESSAGE')
+            );
+            next(confirmed);
+        }
+
     });
 });
 
@@ -136,31 +143,36 @@ function validate(): boolean {
     return valid;
 }
 
-async function saveProxy(): Promise<void> {
+async function save(): Promise<boolean> {
     if (!validate())
-        return;
+        return false;
 
     const payload = new ProxyNode(proxy.value);
     payload.host = payload.host?.trim() ?? '';
-    if (payload.username)
-        payload.username = payload.username.trim();
-
+    
     try {
         isSaving.value = true;
-        if (isNew.value) {
+        if (proxyId.value === null) {
             await vhApp.proxyNodeClient.add(payload);
         } else {
-            await vhApp.proxyNodeClient.update(payload.id, payload);
+            await vhApp.proxyNodeClient.update(proxyId.value, payload);
         }
         saveInitialProxy();
-        router.back();
-    } finally {
+        return true;
+    }
+    finally {
         isSaving.value = false;
     }
 }
 
+
+async function saveAndClose(): Promise<void> {
+    if (await save())
+        router.back();
+}
+
 async function deleteProxy(): Promise<void> {
-    if (isNew.value || !proxyId.value)
+    if (!proxyId.value)
         return;
 
     if (!await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_SERVER'), locale('ARE_YOU_SURE')))
@@ -169,19 +181,16 @@ async function deleteProxy(): Promise<void> {
     try {
         isDeleting.value = true;
         await vhApp.proxyNodeClient.delete(proxyId.value);
+        saveInitialProxy();
         router.back();
-    } finally {
+    }
+    finally {
         isDeleting.value = false;
     }
 }
 
 async function handleBack(): Promise<void> {
-    // In edit mode, save changes automatically on back
-    if (!isNew.value && isDirty.value) {
-        await saveProxy();
-    } else {
-        router.back();
-    }
+    router.back();
 }
 </script>
 
@@ -207,7 +216,7 @@ async function handleBack(): Promise<void> {
 
             <v-card-actions class="pt-4" v-if="isNew">
                 <v-spacer />
-                <v-btn color="highlight" class="text-transform-none" :loading="isSaving" @click="saveProxy">
+                <v-btn color="highlight" class="text-transform-none" :loading="isSaving" @click="saveAndClose">
                     {{ locale('OK') }}
                 </v-btn>
             </v-card-actions>

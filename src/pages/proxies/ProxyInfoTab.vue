@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 import i18n from '@/locales/i18n';
 import { ProxyNode, ProxyProtocol, ProxyNodeDefaults } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 const isParsing = ref(false);
-
+const proxyModel = toRef(props, 'proxy'); //lets mutate the prop directly in a lint-safe way
 const protocolItems = computed(() => ([
     { value: ProxyProtocol.Http, title: "http" },
     { value: ProxyProtocol.Https, title: "https" },
@@ -23,31 +23,36 @@ const protocolItems = computed(() => ([
     { value: ProxyProtocol.Socks5, title: "socks5" }
 ]));
 
-function updateField<K extends keyof ProxyNode>(field: K, value: ProxyNode[K]): void {
-    // Mutate the passed record directly; parent holds the reference
-    (props.proxy as ProxyNode)[field] = value as ProxyNode[K];
-}
+const portItem = computed<string>({
+  get: (): string => (proxyModel.value.port === 0 || proxyModel.value.port == null ? '' : String(proxyModel.value.port)),
+  set: (v: string) => { proxyModel.value.port = (v === '' ? 0 : Number(v)); }
+})
+
 
 async function handleHostBlur(): Promise<void> {
-    if (!props.proxy.host || Validators.isEmptyString(props.proxy.host) || isParsing.value)
+    if (!proxyModel.value.host || Validators.isEmptyString(proxyModel.value.host) || isParsing.value)
         return;
 
     try {
         isParsing.value = true;
 
         const defaults = new ProxyNodeDefaults();
-        defaults.protocol = props.proxy.protocol;
-        defaults.port = props.proxy.port || null;
-        defaults.username = props.proxy.username;
-        defaults.password = props.proxy.password;
-        defaults.isEnabled = props.proxy.isEnabled;
+        defaults.protocol = proxyModel.value.protocol;
+        defaults.port = proxyModel.value.port || null;
+        defaults.username = proxyModel.value.username;
+        defaults.password = proxyModel.value.password;
+        defaults.isEnabled = proxyModel.value.isEnabled;
 
-        const result = await vhApp.proxyNodeClient.parse(props.proxy.host.trim(), defaults);
-        if (result?.node) {
-            // Apply parsed values onto the same record reference
-            const parsed = new ProxyNode(result.node);
-            Object.assign(props.proxy, parsed);
-        }
+        const result = await vhApp.proxyNodeClient.parse(proxyModel.value.host.trim(), defaults);
+        // Apply parsed values onto the same record reference
+        const parsed = new ProxyNode(result.node);
+
+        // Only overwrite port if it was not explicitly set and host does not include a port part
+        if ((defaults.port == null) && !proxyModel.value.host.includes(':')) 
+            parsed.port = 0;
+
+        // fill other fields
+        Object.assign(proxyModel.value, parsed);
     } finally {
         isParsing.value = false;
     }
@@ -58,33 +63,27 @@ async function handleHostBlur(): Promise<void> {
     <v-card-item class="pb-4">
         <div class="d-flex align-center justify-space-between">
             <span>{{ locale('PROXY_ENABLED') }}</span>
-            <v-switch :model-value="proxy.isEnabled"
-                @update:model-value="$event !== null && updateField('isEnabled', $event)" color="highlight"
-                hide-details />
+            <v-switch v-model="proxyModel.isEnabled" color="highlight" hide-details />
         </div>
     </v-card-item>
 
     <v-card-item class="pt-0">
-        <v-text-field :model-value="proxy.host" @update:model-value="updateField('host', $event)"
-            :label="locale('PROXY_HOST')" :error="!!hostError" :error-messages="hostError" variant="outlined"
-            density="comfortable" rounded="lg" color="highlight" class="mt-4" @blur="handleHostBlur"
-            :loading="isParsing" />
+        <v-text-field v-model="proxyModel.host" :label="locale('PROXY_HOST')" :error="!!hostError"
+            :error-messages="hostError" variant="outlined" density="comfortable" rounded="lg" color="highlight"
+            class="mt-4" @blur="handleHostBlur" :loading="isParsing" />
 
-        <v-text-field :model-value="proxy.port?.toString() ?? ''"
-            @update:model-value="updateField('port', $event ? Number($event) : 0)" :label="locale('PROXY_PORT')"
-            :error="!!portError" :error-messages="portError" type="number" variant="outlined" density="comfortable"
-            rounded="lg" color="highlight" class="mt-4" />
-
-        <v-select :model-value="proxy.protocol" @update:model-value="updateField('protocol', $event)"
-            :items="protocolItems" item-title="title" item-value="value" variant="outlined" density="comfortable"
-            rounded="lg" color="highlight" :label="locale('PROXY_PROTOCOL')" />
-
-        <v-text-field :model-value="proxy.username ?? ''" @update:model-value="updateField('username', $event || null)"
-            :label="locale('PROXY_USERNAME')" variant="outlined" density="comfortable" rounded="lg" color="highlight"
+        <v-text-field v-model="portItem" :label="locale('PROXY_PORT')" :error="!!portError"
+            :error-messages="portError" type="number" variant="outlined" density="comfortable"
+            rounded="lg" color="highlight"
             class="mt-4" />
 
-        <v-text-field :model-value="proxy.password ?? ''" @update:model-value="updateField('password', $event || null)"
-            :label="locale('PROXY_PASSWORD')" variant="outlined" density="comfortable" rounded="lg" color="highlight"
-            class="mt-4" type="password" />
+        <v-select v-model="proxyModel.protocol" :items="protocolItems" item-title="title" item-value="value"
+            variant="outlined" density="comfortable" rounded="lg" color="highlight" :label="locale('PROXY_PROTOCOL')" />
+
+        <v-text-field v-model="proxyModel.username" :label="locale('PROXY_USERNAME')" variant="outlined"
+            density="comfortable" rounded="lg" color="highlight" class="mt-4" />
+
+        <v-text-field v-model="proxyModel.password" :label="locale('PROXY_PASSWORD')" variant="outlined"
+            density="comfortable" rounded="lg" color="highlight" class="mt-4" type="password" />
     </v-card-item>
 </template>
