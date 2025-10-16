@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import { onActivated, onMounted, computed, ref } from 'vue';
+import { onActivated, onDeactivated, onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
+import ProxyListItem from '@/components/proxies/ProxyListItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { AppProxyMode, AppProxyNodeInfo, AppProxySettings, ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
+import { AppProxyMode, AppProxyNodeInfo, AppProxySettings } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-function ensureProxySettings(): AppProxySettings {
-    if (!vhApp.data.userSettings.proxySettings) {
-        vhApp.data.userSettings.proxySettings = new AppProxySettings({ mode: AppProxyMode.Disabled });
-    }
-    return vhApp.data.userSettings.proxySettings;
-}
-
+let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const isLoading = ref(false);
 const proxies = ref<AppProxyNodeInfo[]>([]);
-
+const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Custom);
 const proxyMode = computed<AppProxyMode>({
-    get: () => ensureProxySettings().mode ?? AppProxyMode.Disabled,
+    get: () => vhApp.data.userSettings.proxySettings.mode ?? AppProxyMode.Disabled,
     set: async (value: AppProxyMode) => {
-        const proxySettings = ensureProxySettings();
+        const proxySettings = vhApp.data.userSettings.proxySettings;
         const previous = proxySettings.mode;
         if (previous === value)
             return;
@@ -36,7 +31,7 @@ const proxyMode = computed<AppProxyMode>({
             }
         } catch (err: unknown) {
             proxySettings.mode = previous;
-            await vhApp.processError(err);
+            throw err;
         }
     }
 });
@@ -47,62 +42,73 @@ const modeItems = computed(() => ([
     { value: AppProxyMode.Custom, title: locale('PROXY_MODE_CUSTOM') }
 ]));
 
-const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Custom);
+
 
 async function loadProxies(): Promise<void> {
     if (isLoading.value)
         return;
 
-    isLoading.value = true;
     try {
+        isLoading.value = true;
         const response = await vhApp.proxyNodeClient.list();
         proxies.value = Array.isArray(response) ? response : [];
     } catch (err: unknown) {
         proxies.value = [];
-        await vhApp.processError(err);
+        throw err;
     } finally {
         isLoading.value = false;
     }
 }
 
+function startPeriodicRefresh(): void {
+    if (refreshInterval) return;
+    
+    refreshInterval = setInterval(() => {
+        // Only refresh if page is visible and in custom mode
+        if (!document.hidden && isCustomMode.value) {
+            loadProxies();
+        }
+    }, 4000);
+}
+
+function stopPeriodicRefresh(): void {
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+    }
+}
+
 onMounted(async () => {
-    if (isCustomMode.value)
+    if (isCustomMode.value) {
         await loadProxies();
+        startPeriodicRefresh();
+    }
 });
 
 onActivated(async () => {
-    if (isCustomMode.value)
+    if (isCustomMode.value) {
         await loadProxies();
+        startPeriodicRefresh();
+    }
 });
 
-function formatProxySubtitle(proxy: AppProxyNodeInfo): string {
-    const node = proxy.node;
-    const parts: string[] = [node.protocol, `${node.host}:${node.port}`];
-    if (node.username)
-        parts.push(node.username);
-    return parts.join(' · ');
-}
+onDeactivated(() => {
+    stopPeriodicRefresh();
+});
 
-function getStatusQuality(status: ProxyNodeStatus): { text: string, color: string } {
-    const penalty = status?.penalty;
+onUnmounted(() => {
+    stopPeriodicRefresh();
+});
 
-    if (penalty === undefined || penalty === null || status.succeededCount === 0) {
-        return { text: locale('PROXY_STATUS_NO_DATA'), color: '' };
+// Watch mode changes to start/stop refresh
+watch(isCustomMode, (isCustom) => {
+    if (isCustom) {
+        loadProxies();
+        startPeriodicRefresh();
+    } else {
+        stopPeriodicRefresh();
     }
-    if (penalty === 0) {
-        return { text: locale('PROXY_STATUS_EXCELLENT'), color: 'success' };
-    }
-    if (penalty < 10) {
-        return { text: locale('PROXY_STATUS_GOOD'), color: 'enable-premium' };
-    }
-    if (penalty < 20) {
-        return { text: locale('PROXY_STATUS_NORMAL'), color: 'warning' };
-    }
-    if (penalty < 100) {
-        return { text: locale('PROXY_STATUS_BAD'), color: 'error' };
-    }
-    return { text: locale('PROXY_STATUS_VERY_BAD'), color: 'error' };
-}
+});
 
 function openProxy(proxyId?: string): void {
     if (proxyId) {
@@ -144,18 +150,12 @@ function openProxy(proxyId?: string): void {
                 </v-card-text>
 
                 <v-list v-else lines="two" density="comfortable">
-                    <v-list-item v-for="proxy in proxies" :key="proxy.node.id" :title="proxy.node.host"
-                        :subtitle="formatProxySubtitle(proxy)" @click="openProxy(proxy.node.id)" rounded="lg">
-                        <template #append>
-                            <v-chip v-if="proxy.status?.penalty !== undefined"
-                                :text="getStatusQuality(proxy.status).text" size="small" variant="tonal"
-                                density="comfortable" :color="getStatusQuality(proxy.status).color" class="me-2" />
-                            <v-chip :text="proxy.node.isEnabled ? locale('ON') : locale('OFF')" size="small"
-                                variant="tonal" density="comfortable"
-                                :color="proxy.node.isEnabled ? 'enable-premium' : ''" class="me-2" />
-                            <v-icon :icon="Util.getLocalizedRightChevron()" />
-                        </template>
-                    </v-list-item>
+                    <ProxyListItem 
+                        v-for="proxy in proxies" 
+                        :key="proxy.node.id" 
+                        :proxy="proxy" 
+                        @click="openProxy(proxy.node.id)" 
+                    />
                 </v-list>
             </template>
         </config-card>
