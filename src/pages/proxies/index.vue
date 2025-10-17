@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onActivated, onDeactivated, onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import ProxyListItem from '@/components/proxies/ProxyListItem.vue';
+import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
@@ -118,7 +118,7 @@ function openProxy(proxyId?: string): void {
     if (proxyId) {
         router.push({ path: `/proxies/${proxyId}` });
     } else {
-        router.push({ path: '/proxies/new' });
+        router.push({ path: '/Proxies/new' });
     }
 }
 </script>

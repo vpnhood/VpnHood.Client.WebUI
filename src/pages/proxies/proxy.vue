@@ -11,8 +11,8 @@ import i18n from '@/locales/i18n';
 import { ProxyNode, ProxyProtocol, type ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
 import router from '@/services/router';
-import ProxyInfoTab from './ProxyInfoTab.vue';
-import ProxyStatusTab from './ProxyStatusTab.vue';
+import ProxyInfoTab from '../../components/Proxies/ProxyInfoTab.vue';
+import ProxyStatusTab from '../../components/Proxies/ProxyStatusTab.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -71,7 +71,7 @@ onMounted(async () => {
 
     // Register navigation guard
     navigationUnregister = router.beforeEach(async (to, from, next) => {
-        if (!isDirty.value || isSaving.value || !from.path.startsWith('/proxies/')) {
+        if (!isDirty.value || isSaving.value || !from.path.startsWith('/Proxies/')) {
             next();
             return;
         }
@@ -96,7 +96,7 @@ onMounted(async () => {
             next(confirmed);
             return;
         }
-        
+
         // In edit mode, save changes automatically on navigation
         try {
             await save();
@@ -149,7 +149,7 @@ async function save(): Promise<boolean> {
 
     const payload = new ProxyNode(proxy.value);
     payload.host = payload.host?.trim() ?? '';
-    
+
     try {
         isSaving.value = true;
         if (proxyId.value === null) {

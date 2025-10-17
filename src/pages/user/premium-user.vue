@@ -3,23 +3,18 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import router from '@/services/router';
-import { ref } from 'vue';
-import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const showConfirmRemoveCode = ref<boolean>(false);
+async function removeCode(): Promise<void> {
+  const result = await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_PREMIUM_CODE'), locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
+  if (!result)
+    return;
 
-async function removeCode() {
-  try {
-    await router.replace({name: 'HOME'});
-    await vhApp.removePremiumCode();
-  }
-  finally {
-    showConfirmRemoveCode.value = false;
-  }
+  await vhApp.removePremiumCode();
+  await router.replace({name: 'HOME'});
 }
 </script>
 
@@ -55,7 +50,7 @@ async function removeCode() {
           class="ms-auto"
           :append-icon="Util.getLocalizedRightChevron()"
           size="small"
-          @click="showConfirmRemoveCode = true"
+          @click="removeCode()"
         />
         <v-btn
           v-if="vhApp.data.isConnected"
@@ -84,14 +79,6 @@ async function removeCode() {
         />
       </v-card-actions>
     </config-card>
-
-    <!-- Confirm remove premium code -->
-    <ConfirmDialog
-      v-model="showConfirmRemoveCode"
-      :title="locale('CONFIRM_REMOVE_PREMIUM_CODE')"
-      :message="locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC')"
-      @confirm="removeCode()"
-    />
 
   </v-sheet>
 </template>

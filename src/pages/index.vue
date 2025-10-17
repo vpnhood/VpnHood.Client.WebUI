@@ -145,7 +145,7 @@ function openDebugDialog() {
   // reset counter if no click within 1 second
   setTimeout(() => {
     openDebugDialogCounter.value = 0;
-  }, 1000);
+  }, 5000);
 }
 async function saveDebugDataSetting(): Promise<void> {
   await vhApp.saveUserSetting();
@@ -200,7 +200,7 @@ function isDebugDataHasValue(): boolean {
               :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
               :variant="isDebugDataHasValue() ? 'flat' : 'text'"
               :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
-              @click="openDebugDialog"
+              @click="openDebugDialog()"
             >
               <span :class="{'text-white opacity-40': !isDebugDataHasValue()}">
                 {{ locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false) }}

@@ -2,11 +2,14 @@
 import { UiState } from '@/helpers/UiState';
 import { UserState } from '@/helpers/UserState';
 import {
-  AppConnectionState, AppFeature,
+  AppConnectionState,
+  AppFeature,
   AppFeatures,
   AppIntentFeatures,
-  AppState, ChannelProtocol,
-  ClientProfileInfo, DnsMode,
+  AppState,
+  ChannelProtocol,
+  ClientProfileInfo,
+  DnsMode,
   UiCultureInfo,
   UserSettings
 } from '@/services/VpnHood.Client.Api';
@@ -61,7 +64,7 @@ export class VpnHoodAppData {
   }
 
   get connectionStateText(): string {
-    switch (this.connectionState) {
+    switch (this.state.connectionState) {
       case AppConnectionState.None:
         return this.locale('DISCONNECTED');
       case AppConnectionState.Initializing:

@@ -35,7 +35,7 @@ export const myColors = {
   },
   green: {
     20:  "#d3eee7",
-    50: "#00ff97",
+    50: "#00ff56",
     100: "#3ff6a9",
     200: "#15f5ba",
     300: "#23c99d",
