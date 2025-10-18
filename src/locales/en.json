@@ -203,7 +203,7 @@
   "PROXY": "Proxy",
   "PROXY_MODE": "Proxy mode",
   "PROXY_MODE_DISABLED": "Disabled",
-  "PROXY_MODE_SYSTEM": "Use system proxy",
+  "PROXY_MODE_DEVICE": "Use system proxy",
   "PROXY_MODE_CUSTOM": "Custom proxy list",
   "PROXY_LIST_EMPTY": "No proxies added yet.",
   "PROXY_ADD": "Add proxy",

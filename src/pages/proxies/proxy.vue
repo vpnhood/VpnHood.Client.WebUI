@@ -4,7 +4,7 @@
 }</route>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, onUnmounted, callWithAsyncErrorHandling } from 'vue';
+import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';

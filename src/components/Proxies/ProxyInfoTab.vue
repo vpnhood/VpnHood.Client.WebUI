@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import i18n from '@/locales/i18n';
 import { ProxyNode, ProxyProtocol, ProxyNodeDefaults } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';

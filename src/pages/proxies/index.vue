@@ -8,6 +8,7 @@ import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import { AppProxyMode, AppProxyNodeInfo } from '@/services/VpnHood.Client.Api';
 
+
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
@@ -38,7 +39,7 @@ const proxyMode = computed<AppProxyMode>({
 
 const modeItems = computed(() => ([
     { value: AppProxyMode.Disabled, title: locale('PROXY_MODE_DISABLED') },
-    { value: AppProxyMode.System, title: locale('PROXY_MODE_SYSTEM') },
+    { value: AppProxyMode.Device, title: locale('PROXY_MODE_DEVICE') },
     { value: AppProxyMode.Custom, title: locale('PROXY_MODE_CUSTOM') }
 ]));
 
