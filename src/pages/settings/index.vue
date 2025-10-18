@@ -15,8 +15,8 @@ const proxyModeLabel = computed(() => {
   const mode = vhApp.data.userSettings.proxySettings?.mode ?? AppProxyMode.Disabled;
   let key = 'PROXY_MODE_DISABLED';
   switch (mode) {
-    case AppProxyMode.System:
-      key = 'PROXY_MODE_SYSTEM';
+    case AppProxyMode.Device:
+      key = 'PROXY_MODE_DEVICE';
       break;
     case AppProxyMode.Custom:
       key = 'PROXY_MODE_CUSTOM';
@@ -104,7 +104,7 @@ function isShowConnectivitySectionTitle(): boolean {
         offText: 'DEFAULT'
       }"
       :isPremium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"
-      :is-show="vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported"
+      :is-show="true"
       :click="{name: 'DNS'}"
     />
 
@@ -113,7 +113,7 @@ function isShowConnectivitySectionTitle(): boolean {
       title="PROXIES"
       subtitle="PROXIES_DESC"
       :isPremium="false"
-      :is-show="false"
+      :is-show="true"
       :selectedItem="proxyModeLabel"
       :click="{path: '/Proxies'}"
     />
