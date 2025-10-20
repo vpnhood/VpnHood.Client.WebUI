@@ -43,15 +43,34 @@ const statusQuality = computed(() => {
     }
     return { text: locale('PROXY_STATUS_VERY_BAD'), color: 'error' };
 });
+
+const hasCounts = computed(() => {
+    const status = props.proxy.status;
+    return status?.succeededCount != null || status?.failedCount != null;
+});
+
+const countsText = computed(() => {
+    const status = props.proxy.status;
+    if (!status) return '';
+    const parts: string[] = [];
+    if (status.succeededCount != null)
+        parts.push(`${locale('PROXY_STATUS_SUCCEEDED')}: ${status.succeededCount}`);
+    if (status.failedCount != null)
+        parts.push(`${locale('PROXY_STATUS_FAILED')}: ${status.failedCount}`);
+    return parts.join(' · ');
+});
 </script>
 
 <template>
-    <v-list-item 
-        :title="proxy.node.host" 
-        :subtitle="subtitle" 
-        @click="emit('click')" 
+    <v-list-item
+        :title="proxy.node.host"
+        @click="emit('click')"
         rounded="lg"
     >
+        <template #subtitle>
+            <div>{{ subtitle }}</div>
+            <div v-if="hasCounts" class="text-caption text-disabled mt-1">{{ countsText }}</div>
+        </template>
         <template #append>
             <v-chip 
                 v-if="proxy.status?.penalty !== undefined"

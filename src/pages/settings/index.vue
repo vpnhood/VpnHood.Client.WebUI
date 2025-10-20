@@ -13,13 +13,13 @@ const vhApp = VpnHoodApp.instance;
 const proxyModeLabel = computed(() => {
   const localeCode = i18n.global.locale.value;
   const mode = vhApp.data.userSettings.proxySettings?.mode ?? AppProxyMode.Disabled;
-  let key = 'PROXY_MODE_DISABLED';
+  let key = 'PROXY_MODE_NOPROXY';
   switch (mode) {
     case AppProxyMode.Device:
       key = 'PROXY_MODE_DEVICE';
       break;
     case AppProxyMode.Custom:
-      key = 'PROXY_MODE_CUSTOM';
+      key = 'PROXY_MODE_MANUAL';
       break;
   }
   const label = i18n.global.t(key);

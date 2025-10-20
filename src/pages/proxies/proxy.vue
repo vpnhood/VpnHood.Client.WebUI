@@ -27,6 +27,11 @@ const proxyId = computed(() => {
     return pathId;
 });
 const isNew = computed(() => !proxyId.value);
+const isDevice = computed(() => {
+    const params = currentRoute.value.params as { id?: string };
+    return params?.id === 'device';
+});
+const isReadonly = computed(() => isDevice.value);
 
 const proxy = ref<ProxyNode>(new ProxyNode({
     id: '',
@@ -55,7 +60,16 @@ let navigationUnregister: (() => void) | null = null;
 
 onMounted(async () => {
 
-    if (proxyId.value) {
+    if (isDevice.value) {
+        const deviceInfo = await vhApp.proxyNodeClient.getDevice();
+        if (!deviceInfo) {
+            router.back();
+            return;
+        }
+        proxy.value = new ProxyNode(deviceInfo.node);
+        proxyStatus.value = deviceInfo.status;
+        currentTab.value = 'status';
+    } else if (proxyId.value) {
         const response = await vhApp.proxyNodeClient.list();
         const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
         if (match) {
@@ -71,10 +85,21 @@ onMounted(async () => {
 
     // Register navigation guard
     navigationUnregister = router.beforeEach(async (to, from, next) => {
-        if (!isDirty.value || isSaving.value || !from.path.startsWith('/Proxies/')) {
+            console.log('Saving changes before navigation...');
+
+        if (!isDirty.value || isSaving.value || !from.path.startsWith('/proxies/')) {
             next();
             return;
         }
+
+            console.log('Saving changes before navigation...');
+
+        if (isReadonly.value) {
+            next();
+            return;
+        }
+            console.log('Saving changes before navigation2...');
+
 
         // Add mode: prompt if dirty for new entries
         if (isNew.value) {
@@ -144,6 +169,8 @@ function validate(): boolean {
 }
 
 async function save(): Promise<boolean> {
+    if (isReadonly.value)
+        return true;
     if (!validate())
         return false;
 
@@ -175,6 +202,9 @@ async function deleteProxy(): Promise<void> {
     if (!proxyId.value)
         return;
 
+    if (isReadonly.value)
+        return;
+
     if (!await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_SERVER'), locale('ARE_YOU_SURE')))
         return;
 
@@ -200,12 +230,12 @@ async function handleBack(): Promise<void> {
 
         <config-card class="pa-3">
             <v-tabs v-model="currentTab" color="highlight" align-tabs="center">
-                <v-tab value="info">{{ locale('PROXY_TAB_INFO') }}</v-tab>
+                <v-tab value="info" v-if="!isDevice">{{ locale('PROXY_TAB_INFO') }}</v-tab>
                 <v-tab value="status" v-if="!isNew">{{ locale('PROXY_TAB_STATUS') }}</v-tab>
             </v-tabs>
 
             <v-window v-model="currentTab" class="mt-4">
-                <v-window-item value="info">
+                <v-window-item value="info" v-if="!isDevice">
                     <ProxyInfoTab :proxy="proxy" :host-error="hostError" :port-error="portError" />
                 </v-window-item>
 
@@ -214,14 +244,14 @@ async function handleBack(): Promise<void> {
                 </v-window-item>
             </v-window>
 
-            <v-card-actions class="pt-4" v-if="isNew">
+            <v-card-actions class="pt-4" v-if="isNew && !isReadonly">
                 <v-spacer />
                 <v-btn color="highlight" class="text-transform-none" :loading="isSaving" @click="saveAndClose">
                     {{ locale('OK') }}
                 </v-btn>
             </v-card-actions>
 
-            <v-card-actions class="pt-4" v-else>
+            <v-card-actions class="pt-4" v-else-if="!isReadonly">
                 <v-btn variant="text" color="error" class="text-transform-none" :disabled="isSaving || isDeleting"
                     :loading="isDeleting" @click="deleteProxy">
                     {{ locale('REMOVE') }}

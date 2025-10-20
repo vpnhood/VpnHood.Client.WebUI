@@ -15,6 +15,7 @@ const locale = i18n.global.t;
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const isLoading = ref(false);
 const proxies = ref<AppProxyNodeInfo[]>([]);
+const deviceProxy = ref<AppProxyNodeInfo | null>(null);
 const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Custom);
 const proxyMode = computed<AppProxyMode>({
     get: () => vhApp.data.userSettings.proxySettings.mode ?? AppProxyMode.Disabled,
@@ -29,6 +30,8 @@ const proxyMode = computed<AppProxyMode>({
             await vhApp.saveUserSetting();
             if (value === AppProxyMode.Custom) {
                 await loadProxies();
+            } else if (value === AppProxyMode.Device) {
+                await loadDeviceProxy();
             }
         } catch (err: unknown) {
             proxySettings.mode = previous;
@@ -38,9 +41,9 @@ const proxyMode = computed<AppProxyMode>({
 });
 
 const modeItems = computed(() => ([
-    { value: AppProxyMode.Disabled, title: locale('PROXY_MODE_DISABLED') },
+    { value: AppProxyMode.Disabled, title: locale('PROXY_MODE_NOPROXY') },
     { value: AppProxyMode.Device, title: locale('PROXY_MODE_DEVICE') },
-    { value: AppProxyMode.Custom, title: locale('PROXY_MODE_CUSTOM') }
+    { value: AppProxyMode.Custom, title: locale('PROXY_MODE_MANUAL') }
 ]));
 
 
@@ -55,6 +58,22 @@ async function loadProxies(showLoading = true): Promise<void> {
         proxies.value = Array.isArray(response) ? response : [];
     } catch (err: unknown) {
         proxies.value = [];
+        throw err;
+    } finally {
+        isLoading.value = false;
+    }
+}
+
+async function loadDeviceProxy(showLoading = true): Promise<void> {
+    if (isLoading.value)
+        return;
+
+    try {
+        isLoading.value = showLoading;
+        const response = await vhApp.proxyNodeClient.getDevice();
+        deviceProxy.value = response ?? null;
+    } catch (err: unknown) {
+        deviceProxy.value = null;
         throw err;
     } finally {
         isLoading.value = false;
@@ -87,6 +106,8 @@ onMounted(async () => {
     if (isCustomMode.value) {
         await loadProxies();
         startPeriodicRefresh();
+    } else if (proxyMode.value === AppProxyMode.Device) {
+        await loadDeviceProxy();
     }
 });
 
@@ -94,6 +115,8 @@ onActivated(async () => {
     if (isCustomMode.value) {
         await loadProxies();
         startPeriodicRefresh();
+    } else if (proxyMode.value === AppProxyMode.Device) {
+        await loadDeviceProxy();
     }
 });
 
@@ -112,6 +135,12 @@ watch(isCustomMode, (isCustom) => {
         startPeriodicRefresh();
     } else {
         stopPeriodicRefresh();
+    }
+});
+
+watch(proxyMode, (mode) => {
+    if (mode === AppProxyMode.Device) {
+        loadDeviceProxy(true);
     }
 });
 
@@ -157,6 +186,19 @@ function openProxy(proxyId?: string): void {
                 <v-list v-else lines="two" density="comfortable">
                     <ProxyListItem v-for="proxy in proxies" :key="proxy.node.id" :proxy="proxy"
                         @click="openProxy(proxy.node.id)" />
+                </v-list>
+            </template>
+        </config-card>
+
+        <config-card v-else-if="proxyMode === AppProxyMode.Device" class="mt-4 pa-0">
+            <v-progress-linear v-if="isLoading" color="highlight" indeterminate />
+
+            <template v-else>
+                <v-card-text v-if="!deviceProxy" class="text-disabled">
+                    {{ locale('NO_SYSTEM_PROXY') }}
+                </v-card-text>
+                <v-list v-else lines="two" density="comfortable">
+                    <ProxyListItem :proxy="deviceProxy" @click="openProxy('device')" />
                 </v-list>
             </template>
         </config-card>
