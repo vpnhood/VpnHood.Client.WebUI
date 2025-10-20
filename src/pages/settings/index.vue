@@ -115,7 +115,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :isPremium="false"
       :is-show="true"
       :selectedItem="proxyModeLabel"
-      :click="{path: '/proxies'}"
+      :click="{name:'PROXIES'}"
     />
 
 
