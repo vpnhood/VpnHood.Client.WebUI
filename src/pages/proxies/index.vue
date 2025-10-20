@@ -2,6 +2,7 @@
 import { onActivated, onDeactivated, onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
+import ProxyImportDialog from '@/components/Proxies/ProxyImportDialog.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
@@ -120,9 +121,9 @@ async function importProxies(): Promise<void> {
         isImporting.value = true;
         await vhApp.proxyNodeClient.import(importText.value);
         await loadProxies();
-        importText.value = '';
         isImportDialogOpen.value = false;
     } finally {
+        importText.value = '';
         isImporting.value = false;
     }
 }
@@ -192,11 +193,8 @@ watch(proxyMode, (mode) => {
 });
 
 function openProxy(proxyId?: string): void {
-    if (proxyId) {
-        router.push({ path: `/proxies/${proxyId}` });
-    } else {
-        router.push({ path: '/Proxies/new' });
-    }
+    const id = proxyId ?? 'new';
+    router.push({ path: `/proxies/${encodeURIComponent(id)}` });
 }
 </script>
 
@@ -260,23 +258,6 @@ function openProxy(proxyId?: string): void {
         </config-card>
     </v-sheet>
 
-    <v-dialog v-model="isImportDialogOpen" max-width="640">
-        <v-card>
-            <v-card-title>{{ locale('PROXY_IMPORT_TITLE') }}</v-card-title>
-            <v-card-text>
-                <div class="text-body-2 text-disabled mb-3">{{ locale('PROXY_IMPORT_DESC') }}</div>
-                <v-textarea v-model="importText" :label="locale('PROXY_IMPORT_LABEL')" variant="outlined" auto-grow
-                    rows="6" :disabled="isImporting" />
-            </v-card-text>
-            <v-card-actions class="justify-end ga-2">
-                <v-btn variant="text" class="text-transform-none" :disabled="isImporting" @click="closeImportDialog">
-                    {{ locale('CANCEL') }}
-                </v-btn>
-                <v-btn color="highlight" class="text-transform-none" :disabled="!canImportProxies"
-                    :loading="isImporting" @click="importProxies">
-                    {{ locale('PROXY_IMPORT_CONFIRM') }}
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+    <proxy-import-dialog v-model="isImportDialogOpen" v-model:text="importText" :is-importing="isImporting"
+        :can-import="canImportProxies" @confirm="importProxies" @cancel="closeImportDialog" />
 </template>
