@@ -34,11 +34,7 @@ const proxyMode = computed<AppProxyMode>({
         proxySettings.mode = value;
         try {
             await vhApp.saveUserSetting();
-            if (value === AppProxyMode.Custom) {
-                await loadProxies();
-            } else if (value === AppProxyMode.Device) {
-                await loadDeviceProxy();
-            }
+            // Don't load here - let the watchers handle it to avoid double loading
         } catch (err: unknown) {
             proxySettings.mode = previous;
             throw err;
@@ -160,11 +156,12 @@ onMounted(async () => {
 });
 
 onActivated(async () => {
+    // Force reload when page is activated (e.g., returning from proxy detail page)
     if (isCustomMode.value) {
-        await loadProxies();
+        await loadProxies(true);
         startPeriodicRefresh();
     } else if (proxyMode.value === AppProxyMode.Device) {
-        await loadDeviceProxy();
+        await loadDeviceProxy(true);
     }
 });
 
@@ -176,19 +173,19 @@ onUnmounted(() => {
     stopPeriodicRefresh();
 });
 
-// Watch mode changes to start/stop refresh
-watch(isCustomMode, (isCustom) => {
-    if (isCustom) {
+// Watch mode changes to start/stop refresh and load data
+watch(proxyMode, (newMode, oldMode) => {
+    // Skip if mode hasn't actually changed
+    if (newMode === oldMode) return;
+    
+    if (newMode === AppProxyMode.Custom) {
         loadProxies(true);
         startPeriodicRefresh();
     } else {
         stopPeriodicRefresh();
-    }
-});
-
-watch(proxyMode, (mode) => {
-    if (mode === AppProxyMode.Device) {
-        loadDeviceProxy(true);
+        if (newMode === AppProxyMode.Device) {
+            loadDeviceProxy(true);
+        }
     }
 });
 
