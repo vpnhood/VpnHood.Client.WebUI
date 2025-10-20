@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onActivated, onDeactivated, onMounted, onUnmounted, computed, ref, watch } from 'vue';
+import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import ProxyImportDialog from '@/components/Proxies/ProxyImportDialog.vue';
@@ -147,45 +147,58 @@ function stopPeriodicRefresh(): void {
 }
 
 onMounted(async () => {
-    if (isCustomMode.value) {
-        await loadProxies();
-        startPeriodicRefresh();
-    } else if (proxyMode.value === AppProxyMode.Device) {
-        await loadDeviceProxy();
+    try {
+        if (isCustomMode.value) {
+            await loadProxies();
+            startPeriodicRefresh();
+        } else if (proxyMode.value === AppProxyMode.Device) {
+            await loadDeviceProxy();
+        }
+    } catch (err: unknown) {
+        await vhApp.processError(err);
     }
-});
-
-onActivated(async () => {
-    // Force reload when page is activated (e.g., returning from proxy detail page)
-    if (isCustomMode.value) {
-        await loadProxies(true);
-        startPeriodicRefresh();
-    } else if (proxyMode.value === AppProxyMode.Device) {
-        await loadDeviceProxy(true);
-    }
-});
-
-onDeactivated(() => {
-    stopPeriodicRefresh();
 });
 
 onUnmounted(() => {
     stopPeriodicRefresh();
 });
 
-// Watch mode changes to start/stop refresh and load data
-watch(proxyMode, (newMode, oldMode) => {
-    // Skip if mode hasn't actually changed
-    if (newMode === oldMode) return;
-    
-    if (newMode === AppProxyMode.Custom) {
-        loadProxies(true);
-        startPeriodicRefresh();
-    } else {
-        stopPeriodicRefresh();
-        if (newMode === AppProxyMode.Device) {
-            loadDeviceProxy(true);
+// Watch route changes to reload data when returning from proxy detail page
+watch(() => router.currentRoute.value.fullPath, async (newPath, oldPath) => {
+    if (newPath !== '/proxies' || !oldPath?.startsWith('/proxies/'))
+        return;
+
+    try {
+        if (isCustomMode.value) {
+            await loadProxies(true);
+            startPeriodicRefresh();
+        } else if (proxyMode.value === AppProxyMode.Device) {
+            await loadDeviceProxy(true);
         }
+    } catch (err: unknown) {
+        await vhApp.processError(err);
+    }
+});
+
+// Watch mode changes to start/stop refresh and load data
+watch(proxyMode, async (newMode, oldMode) => {
+    if (newMode === oldMode)
+        return;
+
+    stopPeriodicRefresh();
+
+    try {
+        if (newMode === AppProxyMode.Custom) {
+            await loadProxies(true);
+            startPeriodicRefresh();
+        } else if (newMode === AppProxyMode.Device) {
+            await loadDeviceProxy(true);
+        } else {
+            proxies.value = [];
+            deviceProxy.value = null;
+        }
+    } catch (err: unknown) {
+        await vhApp.processError(err);
     }
 });
 
@@ -253,8 +266,8 @@ function openProxy(proxyId?: string): void {
                 </v-list>
             </template>
         </config-card>
-    </v-sheet>
 
-    <proxy-import-dialog v-model="isImportDialogOpen" v-model:text="importText" :is-importing="isImporting"
-        :can-import="canImportProxies" @confirm="importProxies" @cancel="closeImportDialog" />
+        <proxy-import-dialog v-model="isImportDialogOpen" v-model:text="importText" :is-importing="isImporting"
+            :can-import="canImportProxies" @confirm="importProxies" @cancel="closeImportDialog" />
+    </v-sheet>
 </template>
