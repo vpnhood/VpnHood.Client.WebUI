@@ -14,6 +14,11 @@ const locale = i18n.global.t;
 
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const isLoading = ref(false);
+const isDeletingAll = ref(false);
+const isImportDialogOpen = ref(false);
+const importText = ref('');
+const isImporting = ref(false);
+const canImportProxies = computed(() => importText.value.trim().length > 0 && !isImporting.value);
 const proxies = ref<AppProxyNodeInfo[]>([]);
 const deviceProxy = ref<AppProxyNodeInfo | null>(null);
 const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Custom);
@@ -77,6 +82,48 @@ async function loadDeviceProxy(showLoading = true): Promise<void> {
         throw err;
     } finally {
         isLoading.value = false;
+    }
+}
+
+async function deleteAllProxies(): Promise<void> {
+    if (!proxies.value.length || isDeletingAll.value)
+        return;
+
+    if (!await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_ALL_PROXIES'), locale('ARE_YOU_SURE')))
+        return;
+
+    try {
+        isDeletingAll.value = true;
+        await vhApp.proxyNodeClient.deleteAll();
+        await loadProxies();
+    } finally {
+        isDeletingAll.value = false;
+    }
+}
+
+function openImportDialog(): void {
+    isImportDialogOpen.value = true;
+}
+
+function closeImportDialog(): void {
+    if (isImporting.value)
+        return;
+
+    isImportDialogOpen.value = false;
+}
+
+async function importProxies(): Promise<void> {
+    if (!canImportProxies.value)
+        return;
+
+    try {
+        isImporting.value = true;
+        await vhApp.proxyNodeClient.import(importText.value);
+        await loadProxies();
+        importText.value = '';
+        isImportDialogOpen.value = false;
+    } finally {
+        isImporting.value = false;
     }
 }
 
@@ -169,9 +216,18 @@ function openProxy(proxyId?: string): void {
         </config-card>
 
         <config-card v-if="isCustomMode" class="mt-4 pa-0">
-            <v-card-actions class="pa-3 pb-0">
+            <v-card-actions class="pa-3 pb-0 d-flex flex-column ga-2">
                 <btn-style-4 block :text="locale('PROXY_ADD')" :append-icon="Util.getLocalizedRightChevron()"
                     @click="openProxy()" />
+                <v-btn block variant="text" color="highlight" class="text-transform-none"
+                    :disabled="isLoading || isImporting" @click="openImportDialog">
+                    {{ locale('PROXY_IMPORT') }}
+                </v-btn>
+                <v-btn block variant="text" color="error" class="text-transform-none"
+                    :disabled="!proxies.length || isDeletingAll || isLoading" :loading="isDeletingAll"
+                    @click="deleteAllProxies">
+                    {{ locale('PROXY_DELETE_ALL') }}
+                </v-btn>
             </v-card-actions>
 
             <v-divider class="mt-3" />
@@ -203,4 +259,24 @@ function openProxy(proxyId?: string): void {
             </template>
         </config-card>
     </v-sheet>
+
+    <v-dialog v-model="isImportDialogOpen" max-width="640">
+        <v-card>
+            <v-card-title>{{ locale('PROXY_IMPORT_TITLE') }}</v-card-title>
+            <v-card-text>
+                <div class="text-body-2 text-disabled mb-3">{{ locale('PROXY_IMPORT_DESC') }}</div>
+                <v-textarea v-model="importText" :label="locale('PROXY_IMPORT_LABEL')" variant="outlined" auto-grow
+                    rows="6" :disabled="isImporting" />
+            </v-card-text>
+            <v-card-actions class="justify-end ga-2">
+                <v-btn variant="text" class="text-transform-none" :disabled="isImporting" @click="closeImportDialog">
+                    {{ locale('CANCEL') }}
+                </v-btn>
+                <v-btn color="highlight" class="text-transform-none" :disabled="!canImportProxies"
+                    :loading="isImporting" @click="importProxies">
+                    {{ locale('PROXY_IMPORT_CONFIRM') }}
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
