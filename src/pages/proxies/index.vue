@@ -26,7 +26,24 @@ const deviceProxy = ref<AppProxyEndPointInfo | null>(null);
 const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Manual);
 const autoUpdateUrl = ref('');
 const autoUpdateInterval = ref('');
+const previousUrl = ref('');
 const hasAutoUpdateUrl = computed(() => autoUpdateUrl.value.trim().length > 0);
+
+const intervalOptions = computed(() => ([
+    { value: '', title: locale('NEVER') },
+    { value: '00:01:00', title: `1 ${locale('MINUTE')}` },
+    { value: '00:02:00', title: `2 ${locale('MINUTES')}` },
+    { value: '00:03:00', title: `3 ${locale('MINUTES')}` },
+    { value: '00:05:00', title: `5 ${locale('MINUTES')}` },
+    { value: '00:10:00', title: `10 ${locale('MINUTES')}` },
+    { value: '00:30:00', title: `30 ${locale('MINUTES')}` },
+    { value: '01:00:00', title: `1 ${locale('HOUR')}` },
+    { value: '02:00:00', title: `2 ${locale('HOURS')}` },
+    { value: '04:00:00', title: `4 ${locale('HOURS')}` },
+    { value: '05:00:00', title: `5 ${locale('HOURS')}` },
+    { value: '12:00:00', title: `12 ${locale('HOURS')}` },
+    { value: '1.00:00:00', title: `24 ${locale('HOURS')}` }
+]));
 
 const proxyMode = computed<AppProxyMode>({
     get: () => vhApp.data.userSettings.proxySettings.mode ?? AppProxyMode.NoProxy,
@@ -149,8 +166,20 @@ async function reloadFromUrl(): Promise<void> {
         await saveAutoUpdateSettings();
         await vhApp.proxyNodeClient.reloadUrl();
         await loadProxies();
+        previousUrl.value = autoUpdateUrl.value;
     } finally {
         isReloadingUrl.value = false;
+    }
+}
+
+async function handleUrlBlur(): Promise<void> {
+    if (!hasAutoUpdateUrl.value || autoUpdateUrl.value === previousUrl.value)
+        return;
+
+    try {
+        await reloadFromUrl();
+    } catch (err: unknown) {
+        await vhApp.processError(err);
     }
 }
 
@@ -158,6 +187,7 @@ function loadAutoUpdateSettings(): void {
     const options = vhApp.data.userSettings.proxySettings.autoUpdateOptions;
     autoUpdateUrl.value = options.url ?? '';
     autoUpdateInterval.value = options.interval ?? '';
+    previousUrl.value = autoUpdateUrl.value;
 }
 
 function startPeriodicRefresh(): void {
@@ -277,11 +307,17 @@ function openProxy(proxyId?: string): void {
             <v-card-text class="pb-0">
                 <v-text-field v-model="autoUpdateUrl" :label="locale('PROXY_AUTO_UPDATE_URL')"
                     :placeholder="locale('PROXY_AUTO_UPDATE_URL_PLACEHOLDER')" variant="outlined" density="comfortable"
-                    rounded="lg" hide-details class="mb-3" color="highlight" />
-                <v-text-field v-model="autoUpdateInterval" :label="locale('PROXY_AUTO_UPDATE_INTERVAL')"
-                    :placeholder="locale('PROXY_AUTO_UPDATE_INTERVAL_DESC')" variant="outlined" density="comfortable"
-                    rounded="lg" :hide-details="!hasAutoUpdateUrl" color="highlight"
-                    :disabled="!hasAutoUpdateUrl" />
+                    rounded="lg" hide-details class="mb-3" color="highlight" @blur="handleUrlBlur">
+                    <template #append-inner>
+                        <v-btn icon size="small" variant="text" :disabled="!hasAutoUpdateUrl || isReloadingUrl"
+                            :loading="isReloadingUrl" @click="reloadFromUrl">
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                </v-text-field>
+                <v-select v-model="autoUpdateInterval" :items="intervalOptions" item-title="title" item-value="value"
+                    :label="locale('PROXY_AUTO_UPDATE_INTERVAL')" variant="outlined" density="comfortable"
+                    rounded="lg" hide-details color="highlight" :disabled="!hasAutoUpdateUrl" />
             </v-card-text>
 
             <v-card-actions class="pa-3 pb-0 d-flex flex-column ga-2">
@@ -290,11 +326,6 @@ function openProxy(proxyId?: string): void {
                 <v-btn block variant="text" color="highlight" class="text-transform-none"
                     :disabled="isLoading || isImporting" @click="openImportDialog">
                     {{ locale('PROXY_IMPORT') }}
-                </v-btn>
-                <v-btn block variant="text" color="highlight" class="text-transform-none"
-                    :disabled="!hasAutoUpdateUrl || isReloadingUrl || isLoading" :loading="isReloadingUrl"
-                    @click="reloadFromUrl">
-                    {{ locale('PROXY_RELOAD_URL') }}
                 </v-btn>
                 <v-btn block variant="text" color="error" class="text-transform-none"
                     :disabled="!proxies.length || isDeletingAll || isLoading" :loading="isDeletingAll"
