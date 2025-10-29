@@ -21,7 +21,7 @@ const locale = i18n.global.t;
       locale('PRIVATE_DNS_TURN_ON_STEP_5')
     ]"
     button-text="OPEN_SYSTEM_SETTINGS"
-    :button-click="()=>vhApp.intentsClient.openSystemSettings()"
+    :button-click="()=>vhApp.intentsClient.openSettings()"
     :is-premium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"
     :is-action-button-available="vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported"
   />

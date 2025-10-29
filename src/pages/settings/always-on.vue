@@ -19,7 +19,7 @@ const locale = i18n.global.t;
       locale('ALWAYS_ON_HOW_TO_TURN_ON_STEP_3')
     ]"
     button-text="OPEN_VPN_SETTINGS"
-    :button-click="()=>vhApp.intentsClient.openSystemAlwaysOnSettings()"
+    :button-click="()=>vhApp.intentsClient.openAlwaysOnSettings()"
     :is-premium="vhApp.data.isPremiumFeature(AppFeature.AlwaysOn)"
     :is-action-button-available="vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported"
   />

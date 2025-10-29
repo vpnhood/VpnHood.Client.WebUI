@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue';
 import i18n from '@/locales/i18n';
-import { ProxyNode, ProxyProtocol, ProxyNodeDefaults } from '@/services/VpnHood.Client.Api';
+import { ProxyEndPoint, ProxyProtocol, ProxyEndPointDefaults } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 
@@ -9,7 +9,7 @@ const locale = i18n.global.t;
 const vhApp = VpnHoodApp.instance;
 
 const props = defineProps<{
-    proxy: ProxyNode;
+    proxy: ProxyEndPoint;
     hostError: string | null;
     portError: string | null;
 }>();
@@ -36,7 +36,7 @@ async function handleHostBlur(): Promise<void> {
     try {
         isParsing.value = true;
 
-        const defaults = new ProxyNodeDefaults();
+        const defaults = new ProxyEndPointDefaults();
         defaults.protocol = proxyModel.value.protocol;
         defaults.port = proxyModel.value.port || null;
         defaults.username = proxyModel.value.username;
@@ -45,7 +45,7 @@ async function handleHostBlur(): Promise<void> {
 
         const result = await vhApp.proxyNodeClient.parse(proxyModel.value.host.trim(), defaults);
         // Apply parsed values onto the same record reference
-        const parsed = new ProxyNode(result.node);
+        const parsed = new ProxyEndPoint(result.endPoint);
 
         // Only overwrite port if it was not explicitly set and host does not include a port part
         if ((defaults.port == null) && !proxyModel.value.host.includes(':')) 

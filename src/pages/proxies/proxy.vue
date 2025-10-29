@@ -8,7 +8,7 @@ import { onMounted, computed, ref, onUnmounted } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ProxyNode, ProxyProtocol, type ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
+import { ProxyEndPoint, ProxyProtocol, type ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
 import { Validators } from '@/helpers/Validators';
 import router from '@/services/router';
 import ProxyInfoTab from '../../components/Proxies/ProxyInfoTab.vue';
@@ -33,7 +33,7 @@ const isDevice = computed(() => {
 });
 const isReadonly = computed(() => isDevice.value);
 
-const proxy = ref<ProxyNode>(new ProxyNode({
+const proxy = ref<ProxyEndPoint>(new ProxyEndPoint({
     id: '',
     host: '',
     port: 0,
@@ -49,7 +49,7 @@ const portError = ref<string | null>(null);
 const isSaving = ref(false);
 const isDeleting = ref(false);
 const currentTab = ref<'info' | 'status'>('info');
-const proxyStatus = ref<ProxyNodeStatus | null>(null);
+const proxyStatus = ref<ProxyEndPointStatus | null>(null);
 const initialProxy = ref<string>('');
 
 const isDirty = computed(() => {
@@ -66,14 +66,14 @@ onMounted(async () => {
             router.back();
             return;
         }
-        proxy.value = new ProxyNode(deviceInfo.node);
+        proxy.value = new ProxyEndPoint(deviceInfo.endPoint);
         proxyStatus.value = deviceInfo.status;
         currentTab.value = 'status';
     } else if (proxyId.value) {
         const response = await vhApp.proxyNodeClient.list();
-        const match = Array.isArray(response) ? response.find(item => item.node.id === proxyId.value) : undefined;
+        const match = Array.isArray(response) ? response.find(item => item.endPoint.id === proxyId.value) : undefined;
         if (match) {
-            proxy.value = new ProxyNode(match.node);
+            proxy.value = new ProxyEndPoint(match.endPoint);
             proxyStatus.value = match.status;
         } else {
             router.back();
@@ -174,7 +174,7 @@ async function save(): Promise<boolean> {
     if (!validate())
         return false;
 
-    const payload = new ProxyNode(proxy.value);
+    const payload = new ProxyEndPoint(proxy.value);
     payload.host = payload.host?.trim() ?? '';
 
     try {

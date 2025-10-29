@@ -7,7 +7,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { AppProxyMode, AppProxyNodeInfo } from '@/services/VpnHood.Client.Api';
+import { AppProxyMode, AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
 
 
 const vhApp = VpnHoodApp.instance;
@@ -20,11 +20,11 @@ const isImportDialogOpen = ref(false);
 const importText = ref('');
 const isImporting = ref(false);
 const canImportProxies = computed(() => importText.value.trim().length > 0 && !isImporting.value);
-const proxies = ref<AppProxyNodeInfo[]>([]);
-const deviceProxy = ref<AppProxyNodeInfo | null>(null);
-const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Custom);
+const proxies = ref<AppProxyEndPointInfo[]>([]);
+const deviceProxy = ref<AppProxyEndPointInfo | null>(null);
+const isCustomMode = computed(() => proxyMode.value === AppProxyMode.Manual);
 const proxyMode = computed<AppProxyMode>({
-    get: () => vhApp.data.userSettings.proxySettings.mode ?? AppProxyMode.Disabled,
+    get: () => vhApp.data.userSettings.proxySettings.mode ?? AppProxyMode.NoProxy,
     set: async (value: AppProxyMode) => {
         const proxySettings = vhApp.data.userSettings.proxySettings;
         const previous = proxySettings.mode;
@@ -43,9 +43,9 @@ const proxyMode = computed<AppProxyMode>({
 });
 
 const modeItems = computed(() => ([
-    { value: AppProxyMode.Disabled, title: locale('PROXY_MODE_NOPROXY') },
+    { value: AppProxyMode.NoProxy, title: locale('PROXY_MODE_NOPROXY') },
     { value: AppProxyMode.Device, title: locale('PROXY_MODE_DEVICE') },
-    { value: AppProxyMode.Custom, title: locale('PROXY_MODE_MANUAL') }
+    { value: AppProxyMode.Manual, title: locale('PROXY_MODE_MANUAL') }
 ]));
 
 
@@ -188,7 +188,7 @@ watch(proxyMode, async (newMode, oldMode) => {
     stopPeriodicRefresh();
 
     try {
-        if (newMode === AppProxyMode.Custom) {
+        if (newMode === AppProxyMode.Manual) {
             await loadProxies(true);
             startPeriodicRefresh();
         } else if (newMode === AppProxyMode.Device) {
@@ -248,8 +248,8 @@ function openProxy(proxyId?: string): void {
                 </v-card-text>
 
                 <v-list v-else lines="two" density="comfortable">
-                    <ProxyListItem v-for="proxy in proxies" :key="proxy.node.id" :proxy="proxy"
-                        @click="openProxy(proxy.node.id)" />
+                    <ProxyListItem v-for="proxy in proxies" :key="proxy.endPoint.id" :proxy="proxy"
+                        @click="openProxy(proxy.endPoint.id)" />
                 </v-list>
             </template>
         </config-card>

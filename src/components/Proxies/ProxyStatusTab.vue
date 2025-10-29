@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
-import type { ProxyNodeStatus } from '@/services/VpnHood.Client.Api';
+import type { ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
 
 const locale = i18n.global.t;
 
 const props = defineProps<{
-    status: ProxyNodeStatus | null;
+    status: ProxyEndPointStatus | null;
 }>();
 
 const statusQuality = computed(() => {

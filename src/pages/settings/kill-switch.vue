@@ -18,7 +18,7 @@ const locale = i18n.global.t;
       locale('KILL_SWITCH_HOW_TO_TURN_ON_STEP_3')
     ]"
     button-text="OPEN_VPN_SETTINGS"
-    :button-click="()=>vhApp.intentsClient.openSystemKillSwitchSettings()"
+    :button-click="()=>vhApp.intentsClient.openKillSwitchSettings()"
     :is-premium="false"
     :is-action-button-available="vhApp.data.intentFeatures.isSystemKillSwitchSettingsSupported"
   />

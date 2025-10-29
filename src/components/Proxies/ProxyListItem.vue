@@ -2,12 +2,12 @@
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
-import { AppProxyNodeInfo } from '@/services/VpnHood.Client.Api';
+import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
 
 const locale = i18n.global.t;
 
 const props = defineProps<{
-    proxy: AppProxyNodeInfo;
+    proxy: AppProxyEndPointInfo;
 }>();
 
 const emit = defineEmits<{
@@ -15,7 +15,7 @@ const emit = defineEmits<{
 }>();
 
 const subtitle = computed(() => {
-    const node = props.proxy.node;
+    const node = props.proxy.endPoint;
     const parts: string[] = [node.protocol, `${node.host}:${node.port}`];
     if (node.username)
         parts.push(node.username);
@@ -63,7 +63,7 @@ const countsText = computed(() => {
 
 <template>
     <v-list-item
-        :title="proxy.node.host"
+        :title="proxy.endPoint.host"
         @click="emit('click')"
         rounded="lg"
     >
@@ -82,11 +82,11 @@ const countsText = computed(() => {
                 class="me-2" 
             />
             <v-chip 
-                :text="proxy.node.isEnabled ? locale('ON') : locale('OFF')" 
+                :text="proxy.endPoint.isEnabled ? locale('ON') : locale('OFF')" 
                 size="small"
                 variant="tonal" 
                 density="comfortable"
-                :color="proxy.node.isEnabled ? 'enable-premium' : ''" 
+                :color="proxy.endPoint.isEnabled ? 'enable-premium' : ''" 
                 class="me-2" 
             />
             <v-icon :icon="Util.getLocalizedRightChevron()" />
