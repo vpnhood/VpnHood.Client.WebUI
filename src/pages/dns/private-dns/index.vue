@@ -23,6 +23,6 @@ const locale = i18n.global.t;
     button-text="OPEN_SYSTEM_SETTINGS"
     :button-click="()=>vhApp.intentsClient.openSettings()"
     :is-premium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"
-    :is-action-button-available="vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported"
+    :is-action-button-available="vhApp.data.intentFeatures.isPrivateDnsSettingsSupported"
   />
 </template>

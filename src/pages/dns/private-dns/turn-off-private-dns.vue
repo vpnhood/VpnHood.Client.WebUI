@@ -32,7 +32,7 @@ const locale = i18n.global.t;
         </v-card-item>
       </v-card>
 
-      <div v-if="vhApp.data.intentFeatures.isSystemSettingsSupported" class="text-center">
+      <div v-if="vhApp.data.intentFeatures.isSettingsSupported" class="text-center">
         <btn-style-3
           class="w-100"
           append-icon="mdi-open-in-new"

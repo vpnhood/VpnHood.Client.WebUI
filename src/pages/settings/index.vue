@@ -28,7 +28,7 @@ const proxyModeLabel = computed(() => {
 
 function isShowConnectivitySectionTitle(): boolean {
   return vhApp.data.intentFeatures.isQuickLaunchSupported ||
-    vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported || vhApp.data.intentFeatures.isSystemKillSwitchSettingsSupported
+    vhApp.data.intentFeatures.isAlwaysOnSettingsSupported || vhApp.data.intentFeatures.isKillSwitchSettingsSupported
 }
 </script>
 
@@ -59,7 +59,7 @@ function isShowConnectivitySectionTitle(): boolean {
         onText: 'ON',
         offText: 'OFF'
       }"
-      :isShow="vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported"
+      :isShow="vhApp.data.intentFeatures.isAppNotificationSettingsSupported"
       :click="{name: 'NOTIFICATIONS'}"
     />
 
@@ -135,7 +135,7 @@ function isShowConnectivitySectionTitle(): boolean {
       title="ALWAYS_ON"
       subtitle="ALWAYS_ON_DESC"
       :isPremium="vhApp.data.isPremiumFeature(AppFeature.AlwaysOn)"
-      :is-show="vhApp.data.intentFeatures.isSystemAlwaysOnSettingsSupported"
+      :is-show="vhApp.data.intentFeatures.isAlwaysOnSettingsSupported"
       :click="{name:'ALWAYS_ON'}"
     />
 
@@ -144,7 +144,7 @@ function isShowConnectivitySectionTitle(): boolean {
       title="KILL_SWITCH"
       subtitle="KILL_SWITCH_DESC"
       :isPremium="false"
-      :is-show="vhApp.data.intentFeatures.isSystemKillSwitchSettingsSupported"
+      :is-show="vhApp.data.intentFeatures.isKillSwitchSettingsSupported"
       :click="{name:'KILL_SWITCH'}"
     />
   </v-sheet>

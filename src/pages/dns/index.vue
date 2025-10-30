@@ -96,7 +96,7 @@ function isShowEnforcedByServerAlert() {
 
     <!-- Private DNS card -->
     <config-card
-      v-if="vhApp.data.intentFeatures.isSystemSettingsSupported"
+      v-if="vhApp.data.intentFeatures.isSettingsSupported"
       @click="router.push({name: 'PRIVATE_DNS'})"
       class="pa-3"
     >
@@ -111,7 +111,7 @@ function isShowEnforcedByServerAlert() {
 
             <!-- Status -->
             <v-chip
-              v-if="vhApp.data.intentFeatures.isSystemPrivateDnsSettingsSupported"
+              v-if="vhApp.data.intentFeatures.isPrivateDnsSettingsSupported"
               :text="isPrivateDnsActive ? locale('ON') : locale('OFF')"
               :disabled="!isPrivateDnsActive"
               :color="isPrivateDnsActive ? 'enable-premium' : ''"

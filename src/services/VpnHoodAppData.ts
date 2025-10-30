@@ -5,7 +5,7 @@ import {
   AppConnectionState,
   AppFeature,
   AppFeatures,
-  AppIntentFeatures,
+  DeviceIntentFeatures,
   AppState,
   ChannelProtocol,
   ClientProfileInfo,
@@ -22,7 +22,7 @@ export class VpnHoodAppData {
   public state: AppState;
   public userSettings: UserSettings;
   public features: AppFeatures;
-  public intentFeatures: AppIntentFeatures;
+  public intentFeatures: DeviceIntentFeatures;
   public clientProfileInfos: ClientProfileInfo[];
   public cultureInfos: UiCultureInfo[];
   public locale = i18n.global.t;
@@ -31,7 +31,7 @@ export class VpnHoodAppData {
     state: AppState,
     userSettings: UserSettings,
     features: AppFeatures,
-    intentFeatures: AppIntentFeatures,
+    intentFeatures: DeviceIntentFeatures,
     clientProfileInfos: ClientProfileInfo[],
     cultureInfos: UiCultureInfo[]
   ) {

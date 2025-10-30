@@ -19,6 +19,6 @@ const locale = i18n.global.t;
     :button-text="vhApp.data.isNotificationEnabled ? 'TURN_OFF_NOTIFICATION': 'TURN_ON_NOTIFICATION'"
     :button-click="()=>vhApp.intentsClient.openAppNotificationSettings()"
     :is-premium="false"
-    :is-action-button-available="vhApp.data.intentFeatures.isAppSystemNotificationSettingsSupported"
+    :is-action-button-available="vhApp.data.intentFeatures.isAppNotificationSettingsSupported"
   />
 </template>
