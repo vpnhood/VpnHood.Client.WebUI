@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import {ComponentRouteController} from './services/ComponentRouteController';
+import { ComponentRouteController } from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
@@ -10,6 +10,8 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
+import ConnectionRefusedDialog from '@/components/ConnectionRefusedDialog.vue';
+import { AxiosError } from 'axios';
 
 const vhApp = VpnHoodApp.instance;
 
@@ -36,16 +38,24 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
   }
 })
 
+const isConnectionRefused = (error: unknown): boolean => {
+  return error instanceof AxiosError && error.code === 'ERR_NETWORK';
+}
+
 onMounted(async () => {
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
-    if (!document.hidden){
+    if (document.hidden)
+      return;
 
-      vhApp.data.edgeToEdge();
-
+    try {
       await vhApp.reloadState();
-
+      vhApp.data.edgeToEdge();
+      vhApp.data.uiState.showConnectionRefusedDialog = false;
+    } catch (error: unknown) {
+      vhApp.data.uiState.showConnectionRefusedDialog = isConnectionRefused(error);
     }
+
   }, 1000);
 
   // Get the user account
@@ -55,22 +65,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app :class="{'px-15': !vuetify.display.smAndDown.value}" class="bg-app-bg">
+  <v-app :class="{ 'px-15': !vuetify.display.smAndDown.value }" class="bg-app-bg">
 
-    <v-layout
-      width="100%"
-      max-width="959px"
-      full-height
-      class="mx-auto"
-      :class="{'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': !vuetify.display.smAndDown.value}"
-    >
+    <v-layout width="100%" max-width="959px" full-height class="mx-auto"
+      :class="{ 'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': !vuetify.display.smAndDown.value }">
 
-      <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow"/>
+      <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow" />
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
       <v-main class="fill-height">
         <!-- Privacy policy page -->
-        <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true"/>
+        <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true" />
 
         <router-view v-else v-slot="{ Component, route }">
           <transition :name="route.meta.transition?.toString()" mode="out-in">
@@ -81,13 +86,16 @@ onMounted(async () => {
       </v-main>
 
       <!-- Global Loading dialog -->
-      <loading-dialog v-model="vhApp.data.uiState.showLoadingDialog"/>
+      <loading-dialog v-model="vhApp.data.uiState.showLoadingDialog" />
 
       <!-- Global alert dialog -->
-      <error-dialog v-model="isShowErrorDialog"/>
+      <error-dialog v-model="isShowErrorDialog" />
+
+      <!-- Connection refused dialog -->
+      <connection-refused-dialog v-model="vhApp.data.uiState.showConnectionRefusedDialog" />
 
       <!-- Global snackbar -->
-      <general-snackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow"/>
+      <general-snackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow" />
 
       <!-- General confirm dialog -->
       <confirm-dialog v-model="vhApp.data.uiState.confirmDialogData.isShow" />
@@ -99,24 +107,26 @@ onMounted(async () => {
 <!--suppress CssUnusedSymbol -->
 <style>
 .translate-with-fade-enter-from,
-.short-translate-leave-to{
+.short-translate-leave-to {
   opacity: 0;
   transform: translateY(50px);
 }
+
 .translate-with-fade-enter-active,
-.short-translate-leave-active{
+.short-translate-leave-active {
   transition: all 0.2s ease;
 }
 
 .translate-with-fade-leave-active,
-.short-translate-enter-active{
+.short-translate-enter-active {
   transition: all 0.1s ease;
 }
-.translate-with-fade-leave-to{
+
+.translate-with-fade-leave-to {
   opacity: 0;
 }
 
-.short-translate-enter-from{
+.short-translate-enter-from {
   transform: translateY(-30px);
   opacity: 0;
 }
