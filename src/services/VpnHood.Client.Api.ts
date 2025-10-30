@@ -5600,7 +5600,7 @@ export class ProxyEndPointStatus implements IProxyEndPointStatus {
     latency?: string | null;
     lastUsedTime?: Date | null;
     errorMessage?: string | null;
-    quality!: ProxyQuality;
+    quality!: StatusQuality;
 
     constructor(data?: IProxyEndPointStatus) {
         if (data) {
@@ -5650,10 +5650,10 @@ export interface IProxyEndPointStatus {
     latency?: string | null;
     lastUsedTime?: Date | null;
     errorMessage?: string | null;
-    quality: ProxyQuality;
+    quality: StatusQuality;
 }
 
-export enum ProxyQuality {
+export enum StatusQuality {
     Unknown = "Unknown",
     Excellent = "Excellent",
     Good = "Good",

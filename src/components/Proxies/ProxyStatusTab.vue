@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import type { ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
+import { getStatusQualityDisplay } from './ProxyUtils';
 
 const locale = i18n.global.t;
 
@@ -11,13 +12,7 @@ const props = defineProps<{
 
 const statusQuality = computed(() => {
     if (!props.status) return { text: '-', color: '' };
-    
-    const penalty = props.status.penalty;
-    if (penalty === 0) return { text: locale('PROXY_STATUS_EXCELLENT'), color: 'success' };
-    if (penalty < 10) return { text: locale('PROXY_STATUS_GOOD'), color: 'enable-premium' };
-    if (penalty < 20) return { text: locale('PROXY_STATUS_NORMAL'), color: 'warning' };
-    if (penalty < 100) return { text: locale('PROXY_STATUS_BAD'), color: 'error' };
-    return { text: locale('PROXY_STATUS_VERY_BAD'), color: 'error' };
+    return getStatusQualityDisplay(props.status.quality);
 });
 
 const formattedLatency = computed(() => {

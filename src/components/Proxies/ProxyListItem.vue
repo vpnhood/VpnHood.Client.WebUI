@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
+import { getStatusQualityDisplay } from './ProxyUtils';
 
 const locale = i18n.global.t;
 
@@ -23,30 +24,7 @@ const subtitle = computed(() => {
 });
 
 const statusQuality = computed(() => {
-    const status = props.proxy.status;
-    const penalty = status?.penalty;
-    const hasSuccess = status.succeededCount > 0;
-
-    if (penalty === undefined || penalty === null) {
-        return { text: locale('PROXY_STATUS_NO_DATA'), color: '' };
-    }
-    if (penalty === 0 && hasSuccess) {
-        return { text: locale('PROXY_STATUS_EXCELLENT'), color: 'success' };
-    }
-    if (penalty < 10 && hasSuccess) {
-        return { text: locale('PROXY_STATUS_GOOD'), color: 'enable-premium' };
-    }
-    if (penalty < 20 && hasSuccess) {
-        return { text: locale('PROXY_STATUS_NORMAL'), color: 'warning' };
-    }
-    if (penalty < 100 && hasSuccess) {
-        return { text: locale('PROXY_STATUS_BAD'), color: 'error' };
-    }
-    if (hasSuccess) {
-        return { text: locale('PROXY_STATUS_VERY_BAD'), color: 'error' };
-    }
-
-    return { text: locale('PROXY_STATUS_ALWAYS_FAILED'), color: 'error' };
+    return getStatusQualityDisplay(props.proxy.status?.quality);
 });
 
 const hasCounts = computed(() => {
@@ -73,7 +51,7 @@ const countsText = computed(() => {
             <div v-if="hasCounts" class="text-caption text-disabled mt-1">{{ countsText }}</div>
         </template>
         <template #append>
-            <v-chip v-if="proxy.status?.penalty !== undefined" :text="statusQuality.text" size="small" variant="tonal"
+            <v-chip v-if="proxy.status?.quality" :text="statusQuality.text" size="small" variant="tonal"
                 density="comfortable" :color="statusQuality.color" class="me-2" />
             <v-chip :text="proxy.endPoint.isEnabled ? locale('ON') : locale('OFF')" size="small" variant="tonal"
                 density="comfortable" :color="proxy.endPoint.isEnabled ? 'enable-premium' : ''" class="me-2" />
