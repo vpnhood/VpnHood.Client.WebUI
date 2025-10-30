@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ComponentRouteController } from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
@@ -10,10 +10,11 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
-import ConnectionRefusedDialog from '@/components/EngineErrorDialog.vue';
+import EngineErrorDialog from '@/components/EngineErrorDialog.vue';
 import { AxiosError } from 'axios';
 
 const vhApp = VpnHoodApp.instance;
+const showEngineErrorDialog = ref(false);
 
 const isShowErrorDialog = computed<boolean>({
   get: () => {
@@ -51,9 +52,9 @@ onMounted(async () => {
     try {
       await vhApp.reloadState();
       vhApp.data.edgeToEdge();
-      vhApp.data.uiState.showConnectionRefusedDialog = false;
+      showEngineErrorDialog.value = false;
     } catch (error: unknown) {
-      vhApp.data.uiState.showConnectionRefusedDialog = isConnectionRefused(error);
+      showEngineErrorDialog.value = isConnectionRefused(error);
     }
 
   }, 1000);
@@ -91,8 +92,8 @@ onMounted(async () => {
       <!-- Global alert dialog -->
       <error-dialog v-model="isShowErrorDialog" />
 
-      <!-- Connection refused dialog -->
-      <connection-refused-dialog v-model="vhApp.data.uiState.showConnectionRefusedDialog" />
+      <!-- Engine error dialog -->
+      <engine-error-dialog v-model="showEngineErrorDialog" />
 
       <!-- Global snackbar -->
       <general-snackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow" />

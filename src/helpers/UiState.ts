@@ -28,6 +28,4 @@ export class UiState {
 
   public edgeToEdgeTop: number | null = null;
   public edgeToEdgeBottom: number | null = null;
-
-  public showConnectionRefusedDialog: boolean = false;
 }
