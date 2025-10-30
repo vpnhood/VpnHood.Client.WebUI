@@ -3,11 +3,13 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import ProxyImportDialog from '@/components/Proxies/ProxyImportDialog.vue';
+import ProxyDialog from '@/components/Proxies/ProxyDialog.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import { AppProxyMode, AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
+import { ComponentRouteController } from '@/services/ComponentRouteController';
+import { ComponentName } from '@/helpers/UiConstants';
 
 
 const vhApp = VpnHoodApp.instance;
@@ -28,6 +30,15 @@ const autoUpdateUrl = ref('');
 const autoUpdateInterval = ref('');
 const previousUrl = ref('');
 const hasAutoUpdateUrl = computed(() => autoUpdateUrl.value.trim().length > 0);
+const selectedProxyId = ref<string | null>(null);
+
+const isShowProxyDialog = computed<boolean>({
+    get: () => ComponentRouteController.isShowComponent(ComponentName.ProxyDialog),
+    set: async (value: boolean) => {
+        if (!value) selectedProxyId.value = null;
+        await ComponentRouteController.showComponent(ComponentName.ProxyDialog, value);
+    }
+});
 
 const intervalOptions = computed(() => ([
     { value: '', title: locale('NEVER') },
@@ -230,23 +241,6 @@ onUnmounted(() => {
     stopPeriodicRefresh();
 });
 
-// Watch route changes to reload data when returning from proxy detail page
-watch(() => router.currentRoute.value.fullPath, async (newPath, oldPath) => {
-    if (newPath !== '/proxies' || !oldPath?.startsWith('/proxies/'))
-        return;
-
-    try {
-        if (isCustomMode.value) {
-            await loadProxies(true);
-            startPeriodicRefresh();
-        } else if (proxyMode.value === AppProxyMode.Device) {
-            await loadDeviceProxy(true);
-        }
-    } catch (err: unknown) {
-        await vhApp.processError(err);
-    }
-});
-
 // Watch mode changes to start/stop refresh and load data
 watch(proxyMode, async (newMode, oldMode) => {
     if (newMode === oldMode)
@@ -282,9 +276,21 @@ watch([autoUpdateUrl, autoUpdateInterval], async () => {
     }
 });
 
-function openProxy(proxyId?: string): void {
-    const id = proxyId ?? 'new';
-    router.push({ path: `/proxies/${encodeURIComponent(id)}` });
+async function openProxy(proxyId?: string): Promise<void> {
+    selectedProxyId.value = proxyId ?? null;
+    isShowProxyDialog.value = true;
+}
+
+async function handleProxySaved(): Promise<void> {
+    try {
+        if (isCustomMode.value) {
+            await loadProxies(true);
+        } else if (proxyMode.value === AppProxyMode.Device) {
+            await loadDeviceProxy(true);
+        }
+    } catch (err: unknown) {
+        await vhApp.processError(err);
+    }
 }
 </script>
 
@@ -365,5 +371,7 @@ function openProxy(proxyId?: string): void {
 
         <proxy-import-dialog v-model="isImportDialogOpen" v-model:text="importText" :is-importing="isImporting"
             :can-import="canImportProxies" @confirm="importProxies" @cancel="closeImportDialog" />
+
+        <proxy-dialog v-model="isShowProxyDialog" :proxy-id="selectedProxyId" @saved="handleProxySaved" />
     </v-sheet>
 </template>

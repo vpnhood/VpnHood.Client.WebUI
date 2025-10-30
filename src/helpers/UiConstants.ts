@@ -16,6 +16,7 @@ export enum ComponentName {
   EnterPremiumCode = 'EnterPremiumCode',
   CustomEndpoint = 'CustomEndpoint',
   BadgeDialog = 'BadgeDialog',
+  ProxyDialog = 'ProxyDialog',
 }
 
 export enum LanguagesCode {
