@@ -10,7 +10,7 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
-import ConnectionRefusedDialog from '@/components/ConnectionRefusedDialog.vue';
+import ConnectionRefusedDialog from '@/components/EngineErrorDialog.vue';
 import { AxiosError } from 'axios';
 
 const vhApp = VpnHoodApp.instance;

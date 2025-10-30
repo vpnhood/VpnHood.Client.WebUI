@@ -9,7 +9,7 @@ import { AppName } from '@/helpers/UiConstants'
 import vuetify from './theme/vuetify'
 import i18n from './locales/i18n'
 import router from './services/router'
-import ErrorPage from "./pages/error-page.vue"
+import EngineError from "./pages/engine-error.vue"
 import './assets/styles/general.css'
 import './assets/styles/override.css'
 import './assets/styles/rtl.css'
@@ -81,7 +81,7 @@ async function main(): Promise<void> {
     console.error("Could not create client app.", ex);
 
     // show error page
-    const app = createApp(ErrorPage);
+    const app = createApp(EngineError);
     app.use(i18n)
       .use(vuetify)
       .mount('#app')

@@ -24,7 +24,7 @@ declare module 'vue-router/auto-routes' {
     'PRIVATE_DNS': RouteRecordInfo<'PRIVATE_DNS', '/dns/private-dns', Record<never, never>, Record<never, never>>,
     'ERROR_PRIVATE_DNS': RouteRecordInfo<'ERROR_PRIVATE_DNS', '/dns/private-dns/error-private-dns', Record<never, never>, Record<never, never>>,
     'TURN_OFF_PRIVATE_DNS': RouteRecordInfo<'TURN_OFF_PRIVATE_DNS', '/dns/private-dns/turn-off-private-dns', Record<never, never>, Record<never, never>>,
-    'ERROR_PAGE': RouteRecordInfo<'ERROR_PAGE', '/error-page', Record<never, never>, Record<never, never>>,
+    'ENGINE_ERROR': RouteRecordInfo<'ENGINE_ERROR', '/engine-error', Record<never, never>, Record<never, never>>,
     'INTERNAL_AD': RouteRecordInfo<'INTERNAL_AD', '/internal-ad', Record<never, never>, Record<never, never>>,
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
     'PROTOCOLS': RouteRecordInfo<'PROTOCOLS', '/protocols', Record<never, never>, Record<never, never>>,

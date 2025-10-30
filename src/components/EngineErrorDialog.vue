@@ -7,9 +7,6 @@ defineProps<{
   modelValue: boolean,
 }>();
 
-defineEmits<{
-  (e: 'update:modelValue', value: boolean): void,
-}>();
 
 </script>
 
