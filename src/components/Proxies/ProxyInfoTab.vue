@@ -43,7 +43,7 @@ async function handleHostBlur(): Promise<void> {
         defaults.password = proxyModel.value.password;
         defaults.isEnabled = proxyModel.value.isEnabled;
 
-        const result = await vhApp.proxyNodeClient.parse(proxyModel.value.host.trim(), defaults);
+        const result = await vhApp.proxyEndPointClient.parse(proxyModel.value.host.trim(), defaults);
         // Apply parsed values onto the same record reference
         const parsed = new ProxyEndPoint(result.endPoint);
 

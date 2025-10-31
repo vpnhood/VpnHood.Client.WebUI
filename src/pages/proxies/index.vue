@@ -89,7 +89,7 @@ async function loadProxies(showLoading = true): Promise<void> {
 
     try {
         isLoading.value = showLoading;
-        const response = await vhApp.proxyNodeClient.list();
+        const response = await vhApp.proxyEndPointClient.list();
         proxies.value = Array.isArray(response) ? response : [];
     } catch (err: unknown) {
         proxies.value = [];
@@ -105,7 +105,7 @@ async function loadDeviceProxy(showLoading = true): Promise<void> {
 
     try {
         isLoading.value = showLoading;
-        const response = await vhApp.proxyNodeClient.getDevice();
+        const response = await vhApp.proxyEndPointClient.getDevice();
         deviceProxy.value = response ?? null;
     } catch (err: unknown) {
         deviceProxy.value = null;
@@ -124,7 +124,7 @@ async function deleteAllProxies(): Promise<void> {
 
     try {
         isDeletingAll.value = true;
-        await vhApp.proxyNodeClient.deleteAll();
+        await vhApp.proxyEndPointClient.deleteAll();
         await loadProxies();
     } finally {
         isDeletingAll.value = false;
@@ -148,7 +148,7 @@ async function importProxies(): Promise<void> {
 
     try {
         isImporting.value = true;
-        await vhApp.proxyNodeClient.import(importText.value);
+        await vhApp.proxyEndPointClient.import(importText.value);
         await loadProxies();
         isImportDialogOpen.value = false;
     } finally {
@@ -175,7 +175,7 @@ async function reloadFromUrl(): Promise<void> {
     try {
         isReloadingUrl.value = true;
         await saveAutoUpdateSettings();
-        await vhApp.proxyNodeClient.reloadUrl();
+        await vhApp.proxyEndPointClient.reloadUrl();
         await loadProxies();
         previousUrl.value = autoUpdateUrl.value;
     } finally {
@@ -205,8 +205,8 @@ function startPeriodicRefresh(): void {
     if (refreshInterval) return;
 
     refreshInterval = setInterval(async () => {
-        // Only refresh if page is visible and in custom mode and connected
-        if (!document.hidden && isCustomMode.value && vhApp.data.isConnected) {
+        // Only refresh if page is visible, in custom mode, connected, and no dialog is open
+        if (!document.hidden && isCustomMode.value && vhApp.data.isConnected && !isShowProxyDialog.value) {
             try {
                 await loadProxies(false); // Don't show loading indicator on periodic refresh
             } catch {
@@ -276,6 +276,35 @@ watch([autoUpdateUrl, autoUpdateInterval], async () => {
     }
 });
 
+// Watch dialog close to refresh the specific proxy or list
+watch(isShowProxyDialog, async (isOpen) => {
+    if (!isOpen && isCustomMode.value && selectedProxyId.value) {
+        try {
+            await updateSingleProxy(selectedProxyId.value);
+        } catch (err: unknown) {
+            await vhApp.processError(err);
+        }
+    }
+});
+
+async function updateSingleProxy(proxyId: string): Promise<void> {
+    try {
+        const updatedProxy = await vhApp.proxyEndPointClient.get(proxyId);
+        if (updatedProxy) {
+            const index = proxies.value.findIndex(p => p.endPoint.id === proxyId);
+            if (index !== -1) {
+                proxies.value[index] = updatedProxy;
+            }
+        } else {
+            // Proxy was deleted, remove from list
+            proxies.value = proxies.value.filter(p => p.endPoint.id !== proxyId);
+        }
+    } catch {
+        // If proxy not found (404), remove from list
+        proxies.value = proxies.value.filter(p => p.endPoint.id !== proxyId);
+    }
+}
+
 async function openProxy(proxyId?: string): Promise<void> {
     selectedProxyId.value = proxyId ?? null;
     isShowProxyDialog.value = true;
@@ -284,7 +313,13 @@ async function openProxy(proxyId?: string): Promise<void> {
 async function handleProxySaved(): Promise<void> {
     try {
         if (isCustomMode.value) {
-            await loadProxies(true);
+            if (selectedProxyId.value) {
+                // Update single proxy instead of reloading entire list
+                await updateSingleProxy(selectedProxyId.value);
+            } else {
+                // New proxy was added, reload the list
+                await loadProxies(true);
+            }
         } else if (proxyMode.value === AppProxyMode.Device) {
             await loadDeviceProxy(true);
         }

@@ -61,7 +61,7 @@ let navigationUnregister: (() => void) | null = null;
 onMounted(async () => {
 
     if (isDevice.value) {
-        const deviceInfo = await vhApp.proxyNodeClient.getDevice();
+        const deviceInfo = await vhApp.proxyEndPointClient.getDevice();
         if (!deviceInfo) {
             router.back();
             return;
@@ -70,7 +70,7 @@ onMounted(async () => {
         proxyStatus.value = deviceInfo.status;
         currentTab.value = 'status';
     } else if (proxyId.value) {
-        const response = await vhApp.proxyNodeClient.list();
+        const response = await vhApp.proxyEndPointClient.list();
         const match = Array.isArray(response) ? response.find(item => item.endPoint.id === proxyId.value) : undefined;
         if (match) {
             proxy.value = new ProxyEndPoint(match.endPoint);
@@ -180,9 +180,9 @@ async function save(): Promise<boolean> {
     try {
         isSaving.value = true;
         if (proxyId.value === null) {
-            await vhApp.proxyNodeClient.add(payload);
+            await vhApp.proxyEndPointClient.add(payload);
         } else {
-            await vhApp.proxyNodeClient.update(proxyId.value, payload);
+            await vhApp.proxyEndPointClient.update(proxyId.value, payload);
         }
         saveInitialProxy();
         return true;
@@ -210,7 +210,7 @@ async function deleteProxy(): Promise<void> {
 
     try {
         isDeleting.value = true;
-        await vhApp.proxyNodeClient.delete(proxyId.value);
+        await vhApp.proxyEndPointClient.delete(proxyId.value);
         saveInitialProxy();
         router.back();
     }

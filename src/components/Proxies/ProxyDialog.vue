@@ -57,7 +57,7 @@ watch(() => props.modelValue, async (newValue) => {
 
 async function loadProxy(): Promise<void> {
     if (isDevice.value) {
-        const deviceInfo = await vhApp.proxyNodeClient.getDevice();
+        const deviceInfo = await vhApp.proxyEndPointClient.getDevice();
         if (!deviceInfo) {
             closeDialog();
             return;
@@ -66,11 +66,10 @@ async function loadProxy(): Promise<void> {
         proxyStatus.value = deviceInfo.status;
         currentTab.value = 'status';
     } else if (props.proxyId) {
-        const response = await vhApp.proxyNodeClient.list();
-        const match = Array.isArray(response) ? response.find(item => item.endPoint.id === props.proxyId) : undefined;
-        if (match) {
-            proxy.value = new ProxyEndPoint(match.endPoint);
-            proxyStatus.value = match.status;
+        const proxyInfo = await vhApp.proxyEndPointClient.get(props.proxyId);
+        if (proxyInfo) {
+            proxy.value = new ProxyEndPoint(proxyInfo.endPoint);
+            proxyStatus.value = proxyInfo.status;
         } else {
             closeDialog();
             return;
@@ -135,9 +134,9 @@ async function save(): Promise<boolean> {
     try {
         isSaving.value = true;
         if (props.proxyId === null || props.proxyId === undefined) {
-            await vhApp.proxyNodeClient.add(payload);
+            await vhApp.proxyEndPointClient.add(payload);
         } else {
-            await vhApp.proxyNodeClient.update(props.proxyId, payload);
+            await vhApp.proxyEndPointClient.update(props.proxyId, payload);
         }
         saveInitialProxy();
         return true;
@@ -166,7 +165,7 @@ async function deleteProxy(): Promise<void> {
 
     try {
         isDeleting.value = true;
-        await vhApp.proxyNodeClient.delete(props.proxyId);
+        await vhApp.proxyEndPointClient.delete(props.proxyId);
         saveInitialProxy();
         emit('saved');
         closeDialog();
@@ -186,7 +185,10 @@ async function handleBack(): Promise<void> {
             if (!confirmed) return;
         } else {
             if (validate()) {
-                await save();
+                const saved = await save();
+                if (saved) {
+                    emit('saved');
+                }
             } else {
                 const confirmed = await vhApp.showConfirmDialog(
                     locale('WARNING'),
