@@ -42,13 +42,27 @@ const countsText = computed(() => {
         parts.push(`${locale('PROXY_STATUS_FAILED')}: ${status.failedCount}`);
     return parts.join(' · ');
 });
+
+const hasError = computed(() => {
+    return props.proxy.status?.errorMessage != null;
+});
+
+const errorMessage = computed(() => {
+    return props.proxy.status?.errorMessage || '';
+});
 </script>
 
 <template>
-    <v-list-item :title="proxy.endPoint.host" @click="emit('click')" rounded="lg">
-        <template #subtitle>
+    <v-list-item @click="emit('click')" rounded="lg">
+        <template #title>
             <div>{{ subtitle }}</div>
+        </template>
+        <template #subtitle>
             <div v-if="hasCounts" class="text-caption text-disabled mt-1">{{ countsText }}</div>
+            <div v-if="hasError" class="text-caption text-error mt-1 d-flex align-center text-no-wrap">
+                <v-icon icon="mdi-alert-circle" size="x-small" class="me-1" />
+                <span class="text-truncate">{{ errorMessage }}</span>
+            </div>
         </template>
         <template #append>
             <v-chip v-if="proxy.status?.quality" :text="statusQuality.text" size="small" variant="tonal"
