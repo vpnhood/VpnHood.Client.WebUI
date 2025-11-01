@@ -1,5 +1,6 @@
 import { ChannelProtocol, ClientProfileInfo } from '@/services/VpnHood.Client.Api';
 import vuetify from '@/theme/vuetify';
+import i18n from '@/locales/i18n';
 
 export class Util {
   // Client profile has a single location
@@ -47,6 +48,47 @@ export class Util {
       case ChannelProtocol.Quic:
         return "PROTOCOL_QUIC";
     }
+  }
+
+  public static getRelativeTime(date: Date | string | null | undefined): string {
+    if (!date) return '-';
+    
+    const locale = i18n.global.t;
+    const now = new Date();
+    const targetDate = typeof date === 'string' ? new Date(date) : date;
+    
+    // Calculate difference in seconds
+    const diffInSeconds = Math.floor((now.getTime() - targetDate.getTime()) / 1000);
+    
+    // Handle future dates or very recent (less than 5 seconds)
+    if (diffInSeconds < 5) {
+      return locale('TIME_JUST_NOW');
+    }
+    
+    // Seconds (5-59 seconds)
+    if (diffInSeconds < 60) {
+      const unit = diffInSeconds === 1 ? locale('SECOND') : locale('SECONDS');
+      return locale('TIME_SECONDS_AGO', { count: diffInSeconds, unit });
+    }
+    
+    // Minutes (1-59 minutes)
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      const unit = diffInMinutes === 1 ? locale('MINUTE') : locale('MINUTES');
+      return locale('TIME_MINUTES_AGO', { count: diffInMinutes, unit });
+    }
+    
+    // Hours (1-23 hours)
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      const unit = diffInHours === 1 ? locale('HOUR') : locale('HOURS');
+      return locale('TIME_HOURS_AGO', { count: diffInHours, unit });
+    }
+    
+    // Days (1+ days)
+    const diffInDays = Math.floor(diffInHours / 24);
+    const unit = diffInDays === 1 ? locale('DAY') : locale('DAYS');
+    return locale('TIME_DAYS_AGO', { count: diffInDays, unit });
   }
 
 

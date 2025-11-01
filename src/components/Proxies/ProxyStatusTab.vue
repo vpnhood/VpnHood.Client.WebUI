@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import type { ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
 import { getStatusQualityDisplay } from './ProxyUtils';
+import { Util } from '@/helpers/Util';
 
 const locale = i18n.global.t;
 
@@ -20,13 +21,11 @@ const formattedLatency = computed(() => {
 });
 
 const formattedLastSucceeded = computed(() => {
-    if (!props.status?.lastSucceeded) return '-';
-    return new Date(props.status.lastSucceeded).toLocaleString();
+    return Util.getRelativeTime(props.status?.lastSucceeded);
 });
 
 const formattedLastFailed = computed(() => {
-    if (!props.status?.lastFailed) return '-';
-    return new Date(props.status.lastFailed).toLocaleString();
+    return Util.getRelativeTime(props.status?.lastFailed);
 });
 
 </script>
