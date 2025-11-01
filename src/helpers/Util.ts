@@ -91,6 +91,51 @@ export class Util {
     return locale('TIME_DAYS_AGO', { count: diffInDays, unit });
   }
 
+  public static formatLatency(timeSpan: string | null | undefined): string {
+    if (!timeSpan) return '-';
+    
+    // Parse TimeSpan format (e.g., "00:00:00.1234567" or "1.23:45:56.7890123")
+    // Format: [days.]hours:minutes:seconds[.fractionalSeconds]
+    
+    try {
+      const parts = timeSpan.split(':');
+      if (parts.length < 3) return timeSpan;
+      
+      // Get the seconds part which may contain fractional seconds
+      const secondsPart = parts[parts.length - 1];
+      const [seconds, fractionalSeconds] = secondsPart.split('.');
+      
+      // Calculate total milliseconds
+      let totalMs = 0;
+      
+      // Handle optional days in the first part
+      const firstPart = parts[0];
+      if (firstPart.includes('.')) {
+        const [days, hours] = firstPart.split('.');
+        totalMs += parseInt(days) * 24 * 60 * 60 * 1000;
+        totalMs += parseInt(hours) * 60 * 60 * 1000;
+        totalMs += parseInt(parts[1]) * 60 * 1000; // minutes
+      } else {
+        totalMs += parseInt(parts[0]) * 60 * 60 * 1000; // hours
+        totalMs += parseInt(parts[1]) * 60 * 1000; // minutes
+      }
+      
+      totalMs += parseInt(seconds) * 1000;
+      
+      // Add fractional seconds (convert to milliseconds)
+      if (fractionalSeconds) {
+        // .NET TimeSpan uses 7 digits for fractional seconds (ticks)
+        // We need to convert to milliseconds (3 digits)
+        const fractionStr = fractionalSeconds.substring(0, 3).padEnd(3, '0');
+        totalMs += parseInt(fractionStr);
+      }
+      
+      return `${totalMs} ms`;
+    } catch {
+      return timeSpan;
+    }
+  }
+
 
 
 // For developers sends test error

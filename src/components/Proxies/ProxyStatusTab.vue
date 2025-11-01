@@ -17,7 +17,7 @@ const statusQuality = computed(() => {
 });
 
 const formattedLatency = computed(() => {
-    return props.status?.latency ?? '-';
+    return Util.formatLatency(props.status?.latency);
 });
 
 const formattedLastSucceeded = computed(() => {
