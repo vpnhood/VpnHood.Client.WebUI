@@ -19,10 +19,16 @@ const formattedLatency = computed(() => {
     return props.status?.latency ?? '-';
 });
 
-const formattedLastUsed = computed(() => {
-    if (!props.status?.lastUsedTime) return '-';
-    return new Date(props.status.lastUsedTime).toLocaleString();
+const formattedLastSucceeded = computed(() => {
+    if (!props.status?.lastSucceeded) return '-';
+    return new Date(props.status.lastSucceeded).toLocaleString();
 });
+
+const formattedLastFailed = computed(() => {
+    if (!props.status?.lastFailed) return '-';
+    return new Date(props.status.lastFailed).toLocaleString();
+});
+
 </script>
 
 <template>
@@ -94,10 +100,19 @@ const formattedLastUsed = computed(() => {
                 <template #prepend>
                     <v-icon icon="mdi-clock" />
                 </template>
-                <v-list-item-title>{{ locale('PROXY_STATUS_LAST_USED') }}</v-list-item-title>
-                <v-list-item-subtitle>{{ formattedLastUsed }}</v-list-item-subtitle>
+                <v-list-item-title>{{ locale('PROXY_STATUS_LAST_SUCCEEDED') }}</v-list-item-title>
+                <v-list-item-subtitle>{{ formattedLastSucceeded }}</v-list-item-subtitle>
             </v-list-item>
 
+            <v-list-item>
+                <template #prepend>
+                    <v-icon icon="mdi-clock-alert" />
+                </template>
+                <v-list-item-title>{{ locale('PROXY_STATUS_LAST_FAILED') }}</v-list-item-title>
+                <v-list-item-subtitle>{{ formattedLastFailed }}</v-list-item-subtitle>
+            </v-list-item>
+
+            <v-divider />
             <v-divider v-if="status.errorMessage" />
 
             <v-list-item v-if="status.errorMessage">
