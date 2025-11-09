@@ -107,10 +107,10 @@ export class VpnHoodApp {
 
     // Show the internal ad
     if (this.data.state.isWaitingForInternalAd)
-      await router.replace({name: 'INTERNAL_AD'});
+      await router.replace({ name: 'INTERNAL_AD' });
     // Show the Quick launch page if the internal ad is not shown
     else if (this.data.state.isQuickLaunchRecommended)
-      await router.push({name: 'QUICK_LAUNCH'});
+      await router.push({ name: 'QUICK_LAUNCH' });
 
 
     // Show the update message if the user has not ignored or more than 24 hours have passed

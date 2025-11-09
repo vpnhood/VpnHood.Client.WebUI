@@ -211,6 +211,7 @@
   "PROXY_ADD": "Add proxy",
   "PROXY_EDIT": "Edit proxy",
   "PROXY_DELETE_ALL": "Delete all proxies",
+  "PROXY_RESET_STATES": "Reset states",
   "CONFIRM_REMOVE_ALL_PROXIES": "Do you want to remove all proxies?",
   "PROXY_IMPORT": "Import proxies",
   "PROXY_IMPORT_TITLE": "Import proxies",

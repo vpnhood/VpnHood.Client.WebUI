@@ -18,6 +18,7 @@ const locale = i18n.global.t;
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const isLoading = ref(false);
 const isDeletingAll = ref(false);
+const isResettingStates = ref(false);
 const isImportDialogOpen = ref(false);
 const importText = ref('');
 const isImporting = ref(false);
@@ -128,6 +129,19 @@ async function deleteAllProxies(): Promise<void> {
         await loadProxies();
     } finally {
         isDeletingAll.value = false;
+    }
+}
+
+async function resetStates(): Promise<void> {
+    if (!proxies.value.length || isResettingStates.value)
+        return;
+
+    try {
+        isResettingStates.value = true;
+        await vhApp.proxyEndPointClient.resetStates();
+        await loadProxies();
+    } finally {
+        isResettingStates.value = false;
     }
 }
 
@@ -367,6 +381,11 @@ async function handleProxySaved(): Promise<void> {
                 <v-btn block variant="text" color="highlight" class="text-transform-none"
                     :disabled="isLoading || isImporting" @click="openImportDialog">
                     {{ locale('PROXY_IMPORT') }}
+                </v-btn>
+                <v-btn block variant="text" color="highlight" class="text-transform-none"
+                    :disabled="!proxies.length || isResettingStates || isLoading" :loading="isResettingStates"
+                    @click="resetStates">
+                    {{ locale('PROXY_RESET_STATES') }}
                 </v-btn>
                 <v-btn block variant="text" color="error" class="text-transform-none"
                     :disabled="!proxies.length || isDeletingAll || isLoading" :loading="isDeletingAll"
