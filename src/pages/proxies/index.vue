@@ -301,6 +301,18 @@ watch(isShowProxyDialog, async (isOpen) => {
     }
 });
 
+// Watch connection state changes to refresh the list
+watch(() => vhApp.data.connectionState, async () => {
+    if (!isCustomMode.value)
+        return;
+
+    try {
+        await loadProxies(false);
+    } catch  {
+        // Ignore errors on connection state change
+    }
+});
+
 async function updateSingleProxy(proxyId: string): Promise<void> {
     try {
         const updatedProxy = await vhApp.proxyEndPointClient.get(proxyId);
