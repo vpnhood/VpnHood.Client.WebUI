@@ -33,6 +33,26 @@ const previousUrl = ref('');
 const hasAutoUpdateUrl = computed(() => autoUpdateUrl.value.trim().length > 0);
 const selectedProxyId = ref<string | null>(null);
 
+const proxyStats = computed(() => {
+    const status = vhApp.data.state.proxyEndPointManagerStatus;
+    if (!status) {
+        return {
+            recentSucceeded: 0,
+            recentFailed: 0,
+            succeededServers: 0,
+            failedServers: 0,
+            unknownServers: 0
+        };
+    }
+    return {
+        recentSucceeded: status.sessionStatus?.succeededCount ?? 0,
+        recentFailed: status.sessionStatus?.failedCount ?? 0,
+        succeededServers: status.succeededServerCount ?? 0,
+        failedServers: status.failedServerCount ?? 0,
+        unknownServers: status.unknownServerCount ?? 0
+    };
+});
+
 const isShowProxyDialog = computed<boolean>({
     get: () => ComponentRouteController.isShowComponent(ComponentName.ProxyDialog),
     set: async (value: boolean) => {
@@ -368,6 +388,45 @@ async function handleProxySaved(): Promise<void> {
             </v-card-subtitle>
             <v-select v-model="proxyMode" :items="modeItems" item-title="title" item-value="value" variant="outlined"
                 density="comfortable" rounded="lg" hide-details color="highlight" />
+        </config-card>
+
+        <config-card v-if="isCustomMode" class="mt-4 pa-3">
+            <v-card-item class="pb-0">
+                <span>{{ locale('PROXY_STATS_RECENT_CONNECTIONS') }}</span>
+            </v-card-item>
+            <v-row class="mt-2" dense>
+                <v-col cols="6" sm="3">
+                    <v-sheet class="pa-3 rounded-lg">
+                        <div class="text-caption text-disabled">{{ locale('PROXY_STATS_SUCCEEDED') }}</div>
+                        <div class="text-h6 text-success">{{ proxyStats.recentSucceeded }}</div>
+                    </v-sheet>
+                </v-col>
+                <v-col cols="6" sm="3">
+                    <v-sheet class="pa-3 rounded-lg">
+                        <div class="text-caption text-disabled">{{ locale('PROXY_STATS_FAILED') }}</div>
+                        <div class="text-h6 text-error">{{ proxyStats.recentFailed }}</div>
+                    </v-sheet>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-sheet class="pa-3 rounded-lg">
+                        <div class="text-caption text-disabled mb-1">{{ locale('PROXY_STATS_SERVERS') }}</div>
+                        <v-row dense>
+                            <v-col cols="4">
+                                <div class="text-caption text-disabled">{{ locale('PROXY_STATS_SUCCEEDED') }}</div>
+                                <div class="text-subtitle-1 text-success">{{ proxyStats.succeededServers }}</div>
+                            </v-col>
+                            <v-col cols="4">
+                                <div class="text-caption text-disabled">{{ locale('PROXY_STATS_FAILED') }}</div>
+                                <div class="text-subtitle-1 text-error">{{ proxyStats.failedServers }}</div>
+                            </v-col>
+                            <v-col cols="4">
+                                <div class="text-caption text-disabled">{{ locale('PROXY_STATS_UNKNOWN') }}</div>
+                                <div class="text-subtitle-1 text-medium-emphasis">{{ proxyStats.unknownServers }}</div>
+                            </v-col>
+                        </v-row>
+                    </v-sheet>
+                </v-col>
+            </v-row>
         </config-card>
 
         <config-card v-if="isCustomMode" class="mt-4 pa-0">
