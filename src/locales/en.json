@@ -250,7 +250,7 @@
   "PROXY_STATS_SUCCEEDED": "Succeeded",
   "PROXY_STATS_FAILED": "Failed",
   "PROXY_STATS_SERVERS": "Servers",
-  "PROXY_STATS_UNKNOWN": "Unknown",
+  "PROXY_STATS_DISABLED": "Disabled",
   "MINUTE": "minute",
   "MINUTES": "minutes",
   "HOUR": "hour",
