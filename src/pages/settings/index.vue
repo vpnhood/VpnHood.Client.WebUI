@@ -109,14 +109,14 @@ function isShowConnectivitySectionTitle(): boolean {
     />
 
     <!-- Proxies -->
-    <settings-item
+<!--    <settings-item
       title="PROXIES"
       subtitle="PROXIES_DESC"
       :isPremium="false"
       :is-show="true"
       :selectedItem="proxyModeLabel"
       :click="{name:'PROXIES'}"
-    />
+    />-->
 
 
     <!-- CONNECTIVITY SECTION -->

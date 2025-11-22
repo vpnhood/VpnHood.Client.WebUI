@@ -17,6 +17,7 @@ export enum ComponentName {
   CustomEndpoint = 'CustomEndpoint',
   BadgeDialog = 'BadgeDialog',
   ProxyDialog = 'ProxyDialog',
+  PromoteDialog = 'PromoteDialog',
 }
 
 export enum LanguagesCode {

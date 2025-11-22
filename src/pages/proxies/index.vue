@@ -32,7 +32,8 @@ const autoUpdateInterval = ref('');
 const previousUrl = ref('');
 const hasAutoUpdateUrl = computed(() => autoUpdateUrl.value.trim().length > 0);
 const selectedProxyId = ref<string | null>(null);
-const proxyStats: AppProxyEndPointManagerStatus | null | undefined = computed(() => vhApp.data.state.proxyEndPointManagerStatus);
+const proxyStats: AppProxyEndPointManagerStatus | null | undefined = computed(() =>
+  vhApp.data.state.proxyEndPointManagerStatus).value;
 
 const isShowProxyDialog = computed<boolean>({
     get: () => ComponentRouteController.isShowComponent(ComponentName.ProxyDialog),

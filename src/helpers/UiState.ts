@@ -28,4 +28,7 @@ export class UiState {
 
   public edgeToEdgeTop: number | null = null;
   public edgeToEdgeBottom: number | null = null;
+
+  public isPromoteDialogShown: boolean = false;
+  public promoteImageUrl: string = "";
 }

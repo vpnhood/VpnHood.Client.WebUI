@@ -11,13 +11,36 @@ import { ConnectManager } from '@/helpers/ConnectManager';
 import { ComponentName, UiConstants } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import CountDown from '@/components/CountDown.vue';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import UserReviewDialog from '@/components/UserReviewDialog.vue';
 import HomeBadge from '@/components/HomeBadge.vue';
 import BadgeDialog from '@/components/BadgeDialog.vue';
+import PromoteDialog from '@/components/PromoteDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const isShowDebugDialog = ref<boolean>(false);
+const openDebugDialogCounter = ref<number>(0);
+const isShowUserReview = computed((): boolean => {
+  return vhApp.data.state.userReviewRecommended !== 0;
+});
+const debugData1 = computed<string[]>({
+  get: () => {
+    return vhApp.data.userSettings.debugData1?.split(' ') ?? [];
+  },
+  set: (value: string[] | null) => {
+    vhApp.data.userSettings.debugData1 = value?.join(' ') || null;
+  }
+});
+const debugData2 = computed<string | null>({
+  get: () => {
+    return vhApp.data.userSettings.debugData2 ?? null;
+  },
+  set: (value: string | null) => {
+    vhApp.data.userSettings.debugData2 = value;
+  }
+});
+const promoImageUrl = computed(() => vhApp.data.state.promotionImageUrl);
 let lastConnectPressedTime = Date.now() - 1000;
 
 async function onConnectButtonClick(): Promise<void> {
@@ -109,31 +132,6 @@ function appFilterStatus(): string {
   }
 }
 
-const isShowDebugDialog = ref<boolean>(false);
-const openDebugDialogCounter = ref<number>(0);
-
-const isShowUserReview = computed((): boolean => {
-  return vhApp.data.state.userReviewRecommended !== 0;
-})
-
-const debugData1 = computed<string[]>({
-  get: () => {
-    return vhApp.data.userSettings.debugData1?.split(' ') ?? [];
-  },
-  set: (value: string[] | null) => {
-    vhApp.data.userSettings.debugData1 = value?.join(' ') || null;
-  }
-});
-
-const debugData2 = computed<string | null>({
-  get: () => {
-    return vhApp.data.userSettings.debugData2 ?? null;
-  },
-  set: (value: string | null) => {
-    vhApp.data.userSettings.debugData2 = value;
-  }
-});
-
 function openDebugDialog() {
   openDebugDialogCounter.value++;
   if (vhApp.data.userSettings.debugData1 || vhApp.data.userSettings.debugData2)
@@ -154,6 +152,18 @@ async function saveDebugDataSetting(): Promise<void> {
 function isDebugDataHasValue(): boolean {
   return vhApp.data.userSettings.debugData1 !== null || vhApp.data.userSettings.debugData2 !== null;
 }
+
+onMounted(async () => {
+  if ((promoImageUrl.value != null || promoImageUrl.value != undefined) && !vhApp.data.uiState.isPromoteDialogShown){
+    const isImgAccessible = await Util.isUrlAccessible(promoImageUrl.value, true);
+    vhApp.data.uiState.isPromoteDialogShown = true;
+    vhApp.data.uiState.promoteImageUrl = promoImageUrl.value;
+
+    // Show dialog only if the image is accessible
+    if (isImgAccessible)
+      await ComponentRouteController.showComponent(ComponentName.PromoteDialog);
+  }
+})
 </script>
 
 <template>
@@ -459,6 +469,7 @@ function isDebugDataHasValue(): boolean {
     <TunnelClientCountryDialog v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
     <UserReviewDialog v-model="isShowUserReview" />
     <badge-dialog v-model="ComponentRouteController.create(ComponentName.BadgeDialog).isShow" />
+    <promote-dialog v-model="ComponentRouteController.create(ComponentName.PromoteDialog).isShow" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">
