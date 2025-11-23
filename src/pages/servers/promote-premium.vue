@@ -59,7 +59,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
       <v-img
         :eager="true"
-        :src="vhApp.data.uiState.promoteImageUrl"
+        :src="Util.getAssetPath(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
         alt="Servers Icon"
         width="100%"
         max-width="500px"
