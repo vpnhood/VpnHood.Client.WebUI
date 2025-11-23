@@ -8,10 +8,12 @@ import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
+import { UiConstants } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
+const promotionImageUrl: string = vhApp.data.serverUrl + UiConstants.promotionFileLocation;
 
 const dialogTitle = computed<string>(() => dialogData.value.isPremiumLocation
   ? locale('SELECTED_LOCATION_IS_PREMIUM') : locale('SELECTED_LOCATION_IS_FREE'));
@@ -57,7 +59,17 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
       <h3 class="text-center" v-html="dialogTitle" />
     </div>
 
-      <v-img
+      <v-img 
+        v-if="vhApp.data.state.promotionExists"
+        :eager="true"
+        :src="promotionImageUrl"
+        alt="Servers Icon"
+        width="100%"
+        max-width="500px"
+        class="mx-auto"
+        @click="actionByConnectPlan(MyPlanId.premiumByPurchase)"
+      />
+      <v-img v-else
         :eager="true"
         :src="Util.getAssetPath(dialogData.isPremiumLocation ? 'premium-servers.webp' : 'free-to-premium-servers.webp')"
         alt="Servers Icon"

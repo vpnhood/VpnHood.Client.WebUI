@@ -154,15 +154,12 @@ function isDebugDataHasValue(): boolean {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function triggerPromotion() : Promise<boolean>
 {
-  const promoImageUrl = vhApp.data.state.promotionImageUrl;
+  const promoImageUrl = vhApp.data.state.promotionExists;
   if (!promoImageUrl || vhApp.data.uiState.isPromoteDialogShown)
     return false;
     
-    vhApp.data.uiState.isPromoteDialogShown = true;
-    if (!await Util.isUrlAccessible(promoImageUrl))
-      return false;
-    
-    vhApp.data.uiState.promoteImageUrl = promoImageUrl;
+    const promotionImageUrl: string = vhApp.data.serverUrl + UiConstants.promotionFileLocation;
+    vhApp.data.uiState.promoteImageUrl =  promotionImageUrl;
     await router.push({ name: 'PROMOTE' });
     return true;
 }
