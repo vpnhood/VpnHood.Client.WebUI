@@ -146,11 +146,6 @@ onBeforeMount(() => {
 
 onMounted(async () => {
 
-  // Hide the carousel arrow after 3 seconds
- /* setTimeout(() => {
-    isShowCarouselArrow.value = false;
-  }, 6000);*/
-
   // Check eligibility to purchase by Google
   if (vhApp.data.state.clientProfile?.selectedLocationInfo?.options.premiumByPurchase !== true){
     isGoogleBillingAvailable.value = false;
@@ -173,15 +168,13 @@ onMounted(async () => {
 
   // Sort plans based on plan prices
   if (isGoogleBillingAvailable.value) {
-    subscriptionPlans.value = purchaseOptions.value.subscriptionPlans.sort(
-      (a, b) => Number((a.planPrice).replace(/\D/g, '')) -
-        Number((b.planPrice).replace(/\D/g, ''))
-    );
+    subscriptionPlans.value = purchaseOptions.value.subscriptionPlans;
   }
 
 });
 
-async function onPurchaseClick(planId: string): Promise<void> {
+async function onPurchaseClick(planId: string, offerToken: string): Promise<void> {
+
   // Login if not logged in
   if (!vhApp.data.userState.userAccount)
     await vhApp.signIn(true);
@@ -191,14 +184,14 @@ async function onPurchaseClick(planId: string): Promise<void> {
     throw new Error(locale('SELECTED_PLAN_ALREADY_SUBSCRIBED'));
 
   // Start google billing flow
-  await purchase(planId);
+  await purchase(planId, offerToken);
 }
 
-async function purchase(planId: string): Promise<void> {
+async function purchase(planId: string, offerToken: string): Promise<void> {
   vhApp.data.uiState.showLoadingDialog = true;
   try {
     const billingClient = ClientApiFactory.instance.createBillingClient();
-    await billingClient.purchase(planId);
+    await billingClient.purchase(planId, offerToken);
     await vhApp.loadAccount();
     vhApp.data.uiState.showLoadingDialog = false;
     purchaseCompleteDialogMessage.value = locale('PURCHASE_AND_PROCESS_IS_COMPLETE_MESSAGE');
@@ -334,8 +327,12 @@ function closeCompleteDialog(showStatistics: boolean) {
                 <span class="font-weight-bold text-body-2">{{ locale('1_MONTH') }}</span>
               </v-col>
               <v-col cols="auto" class="d-flex ga-1 align-center">
-                <span v-if="subscriptionPlans[0]?.planPrice" class="font-weight-bold text-body-2">
-                  {{ subscriptionPlans[0].planPrice }}
+                <span v-if="subscriptionPlans[0].planPrices.length > 1">
+                  <span class="text-decoration-line-through text-caption text-disabled pe-2">{{subscriptionPlans[0].planPrices[0]}}</span>
+                  <span class="font-weight-bold text-body-2">{{subscriptionPlans[0].planPrices[1]}}</span>
+                </span>
+                <span v-else-if="subscriptionPlans[0].planPrices">
+                  {{subscriptionPlans[0].planPrices[0]}}
                 </span>
                 <v-progress-circular
                   v-else
@@ -357,7 +354,7 @@ function closeCompleteDialog(showStatistics: boolean) {
               :loading="!subscriptionPlans[0]?.subscriptionPlanId"
               :disabled="!subscriptionPlans[0]?.subscriptionPlanId"
               :text="locale('PURCHASE')"
-              @click="onPurchaseClick(subscriptionPlans[0].subscriptionPlanId)"
+              @click="onPurchaseClick(subscriptionPlans[0].subscriptionPlanId, subscriptionPlans[0].offerToken)"
             />
 
             <!-- Plan Descriptions -->

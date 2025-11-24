@@ -157,7 +157,7 @@ async function triggerPromotion() : Promise<boolean>
   const promoImageUrl = vhApp.data.state.promotionExists;
   if (!promoImageUrl || vhApp.data.uiState.isPromoteDialogShown)
     return false;
-    
+
     const promotionImageUrl: string = vhApp.data.serverUrl + UiConstants.promotionFileLocation;
     vhApp.data.uiState.promoteImageUrl =  promotionImageUrl;
     await router.push({ name: 'PROMOTE' });
@@ -221,7 +221,7 @@ async function triggerPromotion() : Promise<boolean>
             <!-- You are premium button -->
             <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount"
               prepend-icon="mdi-crown" :text="locale('YOU_ARE_PREMIUM')" color="enable-premium" variant="tonal"
-              tabindex="2" tag="h6" 
+              tabindex="2" tag="h6"
               @click="router.push({ name: 'PREMIUM_USER' })" />
 
             <!-- Premium code -->
@@ -234,7 +234,7 @@ async function triggerPromotion() : Promise<boolean>
             <v-btn v-else-if="vhApp.data.features.isPremiumFlagSupported &&
               vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium" variant="outlined"
               color="go-premium-btn" rounded="pill" tabindex="2" size="small" height="35"
-              @click="router.push({ name: 'PROMOTE' })" class="ps-1 pe-3 text-capitalize">
+              @click="router.push({ name: 'PURCHASE_SUBSCRIPTION' })" class="ps-1 pe-3 text-capitalize">
               <v-icon icon="mdi-crown" size="25" class="bg-go-premium-btn rounded-circle me-2" />
               {{ locale('PURCHASE_SUBSCRIPTION') }}
             </v-btn>

@@ -3,17 +3,18 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppPackageName } from '@/helpers/UiConstants';
-import { ref } from 'vue';
 import router from '@/services/router';
-import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const userAccount = vhApp.data.userState.userAccount;
-const showConfirmSignOut = ref<boolean>(false);
 
 async function onSignOut() {
+  const result = await vhApp.showConfirmDialog(locale('CONFIRM_SIGN_OUT_TITLE'), locale('CONFIRM_SIGN_OUT_DESC'));
+  if (!result)
+    return;
+
   await vhApp.signOut();
   await router.replace({name: 'HOME'});
 }
@@ -68,7 +69,7 @@ function formatDate(date: Date | null | undefined): string | null {
           :color="vhApp.data.isPremiumAccount ? 'active' : 'highlight'"
           class="ms-auto"
           size="small"
-          @click="showConfirmSignOut = true"
+          @click="onSignOut()"
         />
       </v-card-actions>
 
@@ -225,14 +226,6 @@ function formatDate(date: Date | null | undefined): string | null {
         />
       </v-card-actions>
     </config-card>
-
-    <!-- Confirm sign-out dialog -->
-    <ConfirmDialog
-      v-model="showConfirmSignOut"
-      :title="locale('CONFIRM_SIGN_OUT_TITLE')"
-      :message="locale('CONFIRM_SIGN_OUT_DESC')"
-      @confirm="onSignOut()"
-    />
 
   </v-sheet>
 </template>
