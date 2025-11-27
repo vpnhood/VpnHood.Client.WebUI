@@ -141,7 +141,7 @@ function openDebugDialog() {
   // reset counter if no click within 1 second
   setTimeout(() => {
     openDebugDialogCounter.value = 0;
-  }, 1000);
+  }, 5000);
 }
 async function saveDebugDataSetting(): Promise<void> {
   await vhApp.saveUserSetting();
@@ -149,19 +149,6 @@ async function saveDebugDataSetting(): Promise<void> {
 }
 function isDebugDataHasValue(): boolean {
   return vhApp.data.userSettings.debugData1 !== null || vhApp.data.userSettings.debugData2 !== null;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function triggerPromotion() : Promise<boolean>
-{
-  const promoImageUrl = vhApp.data.state.promotionExists;
-  if (!promoImageUrl || vhApp.data.uiState.isPromoteDialogShown)
-    return false;
-
-    const promotionImageUrl: string = vhApp.data.serverUrl + UiConstants.promotionFileLocation;
-    vhApp.data.uiState.promoteImageUrl =  promotionImageUrl;
-    await router.push({ name: 'PROMOTE' });
-    return true;
 }
 
 </script>
@@ -236,7 +223,7 @@ async function triggerPromotion() : Promise<boolean>
               color="go-premium-btn" rounded="pill" tabindex="2" size="small" height="35"
               @click="router.push({ name: 'PURCHASE_SUBSCRIPTION' })" class="ps-1 pe-3 text-capitalize">
               <v-icon icon="mdi-crown" size="25" class="bg-go-premium-btn rounded-circle me-2" />
-              {{ locale('PURCHASE_SUBSCRIPTION') }}
+              {{ locale('GO_PREMIUM') }}
             </v-btn>
           </v-col>
         </v-row>

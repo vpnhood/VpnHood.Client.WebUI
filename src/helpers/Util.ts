@@ -169,6 +169,10 @@ export class Util {
     }
   }
 
+  public static calcPercentage(firstNumber: number, secondNumber: number): number {
+    return Math.round(((firstNumber - secondNumber) / firstNumber) * 100);
+  }
+
 // For developers sends test error
 /*  public static sendTestError(): void {
     const errorMessage = 'Something went wrong';

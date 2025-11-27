@@ -27,7 +27,6 @@ declare module 'vue-router/auto-routes' {
     'ENGINE_ERROR': RouteRecordInfo<'ENGINE_ERROR', '/engine-error', Record<never, never>, Record<never, never>>,
     'INTERNAL_AD': RouteRecordInfo<'INTERNAL_AD', '/internal-ad', Record<never, never>, Record<never, never>>,
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
-    'PROMOTE': RouteRecordInfo<'PROMOTE', '/promote', Record<never, never>, Record<never, never>>,
     'PROTOCOLS': RouteRecordInfo<'PROTOCOLS', '/protocols', Record<never, never>, Record<never, never>>,
     'CLOAK_MODE': RouteRecordInfo<'CLOAK_MODE', '/protocols/cloak-mode', Record<never, never>, Record<never, never>>,
     'PROXIES': RouteRecordInfo<'PROXIES', '/proxies', Record<never, never>, Record<never, never>>,

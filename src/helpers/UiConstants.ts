@@ -18,16 +18,11 @@ export enum ComponentName {
   CustomEndpoint = 'CustomEndpoint',
   BadgeDialog = 'BadgeDialog',
   ProxyDialog = 'ProxyDialog',
-  PromoteDialog = 'PromoteDialog',
 }
 
 export enum LanguagesCode {
   SystemDefault = 'sys',
   English = 'en',
-}
-
-export enum SubscriptionPlansId {
-  GlobalServer = 'global-servers',
 }
 
 export enum AppName {
