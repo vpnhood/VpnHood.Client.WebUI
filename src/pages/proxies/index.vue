@@ -7,9 +7,15 @@ import ProxyDialog from '@/components/Proxies/ProxyDialog.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
-import { AppProxyMode, AppProxyEndPointInfo, AppProxyEndPointManagerStatus } from '@/services/VpnHood.Client.Api';
+import {
+  AppProxyMode,
+  AppProxyEndPointInfo,
+  AppProxyEndPointManagerStatus,
+  AppFeature
+} from '@/services/VpnHood.Client.Api';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
+import PremiumIcon from '@/components/PremiumIcon.vue';
 
 
 const vhApp = VpnHoodApp.instance;
@@ -362,27 +368,53 @@ async function handleProxySaved(): Promise<void> {
         <app-bar />
 
         <config-card class="pa-3">
-            <v-card-item class="pb-0">
-                <span>{{ locale('PROXY_MODE') }}</span>
-            </v-card-item>
-            <v-card-subtitle class="text-disabled text-caption pb-2">
-                {{ locale('PROXIES_DESC') }}
-            </v-card-subtitle>
-            <v-select v-model="proxyMode" :items="modeItems" item-title="title" item-value="value" variant="outlined"
-                density="comfortable" rounded="lg" hide-details color="highlight" />
+          <!-- Title, status and premium icon -->
+          <div class="d-flex align-center justify-space-between pb-1">
+            <!-- Title -->
+            <span>{{ locale('PROXY_MODE') }}</span>
+
+            <!-- Premium icon for premium features -->
+            <premium-icon :is-premium="AppFeature.CustomDns"/>
+          </div>
+
+          <v-card-subtitle class="px-0 mb-4">{{ locale('PROXIES_DESC') }}</v-card-subtitle>
+
+          <v-select
+            v-model="proxyMode"
+            :items="modeItems"
+            item-title="title"
+            item-value="value"
+            variant="outlined"
+            density="comfortable"
+            rounded="lg"
+            hide-details color="highlight"
+          />
         </config-card>
 
-        <config-card v-if="isCustomMode" class="mt-4 pa-0">
+        <config-card v-if="isCustomMode">
             <v-card-text class="pb-0">
-                <v-text-field v-model="autoUpdateUrl" :label="locale('PROXY_AUTO_UPDATE_URL')"
-                    :placeholder="locale('PROXY_AUTO_UPDATE_URL_PLACEHOLDER')" variant="outlined" density="comfortable"
-                    rounded="lg" hide-details class="mb-3" color="highlight" @blur="handleUrlBlur">
-                    <template #append-inner>
-                        <v-btn icon size="small" variant="text" :disabled="!hasAutoUpdateUrl || isReloadingUrl"
-                            :loading="isReloadingUrl" @click="reloadFromUrl">
-                            <v-icon>mdi-refresh</v-icon>
-                        </v-btn>
-                    </template>
+                <v-text-field
+                  v-model="autoUpdateUrl"
+                  :label="locale('PROXY_AUTO_UPDATE_URL')"
+                  :placeholder="locale('PROXY_AUTO_UPDATE_URL_PLACEHOLDER')"
+                  variant="outlined"
+                  density="comfortable"
+                  rounded="lg"
+                  hide-details
+                  class="mb-3"
+                  color="highlight"
+                  @blur="handleUrlBlur"
+                >
+                  <template v-slot:append-inner>
+                      <v-btn
+                        icon="mdi-refresh"
+                        size="small"
+                        variant="text"
+                        :disabled="!hasAutoUpdateUrl || isReloadingUrl"
+                        :loading="isReloadingUrl"
+                        @click="reloadFromUrl"
+                      />
+                  </template>
                 </v-text-field>
                 <v-select v-model="autoUpdateInterval" :items="intervalOptions" item-title="title" item-value="value"
                     :label="locale('PROXY_AUTO_UPDATE_INTERVAL')" variant="outlined" density="comfortable" rounded="lg"
@@ -466,21 +498,28 @@ async function handleProxySaved(): Promise<void> {
             </template>
         </config-card>
 
-        <config-card v-else-if="proxyMode === AppProxyMode.Device" class="mt-4 pa-0">
-            <v-progress-linear v-if="isLoading" color="highlight" indeterminate />
+        <config-card v-else-if="proxyMode === AppProxyMode.Device">
 
-            <template v-else>
-                <v-card-text v-if="!deviceProxy" class="text-disabled">
-                    {{ locale('NO_SYSTEM_PROXY') }}
-                </v-card-text>
-                <v-list v-else lines="two" density="comfortable">
-                    <ProxyListItem :proxy="deviceProxy" @click="openProxy('device')" />
-                </v-list>
-            </template>
+          <v-progress-linear v-if="isLoading" color="highlight" indeterminate />
+
+          <v-card-text v-else-if="!deviceProxy" class="text-disabled">
+            {{ locale('NO_SYSTEM_PROXY') }}
+          </v-card-text>
+
+          <v-list v-else lines="two" density="comfortable">
+            <ProxyListItem :proxy="deviceProxy" @click="openProxy('device')" />
+          </v-list>
+
         </config-card>
 
-        <proxy-import-dialog v-model="isImportDialogOpen" v-model:text="importText" :is-importing="isImporting"
-            :can-import="canImportProxies" @confirm="importProxies" @cancel="closeImportDialog" />
+        <proxy-import-dialog
+          v-model="isImportDialogOpen"
+          v-model:text="importText"
+          :is-importing="isImporting"
+          :can-import="canImportProxies"
+          @confirm="importProxies"
+          @cancel="closeImportDialog"
+        />
 
         <proxy-dialog v-model="isShowProxyDialog" :proxy-id="selectedProxyId" @saved="handleProxySaved" />
     </v-sheet>

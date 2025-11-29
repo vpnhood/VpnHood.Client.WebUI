@@ -3,6 +3,10 @@ import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+
+const props = defineProps<{
+  errorMessage: string,
+}>();
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const locale = i18n.global.t;
     color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
   >
     <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline" />
-    <span class="text-error text-caption">{{ locale('GOOGLE_PLAY_BILLING_UNAVAILABLE') }}</span>
+    <span class="text-error text-caption">{{ locale('ONLINE_PURCHASE_IS_NOT_AVAILABLE') }}</span>
     <v-btn
       :text="locale('MORE_INFO')"
       color="error"
@@ -20,7 +24,7 @@ const locale = i18n.global.t;
       size="small"
       block
       class="text-lowercase mt-2"
-      @click="vhApp.showErrorMessage(locale('GOOGLE_BILLING_BILLING_UNAVAILABLE'))"
+      @click="vhApp.showErrorMessage(props.errorMessage)"
     />
   </v-card>
 </template>

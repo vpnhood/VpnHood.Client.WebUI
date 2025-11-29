@@ -8,8 +8,7 @@ $distDir= "$PSScriptRoot/dist"
 $nugetSolutionDir = Join-Path -Path (Split-Path -parent $PSScriptRoot) -ChildPath "VpnHood.AppLib.Assets.ClassicSpa";
 $nugetProjectDir = Join-Path -Path $nugetSolutionDir -ChildPath "VpnHood.AppLib.Assets.ClassicSpa";
 $spaZipFile= "$nugetProjectDir/Resources/spa.zip";
-$translatorFile= "" #Join-Path $vhDir "VpnHood.ResourceTranslator/VpnHood.ResourceTranslator/bin/Debug/net8
-# .0/vhtranslator.exe"
+$translatorFile= Join-Path $vhDir "VpnHood.ResourceTranslator/VpnHood.ResourceTranslator/bin/Debug/net8.0/vhtranslator.exe"
 $translatorPrompt= Join-Path $solutionDir "src/locales/vh_translator/custom_prompt.txt"
 
 #translate

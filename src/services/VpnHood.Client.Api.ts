@@ -4916,6 +4916,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
     accessCode?: string | null;
     locationInfos!: ClientServerLocationInfo[];
     purchaseUrl?: string | null;
+    canGoPremiumByCode!: boolean;
     purchaseUrlMode!: PurchaseUrlMode;
     customServerEndpoints?: string[] | null;
     selectedLocationInfo?: ClientServerLocationInfo | null;
@@ -4963,6 +4964,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
                 this.locationInfos = null as any;
             }
             this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : null as any;
+            this.canGoPremiumByCode = _data["canGoPremiumByCode"] !== undefined ? _data["canGoPremiumByCode"] : null as any;
             this.purchaseUrlMode = _data["purchaseUrlMode"] !== undefined ? _data["purchaseUrlMode"] : null as any;
             if (Array.isArray(_data["customServerEndpoints"])) {
                 this.customServerEndpoints = [] as any;
@@ -5007,6 +5009,7 @@ export class ClientProfileInfo implements IClientProfileInfo {
                 data["locationInfos"].push(item ? item.toJSON() : null as any);
         }
         data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : null as any;
+        data["canGoPremiumByCode"] = this.canGoPremiumByCode !== undefined ? this.canGoPremiumByCode : null as any;
         data["purchaseUrlMode"] = this.purchaseUrlMode !== undefined ? this.purchaseUrlMode : null as any;
         if (Array.isArray(this.customServerEndpoints)) {
             data["customServerEndpoints"] = [];
@@ -5033,6 +5036,7 @@ export interface IClientProfileInfo {
     accessCode?: string | null;
     locationInfos: ClientServerLocationInfo[];
     purchaseUrl?: string | null;
+    canGoPremiumByCode: boolean;
     purchaseUrlMode: PurchaseUrlMode;
     customServerEndpoints?: string[] | null;
     selectedLocationInfo?: ClientServerLocationInfo | null;
@@ -5419,6 +5423,7 @@ export class SubscriptionPlan implements ISubscriptionPlan {
     period!: string;
     planToken!: string;
     currencySymbol!: string;
+    currencyCode!: string;
 
     constructor(data?: ISubscriptionPlan) {
         if (data) {
@@ -5436,6 +5441,7 @@ export class SubscriptionPlan implements ISubscriptionPlan {
             this.period = _data["period"] !== undefined ? _data["period"] : null as any;
             this.planToken = _data["planToken"] !== undefined ? _data["planToken"] : null as any;
             this.currencySymbol = _data["currencySymbol"] !== undefined ? _data["currencySymbol"] : null as any;
+            this.currencyCode = _data["currencyCode"] !== undefined ? _data["currencyCode"] : null as any;
         }
     }
 
@@ -5453,6 +5459,7 @@ export class SubscriptionPlan implements ISubscriptionPlan {
         data["period"] = this.period !== undefined ? this.period : null as any;
         data["planToken"] = this.planToken !== undefined ? this.planToken : null as any;
         data["currencySymbol"] = this.currencySymbol !== undefined ? this.currencySymbol : null as any;
+        data["currencyCode"] = this.currencyCode !== undefined ? this.currencyCode : null as any;
         return data;
     }
 }
@@ -5463,6 +5470,7 @@ export interface ISubscriptionPlan {
     period: string;
     planToken: string;
     currencySymbol: string;
+    currencyCode: string;
 }
 
 export class PurchaseParams implements IPurchaseParams {
@@ -5503,9 +5511,11 @@ export interface IPurchaseParams {
 
 export class AppPurchaseOptions implements IAppPurchaseOptions {
     storeName?: string | null;
+    isStoreAvailable!: boolean;
     storeError?: ApiError | null;
     subscriptionPlans!: SubscriptionPlan[];
     purchaseUrl?: string | null;
+    canGoPremiumByCode!: boolean;
 
     constructor(data?: IAppPurchaseOptions) {
         if (data) {
@@ -5522,6 +5532,7 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
     init(_data?: any) {
         if (_data) {
             this.storeName = _data["storeName"] !== undefined ? _data["storeName"] : null as any;
+            this.isStoreAvailable = _data["isStoreAvailable"] !== undefined ? _data["isStoreAvailable"] : null as any;
             this.storeError = _data["storeError"] ? ApiError.fromJS(_data["storeError"]) : null as any;
             if (Array.isArray(_data["subscriptionPlans"])) {
                 this.subscriptionPlans = [] as any;
@@ -5532,6 +5543,7 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
                 this.subscriptionPlans = null as any;
             }
             this.purchaseUrl = _data["purchaseUrl"] !== undefined ? _data["purchaseUrl"] : null as any;
+            this.canGoPremiumByCode = _data["canGoPremiumByCode"] !== undefined ? _data["canGoPremiumByCode"] : null as any;
         }
     }
 
@@ -5545,6 +5557,7 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["storeName"] = this.storeName !== undefined ? this.storeName : null as any;
+        data["isStoreAvailable"] = this.isStoreAvailable !== undefined ? this.isStoreAvailable : null as any;
         data["storeError"] = this.storeError ? this.storeError.toJSON() : null as any;
         if (Array.isArray(this.subscriptionPlans)) {
             data["subscriptionPlans"] = [];
@@ -5552,15 +5565,18 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
                 data["subscriptionPlans"].push(item ? item.toJSON() : null as any);
         }
         data["purchaseUrl"] = this.purchaseUrl !== undefined ? this.purchaseUrl : null as any;
+        data["canGoPremiumByCode"] = this.canGoPremiumByCode !== undefined ? this.canGoPremiumByCode : null as any;
         return data;
     }
 }
 
 export interface IAppPurchaseOptions {
     storeName?: string | null;
+    isStoreAvailable: boolean;
     storeError?: ApiError | null;
     subscriptionPlans: SubscriptionPlan[];
     purchaseUrl?: string | null;
+    canGoPremiumByCode: boolean;
 }
 
 export class ClientProfileUpdateParams implements IClientProfileUpdateParams {

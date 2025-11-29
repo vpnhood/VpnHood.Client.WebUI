@@ -13,8 +13,8 @@ async function removeCode(): Promise<void> {
   if (!result)
     return;
 
-  await vhApp.removePremiumCode();
   await router.replace({name: 'HOME'});
+  await vhApp.removePremiumCode();
 }
 </script>
 

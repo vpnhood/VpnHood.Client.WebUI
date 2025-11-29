@@ -73,17 +73,13 @@ export class ErrorHandler {
   }
 
   private static async processApiException(err: ApiException): Promise<ShowErrorOptions> {
-    // For developer
-    console.log('Exception Type: ApiException');
-    console.log('TypeName: ', err.exceptionTypeName);
-    console.log('Error Infos: ' + err);
 
     switch (err.exceptionTypeName) {
 
       // Intentionally silenced errors
-      case 'OperationCanceledException':
-      case 'UserCanceledException':
-      case 'ObjectDisposedException':
+      //case 'OperationCanceledException':
+      case ExceptionType.UserCanceled:
+      //case 'ObjectDisposedException':
         return { ignoreMessage: true };
 
       // Could not connect to any server
@@ -151,16 +147,16 @@ export class ErrorHandler {
         return { action:{isPrivateDnsError: true} };
 
       // Could not connect after a specific time
-      case 'ConnectionTimeoutException':
+      case ExceptionType.ConnectionTimeout:
         return { localeKey: 'CONNECTION_TIMEOUT_MSG', action: { showDiagnose: true } };
+
+      // Access server exceptions
+      case ExceptionType.Session:
+        return this.sessionExceptionHandler(err);
 
       // Device does not have Google Play
       case 'GooglePlayUnavailableException':
         return { localeKey: 'GOOGLE_PLAY_IS_UNAVAILABLE' };
-
-      // Access server exceptions
-      case 'SessionException':
-        return this.sessionExceptionHandler(err);
 
       case 'GoogleBillingException':
         return this.googleBillingExceptionHandler(err);
