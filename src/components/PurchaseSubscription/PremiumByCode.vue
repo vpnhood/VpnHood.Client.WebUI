@@ -14,7 +14,7 @@ const locale = i18n.global.t;
 const premiumCodeForm = ref<boolean>(false);
 const invalidCodeError = ref<null|string>(null);
 const formattedPremiumCode = ref('');
-const premiumCodeRawNumber = ref<string>('');
+const premiumCodeRawNumber = ref<string|null>(null);
 const isShowPremiumCodeCompleteDialog = ref(false);
 const isShowPendingDialog = ref(false);
 
@@ -41,9 +41,6 @@ const premiumCodeHandleInput = (event: Event) => {
   premiumCodeRawNumber.value = value;
 };
 async function validatePremiumCode(): Promise<void> {
-  if (!premiumCodeRawNumber.value)
-    return;
-
   const profileId = vhApp.data.state.clientProfile?.clientProfileId;
   if (!profileId)
     throw new Error(locale("PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG"));
@@ -118,6 +115,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
             hide-details="auto"
             single-line
             clearable
+            :on-click:clear="() => premiumCodeRawNumber = null"
             autofocus
             spellcheck="false"
             autocomplete="off"
@@ -136,7 +134,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
             class="text-transform-none"
             block
             type="submit"
-            :disabled="!premiumCodeForm"
+            :disabled="!premiumCodeRawNumber"
             :text="locale('ACTIVATE')"
           />
         </v-form>
