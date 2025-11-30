@@ -34,6 +34,10 @@ export class ComponentRouteController {
             // v-model may call showComponentin middle of navigation
             await this.delay(100); 
             await this.showComponentInternal(componentName, value);
+
+            // let next process done after router navigation completed
+            // because the next step may involve changing another route
+            await this.delay(100); 
         });
     }
     private static async showComponentInternal(componentName: string, value: boolean): Promise<void> {
