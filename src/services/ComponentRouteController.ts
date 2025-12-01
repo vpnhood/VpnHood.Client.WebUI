@@ -21,12 +21,8 @@ export class ComponentRouteController {
         if (ComponentRouteController.isShowComponent(this.componentName) !== value)
             return ComponentRouteController.showComponent(this.componentName, value);
     }
-    
-    public static create(componentName: string): ComponentRouteController {
-        return new ComponentRouteController(componentName);
-    }
 
-    public static isShowComponent(componentName: string): boolean {
+    private static isShowComponent(componentName: string): boolean {
         return router.currentRoute.value.query[componentName] === "true";
     }
 
@@ -34,7 +30,7 @@ export class ComponentRouteController {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    public static async showComponent(componentName: string, value: boolean = true): Promise<void> {
+    private static async showComponent(componentName: string, value: boolean = true): Promise<void> {
         const showLock: AsyncLock = new AsyncLock();
         await showLock.acquire("showLock", async () => {
             // wait to make sure we are not in the middle of navigation

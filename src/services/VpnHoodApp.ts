@@ -33,6 +33,7 @@ export class VpnHoodApp {
   public proxyEndPointClient: ProxyEndPointClient;
   public vhFirebase: VhFirebaseApp | null;
   public confirmDialogDeferred: Deferred<boolean> | null = null;
+  public errorDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
   private isSaving: boolean = false;
 
@@ -46,6 +47,7 @@ export class VpnHoodApp {
     this.intentsClient = intentsClient;
     this.proxyEndPointClient = proxyEndPointClient;
     this.vhFirebase = vhFirebase;
+    this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
     this.data.uiState.configTime = this.data.state.configTime;
     VpnHoodApp._instance = this;
   }
@@ -255,7 +257,7 @@ export class VpnHoodApp {
     errorDialogData.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
     errorDialogData.showRemovePremium = action?.showRemovePremium ?? false;
 
-    await ComponentRouteController.showComponent(ComponentName.ErrorDialog);
+    await this.errorDialogModel.show(true);
   }
 
   // Get the installed apps list on the user device

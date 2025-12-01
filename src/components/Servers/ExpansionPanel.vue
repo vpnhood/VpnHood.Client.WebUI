@@ -19,6 +19,9 @@ import ExpansionPanelCollapsed from '@/components/Servers/ExpansionPanelCollapse
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const confirmDeleteServerDialogModel = ref(new ComponentRouteController(ComponentName.ConfirmDeleteServerDialog));
+const renameServerDialogModel = ref(new ComponentRouteController(ComponentName.RenameServerDialog));
+const customEndpointModel = ref(new ComponentRouteController(ComponentName.CustomEndpoint));
 const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo());
 const newClientProfileName = ref<string>("");
 const expandedPanels = ref<number[]>([]);
@@ -36,12 +39,12 @@ onMounted(() => {
 // Show confirm dialog for delete server
 async function showConfirmDeleteDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
   currentClientProfileInfo.value = clientProfileInfo;
-  await ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog);
+  await confirmDeleteServerDialogModel.value.show();
 }
 
 // Delete server by user
 async function removeServer(clientProfileId: string): Promise<void> {
-  await ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog, false);
+  await confirmDeleteServerDialogModel.value.show(false);
   await vhApp.deleteClientProfile(clientProfileId);
 }
 
@@ -49,7 +52,7 @@ async function removeServer(clientProfileId: string): Promise<void> {
 async function showRenameDialog(clientProfileInfo: ClientProfileInfo): Promise<void> {
   currentClientProfileInfo.value = clientProfileInfo;
   newClientProfileName.value = clientProfileInfo.clientProfileName;
-  await ComponentRouteController.showComponent(ComponentName.RenameServerDialog);
+  await renameServerDialogModel.value.show();
 }
 
 // Show endpoint dialog
@@ -57,12 +60,12 @@ async function showEndpointDialog(clientProfileInfo: ClientProfileInfo): Promise
   currentClientProfileInfo.value = clientProfileInfo;
   const endpoint = clientProfileInfo.customServerEndpoints;
   customEndpoint.value = (endpoint && endpoint.length > 0) ? endpoint[0] : null;
-  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint);
+  await customEndpointModel.value.show();
 }
 
 // Rename server by user
 async function saveNewClientProfileName(): Promise<void> {
-  await ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false);
+  await renameServerDialogModel.value.show(false);
   await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, new
     ClientProfileUpdateParams({
     clientProfileName: new PatchOfString({ value: newClientProfileName.value })
@@ -91,7 +94,7 @@ async function saveCustomEndpoint(): Promise<void> {
 }
 
 async function closeCustomEndpointDialog(): Promise<void> {
-  await ComponentRouteController.showComponent(ComponentName.CustomEndpoint, false);
+  await customEndpointModel.value.show(false);
 }
 
 function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
@@ -226,7 +229,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-expansion-panels>
 
   <!-- Rename dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isVisible" max-width="600">
+  <v-dialog v-model="renameServerDialogModel.isVisible" max-width="600">
     <v-card :title="locale('RENAME')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
@@ -247,7 +250,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
         <!-- Cancel button -->
         <v-btn
           :text="locale('CANCEL')"
-          @click="ComponentRouteController.showComponent(ComponentName.RenameServerDialog, false)"
+          @click="renameServerDialogModel.show(false)"
         />
 
         <!-- Save button -->
@@ -258,7 +261,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-dialog>
 
   <!-- Endpoint dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.CustomEndpoint).isVisible" max-width="600">
+  <v-dialog v-model="customEndpointModel.isVisible" max-width="600">
     <v-card :title="locale('CUSTOM_ENDPOINT')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
@@ -311,7 +314,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-dialog>
 
   <!-- Confirm delete server dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isVisible">
+  <v-dialog v-model="confirmDeleteServerDialogModel.isVisible">
     <v-card color="general-dialog" :title="locale('WARNING')">
 
       <v-card-text class="text-general-dialog-text">
@@ -324,7 +327,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
 
         <!-- Cancel delete button -->
         <v-btn :text="locale('NO')"
-          @click="ComponentRouteController.showComponent(ComponentName.ConfirmDeleteServerDialog, false)"
+          @click="confirmDeleteServerDialogModel.show(false)"
         />
 
         <!-- Confirm delete button -->

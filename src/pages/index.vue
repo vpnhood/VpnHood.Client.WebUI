@@ -20,6 +20,9 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const isShowDebugDialog = ref<boolean>(false);
 const openDebugDialogCounter = ref<number>(0);
+const navigationDrawerModel = ref(new ComponentRouteController(ComponentName.NavigationDrawer));
+const tunnelClientCountryDialogModel = ref(new ComponentRouteController(ComponentName.TunnelClientCountryDialog));
+const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 const isShowUserReview = computed((): boolean => {
   return vhApp.data.state.userReviewRecommended !== 0;
 });
@@ -172,7 +175,7 @@ function isDebugDataHasValue(): boolean {
           <!-- Navigation drawer button -->
           <v-col cols="3">
             <v-app-bar-nav-icon tabindex="1" color="home-app-bar" class="ms-n3 me-0"
-              @click="ComponentRouteController.showComponent(ComponentName.NavigationDrawer)" />
+              @click="navigationDrawerModel.show()" />
           </v-col>
 
           <!-- App name -->
@@ -309,7 +312,7 @@ function isDebugDataHasValue(): boolean {
 
         <!-- Exclude country button -->
         <home-config-btn id="excludeCountryButton" prepend-icon="mdi-call-split" class="mb-1" tabindex="6"
-          @click="ComponentRouteController.showComponent(ComponentName.TunnelClientCountryDialog)">
+          @click="tunnelClientCountryDialogModel.show()">
           <span class="config-btn-title">{{ locale('SPLIT_MY_COUNTRY') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
@@ -368,9 +371,9 @@ function isDebugDataHasValue(): boolean {
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog
-      v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isVisible" />
+      v-model="tunnelClientCountryDialogModel.isVisible" />
     <UserReviewDialog v-model="isShowUserReview" />
-    <badge-dialog v-model="ComponentRouteController.create(ComponentName.BadgeDialog).isVisible" />
+    <badge-dialog v-model="badgeDialogModel.isVisible" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">

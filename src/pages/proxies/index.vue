@@ -21,6 +21,7 @@ import PremiumIcon from '@/components/PremiumIcon.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const proxyDialogModel = ref(new ComponentRouteController(ComponentName.ProxyDialog));
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const isLoading = ref(false);
 const isDeletingAll = ref(false);
@@ -42,10 +43,10 @@ const proxyStats: AppProxyEndPointManagerStatus | null | undefined = computed(()
   vhApp.data.state.proxyEndPointManagerStatus).value;
 
 const isShowProxyDialog = computed<boolean>({
-    get: () => ComponentRouteController.isShowComponent(ComponentName.ProxyDialog),
+    get: () => proxyDialogModel.value.isVisible,
     set: async (value: boolean) => {
         if (!value) selectedProxyId.value = null;
-        await ComponentRouteController.showComponent(ComponentName.ProxyDialog, value);
+        await proxyDialogModel.value.show(value);
     }
 });
 

@@ -2,8 +2,10 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
+import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
+const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 
 interface FeatureIcon {
   icon: string,
@@ -36,7 +38,7 @@ const icons: FeatureIcon[] = [
       color="white"
       class="opacity-40 pb-1"
       tabindex="-1"
-      @click="ComponentRouteController.showComponent(ComponentName.BadgeDialog)"
+      @click="badgeDialogModel.show()"
     />
   </template>
 </div>

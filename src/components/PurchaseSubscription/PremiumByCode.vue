@@ -11,6 +11,7 @@ import PremiumCodeCompleteDialog from '@/components/PurchaseSubscription/Premium
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const enterPremiumCodeModel = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
 const premiumCodeForm = ref<boolean>(false);
 const invalidCodeError = ref<null|string>(null);
 const formattedPremiumCode = ref('');
@@ -58,7 +59,7 @@ async function validatePremiumCode(): Promise<void> {
 }
 async function validateCodeViaAccessServer(profileId: string): Promise<void>{
   try {
-    await ComponentRouteController.showComponent(ComponentName.EnterPremiumCode, false);
+    await enterPremiumCodeModel.value.show(false);
     isShowPendingDialog.value = true;
     await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
 
@@ -84,12 +85,12 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
     color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
     prepend-icon="mdi-key"
     :text="locale('I_HAVE_A_PREMIUM_CODE')"
-    @click="ComponentRouteController.showComponent(ComponentName.EnterPremiumCode)"
+    @click="enterPremiumCodeModel.show()"
   />
 
   <!-- Premium code sheet -->
   <v-bottom-sheet
-    v-model="ComponentRouteController.create(ComponentName.EnterPremiumCode).isVisible"
+    v-model="enterPremiumCodeModel.isVisible"
     contained width="100%"
     max-width="100%"
   >
