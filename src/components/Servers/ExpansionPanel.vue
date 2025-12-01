@@ -226,7 +226,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-expansion-panels>
 
   <!-- Rename dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isShow" max-width="600">
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.RenameServerDialog).isVisible" max-width="600">
     <v-card :title="locale('RENAME')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
@@ -258,7 +258,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-dialog>
 
   <!-- Endpoint dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.CustomEndpoint).isShow" max-width="600">
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.CustomEndpoint).isVisible" max-width="600">
     <v-card :title="locale('CUSTOM_ENDPOINT')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
@@ -311,7 +311,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   </v-dialog>
 
   <!-- Confirm delete server dialog -->
-  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isShow">
+  <v-dialog v-model="ComponentRouteController.create(ComponentName.ConfirmDeleteServerDialog).isVisible">
     <v-card color="general-dialog" :title="locale('WARNING')">
 
       <v-card-text class="text-general-dialog-text">

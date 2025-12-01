@@ -7,9 +7,11 @@ import LocationList from '@/components/Servers/LocationList.vue'
 import { ComponentName } from '@/helpers/UiConstants';
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue';
 import AppBar from '@/components/AppBar.vue';
+import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const addServerDialogModel = ref(new ComponentRouteController(ComponentName.AddServerDialog));
 
 </script>
 
@@ -26,7 +28,7 @@ const locale = i18n.global.t;
       min-height="40px"
       prepend-icon="mdi-plus-circle"
       :text="locale('ADD_SERVER')"
-      @click="ComponentRouteController.showComponent(ComponentName.AddServerDialog)"
+      @click="addServerDialogModel.show(true)"
     />
 
     <!-- Show alert, if user does not have any server -->
@@ -43,6 +45,6 @@ const locale = i18n.global.t;
     <!-- Multi profile mode -->
     <ExpansionPanel v-else/>
 
-    <AddServerDialog v-model="ComponentRouteController.create(ComponentName.AddServerDialog).isShow" />
+    <AddServerDialog v-model="addServerDialogModel.isVisible" />
   </v-sheet>
 </template>

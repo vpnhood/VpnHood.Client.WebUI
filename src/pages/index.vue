@@ -368,9 +368,9 @@ function isDebugDataHasValue(): boolean {
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <TunnelClientCountryDialog
-      v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isShow" />
+      v-model="ComponentRouteController.create(ComponentName.TunnelClientCountryDialog).isVisible" />
     <UserReviewDialog v-model="isShowUserReview" />
-    <badge-dialog v-model="ComponentRouteController.create(ComponentName.BadgeDialog).isShow" />
+    <badge-dialog v-model="ComponentRouteController.create(ComponentName.BadgeDialog).isVisible" />
 
     <!-- Developer debug data dialog -->
     <v-dialog v-model="isShowDebugDialog" :persistent="true">

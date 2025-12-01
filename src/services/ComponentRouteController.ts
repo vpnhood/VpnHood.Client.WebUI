@@ -4,18 +4,24 @@ import AsyncLock from 'async-lock';
 export class ComponentRouteController {
 
     public componentName: string;
-    private constructor(componentName: string) {
+    public constructor(componentName: string) {
         this.componentName = componentName;
     }
-    public get isShow(): boolean {
+
+    public  get isVisible(): boolean {
         return ComponentRouteController.isShowComponent(this.componentName);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public set isShow(value: boolean) {
+    public set isVisible(value: boolean) {
         ComponentRouteController.showComponent(this.componentName, value).then();
     }
 
+    public async show( value: boolean = true ): Promise<void> {
+        if (ComponentRouteController.isShowComponent(this.componentName) !== value)
+            return ComponentRouteController.showComponent(this.componentName, value);
+    }
+    
     public static create(componentName: string): ComponentRouteController {
         return new ComponentRouteController(componentName);
     }
@@ -27,6 +33,7 @@ export class ComponentRouteController {
     private static delay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
     public static async showComponent(componentName: string, value: boolean = true): Promise<void> {
         const showLock: AsyncLock = new AsyncLock();
         await showLock.acquire("showLock", async () => {
@@ -40,6 +47,7 @@ export class ComponentRouteController {
             await this.delay(100); 
         });
     }
+
     private static async showComponentInternal(componentName: string, value: boolean): Promise<void> {
         if (value === this.isShowComponent(componentName))
             return;

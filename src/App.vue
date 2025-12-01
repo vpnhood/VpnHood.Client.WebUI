@@ -72,7 +72,7 @@ onMounted(async () => {
     <v-layout width="100%" max-width="959px" full-height class="mx-auto"
       :class="{ 'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': !vuetify.display.smAndDown.value }">
 
-      <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isShow" />
+      <NavigationDrawer v-model="ComponentRouteController.create(ComponentName.NavigationDrawer).isVisible" />
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
       <v-main class="fill-height">

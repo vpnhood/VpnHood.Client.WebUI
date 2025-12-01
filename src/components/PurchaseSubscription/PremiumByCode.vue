@@ -89,7 +89,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
 
   <!-- Premium code sheet -->
   <v-bottom-sheet
-    v-model="ComponentRouteController.create(ComponentName.EnterPremiumCode).isShow"
+    v-model="ComponentRouteController.create(ComponentName.EnterPremiumCode).isVisible"
     contained width="100%"
     max-width="100%"
   >
