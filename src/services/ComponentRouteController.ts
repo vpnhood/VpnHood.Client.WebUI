@@ -8,7 +8,7 @@ export class ComponentRouteController {
         this.componentName = componentName;
     }
 
-    public  get isVisible(): boolean {
+    public get isVisible(): boolean {
         return ComponentRouteController.isShowComponent(this.componentName);
     }
 
@@ -35,12 +35,12 @@ export class ComponentRouteController {
         await showLock.acquire("showLock", async () => {
             // wait to make sure we are not in the middle of navigation
             // v-model may call showComponentin middle of navigation
-            await this.delay(100); 
+            await this.delay(100);
             await this.showComponentInternal(componentName, value);
 
             // let next process done after router navigation completed
             // because the next step may involve changing another route
-            await this.delay(100); 
+            await this.delay(100);
         });
     }
 

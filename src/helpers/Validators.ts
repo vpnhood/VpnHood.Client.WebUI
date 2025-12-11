@@ -19,8 +19,8 @@
     return formatIPv4(raw);
   }
 
-  public static isEmptyString(value: string): boolean{
-    return value.trim() === '';
+  public static isEmptyString(value: string | null | undefined): boolean{
+    return value == null || value.trim() === '';
   }
 
   public static isNullOrUndefined(value: unknown): boolean {

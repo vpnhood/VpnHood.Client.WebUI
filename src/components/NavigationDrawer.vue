@@ -90,7 +90,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 <template>
   <v-navigation-drawer
     @update:modelValue="emit('update:modelValue', $event)"
-    :modelValue="modelValue"
+    :modelValue="props.modelValue"
     :location="vuetify.locale.isRtl.value? 'right' : 'left'"
     color="navigation-drawer"
     class="rounded-te-xl rounded-be-xl overflow-hidden"

@@ -236,10 +236,10 @@ function isDebugDataHasValue(): boolean {
       <!-- Speed & Circle & Connect button -->
       <v-col cols="12" :class="'text-center state-' + [vhApp.data.connectionState.toLowerCase()]">
 
-        <!-- Statistics & Speed -->
+        <!-- ProxiesStatistics & Speed -->
         <v-row align-content="center" justify="center" dir="ltr"
           :class="[vhApp.data.isConnected ? 'opacity-100' : 'opacity-0', 'mb-2']">
-          <!-- Statistics -->
+          <!-- ProxiesStatistics -->
           <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
             <v-btn :text="locale('STATISTICS')" :tabindex="vhApp.data.isConnected ? '3' : null" dir="auto"
               variant="text" rounded="pill" class="d-inline-flex" :append-icon="Util.getLocalizedRightChevron()"

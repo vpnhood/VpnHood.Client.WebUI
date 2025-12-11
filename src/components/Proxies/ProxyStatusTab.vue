@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import type { ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
-import { getStatusQualityDisplay } from './ProxyUtils';
+import { GetStatusQualityDisplay } from './ProxyUtils';
 import { Util } from '@/helpers/Util';
 
 const locale = i18n.global.t;
@@ -13,7 +13,7 @@ const props = defineProps<{
 
 const statusQuality = computed(() => {
     if (!props.status) return { text: '-', color: '' };
-    return getStatusQualityDisplay(props.status.quality);
+    return GetStatusQualityDisplay(props.status.quality);
 });
 
 const formattedLatency = computed(() => {

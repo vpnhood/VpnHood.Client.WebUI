@@ -31,6 +31,7 @@ declare module 'vue-router/auto-routes' {
     'CLOAK_MODE': RouteRecordInfo<'CLOAK_MODE', '/protocols/cloak-mode', Record<never, never>, Record<never, never>>,
     'PROXIES': RouteRecordInfo<'PROXIES', '/proxies', Record<never, never>, Record<never, never>>,
     'PROXY': RouteRecordInfo<'PROXY', '/proxies/:id', Record<never, never>, Record<never, never>>,
+    'OLD_INDEX': RouteRecordInfo<'OLD_INDEX', '/proxies/old-index', Record<never, never>, Record<never, never>>,
     'PURCHASE_SUBSCRIPTION': RouteRecordInfo<'PURCHASE_SUBSCRIPTION', '/purchase-subscription', Record<never, never>, Record<never, never>>,
     'SERVERS': RouteRecordInfo<'SERVERS', '/servers', Record<never, never>, Record<never, never>>,
     'EXTEND_SESSION': RouteRecordInfo<'EXTEND_SESSION', '/servers/extend-session', Record<never, never>, Record<never, never>>,

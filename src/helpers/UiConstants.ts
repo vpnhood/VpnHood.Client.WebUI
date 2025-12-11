@@ -18,6 +18,7 @@ export enum ComponentName {
   CustomEndpoint = 'CustomEndpoint',
   BadgeDialog = 'BadgeDialog',
   ProxyDialog = 'ProxyDialog',
+  AddOrEditProxySheet = "AddOrEditProxySheet",
 }
 
 export enum LanguagesCode {

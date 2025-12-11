@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
-import { Util } from '@/helpers/Util';
 import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
-import { getStatusQualityDisplay } from './ProxyUtils';
+import { GetStatusQualityDisplay } from '@/components/Proxies/ProxyUtils';
 
 const locale = i18n.global.t;
 
@@ -11,11 +10,7 @@ const props = defineProps<{
     proxy: AppProxyEndPointInfo;
 }>();
 
-const emit = defineEmits<{
-    click: [];
-}>();
-
-const subtitle = computed(() => {
+const title = computed(() => {
     const node = props.proxy.endPoint;
     const parts: string[] = [node.protocol, `${node.host}:${node.port}`];
     if (node.username)
@@ -24,7 +19,7 @@ const subtitle = computed(() => {
 });
 
 const statusQuality = computed(() => {
-    return getStatusQualityDisplay(props.proxy.status?.quality);
+    return GetStatusQualityDisplay(props.proxy.status?.quality);
 });
 
 const hasCounts = computed(() => {
@@ -53,23 +48,31 @@ const errorMessage = computed(() => {
 </script>
 
 <template>
-    <v-list-item @click="emit('click')" rounded="lg">
-        <template #title>
-            <div>{{ subtitle }}</div>
-        </template>
-        <template #subtitle>
-            <div v-if="hasCounts" class="text-caption text-disabled mt-1">{{ countsText }}</div>
-            <div v-if="hasError" class="text-caption text-error mt-1 d-flex align-center text-no-wrap">
-                <v-icon icon="mdi-alert-circle" size="x-small" class="me-1" />
-                <span class="text-truncate">{{ errorMessage }}</span>
-            </div>
-        </template>
-        <template #append>
-            <v-chip v-if="proxy.status?.quality" :text="statusQuality.text" size="small" variant="tonal"
-                density="comfortable" :color="statusQuality.color" class="me-2" />
-            <v-chip :text="proxy.endPoint.isEnabled ? locale('ON') : locale('OFF')" size="small" variant="tonal"
-                density="comfortable" :color="proxy.endPoint.isEnabled ? 'enable-premium' : ''" class="me-2" />
-            <v-icon :icon="Util.getLocalizedRightChevron()" />
-        </template>
+    <v-list-item>
+      <template v-slot:title>
+        <div class="d-flex align-center justify-space-between ga-2">
+          <span class="text-truncate">{{title}}</span>
+          <v-chip
+            :text="proxy.endPoint.isEnabled ? locale('ON') : locale('OFF')"
+            size="small"
+            variant="tonal"
+            density="comfortable"
+            :color="proxy.endPoint.isEnabled ? 'enable-premium' : ''"
+          />
+        </div>
+      </template>
+      <template v-slot:subtitle>
+        <p v-if="hasCounts" class="text-caption text-disabled">{{ countsText }}</p>
+        <div class="d-flex align-center mt-1 text-caption">
+          <span v-if="proxy.status?.quality" :class="`text-${statusQuality.color}`">{{statusQuality.text}}</span>
+          <span
+            v-if="hasError"
+            class="text-error text-truncate"
+            :class="{ 'border-s border-opacity-25 ps-2 ms-2': proxy.status?.quality}"
+          >
+            {{ errorMessage }}
+          </span>
+        </div>
+      </template>
     </v-list-item>
 </template>
