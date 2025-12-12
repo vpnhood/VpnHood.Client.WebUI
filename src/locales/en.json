@@ -218,6 +218,8 @@
   "PROXY_RESET_STATES": "Reset states",
   "REMOVE_ALL_PROXIES": "Remove all proxies",
   "REMOVE_ALL_PROXIES_MSG": "Are you sure you want to remove all proxies?",
+  "REMOVE_PROXY": "Remove proxy",
+  "REMOVE_PROXY_MSG": "Are you sure you want to remove the proxy?",
   "ADD_PROXY_LIST": "Add proxy list",
   "ADD_PROXY": "Add proxy",
   "EDIT_PROXY": "Edit proxy",
