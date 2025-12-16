@@ -3,11 +3,17 @@ import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import { ProxySheetType } from '@/components/Proxies/ProxyUtils';
 import { ref, toRef } from 'vue';
 import i18n from '@/locales/i18n';
-import { type AppProxyEndPointInfo, ProxyEndPoint, ProxyProtocol } from '@/services/VpnHood.Client.Api';
+import {
+  type AppProxyEndPointInfo,
+  ProxyEndPoint,
+  ProxyEndPointInfo,
+  type ProxyEndPointStatus,
+  ProxyProtocol
+} from '@/services/VpnHood.Client.Api';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import AddOrEditProxy from '@/components/Proxies/AddOrEditProxy.vue';
+import AddOrEditProxy from '@/components/Proxies/Manual/AddOrEditProxy.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -28,9 +34,10 @@ const isShowAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddO
 const addOrdEditSheetType = ref<ProxySheetType>(ProxySheetType.add);
 const isDisableButtons = ref(isResettingStates.value || props.isLoading || isImporting.value);
 const proxyEndPoint = ref<ProxyEndPoint | null>(null);
+const proxyStatus = ref<ProxyEndPointStatus | null>(null);
 
-function openProxySheet(sheetType: ProxySheetType, selectedProxyEndPoint?: ProxyEndPoint): void {
-    proxyEndPoint.value =  selectedProxyEndPoint ?? new ProxyEndPoint({
+function addProxy(): void {
+  proxyEndPoint.value = new ProxyEndPoint({
     id: '',
     host: '',
     port: 8080,
@@ -41,7 +48,17 @@ function openProxySheet(sheetType: ProxySheetType, selectedProxyEndPoint?: Proxy
     url: ''
   });
 
-  addOrdEditSheetType.value = sheetType;
+  addOrdEditSheetType.value = ProxySheetType.add;
+  isShowAddOrEditSheet.value.show();
+}
+function edditProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
+  proxyStatus.value = selectedProxyEndPoint.status;
+  proxyEndPoint.value =  selectedProxyEndPoint.endPoint;
+  addOrdEditSheetType.value = ProxySheetType.edit;
+  isShowAddOrEditSheet.value.show();
+}
+function addProxyList(): void {
+  addOrdEditSheetType.value = ProxySheetType.addList;
   isShowAddOrEditSheet.value.show();
 }
 async function resetStates(): Promise<void> {
@@ -76,7 +93,7 @@ async function deleteAllProxies(): Promise<void> {
 
       <!-- Title and Menu button -->
       <div class="d-flex align-center justify-space-between">
-        <span>{{ locale('SAVED_PROXIES') }}</span>
+        <span>{{ locale('PROXIES') }}</span>
         <v-btn
           v-if="props.proxies.length"
           icon
@@ -127,7 +144,7 @@ async function deleteAllProxies(): Promise<void> {
             prepend-icon="mdi-plus"
             :disabled="isDisableButtons"
             :text="locale('ADD')"
-            @click="openProxySheet(ProxySheetType.add)"
+            @click="addProxy()"
           />
         </v-col>
 
@@ -142,28 +159,37 @@ async function deleteAllProxies(): Promise<void> {
             prepend-icon="mdi-playlist-plus"
             :disabled="isDisableButtons"
             :text="locale('ADD_LIST')"
-            @click="openProxySheet(ProxySheetType.addList)"
+            @click="addProxyList()"
           />
         </v-col>
 
       </v-row>
 
-      <!-- Empty list message -->
-      <v-card-text v-if="!props.proxies.length" class="text-disabled text-center">
-        {{ locale('PROXY_LIST_EMPTY') }}
-      </v-card-text>
-
     </v-card-item>
 
-    <v-list v-if="props.proxies.length" lines="two" bg-color="transparent">
+    <!-- Proxy list loading skeleton -->
+    <template v-if="loading">
+      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
+      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
+      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
+      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
+    </template>
+
+    <!-- Proxy list -->
+    <v-list v-else-if="props.proxies.length" lines="three" bg-color="transparent">
       <proxy-list-item
         v-for="(proxy, index) in props.proxies"
         :key="proxy.endPoint.id"
         :proxy="proxy"
         :class="{'border-b': index !== props.proxies.length - 1}"
-        @click="openProxySheet(ProxySheetType.edit, proxy.endPoint)"
+        @click="edditProxy(proxy)"
       />
     </v-list>
+
+    <!-- Empty list message -->
+    <v-card-text v-else class="text-disabled text-center">
+      {{ locale('PROXY_LIST_EMPTY') }}
+    </v-card-text>
 
   </config-card>
 
@@ -172,11 +198,8 @@ async function deleteAllProxies(): Promise<void> {
     v-model="isShowAddOrEditSheet.isVisible"
     :proxy-type="addOrdEditSheetType"
     :selected-proxy-end-point="proxyEndPoint"
+    :proxy-status="proxyStatus"
     @loadProxies="emit('loadProxies')"
   />
 
 </template>
-
-<style scoped>
-
-</style>

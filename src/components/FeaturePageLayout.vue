@@ -3,6 +3,7 @@ import { Util } from '@/helpers/Util';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -18,6 +19,7 @@ const props = defineProps<{
   isActionButtonAvailable: boolean,
   isShowSkipBtn?: boolean
 }>();
+const isPrivateDnsActive = computed(() => vhApp.data.state.systemPrivateDns?.isActive);
 
 function actionButtonClick(): void | null {
   return props.buttonClick ? props.buttonClick() : null;
@@ -30,11 +32,15 @@ function actionButtonClick(): void | null {
 
     <div>
       <!-- Back button -->
-      <tonal-icon-btn
+      <v-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        @click="router.go(-1)"
+        variant="text"
+        width="43px"
+        height="43px"
         class="mt-3"
+        style="border-radius: 18px; border: 1px solid #ffffff2e; inset-inline-start: 0;"
+        @click="router.go(-1)"
       />
 
       <!-- Title and Description -->
@@ -62,9 +68,10 @@ function actionButtonClick(): void | null {
     </card-on-grad>
 
     <!-- Private DNS error page -->
-    <div v-else-if="props.title === 'PRIVATE_DNS_COLORED'">
+    <div v-else-if="props.title === 'PRIVATE_DNS_COLORED' && !vhApp.data.isPremiumAccount">
       <!-- Continue as Free -->
       <v-row
+        v-if="isPrivateDnsActive"
         dense
         v-ripple
         :autofocus="vhApp.data.features.isTv"
@@ -92,10 +99,10 @@ function actionButtonClick(): void | null {
       </v-row>
 
       <!-- Divider -->
-      <div class="d-flex align-center justify-center w-50 my-3 mx-auto">
-        <div class="w-100 border-b border-active border-opacity-25"></div>
+      <div v-if="isPrivateDnsActive" class="d-flex align-center justify-center w-50 my-3 mx-auto">
+        <v-divider color="active" opacity=".25"/>
         <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
-        <div class="w-100 border-b border-active border-opacity-25"></div>
+        <v-divider color="active" opacity=".25"/>
       </div>
 
       <v-row

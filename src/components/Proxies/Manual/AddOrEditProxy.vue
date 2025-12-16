@@ -1,11 +1,12 @@
 ﻿<script setup lang="ts">
-import { AppProxyEndPointInfo, ProxyEndPoint } from '@/services/VpnHood.Client.Api';
+import { AppProxyEndPointInfo, ProxyEndPoint, type ProxyEndPointStatus } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { ProxySheetType } from '@/components/Proxies/ProxyUtils';
 import { computed, ref, toRef, watch } from 'vue';
 import { Validators } from '@/helpers/Validators';
-import ProxyFields from '@/components/Proxies/ProxyFields.vue';
+import ProxyFields from '@/components/Proxies/Manual/ProxyFields.vue';
+import ProxyStatus from '@/components/Proxies/Manual/ProxyStatus.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -14,6 +15,7 @@ const props = defineProps<{
   modelValue: boolean,
   proxyType: ProxySheetType,
   selectedProxyEndPoint: ProxyEndPoint,
+  proxyStatus: ProxyEndPointStatus | null
 }>();
 
 const emit = defineEmits<{
@@ -106,47 +108,49 @@ function closeSheet(){
     max-width="100%"
   >
 
-    <config-card color="background" class="rounded-b-0" :disabled="isProcessing" :loading="isProcessing">
+    <config-card color="background" class="rounded-xl rounded-b-0" :disabled="isProcessing" :loading="isProcessing">
 
       <v-card-item>
-        <div class="d-flex align-center justify-space-between border-b pb-3 mb-2">
-          <!-- Page title -->
-          <h4>{{ locale(props.proxyType) }}</h4>
-
-          <!-- Remove button on the edit mode -->
-          <v-btn
-            v-if="props.proxyType === ProxySheetType.edit"
-            :text="locale('REMOVE')"
-            variant="text"
-            density="comfortable"
-            color="error"
-            @click="deleteProxy()"
-          />
-        </div>
-
         <!-- Add proxy list -->
-        <p class="text-caption text-disabled mb-3">{{locale('PROXY_IMPORT_DESC')}}</p>
-        <v-textarea
-          v-if="props.proxyType === ProxySheetType.addList"
-          v-model="proxyList"
-          :label="locale('PROXY_IMPORT_LABEL')"
-          variant="outlined"
-          hide-details="auto"
-          auto-grow
-          rows="6"
-        />
+        <template v-if="props.proxyType === ProxySheetType.addList">
+          <p class="text-caption text-disabled mb-3">{{locale('PROXY_IMPORT_DESC')}}</p>
+          <v-textarea
+            v-model="proxyList"
+            :label="locale('PROXY_IMPORT_LABEL')"
+            variant="outlined"
+            hide-details="auto"
+            auto-grow
+            rows="6"
+          />
+        </template>
 
-        <!-- Add or update proxy fields -->
+        <!-- Add or edit proxy -->
         <proxy-fields
           v-else
           :field-rules="fieldRules"
           :proxy-end-point="proxy"
           @process-host-field="processHostField"
         />
-
       </v-card-item>
 
+      <template v-if="props.proxyType === ProxySheetType.edit">
+        <v-divider/>
+        <v-card-item class="py-1">
+          <proxy-status :status="props.proxyStatus" />
+        </v-card-item>
+      </template>
+
+      <v-divider />
       <v-card-actions>
+        <v-btn
+          v-if="props.proxyType === ProxySheetType.edit"
+          :text="locale('REMOVE')"
+          variant="text"
+          density="comfortable"
+          color="error"
+          @click="deleteProxy()"
+        />
+        <v-spacer />
 
         <!-- Cancel button -->
         <v-btn
@@ -157,7 +161,9 @@ function closeSheet(){
 
         <!-- Add or update button -->
         <v-btn
-          :text="locale(props.proxyType === ProxySheetType.edit ? 'OK' : 'ADD')"
+          class="font-weight-bold text-transform-none"
+          color="highlight"
+          :text="locale(props.proxyType === ProxySheetType.edit ? 'SAVE' : 'ADD')"
           :disabled="!isAddButtonAvailable"
           @click="addOrUpdateProxy()"
         />

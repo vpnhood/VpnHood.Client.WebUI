@@ -48,6 +48,7 @@ export const vuetifyDefaults = {
     VCardTitle: { class: 'd-flex justify-space-between align-center pt-3 pb-0' },
     VCardSubtitle: { class: 'text-disabled text-wrap text-caption' },
     VSwitch: { class: 'px-2', color: 'switch-btn', density: 'compact', hideDetails: true },
+    VProgressLinear: { color: 'switch-btn' },
   },
   CardOnGrad: {
     variant: 'text',

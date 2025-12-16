@@ -37,7 +37,7 @@ watch(isShowAuthenticationFields, async (newVal, oldVal) => {
 <template>
 
   <div class="d-flex align-center justify-space-between">
-    <span>{{ locale('PROXY_ENABLED') }}</span>
+    <span>{{ locale('ENABLED') }}</span>
     <v-switch v-model="proxy.isEnabled" density="compact" hide-details />
   </div>
 
@@ -49,9 +49,10 @@ watch(isShowAuthenticationFields, async (newVal, oldVal) => {
     hide-details="auto"
     variant="outlined"
     density="comfortable"
+    clearable
     rounded="lg"
     color="highlight"
-    class="mt-4"
+    class="mt-5"
   />
 
   <v-text-field
@@ -62,6 +63,7 @@ watch(isShowAuthenticationFields, async (newVal, oldVal) => {
     type="number"
     variant="outlined"
     density="comfortable"
+    clearable
     rounded="lg"
     color="highlight"
     class="my-4"
@@ -91,6 +93,7 @@ watch(isShowAuthenticationFields, async (newVal, oldVal) => {
       hide-details="auto"
       variant="outlined"
       density="comfortable"
+      clearable
       rounded="lg"
       color="highlight"
       class="mt-4"
@@ -102,6 +105,7 @@ watch(isShowAuthenticationFields, async (newVal, oldVal) => {
       hide-details="auto"
       variant="outlined"
       density="comfortable"
+      clearable
       rounded="lg"
       color="highlight"
       class="mt-4"

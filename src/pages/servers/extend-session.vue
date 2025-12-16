@@ -44,11 +44,15 @@ async function showRewardedAd(){
 
     <div>
       <!-- Back button -->
-      <tonal-icon-btn
+      <v-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
-        @click="router.go(-1)"
+        variant="text"
+        width="43px"
+        height="43px"
         class="mt-3"
+        style="border-radius: 18px; border: 1px solid #ffffff2e;"
+        @click="router.go(-1)"
       />
 
       <h3 class="mt-5 text-center" v-html="locale('EXTEND_PREMIUM_SESSION')" />

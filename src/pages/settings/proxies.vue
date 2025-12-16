@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { AppProxyMode } from '@/services/VpnHood.Client.Api';
-import DeviceProxyList from '@/components/Proxies/DeviceProxyList.vue';
-import ManualProxyList from '@/components/Proxies/ManualProxyList.vue';
+import DeviceProxy from '@/components/Proxies/DeviceProxy.vue';
+import ManualProxies from '@/components/Proxies/ManualProxies.vue';
+import { Util } from '@/helpers/Util';
+import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
 
 
 const vhApp = VpnHoodApp.instance;
@@ -35,20 +37,26 @@ const proxyMode = computed<AppProxyMode>({
     }
 });
 
-
-onMounted(async () => {
-
-});
-
-onUnmounted(() => {
-
-});
-
 </script>
 
 <template>
     <v-sheet>
       <app-bar />
+
+      <!-- Small image for manual mode -->
+      <small-feature-image-and-description v-if="proxyMode === AppProxyMode.Manual" image="proxy.webp" description="PROXY_NOTE" />
+
+      <!-- Large image for other modes -->
+      <template v-else>
+        <v-img
+          :src="Util.getAssetPath('proxy.webp')"
+          alt="Symbol image"
+          width="100%"
+          max-height="280px"
+          class="mx-auto"
+        />
+        <p class="mt-2 mb-5 pb-4 border-b text-center text-disabled text-caption px-3">{{locale('PROXY_NOTE')}}</p>
+      </template>
 
       <!-- Proxy mode select-->
       <config-card>
@@ -73,10 +81,10 @@ onUnmounted(() => {
       </config-card>
 
       <!-- Manual mode -->
-      <manual-proxy-list v-if="proxyMode == AppProxyMode.Manual"/>
+      <manual-proxies v-if="proxyMode == AppProxyMode.Manual"/>
 
       <!-- Device mode -->
-      <device-proxy-list v-else-if="proxyMode === AppProxyMode.Device" />
+      <device-proxy v-else-if="proxyMode === AppProxyMode.Device" />
 
     </v-sheet>
 </template>

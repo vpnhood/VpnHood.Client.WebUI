@@ -35,25 +35,25 @@ const props = defineProps< {
 
         <!-- Title, selected item and status (If available) -->
         <div class="d-flex align-center justify-space-between ga-2">
-          <span>{{ locale(props.title) }}</span>
+          <span>{{ props.title }}</span>
 
           <!-- Selected item if available -->
           <v-chip v-if="props.selectedItem"
-                  :text="props.selectedItem"
-                  size="small"
-                  variant="tonal"
-                  density="comfortable"
-                  color="switch-btn"
+            :text="props.selectedItem"
+            size="small"
+            variant="tonal"
+            density="comfortable"
+            color="switch-btn"
           />
 
           <!-- Status if available -->
           <v-chip v-else-if="props.status?.state !== undefined"
-                  :text="locale(props.status.state ? props.status.onText : props.status.offText)"
-                  size="small"
-                  variant="tonal"
-                  density="comfortable"
-                  :disabled="!props.status.state"
-                  :color="props.status.state ? 'enable-premium' : ''"
+            :text="props.status.state ? props.status.onText : props.status.offText"
+            size="small"
+            variant="tonal"
+            density="comfortable"
+            :disabled="!props.status.state"
+            :color="props.status.state ? 'enable-premium' : ''"
           />
 
         </div>
@@ -65,7 +65,7 @@ const props = defineProps< {
 
       <!-- Item description (Show chevron icon if the item does not have the model) -->
       <v-card-subtitle class="d-flex align-center justify-space-between ga-3 pa-0">
-        <span>{{ locale(props.subtitle) }}</span>
+        <span>{{ props.subtitle }}</span>
         <v-icon :icon="Util.getLocalizedRightChevron()"/>
       </v-card-subtitle>
 

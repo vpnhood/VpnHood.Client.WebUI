@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
 import { GetStatusQualityDisplay } from '@/components/Proxies/ProxyUtils';
+import { Util } from '@/helpers/Util';
 
 const locale = i18n.global.t;
 
@@ -12,7 +13,7 @@ const props = defineProps<{
 
 const title = computed(() => {
     const node = props.proxy.endPoint;
-    const parts: string[] = [node.protocol, `${node.host}:${node.port}`];
+    const parts: string[] = [`${node.host}:${node.port}`];
     if (node.username)
         parts.push(node.username);
     return parts.join(' · ');
@@ -20,22 +21,6 @@ const title = computed(() => {
 
 const statusQuality = computed(() => {
     return GetStatusQualityDisplay(props.proxy.status?.quality);
-});
-
-const hasCounts = computed(() => {
-    const status = props.proxy.status;
-    return status?.succeededCount != null || status?.failedCount != null;
-});
-
-const countsText = computed(() => {
-    const status = props.proxy.status;
-    if (!status) return '';
-    const parts: string[] = [];
-    if (status.succeededCount != null)
-        parts.push(`${locale('PROXY_STATUS_SUCCEEDED')}: ${status.succeededCount}`);
-    if (status.failedCount != null)
-        parts.push(`${locale('PROXY_STATUS_FAILED')}: ${status.failedCount}`);
-    return parts.join(' · ');
 });
 
 const hasError = computed(() => {
@@ -51,28 +36,82 @@ const errorMessage = computed(() => {
     <v-list-item>
       <template v-slot:title>
         <div class="d-flex align-center justify-space-between ga-2">
-          <span class="text-truncate">{{title}}</span>
+          <div class="text-truncate">
+
+            <!-- Protocol -->
+            <v-chip
+              :text="props.proxy.endPoint.protocol"
+              size="small"
+              variant="tonal"
+              density="comfortable"
+              color="white"
+              label
+              class="me-2"
+            />
+
+            <!-- Host and port -->
+            <span>{{title}}</span>
+
+          </div>
+
+          <!-- On/Off state -->
           <v-chip
             :text="proxy.endPoint.isEnabled ? locale('ON') : locale('OFF')"
             size="small"
             variant="tonal"
-            density="comfortable"
+            density="compact"
+            :disabled="!proxy.endPoint.isEnabled"
             :color="proxy.endPoint.isEnabled ? 'enable-premium' : ''"
           />
+
         </div>
       </template>
+
       <template v-slot:subtitle>
-        <p v-if="hasCounts" class="text-caption text-disabled">{{ countsText }}</p>
-        <div class="d-flex align-center mt-1 text-caption">
-          <span v-if="proxy.status?.quality" :class="`text-${statusQuality.color}`">{{statusQuality.text}}</span>
-          <span
-            v-if="hasError"
-            class="text-error text-truncate"
-            :class="{ 'border-s border-opacity-25 ps-2 ms-2': proxy.status?.quality}"
-          >
-            {{ errorMessage }}
-          </span>
+
+        <div class="d-flex align-center justify-space-between text-caption mt-3">
+          <div id="proxyItemSubtitle" class="d-flex align-center ga-3 text-caption">
+
+            <!-- Succeeded connections -->
+            <div>
+              <v-icon icon="mdi-check-circle" size="14px" color="disabled"/>
+              <span>{{props.proxy.status.succeededCount}}</span>
+            </div>
+
+            <v-divider vertical class="opacity-20"></v-divider>
+
+            <!-- Failed connections -->
+            <div>
+              <v-icon icon="mdi-close-circle" size="14px" color="disabled"/>
+              <span>{{props.proxy.status.failedCount}}</span>
+            </div>
+
+            <v-divider vertical class="opacity-20"></v-divider>
+
+            <!-- Quality -->
+            <span v-if="proxy.status?.quality" :class="`text-${statusQuality.color}`">{{statusQuality.text}}</span>
+
+          </div>
+
+          <!-- Chevron icon -->
+          <v-icon color="disabled" :icon="Util.getLocalizedRightChevron()"/>
+
         </div>
+
+        <!-- Error message -->
+        <p v-if="hasError" class="text-error text-truncate">{{ errorMessage }}</p>
+
       </template>
     </v-list-item>
 </template>
+
+<style scoped>
+/*noinspection ALL*/
+#proxyItemSubtitle>div{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(var(--v-theme-on-background), var(--v-disabled-opacity));
+}
+</style>

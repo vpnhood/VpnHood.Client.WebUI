@@ -35,11 +35,6 @@ export default defineConfig({
         },
       ],
       extendRoute(route) {
-        // Handle proxy route with dynamic parameter
-        if (route.path === '/proxies/proxy' || route.name === 'PROXY') {
-          route.path = '/proxies/:id';
-        }
-
         if (route.name === '/') {
           route.name = 'HOME';
         }

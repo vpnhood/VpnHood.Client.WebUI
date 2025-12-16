@@ -25,11 +25,14 @@ onMounted(async () => {
   <grad-sheet>
 
       <!-- Back button -->
-      <tonal-icon-btn
+      <v-btn
         v-if="!vhApp.data.features.isTv"
         :icon="Util.getLocalizedLeftChevron()"
+        variant="text"
+        width="43px"
+        height="43px"
         class="position-absolute mt-3"
-        style="z-index: 999"
+        style="z-index: 999; border-radius: 18px; border: 1px solid #ffffff2e;"
         @click="router.go(-1)"
       />
 

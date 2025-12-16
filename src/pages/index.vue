@@ -23,24 +23,17 @@ const openDebugDialogCounter = ref<number>(0);
 const navigationDrawerModel = ref(new ComponentRouteController(ComponentName.NavigationDrawer));
 const tunnelClientCountryDialogModel = ref(new ComponentRouteController(ComponentName.TunnelClientCountryDialog));
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
-const isShowUserReview = computed((): boolean => {
-  return vhApp.data.state.userReviewRecommended !== 0;
-});
+const isPremiumFlagSupported = ref(vhApp.data.features.isPremiumFlagSupported);
+const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
+
 const debugData1 = computed<string[]>({
-  get: () => {
-    return vhApp.data.userSettings.debugData1?.split(' ') ?? [];
-  },
-  set: (value: string[] | null) => {
-    vhApp.data.userSettings.debugData1 = value?.join(' ') || null;
-  }
+  get: () => vhApp.data.userSettings.debugData1?.split(' ') ?? [],
+  set: (value: string[] | null) => vhApp.data.userSettings.debugData1 = value?.join(' ') || null
 });
+
 const debugData2 = computed<string | null>({
-  get: () => {
-    return vhApp.data.userSettings.debugData2 ?? null;
-  },
-  set: (value: string | null) => {
-    vhApp.data.userSettings.debugData2 = value;
-  }
+  get: () => vhApp.data.userSettings.debugData2 ?? null,
+  set: (value: string | null) => vhApp.data.userSettings.debugData2 = value
 });
 
 let lastConnectPressedTime = Date.now() - 1000;
@@ -66,7 +59,7 @@ async function onConnectButtonClick(): Promise<void> {
 
 function isShowCountdown(): boolean {
   // Client app should not show countdown.
-  if (!vhApp.data.features.isPremiumFlagSupported)
+  if (!isPremiumFlagSupported.value)
     return false;
 
   // Do not display the expiry countdown for premium users. The expiration status of a premium account is
@@ -120,8 +113,7 @@ function formatSpeed(speed: number): string | void {
 
 // Return status of filtered apps by user (Only in mobile)
 function appFilterStatus(): string {
-  let appFilters = vhApp.data.userSettings.appFilters;
-  if (!appFilters) appFilters = [];
+  const appFilters = vhApp.data.userSettings.appFilters ?? [];
 
   switch (vhApp.data.userSettings.appFiltersMode) {
     case FilterMode.Exclude:
@@ -135,7 +127,7 @@ function appFilterStatus(): string {
 
 function openDebugDialog() {
   openDebugDialogCounter.value++;
-  if (vhApp.data.userSettings.debugData1 || vhApp.data.userSettings.debugData2)
+  if (debugData1.value || debugData2.value)
     isShowDebugDialog.value = true;
 
   else if (openDebugDialogCounter.value === 5)
@@ -151,19 +143,25 @@ async function saveDebugDataSetting(): Promise<void> {
   isShowDebugDialog.value = false;
 }
 function isDebugDataHasValue(): boolean {
-  return vhApp.data.userSettings.debugData1 !== null || vhApp.data.userSettings.debugData2 !== null;
+  return debugData1.value !== null || debugData2.value !== null;
 }
 
 </script>
 
 <template>
-  <v-sheet id="homeContainer"
-    :class="[vhApp.data.features.isPremiumFlagSupported &&
-      (vhApp.data.isPremiumAccount || (vhApp.data.state.sessionInfo?.isPremiumSession &&
-        vhApp.data.isConnected)) ?
-      'premium-user' : '', vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode, 'position-relative']">
+  <v-sheet
+    id="homeContainer"
+    class="position-relative"
+    :class="[{'premium-user': isPremiumFlagSupported && (
+      vhApp.data.isPremiumAccount ||
+      (vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.data.isConnected)
+      )},
+      vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
+  >
 
-    <v-row :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined" justify="center"
+    <v-row
+      :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined"
+      justify="center"
       class="fill-height v-row--no-gutters">
 
       <!-- Home page app bar & Go Premium or Countdown button -->
@@ -187,10 +185,15 @@ function isDebugDataHasValue(): boolean {
 
           <!-- App mini version -->
           <v-col cols="3" class="text-end">
-            <v-chip tabindex="-1" size="small" density="compact"
+            <v-chip
+              tabindex="-1"
+              size="small"
+              density="compact"
               :color="isDebugDataHasValue() ? 'version-on-home-debug' : 'disabled'"
-              :variant="isDebugDataHasValue() ? 'flat' : 'text'" :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
-              @click="openDebugDialog()">
+              :variant="isDebugDataHasValue() ? 'flat' : 'text'"
+              :class="[isDebugDataHasValue() ? 'px-2' : 'px-0']"
+              @click="openDebugDialog()"
+            >
               <span :class="{ 'text-white opacity-40': !isDebugDataHasValue() }">
                 {{ locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false) }}
               </span>
@@ -202,6 +205,7 @@ function isDebugDataHasValue(): boolean {
         <!-- Go Premium or Countdown button -->
         <v-row class="mt-0" align="center">
           <v-col cols="12" class="text-center position-relative">
+
             <!-- Show some features icon if available -->
             <home-badge />
 
@@ -209,25 +213,48 @@ function isDebugDataHasValue(): boolean {
             <CountDown v-if="isShowCountdown()" tabindex="2" />
 
             <!-- You are premium button -->
-            <v-chip v-else-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumAccount"
-              prepend-icon="mdi-crown" :text="locale('YOU_ARE_PREMIUM')" color="enable-premium" variant="tonal"
-              tabindex="2" tag="h6"
-              @click="router.push({ name: 'PREMIUM_USER' })" />
+            <v-chip
+              v-else-if="isPremiumFlagSupported && vhApp.data.isPremiumAccount"
+              prepend-icon="mdi-crown"
+              :text="locale('YOU_ARE_PREMIUM')"
+              color="enable-premium"
+              variant="tonal"
+              tabindex="2"
+              tag="h6"
+              @click="router.push({ name: 'PREMIUM_USER' })"
+            />
 
             <!-- Premium code -->
-            <v-chip v-else-if="!vhApp.data.features.isPremiumFlagSupported &&
-              vhApp.data.state.clientProfile?.hasAccessCode" prepend-icon="mdi-key"
-              :text="locale('PREMIUM_CODE_IS_ACTIVE')" color="active" variant="tonal" tag="h6" tabindex="2"
-              @click="router.push({ name: 'PREMIUM_USER' })" />
+            <v-chip
+              v-else-if="!isPremiumFlagSupported && vhApp.data.state.clientProfile?.hasAccessCode"
+              prepend-icon="mdi-key"
+              :text="locale('PREMIUM_CODE_IS_ACTIVE')"
+              color="active"
+              variant="tonal"
+              tag="h6"
+              tabindex="2"
+              @click="router.push({ name: 'PREMIUM_USER' })"
+            />
 
             <!-- Go Premium button -->
-            <v-btn v-else-if="vhApp.data.features.isPremiumFlagSupported &&
-              vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium" variant="outlined"
-              color="go-premium-btn" rounded="pill" tabindex="2" size="small" height="35"
-              @click="router.push({ name: 'PURCHASE_SUBSCRIPTION' })" class="ps-1 pe-3 text-capitalize">
-              <v-icon icon="mdi-crown" size="25" class="bg-go-premium-btn rounded-circle me-2" />
+            <v-btn
+              v-else-if="isPremiumFlagSupported && vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+              variant="outlined"
+              color="go-premium-btn"
+              rounded="pill"
+              tabindex="2"
+              size="small"
+              height="35"
+              @click="router.push({ name: 'PURCHASE_SUBSCRIPTION' })" class="ps-1 pe-3 text-capitalize"
+            >
+              <v-icon
+                icon="mdi-crown"
+                size="25"
+                class="bg-go-premium-btn rounded-circle me-2"
+              />
               {{ locale('GO_PREMIUM') }}
             </v-btn>
+
           </v-col>
         </v-row>
 
@@ -236,10 +263,10 @@ function isDebugDataHasValue(): boolean {
       <!-- Speed & Circle & Connect button -->
       <v-col cols="12" :class="'text-center state-' + [vhApp.data.connectionState.toLowerCase()]">
 
-        <!-- ProxiesStatistics & Speed -->
+        <!-- ConnectionStatistics & Speed -->
         <v-row align-content="center" justify="center" dir="ltr"
           :class="[vhApp.data.isConnected ? 'opacity-100' : 'opacity-0', 'mb-2']">
-          <!-- ProxiesStatistics -->
+          <!-- ConnectionStatistics -->
           <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
             <v-btn :text="locale('STATISTICS')" :tabindex="vhApp.data.isConnected ? '3' : null" dir="auto"
               variant="text" rounded="pill" class="d-inline-flex" :append-icon="Util.getLocalizedRightChevron()"
@@ -370,8 +397,7 @@ function isDebugDataHasValue(): boolean {
 
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
-    <TunnelClientCountryDialog
-      v-model="tunnelClientCountryDialogModel.isVisible" />
+    <TunnelClientCountryDialog v-model="tunnelClientCountryDialogModel.isVisible" />
     <UserReviewDialog v-model="isShowUserReview" />
     <badge-dialog v-model="badgeDialogModel.isVisible" />
 

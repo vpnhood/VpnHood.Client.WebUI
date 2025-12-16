@@ -7,7 +7,7 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const emit = defineEmits<{
-  (event: 'loadProxies'): void;
+  (event: 'loadProxies', value: boolean): void;
 }>();
 
 const intervalOptions = [
@@ -52,7 +52,7 @@ async function reloadFromUrl(): Promise<void> {
     await saveAutoUpdateSettings();
     await vhApp.proxyEndPointClient.reloadUrl();
     oldProxyUrl.value = proxyUrl.value;
-    emit('loadProxies');
+    emit('loadProxies', true);
   }
   finally {
     isReloadingUrl.value = false;
@@ -73,6 +73,7 @@ function loadAutoUpdateSettings(): void {
 
 onMounted(() => {
   loadAutoUpdateSettings();
+
 });
 
 // Reset URL settings when the URL switch disabled
@@ -82,12 +83,11 @@ watch(isAddByUrlEnabled, async (newVal, oldVal) => {
     autoUpdateInterval.value = null;
     await saveAutoUpdateSettings();
   }
-})
-
+});
 </script>
 
 <template>
-  <config-card>
+  <config-card :loading="isReloadingUrl">
     <v-card-item class="smallSelect">
       <!-- Status button -->
       <div class="d-flex align-center justify-space-between">
@@ -130,6 +130,7 @@ watch(isAddByUrlEnabled, async (newVal, oldVal) => {
 
           <v-select
             v-model="autoUpdateInterval"
+            @update:model-value="saveAutoUpdateSettings()"
             :items="intervalOptions"
             item-title="title"
             item-value="value"
