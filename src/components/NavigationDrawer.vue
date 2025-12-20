@@ -275,33 +275,25 @@ function edgeToEdgeHeight(bottom: boolean): string{
           target="_blank"
         />
 
-<!--        &lt;!&ndash; Instagram &ndash;&gt;
+        <!-- Instagram -->
         <v-btn
-          icon
+          icon="mdi-instagram"
           size="small"
           variant="tonal"
           density="comfortable"
           href="https://www.instagram.com/vpnhood/"
           target="_blank"
-        >
-          <template v-slot:default>
-            <Icon icon="proicons:instagram" width="20" />
-          </template>
-        </v-btn>
+        />
 
-        &lt;!&ndash; Twitter &ndash;&gt;
+        <!-- Twitter -->
         <v-btn
-          icon
+          icon="mdi-twitter"
           size="small"
           variant="tonal"
           density="comfortable"
           href="https://x.com/vpnhood"
           target="_blank"
-        >
-          <template v-slot:default>
-            <Icon icon="proicons:x-twitter" width="17" />
-          </template>
-        </v-btn>-->
+        />
       </div>
 
       <!-- Powered by button -->

@@ -41,6 +41,12 @@ const featuresList: Features[] = [
     title: "DNS",
     pageLink: {name: "DNS"},
     isInUse: vhApp.data.isDnsInUse
+  },
+  {
+    icon: "mdi-diversify",
+    title: "PROXIES",
+    pageLink: {name: "PROXIES"},
+    isInUse: vhApp.data.state.isProxyEndPointActive
   }
 ]
 

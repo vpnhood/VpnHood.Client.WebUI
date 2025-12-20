@@ -99,7 +99,7 @@ const errorMessage = computed(() => {
         </div>
 
         <!-- Error message -->
-        <p v-if="hasError" class="text-error text-truncate">{{ errorMessage }}</p>
+        <p v-if="hasError" class="text-caption text-disabled opacity-60 mt-2">{{ errorMessage }}</p>
 
       </template>
     </v-list-item>

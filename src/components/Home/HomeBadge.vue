@@ -25,6 +25,10 @@ const icons: FeatureIcon[] = [
     icon: "mdi-dns",
     isShow: vhApp.data.isDnsInUse
   },
+  {
+    icon: "mdi-diversify",
+    isShow: vhApp.data.state.isProxyEndPointActive
+  }
 ]
 </script>
 
