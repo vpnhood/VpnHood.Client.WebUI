@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from 'vue-router/auto-routes'
-import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 const router = createRouter({
@@ -19,7 +18,7 @@ router.beforeEach((to, from, next) => {
 // Update document title after navigation. Dont change the page title in beforeEach
 router.afterEach((to) => {
   // Add the app name to the page title
-  const appName = VpnHoodApp.instance.isConnectApp() ? i18n.global.t('VPN_HOOD_CONNECT_APP_NAME') : i18n.global.t('VPN_HOOD_APP_NAME');
+  const appName = VpnHoodApp.instance.data.features.appName;
   document.title = `${to.meta.title} - ${appName}`;
 });
 

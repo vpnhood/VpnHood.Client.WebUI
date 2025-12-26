@@ -167,98 +167,100 @@ function calcUnit(total: number): string{
         </v-card-text>
       </config-card>
 
-      <!-- Session traffic -->
-      <config-card>
-        <v-card-title>
-          {{locale('SESSION_TRAFFIC')}}
-          <v-icon icon="mdi-chart-timeline-variant"/>
-        </v-card-title>
-        <v-card-subtitle>{{locale('STATISTICS_SESSION_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+      <template v-if="vhApp.data.state.clientCountryCode?.toUpperCase() !== 'CN'">
+        <!-- Session traffic -->
+        <config-card>
+          <v-card-title>
+            {{locale('SESSION_TRAFFIC')}}
+            <v-icon icon="mdi-chart-timeline-variant"/>
+          </v-card-title>
+          <v-card-subtitle>{{locale('STATISTICS_SESSION_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
-        <v-card-text>
-          <ul class="info-table">
-            <li class="border-b">
-              <span>{{locale('USED')}}</span>
-              <span class="text-highlight" dir="ltr">
-                {{ calcUsage(vhApp.data.state.sessionStatus?.sessionTraffic.received, vhApp.data.state.sessionStatus?.sessionTraffic.sent)
-                }}
-              </span>
-            </li>
-            <li>
-              <span>{{locale('MAX_TRAFFIC')}}</span>
-              <span
-                dir="ltr"
-                :class="[vhApp.data.state.sessionStatus?.sessionMaxTraffic &&
-                vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ? 'text-error' : 'text-active']">
-                {{vhApp.data.state.sessionStatus?.sessionMaxTraffic && vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ?
-                calcUnit(vhApp.data.state.sessionStatus.sessionMaxTraffic) : locale('UNLIMITED')}}
-              </span>
-            </li>
-          </ul>
-        </v-card-text>
-      </config-card>
+          <v-card-text>
+            <ul class="info-table">
+              <li class="border-b">
+                <span>{{locale('USED')}}</span>
+                <span class="text-highlight" dir="ltr">
+                  {{ calcUsage(vhApp.data.state.sessionStatus?.sessionTraffic.received, vhApp.data.state.sessionStatus?.sessionTraffic.sent)
+                  }}
+                </span>
+              </li>
+              <li>
+                <span>{{locale('MAX_TRAFFIC')}}</span>
+                <span
+                  dir="ltr"
+                  :class="[vhApp.data.state.sessionStatus?.sessionMaxTraffic &&
+                  vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ? 'text-error' : 'text-active']">
+                  {{vhApp.data.state.sessionStatus?.sessionMaxTraffic && vhApp.data.state.sessionStatus.sessionMaxTraffic > 0 ?
+                  calcUnit(vhApp.data.state.sessionStatus.sessionMaxTraffic) : locale('UNLIMITED')}}
+                </span>
+              </li>
+            </ul>
+          </v-card-text>
+        </config-card>
 
-      <!-- Monthly traffic -->
-      <config-card>
-        <v-card-title>
-          {{locale('MONTHLY_TRAFFIC')}}
-          <v-icon icon="mdi-chart-timeline-variant"/>
-        </v-card-title>
-        <v-card-subtitle>{{locale('STATISTICS_MONTHLY_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+        <!-- Monthly traffic -->
+        <config-card>
+          <v-card-title>
+            {{locale('MONTHLY_TRAFFIC')}}
+            <v-icon icon="mdi-chart-timeline-variant"/>
+          </v-card-title>
+          <v-card-subtitle>{{locale('STATISTICS_MONTHLY_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
-        <v-card-text>
-          <ul class="info-table">
-            <li class="border-b">
-              <span>{{locale('USED')}}</span>
-              <span class="text-highlight" dir="ltr">
-                {{ calcUsage(vhApp.data.state.sessionStatus?.cycleTraffic.received, vhApp.data.state.sessionStatus?.cycleTraffic.sent)
-                }}
-              </span>
-            </li>
-            <li>
-              <span>{{locale('MAX_TRAFFIC')}}</span>
-              <span
-                dir="ltr"
-                :class="[vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic &&
-                vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ? 'text-error' : 'text-active']">
-                {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ?
-                calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic) : locale('UNLIMITED')}}
-              </span>
-            </li>
-          </ul>
-        </v-card-text>
-      </config-card>
+          <v-card-text>
+            <ul class="info-table">
+              <li class="border-b">
+                <span>{{locale('USED')}}</span>
+                <span class="text-highlight" dir="ltr">
+                  {{ calcUsage(vhApp.data.state.sessionStatus?.cycleTraffic.received, vhApp.data.state.sessionStatus?.cycleTraffic.sent)
+                  }}
+                </span>
+              </li>
+              <li>
+                <span>{{locale('MAX_TRAFFIC')}}</span>
+                <span
+                  dir="ltr"
+                  :class="[vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic &&
+                  vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ? 'text-error' : 'text-active']">
+                  {{vhApp.data.state.sessionInfo.accessInfo?.maxCycleTraffic && vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic > 0 ?
+                  calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxCycleTraffic) : locale('UNLIMITED')}}
+                </span>
+              </li>
+            </ul>
+          </v-card-text>
+        </config-card>
 
-      <!-- Total traffic -->
-      <config-card v-if="vhApp.data.isPremiumAccount">
-        <v-card-title>
-          {{locale('TOTAL_TRAFFIC')}}
-          <v-icon icon="mdi-chart-timeline-variant"/>
-        </v-card-title>
-        <v-card-subtitle>{{locale('STATISTICS_TOTAL_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
+        <!-- Total traffic -->
+        <config-card v-if="vhApp.data.isPremiumAccount">
+          <v-card-title>
+            {{locale('TOTAL_TRAFFIC')}}
+            <v-icon icon="mdi-chart-timeline-variant"/>
+          </v-card-title>
+          <v-card-subtitle>{{locale('STATISTICS_TOTAL_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
-        <v-card-text class="text-disabled text-caption mt-3">
-          <ul class="info-table">
-            <li class="border-b">
-              <span>{{locale('USED')}}</span>
-              <span class="text-highlight" dir="ltr">
-                {{ calcUsage(vhApp.data.state.sessionStatus?.totalTraffic.received, vhApp.data.state.sessionStatus?.totalTraffic.sent)
-                }}
-              </span>
-            </li>
-            <li>
-              <span>{{locale('MAX_TRAFFIC')}}</span>
-              <span
-                dir="ltr"
-                :class="[vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic &&
-                vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ? 'text-error' : 'text-active']">
-                {{vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic && vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ?
-                calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic) : locale('UNLIMITED')}}
-              </span>
-            </li>
-          </ul>
-        </v-card-text>
-      </config-card>
+          <v-card-text class="text-disabled text-caption mt-3">
+            <ul class="info-table">
+              <li class="border-b">
+                <span>{{locale('USED')}}</span>
+                <span class="text-highlight" dir="ltr">
+                  {{ calcUsage(vhApp.data.state.sessionStatus?.totalTraffic.received, vhApp.data.state.sessionStatus?.totalTraffic.sent)
+                  }}
+                </span>
+              </li>
+              <li>
+                <span>{{locale('MAX_TRAFFIC')}}</span>
+                <span
+                  dir="ltr"
+                  :class="[vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic &&
+                  vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ? 'text-error' : 'text-active']">
+                  {{vhApp.data.state.sessionInfo.accessInfo?.maxTotalTraffic && vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic > 0 ?
+                  calcUnit(vhApp.data.state.sessionInfo.accessInfo.maxTotalTraffic) : locale('UNLIMITED')}}
+                </span>
+              </li>
+            </ul>
+          </v-card-text>
+        </config-card>
+      </template>
 
     </v-defaults-provider>
   </v-sheet>

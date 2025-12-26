@@ -113,7 +113,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <div class="ms-3">
         <!-- App name -->
         <h4 dir="ltr" :class="vuetify.locale.isRtl.value? 'text-end' : 'text-start'" class="text-no-wrap">
-          {{ vhApp.isConnectApp() ? locale('VPN_HOOD_CONNECT_APP_NAME') : locale('VPN_HOOD_APP_NAME') }}
+          {{vhApp.data.features.appName}}
         </h4>
 
         <!-- App full version -->
