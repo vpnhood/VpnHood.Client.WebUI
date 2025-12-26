@@ -14,7 +14,7 @@ $translatorPrompt= Join-Path $solutionDir "src/locales/vh_translator/custom_prom
 #translate
 Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
 if (Test-Path $translatorFile) {
-    & $translatorFile --base "$solutionDir/src/locales/en.json" -x $translatorPrompt -m "gemini-2.5-pro";
+    & $translatorFile --base "$solutionDir/src/locales/en.json" -x $translatorPrompt -m "gemini-3-flash-preview";
 }
 else {
     Write-Host "Translator app not found. Skipping translation step." -ForegroundColor Yellow;
