@@ -101,6 +101,7 @@ function isShowConnectivitySectionTitle(): boolean {
 
     <!-- Proxies -->
     <settings-item
+      v-if="false"
       :title="locale('PROXIES')"
       :subtitle="locale('PROXIES_DESC')"
       :isPremium="false"
