@@ -84,7 +84,7 @@ export class ErrorHandler {
 
       // Could not connect to any server
       case ExceptionType.UnreachableServer:
-        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
+        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showTryPremium: true } };
 
       case ExceptionType.RequestQuickLaunch:
         return { localeKey: 'QUICK_LAUNCH_TURN_ON_ERROR' };

@@ -20,17 +20,10 @@ const isAdapterDnsAvailable = computed(() => selectedDnsMode.value == DnsMode.Ad
 
 const dns1 = ref<string | null>(vhApp.data.userSettings.dnsServers[0] ?? null);
 const dns2 = ref<string | null>(vhApp.data.userSettings.dnsServers[1] ?? null);
-const dns1Error = ref<string | null>(null);
+const customDnsForm = ref();
 const selectedDnsMode = ref<DnsMode>(vhApp.data.userSettings.dnsMode);
 
-const validateDns1 = (value: string | null): true | string => {
-  if (isAdapterDnsAvailable.value && (!value || Validators.isEmptyString(value))) {
-    return locale('DNS1_REQUIRED');
-  }
-  return Validators.validateIp(value, locale('INVALID_IP'));
-};
-
-const dns1Rules = [validateDns1];
+const dns1Rules = [(value: string | null) => isAdapterDnsAvailable.value && !value ? locale('DNS1_REQUIRED') : Validators.validateIp(value, locale('INVALID_IP'))];
 const dns2Rules = [(value: string | null) => Validators.validateIp(value, locale('INVALID_IP'))];
 
 async function saveSettings() {
@@ -41,14 +34,13 @@ async function saveSettings() {
 
 onBeforeRouteLeave(
   async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    const result = validateDns1(dns1.value);
-    if (result !== true) {
-      dns1Error.value = result;
-      next(false);
-      return;
+    if ( isAdapterDnsAvailable.value ) {
+      const result = await customDnsForm.value.validate();
+      if (!result.valid){
+        next(false);
+        return;
+      }
     }
-
-    dns1Error.value = null;
 
     try {
       await saveSettings();
@@ -74,7 +66,8 @@ watch(dns2, (newVal) => {
 });
 
 function isShowEnforcedByServerAlert() {
-  return vhApp.data.isConnected && selectedDnsMode.value == DnsMode.AdapterDns &&  !vhApp.data.state.sessionInfo?.isDnsServersAccepted
+  return vhApp.data.isConnected && selectedDnsMode.value == DnsMode.AdapterDns &&
+  !vhApp.data.state.sessionInfo?.isDnsServersAccepted
 }
 </script>
 
@@ -151,7 +144,11 @@ function isShowEnforcedByServerAlert() {
       <!-- Enforced by server alert -->
       <alert-warning v-if="isShowEnforcedByServerAlert()" :text="locale('ENFORCED_BY_SERVER')" />
 
-      <alert-warning v-if="isPrivateDnsActive" :text="locale('ADAPTER_DNS_DISABLE_ALERT_MSG')" class="my-3" />
+      <alert-warning
+        v-if="isPrivateDnsActive && selectedDnsMode === DnsMode.AdapterDns"
+        :text="locale('PRIVATE_DNS_AVAILABLE_ALERT_MSG')"
+        class="my-3"
+      />
 
       <v-radio-group
         v-model="selectedDnsMode"
@@ -181,34 +178,33 @@ function isShowEnforcedByServerAlert() {
 
       </v-radio-group>
 
-      <v-card-item v-if="isAdapterDnsAvailable" :class="{'opacity-50': isPrivateDnsActive}">
+      <v-card-item v-if="isAdapterDnsAvailable">
         <v-locale-provider :rtl="false">
-          <p>DNS 1</p>
-          <v-text-field
-            v-model="dns1"
-            :error="!!dns1Error"
-            :error-messages="dns1Error"
-            :rules="dns1Rules"
-            :disabled="isPrivateDnsActive"
-            rounded="lg"
-            variant="outlined"
-            color="highlight"
-            placeholder="8.8.8.8"
-            density="compact"
-            clearable
-          />
-          <p class="mt-2">DNS 2</p>
-          <v-text-field
-            v-model="dns2"
-            :rules="dns2Rules"
-            :disabled="isPrivateDnsActive"
-            rounded="lg"
-            variant="outlined"
-            color="highlight"
-            placeholder="8.8.4.4"
-            density="compact"
-            clearable
-          />
+          <v-form ref="customDnsForm">
+            <p>DNS 1</p>
+            <v-text-field
+              v-model="dns1"
+              :rules="dns1Rules"
+              rounded="lg"
+              variant="outlined"
+              color="highlight"
+              placeholder="8.8.8.8"
+              density="compact"
+              clearable
+            />
+
+            <p class="mt-2">DNS 2</p>
+            <v-text-field
+              v-model="dns2"
+              :rules="dns2Rules"
+              rounded="lg"
+              variant="outlined"
+              color="highlight"
+              placeholder="8.8.4.4"
+              density="compact"
+              clearable
+            />
+          </v-form>
         </v-locale-provider>
       </v-card-item>
     </config-card>

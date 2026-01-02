@@ -46,7 +46,6 @@ const isConnectionRefused = (error: unknown): boolean => {
 }
 
 onMounted(async () => {
-  console.log(vhApp.data.state.currentUiCultureInfo.nativeName);
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
 

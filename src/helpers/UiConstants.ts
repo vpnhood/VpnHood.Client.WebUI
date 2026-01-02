@@ -45,4 +45,5 @@ export interface ShowErrorActions {
   showChangeServerToAuto?: boolean,
   showRemovePremium?: boolean,
   isPrivateDnsError?: boolean,
+  showTryPremium?: boolean
 }
