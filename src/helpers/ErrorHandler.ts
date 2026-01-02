@@ -23,7 +23,7 @@ export class ErrorHandler {
 
     // Do not show any message
     if (errorOptions.ignoreMessage){
-      await VpnHoodApp.instance.clearLastError();
+      // do not clear last message when ignored, just do not show it
       return;
     }
 

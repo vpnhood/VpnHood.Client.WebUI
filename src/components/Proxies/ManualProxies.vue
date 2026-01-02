@@ -2,7 +2,7 @@
 import AddByUrl from '@/components/Proxies/Manual/AddByUrl.vue';
 import ConnectionStatistics from '@/components/Proxies/Manual/ConnectionStatistics.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
+import { AppConnectionState, AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import SavedProxies from '@/components/Proxies/Manual/SavedProxies.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
@@ -28,7 +28,7 @@ async function loadProxies(showLoading = true): Promise<void> {
 async function startPeriodicRefresh(): Promise<void> {
   if (refreshInterval) return;
   refreshInterval = setInterval(async () => {
-    if (!document.hidden && vhApp.data.isConnected && !isShowAddOrEditSheet.value) {
+    if (!document.hidden && vhApp.data.connectionState != AppConnectionState.None && !isShowAddOrEditSheet.value) {
       await loadProxies(false); // Don't show loading indicator on periodic refresh
     }
   }, 3000);
