@@ -66,7 +66,7 @@ async function navigateByRouter(to: RouteLocationRaw){
 
       <v-card-item>
         <template v-for="(feature, index) in featuresList" :key="index">
-          <v-divider v-if="index > 0 && feature.isInUse" class="my-2" opacity=".1" />
+          <v-divider v-if="index > 0 && featuresList.filter(x => x.isInUse).length > 1" class="my-2" opacity=".1" />
           <v-btn
             v-if="feature.isInUse"
             block

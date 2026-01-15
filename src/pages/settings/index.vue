@@ -102,7 +102,6 @@ function isShowConnectivitySectionTitle(): boolean {
 
     <!-- Proxies -->
     <settings-item
-      v-if="(vhApp.data.userSettings.debugData1?.indexOf('/client-proxy') ?? -1) >= 0"
       :title="locale('PROXIES')"
       :subtitle="locale('PROXIES_DESC')"
       :isPremium="false"

@@ -250,7 +250,7 @@
   "PROXY_STATUS_FAIR": "Regular",
   "PROXY_STATUS_POOR": "Mala",
   "PROXY_STATUS_VERY_POOR": "Muy mala",
-  "PROXY_STATUS_NO_DATA": "Sin datos",
+  "NO_DATA": "Sin datos",
   "SUCCEEDED": "Éxito",
   "FAILED": "Error",
   "DISABLED": "Desactivado",

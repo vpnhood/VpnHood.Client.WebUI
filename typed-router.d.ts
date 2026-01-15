@@ -26,6 +26,7 @@ declare module 'vue-router/auto-routes' {
     'TURN_OFF_PRIVATE_DNS': RouteRecordInfo<'TURN_OFF_PRIVATE_DNS', '/dns/private-dns/turn-off-private-dns', Record<never, never>, Record<never, never>>,
     'ENGINE_ERROR': RouteRecordInfo<'ENGINE_ERROR', '/engine-error', Record<never, never>, Record<never, never>>,
     'INTERNAL_AD': RouteRecordInfo<'INTERNAL_AD', '/internal-ad', Record<never, never>, Record<never, never>>,
+    'FREE_SERVERS_CONNECTION_ISSUE': RouteRecordInfo<'FREE_SERVERS_CONNECTION_ISSUE', '/learn-more/free-servers-connection-issue', Record<never, never>, Record<never, never>>,
     'PRIVACY_POLICY': RouteRecordInfo<'PRIVACY_POLICY', '/privacy-policy', Record<never, never>, Record<never, never>>,
     'PROTOCOLS': RouteRecordInfo<'PROTOCOLS', '/protocols', Record<never, never>, Record<never, never>>,
     'CLOAK_MODE': RouteRecordInfo<'CLOAK_MODE', '/protocols/cloak-mode', Record<never, never>, Record<never, never>>,

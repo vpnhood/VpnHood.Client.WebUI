@@ -73,6 +73,10 @@ export class ErrorHandler {
   }
 
   private static async processApiException(err: ApiException): Promise<ShowErrorOptions> {
+    // For developer
+    console.log('Exception Type: ApiException');
+    console.log('TypeName: ', err.exceptionTypeName);
+    console.log('Error Infos: ' + err);
 
     switch (err.exceptionTypeName) {
 
@@ -84,7 +88,9 @@ export class ErrorHandler {
 
       // Could not connect to any server
       case ExceptionType.UnreachableServer:
-        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showTryPremium: true } };
+        // TODO: active try premium after fix the error issue.
+        //return { localeKey: 'UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM', action: { showTryPremium: true } };
+        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
 
       case ExceptionType.RequestQuickLaunch:
         return { localeKey: 'QUICK_LAUNCH_TURN_ON_ERROR' };

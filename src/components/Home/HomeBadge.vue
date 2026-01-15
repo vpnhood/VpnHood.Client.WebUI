@@ -35,10 +35,11 @@ const icons: FeatureIcon[] = [
 <template>
 <div class="d-flex flex-column align-center ga-3" style="position: absolute; top: 15px; right: 10px">
   <template v-for="(item, index) in icons" :key="index">
-    <v-icon
+    <v-btn
       v-if="item.isShow"
       :icon="item.icon"
-      size="17px"
+      size="small"
+      variant="text"
       color="white"
       class="opacity-40 pb-1"
       tabindex="-1"

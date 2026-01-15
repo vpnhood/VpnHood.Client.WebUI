@@ -18,7 +18,9 @@ let refreshInterval: ReturnType<typeof setInterval> | null = null;
 
 async function loadProxies(showLoading = true): Promise<void> {
   try {
-    isLoading.value = showLoading;
+    if (!isLoading.value)
+      isLoading.value = showLoading;
+
     proxies.value = await vhApp.proxyEndPointClient.list();
   }
   finally {

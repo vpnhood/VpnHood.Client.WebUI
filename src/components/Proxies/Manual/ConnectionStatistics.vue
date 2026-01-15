@@ -75,10 +75,11 @@ const props = defineProps<{
           />
           <v-chip
             :text="props.proxyStats.disabledServerCount"
-            color="error"
+            color="white"
             variant="tonal"
             density="comfortable"
             size="small"
+            class="text-disabled"
           />
         </div>
       </div>

@@ -104,8 +104,9 @@ function closeSheet(){
   <v-bottom-sheet
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
+    location="bottom"
     width="100%"
-    max-width="100%"
+    :max-width="vhApp.data.uiState.maxWidthOnLargeScreen"
   >
 
     <config-card color="background" class="rounded-xl rounded-b-0" :disabled="isProcessing" :loading="isProcessing">
@@ -119,7 +120,7 @@ function closeSheet(){
             :label="locale('PROXY_IMPORT_LABEL')"
             variant="outlined"
             hide-details="auto"
-            auto-grow
+            no-resize
             rows="6"
           />
         </template>

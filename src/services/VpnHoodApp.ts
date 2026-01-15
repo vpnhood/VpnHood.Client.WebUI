@@ -256,6 +256,7 @@ export class VpnHoodApp {
     errorDialogData.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
     errorDialogData.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
     errorDialogData.showRemovePremium = action?.showRemovePremium ?? false;
+    errorDialogData.showTryPremium = action?.showTryPremium ?? false;
 
     await this.errorDialogModel.show(true);
   }

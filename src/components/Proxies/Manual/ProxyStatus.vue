@@ -70,7 +70,7 @@ const statusItems = [
 </script>
 
 <template>
-    <p v-if="!status" class="text-center text-disabled py-8">{{ locale('PROXY_STATUS_NO_DATA') }}</p>
+    <p v-if="!status" class="text-center text-disabled py-8">{{ locale('NO_DATA') }}</p>
 
     <v-list id="statusList" v-else lines="one" density="compact">
       <template

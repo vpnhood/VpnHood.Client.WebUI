@@ -32,6 +32,10 @@ async function changeLocationToAuto(): Promise<void> {
   await ConnectManager.connect1(false);
 }
 
+async function tryPremium(): Promise<void> {
+
+}
+
 async function diagnose(): Promise<void> {
   await closeDialog();
   await vhApp.diagnose();
@@ -86,14 +90,14 @@ async function closeDialog(): Promise<void> {
       <v-card-item class="py-1">
 
           <v-defaults-provider :defaults="{
-          'VBtn':{
-            'rounded':'pill',
-            'variant': 'tonal',
-            'color': 'dialog-alert-btn',
-            'class': 'text-transform-none mb-3',
-            'block': true
+            'VBtn':{
+              'rounded':'pill',
+              'variant': 'tonal',
+              'color': 'dialog-alert-btn',
+              'class': 'text-transform-none mb-3',
+              'block': true
             }
-        }"
+          }"
           >
 
           <!-- Change location to auto -->
@@ -102,6 +106,16 @@ async function closeDialog(): Promise<void> {
             :text="locale('CONFIRM_CHANGE_LOCATION_TO_AUTO')"
             @click="changeLocationToAuto()"
           />
+
+          <!-- Try premium -->
+          <template v-if="dialogData.showTryPremium">
+            <v-btn
+             variant="flat"
+             :text="locale('TRY_PREMIUM')"
+             @click="tryPremium()"
+            />
+            <p></p>
+          </template>
 
           <!-- Remove premium code or profile -->
           <div v-if="dialogData.showRemovePremium">

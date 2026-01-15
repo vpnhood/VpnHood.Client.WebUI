@@ -2219,8 +2219,28 @@ export class ProxyEndPointClient {
         return Promise.resolve<AppProxyEndPointInfo>(null as any);
     }
 
-    list( cancelToken?: CancelToken): Promise<AppProxyEndPointInfo[]> {
-        let url_ = this.baseUrl + "/api/proxy-endpoints";
+    list(includeSucceeded?: boolean | undefined, includeFailed?: boolean | undefined, includeUnknown?: boolean | undefined, includeDisabled?: boolean | undefined, recordIndex?: number | null | undefined, recordCount?: number | null | undefined, cancelToken?: CancelToken): Promise<AppProxyEndPointInfo[]> {
+        let url_ = this.baseUrl + "/api/proxy-endpoints?";
+        if (includeSucceeded === null)
+            throw new globalThis.Error("The parameter 'includeSucceeded' cannot be null.");
+        else if (includeSucceeded !== undefined)
+            url_ += "includeSucceeded=" + encodeURIComponent("" + includeSucceeded) + "&";
+        if (includeFailed === null)
+            throw new globalThis.Error("The parameter 'includeFailed' cannot be null.");
+        else if (includeFailed !== undefined)
+            url_ += "includeFailed=" + encodeURIComponent("" + includeFailed) + "&";
+        if (includeUnknown === null)
+            throw new globalThis.Error("The parameter 'includeUnknown' cannot be null.");
+        else if (includeUnknown !== undefined)
+            url_ += "includeUnknown=" + encodeURIComponent("" + includeUnknown) + "&";
+        if (includeDisabled === null)
+            throw new globalThis.Error("The parameter 'includeDisabled' cannot be null.");
+        else if (includeDisabled !== undefined)
+            url_ += "includeDisabled=" + encodeURIComponent("" + includeDisabled) + "&";
+        if (recordIndex !== undefined && recordIndex !== null)
+            url_ += "recordIndex=" + encodeURIComponent("" + recordIndex) + "&";
+        if (recordCount !== undefined && recordCount !== null)
+            url_ += "recordCount=" + encodeURIComponent("" + recordCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -2326,8 +2346,24 @@ export class ProxyEndPointClient {
         return Promise.resolve<AppProxyEndPointInfo>(null as any);
     }
 
-    deleteAll( cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/proxy-endpoints";
+    deleteAll(deleteSucceeded?: boolean | undefined, deleteFailed?: boolean | undefined, deleteUnknown?: boolean | undefined, deleteDisabled?: boolean | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/proxy-endpoints?";
+        if (deleteSucceeded === null)
+            throw new globalThis.Error("The parameter 'deleteSucceeded' cannot be null.");
+        else if (deleteSucceeded !== undefined)
+            url_ += "deleteSucceeded=" + encodeURIComponent("" + deleteSucceeded) + "&";
+        if (deleteFailed === null)
+            throw new globalThis.Error("The parameter 'deleteFailed' cannot be null.");
+        else if (deleteFailed !== undefined)
+            url_ += "deleteFailed=" + encodeURIComponent("" + deleteFailed) + "&";
+        if (deleteUnknown === null)
+            throw new globalThis.Error("The parameter 'deleteUnknown' cannot be null.");
+        else if (deleteUnknown !== undefined)
+            url_ += "deleteUnknown=" + encodeURIComponent("" + deleteUnknown) + "&";
+        if (deleteDisabled === null)
+            throw new globalThis.Error("The parameter 'deleteDisabled' cannot be null.");
+        else if (deleteDisabled !== undefined)
+            url_ += "deleteDisabled=" + encodeURIComponent("" + deleteDisabled) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -2695,6 +2731,50 @@ export class ProxyEndPointClient {
     }
 
     protected processReloadUrl(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    disableAllFailed( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/proxy-endpoints/disable-failed";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDisableAllFailed(_response);
+        });
+    }
+
+    protected processDisableAllFailed(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -4790,9 +4870,11 @@ export interface IDomainFilter {
 export enum EndPointStrategy {
     Auto = "Auto",
     DnsFirst = "DnsFirst",
-    TokenFirst = "TokenFirst",
+    IpFirst = "IpFirst",
+    TokenFirst = "IpFirst",
     DnsOnly = "DnsOnly",
-    TokenOnly = "TokenOnly",
+    IpOnly = "IpOnly",
+    TokenOnly = "IpOnly",
 }
 
 export enum DnsMode {

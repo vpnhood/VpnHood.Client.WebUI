@@ -27,17 +27,32 @@ const emit = defineEmits<{
   (event: 'loadProxies'): void;
 }>();
 
+interface MenuItem {
+  title: string,
+  icon: string,
+  color: string,
+  confirm?:{
+    required: boolean,
+    title: string,
+    message: string
+  },
+  action?: () => Promise<void>,
+  bulkActionType?: BulkActionType
+}
+enum BulkActionType{
+  deleteAll,
+  disableAllFailed,
+  deleteAllFailed,
+  deleteAllDisabled
+}
+
 const loading = toRef(props, 'isLoading');
 const isResettingStates = ref(false);
 const isImporting = ref(false);
 const isShowAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
 const addOrdEditSheetType = ref<ProxySheetType>(ProxySheetType.add);
 const isDisableButtons = ref(isResettingStates.value || props.isLoading || isImporting.value);
-const proxyEndPoint = ref<ProxyEndPoint | null>(null);
-const proxyStatus = ref<ProxyEndPointStatus | null>(null);
-
-function addProxy(): void {
-  proxyEndPoint.value = new ProxyEndPoint({
+const proxyEndPoint = ref<ProxyEndPoint>(new ProxyEndPoint({
     id: '',
     host: '',
     port: 8080,
@@ -46,12 +61,67 @@ function addProxy(): void {
     username: '',
     password: '',
     url: ''
-  });
+  })
+);
+const proxyStatus = ref<ProxyEndPointStatus | null>(null);
+const menuItems: MenuItem[] = [
+  {
+    title: locale('PROXY_RESET_STATES'),
+    icon: 'mdi-refresh',
+    color: '',
+    action: resetStates
+  },
+  {
+    title: locale('DISABLE_ALL_FAILED'),
+    icon: 'mdi-cancel',
+    color: '',
+    confirm:{
+      required: true,
+      title: locale('DISABLE_ALL_FAILED'),
+      message: locale('DISABLE_ALL_FAILED_PROXIES_MSG')
+    },
+    bulkActionType: BulkActionType.disableAllFailed
+  },
+  {
+    title: locale('REMOVE_ALL_FAILED'),
+    icon: 'mdi-delete-alert',
+    color: '',
+    confirm:{
+      required: true,
+      title: locale('REMOVE_ALL_FAILED'),
+      message: locale('REMOVE_ALL_FAILED_MSG')
+    },
+    bulkActionType: BulkActionType.deleteAllFailed
+  },
+  {
+    title: locale('REMOVE_ALL_DISABLED'),
+    icon: 'mdi-delete-forever',
+    color: '',
+    confirm:{
+      required: true,
+      title: locale('REMOVE_ALL_DISABLED'),
+      message: locale('REMOVE_ALL_DISABLED_MSG')
+    },
+    bulkActionType: BulkActionType.deleteAllDisabled
+  },
+  {
+    title: locale('REMOVE_ALL'),
+    icon: 'mdi-delete',
+    color: 'error',
+    confirm:{
+      required: true,
+      title: locale('REMOVE_ALL'),
+      message: locale('REMOVE_ALL_PROXIES_MSG')
+    },
+    bulkActionType: BulkActionType.deleteAll
+  },
+];
 
+function addProxy(): void {
   addOrdEditSheetType.value = ProxySheetType.add;
   isShowAddOrEditSheet.value.show();
 }
-function edditProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
+function editeProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
   proxyStatus.value = selectedProxyEndPoint.status;
   proxyEndPoint.value =  selectedProxyEndPoint.endPoint;
   addOrdEditSheetType.value = ProxySheetType.edit;
@@ -70,18 +140,27 @@ async function resetStates(): Promise<void> {
     isResettingStates.value = false;
   }
 }
-async function deleteAllProxies(): Promise<void> {
-  if (!await vhApp.showConfirmDialog(locale('REMOVE_ALL_PROXIES'), locale('REMOVE_ALL_PROXIES_MSG')))
+
+async function bulkAction(selectedItem: MenuItem): Promise<void> {
+  if (selectedItem.confirm?.required && !await vhApp.showConfirmDialog(selectedItem.confirm.title,
+    selectedItem.confirm.message))
     return;
 
-  try {
-    loading.value = true;
-    await vhApp.proxyEndPointClient.deleteAll();
-    emit('loadProxies');
+  switch (selectedItem.bulkActionType) {
+    case BulkActionType.disableAllFailed:
+      await vhApp.proxyEndPointClient.disableAllFailed();
+      break;
+    case BulkActionType.deleteAll:
+      await vhApp.proxyEndPointClient.deleteAll();
+      break;
+    case BulkActionType.deleteAllDisabled:
+      await vhApp.proxyEndPointClient.deleteAll(false, false, false, true);
+      break;
+    case BulkActionType.deleteAllFailed:
+      await vhApp.proxyEndPointClient.deleteAll(false, true);
+      break;
   }
-  catch {
-    loading.value = false;
-  }
+  emit('loadProxies');
 }
 
 </script>
@@ -108,21 +187,14 @@ async function deleteAllProxies(): Promise<void> {
 
               <!-- Reset states -->
               <v-list-item
-                :title="locale('PROXY_RESET_STATES')"
+                v-for="(item, index) in menuItems"
                 prepend-gap="10px"
-                prepend-icon="mdi-refresh"
-                @click="resetStates()"
-              />
-
-              <v-divider />
-
-              <!-- Delete all -->
-              <v-list-item
-                :title="locale('PROXY_DELETE_ALL')"
-                prepend-gap="10px"
-                prepend-icon="mdi-delete"
-                base-color="error"
-                @click="deleteAllProxies()"
+                :class="{'border-b': index < (menuItems.length - 1)}"
+                :key="index"
+                :title="item.title"
+                :prepend-icon="item.icon"
+                :base-color="item.color"
+                @click="item.action ? item.action() : bulkAction(item)"
               />
 
             </v-list>
@@ -182,7 +254,7 @@ async function deleteAllProxies(): Promise<void> {
         :key="proxy.endPoint.id"
         :proxy="proxy"
         :class="{'border-b': index !== props.proxies.length - 1}"
-        @click="edditProxy(proxy)"
+        @click="editeProxy(proxy)"
       />
     </v-list>
 
@@ -194,7 +266,6 @@ async function deleteAllProxies(): Promise<void> {
   </config-card>
 
   <add-or-edit-proxy
-    v-if="proxyEndPoint"
     v-model="isShowAddOrEditSheet.isVisible"
     :proxy-type="addOrdEditSheetType"
     :selected-proxy-end-point="proxyEndPoint"

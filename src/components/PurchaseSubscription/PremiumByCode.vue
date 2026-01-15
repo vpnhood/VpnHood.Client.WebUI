@@ -91,7 +91,8 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
   <!-- Premium code sheet -->
   <v-bottom-sheet
     v-model="enterPremiumCodeModel.isVisible"
-    contained width="100%"
+    contained
+    width="100%"
     max-width="100%"
   >
 

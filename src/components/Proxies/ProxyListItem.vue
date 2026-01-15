@@ -74,7 +74,11 @@ const errorMessage = computed(() => {
 
             <!-- Succeeded connections -->
             <div>
-              <v-icon icon="mdi-check-circle" size="14px" color="disabled"/>
+              <v-icon
+                icon="mdi-check-circle"
+                size="14px"
+                :color="props.proxy.status.succeededCount > 0 ? 'enable-premium' : 'disabled'"
+              />
               <span>{{props.proxy.status.succeededCount}}</span>
             </div>
 
@@ -82,7 +86,11 @@ const errorMessage = computed(() => {
 
             <!-- Failed connections -->
             <div>
-              <v-icon icon="mdi-close-circle" size="14px" color="disabled"/>
+              <v-icon
+                icon="mdi-close-circle"
+                size="14px"
+                :color="props.proxy.status.failedCount > 0 ? 'error' : 'disabled'"
+              />
               <span>{{props.proxy.status.failedCount}}</span>
             </div>
 

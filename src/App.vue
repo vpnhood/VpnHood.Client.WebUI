@@ -71,7 +71,7 @@ onMounted(async () => {
 <template>
   <v-app :class="{ 'px-15': !vuetify.display.smAndDown.value }" class="bg-app-bg">
 
-    <v-layout width="100%" max-width="959px" full-height class="mx-auto"
+    <v-layout width="100%" :max-width="vhApp.data.uiState.maxWidthOnLargeScreen" full-height class="mx-auto"
       :class="{ 'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': !vuetify.display.smAndDown.value }">
 
       <NavigationDrawer v-model="navigationDrawerModel.isVisible" />
