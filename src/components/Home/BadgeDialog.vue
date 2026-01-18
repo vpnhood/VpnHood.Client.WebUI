@@ -64,29 +64,31 @@ async function navigateByRouter(to: RouteLocationRaw){
 
       <v-card-text class="text-disabled text-caption">{{locale('IN_USE_FEATURES_DESC')}}</v-card-text>
 
-      <v-card-item>
+      <v-list id="badgeList" >
         <template v-for="(feature, index) in featuresList" :key="index">
-          <v-divider v-if="index > 0 && featuresList.filter(x => x.isInUse).length > 1" class="my-2" opacity=".1" />
-          <v-btn
+          <v-list-item
             v-if="feature.isInUse"
-            block
-            variant="plain"
-            spaced="end"
+            :prepend-icon="feature.icon"
             :append-icon="Util.getLocalizedRightChevron()"
-            :text="locale(feature.title)"
+            :title="locale(feature.title)"
+            slim
             @click="navigateByRouter(feature.pageLink)"
-          >
-            <template v-slot:prepend>
-              <v-icon :icon="feature.icon" size="25" />
-            </template>
-          </v-btn>
+          />
         </template>
-      </v-card-item>
+      </v-list>
 
       <v-card-actions>
         <!-- Cancel -->
         <v-btn :text="locale('CLOSE')" @click="emit('update:modelValue', false)" />
       </v-card-actions>
+
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+/*noinspection CssUnresolvedCustomProperty,CssUnusedSymbol*/
+#badgeList .v-list-item:not(:last-child) {
+  border-bottom: 1px solid rgba(var(--v-theme-on-general-dialog),.1);
+}
+</style>

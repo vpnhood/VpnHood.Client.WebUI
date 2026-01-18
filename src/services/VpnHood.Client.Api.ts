@@ -568,15 +568,19 @@ export class AppClient {
         return Promise.resolve<AppState>(null as any);
     }
 
-    connect(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: ConnectPlanId | undefined, cancelToken?: CancelToken): Promise<void> {
+    connect(clientProfileId: string | null, serverLocation: string | null, planId: ConnectPlanId, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/connect?";
-        if (clientProfileId !== undefined && clientProfileId !== null)
+        if (clientProfileId === undefined)
+            throw new globalThis.Error("The parameter 'clientProfileId' must be defined.");
+        else if(clientProfileId !== null)
             url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
-        if (serverLocation !== undefined && serverLocation !== null)
+        if (serverLocation === undefined)
+            throw new globalThis.Error("The parameter 'serverLocation' must be defined.");
+        else if(serverLocation !== null)
             url_ += "serverLocation=" + encodeURIComponent("" + serverLocation) + "&";
-        if (planId === null)
-            throw new globalThis.Error("The parameter 'planId' cannot be null.");
-        else if (planId !== undefined)
+        if (planId === undefined || planId === null)
+            throw new globalThis.Error("The parameter 'planId' must be defined and cannot be null.");
+        else
             url_ += "planId=" + encodeURIComponent("" + planId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -620,15 +624,19 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
-    diagnose(clientProfileId?: string | null | undefined, serverLocation?: string | null | undefined, planId?: ConnectPlanId | undefined, cancelToken?: CancelToken): Promise<void> {
+    diagnose(clientProfileId: string | null, serverLocation: string | null, planId: ConnectPlanId, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/diagnose?";
-        if (clientProfileId !== undefined && clientProfileId !== null)
+        if (clientProfileId === undefined)
+            throw new globalThis.Error("The parameter 'clientProfileId' must be defined.");
+        else if(clientProfileId !== null)
             url_ += "clientProfileId=" + encodeURIComponent("" + clientProfileId) + "&";
-        if (serverLocation !== undefined && serverLocation !== null)
+        if (serverLocation === undefined)
+            throw new globalThis.Error("The parameter 'serverLocation' must be defined.");
+        else if(serverLocation !== null)
             url_ += "serverLocation=" + encodeURIComponent("" + serverLocation) + "&";
-        if (planId === null)
-            throw new globalThis.Error("The parameter 'planId' cannot be null.");
-        else if (planId !== undefined)
+        if (planId === undefined || planId === null)
+            throw new globalThis.Error("The parameter 'planId' must be defined and cannot be null.");
+        else
             url_ += "planId=" + encodeURIComponent("" + planId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2346,23 +2354,23 @@ export class ProxyEndPointClient {
         return Promise.resolve<AppProxyEndPointInfo>(null as any);
     }
 
-    deleteAll(deleteSucceeded?: boolean | undefined, deleteFailed?: boolean | undefined, deleteUnknown?: boolean | undefined, deleteDisabled?: boolean | undefined, cancelToken?: CancelToken): Promise<void> {
+    deleteAll(deleteSucceeded: boolean, deleteFailed: boolean, deleteUnknown: boolean, deleteDisabled: boolean, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/proxy-endpoints?";
-        if (deleteSucceeded === null)
-            throw new globalThis.Error("The parameter 'deleteSucceeded' cannot be null.");
-        else if (deleteSucceeded !== undefined)
+        if (deleteSucceeded === undefined || deleteSucceeded === null)
+            throw new globalThis.Error("The parameter 'deleteSucceeded' must be defined and cannot be null.");
+        else
             url_ += "deleteSucceeded=" + encodeURIComponent("" + deleteSucceeded) + "&";
-        if (deleteFailed === null)
-            throw new globalThis.Error("The parameter 'deleteFailed' cannot be null.");
-        else if (deleteFailed !== undefined)
+        if (deleteFailed === undefined || deleteFailed === null)
+            throw new globalThis.Error("The parameter 'deleteFailed' must be defined and cannot be null.");
+        else
             url_ += "deleteFailed=" + encodeURIComponent("" + deleteFailed) + "&";
-        if (deleteUnknown === null)
-            throw new globalThis.Error("The parameter 'deleteUnknown' cannot be null.");
-        else if (deleteUnknown !== undefined)
+        if (deleteUnknown === undefined || deleteUnknown === null)
+            throw new globalThis.Error("The parameter 'deleteUnknown' must be defined and cannot be null.");
+        else
             url_ += "deleteUnknown=" + encodeURIComponent("" + deleteUnknown) + "&";
-        if (deleteDisabled === null)
-            throw new globalThis.Error("The parameter 'deleteDisabled' cannot be null.");
-        else if (deleteDisabled !== undefined)
+        if (deleteDisabled === undefined || deleteDisabled === null)
+            throw new globalThis.Error("The parameter 'deleteDisabled' must be defined and cannot be null.");
+        else
             url_ += "deleteDisabled=" + encodeURIComponent("" + deleteDisabled) + "&";
         url_ = url_.replace(/[?&]$/, "");
 

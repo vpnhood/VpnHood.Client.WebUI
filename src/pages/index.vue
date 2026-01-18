@@ -115,7 +115,7 @@ function appFilterStatus(): string {
       justify="center"
       class="fill-height v-row--no-gutters">
 
-      <!-- Home page app bar & Go Premium or Countdown button -->
+      <!-- Home page app bar & Go Premium or Countdown button & home badge -->
       <v-col cols="12">
         <home-app-bar/>
         <go-premium-button/>
