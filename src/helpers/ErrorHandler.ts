@@ -160,6 +160,9 @@ export class ErrorHandler {
       case ExceptionType.Session:
         return this.sessionExceptionHandler(err);
 
+      case ExceptionType.UnreachableProxyServer:
+        return { localeKey: 'UNREACHABLE_PROXIES_MESSAGE' };
+
       // Device does not have Google Play
       case 'GooglePlayUnavailableException':
         return { localeKey: 'GOOGLE_PLAY_IS_UNAVAILABLE' };

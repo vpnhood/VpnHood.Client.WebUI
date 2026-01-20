@@ -43,7 +43,8 @@ async function saveDebugDataSetting(): Promise<void> {
         <v-combobox
           v-model="debugData1"
           theme="dark"
-          clearable label="DebugData1"
+          clearable
+          label="DebugData1"
           :items="vhApp.data.features.debugCommands"
           :list-props="{ bgColor: 'app-bar' }"
           hide-details

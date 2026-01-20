@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import { ProxySheetType } from '@/components/Proxies/ProxyUtils';
-import { ref, toRef } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import i18n from '@/locales/i18n';
 import {
   type AppProxyEndPointInfo,
@@ -21,10 +21,11 @@ const locale = i18n.global.t;
 const props = defineProps<{
   isLoading: boolean,
   proxies: AppProxyEndPointInfo[],
+  totalProxyCount: number
 }>();
 
 const emit = defineEmits<{
-  (event: 'loadProxies'): void;
+  (event: 'loadProxies', recordIndex?: number, recordCount?: number): void;
 }>();
 
 interface MenuItem {
@@ -47,6 +48,9 @@ enum BulkActionType{
 }
 
 const loading = toRef(props, 'isLoading');
+const page = ref(1);
+const itemsPerPage = 10;
+const totalPages = computed(() => Math.ceil(props.totalProxyCount / itemsPerPage));
 const isResettingStates = ref(false);
 const isImporting = ref(false);
 const isShowAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
@@ -116,7 +120,15 @@ const menuItems: MenuItem[] = [
     bulkActionType: BulkActionType.deleteAll
   },
 ];
+const paginationStatus = computed(() => {
+  if (props.totalProxyCount === 0) return '0 - 0 of 0';
 
+  const start = (page.value - 1) * itemsPerPage + 1;
+  // Ensure 'end' doesn't exceed the total count
+  const end = Math.min(page.value * itemsPerPage, props.totalProxyCount);
+
+  return locale('PAGINATION_STATUS', { start, end, total: props.totalProxyCount });
+});
 function addProxy(): void {
   addOrdEditSheetType.value = ProxySheetType.add;
   isShowAddOrEditSheet.value.show();
@@ -135,7 +147,8 @@ async function resetStates(): Promise<void> {
   try {
     isResettingStates.value = true;
     await vhApp.proxyEndPointClient.resetStates();
-    emit('loadProxies');
+    page.value = 1;
+    handlePageChange(1);
   } finally {
     isResettingStates.value = false;
   }
@@ -160,9 +173,14 @@ async function bulkAction(selectedItem: MenuItem): Promise<void> {
       await vhApp.proxyEndPointClient.deleteAll(false, true);
       break;
   }
-  emit('loadProxies');
+  page.value = 1;
+  handlePageChange(1);
 }
 
+function handlePageChange(newPage: number) {
+  const recordIndex = (newPage - 1) * itemsPerPage;
+  emit('loadProxies', recordIndex, itemsPerPage);
+}
 </script>
 
 <template>
@@ -238,6 +256,12 @@ async function bulkAction(selectedItem: MenuItem): Promise<void> {
       </v-row>
 
     </v-card-item>
+    <v-divider/>
+    <v-select
+      density="compact"
+      label="Select"
+      :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+    ></v-select>
 
     <!-- Proxy list loading skeleton -->
     <template v-if="loading">
@@ -248,15 +272,33 @@ async function bulkAction(selectedItem: MenuItem): Promise<void> {
     </template>
 
     <!-- Proxy list -->
-    <v-list v-else-if="props.proxies.length" lines="three" bg-color="transparent">
-      <proxy-list-item
-        v-for="(proxy, index) in props.proxies"
-        :key="proxy.endPoint.id"
-        :proxy="proxy"
-        :class="{'border-b': index !== props.proxies.length - 1}"
-        @click="editeProxy(proxy)"
-      />
-    </v-list>
+    <template v-else-if="props.proxies.length">
+      <v-list lines="three" bg-color="transparent">
+        <proxy-list-item
+          v-for="(proxy, index) in props.proxies"
+          :key="proxy.endPoint.id"
+          :proxy="proxy"
+          :class="{'border-b': index !== props.proxies.length - 1}"
+          @click="editeProxy(proxy)"
+        />
+      </v-list>
+      <template v-if="props.totalProxyCount > itemsPerPage">
+        <v-divider/>
+        <v-pagination
+          v-model="page"
+          :length="totalPages"
+          :total-visible="3"
+          size="small"
+          show-first-last-page
+          active-color="highlight"
+          density="compact"
+          class="my-3"
+          @update:model-value="handlePageChange"
+        />
+        <p class="text-disabled text-caption text-center mb-3">{{paginationStatus}}</p>
+      </template>
+    </template>
+
 
     <!-- Empty list message -->
     <v-card-text v-else class="text-disabled text-center">

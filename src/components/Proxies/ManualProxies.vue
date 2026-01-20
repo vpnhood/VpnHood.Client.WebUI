@@ -14,14 +14,25 @@ const proxies = ref<AppProxyEndPointInfo[]>([]);
 const isLoading = ref<boolean>(false);
 const isShowAddOrEditSheet = computed(() => new ComponentRouteController(ComponentName.AddOrEditProxySheet).isVisible);
 const proxyStats = computed(() => vhApp.data.state.proxyEndPointManagerStatus);
+const totalProxyCount = ref(0);
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 
-async function loadProxies(showLoading = true): Promise<void> {
+async function loadProxies(recordIndex = 0, recordCount = 10, showLoading = true): Promise<void> {
   try {
     if (!isLoading.value)
       isLoading.value = showLoading;
 
-    proxies.value = await vhApp.proxyEndPointClient.list();
+    const list = await vhApp.proxyEndPointClient.list(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      recordIndex,
+      recordCount
+    );
+    proxies.value = list.items;
+    totalProxyCount.value = list.totalCount;
   }
   finally {
     isLoading.value = false;
@@ -31,7 +42,7 @@ async function startPeriodicRefresh(): Promise<void> {
   if (refreshInterval) return;
   refreshInterval = setInterval(async () => {
     if (!document.hidden && vhApp.data.connectionState != AppConnectionState.None && !isShowAddOrEditSheet.value) {
-      await loadProxies(false); // Don't show loading indicator on periodic refresh
+      await loadProxies(undefined, undefined,false); // Don't show loading indicator on periodic refresh
     }
   }, 3000);
 }
@@ -42,7 +53,7 @@ function stopPeriodicRefresh(): void {
   }
 }
 onMounted(async () => {
-  await loadProxies();
+  await loadProxies(0, 10);
   await startPeriodicRefresh();
 });
 onUnmounted(() => {
@@ -59,7 +70,8 @@ onUnmounted(() => {
   <saved-proxies
     :is-loading="isLoading"
     :proxies="proxies"
-    @load-proxies="loadProxies()"
+    :total-proxy-count="totalProxyCount"
+    @load-proxies="loadProxies"
   />
 
 </template>

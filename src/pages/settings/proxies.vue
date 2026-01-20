@@ -7,16 +7,14 @@ import { AppProxyMode } from '@/services/VpnHood.Client.Api';
 import DeviceProxy from '@/components/Proxies/DeviceProxy.vue';
 import ManualProxies from '@/components/Proxies/ManualProxies.vue';
 import { Util } from '@/helpers/Util';
-import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
-
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const proxyModeItems = [
-  { value: AppProxyMode.NoProxy, title: locale('PROXY_MODE_NOPROXY') },
-  { value: AppProxyMode.Device, title: locale('PROXY_MODE_DEVICE') },
-  { value: AppProxyMode.Manual, title: locale('PROXY_MODE_MANUAL') }
+  { value: AppProxyMode.NoProxy, title: locale('NO_PROXY') },
+  { value: AppProxyMode.Device, title: locale('SYSTEM') },
+  { value: AppProxyMode.Manual, title: locale('MANUAL') }
 ];
 
 const proxyMode = computed<AppProxyMode>({
@@ -43,20 +41,17 @@ const proxyMode = computed<AppProxyMode>({
     <v-sheet>
       <app-bar />
 
-      <!-- Small image for manual mode -->
-      <small-feature-image-and-description v-if="proxyMode === AppProxyMode.Manual" image="proxy.webp" description="PROXY_NOTE" />
+      <!-- Proxy image and description -->
+      <v-img
+        :src="Util.getAssetPath('proxy.webp')"
+        alt="Symbol image"
+        width="100%"
+        :max-height="proxyMode === AppProxyMode.Manual ? '130px' : '280px'"
+        class="mx-auto"
+        style="transition: all .3s ease-in-out"
+      />
+      <p class="mt-2 mb-5 pb-4 border-b text-center text-disabled text-caption px-3">{{locale('PROXY_NOTE')}}</p>
 
-      <!-- Large image for other modes -->
-      <template v-else>
-        <v-img
-          :src="Util.getAssetPath('proxy.webp')"
-          alt="Symbol image"
-          width="100%"
-          max-height="280px"
-          class="mx-auto"
-        />
-        <p class="mt-2 mb-5 pb-4 border-b text-center text-disabled text-caption px-3">{{locale('PROXY_NOTE')}}</p>
-      </template>
 
       <!-- Proxy mode select-->
       <config-card>

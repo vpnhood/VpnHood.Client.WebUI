@@ -2219,8 +2219,10 @@ export class ProxyEndPointClient {
         return Promise.resolve<AppProxyEndPointInfo>(null as any);
     }
 
-    list(includeSucceeded?: boolean | undefined, includeFailed?: boolean | undefined, includeUnknown?: boolean | undefined, includeDisabled?: boolean | undefined, recordIndex?: number | null | undefined, recordCount?: number | null | undefined, cancelToken?: CancelToken): Promise<AppProxyEndPointInfo[]> {
+    list(search?: string | null | undefined, includeSucceeded?: boolean | undefined, includeFailed?: boolean | undefined, includeUnknown?: boolean | undefined, includeDisabled?: boolean | undefined, recordIndex?: number | null | undefined, recordCount?: number | null | undefined, cancelToken?: CancelToken): Promise<PagedResultOfAppProxyEndPointInfo> {
         let url_ = this.baseUrl + "/api/proxy-endpoints?";
+        if (search !== undefined && search !== null)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         if (includeSucceeded === null)
             throw new globalThis.Error("The parameter 'includeSucceeded' cannot be null.");
         else if (includeSucceeded !== undefined)
@@ -2263,7 +2265,7 @@ export class ProxyEndPointClient {
         });
     }
 
-    protected processList(response: AxiosResponse): Promise<AppProxyEndPointInfo[]> {
+    protected processList(response: AxiosResponse): Promise<PagedResultOfAppProxyEndPointInfo> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -2277,21 +2279,14 @@ export class ProxyEndPointClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(AppProxyEndPointInfo.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return Promise.resolve<AppProxyEndPointInfo[]>(result200);
+            result200 = PagedResultOfAppProxyEndPointInfo.fromJS(resultData200);
+            return Promise.resolve<PagedResultOfAppProxyEndPointInfo>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<AppProxyEndPointInfo[]>(null as any);
+        return Promise.resolve<PagedResultOfAppProxyEndPointInfo>(null as any);
     }
 
     add(proxyEndPoint: ProxyEndPoint, cancelToken?: CancelToken): Promise<AppProxyEndPointInfo> {
@@ -3142,6 +3137,7 @@ export enum AppFeature {
     CustomDns = "CustomDns",
     AppIpFilter = "AppIpFilter",
     AdapterIpFilter = "AdapterIpFilter",
+    CountryFilter = "CountryFilter",
 }
 
 export enum ChannelProtocol {
@@ -4614,7 +4610,8 @@ export class UserSettings implements IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     maxPacketChannelCount!: number;
-    tunnelClientCountry!: boolean;
+    splitByCountryMode!: SplitByCountryMode;
+    splitByCountries!: string[];
     appFilters!: string[];
     appFiltersMode!: FilterMode;
     channelProtocol!: ChannelProtocol;
@@ -4636,6 +4633,7 @@ export class UserSettings implements IUserSettings {
     customData?: CustomData | null;
     dnsServers!: string[];
     useUdpChannel?: boolean | null;
+    tunnelClientCountry!: boolean;
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -4645,6 +4643,7 @@ export class UserSettings implements IUserSettings {
             }
         }
         if (!data) {
+            this.splitByCountries = [];
             this.appFilters = [];
             this.domainFilter = new DomainFilter();
             this.proxySettings = new AppProxySettings();
@@ -4660,7 +4659,15 @@ export class UserSettings implements IUserSettings {
             this.cultureCode = _data["cultureCode"] !== undefined ? _data["cultureCode"] : null as any;
             this.clientProfileId = _data["clientProfileId"] !== undefined ? _data["clientProfileId"] : null as any;
             this.maxPacketChannelCount = _data["maxPacketChannelCount"] !== undefined ? _data["maxPacketChannelCount"] : null as any;
-            this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : null as any;
+            this.splitByCountryMode = _data["splitByCountryMode"] !== undefined ? _data["splitByCountryMode"] : null as any;
+            if (Array.isArray(_data["splitByCountries"])) {
+                this.splitByCountries = [] as any;
+                for (let item of _data["splitByCountries"])
+                    this.splitByCountries!.push(item);
+            }
+            else {
+                this.splitByCountries = null as any;
+            }
             if (Array.isArray(_data["appFilters"])) {
                 this.appFilters = [] as any;
                 for (let item of _data["appFilters"])
@@ -4696,6 +4703,7 @@ export class UserSettings implements IUserSettings {
                 this.dnsServers = null as any;
             }
             this.useUdpChannel = _data["useUdpChannel"] !== undefined ? _data["useUdpChannel"] : null as any;
+            this.tunnelClientCountry = _data["tunnelClientCountry"] !== undefined ? _data["tunnelClientCountry"] : null as any;
         }
     }
 
@@ -4714,7 +4722,12 @@ export class UserSettings implements IUserSettings {
         data["cultureCode"] = this.cultureCode !== undefined ? this.cultureCode : null as any;
         data["clientProfileId"] = this.clientProfileId !== undefined ? this.clientProfileId : null as any;
         data["maxPacketChannelCount"] = this.maxPacketChannelCount !== undefined ? this.maxPacketChannelCount : null as any;
-        data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : null as any;
+        data["splitByCountryMode"] = this.splitByCountryMode !== undefined ? this.splitByCountryMode : null as any;
+        if (Array.isArray(this.splitByCountries)) {
+            data["splitByCountries"] = [];
+            for (let item of this.splitByCountries)
+                data["splitByCountries"].push(item);
+        }
         if (Array.isArray(this.appFilters)) {
             data["appFilters"] = [];
             for (let item of this.appFilters)
@@ -4744,6 +4757,7 @@ export class UserSettings implements IUserSettings {
                 data["dnsServers"].push(item);
         }
         data["useUdpChannel"] = this.useUdpChannel !== undefined ? this.useUdpChannel : null as any;
+        data["tunnelClientCountry"] = this.tunnelClientCountry !== undefined ? this.tunnelClientCountry : null as any;
         return data;
     }
 }
@@ -4755,7 +4769,8 @@ export interface IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     maxPacketChannelCount: number;
-    tunnelClientCountry: boolean;
+    splitByCountryMode: SplitByCountryMode;
+    splitByCountries: string[];
     appFilters: string[];
     appFiltersMode: FilterMode;
     channelProtocol: ChannelProtocol;
@@ -4777,6 +4792,14 @@ export interface IUserSettings {
     customData?: CustomData | null;
     dnsServers: string[];
     useUdpChannel?: boolean | null;
+    tunnelClientCountry: boolean;
+}
+
+export enum SplitByCountryMode {
+    IncludeAll = "IncludeAll",
+    ExcludeMyCountry = "ExcludeMyCountry",
+    ExcludeList = "ExcludeList",
+    IncludeList = "IncludeList",
 }
 
 export enum FilterMode {
@@ -5986,6 +6009,60 @@ export enum ProxyProtocol {
     Socks5 = "Socks5",
     Http = "Http",
     Https = "Https",
+}
+
+export class PagedResultOfAppProxyEndPointInfo implements IPagedResultOfAppProxyEndPointInfo {
+    items!: AppProxyEndPointInfo[];
+    totalCount!: number;
+
+    constructor(data?: IPagedResultOfAppProxyEndPointInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+        if (!data) {
+            this.items = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(AppProxyEndPointInfo.fromJS(item));
+            }
+            else {
+                this.items = null as any;
+            }
+            this.totalCount = _data["totalCount"] !== undefined ? _data["totalCount"] : null as any;
+        }
+    }
+
+    static fromJS(data: any): PagedResultOfAppProxyEndPointInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultOfAppProxyEndPointInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : null as any);
+        }
+        data["totalCount"] = this.totalCount !== undefined ? this.totalCount : null as any;
+        return data;
+    }
+}
+
+export interface IPagedResultOfAppProxyEndPointInfo {
+    items: AppProxyEndPointInfo[];
+    totalCount: number;
 }
 
 export class ProxyEndPointDefaults implements IProxyEndPointDefaults {

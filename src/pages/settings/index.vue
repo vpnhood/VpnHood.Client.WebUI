@@ -108,8 +108,8 @@ function isShowConnectivitySectionTitle(): boolean {
       :is-show="true"
       :status="{
         state: proxySelectedMode != AppProxyMode.NoProxy,
-        onText: proxySelectedMode === AppProxyMode.Device ? locale('PROXY_MODE_DEVICE') : locale('PROXY_MODE_MANUAL'),
-        offText: locale('PROXY_MODE_NOPROXY')
+        onText: proxySelectedMode === AppProxyMode.Device ? locale('SYSTEM') : locale('MANUAL'),
+        offText: locale('NO_PROXY')
       }"
       :click="{name:'PROXIES'}"
     />

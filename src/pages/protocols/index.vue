@@ -144,7 +144,11 @@ const isCloakModeEnabled = computed(() => {
     <!-- Protocols radio buttons -->
     <config-card class="pt-3">
       <v-card-item class="ps-2">
-        <v-radio-group :hide-details="true" v-model="activeProtocol" color="highlight">
+        <v-radio-group
+          v-model="activeProtocol"
+          :hide-details="true"
+          color="highlight"
+        >
           <template v-for="item in protocolItems" :key="item.value">
             <v-radio
               v-if="item.isShow"

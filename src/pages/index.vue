@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { AppConnectionState, FilterMode } from '@/services/VpnHood.Client.Api';
-import TunnelClientCountryDialog from '@/components/TunnelClientCountryDialog.vue';
-import UpdateSnackbar from '@/components/UpdateSnackbar.vue';
+import { AppConnectionState, FilterMode, SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import UpdateSnackbar from '@/components/Home/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/Home/HomeConnectionInfo.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
@@ -11,7 +10,7 @@ import { ConnectManager } from '@/helpers/ConnectManager';
 import { ComponentName } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import { computed, ref } from 'vue';
-import UserReviewDialog from '@/components/UserReviewDialog.vue';
+import UserReviewDialog from '@/components/Home/UserReviewDialog.vue';
 import BadgeDialog from '@/components/Home/BadgeDialog.vue';
 import HomeAppBar from '@/components/Home/HomeAppBar.vue';
 import DeveloperDialog from '@/components/Home/DeveloperDialog.vue';
@@ -21,9 +20,18 @@ import ConnectionInfo from '@/components/Home/ConnectionInfo.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const tunnelClientCountryDialogModel = ref(new ComponentRouteController(ComponentName.TunnelClientCountryDialog));
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
+const splitCountryStatusText = computed((): string => {
+  switch (vhApp.data.userSettings.splitByCountryMode){
+    case SplitByCountryMode.ExcludeMyCountry:
+      return "MY_COUNTRY";
+    case SplitByCountryMode.ExcludeList:
+      return "MANUAL"
+    default:
+      return "NO";
+  }
+});
 
 let lastConnectPressedTime = Date.now() - 1000;
 async function onConnectButtonClick(): Promise<void> {
@@ -93,7 +101,7 @@ function appFilterStatus(): string {
     case FilterMode.Include:
       return locale('APP_FILTER_STATUS_INCLUDE', { x: appFilters.length });
     default:
-      return locale('APP_FILTER_STATUS_ALL');
+      return locale('ALL_APPS');
   }
 }
 
@@ -195,20 +203,20 @@ function appFilterStatus(): string {
 
         </home-config-btn>
 
-        <!-- Exclude country button -->
+        <!-- Split countries -->
         <home-config-btn
           id="excludeCountryButton"
           prepend-icon="mdi-call-split"
           class="mb-1"
           tabindex="6"
-          @click="tunnelClientCountryDialogModel.show()"
+          @click="router.push({ name: 'SPLIT_COUNTRIES' })"
         >
-          <span class="config-btn-title">{{ locale('SPLIT_MY_COUNTRY') }}</span>
+          <span class="config-btn-title">{{ locale('SPLIT_COUNTRIES') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
           <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ locale(vhApp.data.userSettings.tunnelClientCountry ? 'NO' : 'YES') }}
+            {{ locale(splitCountryStatusText) }}
           </span>
 
           <!-- Client country flag -->
@@ -228,7 +236,7 @@ function appFilterStatus(): string {
           prepend-icon="mdi-call-split"
           class="mb-1"
           tabindex="7"
-          @click="router.push({ name: 'APP_FILTER' })"
+          @click="router.push({ name: 'SPLIT_APPS' })"
         >
           <span class="config-btn-title">{{ locale('SPLIT_APPS') }}</span>
           <v-icon :icon="Util.getLocalizedRightChevron()" />
@@ -276,7 +284,6 @@ function appFilterStatus(): string {
 
     <!-- Components -->
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
-    <TunnelClientCountryDialog v-model="tunnelClientCountryDialogModel.isVisible" />
     <UserReviewDialog v-model="isShowUserReview" />
     <badge-dialog v-model="badgeDialogModel.isVisible" />
     <developer-dialog v-model="vhApp.data.uiState.isShowDeveloperDialog" />
