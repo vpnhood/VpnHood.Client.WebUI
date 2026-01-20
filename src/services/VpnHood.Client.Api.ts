@@ -1248,6 +1248,61 @@ export class AppClient {
         return Promise.resolve<CountryInfo[]>(null as any);
     }
 
+    getSupportedSplitByCountries( cancelToken?: CancelToken): Promise<CountryInfo[]> {
+        let url_ = this.baseUrl + "/api/app/supported-split-by-countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetSupportedSplitByCountries(_response);
+        });
+    }
+
+    protected processGetSupportedSplitByCountries(response: AxiosResponse): Promise<CountryInfo[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CountryInfo.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return Promise.resolve<CountryInfo[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<CountryInfo[]>(null as any);
+    }
+
     internalAdDismiss(result: ShowAdResult, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/internal-ad/dismiss?";
         if (result === undefined || result === null)
@@ -4633,7 +4688,7 @@ export class UserSettings implements IUserSettings {
     customData?: CustomData | null;
     dnsServers!: string[];
     useUdpChannel?: boolean | null;
-    tunnelClientCountry!: boolean;
+    tunnelClientCountry?: boolean | null;
 
     constructor(data?: IUserSettings) {
         if (data) {
@@ -4792,7 +4847,7 @@ export interface IUserSettings {
     customData?: CustomData | null;
     dnsServers: string[];
     useUdpChannel?: boolean | null;
-    tunnelClientCountry: boolean;
+    tunnelClientCountry?: boolean | null;
 }
 
 export enum SplitByCountryMode {
@@ -4949,9 +5004,9 @@ export interface IAppProxySettings {
 }
 
 export enum AppProxyMode {
-    NoProxy = 0,
-    Device = 1,
-    Manual = 2,
+    NoProxy = "NoProxy",
+    Device = "Device",
+    Manual = "Manual",
 }
 
 export class ProxyAutoUpdateOptions implements IProxyAutoUpdateOptions {

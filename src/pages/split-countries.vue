@@ -1,16 +1,16 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import { SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import { CountryInfo, SplitByCountryMode } from '@/services/VpnHood.Client.Api';
 import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const emptyManualCountriesError = ref<string | null>(null)
-
+const emptyManualCountriesError = ref<string | null>(null);
+const countryList = ref<CountryInfo[]>();
 const splitMode = computed<SplitByCountryMode>({
   get: () => {
     return vhApp.data.userSettings.splitByCountryMode;
@@ -24,19 +24,22 @@ const splitMode = computed<SplitByCountryMode>({
   }
 });
 
-const debugData1 = computed<string[]>({
-  get: () => vhApp.data.userSettings.debugData1?.split(' ') ?? [],
-  set: (value: string[] | null) => {
-    vhApp.data.userSettings.debugData1 = value?.join(' ') || null;
+const selectedCountries = computed<string[]>({
+  get: () => vhApp.data.userSettings.splitByCountries,
+  set: async (value: string[]) => {
+    vhApp.data.userSettings.splitByCountries = value;
+    await vhApp.saveUserSetting();
 
-    if (value && value.length > 0)
+    if (value.length > 0)
       emptyManualCountriesError.value = null;
   }
 });
-
+onMounted(async () => {
+  countryList.value = await vhApp.appClient.getSupportedSplitByCountries();
+})
 onBeforeRouteLeave(
   async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    if (splitMode.value === SplitByCountryMode.ExcludeList && debugData1.value.length < 1){
+    if (splitMode.value === SplitByCountryMode.ExcludeList && selectedCountries.value.length < 1){
       emptyManualCountriesError.value = locale('EMPTY_COUNTRY_LIST_ERROR_MSG');
       next(false);
       return;
@@ -102,19 +105,32 @@ onBeforeRouteLeave(
 
         <v-combobox
           v-if="splitMode === SplitByCountryMode.ExcludeList"
-          v-model="debugData1"
+          v-model="selectedCountries"
           theme="dark"
-          clearable
           :label="locale('COUNTRIES')"
-          :items="vhApp.data.features.debugCommands"
+          :items="countryList"
+          item-title="englishName"
+          item-value="countryCode"
           :list-props="{ bgColor: 'app-bar' }"
           :error-messages="emptyManualCountriesError"
           hide-details="auto"
           hide-selected
+          clearable
           chips
           closable-chips
           multiple
-        />
+        >
+          <template v-slot:chip="{ props, item }">
+            <v-chip v-bind="props" label>
+              <template v-slot:prepend>
+                <img :src="vhApp.getCountryFlag(item.raw.countryCode)" class="me-1" height="14px" alt="country flag" />
+              </template>
+              <template v-slot:close>
+                <v-icon icon="mdi-close" size="14"/>
+              </template>
+            </v-chip>
+          </template>
+        </v-combobox>
 
       </v-card-item>
 

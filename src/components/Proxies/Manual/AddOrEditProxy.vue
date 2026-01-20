@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
-  (e: 'loadProxies'): void;
+  (e: 'refreshList'): void;
 }>();
 
 const proxy = toRef(props, 'selectedProxyEndPoint');
@@ -94,7 +94,7 @@ async function deleteProxy(): Promise<void> {
 
 function closeSheet(){
   emit('update:modelValue',false);
-  emit('loadProxies');
+  emit('refreshList');
   isProcessing.value = false;
 }
 

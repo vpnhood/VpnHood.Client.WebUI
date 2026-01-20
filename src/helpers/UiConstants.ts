@@ -8,7 +8,6 @@ export class UiConstants {
 }
 
 export enum ComponentName {
-  TunnelClientCountryDialog = 'TunnelClientCountryDialog',
   NavigationDrawer = 'NavigationDrawer',
   ErrorDialog = 'ErrorDialog',
   AddServerDialog = 'AddServerDialog',

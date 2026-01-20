@@ -17,20 +17,29 @@ const proxyStats = computed(() => vhApp.data.state.proxyEndPointManagerStatus);
 const totalProxyCount = ref(0);
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 
-async function loadProxies(recordIndex = 0, recordCount = 10, showLoading = true): Promise<void> {
+async function loadProxies(
+  recordIndex = 0,
+  recordCount = 10,
+  includeSucceeded = true,
+  includeFailed = true,
+  includeUnknown = true,
+  includeDisabled = true,
+  showLoading = true
+): Promise<void> {
   try {
     if (!isLoading.value)
       isLoading.value = showLoading;
 
     const list = await vhApp.proxyEndPointClient.list(
       undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
+      includeSucceeded,
+      includeFailed,
+      includeUnknown,
+      includeDisabled,
       recordIndex,
       recordCount
     );
+
     proxies.value = list.items;
     totalProxyCount.value = list.totalCount;
   }

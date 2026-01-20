@@ -217,6 +217,7 @@
   "NO_SYSTEM_PROXY": "No system proxy is configured on your device.",
   "AUTHENTICATION": "Authentication",
   "PROXY_RESET_STATES": "Reset states",
+  "PROXY_FILTER_NO_RESULT": "No matches found for this filter.",
   "REMOVE_ALL": "Remove all",
   "REMOVE_ALL_PROXIES_MSG": "Are you sure you want to remove all proxies?",
   "REMOVE_ALL_FAILED": "Remove all failed",

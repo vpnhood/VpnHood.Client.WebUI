@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import { ProxySheetType } from '@/components/Proxies/ProxyUtils';
-import { computed, ref, toRef } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 import i18n from '@/locales/i18n';
 import {
   type AppProxyEndPointInfo,
@@ -24,27 +24,29 @@ const props = defineProps<{
   totalProxyCount: number
 }>();
 
-const emit = defineEmits<{
-  (event: 'loadProxies', recordIndex?: number, recordCount?: number): void;
+const emit = defineEmits<{ (
+  event: 'loadProxies',
+  recordIndex: number,
+  recordCount: number,
+  includeSucceeded: boolean,
+  includeFailed: boolean,
+  includeUnknown: boolean,
+  includeDisabled: boolean
+  ): void;
 }>();
 
 interface MenuItem {
   title: string,
   icon: string,
-  color: string,
-  confirm?:{
-    required: boolean,
-    title: string,
-    message: string
-  },
-  action?: () => Promise<void>,
-  bulkActionType?: BulkActionType
+  color?: string,
+  confirm?:{ title: string, message: string },
+  action: () => Promise<void>
 }
-enum BulkActionType{
-  deleteAll,
-  disableAllFailed,
-  deleteAllFailed,
-  deleteAllDisabled
+
+enum FilterProxyStatus{
+  succeeded = 'SUCCEEDED',
+  failed = 'FAILED',
+  disabled = 'DISABLED'
 }
 
 const loading = toRef(props, 'isLoading');
@@ -55,8 +57,71 @@ const isResettingStates = ref(false);
 const isImporting = ref(false);
 const isShowAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
 const addOrdEditSheetType = ref<ProxySheetType>(ProxySheetType.add);
-const isDisableButtons = ref(isResettingStates.value || props.isLoading || isImporting.value);
-const proxyEndPoint = ref<ProxyEndPoint>(new ProxyEndPoint({
+const isDisableButtons = computed(() => isResettingStates.value || props.isLoading || isImporting.value);
+const proxyStatus = ref<ProxyEndPointStatus | null>(null);
+const selectedFilterProxy = ref<FilterProxyStatus | null>(null);
+const proxyEndPoint = ref<ProxyEndPoint>(createEmptyProxy());
+
+const menuItems = computed<MenuItem[]>(() => [
+  {
+    title: locale('PROXY_RESET_STATES'),
+    icon: 'mdi-refresh',
+    action: resetStates
+  },
+  {
+    title: locale('DISABLE_ALL_FAILED'),
+    icon: 'mdi-cancel',
+    confirm:{
+      title: locale('DISABLE_ALL_FAILED'),
+      message: locale('DISABLE_ALL_FAILED_PROXIES_MSG')
+    },
+    action: async () => {await vhApp.proxyEndPointClient.disableAllFailed();}
+  },
+  {
+    title: locale('REMOVE_ALL_FAILED'),
+    icon: 'mdi-delete-alert',
+    confirm:{
+      title: locale('REMOVE_ALL_FAILED'),
+      message: locale('REMOVE_ALL_FAILED_MSG')
+    },
+    action: async () => {await vhApp.proxyEndPointClient.deleteAll(false, true);}
+  },
+  {
+    title: locale('REMOVE_ALL_DISABLED'),
+    icon: 'mdi-delete-forever',
+    confirm:{
+      title: locale('REMOVE_ALL_DISABLED'),
+      message: locale('REMOVE_ALL_DISABLED_MSG')
+    },
+    action: async () => {await vhApp.proxyEndPointClient.deleteAll(false, false, false, true);}
+  },
+  {
+    title: locale('REMOVE_ALL'),
+    icon: 'mdi-delete',
+    color: 'error',
+    confirm:{
+      title: locale('REMOVE_ALL'),
+      message: locale('REMOVE_ALL_PROXIES_MSG')
+    },
+    action: async () => {await vhApp.proxyEndPointClient.deleteAll();}
+  },
+]);
+
+const filterItems = computed(() => [
+  { title: locale('SUCCEEDED'), value: FilterProxyStatus.succeeded },
+  { title: locale('FAILED'), value: FilterProxyStatus.failed },
+  { title: locale('DISABLED'), value: FilterProxyStatus.disabled }
+]);
+
+const paginationStatus = computed(() => {
+  if (props.totalProxyCount === 0) return '0 - 0 of 0';
+  const start = (page.value - 1) * itemsPerPage + 1;
+  const end = Math.min(page.value * itemsPerPage, props.totalProxyCount);
+  return locale('PAGINATION_STATUS', { start, end, total: props.totalProxyCount });
+});
+
+function createEmptyProxy(): ProxyEndPoint{
+  const proxyEndpoint = new ProxyEndPoint({
     id: '',
     host: '',
     port: 8080,
@@ -65,71 +130,21 @@ const proxyEndPoint = ref<ProxyEndPoint>(new ProxyEndPoint({
     username: '',
     password: '',
     url: ''
-  })
-);
-const proxyStatus = ref<ProxyEndPointStatus | null>(null);
-const menuItems: MenuItem[] = [
-  {
-    title: locale('PROXY_RESET_STATES'),
-    icon: 'mdi-refresh',
-    color: '',
-    action: resetStates
-  },
-  {
-    title: locale('DISABLE_ALL_FAILED'),
-    icon: 'mdi-cancel',
-    color: '',
-    confirm:{
-      required: true,
-      title: locale('DISABLE_ALL_FAILED'),
-      message: locale('DISABLE_ALL_FAILED_PROXIES_MSG')
-    },
-    bulkActionType: BulkActionType.disableAllFailed
-  },
-  {
-    title: locale('REMOVE_ALL_FAILED'),
-    icon: 'mdi-delete-alert',
-    color: '',
-    confirm:{
-      required: true,
-      title: locale('REMOVE_ALL_FAILED'),
-      message: locale('REMOVE_ALL_FAILED_MSG')
-    },
-    bulkActionType: BulkActionType.deleteAllFailed
-  },
-  {
-    title: locale('REMOVE_ALL_DISABLED'),
-    icon: 'mdi-delete-forever',
-    color: '',
-    confirm:{
-      required: true,
-      title: locale('REMOVE_ALL_DISABLED'),
-      message: locale('REMOVE_ALL_DISABLED_MSG')
-    },
-    bulkActionType: BulkActionType.deleteAllDisabled
-  },
-  {
-    title: locale('REMOVE_ALL'),
-    icon: 'mdi-delete',
-    color: 'error',
-    confirm:{
-      required: true,
-      title: locale('REMOVE_ALL'),
-      message: locale('REMOVE_ALL_PROXIES_MSG')
-    },
-    bulkActionType: BulkActionType.deleteAll
-  },
-];
-const paginationStatus = computed(() => {
-  if (props.totalProxyCount === 0) return '0 - 0 of 0';
+  });
+  return proxyEndpoint;
+}
 
-  const start = (page.value - 1) * itemsPerPage + 1;
-  // Ensure 'end' doesn't exceed the total count
-  const end = Math.min(page.value * itemsPerPage, props.totalProxyCount);
-
-  return locale('PAGINATION_STATUS', { start, end, total: props.totalProxyCount });
-});
+async function runMenuAction(item: MenuItem) {
+  if (item.confirm) {
+    const confirmed = await vhApp.showConfirmDialog(item.confirm.title, item.confirm.message);
+    if (!confirmed) return;
+  }
+  await item.action();
+  refreshList();
+}
 function addProxy(): void {
+  proxyEndPoint.value = createEmptyProxy();
+  proxyStatus.value = null;
   addOrdEditSheetType.value = ProxySheetType.add;
   isShowAddOrEditSheet.value.show();
 }
@@ -147,40 +162,32 @@ async function resetStates(): Promise<void> {
   try {
     isResettingStates.value = true;
     await vhApp.proxyEndPointClient.resetStates();
-    page.value = 1;
-    handlePageChange(1);
   } finally {
     isResettingStates.value = false;
   }
 }
-
-async function bulkAction(selectedItem: MenuItem): Promise<void> {
-  if (selectedItem.confirm?.required && !await vhApp.showConfirmDialog(selectedItem.confirm.title,
-    selectedItem.confirm.message))
-    return;
-
-  switch (selectedItem.bulkActionType) {
-    case BulkActionType.disableAllFailed:
-      await vhApp.proxyEndPointClient.disableAllFailed();
-      break;
-    case BulkActionType.deleteAll:
-      await vhApp.proxyEndPointClient.deleteAll();
-      break;
-    case BulkActionType.deleteAllDisabled:
-      await vhApp.proxyEndPointClient.deleteAll(false, false, false, true);
-      break;
-    case BulkActionType.deleteAllFailed:
-      await vhApp.proxyEndPointClient.deleteAll(false, true);
-      break;
-  }
+function refreshList() {
   page.value = 1;
   handlePageChange(1);
 }
-
 function handlePageChange(newPage: number) {
   const recordIndex = (newPage - 1) * itemsPerPage;
-  emit('loadProxies', recordIndex, itemsPerPage);
+  const filter = selectedFilterProxy.value;
+
+  emit(
+    'loadProxies',
+    recordIndex,
+    itemsPerPage,
+    !filter || filter === FilterProxyStatus.succeeded,
+    !filter || filter === FilterProxyStatus.failed,
+    !filter, // includeUnknown
+    !filter || filter === FilterProxyStatus.disabled
+  );
 }
+
+watch(selectedFilterProxy, () => {
+  refreshList();
+});
 </script>
 
 <template>
@@ -206,13 +213,13 @@ function handlePageChange(newPage: number) {
               <!-- Reset states -->
               <v-list-item
                 v-for="(item, index) in menuItems"
-                prepend-gap="10px"
-                :class="{'border-b': index < (menuItems.length - 1)}"
                 :key="index"
                 :title="item.title"
                 :prepend-icon="item.icon"
                 :base-color="item.color"
-                @click="item.action ? item.action() : bulkAction(item)"
+                :class="{'border-b': index < (menuItems.length - 1)}"
+                prepend-gap="10px"
+                @click="runMenuAction(item)"
               />
 
             </v-list>
@@ -221,7 +228,7 @@ function handlePageChange(newPage: number) {
       </div>
 
       <!-- Add proxy buttons -->
-      <v-row class="my-2" dense>
+      <v-row class="mt-2" dense>
 
         <!-- Add single proxy -->
         <v-col cols="6">
@@ -255,20 +262,39 @@ function handlePageChange(newPage: number) {
 
       </v-row>
 
+      <v-select
+        v-if="selectedFilterProxy || props.totalProxyCount > itemsPerPage"
+        v-model="selectedFilterProxy"
+        density="compact"
+        label="Filter Status"
+        clear-icon="mdi-close"
+        prepend-inner-icon="mdi-filter-variant"
+        rounded="pill"
+        icon-color="highlight"
+        base-color="highlight"
+        color="highlight"
+        variant="outlined"
+        :items="filterItems"
+        item-title="title"
+        item-value="value"
+        class="mt-6"
+        :class="{'text-highlight': !selectedFilterProxy}"
+        hide-details
+        clearable
+      />
+
     </v-card-item>
-    <v-divider/>
-    <v-select
-      density="compact"
-      label="Select"
-      :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-    ></v-select>
+
+    <v-divider class="my-2"/>
 
     <!-- Proxy list loading skeleton -->
     <template v-if="loading">
-      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
-      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
-      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
-      <v-skeleton-loader color="config-card-bg" type="list-item-two-line"></v-skeleton-loader>
+      <v-skeleton-loader
+        v-for="i in 4"
+        :key="i"
+        color="config-card-bg"
+        type="list-item-two-line"
+      />
     </template>
 
     <!-- Proxy list -->
@@ -302,7 +328,7 @@ function handlePageChange(newPage: number) {
 
     <!-- Empty list message -->
     <v-card-text v-else class="text-disabled text-center">
-      {{ locale('PROXY_LIST_EMPTY') }}
+      {{ locale( selectedFilterProxy ? 'PROXY_FILTER_NO_RESULT' : 'PROXY_LIST_EMPTY') }}
     </v-card-text>
 
   </config-card>
@@ -312,7 +338,7 @@ function handlePageChange(newPage: number) {
     :proxy-type="addOrdEditSheetType"
     :selected-proxy-end-point="proxyEndPoint"
     :proxy-status="proxyStatus"
-    @loadProxies="emit('loadProxies')"
+    @refresh-list="refreshList"
   />
 
 </template>
