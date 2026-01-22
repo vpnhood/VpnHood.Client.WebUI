@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {FilterMode} from "@/services/VpnHood.Client.Api";
+import {SplitByMode} from "@/services/VpnHood.Client.Api";
 import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -33,7 +33,7 @@ const appList = computed<IMyInstalledApps[]>(() => {
 onMounted(async () => {
   if (vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported) {
     const installedApps = await vhApp.getInstalledApps();
-    const filterMode = vhApp.data.userSettings.appFiltersMode;
+    const splitByAppMode = vhApp.data.userSettings.splitByAppMode;
 
     // Add isSelected to all app items
     myInstalledApps.value = installedApps.map(app => {
@@ -42,9 +42,9 @@ onMounted(async () => {
         appId: app.appId,
         appName: app.appName,
         iconPng: app.iconPng,
-        isSelected: (filterMode === FilterMode.All)
-          || (filterMode === FilterMode.Include && vhApp.data.userSettings.appFilters.some(x => x === app.appId))
-          || (filterMode === FilterMode.Exclude && vhApp.data.userSettings.appFilters.every(x => x !== app.appId))
+        isSelected: (splitByAppMode === SplitByMode.All)
+          || (splitByAppMode === SplitByMode.Include && vhApp.data.userSettings.splitByApps.some(x => x === app.appId))
+          || (splitByAppMode === SplitByMode.Exclude && vhApp.data.userSettings.splitByApps.every(x => x !== app.appId))
       };
       return myApp;
     });
@@ -53,7 +53,7 @@ onMounted(async () => {
       appId: "$",
       appName: locale('ALL_FUTURE_APPS'),
       iconPng: vhApp.isConnectApp() ? UiConstants.futureAppsIconConnect : UiConstants.futureAppsIconClient,
-      isSelected: filterMode === FilterMode.All || filterMode === FilterMode.Exclude
+      isSelected: splitByAppMode === SplitByMode.All || splitByAppMode === SplitByMode.Exclude
     };
     myInstalledApps.value.push(futureInstalledAppInfo);
     sortApps(myInstalledApps.value);
@@ -82,8 +82,8 @@ async function saveChange(){
   // All apps
   const isAllSelectedApp = myInstalledApps.value.every(x => x.isSelected);
   if (isAllSelectedApp) {
-    vhApp.data.userSettings.appFiltersMode = FilterMode.All;
-    vhApp.data.userSettings.appFilters = [];
+    vhApp.data.userSettings.splitByAppMode = SplitByMode.All;
+    vhApp.data.userSettings.splitByApps = [];
     await vhApp.saveUserSetting();
     return;
   }
@@ -91,8 +91,8 @@ async function saveChange(){
   // All apps except selected
   const isFutureAppSelected = myInstalledApps.value.some(x => x.appId === "$" && x.isSelected);
   if (isFutureAppSelected) {
-    vhApp.data.userSettings.appFiltersMode = FilterMode.Exclude;
-    vhApp.data.userSettings.appFilters = myInstalledApps.value
+    vhApp.data.userSettings.splitByAppMode = SplitByMode.Exclude;
+    vhApp.data.userSettings.splitByApps = myInstalledApps.value
       .filter(x => !x.isSelected && x.appId !== "$")
       .map(x => x.appId);
     await vhApp.saveUserSetting();
@@ -100,8 +100,8 @@ async function saveChange(){
   }
 
   // Only selected apps
-  vhApp.data.userSettings.appFiltersMode = FilterMode.Include;
-  vhApp.data.userSettings.appFilters = myInstalledApps.value
+  vhApp.data.userSettings.splitByAppMode = SplitByMode.Include;
+  vhApp.data.userSettings.splitByApps = myInstalledApps.value
     .filter(x => x.isSelected && x.appId !== "$")
     .map(x => x.appId);
   await vhApp.saveUserSetting();

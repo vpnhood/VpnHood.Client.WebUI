@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppConnectionState, FilterMode, SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import { AppConnectionState, SplitByMode } from '@/services/VpnHood.Client.Api';
 import UpdateSnackbar from '@/components/Home/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/Home/HomeConnectionInfo.vue';
@@ -16,21 +16,18 @@ import HomeAppBar from '@/components/Home/HomeAppBar.vue';
 import DeveloperDialog from '@/components/Home/DeveloperDialog.vue';
 import GoPremiumButton from '@/components/Home/GoPremiumButton.vue';
 import ConnectionInfo from '@/components/Home/ConnectionInfo.vue';
+import SplitCountryButton from '@/components/Home/SplitCountryButton.vue';
+import ServersButton from '@/components/Home/ServersButton.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
-const splitCountryStatusText = computed((): string => {
-  switch (vhApp.data.userSettings.splitByCountryMode){
-    case SplitByCountryMode.ExcludeMyCountry:
-      return "MY_COUNTRY";
-    case SplitByCountryMode.ExcludeList:
-      return "MANUAL"
-    default:
-      return "NO";
-  }
+const isPremiumUser = computed((): boolean => {
+  return vhApp.data.features.isPremiumFlagSupported && (
+  vhApp.data.isPremiumAccount || (vhApp.data.state.sessionInfo?.isPremiumSession === true && vhApp.data.isConnected)
+  )
 });
 
 let lastConnectPressedTime = Date.now() - 1000;
@@ -54,24 +51,6 @@ async function onConnectButtonClick(): Promise<void> {
   }
 }
 
-function getActiveServerNameOrLocation(): string {
-  // App is VpnHoodClient
-  if (!vhApp.isSingleServerMode() && !vhApp.isConnectApp())
-    return (vhApp.data.state.clientProfile?.clientProfileName ?? i18n.global.t('NO_SERVER_SELECTED'));
-
-  // App is VpnHoodCONNECT
-  const serverLocationInfo = vhApp.getCurrentServerLocationInfo();
-
-  if (!serverLocationInfo || vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode))
-    return i18n.global.t('AUTO_SELECT');
-
-  const text = vhApp.data.isLocationAutoSelected(serverLocationInfo.regionName)
-    ? serverLocationInfo.countryName
-    : serverLocationInfo.countryName + ' (' + serverLocationInfo.regionName + ')';
-
-  return text.replace('United States (', 'USA (');
-}
-
 // Return text for connected button based on connection state
 function connectButtonText(): string {
   if (vhApp.data.state.isDiagnosing)
@@ -92,30 +71,25 @@ function connectButtonText(): string {
 }
 
 // Return status of filtered apps by user (Only in mobile)
-function appFilterStatus(): string {
-  const appFilters = vhApp.data.userSettings.appFilters ?? [];
+function splitByAppsStatus(): string {
+  const splitByApps = vhApp.data.userSettings.splitByApps ?? [];
 
-  switch (vhApp.data.userSettings.appFiltersMode) {
-    case FilterMode.Exclude:
-      return locale('APP_FILTER_STATUS_EXCLUDE', { x: appFilters.length });
-    case FilterMode.Include:
-      return locale('APP_FILTER_STATUS_INCLUDE', { x: appFilters.length });
+  switch (vhApp.data.userSettings.splitByAppMode) {
+    case SplitByMode.Exclude:
+      return locale('APP_FILTER_STATUS_EXCLUDE', { x: splitByApps.length });
+    case SplitByMode.Include:
+      return locale('APP_FILTER_STATUS_INCLUDE', { x: splitByApps.length });
     default:
       return locale('ALL_APPS');
   }
 }
-
 </script>
 
 <template>
   <v-sheet
     id="homeContainer"
     class="position-relative"
-    :class="[{'premium-user': vhApp.data.features.isPremiumFlagSupported && (
-      vhApp.data.isPremiumAccount ||
-      (vhApp.data.state.sessionInfo?.isPremiumSession && vhApp.data.isConnected)
-      )},
-      vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
+    :class="[{'premium-user': isPremiumUser}, vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
   >
 
     <v-row
@@ -160,75 +134,10 @@ function appFilterStatus(): string {
       <v-col cols="12">
 
         <!-- Servers button -->
-        <home-config-btn
-          id="serverButton"
-          prepend-icon="mdi-earth"
-          tabindex="5"
-          class="align-center mb-1"
-          @click="!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length < 2
-          && vhApp.data.clientProfileInfos[0].locationInfos.length < 2
-          ? vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'))
-          : router.push({ name: 'SERVERS' })"
-        >
-          <span class="config-btn-title" tabindex="-1">
-            {{ vhApp.isSingleServerMode() ? locale('LOCATION') : locale('SERVER') }}
-          </span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ getActiveServerNameOrLocation() }}
-          </span>
-
-          <template v-slot:append>
-            <!-- Country flag -->
-            <span
-              v-if="vhApp.getActiveServerCountryFlag()"
-              class="overflow-hidden d-inline-flex align-center justify-center ms-1"
-              style="width: 23px; height: 15px; border-radius: 3px"
-            >
-              <img :src="vhApp.getActiveServerCountryFlag()!" height="100%" alt="country flag" />
-            </span>
-
-            <!-- Auto server -->
-            <v-chip
-              v-else
-              :text="locale('AUTO')"
-              color="white"
-              variant="tonal"
-              size="small"
-              density="compact"
-              class="text-capitalize opacity-50 px-2"
-              tabindex="-1"
-            />
-          </template>
-
-        </home-config-btn>
+        <servers-button/>
 
         <!-- Split countries -->
-        <home-config-btn
-          id="excludeCountryButton"
-          prepend-icon="mdi-call-split"
-          class="mb-1"
-          tabindex="6"
-          @click="router.push({ name: 'SPLIT_COUNTRIES' })"
-        >
-          <span class="config-btn-title">{{ locale('SPLIT_COUNTRIES') }}</span>
-          <v-icon :icon="Util.getLocalizedRightChevron()" />
-
-          <!-- Text related to selected option -->
-          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ locale(splitCountryStatusText) }}
-          </span>
-
-          <!-- Client country flag -->
-          <template v-if="!vhApp.data.userSettings.tunnelClientCountry && vhApp.data.state.clientCountryCode" v-slot:append>
-            <span
-              class="overflow-hidden d-inline-flex align-center justify-center ms-1"
-              style="width: 23px; height: 15px; border-radius: 3px"
-            >
-              <img :src="vhApp.getCountryFlag(vhApp.data.state.clientCountryCode)" height="100%" alt="country flag" />
-            </span>
-          </template>
-        </home-config-btn>
+        <split-country-button/>
 
         <!-- App filter button -->
         <home-config-btn
@@ -243,7 +152,7 @@ function appFilterStatus(): string {
 
           <!-- Text related to selected option -->
           <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ appFilterStatus() }}
+            {{ splitByAppsStatus() }}
           </span>
         </home-config-btn>
 

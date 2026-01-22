@@ -63,7 +63,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :title="locale('SPLIT_IP_ADDRESSES')"
       :subtitle="locale('SPLIT_IP_ADDRESSES_DESC')"
       :is-show="true"
-      :isPremium="vhApp.data.isPremiumFeature(AppFeature.AppIpFilter)"
+      :isPremium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaApp)"
       :status="{
         state: vhApp.data.isSplitIpInUse,
         onText: locale('ON'),

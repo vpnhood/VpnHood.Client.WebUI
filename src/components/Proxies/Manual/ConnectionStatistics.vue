@@ -5,6 +5,7 @@ import type { AppProxyEndPointManagerStatus } from '@/services/VpnHood.Client.Ap
 const locale = i18n.global.t;
 const props = defineProps<{
   proxyStats: AppProxyEndPointManagerStatus,
+  totalProxyCount: number
 }>();
 </script>
 
@@ -56,7 +57,7 @@ const props = defineProps<{
 
       <!-- Servers -->
       <div class="d-flex align-center ga-2">
-        <span class="text-caption text-disabled text-no-wrap">{{locale('SERVERS')}}</span>
+        <span class="text-caption text-disabled text-no-wrap">{{locale('SERVERS')}} ({{props.totalProxyCount}})</span>
         <v-divider class="flex-grow-1 opacity-40" variant="dotted"></v-divider>
         <div class="d-flex align-center ga-2">
           <v-chip

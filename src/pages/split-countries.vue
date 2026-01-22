@@ -27,7 +27,7 @@ const splitMode = computed<SplitByCountryMode>({
 const selectedCountries = computed<string[]>({
   get: () => vhApp.data.userSettings.splitByCountries,
   set: async (value: string[]) => {
-    vhApp.data.userSettings.splitByCountries = value;
+    vhApp.data.userSettings.splitByCountries = value ?? [];
     await vhApp.saveUserSetting();
 
     if (value.length > 0)
@@ -54,11 +54,14 @@ onBeforeRouteLeave(
   <v-sheet>
     <app-bar/>
 
+    <!-- Feature description -->
     <p class="text-disabled text-caption mb-4">{{locale("SPLIT_COUNTRIES_DESC")}}</p>
 
-    <config-card class="pb-3">
+    <config-card class="pt-3">
 
-      <v-card-item>
+      <v-card-item class="ps-1">
+
+        <!-- TODO: Create component for all radio group -->
         <v-radio-group
           v-model="splitMode"
           :hide-details="true"
@@ -66,9 +69,9 @@ onBeforeRouteLeave(
         >
           <v-radio :value="SplitByCountryMode.IncludeAll" class="mb-3">
             <template v-slot:label>
-              <div class="d-flex flex-column">
-                <span>{{ locale("NO") }}</span>
-                <span class="text-disabled text-caption">{{ locale("SLOWER") }}</span>
+              <div class="d-flex flex-column align-start">
+                <span>{{ locale("OFF") }}</span>
+                <span class="text-disabled text-caption">{{ locale("SPLIT_COUNTRY_OFF_DESC") }}</span>
               </div>
             </template>
           </v-radio>
@@ -76,18 +79,20 @@ onBeforeRouteLeave(
           <v-radio :value="SplitByCountryMode.ExcludeMyCountry" class="mb-3">
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("MY_COUNTRY") }}</span>
+                <span>
+                  {{ locale("MY_COUNTRY") }}
+                  <v-chip
+                    color="highlight"
+                    :text="locale('RECOMMENDED')"
+                    size="small"
+                    variant="tonal"
+                    density="comfortable"
+                    tabindex="-1"
+                  />
+                </span>
                 <span class="text-disabled text-caption">
-                    {{ locale("FASTER") }}
-                    <v-chip
-                      color="highlight"
-                      :text="locale('RECOMMENDED')"
-                      size="small"
-                      variant="tonal"
-                      density="comfortable"
-                      tabindex="-1"
-                    />
-                  </span>
+                    {{ locale("SPLIT_MY_COUNTRY_DESC") }}
+                </span>
               </div>
             </template>
           </v-radio>
@@ -95,45 +100,71 @@ onBeforeRouteLeave(
           <v-radio :value="SplitByCountryMode.ExcludeList" class="mb-3">
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("MANUAL") }}</span>
-                <span class="text-disabled text-caption">{{ locale("MULTIPLE_COUNTRIES") }}</span>
+                <span>{{ locale("CUSTOM_EXCLUSION_LIST") }}</span>
+                <span class="text-disabled text-caption">{{ locale("CUSTOM_EXCLUSION_LIST_DESC") }}</span>
               </div>
             </template>
           </v-radio>
 
         </v-radio-group>
+      </v-card-item>
 
+      <!-- Country list -->
+      <v-card-item v-if="splitMode === SplitByCountryMode.ExcludeList" class="pt-0 pb-4">
         <v-combobox
-          v-if="splitMode === SplitByCountryMode.ExcludeList"
           v-model="selectedCountries"
           theme="dark"
           :label="locale('COUNTRIES')"
           :items="countryList"
           item-title="englishName"
           item-value="countryCode"
+          :return-object="false"
           :list-props="{ bgColor: 'app-bar' }"
           :error-messages="emptyManualCountriesError"
           hide-details="auto"
+          variant="outlined"
+          color="highlight"
+          class="mt-2"
           hide-selected
           clearable
           chips
           closable-chips
           multiple
         >
+          <!-- Selected countries -->
           <template v-slot:chip="{ props, item }">
             <v-chip v-bind="props" label>
               <template v-slot:prepend>
-                <img :src="vhApp.getCountryFlag(item.raw.countryCode)" class="me-1" height="14px" alt="country flag" />
+                <v-img
+                  :src="vhApp.getCountryFlag(item.raw.countryCode)"
+                  eager
+                  alt="country flag"
+                  width="18px"
+                  class="me-1"
+                />
               </template>
               <template v-slot:close>
                 <v-icon icon="mdi-close" size="14"/>
               </template>
             </v-chip>
           </template>
+
+          <!-- List item flag -->
+          <template v-slot:item="{ props, item }">
+            <v-list-item v-bind="props" :title="item.raw.englishName">
+              <template v-slot:prepend>
+                <v-img
+                  :src="vhApp.getCountryFlag(item.raw.countryCode)"
+                  width="22px"
+                  alt="country flag"
+                  class="me-3"
+                />
+              </template>
+            </v-list-item>
+          </template>
+
         </v-combobox>
-
       </v-card-item>
-
   </config-card>
   </v-sheet>
 </template>

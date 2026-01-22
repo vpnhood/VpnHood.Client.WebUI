@@ -74,7 +74,11 @@ onUnmounted(() => {
   <add-by-url @load-proxies="loadProxies()" />
 
   <!-- Proxies Statistics -->
-  <connection-statistics v-if="proxies.length > 5 && proxyStats" :proxy-stats="proxyStats" />
+  <connection-statistics
+    v-if="proxies.length > 5 && proxyStats"
+    :proxy-stats="proxyStats"
+    :total-proxy-count="totalProxyCount"
+  />
 
   <saved-proxies
     :is-loading="isLoading"

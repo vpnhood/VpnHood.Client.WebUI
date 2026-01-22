@@ -105,7 +105,7 @@ export class VpnHoodAppData {
   }
 
   get isSplitIpInUse(): boolean {
-    return this.userSettings.useVpnAdapterIpFilter || this.userSettings.useAppIpFilter;
+    return this.userSettings.useSplitByIpViaDevice || this.userSettings.useSplitByIpViaApp;
   }
 
   get isDnsInUse(): boolean{

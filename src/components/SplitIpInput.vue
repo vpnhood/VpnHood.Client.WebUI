@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { IpFilters } from '@/services/VpnHood.Client.Api';
+import { SplitByIps } from '@/services/VpnHood.Client.Api';
 import { IPFilterType } from '@/helpers/UiConstants';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { onBeforeRouteLeave } from 'vue-router';
@@ -15,63 +15,63 @@ const props = defineProps<{
 }>();
 
 const isLoadingIP = ref<boolean>(true);
-const ipFilters = ref<IpFilters>(new IpFilters());
+const ipFilters = ref<SplitByIps>(new SplitByIps());
 const showRevertButton = ref<boolean>(false);
-let savedIps: IpFilters;
+let savedIps: SplitByIps;
 
 const excludeIpFilters = computed<string>({
   get: () => {
     return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.adapterIpFilterExcludes
-      : ipFilters.value.appIpFilterExcludes;
+      ? ipFilters.value.deviceExcludes
+      : ipFilters.value.appExcludes;
   },
   set: (value: string) => {
     if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.adapterIpFilterExcludes = value;
+      ipFilters.value.deviceExcludes = value;
     else
-    ipFilters.value.appIpFilterExcludes = value;
+    ipFilters.value.appExcludes = value;
   }
 })
 
 const includeIpFilters = computed<string>({
   get: () => {
     return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.adapterIpFilterIncludes
-      : ipFilters.value.appIpFilterIncludes;
+      ? ipFilters.value.deviceIncludes
+      : ipFilters.value.appIncludes;
   },
   set: (value: string) => {
     if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.adapterIpFilterIncludes = value;
+      ipFilters.value.deviceIncludes = value;
     else
-    ipFilters.value.appIpFilterIncludes = value;
+    ipFilters.value.appIncludes = value;
   }
 })
 
 async function saveIpList(){
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setIpFilters(new IpFilters({
-    adapterIpFilterExcludes: ipFilters.value.adapterIpFilterExcludes,
-    adapterIpFilterIncludes: ipFilters.value.adapterIpFilterIncludes,
-    appIpFilterExcludes: ipFilters.value.appIpFilterExcludes,
-    appIpFilterIncludes: ipFilters.value.appIpFilterIncludes
+  await vhApp.appClient.setSplitByIps(new SplitByIps({
+    deviceExcludes: ipFilters.value.deviceExcludes,
+    deviceIncludes: ipFilters.value.deviceIncludes,
+    appExcludes: ipFilters.value.appExcludes,
+    appIncludes: ipFilters.value.appIncludes
   }));
   await vhApp.saveUserSetting();
 }
 
 onMounted(async () => {
-  ipFilters.value = await vhApp.appClient.getIpFilters();
-  savedIps = new IpFilters(ipFilters.value);
+  ipFilters.value = await vhApp.appClient.getSplitByIps();
+  savedIps = new SplitByIps(ipFilters.value);
   isLoadingIP.value = false;
 })
 
 onBeforeRouteLeave(
   async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     try {
-      if (ipFilters.value.adapterIpFilterExcludes !== savedIps.adapterIpFilterExcludes ||
-        ipFilters.value.adapterIpFilterIncludes !== savedIps.adapterIpFilterIncludes ||
-        ipFilters.value.appIpFilterExcludes !== savedIps.appIpFilterExcludes ||
-        ipFilters.value.appIpFilterIncludes !== savedIps.appIpFilterIncludes)
+      if (ipFilters.value.deviceExcludes !== savedIps.deviceExcludes ||
+        ipFilters.value.deviceIncludes !== savedIps.deviceIncludes ||
+        ipFilters.value.appExcludes !== savedIps.appExcludes ||
+        ipFilters.value.appIncludes !== savedIps.appIncludes)
         await saveIpList();
       next();
     }

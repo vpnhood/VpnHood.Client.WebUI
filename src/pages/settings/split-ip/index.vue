@@ -1,5 +1,4 @@
 ﻿<script setup lang="ts">
-
 import router from '@/services/router';
 import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
@@ -15,22 +14,18 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 
-const useIpFilterByAdapter = computed<boolean>({
-  get: () => {
-    return vhApp.data.userSettings.useVpnAdapterIpFilter;
-  },
+const useSplitByIpViaDevice = computed<boolean>({
+  get: () => vhApp.data.userSettings.useSplitByIpViaDevice,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useVpnAdapterIpFilter = value;
+    vhApp.data.userSettings.useSplitByIpViaDevice = value;
     await vhApp.saveUserSetting();
   }
 });
 
-const useIpFilterByApp = computed<boolean>({
-  get: () => {
-    return vhApp.data.userSettings.useAppIpFilter;
-  },
+const useSplitByIpViaApp = computed<boolean>({
+  get: () => vhApp.data.userSettings.useSplitByIpViaApp,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useAppIpFilter = value;
+    vhApp.data.userSettings.useSplitByIpViaApp = value;
     await vhApp.saveUserSetting();
   }
 });
@@ -40,11 +35,11 @@ const useIpFilterByApp = computed<boolean>({
 <template>
 
   <feature-page-layout
-    v-if="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AdapterIpFilter)"
+    v-if="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
     title="SPLIT_IP_ADDRESSES_COLORED"
     description="SPLIT_IP_ADDRESSES_DESC"
     image="split-ip.webp"
-    :is-premium="vhApp.data.isPremiumFeature(AppFeature.AdapterIpFilter)"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaDevice)"
     :is-action-button-available="false"
   />
 
@@ -64,8 +59,8 @@ const useIpFilterByApp = computed<boolean>({
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('SPLIT_IPS_BY_ADAPTER') }}</span>
           <v-switch
-            v-model="useIpFilterByAdapter"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AdapterIpFilter)"
+            v-model="useSplitByIpViaDevice"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
           />
         </div>
 
@@ -74,7 +69,7 @@ const useIpFilterByApp = computed<boolean>({
       </v-card-item>
 
       <!-- Manage IP button -->
-      <v-card-item v-if="useIpFilterByAdapter">
+      <v-card-item v-if="useSplitByIpViaDevice">
         <btn-style-4
           :text="locale('MANAGE_IP_ADDRESSES')"
           :append-icon="Util.getLocalizedRightChevron()"
@@ -92,14 +87,14 @@ const useIpFilterByApp = computed<boolean>({
         <div class="d-flex align-center justify-space-between">
           <span>{{ locale('SPLIT_IPS_BY_APP') }}</span>
           <v-switch
-            v-model="useIpFilterByApp"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.AppIpFilter)"
+            v-model="useSplitByIpViaApp"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaApp)"
           />
         </div>
       </v-card-item>
 
       <!-- Manage IP button -->
-      <v-card-item v-if="useIpFilterByApp" class="mb-2">
+      <v-card-item v-if="useSplitByIpViaApp" class="mb-2">
         <btn-style-4
           :text="locale('MANAGE_IP_ADDRESSES')"
           :append-icon="Util.getLocalizedRightChevron()"

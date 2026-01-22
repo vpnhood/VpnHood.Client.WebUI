@@ -283,13 +283,6 @@ export class VpnHoodApp {
     }
   }
 
-  getActiveServerCountryFlag(): string | null {
-    const serverLocationInfo = this.getCurrentServerLocationInfo();
-    return serverLocationInfo && !this.data.isLocationAutoSelected(serverLocationInfo.countryCode)
-      ? this.getCountryFlag(serverLocationInfo.countryCode)
-      : null;
-  }
-
   public getCountryFlag(countryCode: string | null | undefined): string {
     try {
       if (!countryCode || countryCode.trim() === '') {
