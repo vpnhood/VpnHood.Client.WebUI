@@ -94,9 +94,7 @@ export class ConnectManager {
     goToHome: boolean | undefined = true
   ): Promise<void> {
     // For developer
-    console.log('Connect3');
-    console.log('isPremiumLocation: ' + isPremiumLocation);
-    console.log('goToHome: ' + goToHome);
+    console.debug(`Connect3: isPremiumLocation: ${isPremiumLocation}, goToHome: ${goToHome}`);
 
     if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;

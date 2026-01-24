@@ -7,6 +7,7 @@ import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/Googl
 import type { ShowErrorActions } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import { Validators } from '@/helpers/Validators';
+import { Util } from './Util';
 
 interface ShowErrorOptions {
   ignoreMessage?: boolean,
@@ -22,7 +23,7 @@ export class ErrorHandler {
     const errorOptions: ShowErrorOptions = await this.getErrorMessage(err);
 
     // Do not show any message
-    if (errorOptions.ignoreMessage){
+    if (errorOptions.ignoreMessage) {
       // do not clear last message when ignored, just do not show it
       return;
     }
@@ -48,8 +49,8 @@ export class ErrorHandler {
     });
 
     // Private DNS error
-    if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.features.premiumFeatures.includes(AppFeature.CustomDns)){
-      await router.push({name: 'ERROR_PRIVATE_DNS'});
+    if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.features.premiumFeatures.includes(AppFeature.CustomDns)) {
+      await router.push({ name: 'ERROR_PRIVATE_DNS' });
       await VpnHoodApp.instance.clearLastError();
       return;
     }
@@ -83,14 +84,23 @@ export class ErrorHandler {
       // Intentionally silenced errors
       //case 'OperationCanceledException':
       case ExceptionType.UserCanceled:
-      //case 'ObjectDisposedException':
+        //case 'ObjectDisposedException':
         return { ignoreMessage: true };
 
       // Could not connect to any server
       case ExceptionType.UnreachableServer:
+      case ExceptionType.UnreachableServerLocation:
+        //  Could not connect to any server in the selected location
+        if (!Util.ToBoolean(err.data?.IsAutoLocation)  && !VpnHoodApp.instance.data.state.hasDiagnoseRequested)
+          return {
+            localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO',
+            action: { showChangeServerToAuto: true }
+          }
+
         // TODO: active try premium after fix the error issue.
         //return { localeKey: 'UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM', action: { showTryPremium: true } };
         return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
+
 
       case ExceptionType.RequestQuickLaunch:
         return { localeKey: 'QUICK_LAUNCH_TURN_ON_ERROR' };
@@ -133,10 +143,6 @@ export class ErrorHandler {
       case ExceptionType.VpnServiceRevoked:
         return { localeKey: 'VPN_SERVICE_REVOKED_MSG' };
 
-      // Could not connect to any server in the selected location
-      case ExceptionType.UnreachableServerLocation:
-        return this.unreachableServerLocationExceptionHandler();
-
       // Premium exceptions
       case ExceptionType.PremiumOnly:
         return this.premiumOnlyExceptionHandler(err);
@@ -150,7 +156,7 @@ export class ErrorHandler {
         return { localeKey: 'REWARDED_AD_SHOW_ERROR_MSG' };
 
       case ExceptionType.AdBlocker:
-        return { action:{isPrivateDnsError: true} };
+        return { action: { isPrivateDnsError: true } };
 
       // Could not connect after a specific time
       case ExceptionType.ConnectionTimeout:
@@ -179,17 +185,6 @@ export class ErrorHandler {
     }
   }
 
-  private static async unreachableServerLocationExceptionHandler(): Promise<ShowErrorOptions> {
-    // Suggest connecting to the auto location
-    if (!VpnHoodApp.instance.data.state.hasDiagnoseRequested)
-      return {
-        localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO',
-        action: { showChangeServerToAuto: true }
-      };
-
-    return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
-  }
-
   private static async sessionExceptionHandler(err: ApiException): Promise<ShowErrorOptions> {
     switch (err.data?.ErrorCode) {
 
@@ -198,8 +193,8 @@ export class ErrorHandler {
 
       // User is premium (by Code or Google) and attempt to connect while the premium is expired.
       case SessionErrorCode.AccessExpired:
-        if (VpnHoodApp.instance.data.features.isPremiumFlagSupported){
-          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: {showRemovePremium: true} };
+        if (VpnHoodApp.instance.data.features.isPremiumFlagSupported) {
+          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: { showRemovePremium: true } };
         }
         return { localeKey: 'SERVER_KEY_EXPIRED' };
 

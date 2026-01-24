@@ -152,9 +152,7 @@ export class VpnHoodApp {
   ): Promise<void> {
 
     // Just for Development info
-    console.log(`Final server location:  ${serverLocation}`);
-    console.log(`Plan id:  ${planId}`);
-    console.log(`Go to home:  ${goToHome}`);
+    console.debug(`connect. Server location: ${serverLocation}, Plan id: ${planId}, Go to home: ${goToHome}`);
 
     // Navigate to home page
     if (goToHome && router.currentRoute.value.name !== 'HOME')

@@ -39,7 +39,7 @@ export class Util {
     return new URL(`../assets/images/${fileName}`, import.meta.url).href;
   }
 
-  public static protocolTitle(protocol: ChannelProtocol): string{
+  public static protocolTitle(protocol: ChannelProtocol): string {
     switch (protocol) {
       case ChannelProtocol.Udp:
         return "PROTOCOL_UDP";
@@ -138,7 +138,7 @@ export class Util {
 
   public static async isUrlAccessible(url: string, loadContent: boolean = false): Promise<boolean> {
 
-    if (loadContent){
+    if (loadContent) {
       return new Promise((resolve) => {
         const img = new Image();
 
@@ -169,27 +169,52 @@ export class Util {
     }
   }
 
+  public static ToBoolean(value: any): boolean {
+    if (value == null)
+      return false;
+
+    if (typeof value === "boolean")
+      return value;
+
+    if (typeof value === "number")
+      return value !== 0;
+
+    if (typeof value === "string") {
+      var v = value.trim().toLowerCase();
+
+      if (v === "true" || v === "1" || v === "yes" || v === "on")
+        return true;
+
+      if (v === "false" || v === "0" || v === "no" || v === "off" || v === "")
+        return false;
+    }
+
+    // fallback (JS truthy/falsy)
+    return Boolean(value);
+  }
+
+
   public static calcPercentage(firstNumber: number, secondNumber: number): number {
     return Math.round(((firstNumber - secondNumber) / firstNumber) * 100);
   }
 
-// For developers sends test error
-/*  public static sendTestError(): void {
-    const errorMessage = 'Something went wrong';
-    const statusCode = 401;
-    const responseBody = {
-      typeName: 'AdBlockerException',
-      message: 'Invalid email',
-      data: {
-        ErrorCode: 'AccessExpired',
-        BillingResponseCode: 'Error',
-        PurchaseState: 'purchase state',
-        BillingMessage: 'billing message'
-      },
-    };
-    const headers = { 'Content-Type': 'application/json' };
-
-    const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
-    throw apiException;
-  }*/
+  // For developers sends test error
+  /*  public static sendTestError(): void {
+      const errorMessage = 'Something went wrong';
+      const statusCode = 401;
+      const responseBody = {
+        typeName: 'AdBlockerException',
+        message: 'Invalid email',
+        data: {
+          ErrorCode: 'AccessExpired',
+          BillingResponseCode: 'Error',
+          PurchaseState: 'purchase state',
+          BillingMessage: 'billing message'
+        },
+      };
+      const headers = { 'Content-Type': 'application/json' };
+  
+      const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
+      throw apiException;
+    }*/
 }
