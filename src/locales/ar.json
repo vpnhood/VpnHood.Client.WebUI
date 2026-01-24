@@ -306,7 +306,7 @@
   "CLEAR_ALL_APPS_TITLE": "امسح جميع التطبيقات المحددة",
   "ARE_YOU_SURE": "هل أنت متأكد؟",
   "UNREACHABLE_SERVER_MESSAGE": "لا يوجد خادم متاح من منطقتك في هذه اللحظة، يرجى المحاولة مرة أخرى لاحقًا.",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "لا تتوفر خوادم متاحة في منطقتك حالياً. هل ترغب في تجربة الخوادم المميزة مجاناً للتأكد من أن اتصالك ليس محظوراً؟",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "\"لقد اتصلت بشبكة VPN، ولكن جميع الخوادم في الموقع الذي اخترته غير قابلة للوصول من منطقتك. هل ترغب في تغيير الموقع إلى تلقائي والاتصال بخادم يمكن الوصول إليه؟",
   "UNREACHABLE_PROXIES_MESSAGE": "تعذر الوصول إلى جميع البروكسيات حالياً.",
   "PAGINATION_STATUS": "{start} - {end} من {total}",
@@ -521,6 +521,5 @@
   "CONNECTIVITY": "الاتصال",
   "APP_SETTINGS": "إعدادات التطبيق",
   "PRIVACY_AND_SECURITY": "الخصوصية والأمان",
-  "ENFORCED_BY_SERVER": "مفروض من الخادم",
-  "UNREACHABLE_SERVER_MESSAGE_W_TRY_PREMIUM": "لا تتوفر خوادم في منطقتك حالياً. هل ترغب في تجربة الخوادم المميزة مجاناً للتأكد من حالة اتصالك؟"
+  "ENFORCED_BY_SERVER": "مفروض من الخادم"
 }
