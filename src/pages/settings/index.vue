@@ -55,9 +55,23 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name: 'NOTIFICATIONS'}"
     />
 
+    <!-- CONNECTIVITY SECTION -->
+    <settings-section-title :title="locale('CONNECTIVITY')" v-if="isShowConnectivitySectionTitle()"/>
 
-    <!-- PRIVACY & SECURITY SECTION -->
-    <settings-section-title :title="locale('PRIVACY_AND_SECURITY')"/>
+    <!-- Proxies -->
+    <settings-item
+      :title="locale('PROXIES')"
+      :subtitle="locale('PROXIES_DESC')"
+      :isPremium="false"
+      :is-show="true"
+      :status="{
+        state: proxySelectedMode != AppProxyMode.NoProxy,
+        onText: proxySelectedMode === AppProxyMode.Device ? locale('SYSTEM') : locale('MANUAL'),
+        offText: locale('NO_PROXY')
+      }"
+      :click="{name:'PROXIES'}"
+    />
+
     <!-- Split IP -->
     <settings-item
       :title="locale('SPLIT_IP_ADDRESSES')"
@@ -72,6 +86,18 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name: 'SPLIT_IP'}"
     />
 
+    <!-- Quick launch -->
+    <settings-item
+      :title="locale('QUICK_LAUNCH')"
+      :subtitle="locale('QUICK_LAUNCH_DESC')"
+      :isPremium="vhApp.data.isPremiumFeature(AppFeature.QuickLaunch)"
+      :is-show="vhApp.data.intentFeatures.isQuickLaunchSupported"
+      :click="{name:'QUICK_LAUNCH'}"
+    />
+
+    <!-- PRIVACY & SECURITY SECTION -->
+    <settings-section-title :title="locale('PRIVACY_AND_SECURITY')"/>
+
     <!-- Local network -->
     <settings-item
       :title="locale('ACCESS_LOCAL_NETWORK')"
@@ -84,6 +110,24 @@ function isShowConnectivitySectionTitle(): boolean {
       }"
       :is-show="vhApp.data.features.isLocalNetworkSupported"
       :click="{name: 'ACCESS_LOCAL_NETWORK'}"
+    />
+
+    <!-- Kill switch -->
+    <settings-item
+      :title="locale('KILL_SWITCH')"
+      :subtitle="locale('KILL_SWITCH_DESC')"
+      :isPremium="false"
+      :is-show="vhApp.data.intentFeatures.isKillSwitchSettingsSupported"
+      :click="{name:'KILL_SWITCH'}"
+    />
+
+    <!-- Always on -->
+    <settings-item
+      :title="locale('ALWAYS_ON')"
+      :subtitle="locale('ALWAYS_ON_DESC')"
+      :isPremium="vhApp.data.isPremiumFeature(AppFeature.AlwaysOn)"
+      :is-show="vhApp.data.intentFeatures.isAlwaysOnSettingsSupported"
+      :click="{name:'ALWAYS_ON'}"
     />
 
     <!-- DNS -->
@@ -100,48 +144,5 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name: 'DNS'}"
     />
 
-    <!-- Proxies -->
-    <settings-item
-      :title="locale('PROXIES')"
-      :subtitle="locale('PROXIES_DESC')"
-      :isPremium="false"
-      :is-show="true"
-      :status="{
-        state: proxySelectedMode != AppProxyMode.NoProxy,
-        onText: proxySelectedMode === AppProxyMode.Device ? locale('SYSTEM') : locale('MANUAL'),
-        offText: locale('NO_PROXY')
-      }"
-      :click="{name:'PROXIES'}"
-    />
-
-
-    <!-- CONNECTIVITY SECTION -->
-    <settings-section-title title="CONNECTIVITY" v-if="isShowConnectivitySectionTitle()"/>
-    <!-- Quick launch -->
-    <settings-item
-      :title="locale('QUICK_LAUNCH')"
-      :subtitle="locale('QUICK_LAUNCH_DESC')"
-      :isPremium="vhApp.data.isPremiumFeature(AppFeature.QuickLaunch)"
-      :is-show="vhApp.data.intentFeatures.isQuickLaunchSupported"
-      :click="{name:'QUICK_LAUNCH'}"
-    />
-
-    <!-- Always on -->
-    <settings-item
-      :title="locale('ALWAYS_ON')"
-      :subtitle="locale('ALWAYS_ON_DESC')"
-      :isPremium="vhApp.data.isPremiumFeature(AppFeature.AlwaysOn)"
-      :is-show="vhApp.data.intentFeatures.isAlwaysOnSettingsSupported"
-      :click="{name:'ALWAYS_ON'}"
-    />
-
-    <!-- Kill switch -->
-    <settings-item
-      :title="locale('KILL_SWITCH')"
-      :subtitle="locale('KILL_SWITCH_DESC')"
-      :isPremium="false"
-      :is-show="vhApp.data.intentFeatures.isKillSwitchSettingsSupported"
-      :click="{name:'KILL_SWITCH'}"
-    />
   </v-sheet>
 </template>

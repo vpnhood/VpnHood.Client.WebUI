@@ -111,7 +111,7 @@ onBeforeRouteLeave(
 
       <!-- Country list -->
       <v-card-item v-if="splitMode === SplitByCountryMode.ExcludeList" class="pt-0 pb-4">
-        <v-combobox
+        <v-autocomplete
           v-model="selectedCountries"
           theme="dark"
           :label="locale('COUNTRIES')"
@@ -163,7 +163,7 @@ onBeforeRouteLeave(
             </v-list-item>
           </template>
 
-        </v-combobox>
+        </v-autocomplete>
       </v-card-item>
   </config-card>
   </v-sheet>
