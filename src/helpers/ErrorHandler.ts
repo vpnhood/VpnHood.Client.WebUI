@@ -87,20 +87,35 @@ export class ErrorHandler {
         //case 'ObjectDisposedException':
         return { ignoreMessage: true };
 
-      // Could not connect to any server
+      // Could not connect to any server (premium cannot solve this)
       case ExceptionType.UnreachableServer:
+        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
+
       case ExceptionType.UnreachableServerLocation:
+        // disanose does not offer any help
+        if (VpnHoodApp.instance.data.state.hasDiagnoseRequested)
+          return { localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE' };
+
         //  Could not connect to any server in the selected location
-        if (!Util.ToBoolean(err.data?.IsAutoLocation)  && !VpnHoodApp.instance.data.state.hasDiagnoseRequested)
+        // it same for premium and free users
+        if (!Util.ToBoolean(err.data?.IsAutoLocation))
           return {
             localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO',
             action: { showChangeServerToAuto: true }
           }
 
+        // prompt for premium if applicable on current profile
         // TODO: active try premium after fix the error issue.
-        //return { localeKey: 'UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM', action: { showTryPremium: true } };
-        return { localeKey: 'UNREACHABLE_SERVER_MESSAGE', action: { showDiagnose: true } };
+        if (VpnHoodApp.instance.data.state.clientProfile?.isPremiumAccount === false &&
+          VpnHoodApp.instance.data.state.clientProfile?.canTryPremium === true) {
+          return {
+            localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM',
+            action: { showDiagnose: true }
+          };
+        }
 
+        // Generic unreachable server message
+        return { localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE', action: { showDiagnose: true } };
 
       case ExceptionType.RequestQuickLaunch:
         return { localeKey: 'QUICK_LAUNCH_TURN_ON_ERROR' };

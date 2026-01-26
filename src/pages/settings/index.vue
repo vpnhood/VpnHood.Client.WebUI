@@ -13,9 +13,8 @@ const locale = i18n.global.t;
 const proxySelectedMode = ref(vhApp.data.userSettings.proxySettings?.mode);
 
 function isShowConnectivitySectionTitle(): boolean {
-  return vhApp.data.intentFeatures.isQuickLaunchSupported ||
-    vhApp.data.intentFeatures.isAlwaysOnSettingsSupported ||
-    vhApp.data.intentFeatures.isKillSwitchSettingsSupported;
+  return vhApp.data.features.isProxySupported ||
+    vhApp.data.intentFeatures.isQuickLaunchSupported;
 }
 
 </script>

@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "Löschen Sie alle ausgewählten Apps",
   "ARE_YOU_SURE": "Bist du sicher?",
   "UNREACHABLE_SERVER_MESSAGE": "Es ist momentan kein erreichbarer Server in Ihrer Region verfügbar. Bitte versuchen Sie es später erneut.",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Sie sind mit dem VPN-Netzwerk verbunden, aber momentan ist kein erreichbarer Server in Ihrer Region verfügbar. Bitte versuchen Sie es später erneut.",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "Hoppla! Derzeit sind keine erreichbaren kostenlosen Server in Ihrer Region verfügbar. Sie können eine kostenlose Premium-Verbindung testen, um die Verfügbarkeit von Premium-Servern zu prüfen.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Sie haben sich mit dem VPN-Netzwerk verbunden, aber alle Server an Ihrem ausgewählten Standort sind von Ihrer Region aus nicht erreichbar. Möchten Sie den Standort auf automatisch umstellen und eine erreichbare Verbindung herstellen?",
   "UNREACHABLE_PROXIES_MESSAGE": "Alle Proxys sind derzeit nicht erreichbar.",
   "PAGINATION_STATUS": "{start} - {end} von {total}",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "Verbindung",
   "APP_SETTINGS": "App-Einstellungen",
   "PRIVACY_AND_SECURITY": "Datenschutz & Sicherheit",
-  "ENFORCED_BY_SERVER": "Vom Server festgelegt",
-  "UNREACHABLE_SERVER_MESSAGE_،WITH_TRY_PREMIUM": "Aktuell ist kein Server in Ihrer Region erreichbar. Möchten Sie unsere Premium-Server kostenlos testen, um eine vollständige Blockierung auszuschließen?"
+  "ENFORCED_BY_SERVER": "Vom Server festgelegt"
 }

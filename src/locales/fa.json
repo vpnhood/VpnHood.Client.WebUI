@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "غیر فعال کردن همه برنامه‌ها",
   "ARE_YOU_SURE": "آیا از اقدام خود مطمئن هستید؟",
   "UNREACHABLE_SERVER_MESSAGE": "در حال حاضر هیچ سرور قابل دسترسی از منطقه شما وجود ندارد. لطفاً بعداً دوباره امتحان کنید.",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "به شبکه VPN متصل شدید، اما در حال حاضر هیچ سرور در دسترس در منطقه شما وجود ندارد. لطفاً بعداً دوباره امتحان کنید.",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "اوه! در حال حاضر هیچ سرور رایگان قابل دسترسی در منطقه شما وجود ندارد. می‌توانید اتصال پریمیوم رایگان را امتحان کنید تا از در دسترس بودن سرورهای پریمیوم مطلع شوید.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "شما به شبکه VPN متصل شده‌اید، اما همه سرورهای مکان انتخابی شما از منطقه شما قابل دسترسی نیستند. آیا می‌خواهید مکان را به خودکار تغییر دهید و به یک سرور قابل دسترسی متصل شوید؟",
   "UNREACHABLE_PROXIES_MESSAGE": "تمامی پروکسی‌ها در حال حاضر غیرقابل دسترس هستند.",
   "PAGINATION_STATUS": "{start} - {end} از {total}",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "اتصال",
   "APP_SETTINGS": "تنظیمات برنامه",
   "PRIVACY_AND_SECURITY": "حریم خصوصی و امنیت",
-  "ENFORCED_BY_SERVER": "توسط سرور اعمال می‌شود",
-  "UNREACHABLE_SERVER_MESSAGE_،WITH_TRY_PREMIUM": "در حال حاضر سروری در منطقه شما در دسترس نیست. برای اطمینان از عدم مسدودسازی کامل، مایلید سرورهای ویژه را رایگان امتحان کنید؟"
+  "ENFORCED_BY_SERVER": "توسط سرور اعمال می‌شود"
 }

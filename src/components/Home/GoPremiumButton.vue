@@ -58,7 +58,7 @@ function isShowCountdown(): boolean {
 
       <!-- Go Premium button -->
       <v-btn
-        v-else-if="isPremiumFlagSupported && vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+        v-else-if="isPremiumFlagSupported && vhApp.data.state.clientProfile?.canGoPremium == true"
         variant="outlined"
         color="go-premium-btn"
         rounded="pill"

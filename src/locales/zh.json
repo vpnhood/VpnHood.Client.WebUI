@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "清除所有选定的应用",
   "ARE_YOU_SURE": "你确定吗？",
   "UNREACHABLE_SERVER_MESSAGE": "目前您所在的区域没有可连接的服务器，请稍后再试。",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "您已连接到 VPN 网络，但目前您所在的地区没有可连接的服务器。请稍后再试。",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "哎呀！您当前区域没有可连接的免费服务器。您可以免费试用高级连接，以查看高级服务器的可用性。",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "您已连接到 VPN 网络，但您选择的位置的所有服务器都无法从您的区域访问。您想将位置切换到自动并连接到可访问的服务器吗？",
   "UNREACHABLE_PROXIES_MESSAGE": "所有代理目前均无法连接。",
   "PAGINATION_STATUS": "{start} - {end} / 共 {total} 条",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "网络连接",
   "APP_SETTINGS": "应用设置",
   "PRIVACY_AND_SECURITY": "隐私与安全",
-  "ENFORCED_BY_SERVER": "由服务器强制",
-  "UNREACHABLE_SERVER_MESSAGE_CWITH_TRY_PREMIUM": "当前您的地区没有可用服务器。是否免费试用高级服务器以尝试恢复连接？"
+  "ENFORCED_BY_SERVER": "由服务器强制"
 }

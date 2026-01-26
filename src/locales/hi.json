@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "सभी चयनित ऐप्स हटाएं",
   "ARE_YOU_SURE": "क्या आप सुनिश्चित हैं?",
   "UNREACHABLE_SERVER_MESSAGE": "इस समय आपके क्षेत्र से कोई सर्वर नहीं पहुंच पा रहा है। कृपया बाद में पुनः प्रयास करें।",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "आप वीपीएन नेटवर्क से कनेक्ट हो गए हैं, लेकिन इस समय आपके क्षेत्र से कोई भी सर्वर सुलभ नहीं है, कृपया बाद में पुनः प्रयास करें।",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "Oops! वर्तमान में आपके क्षेत्र में कोई भी सुलभ मुफ़्त सर्वर उपलब्ध नहीं है। प्रीमियम सर्वरों की उपलब्धता जांचने के लिए आप निःशुल्क प्रीमियम कनेक्शन आज़मा सकते हैं।",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "आप VPN नेटवर्क से जुड़े, लेकिन आपके चयनित स्थान के सभी सर्वर आपके क्षेत्र से अनुपलब्ध हैं। क्या आप स्थान को स्वतः पर बदलना चाहते हैं और एक पहुंच योग्य सर्वर से कनेक्ट करना चाहते हैं?",
   "UNREACHABLE_PROXIES_MESSAGE": "सभी प्रॉक्सी अभी अनुपलब्ध हैं।",
   "PAGINATION_STATUS": "{total} में से {start} - {end}",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "कनेक्टिविटी",
   "APP_SETTINGS": "ऐप सेटिंग्स",
   "PRIVACY_AND_SECURITY": "गोपनीयता और सुरक्षा",
-  "ENFORCED_BY_SERVER": "सर्वर द्वारा लागू",
-  "UNREACHABLE_SERVER_MESSAGE_CWITH_TRY_PREMIUM": "आपके क्षेत्र में अभी कोई सर्वर उपलब्ध नहीं है। क्या आप मुफ़्त में प्रीमियम सर्वर ट्राई करना चाहेंगे ताकि आपका इंटरनेट चलता रहे?"
+  "ENFORCED_BY_SERVER": "सर्वर द्वारा लागू"
 }

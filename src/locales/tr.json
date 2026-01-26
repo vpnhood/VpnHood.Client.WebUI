@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "Seçili tüm uygulamaları temizle",
   "ARE_YOU_SURE": "Emin misiniz?",
   "UNREACHABLE_SERVER_MESSAGE": "Şu anda bölgenizden ulaşılabilecek bir sunucu yok. Lütfen daha sonra tekrar deneyin.",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "VPN ağına bağlandınız ancak şu anda bölgenizden ulaşılabilir bir sunucu yok. Lütfen daha sonra tekrar deneyin.",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "Üzgünüz! Bölgenizde şu anda ulaşılabilecek ücretsiz sunucu bulunmamaktadır. Premium sunucuların kullanılabilirliğini kontrol etmek için ücretsiz olarak premium bağlantıyı deneyebilirsiniz.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "VPN ağına bağlandınız, ancak seçilen konumdaki tüm sunucular bölgenizden erişilemez durumda. Konumu otomatiğe değiştirmek ve erişilebilir bir sunucuya bağlanmak istiyor musunuz?",
   "UNREACHABLE_PROXIES_MESSAGE": "Şu anda hiçbir proxy'ye ulaşılamıyor.",
   "PAGINATION_STATUS": "{start} - {end} / {total}",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "Bağlantı",
   "APP_SETTINGS": "Uygulama Ayarları",
   "PRIVACY_AND_SECURITY": "Gizlilik ve Güvenlik",
-  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu",
-  "UNREACHABLE_SERVER_MESSAGE_CWITH_TRY_PREMIUM": "Şu anda bölgenizden erişilebilir bir sunucu bulunmuyor. Bağlantınızın tamamen engellenmediğinden emin olmak için Premium sunucuları ücretsiz denemek ister misiniz?"
+  "ENFORCED_BY_SERVER": "Sunucu tarafından zorunlu"
 }

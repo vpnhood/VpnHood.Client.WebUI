@@ -306,7 +306,8 @@
   "CLEAR_ALL_APPS_TITLE": "Cancella tutte le app selezionate",
   "ARE_YOU_SURE": "Sei sicuro?",
   "UNREACHABLE_SERVER_MESSAGE": "Al momento non ci sono server raggiungibili dalla tua regione. Riprova più tardi.",
-  "UNREACHABLE_SERVER_MESSAGE_ٌWITH_TRY_PREMIUM": "",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE": "Ti sei connesso alla rete VPN, ma al momento non ci sono server raggiungibili dalla tua regione. Riprova più tardi.",
+  "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM": "Ops! Attualmente non ci sono server gratuiti raggiungibili nella tua zona. Puoi provare una connessione premium gratuita per verificare la disponibilità dei server premium.",
   "UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO": "Ti sei connesso alla rete VPN, ma tutti i server nella posizione selezionata non sono raggiungibili dalla tua regione. Vuoi passare alla posizione automatica e connetterti a un server raggiungibile?",
   "UNREACHABLE_PROXIES_MESSAGE": "Tutti i proxy sono attualmente irraggiungibili.",
   "PAGINATION_STATUS": "{start} - {end} di {total}",
@@ -521,6 +522,5 @@
   "CONNECTIVITY": "Connettività",
   "APP_SETTINGS": "Impostazioni app",
   "PRIVACY_AND_SECURITY": "Privacy e sicurezza",
-  "ENFORCED_BY_SERVER": "Applicato dal server",
-  "UNREACHABLE_SERVER_MESSAGE_CWITH_TRY_PREMIUM": "Nessun server raggiungibile nella tua area. Prova gratuitamente i server Premium per superare eventuali blocchi di rete."
+  "ENFORCED_BY_SERVER": "Applicato dal server"
 }
