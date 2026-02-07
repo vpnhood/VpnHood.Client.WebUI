@@ -169,7 +169,7 @@ export class Util {
     }
   }
 
-  public static ToBoolean(value: any): boolean {
+  public static ToBoolean(value: unknown): boolean {
     if (value == null)
       return false;
 
@@ -180,7 +180,7 @@ export class Util {
       return value !== 0;
 
     if (typeof value === "string") {
-      var v = value.trim().toLowerCase();
+      const v = value.trim().toLowerCase();
 
       if (v === "true" || v === "1" || v === "yes" || v === "on")
         return true;
@@ -199,13 +199,14 @@ export class Util {
   }
 
   // For developers sends test error
-  /*  public static sendTestError(): void {
+    /*public static sendTestError(): void {
       const errorMessage = 'Something went wrong';
       const statusCode = 401;
       const responseBody = {
-        typeName: 'AdBlockerException',
+        typeName: ExceptionType.UnreachableServerLocation,
         message: 'Invalid email',
         data: {
+          IsAutoLocation: true,
           ErrorCode: 'AccessExpired',
           BillingResponseCode: 'Error',
           PurchaseState: 'purchase state',
@@ -213,7 +214,7 @@ export class Util {
         },
       };
       const headers = { 'Content-Type': 'application/json' };
-  
+
       const apiException = new ApiException(errorMessage, statusCode, responseBody, headers);
       throw apiException;
     }*/

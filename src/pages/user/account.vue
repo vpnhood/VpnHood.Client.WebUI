@@ -5,10 +5,11 @@ import { Util } from '@/helpers/Util';
 import { AppPackageName } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import AppBar from '@/components/AppBar.vue';
+import { computed } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const userAccount = vhApp.data.userState.userAccount;
+const userAccount = computed(() => vhApp.data.userState.userAccount);
 
 async function onSignOut() {
   const result = await vhApp.showConfirmDialog(locale('CONFIRM_SIGN_OUT_TITLE'), locale('CONFIRM_SIGN_OUT_DESC'));

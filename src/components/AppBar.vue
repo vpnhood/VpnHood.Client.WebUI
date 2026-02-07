@@ -29,7 +29,9 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
       />
 
       <!-- Page title -->
-      <p class="text-capitalize text-body-1">{{locale(pageInfo.name.toString())}}</p>
+      <p class="text-center text-capitalize text-body-1" style="max-width: 200px">
+        {{locale(pageInfo.name.toString()) }}
+      </p>
     </template>
 
   </div>

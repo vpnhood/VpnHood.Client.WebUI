@@ -46,6 +46,6 @@ export type ThemeColorKey =
   | 'info' | 'on-info' | 'note' | 'on-note' | 'error' | 'warning' | 'on-warning'
   | 'good' | 'very-poor'
   | 'scroll-track' | 'scroll-thumb' | 'scroll-thumb-hover'
-  | 'skeleton-loader';
+  | 'skeleton-loader' | 'learn-more';
 
 export type ThemeColorNames = Record<ThemeColorKey, string>;

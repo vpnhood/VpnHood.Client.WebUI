@@ -1,50 +1,110 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import { CountryInfo, SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import { SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import FilterList, { type IListItemInfo } from '@/components/FilterList.vue';
 import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
+
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const emptyManualCountriesError = ref<string | null>(null);
-const countryList = ref<CountryInfo[]>();
-const splitMode = computed<SplitByCountryMode>({
-  get: () => {
-    return vhApp.data.userSettings.splitByCountryMode;
-  },
-  set: async (value: SplitByCountryMode) => {
-    if (vhApp.data.isConnected && !await vhApp.showConfirmDialog(locale('DISCONNECT_ALERT'), locale('DISCONNECT_ALERT_DESC')))
-      return;
-
-    vhApp.data.userSettings.splitByCountryMode = value;
-    await vhApp.saveUserSetting();
-  }
-});
-
+const countryList = ref<IListItemInfo[]>([]);
+const isShowList = computed(() => vhApp.data.userSettings.splitByCountryMode === SplitByCountryMode.ExcludeList);
+const localSplitMode = ref(vhApp.data.userSettings.splitByCountryMode);
 const selectedCountries = computed<string[]>({
   get: () => vhApp.data.userSettings.splitByCountries,
-  set: async (value: string[]) => {
-    vhApp.data.userSettings.splitByCountries = value ?? [];
-    await vhApp.saveUserSetting();
-
-    if (value.length > 0)
-      emptyManualCountriesError.value = null;
-  }
+  set: async (countiresCode: string[]) => vhApp.data.userSettings.splitByCountries = countiresCode
 });
-onMounted(async () => {
-  countryList.value = await vhApp.appClient.getSupportedSplitByCountries();
-})
+
+watch(isShowList, () => {
+  if (isShowList.value) fetchCountries();
+});
+
+watch(() => vhApp.data.userSettings.splitByCountryMode, (newVal) => {
+  localSplitMode.value = newVal;
+});
+
+onMounted(() => {
+  if (isShowList.value) fetchCountries();
+});
+
+async function fetchCountries() {
+  if (countryList.value.length > 0) return;
+
+  const rawCountries = await vhApp.appClient.getSupportedSplitByCountries();
+  // 1. Create the base list
+  const mapped = rawCountries.map(x => ({
+    id: x.countryCode,
+    name: x.englishName,
+    icon: vhApp.getCountryFlag(x.countryCode),
+    // Logic: If it's NOT in the exclusion list, it is "Selected" (ON)
+    isSelected: !selectedCountries.value.includes(x.countryCode)
+  }));
+
+  // 2. Calculate group sizes
+  const onCount = mapped.filter(x => x.isSelected).length;
+  const offCount = mapped.length - onCount;
+
+  // 3. Determine the "Priority" value
+  // If ON is the minority, it should have the lower sort value (0)
+  const onPriority = onCount < offCount ? 0 : 1;
+  const offPriority = onCount < offCount ? 1 : 0;
+
+  // 4. Sort based on the dynamic priority
+  countryList.value = mapped.sort((a, b) => {
+    const aVal = a.isSelected ? onPriority : offPriority;
+    const bVal = b.isSelected ? onPriority : offPriority;
+
+    if (aVal !== bVal) return aVal - bVal;
+
+    // Secondary sort by name so it looks organized
+    return a.name.localeCompare(b.name);
+  });
+}
+
+async function handleListUpdate(newList: IListItemInfo[]){
+  // Update local UI
+  countryList.value = newList;
+  // Update the actual setting (triggers the setter)
+  selectedCountries.value = newList.filter(x => !x.isSelected).map(x => x.id);
+}
+
+async function onSplitModeChange(value: SplitByCountryMode | null) {
+  const oldValue = vhApp.data.userSettings.splitByCountryMode;
+
+  if (value === null) {
+    localSplitMode.value = oldValue;
+    return;
+  }
+
+  if (!await vhApp.disconnectAlert()) {
+    localSplitMode.value = oldValue;
+    return;
+  }
+
+  // Update logic
+  if (value === SplitByCountryMode.ExcludeMyCountry) {
+    selectedCountries.value = [];
+  }
+
+  vhApp.data.userSettings.splitByCountryMode = value;
+  await vhApp.saveUserSetting();
+}
+
 onBeforeRouteLeave(
   async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    if (splitMode.value === SplitByCountryMode.ExcludeList && selectedCountries.value.length < 1){
-      emptyManualCountriesError.value = locale('EMPTY_COUNTRY_LIST_ERROR_MSG');
+
+    // Show error when the user excluded all countries
+    if (isShowList.value && selectedCountries.value.length === vhApp.data.uiState.allCountriesCount){
       next(false);
+      await vhApp.processError(locale("ALL_COUTRIES_EXCLUDED_ERROR_MSG"));
       return;
     }
 
+    await vhApp.saveUserSetting();
     next();
   }
 );
@@ -61,26 +121,20 @@ onBeforeRouteLeave(
 
       <v-card-item class="ps-1">
 
-        <!-- TODO: Create component for all radio group -->
         <v-radio-group
-          v-model="splitMode"
-          :hide-details="true"
+          v-model="localSplitMode"
+          @update:model-value="onSplitModeChange"
+          hide-details="auto"
           color="highlight"
         >
-          <v-radio :value="SplitByCountryMode.IncludeAll" class="mb-3">
-            <template v-slot:label>
-              <div class="d-flex flex-column align-start">
-                <span>{{ locale("OFF") }}</span>
-                <span class="text-disabled text-caption">{{ locale("SPLIT_COUNTRY_OFF_DESC") }}</span>
-              </div>
-            </template>
-          </v-radio>
-
-          <v-radio :value="SplitByCountryMode.ExcludeMyCountry" class="mb-3">
+          <v-radio
+            :value="SplitByCountryMode.ExcludeMyCountry"
+            class="radio-icon-top mb-3"
+          >
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>
-                  {{ locale("MY_COUNTRY") }}
+                  {{ locale("EXCLUDE_MY_COUNTRY") }}
                   <v-chip
                     color="highlight"
                     :text="locale('RECOMMENDED')"
@@ -91,80 +145,36 @@ onBeforeRouteLeave(
                   />
                 </span>
                 <span class="text-disabled text-caption">
-                    {{ locale("SPLIT_MY_COUNTRY_DESC") }}
+                    {{ locale("SPLIT_EXCLUDE_MY_COUNTRY_DESC") }}
                 </span>
               </div>
             </template>
           </v-radio>
 
-          <v-radio :value="SplitByCountryMode.ExcludeList" class="mb-3">
+          <v-radio
+            :value="SplitByCountryMode.ExcludeList"
+            class="radio-icon-top mb-3"
+          >
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("CUSTOM_EXCLUSION_LIST") }}</span>
-                <span class="text-disabled text-caption">{{ locale("CUSTOM_EXCLUSION_LIST_DESC") }}</span>
+                <span>{{ locale("INCLUDE_LIST") }}</span>
+                <span class="text-disabled text-caption">{{ locale("INCLUDE_LIST_DESC") }}</span>
               </div>
             </template>
           </v-radio>
 
         </v-radio-group>
       </v-card-item>
-
-      <!-- Country list -->
-      <v-card-item v-if="splitMode === SplitByCountryMode.ExcludeList" class="pt-0 pb-4">
-        <v-autocomplete
-          v-model="selectedCountries"
-          theme="dark"
-          :label="locale('COUNTRIES')"
-          :items="countryList"
-          item-title="englishName"
-          item-value="countryCode"
-          :return-object="false"
-          :list-props="{ bgColor: 'app-bar' }"
-          :error-messages="emptyManualCountriesError"
-          hide-details="auto"
-          variant="outlined"
-          color="highlight"
-          class="mt-2"
-          hide-selected
-          clearable
-          chips
-          closable-chips
-          multiple
-        >
-          <!-- Selected countries -->
-          <template v-slot:chip="{ props, item }">
-            <v-chip v-bind="props" label>
-              <template v-slot:prepend>
-                <v-img
-                  :src="vhApp.getCountryFlag(item.raw.countryCode)"
-                  eager
-                  alt="country flag"
-                  width="18px"
-                  class="me-1"
-                />
-              </template>
-              <template v-slot:close>
-                <v-icon icon="mdi-close" size="14"/>
-              </template>
-            </v-chip>
-          </template>
-
-          <!-- List item flag -->
-          <template v-slot:item="{ props, item }">
-            <v-list-item v-bind="props" :title="item.raw.englishName">
-              <template v-slot:prepend>
-                <v-img
-                  :src="vhApp.getCountryFlag(item.raw.countryCode)"
-                  width="22px"
-                  alt="country flag"
-                  class="me-3"
-                />
-              </template>
-            </v-list-item>
-          </template>
-
-        </v-autocomplete>
-      </v-card-item>
   </config-card>
+
+  <!-- Country list -->
+  <filter-list
+    v-if="isShowList"
+    :list="countryList"
+    :loading="countryList.length < 1"
+    icon-size="30"
+    @update:list="handleListUpdate"
+  />
+
   </v-sheet>
 </template>

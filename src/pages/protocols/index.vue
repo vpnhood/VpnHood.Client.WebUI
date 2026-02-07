@@ -154,7 +154,7 @@ const isCloakModeEnabled = computed(() => {
               v-if="item.isShow"
               :value="item.value"
               :disabled="!item.isEnabled"
-              class="protocol-radio mb-3"
+              class="radio-icon-top mb-3"
             >
               <template v-slot:label>
                 <div class="d-flex flex-column align-start">
@@ -199,20 +199,3 @@ const isCloakModeEnabled = computed(() => {
 
   </v-sheet>
 </template>
-
-<style scoped>
-.protocol-radio {
-  align-items: start;
-}
-</style>
-
-<!--suppress CssUnusedSymbol -->
-<style>
-.protocol-radio.v-selection-control--disabled .v-selection-control__input > .v-icon{
-  opacity: 0.5;
-}
-
-.protocol-radio>.v-selection-control__wrapper{
-  transform: translateY(-7px);
-}
-</style>

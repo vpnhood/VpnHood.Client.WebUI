@@ -144,7 +144,7 @@ export class VpnHoodApp {
 
   public async connect(
     clientProfileId: string,
-    serverLocation: string | undefined,
+    serverLocation: string | undefined | null,
     isPremium: boolean,
     planId: ConnectPlanId,
     isDiagnose: boolean = false,
@@ -412,7 +412,7 @@ export class VpnHoodApp {
       await accountClient.refresh();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.log('User Account: ', this.data.userState.userAccount);
+    console.debug('User Account: ', this.data.userState.userAccount, ' IsPremium: ', this.data.isPremiumAccount);
     await this.reloadSettings();
   }
 
@@ -424,6 +424,14 @@ export class VpnHoodApp {
 
     this.confirmDialogDeferred = createDeferred<boolean>();
     return this.confirmDialogDeferred.promise;
+  }
+
+  public async disconnectAlert(): Promise<boolean>{
+    if (!this.data.isConnected) return true;
+
+    const result = await this.showConfirmDialog(i18n.global.t('DISCONNECT_ALERT'), i18n.global.t('DISCONNECT_ALERT_DESC'));
+    if (result) await this.appClient.disconnect();
+    return result;
   }
 
 }

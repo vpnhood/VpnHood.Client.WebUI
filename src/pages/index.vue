@@ -76,11 +76,11 @@ function splitByAppsStatus(): string {
 
   switch (vhApp.data.userSettings.splitByAppMode) {
     case SplitByMode.Exclude:
-      return locale('APP_FILTER_STATUS_EXCLUDE', { x: splitByApps.length });
+      return locale('ALL_EXCEPT_X', { x: splitByApps.length });
     case SplitByMode.Include:
-      return locale('APP_FILTER_STATUS_INCLUDE', { x: splitByApps.length });
+      return locale('ONLY_X', { x: splitByApps.length });
     default:
-      return locale('ALL_APPS');
+      return locale('ALL');
   }
 }
 </script>

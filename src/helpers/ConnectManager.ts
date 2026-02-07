@@ -33,7 +33,7 @@ export class ConnectManager {
   }
 
   public static async connect1(isDiagnose: boolean = false): Promise<void> {
-    const clientProfileId = VpnHoodApp.instance.data.state.clientProfile?.clientProfileId;
+    const clientProfileId = VpnHoodApp.instance.data.clientProfileId;
 
     // For developer
     console.log('Connect1');
@@ -48,7 +48,7 @@ export class ConnectManager {
 
   public static async connect2(clientProfileId: string, isDiagnose: boolean = false): Promise<void> {
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    let serverLocation: string | undefined = clientProfileInfo.selectedLocationInfo?.serverLocation;
+    let serverLocation: string | undefined | null = clientProfileInfo.selectedLocationInfo?.serverLocation;
 
     // For developer
     console.log('Connect2');
@@ -80,7 +80,7 @@ export class ConnectManager {
     // Force the premium user to connect to the premium location.
     if (VpnHoodApp.instance.data.isPremiumAccount && !isPremiumLocationSelected ){
       isPremiumLocationSelected = true;
-      serverLocation = '*/*';
+      serverLocation = VpnHoodApp.instance.data.uiState.autoLocationValue;
     }
 
     await this.connect3(clientProfileId, serverLocation, isPremiumLocationSelected, isDiagnose, undefined);
@@ -88,7 +88,7 @@ export class ConnectManager {
 
   public static async connect3(
     clientProfileId: string,
-    serverLocation: string | undefined,
+    serverLocation: string | undefined | null,
     isPremiumLocation: boolean,
     isDiagnose: boolean = false,
     goToHome: boolean | undefined = true

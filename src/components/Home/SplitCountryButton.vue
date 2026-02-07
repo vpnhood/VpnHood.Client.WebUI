@@ -10,24 +10,38 @@ import CountryFlagWrapper from '@/components/CountryFlagWrapper.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+const mode = computed(() => vhApp.data.userSettings.splitByCountryMode);
 const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitByCountries ?? []);
-const allowMultipleSplitCountryFlag = computed((): boolean => vhApp.data.userSettings.splitByCountryMode ===
-  SplitByCountryMode.ExcludeList && excludedCountries.value.length <= 5);
 
-const isShowSplitCountryFlag = computed((): boolean => vhApp.data.userSettings.splitByCountryMode === SplitByCountryMode.ExcludeMyCountry);
-const isShowSplitCountryText = computed((): boolean => !allowMultipleSplitCountryFlag.value || excludedCountries.value.length === 1);
+// Flag Display Logic
+const isExcludeListMode = computed(() => mode.value === SplitByCountryMode.ExcludeList);
 
-const splitCountryStatusText = computed((): string => {
-  switch (vhApp.data.userSettings.splitByCountryMode){
-    case SplitByCountryMode.ExcludeMyCountry:
-      return "MY_COUNTRY";
-    case SplitByCountryMode.ExcludeList:
-      return locale(excludedCountries.value.length === 1 ? 'CUSTOM' : 'SPLIT_COUNTRY_COUNT', { x:
-        excludedCountries.value.length
-      });
-    default:
-      return "OFF";
+// Only allow multiple flags if list is small (1-3 items)
+const allowMultipleFlags = computed(() =>
+  isExcludeListMode.value &&
+  excludedCountries.value.length > 0 &&
+  excludedCountries.value.length <= 3
+);
+
+const isShowSplitCountryFlag = computed(() => mode.value === SplitByCountryMode.ExcludeMyCountry);
+
+// Hide text if we are showing 2 or 3 flags to save space,
+// unless there's only 1 flag or it's a different mode.
+const isShowSplitCountryText = computed(() => !allowMultipleFlags.value || excludedCountries.value.length === 1);
+
+const splitCountryStatusText = computed( (): string => {
+  if (mode.value === SplitByCountryMode.ExcludeMyCountry)
+    return locale("EXCLUDE_MY_COUNTRY");
+
+  if (isExcludeListMode.value) {
+    const count = excludedCountries.value.length;
+    if (count === 0) return locale("ALL");
+    if (count === 1) return locale('CUSTOM');
+    if (count < (vhApp.data.uiState.allCountriesCount/2)) return locale("ALL_EXCEPT_X", { x: count });
+    return locale('ONLY_X', { x: vhApp.data.uiState.allCountriesCount - count });
   }
+
+  return locale("ALL");
 });
 </script>
 
@@ -47,13 +61,13 @@ const splitCountryStatusText = computed((): string => {
       v-if="isShowSplitCountryText"
       class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50"
     >
-      {{ locale(splitCountryStatusText) }}
+      {{ splitCountryStatusText }}
     </span>
 
-    <template v-if="allowMultipleSplitCountryFlag || isShowSplitCountryFlag" v-slot:append>
+    <template v-if="allowMultipleFlags || isShowSplitCountryFlag" v-slot:append>
 
       <!-- Multiple country flag -->
-      <template v-if="allowMultipleSplitCountryFlag">
+      <template v-if="allowMultipleFlags">
         <country-flag-wrapper
           v-for="countryCode in excludedCountries"
           :key="countryCode"

@@ -32,7 +32,6 @@ export class UiState {
   public isShowDeveloperDialog: boolean = false;
 
   public maxWidthOnLargeScreen = "959px";
-
-  public isPromoteDialogShown: boolean = false;
-  public promoteImageUrl: string = "";
+  public autoLocationValue = null;
+  public allCountriesCount = 238;
 }

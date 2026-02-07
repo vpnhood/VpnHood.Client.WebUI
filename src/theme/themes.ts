@@ -138,6 +138,7 @@ export const vhConnectThemeColors = defineTheme({
   'disable-premium': myColors.cream['100'],
   'good': myColors.green['300'],
   'very-poor': myColors.yellow['200'],
+  'learn-more': myColors.blue['280'],
 
   'disconnect-warning': myColors.purple['100'],
   'on-disconnect-warning': myColors.purple['600'],
@@ -291,6 +292,7 @@ export const vhClientThemeColors = defineTheme({
   'disable-premium': myColors.yellow['200'],
   'good': myColors.green['300'],
   'very-poor': myColors.yellow['200'],
+  'learn-more': myColors.blue['280'],
 
   'disconnect-warning': myColors.yellow['50'],
   'on-disconnect-warning': myColors.yellow['300'],

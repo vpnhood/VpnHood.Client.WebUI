@@ -105,12 +105,10 @@ export class ErrorHandler {
           }
 
         // prompt for premium if applicable on current profile
-        // TODO: active try premium after fix the error issue.
-        if (VpnHoodApp.instance.data.state.clientProfile?.isPremiumAccount === false &&
-          VpnHoodApp.instance.data.state.clientProfile?.canTryPremium === true) {
+        if (!VpnHoodApp.instance.data.isPremiumAccount && VpnHoodApp.instance.data.canTryPremium) {
           return {
             localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_TRY_PREMIUM',
-            action: { showDiagnose: true }
+            action: { showTryPremium: true }
           };
         }
 

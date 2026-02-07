@@ -73,7 +73,16 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     /*noinspection CssUnresolvedCustomProperty*/
     background: linear-gradient(to top, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
 }
+.radio-icon-top{
+    align-items: start;
+}
+.radio-icon-top.v-selection-control--disabled .v-selection-control__input > .v-icon{
+    opacity: 0.5;
+}
 
+.radio-icon-top>.v-selection-control__wrapper{
+    transform: translateY(-7px);
+}
 /*** -------------------- Home Circle Section -------------------- ***/
 #connectionCircleIndicator{
     position: relative;
