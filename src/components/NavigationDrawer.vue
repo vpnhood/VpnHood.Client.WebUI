@@ -131,7 +131,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
       <!-- Go premium -->
       <v-list-item
         v-if="vhApp.data.features.isPremiumFlagSupported &&
-        vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
+        vhApp.data.state.clientProfile?.canGoPremium"
         class="border-b"
         @click="navigateByRouter({name: 'PURCHASE_SUBSCRIPTION'})"
       >

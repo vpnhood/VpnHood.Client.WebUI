@@ -34,26 +34,14 @@ function isShowCountdown(): boolean {
 
       <!-- You are premium button -->
       <v-chip
-        v-else-if="isPremiumFlagSupported && vhApp.data.isPremiumAccount"
+        v-else-if="isPremiumFlagSupported && (vhApp.data.isPremiumAccount || vhApp.data.hasPremiumCode)"
         prepend-icon="mdi-crown"
         :text="locale('YOU_ARE_PREMIUM')"
         color="enable-premium"
         variant="tonal"
         tabindex="2"
         tag="h6"
-        @click="router.push({ name: 'PREMIUM_USER' })"
-      />
-
-      <!-- Premium code -->
-      <v-chip
-        v-else-if="!isPremiumFlagSupported && vhApp.data.state.clientProfile?.hasAccessCode"
-        prepend-icon="mdi-key"
-        :text="locale('PREMIUM_CODE_IS_ACTIVE')"
-        color="active"
-        variant="tonal"
-        tag="h6"
-        tabindex="2"
-        @click="router.push({ name: 'PREMIUM_USER' })"
+        @click="router.push({ name: vhApp.data.hasPremiumCode ? 'PREMIUM_USER' : 'ACCOUNT' })"
       />
 
       <!-- Go Premium button -->

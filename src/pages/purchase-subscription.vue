@@ -10,10 +10,13 @@ import StoreUnavailable from '@/components/PurchaseSubscription/StoreUnavailable
 import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
 import PurchaseByStore from '@/components/PurchaseSubscription/PurchaseByStore.vue';
 import type { AppPurchaseOptions } from '@/services/VpnHood.Client.Api';
+import { ComponentRouteController } from '@/services/ComponentRouteController';
+import { ComponentName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const purchaseOptions = ref<AppPurchaseOptions>();
+const isShowEnterPremiumCodeSheet = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
 
 onMounted(async () => {
     const billingClient = ClientApiFactory.instance.createBillingClient();
@@ -41,48 +44,61 @@ onMounted(async () => {
         <premium-features-carousel/>
       </div>
 
+    <!-- Show skeleton loader till to load google play info -->
+    <v-skeleton-loader
+      v-if="!purchaseOptions"
+      color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+      type="heading, subtitle"
+      class="mb-4"
+      height="125px"
+    />
 
-      <!-- Premium by google and by code buttons -->
-      <div class="mt-4">
+    <!-- Premium by google, web and by code buttons -->
+    <div v-else class="mt-4">
 
-        <!-- Show skeleton loader till to load google play info -->
-        <v-skeleton-loader
-          v-if="!purchaseOptions"
-          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
-          type="heading, subtitle"
-          class="mb-4"
-          height="125px"
-        />
+      <!-- Purchase by store -->
+      <purchase-by-store
+        v-if="purchaseOptions?.isStoreAvailable"
+        :subscription-plans="purchaseOptions.subscriptionPlans"
+      />
 
-        <!-- Purchase by store -->
-        <purchase-by-store
-          v-else-if="purchaseOptions?.isStoreAvailable"
-          :subscription-plans="purchaseOptions.subscriptionPlans"
-        />
+      <!-- Store unavailable -->
+      <store-unavailable
+        v-else-if="purchaseOptions?.storeError"
+        :error-message="purchaseOptions.storeError.message"
+      />
 
-        <!-- Store unavailable -->
-        <store-unavailable
-          v-else-if="purchaseOptions?.storeError"
-          :error-message="purchaseOptions.storeError.message"
-        />
+      <!-- Purchase by Web -->
+      <btn-style-1
+        v-if="purchaseOptions?.purchaseUrl"
+        class="mt-4 text-premium-code-btn"
+        block
+        rounded="pill"
+        height="40px"
+        color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+        prepend-icon="mdi-web"
+        :text="locale('PURCHASE_VIA_WEB')"
+        target="_blank"
+        :href="purchaseOptions.purchaseUrl"
+      />
 
-        <!-- Purchase by Web -->
-        <btn-style-1
-          v-if="purchaseOptions?.purchaseUrl"
-          class="mt-4 text-premium-code-btn"
-          block
-          rounded="pill"
-          height="40px"
-          color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
-          prepend-icon="mdi-web"
-          :text="locale('PURCHASE_VIA_WEB')"
-          target="_blank"
-          :href="purchaseOptions.purchaseUrl"
-        />
 
-        <!-- Input premium code -->
-        <premium-by-code v-if="purchaseOptions?.canGoPremiumByCode" />
-      </div>
+      <!-- Premium code button -->
+      <btn-style-1
+        v-if="purchaseOptions?.canGoPremiumByCode"
+        class="mt-4 text-premium-code-btn"
+        block
+        height="40px"
+        rounded="pill"
+        color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
+        prepend-icon="mdi-key"
+        :text="locale('I_HAVE_A_PREMIUM_CODE')"
+        @click="isShowEnterPremiumCodeSheet.show()"
+      />
+    </div>
+
+    <!-- Input premium code -->
+    <premium-by-code v-model="isShowEnterPremiumCodeSheet.isVisible" />
 
   </grad-sheet>
 </template>

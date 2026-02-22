@@ -9,8 +9,8 @@ import { AppFeature, DnsMode } from '@/services/VpnHood.Client.Api';
 import PremiumIcon from '@/components/PremiumIcon.vue';
 import { computed, ref, watch } from 'vue';
 import { Validators } from '@/helpers/Validators';
-import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
-import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
+import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
+import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -67,7 +67,7 @@ watch(dns2, (newVal) => {
 
 function isShowEnforcedByServerAlert() {
   return vhApp.data.isConnected && selectedDnsMode.value == DnsMode.AdapterDns &&
-  !vhApp.data.state.sessionInfo?.isDnsServersAccepted
+  vhApp.data.state.sessionInfo?.dnsStatus.isUserSuppressed
 }
 </script>
 

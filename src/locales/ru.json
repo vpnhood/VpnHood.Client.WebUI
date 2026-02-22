@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "Хотите изменить?",
   "ACTIVE_USER": "Активный пользователь",
   "ACTIVATED_ON": "Активировано:",
-  "USED_BY": "Используется:",
+  "USED_DEVICE": "Используется:",
   "DEVICE": "Устройство",
   "MORE_THAN_X_DEVICES": "Более {x} устройств",
   "DATE": "Дата",

@@ -6,8 +6,11 @@ import { computed, onMounted, ref, watch } from 'vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const emit = defineEmits<{
-  (event: 'loadProxies', value: boolean): void;
+const emit = defineEmits<{ (
+    event: 'loadProxies',
+    recordIndex: number,
+    recordCount: number
+  ): void;
 }>();
 
 const intervalOptions = [
@@ -52,7 +55,7 @@ async function reloadFromUrl(): Promise<void> {
     await saveAutoUpdateSettings();
     await vhApp.proxyEndPointClient.reloadUrl();
     oldProxyUrl.value = proxyUrl.value;
-    emit('loadProxies', true);
+    emit('loadProxies', 0, 10);
   }
   finally {
     isReloadingUrl.value = false;

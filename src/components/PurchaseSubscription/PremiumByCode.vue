@@ -1,8 +1,6 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ComponentRouteController } from '@/services/ComponentRouteController';
-import { ComponentName } from '@/helpers/UiConstants';
 import { ClientProfileUpdateParams, ConnectPlanId, PatchOfString, } from '@/services/VpnHood.Client.Api';
 import { ref } from 'vue';
 import PendingDialog from '@/components/PurchaseSubscription/PendingDialog.vue';
@@ -11,7 +9,15 @@ import PremiumCodeCompleteDialog from '@/components/PurchaseSubscription/Premium
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const enterPremiumCodeModel = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
+const props = defineProps<{
+  modelValue: boolean
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void,
+}>();
+
+
 const premiumCodeForm = ref<boolean>(false);
 const invalidCodeError = ref<null|string>(null);
 const formattedPremiumCode = ref('');
@@ -59,7 +65,7 @@ async function validatePremiumCode(): Promise<void> {
 }
 async function validateCodeViaAccessServer(profileId: string): Promise<void>{
   try {
-    await enterPremiumCodeModel.value.show(false);
+    emit('update:modelValue', false);
     isShowPendingDialog.value = true;
     await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
 
@@ -76,21 +82,11 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
 </script>
 
 <template>
-  <!-- Premium code button -->
-  <btn-style-1
-    class="mt-4 text-premium-code-btn"
-    block
-    height="40px"
-    rounded="pill"
-    color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
-    prepend-icon="mdi-key"
-    :text="locale('I_HAVE_A_PREMIUM_CODE')"
-    @click="enterPremiumCodeModel.show()"
-  />
 
   <!-- Premium code sheet -->
   <v-bottom-sheet
-    v-model="enterPremiumCodeModel.isVisible"
+    :modelValue="props.modelValue"
+    @update:modelValue="emit('update:modelValue',$event)"
     contained
     width="100%"
     max-width="100%"

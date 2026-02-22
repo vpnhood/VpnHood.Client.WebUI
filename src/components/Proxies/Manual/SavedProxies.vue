@@ -1,10 +1,11 @@
 ﻿<script setup lang="ts">
 import ProxyListItem from '@/components/Proxies/ProxyListItem.vue';
 import { ProxySheetType } from '@/components/Proxies/ProxyUtils';
-import { computed, ref, toRef, watch } from 'vue';
+import { computed, onUnmounted, ref, toRef, watch } from 'vue';
 import i18n from '@/locales/i18n';
 import {
-  type AppProxyEndPointInfo,
+  AppConnectionState,
+  type AppProxyEndPointInfo, CustomData,
   ProxyEndPoint,
   ProxyEndPointInfo,
   type ProxyEndPointStatus,
@@ -26,21 +27,22 @@ const props = defineProps<{
 
 const emit = defineEmits<{ (
   event: 'loadProxies',
-  recordIndex: number,
-  recordCount: number,
-  includeSucceeded: boolean,
-  includeFailed: boolean,
-  includeUnknown: boolean,
-  includeDisabled: boolean
+  recordIndex?: number,
+  recordCount?: number,
+  includeSucceeded?: boolean,
+  includeFailed?: boolean,
+  includeUnknown?: boolean,
+  includeDisabled?: boolean
   ): void;
 }>();
 
 interface MenuItem {
   title: string,
   icon: string,
+  refreshList: boolean,
   color?: string,
   confirm?:{ title: string, message: string },
-  action: () => Promise<void>
+  action: () => Promise<void> | void
 }
 
 enum FilterProxyStatus{
@@ -55,22 +57,39 @@ const itemsPerPage = 10;
 const totalPages = computed(() => Math.ceil(props.totalProxyCount / itemsPerPage));
 const isResettingStates = ref(false);
 const isImporting = ref(false);
-const isShowAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
+const showAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
 const addOrdEditSheetType = ref<ProxySheetType>(ProxySheetType.add);
 const isDisableButtons = computed(() => isResettingStates.value || props.isLoading || isImporting.value);
 const proxyStatus = ref<ProxyEndPointStatus | null>(null);
 const selectedFilterProxy = ref<FilterProxyStatus | null>(null);
 const proxyEndPoint = ref<ProxyEndPoint>(createEmptyProxy());
+const isDisableSkeleton = ref(false);
+let refreshInterval: ReturnType<typeof setInterval> | null = null;
+const enableAutoRefreshProxyList = computed({
+  get: () => vhApp.data.userSettings.customData?.enableAutoRefreshProxyList,
+  set: async (value: boolean) => {
+    (vhApp.data.userSettings.customData ??= new CustomData()).enableAutoRefreshProxyList = value;
+    await vhApp.saveUserSetting();
+  }
+})
 
 const menuItems = computed<MenuItem[]>(() => [
   {
+    title: locale('AUTO_REFRESH'),
+    icon: 'mdi-refresh-auto',
+    refreshList: false,
+    action: autoRefreshList
+  },
+  {
     title: locale('PROXY_RESET_STATES'),
     icon: 'mdi-refresh',
+    refreshList: true,
     action: resetStates
   },
   {
     title: locale('DISABLE_ALL_FAILED'),
     icon: 'mdi-cancel',
+    refreshList: true,
     confirm:{
       title: locale('DISABLE_ALL_FAILED'),
       message: locale('DISABLE_ALL_FAILED_PROXIES_MSG')
@@ -80,6 +99,7 @@ const menuItems = computed<MenuItem[]>(() => [
   {
     title: locale('REMOVE_ALL_FAILED'),
     icon: 'mdi-delete-alert',
+    refreshList: true,
     confirm:{
       title: locale('REMOVE_ALL_FAILED'),
       message: locale('REMOVE_ALL_FAILED_MSG')
@@ -89,6 +109,7 @@ const menuItems = computed<MenuItem[]>(() => [
   {
     title: locale('REMOVE_ALL_DISABLED'),
     icon: 'mdi-delete-forever',
+    refreshList: true,
     confirm:{
       title: locale('REMOVE_ALL_DISABLED'),
       message: locale('REMOVE_ALL_DISABLED_MSG')
@@ -99,6 +120,7 @@ const menuItems = computed<MenuItem[]>(() => [
     title: locale('REMOVE_ALL'),
     icon: 'mdi-delete',
     color: 'error',
+    refreshList: true,
     confirm:{
       title: locale('REMOVE_ALL'),
       message: locale('REMOVE_ALL_PROXIES_MSG')
@@ -140,23 +162,25 @@ async function runMenuAction(item: MenuItem) {
     if (!confirmed) return;
   }
   await item.action();
-  refreshList();
+
+  if (item.refreshList)
+    refreshList();
 }
 function addProxy(): void {
   proxyEndPoint.value = createEmptyProxy();
   proxyStatus.value = null;
   addOrdEditSheetType.value = ProxySheetType.add;
-  isShowAddOrEditSheet.value.show();
+  showAddOrEditSheet.value.show();
 }
 function editeProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
   proxyStatus.value = selectedProxyEndPoint.status;
   proxyEndPoint.value =  selectedProxyEndPoint.endPoint;
   addOrdEditSheetType.value = ProxySheetType.edit;
-  isShowAddOrEditSheet.value.show();
+  showAddOrEditSheet.value.show();
 }
 function addProxyList(): void {
   addOrdEditSheetType.value = ProxySheetType.addList;
-  isShowAddOrEditSheet.value.show();
+  showAddOrEditSheet.value.show();
 }
 async function resetStates(): Promise<void> {
   try {
@@ -168,7 +192,14 @@ async function resetStates(): Promise<void> {
 }
 function refreshList() {
   page.value = 1;
-  handlePageChange(1);
+  handlePageChange(page.value);
+}
+function autoRefreshList() {
+  enableAutoRefreshProxyList.value = !enableAutoRefreshProxyList.value;
+  if (enableAutoRefreshProxyList.value)
+    startPeriodicRefresh();
+  else
+    stopPeriodicRefresh();
 }
 function handlePageChange(newPage: number) {
   const recordIndex = (newPage - 1) * itemsPerPage;
@@ -184,6 +215,33 @@ function handlePageChange(newPage: number) {
     !filter || filter === FilterProxyStatus.disabled
   );
 }
+
+async function startPeriodicRefresh(): Promise<void> {
+  if (refreshInterval ||
+    document.hidden ||
+    vhApp.data.connectionState === AppConnectionState.None ||
+    !enableAutoRefreshProxyList.value)
+    return;
+
+  refreshInterval = setInterval(async () => {
+      // Don't show loading skeleton on periodic refresh
+      isDisableSkeleton.value = true;
+
+      emit('loadProxies');
+
+  }, 3000);
+}
+function stopPeriodicRefresh(): void {
+  isDisableSkeleton.value = false;
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+    refreshInterval = null;
+  }
+}
+
+onUnmounted(() => {
+  stopPeriodicRefresh();
+});
 
 watch(selectedFilterProxy, () => {
   refreshList();
@@ -220,7 +278,11 @@ watch(selectedFilterProxy, () => {
                 :class="{'border-b': index < (menuItems.length - 1)}"
                 prepend-gap="10px"
                 @click="runMenuAction(item)"
-              />
+              >
+                <template v-slot:append v-if="item.title === locale('AUTO_REFRESH')">
+                    <v-switch v-model="enableAutoRefreshProxyList" density="compact" hide-details/>
+                </template>
+              </v-list-item>
 
             </v-list>
           </v-menu>
@@ -265,6 +327,7 @@ watch(selectedFilterProxy, () => {
       <v-select
         v-if="selectedFilterProxy || props.totalProxyCount > itemsPerPage"
         v-model="selectedFilterProxy"
+        :disabled="isDisableButtons"
         density="compact"
         label="Filter Status"
         clear-icon="mdi-close"
@@ -288,7 +351,7 @@ watch(selectedFilterProxy, () => {
     <v-divider class="my-2"/>
 
     <!-- Proxy list loading skeleton -->
-    <template v-if="loading">
+    <template v-if="loading && !isDisableSkeleton">
       <v-skeleton-loader
         v-for="i in 4"
         :key="i"
@@ -334,7 +397,7 @@ watch(selectedFilterProxy, () => {
   </config-card>
 
   <add-or-edit-proxy
-    v-model="isShowAddOrEditSheet.isVisible"
+    v-model="showAddOrEditSheet.isVisible"
     :proxy-type="addOrdEditSheetType"
     :selected-proxy-end-point="proxyEndPoint"
     :proxy-status="proxyStatus"

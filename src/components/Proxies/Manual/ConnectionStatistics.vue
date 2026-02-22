@@ -84,6 +84,8 @@ const props = defineProps<{
           />
         </div>
       </div>
+      <v-divider class="mt-4 mb-2"/>
+      <p class="text-caption text-disabled">{{locale("PROXY_LEARNING_MSG")}}</p>
 
     </v-card-item>
   </config-card>

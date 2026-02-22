@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "Değiştirmek ister misiniz?",
   "ACTIVE_USER": "Aktif Kullanıcı",
   "ACTIVATED_ON": "Etkinleştirilme Tarihi",
-  "USED_BY": "Kullanan Kişi",
+  "USED_DEVICE": "Kullanan Kişi",
   "DEVICE": "Cihaz",
   "MORE_THAN_X_DEVICES": "{x} cihazdan fazla",
   "DATE": "Tarih",

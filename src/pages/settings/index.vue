@@ -3,9 +3,9 @@ import i18n from '@/locales/i18n';
 import AppBar from '@/components/AppBar.vue';
 import { AppFeature, AppProxyMode } from '@/services/VpnHood.Client.Api';
 import { LanguagesCode } from '@/helpers/UiConstants';
-import SettingsItem from '@/components/SettingsItem.vue';
+import SettingsItem from '@/components/Settings/SettingsItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import SettingsSectionTitle from '@/components/SettingsSectionTitle.vue';
+import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
 import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;

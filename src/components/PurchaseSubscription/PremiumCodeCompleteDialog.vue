@@ -77,8 +77,8 @@ const premiumCodeExpirationDate = computed(() =>
             </li>
 
             <li v-if="premiumCodeDeviceCount && premiumCodeDeviceCount > 1">
-              <span>{{ locale('USED_BY') }}:</span>
-              <span class="text-lowercase">{{ premiumCodeDeviceCount }} {{ locale('DEVICE') }}</span>
+              <span>{{ locale('USED_DEVICE') }}:</span>
+              <span class="text-lowercase">{{ premiumCodeDeviceCount }}</span>
             </li>
 
           </ul>

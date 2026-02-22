@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import PromoteConnectButton from '@/components/PromoteConnectButton.vue';
+import PromoteConnectButton from '@/components/Servers/PromoteConnectButton.vue';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
 import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData';

@@ -6,19 +6,14 @@ import { AppPackageName } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import AppBar from '@/components/AppBar.vue';
 import { computed } from 'vue';
+import UserDetails from '@/components/User/UserDetails.vue';
+import ChangePremiumMethod from '@/components/User/ChangePremiumMethod.vue';
+import PremiumCodeDetails from '@/components/User/PremiumCodeDetails.vue';
+import UserPremiumImage from '@/components/User/UserPremiumImage.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const userAccount = computed(() => vhApp.data.userState.userAccount);
-
-async function onSignOut() {
-  const result = await vhApp.showConfirmDialog(locale('CONFIRM_SIGN_OUT_TITLE'), locale('CONFIRM_SIGN_OUT_DESC'));
-  if (!result)
-    return;
-
-  await vhApp.signOut();
-  await router.replace({name: 'HOME'});
-}
 
 function formatDate(date: Date | null | undefined): string | null {
   if (!date)
@@ -32,7 +27,6 @@ function formatDate(date: Date | null | undefined): string | null {
   };
   return date.toLocaleDateString('locales', optionsDate).replace(',', '');
 }
-// TODO: improve page
 </script>
 
 <template>
@@ -40,169 +34,86 @@ function formatDate(date: Date | null | undefined): string | null {
     <app-bar/>
 
     <!-- Premium image -->
-    <div v-if="vhApp.data.isPremiumAccount" class="text-center">
-      <v-img
-        :eager="true"
-        :src="Util.getAssetPath('you-are-premium.webp')"
-        alt="Premium Image"
-        width="100%"
-        max-width="371px"
-      />
-      <div class="text-active mt-n7 mb-10">
-        <h2>{{ locale('CONGRATULATIONS') }}!</h2>
-        <h3>{{ locale('YOU_ARE_PREMIUM') }}</h3>
-      </div>
-    </div>
+    <user-premium-image v-if="vhApp.data.isPremiumAccount"/>
 
     <!-- User details -->
-    <config-card>
+    <user-details v-if="userAccount"/>
 
-      <!-- User name -->
-      <v-card-title>{{ userAccount?.name }}</v-card-title>
+    <!-- Premium subscription -->
+    <template v-if="vhApp.data.isPremiumAccount">
 
-      <!-- User email -->
-      <v-card-subtitle class="text-disabled">{{ userAccount?.email }}</v-card-subtitle>
+      <!-- Sign out to change premium method -->
+      <change-premium-method
+        :title="locale('WOULD_YOU_LIKE_TO_CHANGE')"
+        :description="locale('SIGN_OUT_TO_USE_PREMIUM_CODE_MSG')"
+        :button-name="locale('SIGN_OUT')"
+        @button-click="vhApp.signOut()"
+      />
 
-      <!-- Sign out button -->
-      <v-card-actions>
-        <btn-style-1
-          :text="locale('SIGN_OUT')"
-          :color="vhApp.data.isPremiumAccount ? 'active' : 'highlight'"
-          class="ms-auto"
-          size="small"
-          @click="onSignOut()"
-        />
-      </v-card-actions>
+      <!-- Subscriptions details -->
+      <config-card>
+        <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
+        <v-card-text>
+          <ul id="premiumInfoList">
 
-    </config-card>
+            <!-- Created time -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
+              <span class="text-subtitle-2">{{ formatDate(userAccount?.createdTime) }}</span>
+            </li>
 
-    <!-- Premium code details -->
-    <config-card v-if="vhApp.data.isPremiumAccount && vhApp.data.hasPremiumCode">
-
-      <v-card-title>{{locale('PREMIUM_CODE_DETAILS')}}</v-card-title>
-
-      <v-card-text>
-        <ul v-if="vhApp.data.state.sessionInfo?.accessInfo" id="premiumInfoList">
-
-          <!-- Activation time -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('ACTIVATED_ON') }}:</span>
-            <span class="text-subtitle-2 text-active">{{
-                Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.createdTime) }}</span>
-          </li>
-
-          <!-- Expiration time -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('EXPIRATION_DATE') }}:</span>
-            <span :class="[vhApp.data.state.sessionInfo.accessInfo.expirationTime ? 'text-error' : 'text-active']">
-              {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime
-              ? Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.expirationTime)
-              : locale('NEVER') }}
-            </span>
-          </li>
-
-          <!-- Last use -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('LAST_USED') }}:</span>
-            <span class="text-highlight">
-              {{ Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.lastUsedTime) }}
-            </span>
-          </li>
-
-          <!-- Used device -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{locale('USED_BY')}}</span>
-            <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
-              {{locale('MORE_THAN_X_DEVICES', {x: vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount})}}
-            </span>
-            <span v-else class="text-highlight">
-              {{ vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount }} {{locale('DEVICE') }}
-            </span>
-          </li>
-
-        </ul>
-
-        <!-- If connection state is not connected -->
-        <div v-else class="text-center text-caption text-disabled">
-          <v-icon icon="mdi-information-outline" size="30"/>
-          <p class="mt-3">{{locale('DISPLAY_INFO_AFTER_CONNECTION')}}</p>
-        </div>
-
-      </v-card-text>
-
-      <!-- More details -->
-      <v-card-actions v-if="vhApp.data.state.sessionInfo?.accessInfo">
-        <btn-style-1
-          class="ms-auto"
-          :append-icon="Util.getLocalizedRightChevron()"
-          :text="locale('MORE_DETAILS')"
-          size="small"
-          @click="router.push({name: 'STATISTICS'})"
-        />
-      </v-card-actions>
-
-    </config-card>
-
-    <!-- Subscriptions details -->
-    <config-card v-else-if="vhApp.data.isPremiumAccount">
-
-      <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
-
-      <v-card-text>
-        <ul id="premiumInfoList">
-          <!-- Created time -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
-            <span class="text-subtitle-2">{{ formatDate(userAccount?.createdTime) }}</span>
-          </li>
-          <!-- Next payment or Expiration time -->
-          <li>
+            <!-- Next payment or Expiration time -->
+            <li>
             <span class="text-subtitle-2 text-disabled">
               {{ userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME') }}:
             </span>
-            <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
+              <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
               {{ formatDate(userAccount?.expirationTime) }}
             </span>
-          </li>
-          <!-- Auto renew -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('AUTO_RENEW') }}:</span>
-            <v-chip
-              variant="tonal"
-              density="compact"
-              :color="userAccount?.isAutoRenew ? 'active' : 'error' "
-            >
-              {{ userAccount?.isAutoRenew ? locale('YES') : locale('NO') }}
-            </v-chip>
-          </li>
-          <!-- Price -->
-          <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('PRICE') }}:</span>
-            <span class="text-subtitle-2">
-              <span class="text-caption text-disabled">{{ userAccount?.priceCurrency }}</span>
-              {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
-            </span>
-          </li>
-        </ul>
-      </v-card-text>
+            </li>
 
-      <!-- Manage on google play button -->
-      <v-card-actions>
-        <btn-style-1
-          class="ms-auto"
-          :append-icon="Util.getLocalizedRightChevron()"
-          :text="locale('MANAGE_ON_GOOGLE_PLAY')"
-          size="small"
-          :href="`https://play.google.com/store/account/subscriptions?sku=${userAccount?.providerSubscriptionId}&package=${vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient}`"
-          target="_blank"
-        />
-      </v-card-actions>
+            <!-- Auto renew -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('AUTO_RENEW') }}:</span>
+              <v-chip
+                variant="tonal"
+                density="compact"
+                :color="userAccount?.isAutoRenew ? 'active' : 'error' "
+              >
+                {{ userAccount?.isAutoRenew ? locale('YES') : locale('NO') }}
+              </v-chip>
+            </li>
 
-    </config-card>
+            <!-- Price -->
+            <li>
+              <span class="text-subtitle-2 text-disabled">{{ locale('PRICE') }}:</span>
+              <span class="text-subtitle-2">
+                <span class="text-caption text-disabled">{{ userAccount?.priceCurrency }}</span>
+                {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
+              </span>
+            </li>
+          </ul>
+        </v-card-text>
+
+        <!-- Manage on google play button -->
+        <v-card-actions>
+          <btn-style-1
+            class="ms-auto"
+            :append-icon="Util.getLocalizedRightChevron()"
+            :text="locale('MANAGE_ON_GOOGLE_PLAY')"
+            size="small"
+            :href="`https://play.google.com/store/account/subscriptions?sku=${userAccount?.providerSubscriptionId}&package=${vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient}`"
+            target="_blank"
+          />
+        </v-card-actions>
+
+      </config-card>
+
+      <premium-code-details/>
+    </template>
 
     <!-- Go premium -->
-    <config-card v-else-if="vhApp.data.state.clientProfile?.selectedLocationInfo?.options.canGoPremium"
-                 >
+    <config-card v-else-if="vhApp.data.state.clientProfile?.canGoPremium">
       <v-card-title>{{locale('UPGRADE')}}</v-card-title>
       <v-card-text class="d-flex align-center justify-space-between">
         <v-img
@@ -242,7 +153,7 @@ function formatDate(date: Date | null | undefined): string | null {
   padding: 5px 7px;
 }
 
-#premiumInfoList > li:nth-child(even) {
+#premiumInfoList > li:nth-child(odd) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(var(--v-theme-zebra-on-config-card-bg));
 }

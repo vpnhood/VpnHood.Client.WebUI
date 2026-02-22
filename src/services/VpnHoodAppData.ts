@@ -120,12 +120,15 @@ export class VpnHoodAppData {
   get isPremiumAccount(): boolean {
     return this.state.clientProfile?.isPremiumAccount == true;
   }
-  get canTryPremium(): boolean {
-    return this.state.clientProfile?.canTryPremium == true;
-  }
-
   get hasPremiumCode(): boolean{
     return this.state.clientProfile?.hasAccessCode == true
+  }
+  get isUserPremiumByCode(): boolean{
+    return this.isPremiumAccount && this.hasPremiumCode;
+  }
+
+  get canTryPremium(): boolean {
+    return this.state.clientProfile?.canTryPremium == true;
   }
   get clientProfileId(): string | null{
     return this.state.clientProfile?.clientProfileId ?? this.userSettings.clientProfileId ?? null;

@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "آیا می‌خواهید تغییر دهید؟",
   "ACTIVE_USER": "کاربر فعال",
   "ACTIVATED_ON": "فعال شده در",
-  "USED_BY": "مورد استفاده توسط",
+  "USED_DEVICE": "مورد استفاده توسط",
   "DEVICE": "دستگاه",
   "MORE_THAN_X_DEVICES": "بیش از {x} دستگاه",
   "DATE": "تاریخ",

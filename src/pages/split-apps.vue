@@ -5,7 +5,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import FilterList, { type IListItemInfo } from '@/components/FilterList.vue';
+import FilterList, { type IListItemInfo } from '@/components/Settings/FilterList.vue';
 import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;

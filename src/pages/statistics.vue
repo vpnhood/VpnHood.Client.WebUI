@@ -9,7 +9,7 @@ import { computed, ref } from 'vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const isChinaCountry = ref(vhApp.data.state.clientCountryCode?.toUpperCase() === 'CN');
+const isChinaCountry = ref(vhApp.data.state.clientCountryInfo?.countryCode?.toUpperCase() === 'CN');
 const isUdpSupported = computed(() => {
   return vhApp.data.isProtocolEnabled(ChannelProtocol.Udp);
 })
@@ -148,12 +148,12 @@ function calcUnit(total: number): string{
         <v-card-text>
           <ul class="info-table">
             <li class="border-b">
-              <span>{{locale('USED_BY')}}</span>
+              <span>{{locale('USED_DEVICE')}}</span>
               <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
                 {{locale('MORE_THAN_X_DEVICES', {x: vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount})}}
               </span>
               <span v-else class="text-highlight">
-                {{ vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount }} {{locale('DEVICE') }}
+                {{ vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount }}
               </span>
             </li>
             <li>

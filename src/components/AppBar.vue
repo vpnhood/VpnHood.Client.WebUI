@@ -15,7 +15,7 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 
 <template>
   <!-- Page header -->
-  <div class="d-flex align-center justify-center position-relative text-white mb-5 pt-6 pb-3">
+  <div class="d-flex align-center position-relative text-white mb-5 pt-4">
     <template v-if="!vhApp.data.features.isTv">
       <!-- Back button -->
       <v-btn
@@ -23,13 +23,12 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
         variant="text"
         width="43px"
         height="43px"
-        position="absolute"
-        style="border-radius: 18px; border: 1px solid #ffffff2e; inset-inline-start: 0;"
+        style="border-radius: 18px; border: 1px solid #ffffff2e;"
         @click="router.go(-1)"
       />
 
       <!-- Page title -->
-      <p class="text-center text-capitalize text-body-1" style="max-width: 200px">
+      <p class="position-absolute text-center text-capitalize text-body-1 mx-auto left-0 right-0" style="max-width: 200px;">
         {{locale(pageInfo.name.toString()) }}
       </p>
     </template>

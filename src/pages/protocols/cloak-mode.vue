@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { onMounted } from 'vue';
-import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
+import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 

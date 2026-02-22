@@ -5,7 +5,7 @@ import router from '@/services/router';
 import { computed, ref } from 'vue';
 import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
-import PromoteConnectButton from '@/components/PromoteConnectButton.vue';
+import PromoteConnectButton from '@/components/Servers/PromoteConnectButton.vue';
 import { Util } from '@/helpers/Util';
 import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData';
 

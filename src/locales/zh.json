@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "您想更改吗？",
   "ACTIVE_USER": "活跃用户",
   "ACTIVATED_ON": "激活于",
-  "USED_BY": "使用者",
+  "USED_DEVICE": "使用者",
   "DEVICE": "设备",
   "MORE_THAN_X_DEVICES": "超过 {x} 台设备",
   "DATE": "日期",

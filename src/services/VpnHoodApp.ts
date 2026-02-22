@@ -312,10 +312,10 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor?: string, hasTimer?: boolean, textColor?: string, hasCloseButton?: boolean): void {
+  public showGeneralSnackbar(message: string, bgColor: string = "highlight", hasTimer: boolean = true, textColor?: string, hasCloseButton?: boolean): void {
     this.data.uiState.generalSnackbarData.message = message;
-    this.data.uiState.generalSnackbarData.bgColor = bgColor ?? 'highlight';
-    this.data.uiState.generalSnackbarData.hasTimer = hasTimer ?? true;
+    this.data.uiState.generalSnackbarData.bgColor = bgColor;
+    this.data.uiState.generalSnackbarData.hasTimer = hasTimer;
     this.data.uiState.generalSnackbarData.textColor = textColor ?? null;
     this.data.uiState.generalSnackbarData.hasCloseBtn = hasCloseButton ?? null;
     this.data.uiState.generalSnackbarData.isShow = true;
@@ -401,9 +401,15 @@ export class VpnHoodApp {
   }
 
   public async signOut(): Promise<void> {
+    const result = await this.showConfirmDialog(
+      i18n.global.t('CONFIRM_SIGN_OUT_TITLE'), i18n.global.t('CONFIRM_SIGN_OUT_DESC')
+    );
+    if (!result) return;
+
     const accountClient = ClientApiFactory.instance.createAccountClient();
     await accountClient.signOut();
     await this.loadAccount();
+    await router.replace({name: 'HOME'});
   }
 
   public async loadAccount(withRefresh: boolean = false): Promise<void> {

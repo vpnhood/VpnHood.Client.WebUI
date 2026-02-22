@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "Voulez-vous changer ?",
   "ACTIVE_USER": "Utilisateur actif",
   "ACTIVATED_ON": "Activé le",
-  "USED_BY": "Utilisé par",
+  "USED_DEVICE": "Utilisé par",
   "DEVICE": "Appareil",
   "MORE_THAN_X_DEVICES": "Plus de {x} appareils",
   "DATE": "Date",

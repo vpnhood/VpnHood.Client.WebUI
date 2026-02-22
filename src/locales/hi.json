@@ -405,7 +405,7 @@
   "WOULD_YOU_LIKE_TO_CHANGE": "क्या आप बदलाव करना चाहेंगे?",
   "ACTIVE_USER": "सक्रिय उपयोगकर्ता",
   "ACTIVATED_ON": "इस पर सक्रिय:",
-  "USED_BY": "द्वारा प्रयुक्त:",
+  "USED_DEVICE": "द्वारा प्रयुक्त:",
   "DEVICE": "डिवाइस",
   "MORE_THAN_X_DEVICES": "{x} से अधिक डिवाइस",
   "DATE": "तारीख",

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import AppBar from '@/components/AppBar.vue';
-import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
+import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;

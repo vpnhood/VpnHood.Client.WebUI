@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
+import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 
 
 </script>

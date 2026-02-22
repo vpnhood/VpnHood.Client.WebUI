@@ -5,6 +5,7 @@ import i18n from '@/locales/i18n';
 import { ClientProfileUpdateParams, ConnectPlanId, PatchOfBoolean, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { UiConstants } from '@/helpers/UiConstants';
 import LearningButton from '@/components/LearningButton.vue';
+import router from '@/services/router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -62,6 +63,10 @@ async function sendReport(): Promise<void> {
 async function removePremium(): Promise<void> {
   await vhApp.removePremium();
   await closeDialog();
+}
+async function renewPremium(): Promise<void> {
+  await removePremium();
+  await router.replace({ name: 'PURCHASE_SUBSCRIPTION' });
 }
 async function closeDialog(): Promise<void> {
   await vhApp.clearLastError();
@@ -127,10 +132,14 @@ async function closeDialog(): Promise<void> {
 
           <!-- Remove premium code or profile -->
           <div v-if="dialogData.showRemovePremium">
-            <p class="text-dialog-alert-text text-body-2 mb-3">{{locale("CONFIRM_TO_SWITCH_MODE_MSG")}}</p>
             <v-btn
               variant="flat"
-              :text="locale('YES_SWITCH_NOW')"
+              :text="locale('RE_NEW_PREMIUM')"
+              @click="renewPremium()"
+            />
+            <v-btn
+              variant="flat"
+              :text="locale('EXIT_PREMIUM')"
               @click="removePremium()"
             />
           </div>

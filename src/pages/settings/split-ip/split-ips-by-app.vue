@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SplitIpInput from '@/components/SplitIpInput.vue';
+import SplitIpInput from '@/components/Settings/SplitIpInput.vue';
 import { IPFilterType } from '@/helpers/UiConstants';
 import AppBar from '@/components/AppBar.vue';
 </script>

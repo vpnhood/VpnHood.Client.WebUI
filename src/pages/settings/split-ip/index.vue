@@ -7,8 +7,8 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { AppFeature } from '@/services/VpnHood.Client.Api';
-import SmallFeatureImageAndDescription from '@/components/SmallFeatureImageAndDescription.vue';
-import FeaturePageLayout from '@/components/FeaturePageLayout.vue';
+import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
+import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;

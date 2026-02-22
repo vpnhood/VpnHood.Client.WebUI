@@ -96,6 +96,8 @@ function closeSheet(){
   emit('update:modelValue',false);
   emit('refreshList');
   isProcessing.value = false;
+  if (props.proxyType === ProxySheetType.addList)
+    proxyList.value = '';
 }
 
 </script>

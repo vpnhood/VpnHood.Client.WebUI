@@ -4,7 +4,7 @@ import i18n from '@/locales/i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import { SplitByCountryMode } from '@/services/VpnHood.Client.Api';
-import FilterList, { type IListItemInfo } from '@/components/FilterList.vue';
+import FilterList, { type IListItemInfo } from '@/components/Settings/FilterList.vue';
 import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
 
 
@@ -35,10 +35,11 @@ async function fetchCountries() {
   if (countryList.value.length > 0) return;
 
   const rawCountries = await vhApp.appClient.getSupportedSplitByCountries();
+
   // 1. Create the base list
   const mapped = rawCountries.map(x => ({
     id: x.countryCode,
-    name: x.englishName,
+    name: x.translatedName,
     icon: vhApp.getCountryFlag(x.countryCode),
     // Logic: If it's NOT in the exclusion list, it is "Selected" (ON)
     isSelected: !selectedCountries.value.includes(x.countryCode)
@@ -128,6 +129,18 @@ onBeforeRouteLeave(
           color="highlight"
         >
           <v-radio
+            :value="SplitByCountryMode.IncludeAll"
+            class="radio-icon-top mb-3"
+          >
+            <template v-slot:label>
+              <div class="d-flex flex-column">
+                <span>{{ locale("INCLUDE_ALL") }}</span>
+                <span class="text-disabled text-caption">{{ locale("INCLUDE_ALL_DESC") }}</span>
+              </div>
+            </template>
+          </v-radio>
+
+          <v-radio
             :value="SplitByCountryMode.ExcludeMyCountry"
             class="radio-icon-top mb-3"
           >
@@ -157,8 +170,8 @@ onBeforeRouteLeave(
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("INCLUDE_LIST") }}</span>
-                <span class="text-disabled text-caption">{{ locale("INCLUDE_LIST_DESC") }}</span>
+                <span>{{ locale("CUSTOM_INCLUDE_LIST") }}</span>
+                <span class="text-disabled text-caption">{{ locale("CUSTOM_INCLUDE_LIST_DESC") }}</span>
               </div>
             </template>
           </v-radio>
