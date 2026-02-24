@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { GeneralSnackbarData } from '@/components/GeneralSnackbar/GeneralSnackbarData';
 import i18n from '@/locales/i18n';
 import vuetify from '@/theme/vuetify';
@@ -17,6 +17,12 @@ const emit = defineEmits<{
 }>();
 
 const snackbarData = ref<GeneralSnackbarData>(VpnHoodApp.instance.data.uiState.generalSnackbarData);
+const timeOut = computed(() => {
+  if (snackbarData.value.hasTimer){
+    return snackbarData.value.timeOut ?? 3000;
+  }
+  return -1;
+});
 
 function hasCloseButton(): boolean{
   if (snackbarData.value.hasCloseBtn !== null)
@@ -43,7 +49,7 @@ function onCloseButton(){
     rounded="lg"
     vertical
     :timer="snackbarData.hasTimer ? 'rgba(255,255,255,0.5)' : false"
-    :timeout="snackbarData.timeOut ?? 3000"
+    :timeout="timeOut"
     :content-class="snackbarData.textColor ? `text-${snackbarData.textColor}` : ''"
     :color="snackbarData.bgColor"
     :text="snackbarData.message"
