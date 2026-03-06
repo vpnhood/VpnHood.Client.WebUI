@@ -3507,7 +3507,7 @@ export enum AppConnectionState {
 
 export class AppSessionInfo implements IAppSessionInfo {
     accessInfo?: AccessInfo | null;
-    dnsStatus!: DnsStatus;
+    dnsConfig!: DnsConfig;
     isLocalNetworkAllowed!: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
     isPremiumSession!: boolean;
@@ -3528,7 +3528,7 @@ export class AppSessionInfo implements IAppSessionInfo {
             }
         }
         if (!data) {
-            this.dnsStatus = new DnsStatus();
+            this.dnsConfig = new DnsConfig();
             this.channelProtocols = [];
         }
     }
@@ -3536,7 +3536,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     init(_data?: any) {
         if (_data) {
             this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : null as any;
-            this.dnsStatus = _data["dnsStatus"] ? DnsStatus.fromJS(_data["dnsStatus"]) : new DnsStatus();
+            this.dnsConfig = _data["dnsConfig"] ? DnsConfig.fromJS(_data["dnsConfig"]) : new DnsConfig();
             this.isLocalNetworkAllowed = _data["isLocalNetworkAllowed"] !== undefined ? _data["isLocalNetworkAllowed"] : null as any;
             this.serverLocationInfo = _data["serverLocationInfo"] ? ServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
             this.isPremiumSession = _data["isPremiumSession"] !== undefined ? _data["isPremiumSession"] : null as any;
@@ -3568,7 +3568,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["accessInfo"] = this.accessInfo ? this.accessInfo.toJSON() : null as any;
-        data["dnsStatus"] = this.dnsStatus ? this.dnsStatus.toJSON() : null as any;
+        data["dnsConfig"] = this.dnsConfig ? this.dnsConfig.toJSON() : null as any;
         data["isLocalNetworkAllowed"] = this.isLocalNetworkAllowed !== undefined ? this.isLocalNetworkAllowed : null as any;
         data["serverLocationInfo"] = this.serverLocationInfo ? this.serverLocationInfo.toJSON() : null as any;
         data["isPremiumSession"] = this.isPremiumSession !== undefined ? this.isPremiumSession : null as any;
@@ -3590,7 +3590,7 @@ export class AppSessionInfo implements IAppSessionInfo {
 
 export interface IAppSessionInfo {
     accessInfo?: AccessInfo | null;
-    dnsStatus: DnsStatus;
+    dnsConfig: DnsConfig;
     isLocalNetworkAllowed: boolean;
     serverLocationInfo?: ServerLocationInfo | null;
     isPremiumSession: boolean;
@@ -3775,13 +3775,13 @@ export interface IAccessDevice {
     ipAddress?: string | null;
 }
 
-export class DnsStatus implements IDnsStatus {
+export class DnsConfig implements IDnsConfig {
     dnsSelection!: DnsSelection;
     isIncludedInVpn!: boolean;
     isUserSuppressed!: boolean;
     dnsServers!: string[];
 
-    constructor(data?: IDnsStatus) {
+    constructor(data?: IDnsConfig) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3809,9 +3809,9 @@ export class DnsStatus implements IDnsStatus {
         }
     }
 
-    static fromJS(data: any): DnsStatus {
+    static fromJS(data: any): DnsConfig {
         data = typeof data === 'object' ? data : {};
-        let result = new DnsStatus();
+        let result = new DnsConfig();
         result.init(data);
         return result;
     }
@@ -3830,7 +3830,7 @@ export class DnsStatus implements IDnsStatus {
     }
 }
 
-export interface IDnsStatus {
+export interface IDnsConfig {
     dnsSelection: DnsSelection;
     isIncludedInVpn: boolean;
     isUserSuppressed: boolean;

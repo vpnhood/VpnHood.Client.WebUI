@@ -67,7 +67,7 @@ watch(dns2, (newVal) => {
 
 function isShowEnforcedByServerAlert() {
   return vhApp.data.isConnected && selectedDnsMode.value == DnsMode.AdapterDns &&
-  vhApp.data.state.sessionInfo?.dnsStatus.isUserSuppressed
+  vhApp.data.state.sessionInfo?.dnsConfig.isUserSuppressed
 }
 </script>
 
