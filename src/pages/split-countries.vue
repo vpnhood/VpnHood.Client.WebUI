@@ -186,6 +186,7 @@ onBeforeRouteLeave(
     :list="countryList"
     :loading="countryList.length < 1"
     icon-size="30"
+    :is-icon-as-flag="true"
     @update:list="handleListUpdate"
   />
 

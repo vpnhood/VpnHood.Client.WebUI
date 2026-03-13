@@ -17,6 +17,7 @@ const props = defineProps<{
   list: IListItemInfo[];
   loading: boolean;
   iconSize: string;
+  isIconAsFlag?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -133,7 +134,13 @@ async function onClearAll() {
         :class="{'border-b': filteredListItem.length > index + 1}"
         @click="toggleListItem(item)"
       >
-        <template v-slot:prepend>
+        <template v-if="props.isIconAsFlag" v-slot:prepend>
+          <span class="overflow-hidden d-inline-flex align-center justify-center item-flag me-2">
+          <img :src="item.icon" height="100%" alt="country flag"/>
+        </span>
+        </template>
+
+        <template v-else v-slot:prepend>
           <v-avatar :size="props.iconSize">
             <v-img
               :src="item.icon"
@@ -141,6 +148,7 @@ async function onClearAll() {
             />
           </v-avatar>
         </template>
+
         <template v-slot:append>
           <v-switch
             :model-value="item.isSelected"
@@ -158,5 +166,10 @@ async function onClearAll() {
 <style scoped>
 .my-search-field :deep(input) {
   font-size: 13px;
+}
+.item-flag {
+  width: 26px;
+  height: 18px;
+  border-radius: 2px;
 }
 </style>
