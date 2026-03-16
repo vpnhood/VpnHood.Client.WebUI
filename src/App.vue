@@ -15,6 +15,7 @@ import { AxiosError } from 'axios';
 
 const vhApp = VpnHoodApp.instance;
 const showEngineErrorDialog = ref(false);
+const consecutiveConnectionRefusedCount = ref(0);
 const errorDialogModel = ref(new ComponentRouteController(ComponentName.ErrorDialog));
 const navigationDrawerModel = ref(new ComponentRouteController(ComponentName.NavigationDrawer));
 
@@ -55,9 +56,15 @@ onMounted(async () => {
     try {
       await vhApp.reloadState();
       vhApp.data.edgeToEdge();
+      consecutiveConnectionRefusedCount.value = 0;
       showEngineErrorDialog.value = false;
     } catch (error: unknown) {
-      showEngineErrorDialog.value = isConnectionRefused(error);
+      if (isConnectionRefused(error)) {
+        consecutiveConnectionRefusedCount.value++;
+        showEngineErrorDialog.value = consecutiveConnectionRefusedCount.value >= 2;
+      } else {
+        consecutiveConnectionRefusedCount.value = 0;
+      }
     }
 
   }, 1000);
