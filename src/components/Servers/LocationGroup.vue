@@ -14,7 +14,7 @@ const componentProps = defineProps<{
 </script>
 
 <template>
-    <config-card :color="vhApp.isSingleServerMode() ? 'config-card-on-expansion-panel' : 'expansion-panels-collapsed'">
+    <config-card :color="vhApp.isSingleProfileMode() ? 'config-card-on-expansion-panel' : 'expansion-panels-collapsed'">
         <v-list-group :value="componentProps.listType">
 
           <!-- Group title -->

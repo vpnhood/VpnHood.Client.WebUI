@@ -3335,6 +3335,7 @@ export class AppState implements IAppState {
     sessionInfo?: AppSessionInfo | null;
     sessionStatus?: AppSessionStatus | null;
     proxyEndPointManagerStatus?: AppProxyEndPointManagerStatus | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
     connectRequestTime?: Date | null;
     lastError?: ApiError | null;
     clientProfile?: ClientProfileBaseInfo | null;
@@ -3383,6 +3384,7 @@ export class AppState implements IAppState {
             this.sessionInfo = _data["sessionInfo"] ? AppSessionInfo.fromJS(_data["sessionInfo"]) : null as any;
             this.sessionStatus = _data["sessionStatus"] ? AppSessionStatus.fromJS(_data["sessionStatus"]) : null as any;
             this.proxyEndPointManagerStatus = _data["proxyEndPointManagerStatus"] ? AppProxyEndPointManagerStatus.fromJS(_data["proxyEndPointManagerStatus"]) : null as any;
+            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
             this.connectRequestTime = _data["connectRequestTime"] ? new Date(_data["connectRequestTime"].toString()) : null as any;
             this.lastError = _data["lastError"] ? ApiError.fromJS(_data["lastError"]) : null as any;
             this.clientProfile = _data["clientProfile"] ? ClientProfileBaseInfo.fromJS(_data["clientProfile"]) : null as any;
@@ -3426,6 +3428,7 @@ export class AppState implements IAppState {
         data["sessionInfo"] = this.sessionInfo ? this.sessionInfo.toJSON() : null as any;
         data["sessionStatus"] = this.sessionStatus ? this.sessionStatus.toJSON() : null as any;
         data["proxyEndPointManagerStatus"] = this.proxyEndPointManagerStatus ? this.proxyEndPointManagerStatus.toJSON() : null as any;
+        data["serverLocationInfo"] = this.serverLocationInfo ? this.serverLocationInfo.toJSON() : null as any;
         data["connectRequestTime"] = this.connectRequestTime ? this.connectRequestTime.toISOString() : null as any;
         data["lastError"] = this.lastError ? this.lastError.toJSON() : null as any;
         data["clientProfile"] = this.clientProfile ? this.clientProfile.toJSON() : null as any;
@@ -3462,6 +3465,7 @@ export interface IAppState {
     sessionInfo?: AppSessionInfo | null;
     sessionStatus?: AppSessionStatus | null;
     proxyEndPointManagerStatus?: AppProxyEndPointManagerStatus | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
     connectRequestTime?: Date | null;
     lastError?: ApiError | null;
     clientProfile?: ClientProfileBaseInfo | null;
@@ -3509,7 +3513,7 @@ export class AppSessionInfo implements IAppSessionInfo {
     accessInfo?: AccessInfo | null;
     dnsConfig!: DnsConfig;
     isLocalNetworkAllowed!: boolean;
-    serverLocationInfo?: ServerLocationInfo | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
     isPremiumSession!: boolean;
     suppressedTo!: SessionSuppressType;
     serverVersion!: string;
@@ -3538,7 +3542,7 @@ export class AppSessionInfo implements IAppSessionInfo {
             this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : null as any;
             this.dnsConfig = _data["dnsConfig"] ? DnsConfig.fromJS(_data["dnsConfig"]) : new DnsConfig();
             this.isLocalNetworkAllowed = _data["isLocalNetworkAllowed"] !== undefined ? _data["isLocalNetworkAllowed"] : null as any;
-            this.serverLocationInfo = _data["serverLocationInfo"] ? ServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
+            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
             this.isPremiumSession = _data["isPremiumSession"] !== undefined ? _data["isPremiumSession"] : null as any;
             this.suppressedTo = _data["suppressedTo"] !== undefined ? _data["suppressedTo"] : null as any;
             this.serverVersion = _data["serverVersion"] !== undefined ? _data["serverVersion"] : null as any;
@@ -3592,7 +3596,7 @@ export interface IAppSessionInfo {
     accessInfo?: AccessInfo | null;
     dnsConfig: DnsConfig;
     isLocalNetworkAllowed: boolean;
-    serverLocationInfo?: ServerLocationInfo | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
     isPremiumSession: boolean;
     suppressedTo: SessionSuppressType;
     serverVersion: string;
@@ -3850,6 +3854,7 @@ export class ServerLocationInfo implements IServerLocationInfo {
     serverLocation!: string;
     countryName!: string;
     isAuto!: boolean;
+    hasRegion!: boolean;
 
     constructor(data?: IServerLocationInfo) {
         if (data) {
@@ -3875,6 +3880,7 @@ export class ServerLocationInfo implements IServerLocationInfo {
             this.serverLocation = _data["serverLocation"] !== undefined ? _data["serverLocation"] : null as any;
             this.countryName = _data["countryName"] !== undefined ? _data["countryName"] : null as any;
             this.isAuto = _data["isAuto"] !== undefined ? _data["isAuto"] : null as any;
+            this.hasRegion = _data["hasRegion"] !== undefined ? _data["hasRegion"] : null as any;
         }
     }
 
@@ -3897,6 +3903,7 @@ export class ServerLocationInfo implements IServerLocationInfo {
         data["serverLocation"] = this.serverLocation !== undefined ? this.serverLocation : null as any;
         data["countryName"] = this.countryName !== undefined ? this.countryName : null as any;
         data["isAuto"] = this.isAuto !== undefined ? this.isAuto : null as any;
+        data["hasRegion"] = this.hasRegion !== undefined ? this.hasRegion : null as any;
         return data;
     }
 }
@@ -3908,6 +3915,44 @@ export interface IServerLocationInfo {
     serverLocation: string;
     countryName: string;
     isAuto: boolean;
+    hasRegion: boolean;
+}
+
+export class AppServerLocationInfo extends ServerLocationInfo implements IAppServerLocationInfo {
+    translatedCountryName!: string;
+    hasMultipleRegions!: boolean;
+
+    constructor(data?: IAppServerLocationInfo) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.translatedCountryName = _data["translatedCountryName"] !== undefined ? _data["translatedCountryName"] : null as any;
+            this.hasMultipleRegions = _data["hasMultipleRegions"] !== undefined ? _data["hasMultipleRegions"] : null as any;
+        }
+    }
+
+    static override fromJS(data: any): AppServerLocationInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppServerLocationInfo();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["translatedCountryName"] = this.translatedCountryName !== undefined ? this.translatedCountryName : null as any;
+        data["hasMultipleRegions"] = this.hasMultipleRegions !== undefined ? this.hasMultipleRegions : null as any;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IAppServerLocationInfo extends IServerLocationInfo {
+    translatedCountryName: string;
+    hasMultipleRegions: boolean;
 }
 
 export enum SessionSuppressType {

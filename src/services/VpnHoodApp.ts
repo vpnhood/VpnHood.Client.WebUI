@@ -272,15 +272,6 @@ export class VpnHoodApp {
     await this.appClient.versionCheck();
   }
 
-  getCurrentServerLocationInfo(): ServerLocationInfo | null | undefined {
-    if (this.data.isConnected) {
-      return this.data.state.sessionInfo?.serverLocationInfo ??
-        this.data.state.clientProfile?.selectedLocationInfo;
-    } else {
-      return this.data.state.clientProfile?.selectedLocationInfo;
-    }
-  }
-
   public getCountryFlag(countryCode: string | null | undefined): string {
     try {
       if (!countryCode || countryCode.trim() === '') {
@@ -301,8 +292,8 @@ export class VpnHoodApp {
     return this.data.features.uiName === AppName.VpnHoodConnect;
   }
 
-  public isSingleServerMode(): boolean {
-    return this.isConnectApp() && this.data.clientProfileInfos.length === 1;
+  public isSingleProfileMode(): boolean {
+    return this.isConnectApp();
   }
 
   public async clearLastError(): Promise<void> {

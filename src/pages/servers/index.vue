@@ -40,7 +40,7 @@ const addServerDialogModel = ref(new ComponentRouteController(ComponentName.AddS
     </div>
 
     <!-- Single profile mode -->
-    <LocationList v-else-if="vhApp.isSingleServerMode()" :client-profile="vhApp.data.clientProfileInfos[0]" />
+    <LocationList v-else-if="vhApp.isSingleProfileMode()" :client-profile="vhApp.data.clientProfileInfos[0]" />
 
     <!-- Multi profile mode -->
     <ExpansionPanel v-else/>

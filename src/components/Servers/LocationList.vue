@@ -44,7 +44,7 @@ function isShowLocationGroups(): boolean{
     v-model:opened="openedListGroupsModel"
     open-strategy="multiple"
     bg-color="transparent"
-    :class="{'px-4 pb-2': isShowLocationGroups() && !vhApp.isSingleServerMode()}"
+    :class="{'px-4 pb-2': isShowLocationGroups() && !vhApp.isSingleProfileMode()}"
   >
     <!-- Categorised locations -->
     <template v-if="isShowLocationGroups()">

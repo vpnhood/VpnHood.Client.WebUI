@@ -136,7 +136,7 @@ async function onClearAll() {
       >
         <template v-if="props.isIconAsFlag" v-slot:prepend>
           <span class="overflow-hidden d-inline-flex align-center justify-center item-flag me-2">
-          <img :src="item.icon" height="100%" alt="country flag"/>
+          <img :src="item.icon" height="100%" alt=""/>
         </span>
         </template>
 
@@ -144,7 +144,7 @@ async function onClearAll() {
           <v-avatar :size="props.iconSize">
             <v-img
               :src="item.icon"
-              alt="country flag"
+              alt=""
             />
           </v-avatar>
         </template>
