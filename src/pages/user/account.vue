@@ -2,47 +2,41 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
-import { AppPackageName } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import AppBar from '@/components/AppBar.vue';
-import { computed } from 'vue';
 import UserDetails from '@/components/User/UserDetails.vue';
 import ChangePremiumMethod from '@/components/User/ChangePremiumMethod.vue';
 import PremiumCodeDetails from '@/components/User/PremiumCodeDetails.vue';
 import UserPremiumImage from '@/components/User/UserPremiumImage.vue';
+import SubscriptionDetails from '@/components/User/SubscriptionDetails.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const userAccount = computed(() => vhApp.data.userState.userAccount);
 
-function formatDate(date: Date | null | undefined): string | null {
-  if (!date)
-    return null;
+async function removeCode(): Promise<void> {
+  const result = await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_PREMIUM_CODE'), locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
+  if (!result)
+    return;
 
-  // Format the date part
-  const optionsDate: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  };
-  return date.toLocaleDateString('locales', optionsDate).replace(',', '');
+  await router.replace({name: 'HOME'});
+  await vhApp.removePremiumCode();
 }
 </script>
 
 <template>
-  <v-sheet :class="{'primary-bg-grad' : vhApp.data.isPremiumAccount}">
+  <v-sheet :class="{'primary-bg-grad' : vhApp.data.isPremiumUser}">
     <app-bar/>
 
     <!-- Premium image -->
-    <user-premium-image v-if="vhApp.data.isPremiumAccount"/>
+    <user-premium-image v-if="vhApp.data.isPremiumUser"/>
 
     <!-- User details -->
-    <user-details v-if="userAccount"/>
+    <user-details v-if="vhApp.data.userState.userAccount"/>
 
-    <!-- Premium subscription -->
-    <template v-if="vhApp.data.isPremiumAccount">
+    <!-- Premium user by google subscription -->
+    <template v-if="vhApp.data.isPremiumByGoogle">
 
-      <!-- Sign out to change premium method -->
+      <!-- Sign out and remove google subscription -->
       <change-premium-method
         :title="locale('WOULD_YOU_LIKE_TO_CHANGE')"
         :description="locale('SIGN_OUT_TO_USE_PREMIUM_CODE_MSG')"
@@ -50,66 +44,23 @@ function formatDate(date: Date | null | undefined): string | null {
         @button-click="vhApp.signOut()"
       />
 
-      <!-- Subscriptions details -->
-      <config-card>
-        <v-card-title>{{locale('SUBSCRIPTION_DETAILS')}}</v-card-title>
-        <v-card-text>
-          <ul id="premiumInfoList">
+      <subscription-details/>
 
-            <!-- Created time -->
-            <li>
-              <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
-              <span class="text-subtitle-2">{{ formatDate(userAccount?.createdTime) }}</span>
-            </li>
+    </template>
 
-            <!-- Next payment or Expiration time -->
-            <li>
-            <span class="text-subtitle-2 text-disabled">
-              {{ userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME') }}:
-            </span>
-              <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
-              {{ formatDate(userAccount?.expirationTime) }}
-            </span>
-            </li>
+    <!-- Premium user by code -->
+    <template v-else-if="vhApp.data.isPremiumByCode">
 
-            <!-- Auto renew -->
-            <li>
-              <span class="text-subtitle-2 text-disabled">{{ locale('AUTO_RENEW') }}:</span>
-              <v-chip
-                variant="tonal"
-                density="compact"
-                :color="userAccount?.isAutoRenew ? 'active' : 'error' "
-              >
-                {{ userAccount?.isAutoRenew ? locale('YES') : locale('NO') }}
-              </v-chip>
-            </li>
-
-            <!-- Price -->
-            <li>
-              <span class="text-subtitle-2 text-disabled">{{ locale('PRICE') }}:</span>
-              <span class="text-subtitle-2">
-                <span class="text-caption text-disabled">{{ userAccount?.priceCurrency }}</span>
-                {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
-              </span>
-            </li>
-          </ul>
-        </v-card-text>
-
-        <!-- Manage on google play button -->
-        <v-card-actions>
-          <btn-style-1
-            class="ms-auto"
-            :append-icon="Util.getLocalizedRightChevron()"
-            :text="locale('MANAGE_ON_GOOGLE_PLAY')"
-            size="small"
-            :href="`https://play.google.com/store/account/subscriptions?sku=${userAccount?.providerSubscriptionId}&package=${vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient}`"
-            target="_blank"
-          />
-        </v-card-actions>
-
-      </config-card>
+      <!-- Remove code -->
+      <change-premium-method
+        :title="locale('REMOVE_CURRENT_PREMIUM_CODE')"
+        :description="locale('REMOVE_CURRENT_PREMIUM_CODE_DESC')"
+        :button-name="locale('REMOVE_CODE')"
+        @button-click="removeCode()"
+      />
 
       <premium-code-details/>
+
     </template>
 
     <!-- Go premium -->
@@ -141,20 +92,3 @@ function formatDate(date: Date | null | undefined): string | null {
 
   </v-sheet>
 </template>
-
-<style scoped>
-#premiumInfoList{
-  list-style: none;
-}
-#premiumInfoList > li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 7px;
-}
-
-#premiumInfoList > li:nth-child(odd) {
-  /*noinspection CssUnresolvedCustomProperty*/
-  background-color: rgb(var(--v-theme-zebra-on-config-card-bg));
-}
-</style>

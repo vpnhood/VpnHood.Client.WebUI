@@ -18,7 +18,7 @@ function isShowCountdown(): boolean {
   // already shown elsewhere in the app. The countdown timer should only be visible for users on rewarded
   // ads or trial account.
   const hasExpireTime = !!vhApp.data.state.sessionStatus?.sessionExpirationTime;
-  return !vhApp.data.isPremiumAccount && hasExpireTime && vhApp.data.isConnected;
+  return !vhApp.data.isPremiumUser && hasExpireTime && vhApp.data.isConnected;
 }
 </script>
 
@@ -34,14 +34,14 @@ function isShowCountdown(): boolean {
 
       <!-- You are premium button -->
       <v-chip
-        v-else-if="isPremiumFlagSupported && (vhApp.data.isPremiumAccount || vhApp.data.hasPremiumCode)"
+        v-else-if="isPremiumFlagSupported && vhApp.data.isPremiumUser"
         prepend-icon="mdi-crown"
         :text="locale('YOU_ARE_PREMIUM')"
         color="enable-premium"
         variant="tonal"
         tabindex="2"
         tag="h6"
-        @click="router.push({ name: vhApp.data.hasPremiumCode ? 'PREMIUM_USER' : 'ACCOUNT' })"
+        @click="router.push({ name: 'ACCOUNT' })"
       />
 
       <!-- Go Premium button -->

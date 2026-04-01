@@ -26,7 +26,7 @@ const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDia
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
 const isPremiumUser = computed((): boolean => {
   return vhApp.data.features.isPremiumFlagSupported && (
-  vhApp.data.isPremiumAccount || (vhApp.data.state.sessionInfo?.isPremiumSession === true && vhApp.data.isConnected)
+  vhApp.data.isPremiumUser || (vhApp.data.state.sessionInfo?.isPremiumSession === true && vhApp.data.isConnected)
   )
 });
 

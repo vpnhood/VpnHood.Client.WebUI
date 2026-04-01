@@ -34,7 +34,7 @@ function isListHasGroup(): boolean{
 function isShowLocationGroups(): boolean{
   if (!isListHasGroup())
     return false;
-  return !vhApp.data.features.isPremiumFlagSupported || !vhApp.data.isPremiumAccount
+  return !vhApp.data.features.isPremiumFlagSupported || !vhApp.data.isPremiumUser
 }
 </script>
 

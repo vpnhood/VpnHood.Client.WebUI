@@ -11,7 +11,6 @@ import {
   PatchOfBoolean,
   PatchOfString,
   ProxyEndPointClient,
-  ServerLocationInfo,
   SessionSuppressType
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
@@ -312,29 +311,13 @@ export class VpnHoodApp {
     this.data.uiState.generalSnackbarData.isShow = true;
   }
 
-  public async removePremium(): Promise<void> {
-    if (this.data.clientProfileInfos.find(x => x.isForAccount))
-      await this.removePremiumServerKey();
-    else
-      await this.removePremiumCode();
-  }
-
-  public async removePremiumServerKey(): Promise<void> {
-    const premiumClientProfileId = this.data.clientProfileInfos.find(x => x.isForAccount)?.clientProfileId;
-    if (!premiumClientProfileId)
-      throw new Error('Could not find the premium server key.');
-
-    await this.deleteClientProfile(premiumClientProfileId);
-    await this.loadAccount(true);
-  }
-
   public async removePremiumCode(): Promise<void> {
     const clientProfile = this.data.state.clientProfile;
 
     if (!clientProfile)
       throw new Error('Could not find the profile in the state for remove premium code.');
 
-    if (!clientProfile.isPremiumAccount && !clientProfile.hasAccessCode)
+    if (!clientProfile.isPremium && !clientProfile.hasAccessCode)
       throw new Error('The profile is not for premium account or does not have premium code.');
 
     if (this.data.isConnected)
@@ -409,7 +392,7 @@ export class VpnHoodApp {
       await accountClient.refresh();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.debug('User Account: ', this.data.userState.userAccount, ' IsPremium: ', this.data.isPremiumAccount);
+    console.debug('User Account: ', this.data.userState.userAccount, ' IsPremium: ', this.data.isPremiumUser);
     await this.reloadSettings();
   }
 

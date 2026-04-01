@@ -101,7 +101,7 @@ export class VpnHoodAppData {
   }
 
   get premiumIconColor(): string {
-    return (!this.features.isPremiumFlagSupported || this.isPremiumAccount) ? 'enable-premium' : 'disable-premium';
+    return (!this.features.isPremiumFlagSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
   }
 
   get isSplitIpInUse(): boolean {
@@ -117,14 +117,18 @@ export class VpnHoodAppData {
     return !!customServerEndpoints && customServerEndpoints.length > 0;
   }
 
-  get isPremiumAccount(): boolean {
-    return this.state.clientProfile?.isPremiumAccount == true;
+  get isPremiumUser(): boolean {
+    return this.state.clientProfile?.isPremium == true;
   }
-  get hasPremiumCode(): boolean{
-    return this.state.clientProfile?.hasAccessCode == true
+  get isAccessCodeFromAccount(): boolean{
+    return this.state.clientProfile?.isAccessCodeFromAccount == true
   }
-  get isUserPremiumByCode(): boolean{
-    return this.isPremiumAccount && this.hasPremiumCode;
+
+  get isPremiumByGoogle(): boolean{
+    return this.isPremiumUser && this.isAccessCodeFromAccount;
+  }
+  get isPremiumByCode(): boolean{
+    return this.isPremiumUser && !this.isAccessCodeFromAccount;
   }
 
   get canTryPremium(): boolean {
@@ -241,6 +245,6 @@ export class VpnHoodAppData {
       return true;
 
     // check if the current profile is premium
-    return this.isPremiumAccount;
+    return this.isPremiumUser;
   }
 }

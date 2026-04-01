@@ -69,7 +69,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
     isShowPendingDialog.value = true;
     await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
 
-    if (vhApp.data.isConnected && vhApp.data.isPremiumAccount && vhApp.data.hasPremiumCode)
+    if (vhApp.data.isConnected && vhApp.data.isPremiumByCode)
       isShowPremiumCodeCompleteDialog.value = true;
   }
   catch {

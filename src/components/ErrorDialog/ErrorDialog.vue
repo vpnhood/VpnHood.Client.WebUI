@@ -61,7 +61,7 @@ async function sendReport(): Promise<void> {
 }
 
 async function removePremium(): Promise<void> {
-  await vhApp.removePremium();
+  await vhApp.removePremiumCode();
   await closeDialog();
 }
 async function renewPremium(): Promise<void> {

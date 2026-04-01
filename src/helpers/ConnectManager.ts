@@ -78,7 +78,7 @@ export class ConnectManager {
     }*/
 
     // Force the premium user to connect to the premium location.
-    if (VpnHoodApp.instance.data.isPremiumAccount && !isPremiumLocationSelected ){
+    if (VpnHoodApp.instance.data.isPremiumUser && !isPremiumLocationSelected ){
       isPremiumLocationSelected = true;
       serverLocation = VpnHoodApp.instance.data.uiState.autoLocationValue;
     }

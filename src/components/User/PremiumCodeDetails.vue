@@ -4,6 +4,7 @@ import i18n from '@/locales/i18n';
 import { onMounted, ref } from 'vue';
 import { Util } from '@/helpers/Util';
 import router from '@/services/router';
+import { Validators } from '@/helpers/Validators';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -13,11 +14,13 @@ const premiumCode = ref("");
 onMounted(async () => {
   const clientProfileId = vhApp.data.clientProfileId;
   if (!clientProfileId){
-    premiumCode.value = locale("COULD_NOT_GET_PREMIUM_CODE");
+    premiumCode.value = locale("COULD_NOT_GET_CLIENT_PROFILE_ID");
     return;
   }
   const code = await vhApp.clientProfileClient.getAccessCode(clientProfileId);
-  premiumCode.value = code.match(/.{1,4}/g)?.join('-') || '';
+
+  premiumCode.value = Validators.isEmptyString(code) ? locale("COULD_NOT_GET_PREMIUM_CODE") :
+    code.match(/.{1,4}/g)?.join('-') || '';
 })
 
 async function copyPremiumCode(){

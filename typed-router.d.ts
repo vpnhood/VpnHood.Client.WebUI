@@ -48,6 +48,5 @@ declare module 'vue-router/auto-routes' {
     'SPLIT_COUNTRIES': RouteRecordInfo<'SPLIT_COUNTRIES', '/split-countries', Record<never, never>, Record<never, never>>,
     'STATISTICS': RouteRecordInfo<'STATISTICS', '/statistics', Record<never, never>, Record<never, never>>,
     'ACCOUNT': RouteRecordInfo<'ACCOUNT', '/user/account', Record<never, never>, Record<never, never>>,
-    'PREMIUM_USER': RouteRecordInfo<'PREMIUM_USER', '/user/premium-user', Record<never, never>, Record<never, never>>,
   }
 }

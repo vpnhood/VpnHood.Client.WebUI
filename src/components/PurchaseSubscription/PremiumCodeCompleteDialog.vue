@@ -47,7 +47,6 @@ const premiumCodeExpirationDate = computed(() =>
 
         <!-- TODO: use theme color -->
         <v-alert
-          v-if="vhApp.data.isPremiumAccount && vhApp.data.hasPremiumCode"
           variant="flat"
           color="#17083d"
           density="compact"
@@ -55,8 +54,7 @@ const premiumCodeExpirationDate = computed(() =>
           class="text-caption mt-4"
         >
 
-          <span v-if="!isNewCode && premiumCodeDeviceCount > 1"
-                class="mb-2">
+          <span v-if="!isNewCode && premiumCodeDeviceCount > 1" class="mb-2">
             {{ locale('ALERT_FOR_USED_PREMIUM_CODE_MORE_THAN_ONE_DEVICE') }}
           </span>
 

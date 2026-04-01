@@ -68,7 +68,7 @@ function actionButtonClick(): void | null {
     </card-on-grad>
 
     <!-- Private DNS error page -->
-    <div v-else-if="props.title === 'PRIVATE_DNS_COLORED' && !vhApp.data.isPremiumAccount">
+    <div v-else-if="props.title === 'PRIVATE_DNS_COLORED' && !vhApp.data.isPremiumUser">
       <!-- Continue as Free -->
       <v-row
         v-if="isPrivateDnsActive"
@@ -133,7 +133,7 @@ function actionButtonClick(): void | null {
     </div>
 
     <!-- Tutorial steps -->
-    <card-on-grad v-else-if="!props.isPremium || vhApp.data.isPremiumAccount" class="pb-2">
+    <card-on-grad v-else-if="!props.isPremium || vhApp.data.isPremiumUser" class="pb-2">
 
       <!-- Help steps -->
         <v-card-item v-if="props.listStep">

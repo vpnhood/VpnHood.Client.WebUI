@@ -22,7 +22,7 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
     <v-card-actions>
       <btn-style-1
         :text="locale('SIGN_OUT')"
-        :color="vhApp.data.isPremiumAccount ? 'active' : 'highlight'"
+        :color="vhApp.data.isPremiumUser ? 'active' : 'highlight'"
         class="ms-auto"
         size="small"
         @click="vhApp.signOut()"

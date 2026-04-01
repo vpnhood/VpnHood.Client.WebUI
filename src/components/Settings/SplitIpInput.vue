@@ -47,15 +47,23 @@ const includeIpFilters = computed<string>({
   }
 })
 
+const blockIpFilters = computed<string>({
+  get: () => ipFilters.value.appBlocks,
+  set: (value: string) => ipFilters.value.appBlocks = value
+})
+
 async function saveIpList(){
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
+
   await vhApp.appClient.setSplitByIps(new SplitByIps({
     deviceExcludes: ipFilters.value.deviceExcludes,
     deviceIncludes: ipFilters.value.deviceIncludes,
     appExcludes: ipFilters.value.appExcludes,
-    appIncludes: ipFilters.value.appIncludes
+    appIncludes: ipFilters.value.appIncludes,
+    appBlocks: ipFilters.value.appBlocks,
   }));
+
   await vhApp.saveUserSetting();
 }
 
@@ -71,7 +79,8 @@ onBeforeRouteLeave(
       if (ipFilters.value.deviceExcludes !== savedIps.deviceExcludes ||
         ipFilters.value.deviceIncludes !== savedIps.deviceIncludes ||
         ipFilters.value.appExcludes !== savedIps.appExcludes ||
-        ipFilters.value.appIncludes !== savedIps.appIncludes)
+        ipFilters.value.appIncludes !== savedIps.appIncludes ||
+        ipFilters.value.appBlocks !== savedIps.appBlocks)
         await saveIpList();
       next();
     }
@@ -153,6 +162,16 @@ function revertCurrentChange(): void{
         <p>{{locale('INCLUDE_IPS')}}</p>
         <v-locale-provider :rtl="false">
           <v-textarea v-model="includeIpFilters"/>
+        </v-locale-provider>
+      </v-card-item>
+    </config-card>
+
+    <!-- Block list -->
+    <config-card class="pb-3 mt-4">
+      <v-card-item>
+        <p>{{locale('BLOCK_IPS')}}</p>
+        <v-locale-provider :rtl="false">
+          <v-textarea v-model="blockIpFilters"/>
         </v-locale-provider>
       </v-card-item>
     </config-card>

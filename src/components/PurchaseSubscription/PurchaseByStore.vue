@@ -44,7 +44,7 @@ async function purchase(purchaseParams: PurchaseParams): Promise<void> {
   catch (err){
     console.error(err);
     if (err instanceof ApiException && err.exceptionTypeName === 'AlreadyExistsException'){
-      await router.replace({name: 'PREMIUM_USER'});
+      await router.replace({name: 'ACCOUNT'});
       await vhApp.showErrorMessage(locale('HAVE_ACTIVE_SUBSCRIPTION'));
       return;
     }
