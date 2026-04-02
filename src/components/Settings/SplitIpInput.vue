@@ -167,7 +167,7 @@ function revertCurrentChange(): void{
     </config-card>
 
     <!-- Block list -->
-    <config-card class="pb-3 mt-4">
+    <config-card v-if="props.ipFilterType === IPFilterType.FilterByApp" class="pb-3 mt-4">
       <v-card-item>
         <p>{{locale('BLOCK_IPS')}}</p>
         <v-locale-provider :rtl="false">
