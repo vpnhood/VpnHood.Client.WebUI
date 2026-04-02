@@ -133,12 +133,14 @@ export class VpnHoodApp {
     this.data.userSettings = config.userSettings;
 
     // Remove the built-in client profile if the user is premium
-    this.data.clientProfileInfos = this.data.userState.userAccount?.subscriptionId
-      ? config.clientProfileInfos.filter(x => x.clientProfileId !== config.features.builtInClientProfileId)
-      : config.clientProfileInfos;
-
+    this.data.clientProfileInfos = config.clientProfileInfos;
+    
     if (config.clientProfileInfos.length === 0)
       this.data.userSettings.clientProfileId = null;
+
+    // select first profile if the current selected profile is not exist anymore after reload
+    if (this.data.userSettings.clientProfileId && !config.clientProfileInfos.some(p => p.clientProfileId === this.data.userSettings.clientProfileId)) 
+      this.data.userSettings.clientProfileId = config.clientProfileInfos[0]?.clientProfileId ?? null;
   }
 
   public async connect(
