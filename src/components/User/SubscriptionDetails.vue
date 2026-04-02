@@ -9,19 +9,6 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const userAccount = computed(() => vhApp.data.userState.userAccount);
-
-function formatDate(date: Date | null | undefined): string | null {
-  if (!date)
-    return null;
-
-  // Format the date part
-  const optionsDate: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  };
-  return date.toLocaleDateString('locales', optionsDate).replace(',', '');
-}
 </script>
 
 <template>
@@ -33,7 +20,7 @@ function formatDate(date: Date | null | undefined): string | null {
         <!-- Created time -->
         <li>
           <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
-          <span class="text-subtitle-2">{{ formatDate(userAccount?.createdTime) }}</span>
+          <span class="text-subtitle-2">{{ Util.getShortDate(userAccount?.createdTime) }}</span>
         </li>
 
         <!-- Next payment or Expiration time -->
@@ -42,7 +29,7 @@ function formatDate(date: Date | null | undefined): string | null {
               {{ userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME') }}:
             </span>
           <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
-              {{ formatDate(userAccount?.expirationTime) }}
+              {{ Util.getShortDate(userAccount?.expirationTime) }}
             </span>
         </li>
 
