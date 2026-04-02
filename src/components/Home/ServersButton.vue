@@ -29,15 +29,21 @@ function getActiveServerNameOrLocation(): string {
 }
 
 function buttonClickHandler() {
-  // The server does not have a list, and only one country is available
-  if (!vhApp.data.features.isAddAccessKeySupported &&
-    vhApp.data.clientProfileInfos.length < 2 &&
-    (vhApp.data.clientProfileInfos.length ==0 || vhApp.data.clientProfileInfos[0].locationInfos.length < 2)) {
-    vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'));
-    return;
-  }
+    // This is a special case that should not happen
+    if (!vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length== 0) {
+      vhApp.showErrorMessage(locale('NO_CLIENT_PROFILE_AVAILABLE'));
+      return;
+    }
 
-  router.push({ name: 'SERVERS' });
+    // The server does not have a list, and only one country is available
+    if (!vhApp.data.features.isAddAccessKeySupported &&
+      vhApp.data.clientProfileInfos.length == 1 &&
+      vhApp.data.clientProfileInfos[0].locationInfos.length < 2) {
+      vhApp.showErrorMessage(locale('NO_ADDITIONAL_LOCATION_AVAILABLE'));
+      return;
+    }
+
+    router.push({ name: 'SERVERS' });
 }
 </script>
 

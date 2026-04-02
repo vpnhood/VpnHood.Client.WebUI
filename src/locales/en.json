@@ -360,6 +360,7 @@
   "MANAGE_ON_GOOGLE_PLAY": "Manage on Google Play",
   "COULD_NOT_FIND_AVAILABLE_SERVER_IN_SELECTED_LOCATION": "Could not find any available server in the selected location.",
   "NO_ADDITIONAL_LOCATION_AVAILABLE": "There are no additional locations available for selection.",
+  "NO_CLIENT_PROFILE_AVAILABLE": "Ooops! Nothing is available. Contact support if you receive this message again.",
   "EXTEND_BY_REWARDED_AD_NOTE": "Please stay in the app until the ad finishes. If you leave the app, your session will not be extended.",
   "EXTEND_BY_REWARDED_AD_CONFIRM_MSG": "Congratulations! Your session has been successfully extended.",
   "NOTE": "Note",
