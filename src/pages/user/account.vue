@@ -46,6 +46,7 @@ async function removeCode(): Promise<void> {
 
       <subscription-details/>
 
+      <premium-code-details/>
     </template>
 
     <!-- Premium user by code -->
