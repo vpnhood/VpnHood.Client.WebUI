@@ -44,7 +44,7 @@ async function removeCode(): Promise<void> {
         @button-click="vhApp.signOut()"
       />
 
-      <subscription-details/>
+      <subscription-details />
 
       <premium-code-details/>
     </template>

@@ -134,12 +134,12 @@ export class VpnHoodApp {
 
     // Remove the built-in client profile if the user is premium
     this.data.clientProfileInfos = config.clientProfileInfos;
-    
+
     if (config.clientProfileInfos.length === 0)
       this.data.userSettings.clientProfileId = null;
 
     // select first profile if the current selected profile is not exist anymore after reload
-    if (this.data.userSettings.clientProfileId && !config.clientProfileInfos.some(p => p.clientProfileId === this.data.userSettings.clientProfileId)) 
+    if (this.data.userSettings.clientProfileId && !config.clientProfileInfos.some(p => p.clientProfileId === this.data.userSettings.clientProfileId))
       this.data.userSettings.clientProfileId = config.clientProfileInfos[0]?.clientProfileId ?? null;
   }
 
@@ -328,6 +328,9 @@ export class VpnHoodApp {
     await this.clientProfileClient.update(clientProfile.clientProfileId, new ClientProfileUpdateParams({
       accessCode: new PatchOfString({ value: null })
     }));
+
+    if (this.data.userState.userAccount?.subscriptionId)
+      await this.loadAccount(true);
   }
 
   public async signIn(onPurchase = false): Promise<void> {
@@ -394,7 +397,13 @@ export class VpnHoodApp {
       await accountClient.refresh();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
-    console.debug('User Account: ', this.data.userState.userAccount, ' IsPremium: ', this.data.isPremiumUser);
+    console.debug(
+      'IsPremiumUser: ', this.data.isPremiumUser,
+      ' IsAccessCodeFromAccount: ', this.data.state.clientProfile?.isAccessCodeFromAccount,
+      ' CanGoPremium: ', this.data.state.clientProfile?.canGoPremium,
+      ' isPremiumFlagSupported: ', this.data.features.isPremiumFlagSupported,
+      'User Account: ', this.data.userState.userAccount
+    );
     await this.reloadSettings();
   }
 

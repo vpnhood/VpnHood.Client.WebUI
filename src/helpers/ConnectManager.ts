@@ -10,7 +10,7 @@ export class ConnectManager {
       x => x.serverLocation === serverLocation)?.options;
 
     // Fore developer
-    console.log('Show Prompt: ' + options?.prompt);
+    console.debug('Show Prompt: ' + options?.prompt);
 
     if (!options?.prompt)
       return false;
@@ -36,8 +36,8 @@ export class ConnectManager {
     const clientProfileId = VpnHoodApp.instance.data.clientProfileId;
 
     // For developer
-    console.log('Connect1');
-    console.log(`ClientProfileId: ${clientProfileId}`);
+    console.debug('Connect1');
+    console.debug(`ClientProfileId: ${clientProfileId}`);
 
     if (!clientProfileId) {
       await router.push({name: 'SERVERS'});
@@ -51,8 +51,8 @@ export class ConnectManager {
     let serverLocation: string | undefined | null = clientProfileInfo.selectedLocationInfo?.serverLocation;
 
     // For developer
-    console.log('Connect2');
-    console.log('Detected server location: ' + serverLocation);
+    console.debug('Connect2');
+    console.debug('Detected server location: ' + serverLocation);
 
     if (!serverLocation && clientProfileInfo.selectedLocationInfo) {
       await router.push({name: 'SERVERS'});

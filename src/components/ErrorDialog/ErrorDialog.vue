@@ -60,12 +60,14 @@ async function sendReport(): Promise<void> {
   }
 }
 
-async function removePremium(): Promise<void> {
-  await vhApp.removePremiumCode();
+async function removePremiumCode(): Promise<void> {
   await closeDialog();
+  vhApp.data.uiState.showLoadingDialog = true;
+  await vhApp.removePremiumCode();
+  vhApp.data.uiState.showLoadingDialog = false;
 }
 async function renewPremium(): Promise<void> {
-  await removePremium();
+  await removePremiumCode();
   await router.replace({ name: 'PURCHASE_SUBSCRIPTION' });
 }
 async function closeDialog(): Promise<void> {
@@ -140,7 +142,7 @@ async function closeDialog(): Promise<void> {
             <v-btn
               variant="flat"
               :text="locale('EXIT_PREMIUM')"
-              @click="removePremium()"
+              @click="removePremiumCode()"
             />
           </div>
 
