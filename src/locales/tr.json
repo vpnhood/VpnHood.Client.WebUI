@@ -413,6 +413,7 @@
   "DEVICE": "Cihaz",
   "MORE_THAN_X_DEVICES": "{x} cihazdan fazla",
   "DATE": "Tarih",
+  "PREMIUM_INFO": "Premium Özellikler",
   "PREMIUM_BY": "Premium Sağlayan",
   "PREMIUM_CODE": "Premium Kod",
   "PREMIUM_CODE_DESC": "Bu kodu {x} cihazda kullanabilirsiniz",
