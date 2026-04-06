@@ -43,7 +43,7 @@ function calcUnit(total: number): string{
       <config-card v-if="vhApp.data.isPremiumUser && vhApp.data.state.sessionInfo.accessInfo">
         <v-card-title>
           {{locale('PREMIUM_INFO')}}
-          <v-icon icon="mdi-calendar-range"/>
+          <v-icon icon="mdi-crown"/>
         </v-card-title>
         <v-card-subtitle>{{locale('STATISTICS_DATE_CARD_DESC')}}</v-card-subtitle>
 
