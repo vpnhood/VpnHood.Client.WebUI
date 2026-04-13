@@ -40,7 +40,7 @@ const featuresList: Features[] = [
     icon: "mdi-dns",
     title: "DNS",
     pageLink: {name: "DNS"},
-    isInUse: vhApp.data.isDnsInUse
+    isInUse: vhApp.data.isDnsCustomized
   },
   {
     icon: "mdi-diversify",

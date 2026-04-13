@@ -23,7 +23,7 @@ const icons: FeatureIcon[] = [
   },
   {
     icon: "mdi-dns",
-    isShow: vhApp.data.isDnsInUse
+    isShow: vhApp.data.isDnsCustomized
   },
   {
     icon: "mdi-diversify",

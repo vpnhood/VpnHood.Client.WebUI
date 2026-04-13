@@ -112,6 +112,11 @@ export class VpnHoodAppData {
     return this.state.systemPrivateDns?.isActive || this.userSettings.dnsMode === DnsMode.AdapterDns;
   }
 
+  get isDnsCustomized(): boolean{
+    return this.state.systemPrivateDns?.provider !== null || this.userSettings.dnsMode === DnsMode.AdapterDns;
+  }
+
+
   get isCustomEndpointInUse(): boolean {
     const customServerEndpoints = this.state.clientProfile?.customServerEndpoints;
     return !!customServerEndpoints && customServerEndpoints.length > 0;

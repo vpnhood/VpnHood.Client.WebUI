@@ -134,7 +134,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :title="locale('DNS')"
       :subtitle="locale('DNS_DESC')"
       :status="{
-        state: vhApp.data.isDnsInUse,
+        state: vhApp.data.isDnsCustomized,
         onText: locale('CUSTOM'),
         offText: locale('DEFAULT')
       }"
