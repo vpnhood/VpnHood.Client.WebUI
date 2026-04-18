@@ -27,7 +27,7 @@ const featuresList: Features[] = [
   {
     icon: "mdi-filter-cog-outline",
     title: "SPLIT_IP",
-    pageLink: {name: "SPLIT_IP"},
+    pageLink: {name: "SPLIT_TUNNELING"},
     isInUse: vhApp.data.isSplitIpInUse
   },
   {

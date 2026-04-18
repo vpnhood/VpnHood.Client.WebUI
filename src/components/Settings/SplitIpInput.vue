@@ -1,102 +1,36 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { computed } from 'vue';
 import i18n from '@/locales/i18n';
-import { SplitByIps } from '@/services/VpnHood.Client.Api';
-import { IPFilterType } from '@/helpers/UiConstants';
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
-import { onBeforeRouteLeave } from 'vue-router';
 
-const vhApp = VpnHoodApp.instance
 const locale = i18n.global.t;
 
 const props = defineProps<{
-  ipFilterType: IPFilterType
+  excludes: string;
+  includes: string;
+  blocks?: string;
+  loading?: boolean;
 }>();
 
-const isLoadingIP = ref<boolean>(true);
-const ipFilters = ref<SplitByIps>(new SplitByIps());
-const showRevertButton = ref<boolean>(false);
-let savedIps: SplitByIps;
+const emit = defineEmits<{
+  'update:excludes': [value: string];
+  'update:includes': [value: string];
+  'update:blocks': [value: string];
+}>();
 
 const excludeIpFilters = computed<string>({
-  get: () => {
-    return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.deviceExcludes
-      : ipFilters.value.appExcludes;
-  },
-  set: (value: string) => {
-    if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.deviceExcludes = value;
-    else
-    ipFilters.value.appExcludes = value;
-  }
-})
+  get: () => props.excludes,
+  set: (value: string) => emit('update:excludes', value)
+});
 
 const includeIpFilters = computed<string>({
-  get: () => {
-    return props.ipFilterType === IPFilterType.FilterByDevice
-      ? ipFilters.value.deviceIncludes
-      : ipFilters.value.appIncludes;
-  },
-  set: (value: string) => {
-    if (props.ipFilterType === IPFilterType.FilterByDevice)
-      ipFilters.value.deviceIncludes = value;
-    else
-    ipFilters.value.appIncludes = value;
-  }
-})
+  get: () => props.includes,
+  set: (value: string) => emit('update:includes', value)
+});
 
 const blockIpFilters = computed<string>({
-  get: () => ipFilters.value.appBlocks,
-  set: (value: string) => ipFilters.value.appBlocks = value
-})
-
-async function saveIpList(){
-  if (vhApp.data.isConnected)
-    await vhApp.disconnect();
-
-  await vhApp.appClient.setSplitByIps(new SplitByIps({
-    deviceExcludes: ipFilters.value.deviceExcludes,
-    deviceIncludes: ipFilters.value.deviceIncludes,
-    appExcludes: ipFilters.value.appExcludes,
-    appIncludes: ipFilters.value.appIncludes,
-    appBlocks: ipFilters.value.appBlocks,
-  }));
-
-  await vhApp.saveUserSetting();
-}
-
-onMounted(async () => {
-  ipFilters.value = await vhApp.appClient.getSplitByIps();
-  savedIps = new SplitByIps(ipFilters.value);
-  isLoadingIP.value = false;
-})
-
-onBeforeRouteLeave(
-  async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    try {
-      if (ipFilters.value.deviceExcludes !== savedIps.deviceExcludes ||
-        ipFilters.value.deviceIncludes !== savedIps.deviceIncludes ||
-        ipFilters.value.appExcludes !== savedIps.appExcludes ||
-        ipFilters.value.appIncludes !== savedIps.appIncludes ||
-        ipFilters.value.appBlocks !== savedIps.appBlocks)
-        await saveIpList();
-      next();
-    }
-    catch (err: unknown){
-      next(false);
-      showRevertButton.value = true;
-      await vhApp.processError(err);
-    }
-  }
-);
-
-function revertCurrentChange(): void{
-  ipFilters.value = savedIps;
-  showRevertButton.value = false;
-}
-
+  get: () => props.blocks ?? '',
+  set: (value: string) => emit('update:blocks', value)
+});
 </script>
 
 <template>
@@ -116,7 +50,7 @@ function revertCurrentChange(): void{
         'rows': '5',
         'variant': 'outlined',
         'color': 'highlight',
-        'loading': isLoadingIP,
+        'loading': loading,
         'placeholder': locale('SPLIT_IP_PLACE_HOLDER'),
         'hideDetails': true,
         'clearable': true
@@ -167,7 +101,7 @@ function revertCurrentChange(): void{
     </config-card>
 
     <!-- Block list -->
-    <config-card v-if="props.ipFilterType === IPFilterType.FilterByApp" class="pb-3 mt-4">
+    <config-card v-if="blocks !== undefined" class="pb-3 mt-4">
       <v-card-item>
         <p>{{locale('BLOCK_IPS')}}</p>
         <v-locale-provider :rtl="false">
@@ -175,15 +109,6 @@ function revertCurrentChange(): void{
         </v-locale-provider>
       </v-card-item>
     </config-card>
-
-    <!-- Revert button -->
-    <btn-style-3
-      v-if="showRevertButton"
-      block
-      class="mt-4"
-      :text="locale('REVERT')"
-      @click="revertCurrentChange()"
-    />
 
   </v-defaults-provider>
 </template>

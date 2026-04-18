@@ -82,7 +82,7 @@ function isShowConnectivitySectionTitle(): boolean {
         onText: locale('ON'),
         offText: locale('OFF')
       }"
-      :click="{name: 'SPLIT_IP'}"
+      :click="{name: 'SPLIT_TUNNELING'}"
     />
 
     <!-- Quick launch -->
