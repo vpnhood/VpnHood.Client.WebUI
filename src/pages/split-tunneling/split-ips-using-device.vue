@@ -58,15 +58,20 @@ function revertCurrentChange(): void {
 
 <template>
   <v-sheet>
-    <div class="d-flex align-center position-relative">
-      <app-bar class="flex-grow-1"/>
-      <v-switch
-        v-model="isEnabled"
-        :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
-        hide-details
-        class="position-absolute end-0 pe-2"
-      />
-    </div>
+    <app-bar/>
+
+    <config-card class="pb-2">
+      <v-card-item>
+        <div class="d-flex align-center justify-space-between">
+          <span>{{ locale('SPLIT_IPS_USING_DEVICE') }}</span>
+          <v-switch
+            v-model="isEnabled"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
+            hide-details
+          />
+        </div>
+      </v-card-item>
+    </config-card>
     <split-ip-input
       :excludes="ipFilters.deviceExcludes"
       :includes="ipFilters.deviceIncludes"

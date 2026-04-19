@@ -32,8 +32,8 @@ const locale = i18n.global.t;
 
     <!-- Filter by device -->
     <settings-item
-      :title="locale('SPLIT_IPS_BY_ADAPTER')"
-      :subtitle="locale('SPLIT_IPS_BY_ADAPTER_DESC')"
+      :title="locale('SPLIT_IPS_USING_DEVICE')"
+      :subtitle="locale('SPLIT_IPS_USING_DEVICE_DESC')"
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaDevice)"
       :is-show="true"
       :status="{
@@ -41,13 +41,13 @@ const locale = i18n.global.t;
         onText: locale('ON'),
         offText: locale('OFF')
       }"
-      :click="{name: 'SPLIT_IPS_BY_ADAPTER'}"
+      :click="{name: 'SPLIT_IPS_USING_DEVICE'}"
     />
 
     <!-- Filter by App -->
     <settings-item
-      :title="locale('SPLIT_IPS_BY_APP')"
-      :subtitle="locale('SPLIT_IPS_BY_APP_DESC')"
+      :title="locale('SPLIT_IPS_USING_APP')"
+      :subtitle="locale('SPLIT_IPS_USING_APP_DESC')"
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaApp)"
       :is-show="true"
       :status="{
@@ -55,7 +55,7 @@ const locale = i18n.global.t;
         onText: locale('ON'),
         offText: locale('OFF')
       }"
-      :click="{name: 'SPLIT_IPS_BY_APP'}"
+      :click="{name: 'SPLIT_IPS_USING_APP'}"
     />
 
   </v-sheet>

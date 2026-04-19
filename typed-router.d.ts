@@ -44,8 +44,8 @@ declare module 'vue-router/auto-routes' {
     'SPLIT_APPS': RouteRecordInfo<'SPLIT_APPS', '/split-apps', Record<never, never>, Record<never, never>>,
     'SPLIT_COUNTRIES': RouteRecordInfo<'SPLIT_COUNTRIES', '/split-countries', Record<never, never>, Record<never, never>>,
     'SPLIT_TUNNELING': RouteRecordInfo<'SPLIT_TUNNELING', '/split-tunneling', Record<never, never>, Record<never, never>>,
-    'SPLIT_IPS_BY_ADAPTER': RouteRecordInfo<'SPLIT_IPS_BY_ADAPTER', '/split-tunneling/split-ips-by-adapter', Record<never, never>, Record<never, never>>,
-    'SPLIT_IPS_BY_APP': RouteRecordInfo<'SPLIT_IPS_BY_APP', '/split-tunneling/split-ips-by-app', Record<never, never>, Record<never, never>>,
+    'SPLIT_IPS_USING_APP': RouteRecordInfo<'SPLIT_IPS_USING_APP', '/split-tunneling/split-ips-using-app', Record<never, never>, Record<never, never>>,
+    'SPLIT_IPS_USING_DEVICE': RouteRecordInfo<'SPLIT_IPS_USING_DEVICE', '/split-tunneling/split-ips-using-device', Record<never, never>, Record<never, never>>,
     'STATISTICS': RouteRecordInfo<'STATISTICS', '/statistics', Record<never, never>, Record<never, never>>,
     'ACCOUNT': RouteRecordInfo<'ACCOUNT', '/user/account', Record<never, never>, Record<never, never>>,
   }
