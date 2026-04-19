@@ -75,9 +75,7 @@ export class ErrorHandler {
 
   private static async processApiException(err: ApiException): Promise<ShowErrorOptions> {
     // For developer
-    console.log('Exception Type: ApiException');
-    console.log('TypeName: ', err.exceptionTypeName);
-    console.log('Error Infos: ' + err);
+    console.log('Exception', err);
 
     switch (err.exceptionTypeName) {
 

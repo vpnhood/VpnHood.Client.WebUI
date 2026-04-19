@@ -3344,6 +3344,7 @@ export enum AppFeature {
     CustomDns = "CustomDns",
     SplitByIpViaApp = "SplitByIpViaApp",
     SplitByIpViaDevice = "SplitByIpViaDevice",
+    SplitByDomain = "SplitByDomain",
     SplitByCountry = "SplitByCountry",
 }
 
@@ -3491,7 +3492,7 @@ export class AppState implements IAppState {
             this.proxyEndPointManagerStatus = _data["proxyEndPointManagerStatus"] ? AppProxyEndPointManagerStatus.fromJS(_data["proxyEndPointManagerStatus"]) : new AppProxyEndPointManagerStatus();
             this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : new AppServerLocationInfo();
             this.connectRequestTime = _data["connectRequestTime"] ? new Date(_data["connectRequestTime"].toString()) : null as any;
-            this.lastError = _data["lastError"] ? ApiError.fromJS(_data["lastError"]) : new ApiError();
+            this.lastError = _data["lastError"] ? ApiError.fromJS(_data["lastError"]) : null as any;
             this.clientProfile = _data["clientProfile"] ? ClientProfileBaseInfo.fromJS(_data["clientProfile"]) : new ClientProfileBaseInfo();
             this.isIdle = _data["isIdle"] !== undefined ? _data["isIdle"] : null as any;
             this.promptForLog = _data["promptForLog"] !== undefined ? _data["promptForLog"] : null as any;
@@ -4995,6 +4996,7 @@ export class UserSettings implements IUserSettings {
     splitByCountries!: string[];
     useSplitByIpViaApp!: boolean;
     useSplitByIpViaDevice!: boolean;
+    useSplitByDomain!: boolean;
     channelProtocol!: ChannelProtocol;
     dropUdp!: boolean;
     useTcpProxy!: boolean;
@@ -5054,6 +5056,7 @@ export class UserSettings implements IUserSettings {
             }
             this.useSplitByIpViaApp = _data["useSplitByIpViaApp"] !== undefined ? _data["useSplitByIpViaApp"] : null as any;
             this.useSplitByIpViaDevice = _data["useSplitByIpViaDevice"] !== undefined ? _data["useSplitByIpViaDevice"] : null as any;
+            this.useSplitByDomain = _data["useSplitByDomain"] !== undefined ? _data["useSplitByDomain"] : null as any;
             this.channelProtocol = _data["channelProtocol"] !== undefined ? _data["channelProtocol"] : null as any;
             this.dropUdp = _data["dropUdp"] !== undefined ? _data["dropUdp"] : null as any;
             this.useTcpProxy = _data["useTcpProxy"] !== undefined ? _data["useTcpProxy"] : null as any;
@@ -5108,6 +5111,7 @@ export class UserSettings implements IUserSettings {
         }
         data["useSplitByIpViaApp"] = this.useSplitByIpViaApp !== undefined ? this.useSplitByIpViaApp : null as any;
         data["useSplitByIpViaDevice"] = this.useSplitByIpViaDevice !== undefined ? this.useSplitByIpViaDevice : null as any;
+        data["useSplitByDomain"] = this.useSplitByDomain !== undefined ? this.useSplitByDomain : null as any;
         data["channelProtocol"] = this.channelProtocol !== undefined ? this.channelProtocol : null as any;
         data["dropUdp"] = this.dropUdp !== undefined ? this.dropUdp : null as any;
         data["useTcpProxy"] = this.useTcpProxy !== undefined ? this.useTcpProxy : null as any;
@@ -5144,6 +5148,7 @@ export interface IUserSettings {
     splitByCountries: string[];
     useSplitByIpViaApp: boolean;
     useSplitByIpViaDevice: boolean;
+    useSplitByDomain: boolean;
     channelProtocol: ChannelProtocol;
     dropUdp: boolean;
     useTcpProxy: boolean;

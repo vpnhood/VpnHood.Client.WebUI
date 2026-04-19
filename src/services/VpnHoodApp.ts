@@ -86,10 +86,12 @@ export class VpnHoodApp {
     if (this.isSaving)
       return;
 
+
     // Only reload state for the last reload.
     this.lastReloadNumber++;
     const reloadNumber = this.lastReloadNumber;
     const state = await this.appClient.getState();
+
     if (reloadNumber !== this.lastReloadNumber)
       return; // Discard old data
     this.data.state = state;

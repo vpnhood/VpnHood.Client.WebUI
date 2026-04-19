@@ -72,6 +72,20 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_LOCAL_NETWORK'}"
     />
 
+    <!-- Split domains -->
+    <settings-item
+      :title="locale('SPLIT_DOMAINS')"
+      :subtitle="locale('SPLIT_DOMAINS_DESC')"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByDomain)"
+      :is-show="true"
+      :status="{
+        state: vhApp.data.userSettings.useSplitByDomain,
+        onText: locale('ON'),
+        offText: locale('OFF')
+      }"
+      :click="{name: 'SPLIT_DOMAINS'}"
+    />
+
   </v-sheet>
 </template>
 
