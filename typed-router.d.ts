@@ -46,6 +46,7 @@ declare module 'vue-router/auto-routes' {
     'SPLIT_TUNNELING': RouteRecordInfo<'SPLIT_TUNNELING', '/split-tunneling', Record<never, never>, Record<never, never>>,
     'SPLIT_IPS_USING_APP': RouteRecordInfo<'SPLIT_IPS_USING_APP', '/split-tunneling/split-ips-using-app', Record<never, never>, Record<never, never>>,
     'SPLIT_IPS_USING_DEVICE': RouteRecordInfo<'SPLIT_IPS_USING_DEVICE', '/split-tunneling/split-ips-using-device', Record<never, never>, Record<never, never>>,
+    'SPLIT_LOCAL_NETWORK': RouteRecordInfo<'SPLIT_LOCAL_NETWORK', '/split-tunneling/split-local-network', Record<never, never>, Record<never, never>>,
     'STATISTICS': RouteRecordInfo<'STATISTICS', '/statistics', Record<never, never>, Record<never, never>>,
     'ACCOUNT': RouteRecordInfo<'ACCOUNT', '/user/account', Record<never, never>, Record<never, never>>,
   }

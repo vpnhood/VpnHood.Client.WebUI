@@ -85,7 +85,7 @@ function isShowEnforcedByServerAlert() {
   <v-sheet v-else>
     <app-bar/>
 
-    <small-feature-image-and-description image="private-dns.webp" description="DNS_DESC" />
+    <small-feature-image-and-description image="private-dns.webp" :description="locale('DNS_DESC')" />
 
     <!-- Private DNS card -->
     <config-card

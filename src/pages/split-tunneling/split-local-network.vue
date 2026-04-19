@@ -1,15 +1,15 @@
-﻿<script setup lang="ts">
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
-import { computed } from 'vue';
-import { VpnHoodApp } from '@/services/VpnHoodApp';
-import i18n from '@/locales/i18n';
+<script setup lang="ts">
 import AppBar from '@/components/AppBar.vue';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { computed } from 'vue';
+import i18n from '@/locales/i18n';
+import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const splitLocalNetwork = computed({
+const isEnabled = computed<boolean>({
   get: () => !vhApp.data.userSettings.includeLocalNetwork,
   set: async (value: boolean) => {
     vhApp.data.userSettings.includeLocalNetwork = !value;
@@ -22,30 +22,26 @@ const splitLocalNetwork = computed({
   <v-sheet>
     <app-bar/>
 
-    <SmallFeatureImageAndDescription image="access-local-network.webp" description="ACCESS_LOCAL_NETWORK_DESC" />
+    <small-feature-image-and-description image="access-local-network.webp"  />
 
     <!-- Enforced by server alert -->
-    <alert-warning v-if="!vhApp.data.isLocalNetworkAvailable" :text="locale('ENFORCED_BY_SERVER')" class="my-2" />
+    <alert-warning v-if="!vhApp.data.isLocalNetworkAvailable" :text="locale('ENFORCED_BY_SERVER')" class="mb-4" />
 
     <!-- Disconnecting alert -->
-    <disconnect-required-alert class="my-2"/>
+    <disconnect-required-alert class="mb-4"/>
 
     <config-card class="pb-2">
-
       <v-card-item>
-        <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('ACCESS_LOCAL_NETWORK') }}</span>
+          <span>{{ locale('SPLIT_LOCAL_NETWORK') }}</span>
           <v-switch
-            v-model="splitLocalNetwork"
+            v-model="isEnabled"
             :disabled="!vhApp.data.isLocalNetworkAvailable"
+            hide-details
           />
         </div>
-
-        <!-- Alert for number of IPs in the filter by device -->
-        <p class="text-caption text-disabled">{{locale("ACCESS_LOCAL_NETWORK_FEATURE_DESC") }}</p>
+        <p class="text-caption text-disabled">{{ locale('SPLIT_LOCAL_NETWORK_DESC') }}</p>
       </v-card-item>
-
     </config-card>
   </v-sheet>
 </template>

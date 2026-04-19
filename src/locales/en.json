@@ -87,9 +87,8 @@
   "CLOAK_MODE_SHORT_DESC": "Overcomes VPN blocks by disguising your VPN traffic as regular web traffic.",
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
-  "ACCESS_LOCAL_NETWORK": "Access Local Network",
-  "ACCESS_LOCAL_NETWORK_DESC": "Keep local devices like TVs and printers reachable while connected to the VPN.",
-  "ACCESS_LOCAL_NETWORK_FEATURE_DESC": "Allow access to local devices (e.g., TV, printer) by excluding local network traffic from the VPN.",
+  "SPLIT_LOCAL_NETWORK": "Split Local Network",
+  "SPLIT_LOCAL_NETWORK_DESC": "Allow access to local devices (e.g., TV, printer) by excluding local network traffic from the VPN.",
   "createServer": "Create a Personal Server",
   "SESSION_SUPPRESSED_TO_OTHER": "You disconnected another device because you used the same server key on multiple devices!",
   "SESSION_SUPPRESSED_BY_OTHER": "You have been disconnected because another device connected with your server key!",
@@ -557,5 +556,7 @@
   "REMOVE_CURRENT_PREMIUM_CODE": "Remove current premium code",
   "REMOVE_CURRENT_PREMIUM_CODE_DESC": "Deleting the existing premium code will immediately exit Premium. You can re-enter the same code again at any time to restore Premium access, as long as it remains valid.",
   "RE_NEW_PREMIUM": "Renew premium",
-  "EXIT_PREMIUM": "Exit premium"
+  "EXIT_PREMIUM": "Exit premium",
+  "SPLIT_TUNNELING": "Split tunneling",
+  "SPLIT_TUNNELING_DESC": "Include or exclude traffic from VPN connection to optimize performance."
 }

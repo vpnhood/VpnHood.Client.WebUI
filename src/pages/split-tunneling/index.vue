@@ -26,7 +26,7 @@ const locale = i18n.global.t;
   <v-sheet v-else>
     <app-bar/>
 
-    <small-feature-image-and-description image="split-ip.webp" description="SPLIT_IP_ADDRESSES_DESC" />
+    <small-feature-image-and-description image="split-ip.webp" :description="locale('SPLIT_IP_ADDRESSES_DESC')" />
 
     <disconnect-required-alert class="mb-4"/>
 
@@ -56,6 +56,20 @@ const locale = i18n.global.t;
         offText: locale('OFF')
       }"
       :click="{name: 'SPLIT_IPS_USING_APP'}"
+    />
+
+    <!-- Local network -->
+    <settings-item
+      :title="locale('SPLIT_LOCAL_NETWORK')"
+      :subtitle="locale('SPLIT_LOCAL_NETWORK_DESC')"
+      :is-premium="false"
+      :is-show="vhApp.data.features.isLocalNetworkSupported"
+      :status="{
+        state: !vhApp.data.userSettings.includeLocalNetwork,
+        onText: locale('ON'),
+        offText: locale('OFF')
+      }"
+      :click="{name: 'SPLIT_LOCAL_NETWORK'}"
     />
 
   </v-sheet>

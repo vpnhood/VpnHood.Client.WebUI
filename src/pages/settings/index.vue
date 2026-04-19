@@ -73,8 +73,8 @@ function isShowConnectivitySectionTitle(): boolean {
 
     <!-- Split IP -->
     <settings-item
-      :title="locale('SPLIT_IP_ADDRESSES')"
-      :subtitle="locale('SPLIT_IP_ADDRESSES_DESC')"
+      :title="locale('SPLIT_TUNNELING')"
+      :subtitle="locale('SPLIT_TUNNELING_DESC')"
       :is-show="true"
       :isPremium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaApp)"
       :status="{
@@ -96,20 +96,6 @@ function isShowConnectivitySectionTitle(): boolean {
 
     <!-- PRIVACY & SECURITY SECTION -->
     <settings-section-title :title="locale('PRIVACY_AND_SECURITY')"/>
-
-    <!-- Local network -->
-    <settings-item
-      :title="locale('ACCESS_LOCAL_NETWORK')"
-      :subtitle="locale('ACCESS_LOCAL_NETWORK_DESC')"
-      :isPremium=false
-      :status="{
-        state: !vhApp.data.userSettings.includeLocalNetwork,
-        onText: locale('ON'),
-        offText: locale('OFF')
-      }"
-      :is-show="vhApp.data.features.isLocalNetworkSupported"
-      :click="{name: 'ACCESS_LOCAL_NETWORK'}"
-    />
 
     <!-- Kill switch -->
     <settings-item
