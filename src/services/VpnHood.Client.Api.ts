@@ -3161,16 +3161,16 @@ export class AppFeatures implements IAppFeatures {
     appName!: string;
     isExcludeAppsSupported!: boolean;
     isIncludeAppsSupported!: boolean;
-    uiName!: string;
+    uiName?: string | null;
     isPremiumFlagSupported!: boolean;
     isAddAccessKeySupported!: boolean;
-    builtInClientProfileId!: string;
+    builtInClientProfileId?: string | null;
     isAccountSupported!: boolean;
     isBillingSupported!: boolean;
     isTcpProxySupported!: boolean;
     isUserReviewSupported!: boolean;
     isTv!: boolean;
-    gaMeasurementId!: string;
+    gaMeasurementId?: string | null;
     clientId!: string;
     isDebugMode!: boolean;
     debugCommands!: string[];
@@ -3180,10 +3180,10 @@ export class AppFeatures implements IAppFeatures {
     allowEndPointStrategy!: boolean;
     autoRemoveExpiredPremium!: boolean;
     isAdSupported!: boolean;
-    webUiPort!: number;
+    webUiPort?: number | null;
     premiumFeatures!: AppFeature[];
     channelProtocols!: ChannelProtocol[];
-    customData!: any;
+    customData?: any | null;
     version!: string;
 
     constructor(data?: IAppFeatures) {
@@ -3312,16 +3312,16 @@ export interface IAppFeatures {
     appName: string;
     isExcludeAppsSupported: boolean;
     isIncludeAppsSupported: boolean;
-    uiName: string;
+    uiName?: string | null;
     isPremiumFlagSupported: boolean;
     isAddAccessKeySupported: boolean;
-    builtInClientProfileId: string;
+    builtInClientProfileId?: string | null;
     isAccountSupported: boolean;
     isBillingSupported: boolean;
     isTcpProxySupported: boolean;
     isUserReviewSupported: boolean;
     isTv: boolean;
-    gaMeasurementId: string;
+    gaMeasurementId?: string | null;
     clientId: string;
     isDebugMode: boolean;
     debugCommands: string[];
@@ -3331,10 +3331,10 @@ export interface IAppFeatures {
     allowEndPointStrategy: boolean;
     autoRemoveExpiredPremium: boolean;
     isAdSupported: boolean;
-    webUiPort: number;
+    webUiPort?: number | null;
     premiumFeatures: AppFeature[];
     channelProtocols: ChannelProtocol[];
-    customData: any;
+    customData?: any | null;
     version: string;
 }
 
@@ -3429,32 +3429,32 @@ export interface IDeviceIntentFeatures {
 export class AppState implements IAppState {
     configTime!: Date;
     connectionState!: AppConnectionState;
-    sessionInfo!: AppSessionInfo;
-    sessionStatus!: AppSessionStatus;
-    proxyEndPointManagerStatus!: AppProxyEndPointManagerStatus;
-    serverLocationInfo!: AppServerLocationInfo;
-    connectRequestTime!: Date;
-    lastError!: ApiError;
-    clientProfile!: ClientProfileBaseInfo;
+    sessionInfo?: AppSessionInfo | null;
+    sessionStatus?: AppSessionStatus | null;
+    proxyEndPointManagerStatus?: AppProxyEndPointManagerStatus | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
+    connectRequestTime?: Date | null;
+    lastError?: ApiError | null;
+    clientProfile?: ClientProfileBaseInfo | null;
     isIdle!: boolean;
     promptForLog!: boolean;
     logExists!: boolean;
     hasDiagnoseRequested!: boolean;
-    updaterStatus!: AppUpdaterStatus;
+    updaterStatus?: AppUpdaterStatus | null;
     canDisconnect!: boolean;
     canConnect!: boolean;
     canDiagnose!: boolean;
     userReviewRecommended!: number;
     isQuickLaunchRecommended!: boolean;
-    clientCountryInfo!: CountryInfo;
+    clientCountryInfo?: CountryInfo | null;
     currentUiCultureInfo!: UiCultureInfo;
     systemUiCultureInfo!: UiCultureInfo;
-    purchaseState!: BillingPurchaseState;
+    purchaseState?: BillingPurchaseState | null;
     systemBarsInfo!: SystemBarsInfo;
-    isNotificationEnabled!: boolean;
-    systemPrivateDns!: PrivateDns;
-    isWaitingForInternalAd!: boolean;
-    stateProgress!: number;
+    isNotificationEnabled?: boolean | null;
+    systemPrivateDns?: PrivateDns | null;
+    isWaitingForInternalAd?: boolean | null;
+    stateProgress?: number | null;
     isDiagnosing!: boolean;
     channelProtocol!: ChannelProtocol;
     isProxyEndPointActive!: boolean;
@@ -3468,18 +3468,9 @@ export class AppState implements IAppState {
             }
         }
         if (!data) {
-            this.sessionInfo = new AppSessionInfo();
-            this.sessionStatus = new AppSessionStatus();
-            this.proxyEndPointManagerStatus = new AppProxyEndPointManagerStatus();
-            this.serverLocationInfo = new AppServerLocationInfo();
-            this.lastError = new ApiError();
-            this.clientProfile = new ClientProfileBaseInfo();
-            this.updaterStatus = new AppUpdaterStatus();
-            this.clientCountryInfo = new CountryInfo();
             this.currentUiCultureInfo = new UiCultureInfo();
             this.systemUiCultureInfo = new UiCultureInfo();
             this.systemBarsInfo = new SystemBarsInfo();
-            this.systemPrivateDns = new PrivateDns();
         }
     }
 
@@ -3487,30 +3478,30 @@ export class AppState implements IAppState {
         if (_data) {
             this.configTime = _data["configTime"] ? new Date(_data["configTime"].toString()) : null as any;
             this.connectionState = _data["connectionState"] !== undefined ? _data["connectionState"] : null as any;
-            this.sessionInfo = _data["sessionInfo"] ? AppSessionInfo.fromJS(_data["sessionInfo"]) : new AppSessionInfo();
-            this.sessionStatus = _data["sessionStatus"] ? AppSessionStatus.fromJS(_data["sessionStatus"]) : new AppSessionStatus();
-            this.proxyEndPointManagerStatus = _data["proxyEndPointManagerStatus"] ? AppProxyEndPointManagerStatus.fromJS(_data["proxyEndPointManagerStatus"]) : new AppProxyEndPointManagerStatus();
-            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : new AppServerLocationInfo();
+            this.sessionInfo = _data["sessionInfo"] ? AppSessionInfo.fromJS(_data["sessionInfo"]) : null as any;
+            this.sessionStatus = _data["sessionStatus"] ? AppSessionStatus.fromJS(_data["sessionStatus"]) : null as any;
+            this.proxyEndPointManagerStatus = _data["proxyEndPointManagerStatus"] ? AppProxyEndPointManagerStatus.fromJS(_data["proxyEndPointManagerStatus"]) : null as any;
+            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
             this.connectRequestTime = _data["connectRequestTime"] ? new Date(_data["connectRequestTime"].toString()) : null as any;
             this.lastError = _data["lastError"] ? ApiError.fromJS(_data["lastError"]) : null as any;
-            this.clientProfile = _data["clientProfile"] ? ClientProfileBaseInfo.fromJS(_data["clientProfile"]) : new ClientProfileBaseInfo();
+            this.clientProfile = _data["clientProfile"] ? ClientProfileBaseInfo.fromJS(_data["clientProfile"]) : null as any;
             this.isIdle = _data["isIdle"] !== undefined ? _data["isIdle"] : null as any;
             this.promptForLog = _data["promptForLog"] !== undefined ? _data["promptForLog"] : null as any;
             this.logExists = _data["logExists"] !== undefined ? _data["logExists"] : null as any;
             this.hasDiagnoseRequested = _data["hasDiagnoseRequested"] !== undefined ? _data["hasDiagnoseRequested"] : null as any;
-            this.updaterStatus = _data["updaterStatus"] ? AppUpdaterStatus.fromJS(_data["updaterStatus"]) : new AppUpdaterStatus();
+            this.updaterStatus = _data["updaterStatus"] ? AppUpdaterStatus.fromJS(_data["updaterStatus"]) : null as any;
             this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : null as any;
             this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : null as any;
             this.canDiagnose = _data["canDiagnose"] !== undefined ? _data["canDiagnose"] : null as any;
             this.userReviewRecommended = _data["userReviewRecommended"] !== undefined ? _data["userReviewRecommended"] : null as any;
             this.isQuickLaunchRecommended = _data["isQuickLaunchRecommended"] !== undefined ? _data["isQuickLaunchRecommended"] : null as any;
-            this.clientCountryInfo = _data["clientCountryInfo"] ? CountryInfo.fromJS(_data["clientCountryInfo"]) : new CountryInfo();
+            this.clientCountryInfo = _data["clientCountryInfo"] ? CountryInfo.fromJS(_data["clientCountryInfo"]) : null as any;
             this.currentUiCultureInfo = _data["currentUiCultureInfo"] ? UiCultureInfo.fromJS(_data["currentUiCultureInfo"]) : new UiCultureInfo();
             this.systemUiCultureInfo = _data["systemUiCultureInfo"] ? UiCultureInfo.fromJS(_data["systemUiCultureInfo"]) : new UiCultureInfo();
             this.purchaseState = _data["purchaseState"] !== undefined ? _data["purchaseState"] : null as any;
             this.systemBarsInfo = _data["systemBarsInfo"] ? SystemBarsInfo.fromJS(_data["systemBarsInfo"]) : new SystemBarsInfo();
             this.isNotificationEnabled = _data["isNotificationEnabled"] !== undefined ? _data["isNotificationEnabled"] : null as any;
-            this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : new PrivateDns();
+            this.systemPrivateDns = _data["systemPrivateDns"] ? PrivateDns.fromJS(_data["systemPrivateDns"]) : null as any;
             this.isWaitingForInternalAd = _data["isWaitingForInternalAd"] !== undefined ? _data["isWaitingForInternalAd"] : null as any;
             this.stateProgress = _data["stateProgress"] !== undefined ? _data["stateProgress"] : null as any;
             this.isDiagnosing = _data["isDiagnosing"] !== undefined ? _data["isDiagnosing"] : null as any;
@@ -3568,32 +3559,32 @@ export class AppState implements IAppState {
 export interface IAppState {
     configTime: Date;
     connectionState: AppConnectionState;
-    sessionInfo: AppSessionInfo;
-    sessionStatus: AppSessionStatus;
-    proxyEndPointManagerStatus: AppProxyEndPointManagerStatus;
-    serverLocationInfo: AppServerLocationInfo;
-    connectRequestTime: Date;
-    lastError: ApiError;
-    clientProfile: ClientProfileBaseInfo;
+    sessionInfo?: AppSessionInfo | null;
+    sessionStatus?: AppSessionStatus | null;
+    proxyEndPointManagerStatus?: AppProxyEndPointManagerStatus | null;
+    serverLocationInfo?: AppServerLocationInfo | null;
+    connectRequestTime?: Date | null;
+    lastError?: ApiError | null;
+    clientProfile?: ClientProfileBaseInfo | null;
     isIdle: boolean;
     promptForLog: boolean;
     logExists: boolean;
     hasDiagnoseRequested: boolean;
-    updaterStatus: AppUpdaterStatus;
+    updaterStatus?: AppUpdaterStatus | null;
     canDisconnect: boolean;
     canConnect: boolean;
     canDiagnose: boolean;
     userReviewRecommended: number;
     isQuickLaunchRecommended: boolean;
-    clientCountryInfo: CountryInfo;
+    clientCountryInfo?: CountryInfo | null;
     currentUiCultureInfo: UiCultureInfo;
     systemUiCultureInfo: UiCultureInfo;
-    purchaseState: BillingPurchaseState;
+    purchaseState?: BillingPurchaseState | null;
     systemBarsInfo: SystemBarsInfo;
-    isNotificationEnabled: boolean;
-    systemPrivateDns: PrivateDns;
-    isWaitingForInternalAd: boolean;
-    stateProgress: number;
+    isNotificationEnabled?: boolean | null;
+    systemPrivateDns?: PrivateDns | null;
+    isWaitingForInternalAd?: boolean | null;
+    stateProgress?: number | null;
     isDiagnosing: boolean;
     channelProtocol: ChannelProtocol;
     isProxyEndPointActive: boolean;
@@ -3616,10 +3607,10 @@ export enum AppConnectionState {
 }
 
 export class AppSessionInfo implements IAppSessionInfo {
-    accessInfo!: AccessInfo;
+    accessInfo?: AccessInfo | null;
     dnsConfig!: DnsConfig;
     isLocalNetworkAllowed!: boolean;
-    serverLocationInfo!: AppServerLocationInfo;
+    serverLocationInfo?: AppServerLocationInfo | null;
     isPremiumSession!: boolean;
     suppressedTo!: SessionSuppressType;
     serverVersion!: string;
@@ -3638,19 +3629,17 @@ export class AppSessionInfo implements IAppSessionInfo {
             }
         }
         if (!data) {
-            this.accessInfo = new AccessInfo();
             this.dnsConfig = new DnsConfig();
-            this.serverLocationInfo = new AppServerLocationInfo();
             this.channelProtocols = [];
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : new AccessInfo();
+            this.accessInfo = _data["accessInfo"] ? AccessInfo.fromJS(_data["accessInfo"]) : null as any;
             this.dnsConfig = _data["dnsConfig"] ? DnsConfig.fromJS(_data["dnsConfig"]) : new DnsConfig();
             this.isLocalNetworkAllowed = _data["isLocalNetworkAllowed"] !== undefined ? _data["isLocalNetworkAllowed"] : null as any;
-            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : new AppServerLocationInfo();
+            this.serverLocationInfo = _data["serverLocationInfo"] ? AppServerLocationInfo.fromJS(_data["serverLocationInfo"]) : null as any;
             this.isPremiumSession = _data["isPremiumSession"] !== undefined ? _data["isPremiumSession"] : null as any;
             this.suppressedTo = _data["suppressedTo"] !== undefined ? _data["suppressedTo"] : null as any;
             this.serverVersion = _data["serverVersion"] !== undefined ? _data["serverVersion"] : null as any;
@@ -3701,10 +3690,10 @@ export class AppSessionInfo implements IAppSessionInfo {
 }
 
 export interface IAppSessionInfo {
-    accessInfo: AccessInfo;
+    accessInfo?: AccessInfo | null;
     dnsConfig: DnsConfig;
     isLocalNetworkAllowed: boolean;
-    serverLocationInfo: AppServerLocationInfo;
+    serverLocationInfo?: AppServerLocationInfo | null;
     isPremiumSession: boolean;
     suppressedTo: SessionSuppressType;
     serverVersion: string;
@@ -4083,8 +4072,8 @@ export class AppSessionStatus implements IAppSessionStatus {
     waitingCount!: number;
     canExtendByRewardedAd!: boolean;
     sessionMaxTraffic!: number;
-    sessionExpirationTime!: Date;
-    activeClientCount!: number;
+    sessionExpirationTime?: Date | null;
+    activeClientCount?: number | null;
     isTcpProxy!: boolean;
     isDropQuic!: boolean;
     channelProtocol!: ChannelProtocol;
@@ -4174,8 +4163,8 @@ export interface IAppSessionStatus {
     waitingCount: number;
     canExtendByRewardedAd: boolean;
     sessionMaxTraffic: number;
-    sessionExpirationTime: Date;
-    activeClientCount: number;
+    sessionExpirationTime?: Date | null;
+    activeClientCount?: number | null;
     isTcpProxy: boolean;
     isDropQuic: boolean;
     channelProtocol: ChannelProtocol;
@@ -4479,16 +4468,16 @@ export interface IApiError {
 export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
     clientProfileId!: string;
     clientProfileName!: string;
-    supportId!: string;
-    customData!: string;
+    supportId?: string | null;
+    customData?: string | null;
     isPremiumLocationSelected!: boolean;
     isPremium!: boolean;
     hasAccessCode!: boolean;
     isAccessCodeFromAccount!: boolean;
     canGoPremium!: boolean;
     canTryPremium!: boolean;
-    selectedLocationInfo!: ClientServerLocationInfo;
-    customServerEndpoints!: string[];
+    selectedLocationInfo?: ClientServerLocationInfo | null;
+    customServerEndpoints?: string[] | null;
 
     constructor(data?: IClientProfileBaseInfo) {
         if (data) {
@@ -4496,10 +4485,6 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
                 if (data.hasOwnProperty(property))
                     (this as any)[property] = (data as any)[property];
             }
-        }
-        if (!data) {
-            this.selectedLocationInfo = new ClientServerLocationInfo();
-            this.customServerEndpoints = [];
         }
     }
 
@@ -4515,7 +4500,7 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
             this.isAccessCodeFromAccount = _data["isAccessCodeFromAccount"] !== undefined ? _data["isAccessCodeFromAccount"] : null as any;
             this.canGoPremium = _data["canGoPremium"] !== undefined ? _data["canGoPremium"] : null as any;
             this.canTryPremium = _data["canTryPremium"] !== undefined ? _data["canTryPremium"] : null as any;
-            this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : new ClientServerLocationInfo();
+            this.selectedLocationInfo = _data["selectedLocationInfo"] ? ClientServerLocationInfo.fromJS(_data["selectedLocationInfo"]) : null as any;
             if (Array.isArray(_data["customServerEndpoints"])) {
                 this.customServerEndpoints = [] as any;
                 for (let item of _data["customServerEndpoints"])
@@ -4559,16 +4544,16 @@ export class ClientProfileBaseInfo implements IClientProfileBaseInfo {
 export interface IClientProfileBaseInfo {
     clientProfileId: string;
     clientProfileName: string;
-    supportId: string;
-    customData: string;
+    supportId?: string | null;
+    customData?: string | null;
     isPremiumLocationSelected: boolean;
     isPremium: boolean;
     hasAccessCode: boolean;
     isAccessCodeFromAccount: boolean;
     canGoPremium: boolean;
     canTryPremium: boolean;
-    selectedLocationInfo: ClientServerLocationInfo;
-    customServerEndpoints: string[];
+    selectedLocationInfo?: ClientServerLocationInfo | null;
+    customServerEndpoints?: string[] | null;
 }
 
 export class ClientServerLocationInfo extends ServerLocationInfo implements IClientServerLocationInfo {
@@ -4692,9 +4677,9 @@ export interface IServerLocationOptions {
 }
 
 export class AppUpdaterStatus implements IAppUpdaterStatus {
-    checkedTime!: Date;
+    checkedTime?: Date | null;
     versionStatus!: VersionStatus;
-    publishInfo!: PublishInfo;
+    publishInfo?: PublishInfo | null;
     prompt!: boolean;
 
     constructor(data?: IAppUpdaterStatus) {
@@ -4704,16 +4689,13 @@ export class AppUpdaterStatus implements IAppUpdaterStatus {
                     (this as any)[property] = (data as any)[property];
             }
         }
-        if (!data) {
-            this.publishInfo = new PublishInfo();
-        }
     }
 
     init(_data?: any) {
         if (_data) {
             this.checkedTime = _data["checkedTime"] ? new Date(_data["checkedTime"].toString()) : null as any;
             this.versionStatus = _data["versionStatus"] !== undefined ? _data["versionStatus"] : null as any;
-            this.publishInfo = _data["publishInfo"] ? PublishInfo.fromJS(_data["publishInfo"]) : new PublishInfo();
+            this.publishInfo = _data["publishInfo"] ? PublishInfo.fromJS(_data["publishInfo"]) : null as any;
             this.prompt = _data["prompt"] !== undefined ? _data["prompt"] : null as any;
         }
     }
@@ -4736,9 +4718,9 @@ export class AppUpdaterStatus implements IAppUpdaterStatus {
 }
 
 export interface IAppUpdaterStatus {
-    checkedTime: Date;
+    checkedTime?: Date | null;
     versionStatus: VersionStatus;
-    publishInfo: PublishInfo;
+    publishInfo?: PublishInfo | null;
     prompt: boolean;
 }
 
@@ -6021,11 +6003,11 @@ export interface IPurchaseParams {
 }
 
 export class AppPurchaseOptions implements IAppPurchaseOptions {
-    storeName!: string;
+    storeName?: string | null;
     isStoreAvailable!: boolean;
-    storeError!: ApiError;
+    storeError?: ApiError | null;
     subscriptionPlans!: SubscriptionPlan[];
-    purchaseUrl!: string;
+    purchaseUrl?: string | null;
     canGoPremiumByCode!: boolean;
 
     constructor(data?: IAppPurchaseOptions) {
@@ -6036,7 +6018,6 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
             }
         }
         if (!data) {
-            this.storeError = new ApiError();
             this.subscriptionPlans = [];
         }
     }
@@ -6045,7 +6026,7 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
         if (_data) {
             this.storeName = _data["storeName"] !== undefined ? _data["storeName"] : null as any;
             this.isStoreAvailable = _data["isStoreAvailable"] !== undefined ? _data["isStoreAvailable"] : null as any;
-            this.storeError = _data["storeError"] ? ApiError.fromJS(_data["storeError"]) : new ApiError();
+            this.storeError = _data["storeError"] ? ApiError.fromJS(_data["storeError"]) : null as any;
             if (Array.isArray(_data["subscriptionPlans"])) {
                 this.subscriptionPlans = [] as any;
                 for (let item of _data["subscriptionPlans"])
@@ -6083,11 +6064,11 @@ export class AppPurchaseOptions implements IAppPurchaseOptions {
 }
 
 export interface IAppPurchaseOptions {
-    storeName: string;
+    storeName?: string | null;
     isStoreAvailable: boolean;
-    storeError: ApiError;
+    storeError?: ApiError | null;
     subscriptionPlans: SubscriptionPlan[];
-    purchaseUrl: string;
+    purchaseUrl?: string | null;
     canGoPremiumByCode: boolean;
 }
 
@@ -6319,7 +6300,7 @@ export interface IProxyEndPointInfo {
 }
 
 export class AppProxyEndPointInfo extends ProxyEndPointInfo implements IAppProxyEndPointInfo {
-    countryCode!: string;
+    countryCode?: string | null;
 
     constructor(data?: IAppProxyEndPointInfo) {
         super(data);
@@ -6348,7 +6329,7 @@ export class AppProxyEndPointInfo extends ProxyEndPointInfo implements IAppProxy
 }
 
 export interface IAppProxyEndPointInfo extends IProxyEndPointInfo {
-    countryCode: string;
+    countryCode?: string | null;
 }
 
 export class ProxyEndPoint implements IProxyEndPoint {
