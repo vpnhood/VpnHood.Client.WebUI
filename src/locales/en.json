@@ -375,10 +375,10 @@
   "RANGES_OF_IP": "Range of IP: ",
   "CIDR_NOTATION": "CIDR Notation: ",
   "SPLIT_IP_PLACE_HOLDER": "# YOUR COMMENT\n2.2.2.2",
-  "SPLIT_IPS_USING_DEVICE": "Split IPs using device",
-  "SPLIT_IPS_USING_DEVICE_DESC": "Include or exclude specific IP addresses at the device level.",
-  "SPLIT_IPS_USING_APP": "Split IPs using app",
-  "SPLIT_IPS_USING_APP_DESC": "Include, exclude, or block specific IP addresses at the app level.",
+  "SPLIT_IPS_VIA_DEVICE": "Split IPs using device",
+  "SPLIT_IPS_VIA_DEVICE_DESC": "Include or exclude specific IP addresses at the device level.",
+  "SPLIT_IPS_VIA_APP": "Split IPs using app",
+  "SPLIT_IPS_VIA_APP_DESC": "Include, exclude, or block specific IP addresses at the app level.",
   "EXCLUDE_IPS": "Exclude IPs",
   "INCLUDE_IPS": "Include IPs",
   "BLOCK_IPS": "Block IPs",
@@ -557,6 +557,6 @@
   "REMOVE_CURRENT_PREMIUM_CODE_DESC": "Deleting the existing premium code will immediately exit Premium. You can re-enter the same code again at any time to restore Premium access, as long as it remains valid.",
   "RE_NEW_PREMIUM": "Renew premium",
   "EXIT_PREMIUM": "Exit premium",
-  "SPLIT_TUNNELING": "Split tunneling",
+  "SPLIT_TUNNELING": "Split Tunneling",
   "SPLIT_TUNNELING_DESC": "Include or exclude traffic from VPN connection to optimize performance."
 }

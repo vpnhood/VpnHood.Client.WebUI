@@ -63,7 +63,7 @@ function revertCurrentChange(): void {
     <config-card class="pb-2">
       <v-card-item>
         <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('SPLIT_IPS_USING_DEVICE') }}</span>
+          <span>{{ locale('SPLIT_IPS_VIA_DEVICE') }}</span>
           <v-switch
             v-model="isEnabled"
             :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
