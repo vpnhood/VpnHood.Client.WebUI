@@ -9,6 +9,7 @@ const props = defineProps<{
   includes: string;
   blocks?: string;
   loading?: boolean;
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -51,6 +52,7 @@ const blockIpFilters = computed<string>({
         'variant': 'outlined',
         'color': 'highlight',
         'loading': loading,
+        'disabled': disabled,
         'placeholder': locale('SPLIT_IP_PLACE_HOLDER'),
         'hideDetails': true,
         'clearable': true

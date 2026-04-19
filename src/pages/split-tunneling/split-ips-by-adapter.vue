@@ -3,9 +3,10 @@ import SplitIpInput from '@/components/Settings/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { SplitByIps } from '@/services/VpnHood.Client.Api';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
+import { AppFeature } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -14,6 +15,14 @@ const isLoading = ref<boolean>(true);
 const ipFilters = ref<SplitByIps>(new SplitByIps());
 const showRevertButton = ref<boolean>(false);
 let savedIps: SplitByIps;
+
+const isEnabled = computed<boolean>({
+  get: () => vhApp.data.userSettings.useSplitByIpViaDevice,
+  set: async (value: boolean) => {
+    vhApp.data.userSettings.useSplitByIpViaDevice = value;
+    await vhApp.saveUserSetting();
+  }
+});
 
 onMounted(async () => {
   ipFilters.value = await vhApp.appClient.getSplitByIps();
@@ -49,11 +58,20 @@ function revertCurrentChange(): void {
 
 <template>
   <v-sheet>
-    <app-bar/>
+    <div class="d-flex align-center position-relative">
+      <app-bar class="flex-grow-1"/>
+      <v-switch
+        v-model="isEnabled"
+        :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaDevice)"
+        hide-details
+        class="position-absolute end-0 pe-2"
+      />
+    </div>
     <split-ip-input
       :excludes="ipFilters.deviceExcludes"
       :includes="ipFilters.deviceIncludes"
       :loading="isLoading"
+      :disabled="!isEnabled"
       @update:excludes="ipFilters.deviceExcludes = $event"
       @update:includes="ipFilters.deviceIncludes = $event"
     />
