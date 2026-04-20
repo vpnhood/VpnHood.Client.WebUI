@@ -9,16 +9,19 @@ const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDia
 
 interface FeatureIcon {
   icon: string,
+  secondIcon?: string,
   isShow: boolean
 }
 
 const icons: FeatureIcon[] = [
   {
-    icon: "mdi-ip",
+    icon: "mdi-call-split",
+    secondIcon: "mdi-ip",
     isShow: vhApp.data.isSplitIpInUse,
   },
   {
-    icon: "mdi-alpha-d-box",
+    icon: "mdi-call-split",
+    secondIcon: "mdi-web-box",
     isShow: vhApp.data.isSplitDomainInUse,
   },
   {
@@ -45,14 +48,25 @@ const icons: FeatureIcon[] = [
   <template v-for="(item, index) in icons" :key="index">
     <v-btn
       v-if="item.isShow"
-      :icon="item.icon"
+      icon
       size="small"
       variant="text"
       color="white"
-      class="opacity-60 pb-1"
+      class="opacity-60 pb-1 position-relative"
       tabindex="-1"
       @click="badgeDialogModel.show()"
-    />
+    >
+      <template v-slot:default>
+        <v-icon :icon="item.icon"/>
+        <v-icon
+          v-if="item.secondIcon"
+          :icon="item.secondIcon"
+          size="14"
+          class="position-absolute"
+          style="bottom: 9px;right:6px;"
+        />
+      </template>
+    </v-btn>
   </template>
 </div>
 </template>
