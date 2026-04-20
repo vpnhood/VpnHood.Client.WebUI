@@ -53,6 +53,7 @@ const icons: FeatureIcon[] = [
       variant="text"
       color="white"
       class="opacity-60 pb-1 position-relative"
+      :class="{ 'twoIcon': item.secondIcon }"
       tabindex="-1"
       @click="badgeDialogModel.show()"
     >
@@ -63,7 +64,7 @@ const icons: FeatureIcon[] = [
           :icon="item.secondIcon"
           size="14"
           class="position-absolute"
-          style="bottom: 9px;right:6px;"
+          style="bottom: 9px;right:8px;"
         />
       </template>
     </v-btn>
@@ -71,6 +72,9 @@ const icons: FeatureIcon[] = [
 </div>
 </template>
 
-<style scoped>
-
+<style>
+/*noinspection CssUnusedSymbol*/
+.twoIcon .v-btn__content{
+  margin-left: -4px;
+}
 </style>
