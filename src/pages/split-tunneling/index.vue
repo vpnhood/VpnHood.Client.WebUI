@@ -86,6 +86,24 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_DOMAINS'}"
     />
 
+    <!-- Split countries -->
+    <settings-item
+      :title="locale('SPLIT_COUNTRIES')"
+      :subtitle="locale('SPLIT_COUNTRIES_DESC')"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByCountry)"
+      :is-show="true"
+      :click="{name: 'SPLIT_COUNTRIES'}"
+    />
+
+    <!-- Split apps -->
+    <settings-item
+      :title="locale('SPLIT_APPS')"
+      :subtitle="locale('SPLIT_APPS_DESC')"
+      :is-premium="false"
+      :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+      :click="{name: 'SPLIT_APPS'}"
+    />
+
   </v-sheet>
 </template>
 
