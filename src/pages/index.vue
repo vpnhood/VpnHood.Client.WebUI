@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppConnectionState, SplitByMode } from '@/services/VpnHood.Client.Api';
+import { AppConnectionState } from '@/services/VpnHood.Client.Api';
 import UpdateSnackbar from '@/components/Home/UpdateSnackbar.vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import HomeConnectionInfo from '@/components/Home/HomeConnectionInfo.vue';
@@ -68,20 +68,6 @@ function connectButtonText(): string {
       default:
         return locale('DISCONNECT');
     }
-}
-
-// Return status of filtered apps by user (Only in mobile)
-function splitByAppsStatus(): string {
-  const splitByApps = vhApp.data.userSettings.splitByApps ?? [];
-
-  switch (vhApp.data.userSettings.splitByAppMode) {
-    case SplitByMode.Exclude:
-      return locale('ALL_EXCEPT_X', { x: splitByApps.length });
-    case SplitByMode.Include:
-      return locale('ONLY_X', { x: splitByApps.length });
-    default:
-      return locale('ALL');
-  }
 }
 </script>
 
@@ -152,7 +138,7 @@ function splitByAppsStatus(): string {
 
           <!-- Text related to selected option -->
           <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ splitByAppsStatus() }}
+            {{ vhApp.data.splitAppsStatusText }}
           </span>
         </home-config-btn>
 

@@ -10,6 +10,8 @@ import {
   ChannelProtocol,
   ClientProfileInfo,
   DnsMode,
+  SplitByCountryMode,
+  SplitByMode,
   UiCultureInfo,
   UserSettings
 } from '@/services/VpnHood.Client.Api';
@@ -251,5 +253,37 @@ export class VpnHoodAppData {
 
     // check if the current profile is premium
     return this.isPremiumUser;
+  }
+
+  get splitCountryStatusText(): string {
+    const mode = this.userSettings.splitByCountryMode;
+    const excludedCountries = this.userSettings.splitByCountries ?? [];
+    const allCountriesCount = this.uiState.allCountriesCount;
+    const maxFlags = 3;
+
+    if (mode === SplitByCountryMode.IncludeAll)
+      return this.locale('ALL');
+    if (mode === SplitByCountryMode.ExcludeMyCountry)
+      return this.locale('EXCLUDE_MY_COUNTRY');
+    if (mode === SplitByCountryMode.ExcludeList) {
+      const count = excludedCountries.length;
+      if (count === 0) return this.locale('ALL');
+      if (count < maxFlags) return this.locale('EXCLUDE');
+      if (count < allCountriesCount / 2) return this.locale('ALL_EXCEPT_X', { x: count });
+      return this.locale('ONLY_X', { x: allCountriesCount - count });
+    }
+    return this.locale('ALL');
+  }
+
+  get splitAppsStatusText(): string {
+    const splitByApps = this.userSettings.splitByApps ?? [];
+    switch (this.userSettings.splitByAppMode) {
+      case SplitByMode.Exclude:
+        return this.locale('ALL_EXCEPT_X', { x: splitByApps.length });
+      case SplitByMode.Include:
+        return this.locale('ONLY_X', { x: splitByApps.length });
+      default:
+        return this.locale('ALL');
+    }
   }
 }

@@ -92,6 +92,7 @@ const locale = i18n.global.t;
       :subtitle="locale('SPLIT_COUNTRIES_DESC')"
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByCountry)"
       :is-show="true"
+      :selected-item="vhApp.data.splitCountryStatusText"
       :click="{name: 'SPLIT_COUNTRIES'}"
     />
 
@@ -101,6 +102,7 @@ const locale = i18n.global.t;
       :subtitle="locale('SPLIT_APPS_DESC')"
       :is-premium="false"
       :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+      :selected-item="vhApp.data.splitAppsStatusText"
       :click="{name: 'SPLIT_APPS'}"
     />
 

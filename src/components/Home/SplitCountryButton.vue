@@ -30,22 +30,6 @@ const isShowSplitCountryFlag = computed(() => mode.value === SplitByCountryMode.
 // unless there's only 1 flag or it's a different mode.
 const isShowSplitCountryText = computed(() => !allowMultipleFlags.value || excludedCountries.value.length < maxFlags);
 
-const splitCountryStatusText = computed( (): string => {
-  if (mode.value === SplitByCountryMode.IncludeAll)
-    return locale("ALL");
-  if (mode.value === SplitByCountryMode.ExcludeMyCountry)
-    return locale("EXCLUDE_MY_COUNTRY");
-
-  if (isExcludeListMode.value) {
-    const count = excludedCountries.value.length;
-    if (count === 0) return locale("ALL");
-    if (count < maxFlags) return locale('EXCLUDE');
-    if (count < (vhApp.data.uiState.allCountriesCount/2)) return locale("ALL_EXCEPT_X", { x: count });
-    return locale('ONLY_X', { x: vhApp.data.uiState.allCountriesCount - count });
-  }
-
-  return locale("ALL");
-});
 </script>
 
 <template>
@@ -64,7 +48,7 @@ const splitCountryStatusText = computed( (): string => {
       v-if="isShowSplitCountryText"
       class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50"
     >
-      {{ splitCountryStatusText }}
+      {{ vhApp.data.splitCountryStatusText }}
     </span>
 
     <template v-if="allowMultipleFlags || isShowSplitCountryFlag" v-slot:append>
