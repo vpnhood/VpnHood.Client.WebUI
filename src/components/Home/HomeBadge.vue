@@ -64,7 +64,7 @@ const icons: FeatureIcon[] = [
           :icon="item.secondIcon"
           size="14"
           class="position-absolute"
-          style="bottom: 9px;right:8px;"
+          style="bottom: 9px;right:9px;"
         />
       </template>
     </v-btn>
@@ -75,6 +75,6 @@ const icons: FeatureIcon[] = [
 <style>
 /*noinspection CssUnusedSymbol*/
 .twoIcon .v-btn__content{
-  margin-left: -4px;
+  margin-left: -5px;
 }
 </style>
