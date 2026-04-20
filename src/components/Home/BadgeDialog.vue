@@ -1,11 +1,11 @@
 ﻿<script setup lang="ts">
 import i18n from '@/locales/i18n';
-import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { Util } from '@/helpers/Util';
 import type { RouteLocationRaw } from 'vue-router';
 import router from '@/services/router';
+import { getFeatureItems } from '@/components/Home/featureIcons';
+import FeatureIconDisplay from '@/components/Home/FeatureIconDisplay.vue';
 
-const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const props = defineProps<{
@@ -16,45 +16,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
 }>();
 
-interface Features {
-  icon: string,
-  title: string,
-  pageLink: RouteLocationRaw,
-  isInUse: boolean
-}
-
-const featuresList: Features[] = [
-  {
-    icon: "mdi-ip",
-    title: "SPLIT_IP",
-    pageLink: {name: "SPLIT_TUNNELING"},
-    isInUse: vhApp.data.isSplitIpInUse
-  },
-  {
-    icon: "mdi-alpha-d-box",
-    title: "SPLIT_DOMAINS",
-    pageLink: {name: "SPLIT_DOMAINS"},
-    isInUse: vhApp.data.isSplitDomainInUse
-  },
-  {
-    icon: "mdi-ip-network",
-    title: "CUSTOM_ENDPOINT",
-    pageLink: {name: "SERVERS"},
-    isInUse: vhApp.data.isCustomEndpointInUse
-  },
-  {
-    icon: "mdi-dns",
-    title: "DNS",
-    pageLink: {name: "DNS"},
-    isInUse: vhApp.data.isDnsCustomized
-  },
-  {
-    icon: "mdi-diversify",
-    title: "PROXIES",
-    pageLink: {name: "PROXIES"},
-    isInUse: vhApp.data.state.isProxyEndPointActive
-  }
-]
+const featureItems = getFeatureItems();
 
 async function navigateByRouter(to: RouteLocationRaw){
   await router.replace(to);
@@ -71,15 +33,18 @@ async function navigateByRouter(to: RouteLocationRaw){
       <v-card-text class="text-disabled text-caption">{{locale('IN_USE_FEATURES_DESC')}}</v-card-text>
 
       <v-list id="badgeList" >
-        <template v-for="(feature, index) in featuresList" :key="index">
+        <template v-for="(feature, index) in featureItems" :key="index">
           <v-list-item
-            v-if="feature.isInUse"
-            :prepend-icon="feature.icon"
+            v-if="feature.isActive"
             :append-icon="Util.getLocalizedRightChevron()"
             :title="locale(feature.title)"
             slim
             @click="navigateByRouter(feature.pageLink)"
-          />
+          >
+            <template v-slot:prepend>
+              <FeatureIconDisplay :icon="feature.icon" :second-icon="feature.secondIcon" class="me-4" />
+            </template>
+          </v-list-item>
         </template>
       </v-list>
 
