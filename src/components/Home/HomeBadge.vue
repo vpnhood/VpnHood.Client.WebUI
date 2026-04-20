@@ -14,8 +14,12 @@ interface FeatureIcon {
 
 const icons: FeatureIcon[] = [
   {
-    icon: "mdi-filter-cog-outline",
+    icon: "mdi-ip",
     isShow: vhApp.data.isSplitIpInUse,
+  },
+  {
+    icon: "mdi-alpha-d-box",
+    isShow: vhApp.data.isSplitDomainInUse,
   },
   {
     icon: "mdi-ip-network",
@@ -45,7 +49,7 @@ const icons: FeatureIcon[] = [
       size="small"
       variant="text"
       color="white"
-      class="opacity-40 pb-1"
+      class="opacity-60 pb-1"
       tabindex="-1"
       @click="badgeDialogModel.show()"
     />

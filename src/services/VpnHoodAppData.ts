@@ -109,6 +109,9 @@ export class VpnHoodAppData {
   get isSplitIpInUse(): boolean {
     return this.userSettings.useSplitByIpViaDevice || this.userSettings.useSplitByIpViaApp;
   }
+  get isSplitDomainInUse(): boolean {
+    return this.userSettings.useSplitByDomain;
+  }
 
   get isDnsInUse(): boolean{
     return this.state.systemPrivateDns?.isActive || this.userSettings.dnsMode === DnsMode.AdapterDns;

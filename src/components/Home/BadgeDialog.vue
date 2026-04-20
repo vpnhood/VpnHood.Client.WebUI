@@ -25,10 +25,16 @@ interface Features {
 
 const featuresList: Features[] = [
   {
-    icon: "mdi-filter-cog-outline",
+    icon: "mdi-ip",
     title: "SPLIT_IP",
     pageLink: {name: "SPLIT_TUNNELING"},
     isInUse: vhApp.data.isSplitIpInUse
+  },
+  {
+    icon: "mdi-alpha-d-box",
+    title: "SPLIT_DOMAINS",
+    pageLink: {name: "SPLIT_DOMAINS"},
+    isInUse: vhApp.data.isSplitDomainInUse
   },
   {
     icon: "mdi-ip-network",
