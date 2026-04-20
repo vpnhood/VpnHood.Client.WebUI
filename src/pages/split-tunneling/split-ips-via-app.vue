@@ -70,6 +70,7 @@ function revertCurrentChange(): void {
             hide-details
           />
         </div>
+        <p class="text-caption text-disabled">{{ locale('SPLIT_IPS_VIA_APP_SHORT_DESC') }}</p>
       </v-card-item>
     </config-card>
     <split-ip-input
