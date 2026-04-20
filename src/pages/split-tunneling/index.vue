@@ -7,6 +7,7 @@ import { AppFeature } from '@/services/VpnHood.Client.Api';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 import SettingsItem from '@/components/Settings/SettingsItem.vue';
+import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -29,6 +30,36 @@ const locale = i18n.global.t;
     <small-feature-image-and-description image="split-ip.webp" :description="locale('SPLIT_IP_ADDRESSES_DESC')" />
 
     <disconnect-required-alert class="mb-4"/>
+
+    <!-- Apps & Domains -->
+    <settings-section-title :title="locale('APPS_AND_DOMAINS')"/>
+
+    <!-- Split apps -->
+    <settings-item
+      :title="locale('SPLIT_APPS')"
+      :subtitle="locale('SPLIT_APPS_DESC')"
+      :is-premium="false"
+      :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+      :selected-item="vhApp.data.splitAppsStatusText"
+      :click="{name: 'SPLIT_APPS'}"
+    />
+
+    <!-- Split domains -->
+    <settings-item
+      :title="locale('SPLIT_DOMAINS')"
+      :subtitle="locale('SPLIT_DOMAINS_DESC')"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByDomain)"
+      :is-show="true"
+      :status="{
+        state: vhApp.data.userSettings.useSplitByDomain,
+        onText: locale('ON'),
+        offText: locale('OFF')
+      }"
+      :click="{name: 'SPLIT_DOMAINS'}"
+    />
+
+    <!-- IP Addresses -->
+    <settings-section-title :title="locale('IP_ADDRESSES')"/>
 
     <!-- Filter by device -->
     <settings-item
@@ -58,6 +89,9 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_IPS_VIA_APP'}"
     />
 
+    <!-- Network -->
+    <settings-section-title :title="locale('NETWORK')"/>
+
     <!-- Local network -->
     <settings-item
       :title="locale('SPLIT_LOCAL_NETWORK')"
@@ -72,20 +106,6 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_LOCAL_NETWORK'}"
     />
 
-    <!-- Split domains -->
-    <settings-item
-      :title="locale('SPLIT_DOMAINS')"
-      :subtitle="locale('SPLIT_DOMAINS_DESC')"
-      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByDomain)"
-      :is-show="true"
-      :status="{
-        state: vhApp.data.userSettings.useSplitByDomain,
-        onText: locale('ON'),
-        offText: locale('OFF')
-      }"
-      :click="{name: 'SPLIT_DOMAINS'}"
-    />
-
     <!-- Split countries -->
     <settings-item
       :title="locale('SPLIT_COUNTRIES')"
@@ -94,16 +114,6 @@ const locale = i18n.global.t;
       :is-show="true"
       :selected-item="vhApp.data.splitCountryStatusText"
       :click="{name: 'SPLIT_COUNTRIES'}"
-    />
-
-    <!-- Split apps -->
-    <settings-item
-      :title="locale('SPLIT_APPS')"
-      :subtitle="locale('SPLIT_APPS_DESC')"
-      :is-premium="false"
-      :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
-      :selected-item="vhApp.data.splitAppsStatusText"
-      :click="{name: 'SPLIT_APPS'}"
     />
 
   </v-sheet>
