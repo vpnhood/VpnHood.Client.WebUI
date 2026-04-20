@@ -16,12 +16,12 @@ interface FeatureIcon {
 const icons: FeatureIcon[] = [
   {
     icon: "mdi-call-split",
-    secondIcon: "mdi-ip",
+    secondIcon: "mdi-ip-outline",
     isShow: vhApp.data.isSplitIpInUse,
   },
   {
     icon: "mdi-call-split",
-    secondIcon: "mdi-web-box",
+    secondIcon: "mdi-web",
     isShow: vhApp.data.isSplitDomainInUse,
   },
   {
