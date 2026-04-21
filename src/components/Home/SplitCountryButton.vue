@@ -4,18 +4,18 @@ import { Util } from '@/helpers/Util';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
-import { SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import { SplitCountryMode } from '@/services/VpnHood.Client.Api';
 import CountryFlagWrapper from '@/components/CountryFlagWrapper.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const mode = computed(() => vhApp.data.userSettings.splitByCountryMode);
-const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitByCountries ?? []);
+const mode = computed(() => vhApp.data.userSettings.splitCountryMode);
+const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitCountries ?? []);
 const maxFlags = 3;
 
 // Flag Display Logic
-const isExcludeListMode = computed(() => mode.value === SplitByCountryMode.ExcludeList);
+const isExcludeListMode = computed(() => mode.value === SplitCountryMode.ExcludeList);
 
 // Only allow multiple flags if list is small (1-2 items)
 const allowMultipleFlags = computed(() =>
@@ -24,7 +24,7 @@ const allowMultipleFlags = computed(() =>
   excludedCountries.value.length < maxFlags
 );
 
-const isShowSplitCountryFlag = computed(() => mode.value === SplitByCountryMode.ExcludeMyCountry);
+const isShowSplitCountryFlag = computed(() => mode.value === SplitCountryMode.ExcludeMyCountry);
 
 // Hide text if we are showing 2 or 3 flags to save space,
 // unless there's only 1 flag or it's a different mode.

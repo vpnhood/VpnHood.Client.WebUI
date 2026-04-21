@@ -2,7 +2,7 @@
 import SplitIpInput from '@/components/Settings/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { AppFeature, SplitByIps } from '@/services/VpnHood.Client.Api';
+import { AppFeature, SplitIps } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -11,28 +11,28 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const isLoading = ref<boolean>(true);
-const ipFilters = ref<SplitByIps>(new SplitByIps());
+const ipFilters = ref<SplitIps>(new SplitIps());
 const showRevertButton = ref<boolean>(false);
-let savedIps: SplitByIps;
+let savedIps: SplitIps;
 
 const isEnabled = computed<boolean>({
-  get: () => vhApp.data.userSettings.useSplitByIpViaApp,
+  get: () => vhApp.data.userSettings.useSplitIpViaApp,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useSplitByIpViaApp = value;
+    vhApp.data.userSettings.useSplitIpViaApp = value;
     await vhApp.saveUserSetting();
   }
 });
 
 onMounted(async () => {
-  ipFilters.value = await vhApp.appClient.getSplitByIps();
-  savedIps = new SplitByIps(ipFilters.value);
+  ipFilters.value = await vhApp.appClient.getSplitIps();
+  savedIps = new SplitIps(ipFilters.value);
   isLoading.value = false;
 });
 
 async function saveIpList(): Promise<void> {
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setSplitByIps(new SplitByIps(ipFilters.value));
+  await vhApp.appClient.setSplitIps(new SplitIps(ipFilters.value));
   await vhApp.saveUserSetting();
 }
 
@@ -51,7 +51,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 function revertCurrentChange(): void {
-  ipFilters.value = new SplitByIps(savedIps);
+  ipFilters.value = new SplitIps(savedIps);
   showRevertButton.value = false;
 }
 </script>
@@ -66,7 +66,7 @@ function revertCurrentChange(): void {
           <span>{{ locale('SPLIT_IPS_VIA_APP') }}</span>
           <v-switch
             v-model="isEnabled"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByIpViaApp)"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp)"
             hide-details
           />
         </div>

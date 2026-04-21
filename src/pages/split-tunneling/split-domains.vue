@@ -2,7 +2,7 @@
 import SplitDomainInput from '@/components/Settings/SplitDomainInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { AppFeature, SplitByDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
+import { AppFeature, SplitDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -11,32 +11,32 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const isLoading = ref<boolean>(true);
-const domainFilters = ref<SplitByDomains>(new SplitByDomains());
+const domainFilters = ref<SplitDomains>(new SplitDomains());
 const showRevertButton = ref<boolean>(false);
-let savedDomains: SplitByDomains;
+let savedDomains: SplitDomains;
 
 const isDomainFilterAffectedByServer = computed<boolean>(
   () => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOff
 );
 
 const isEnabled = computed<boolean>({
-  get: () => vhApp.data.userSettings.useSplitByDomain,
+  get: () => vhApp.data.userSettings.useSplitDomain,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useSplitByDomain = value;
+    vhApp.data.userSettings.useSplitDomain = value;
     await vhApp.saveUserSetting();
   }
 });
 
 onMounted(async () => {
-  domainFilters.value = await vhApp.appClient.getSplitByDomains();
-  savedDomains = new SplitByDomains(domainFilters.value);
+  domainFilters.value = await vhApp.appClient.getSplitDomains();
+  savedDomains = new SplitDomains(domainFilters.value);
   isLoading.value = false;
 });
 
 async function saveDomainList(): Promise<void> {
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setSplitByDomains(new SplitByDomains(domainFilters.value));
+  await vhApp.appClient.setSplitDomains(new SplitDomains(domainFilters.value));
   await vhApp.saveUserSetting();
 }
 
@@ -55,7 +55,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 function revertCurrentChange(): void {
-  domainFilters.value = new SplitByDomains(savedDomains);
+  domainFilters.value = new SplitDomains(savedDomains);
   showRevertButton.value = false;
 }
 </script>
@@ -70,7 +70,7 @@ function revertCurrentChange(): void {
           <span>{{ locale('SPLIT_DOMAINS') }}</span>
           <v-switch
             v-model="isEnabled"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitByDomain)"
+            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitDomain)"
             hide-details
           />
         </div>

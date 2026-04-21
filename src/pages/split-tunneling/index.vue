@@ -38,10 +38,10 @@ const locale = i18n.global.t;
     <settings-item
       :title="locale('SPLIT_DOMAINS')"
       :subtitle="locale('SPLIT_DOMAINS_SHORT_DESC')"
-      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByDomain)"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitDomain)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitByDomain,
+        state: vhApp.data.userSettings.useSplitDomain,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -55,10 +55,10 @@ const locale = i18n.global.t;
     <settings-item
       :title="locale('SPLIT_IPS_VIA_DEVICE')"
       :subtitle="locale('SPLIT_IPS_VIA_DEVICE_SHORT_DESC')"
-      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaDevice)"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaDevice)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitByIpViaDevice,
+        state: vhApp.data.userSettings.useSplitIpViaDevice,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -69,27 +69,28 @@ const locale = i18n.global.t;
     <settings-item
       :title="locale('SPLIT_IPS_VIA_APP')"
       :subtitle="locale('SPLIT_IPS_VIA_APP_SHORT_DESC')"
-      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaApp)"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaApp)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitByIpViaApp,
+        state: vhApp.data.userSettings.useSplitIpViaApp,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
       :click="{name: 'SPLIT_IPS_VIA_APP'}"
     />
 
-    <!-- Network -->
-    <settings-section-title :title="locale('NETWORK')"/>
+    <!-- Location -->
+    <settings-section-title :title="locale('LOCATIONS')"/>
 
     <!-- Local network -->
     <settings-item
       :title="locale('SPLIT_LOCAL_NETWORK')"
       :subtitle="locale('SPLIT_LOCAL_NETWORK_SHORT_DESC')"
+      :is-show="true"
       :is-premium="false"
-      :is-show="vhApp.data.features.isLocalNetworkSupported"
+      
       :status="{
-        state: !vhApp.data.userSettings.includeLocalNetwork,
+        state: !vhApp.data.userSettings.useSplitLocalNetwork,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -100,7 +101,7 @@ const locale = i18n.global.t;
     <settings-item
       :title="locale('SPLIT_COUNTRIES')"
       :subtitle="locale('SPLIT_COUNTRIES_SHORT_DESC')"
-      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitByCountry)"
+      :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitCountry)"
       :is-show="true"
       :selected-item="vhApp.data.splitCountryStatusText"
       :click="{name: 'SPLIT_COUNTRIES'}"

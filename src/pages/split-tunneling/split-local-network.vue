@@ -10,9 +10,9 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const isEnabled = computed<boolean>({
-  get: () => !vhApp.data.userSettings.includeLocalNetwork,
+  get: () => !vhApp.data.userSettings.useSplitLocalNetwork,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.includeLocalNetwork = !value;
+    vhApp.data.userSettings.useSplitLocalNetwork = value;
     await vhApp.saveUserSetting();
   }
 });

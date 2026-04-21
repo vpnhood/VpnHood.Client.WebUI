@@ -76,7 +76,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :title="locale('SPLIT_TUNNELING')"
       :subtitle="locale('SPLIT_TUNNELING_DESC')"
       :is-show="true"
-      :isPremium="vhApp.data.isPremiumFeature(AppFeature.SplitByIpViaApp)"
+      :isPremium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaApp)"
       :status="{
         state: vhApp.data.isSplitIpInUse,
         onText: locale('ON'),

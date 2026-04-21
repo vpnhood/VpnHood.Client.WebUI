@@ -79,7 +79,7 @@ const dropQuic = computed({
 });
 
 const canChangeCloakMode = computed<boolean>(() => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.None);
-const isCloakEnforcedByDomainFilter = computed<boolean>(() => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.SplitByDomainRequiredOn);
+const isCloakEnforcedByDomainFilter = computed<boolean>(() => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.SplitDomainRequiredOn);
 const isCloakEnforecedByServer = computed<boolean>(() =>
   vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOff ||
   vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOn);

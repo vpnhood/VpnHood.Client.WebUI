@@ -10,8 +10,8 @@ import {
   ChannelProtocol,
   ClientProfileInfo,
   DnsMode,
-  SplitByCountryMode,
-  SplitByMode,
+  SplitCountryMode,
+  SplitMode,
   UiCultureInfo,
   UserSettings
 } from '@/services/VpnHood.Client.Api';
@@ -107,10 +107,10 @@ export class VpnHoodAppData {
   }
 
   get isSplitIpInUse(): boolean {
-    return this.userSettings.useSplitByIpViaDevice || this.userSettings.useSplitByIpViaApp;
+    return this.userSettings.useSplitIpViaDevice || this.userSettings.useSplitIpViaApp;
   }
   get isSplitDomainInUse(): boolean {
-    return this.userSettings.useSplitByDomain;
+    return this.userSettings.useSplitDomain;
   }
 
   get isDnsInUse(): boolean{
@@ -259,16 +259,16 @@ export class VpnHoodAppData {
   }
 
   get splitCountryStatusText(): string {
-    const mode = this.userSettings.splitByCountryMode;
-    const excludedCountries = this.userSettings.splitByCountries ?? [];
+    const mode = this.userSettings.splitCountryMode;
+    const excludedCountries = this.userSettings.splitCountries ?? [];
     const allCountriesCount = this.uiState.allCountriesCount;
     const maxFlags = 3;
 
-    if (mode === SplitByCountryMode.IncludeAll)
+    if (mode === SplitCountryMode.IncludeAll)
       return this.locale('ALL');
-    if (mode === SplitByCountryMode.ExcludeMyCountry)
+    if (mode === SplitCountryMode.ExcludeMyCountry)
       return this.locale('EXCLUDE_MY_COUNTRY');
-    if (mode === SplitByCountryMode.ExcludeList) {
+    if (mode === SplitCountryMode.ExcludeList) {
       const count = excludedCountries.length;
       if (count === 0) return this.locale('ALL');
       if (count < maxFlags) return this.locale('EXCLUDE');
@@ -279,12 +279,12 @@ export class VpnHoodAppData {
   }
 
   get splitAppsStatusText(): string {
-    const splitByApps = this.userSettings.splitByApps ?? [];
-    switch (this.userSettings.splitByAppMode) {
-      case SplitByMode.Exclude:
-        return this.locale('ALL_EXCEPT_X', { x: splitByApps.length });
-      case SplitByMode.Include:
-        return this.locale('ONLY_X', { x: splitByApps.length });
+    const splitApps = this.userSettings.splitApps ?? [];
+    switch (this.userSettings.splitAppMode) {
+      case SplitMode.Exclude:
+        return this.locale('ALL_EXCEPT_X', { x: splitApps.length });
+      case SplitMode.Include:
+        return this.locale('ONLY_X', { x: splitApps.length });
       default:
         return this.locale('ALL');
     }

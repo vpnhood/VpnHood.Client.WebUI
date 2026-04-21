@@ -3,7 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import { SplitByCountryMode } from '@/services/VpnHood.Client.Api';
+import { SplitCountryMode } from '@/services/VpnHood.Client.Api';
 import FilterList, { type IListItemInfo } from '@/components/Settings/FilterList.vue';
 import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
 
@@ -12,18 +12,18 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const countryList = ref<IListItemInfo[]>([]);
-const isShowList = computed(() => vhApp.data.userSettings.splitByCountryMode === SplitByCountryMode.ExcludeList);
-const localSplitMode = ref(vhApp.data.userSettings.splitByCountryMode);
+const isShowList = computed(() => vhApp.data.userSettings.splitCountryMode === SplitCountryMode.ExcludeList);
+const localSplitMode = ref(vhApp.data.userSettings.splitCountryMode);
 const selectedCountries = computed<string[]>({
-  get: () => vhApp.data.userSettings.splitByCountries,
-  set: async (countiresCode: string[]) => vhApp.data.userSettings.splitByCountries = countiresCode
+  get: () => vhApp.data.userSettings.splitCountries,
+  set: async (countiresCode: string[]) => vhApp.data.userSettings.splitCountries = countiresCode
 });
 
 watch(isShowList, () => {
   if (isShowList.value) fetchCountries();
 });
 
-watch(() => vhApp.data.userSettings.splitByCountryMode, (newVal) => {
+watch(() => vhApp.data.userSettings.splitCountryMode, (newVal) => {
   localSplitMode.value = newVal;
 });
 
@@ -34,7 +34,7 @@ onMounted(() => {
 async function fetchCountries() {
   if (countryList.value.length > 0) return;
 
-  const rawCountries = await vhApp.appClient.getSupportedSplitByCountries();
+  const rawCountries = await vhApp.appClient.getSupportedSplitCountries();
 
   // 1. Create the base list
   const mapped = rawCountries.map(x => ({
@@ -73,8 +73,8 @@ async function handleListUpdate(newList: IListItemInfo[]){
   selectedCountries.value = newList.filter(x => !x.isSelected).map(x => x.id);
 }
 
-async function onSplitModeChange(value: SplitByCountryMode | null) {
-  const oldValue = vhApp.data.userSettings.splitByCountryMode;
+async function onSplitModeChange(value: SplitCountryMode | null) {
+  const oldValue = vhApp.data.userSettings.splitCountryMode;
 
   if (value === null) {
     localSplitMode.value = oldValue;
@@ -87,11 +87,11 @@ async function onSplitModeChange(value: SplitByCountryMode | null) {
   }
 
   // Update logic
-  if (value === SplitByCountryMode.ExcludeMyCountry) {
+  if (value === SplitCountryMode.ExcludeMyCountry) {
     selectedCountries.value = [];
   }
 
-  vhApp.data.userSettings.splitByCountryMode = value;
+  vhApp.data.userSettings.splitCountryMode = value;
   await vhApp.saveUserSetting();
 }
 
@@ -129,7 +129,7 @@ onBeforeRouteLeave(
           color="highlight"
         >
           <v-radio
-            :value="SplitByCountryMode.IncludeAll"
+            :value="SplitCountryMode.IncludeAll"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
@@ -141,7 +141,7 @@ onBeforeRouteLeave(
           </v-radio>
 
           <v-radio
-            :value="SplitByCountryMode.ExcludeMyCountry"
+            :value="SplitCountryMode.ExcludeMyCountry"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
@@ -165,7 +165,7 @@ onBeforeRouteLeave(
           </v-radio>
 
           <v-radio
-            :value="SplitByCountryMode.ExcludeList"
+            :value="SplitCountryMode.ExcludeList"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
