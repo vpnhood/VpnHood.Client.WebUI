@@ -3,6 +3,7 @@ import SplitIpInput from '@/components/Settings/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { SplitIps } from '@/services/VpnHood.Client.Api';
+import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -57,7 +58,16 @@ function revertCurrentChange(): void {
 </script>
 
 <template>
-  <v-sheet>
+  <feature-page-layout
+    v-if="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaDevice)"
+    title="SPLIT_IPS_VIA_DEVICE"
+    description="SPLIT_IPS_VIA_DEVICE_DESC"
+    image="split-ip.webp"
+    :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaDevice)"
+    :is-action-button-available="false"
+  />
+
+  <v-sheet v-else>
     <app-bar/>
 
     <config-card class="pb-2">

@@ -34,7 +34,6 @@ declare module 'vue-router/auto-routes' {
     'EXTEND_SESSION': RouteRecordInfo<'EXTEND_SESSION', '/servers/extend-session', Record<never, never>, Record<never, never>>,
     'PROMOTE_PREMIUM': RouteRecordInfo<'PROMOTE_PREMIUM', '/servers/promote-premium', Record<never, never>, Record<never, never>>,
     'SETTINGS': RouteRecordInfo<'SETTINGS', '/settings', Record<never, never>, Record<never, never>>,
-    'ACCESS_LOCAL_NETWORK': RouteRecordInfo<'ACCESS_LOCAL_NETWORK', '/settings/access-local-network', Record<never, never>, Record<never, never>>,
     'ALWAYS_ON': RouteRecordInfo<'ALWAYS_ON', '/settings/always-on', Record<never, never>, Record<never, never>>,
     'KILL_SWITCH': RouteRecordInfo<'KILL_SWITCH', '/settings/kill-switch', Record<never, never>, Record<never, never>>,
     'LANGUAGE': RouteRecordInfo<'LANGUAGE', '/settings/language', Record<never, never>, Record<never, never>>,

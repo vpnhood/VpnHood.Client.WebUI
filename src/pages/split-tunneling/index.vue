@@ -90,7 +90,7 @@ const locale = i18n.global.t;
       :is-premium="false"
       
       :status="{
-        state: !vhApp.data.userSettings.useSplitLocalNetwork,
+        state: vhApp.data.userSettings.useSplitLocalNetwork,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
