@@ -11,10 +11,20 @@ import i18n from '@/locales/i18n';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+function createNormalizedSplitIps(value?: SplitIps | null): SplitIps {
+  return new SplitIps({
+    deviceExcludes: value?.deviceExcludes ?? '',
+    deviceIncludes: value?.deviceIncludes ?? '',
+    appExcludes: value?.appExcludes ?? '',
+    appIncludes: value?.appIncludes ?? '',
+    appBlocks: value?.appBlocks ?? ''
+  });
+}
+
 const isLoading = ref<boolean>(true);
-const ipFilters = ref<SplitIps>(new SplitIps());
+const splitIps = ref<SplitIps>(createNormalizedSplitIps());
 const showRevertButton = ref<boolean>(false);
-let savedIps: SplitIps;
+let savedIps = createNormalizedSplitIps();
 
 const isEnabled = computed<boolean>({
   get: () => vhApp.data.userSettings.useSplitIpViaApp,
@@ -25,23 +35,23 @@ const isEnabled = computed<boolean>({
 });
 
 onMounted(async () => {
-  ipFilters.value = await vhApp.appClient.getSplitIps();
-  savedIps = new SplitIps(ipFilters.value);
+  splitIps.value = createNormalizedSplitIps(await vhApp.appClient.getSplitIps());
+  savedIps = createNormalizedSplitIps(splitIps.value);
   isLoading.value = false;
 });
 
 async function saveIpList(): Promise<void> {
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setSplitIps(new SplitIps(ipFilters.value));
+  await vhApp.appClient.setSplitIps(createNormalizedSplitIps(splitIps.value));
   await vhApp.saveUserSetting();
 }
 
 onBeforeRouteLeave(async (to, from, next) => {
   try {
-    if (ipFilters.value.appExcludes !== savedIps.appExcludes ||
-      ipFilters.value.appIncludes !== savedIps.appIncludes ||
-      ipFilters.value.appBlocks !== savedIps.appBlocks)
+    if (splitIps.value.appExcludes !== savedIps.appExcludes ||
+      splitIps.value.appIncludes !== savedIps.appIncludes ||
+      splitIps.value.appBlocks !== savedIps.appBlocks)
       await saveIpList();
     next();
   } catch (err: unknown) {
@@ -52,7 +62,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 function revertCurrentChange(): void {
-  ipFilters.value = new SplitIps(savedIps);
+  splitIps.value = createNormalizedSplitIps(savedIps);
   showRevertButton.value = false;
 }
 </script>
@@ -84,14 +94,14 @@ function revertCurrentChange(): void {
       </v-card-item>
     </config-card>
     <split-ip-input
-      :excludes="ipFilters.appExcludes"
-      :includes="ipFilters.appIncludes"
-      :blocks="ipFilters.appBlocks"
+      :excludes="splitIps.appExcludes"
+      :includes="splitIps.appIncludes"
+      :blocks="splitIps.appBlocks"
       :loading="isLoading"
       :disabled="!isEnabled"
-      @update:excludes="ipFilters.appExcludes = $event"
-      @update:includes="ipFilters.appIncludes = $event"
-      @update:blocks="ipFilters.appBlocks = $event"
+      @update:excludes="splitIps.appExcludes = $event"
+      @update:includes="splitIps.appIncludes = $event"
+      @update:blocks="splitIps.appBlocks = $event"
     />
     <btn-style-3
       v-if="showRevertButton"

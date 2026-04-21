@@ -1,6 +1,7 @@
-- Don't use inline styles
-- Follow the existing code style
-- Localize all user-facing strings in en.json (i18n)
-- Don't add any item in i18n files except en.json
-- Let global error handler handle errors (vhApp.processError)
-- Do not use [id].vue filename for dynamic routes and customize route param name instead
+- Don't use inline styles.
+- Follow the existing code style.
+- Localize all user-facing strings in en.json (i18n).
+- Don't add any item in i18n files except en.json.
+- Let global error handler handle errors (vhApp.processError).
+- Do not use [id].vue filename for dynamic routes and customize route param name instead.
+- Do not update the VpnHood.Client.Api.ts file manually, it is auto-generated from the API project.

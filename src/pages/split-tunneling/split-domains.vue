@@ -11,10 +11,18 @@ import i18n from '@/locales/i18n';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+function createNormalizedSplitDomains(value?: SplitDomains | null): SplitDomains {
+  return new SplitDomains({
+    excludes: value?.excludes ?? '',
+    includes: value?.includes ?? '',
+    blocks: value?.blocks ?? ''
+  });
+}
+
 const isLoading = ref<boolean>(true);
-const domainFilters = ref<SplitDomains>(new SplitDomains());
+const splitDomains = ref<SplitDomains>(createNormalizedSplitDomains());
 const showRevertButton = ref<boolean>(false);
-let savedDomains: SplitDomains;
+let savedDomains = createNormalizedSplitDomains();
 
 const isDomainFilterAffectedByServer = computed<boolean>(
   () => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOff
@@ -29,23 +37,23 @@ const isEnabled = computed<boolean>({
 });
 
 onMounted(async () => {
-  domainFilters.value = await vhApp.appClient.getSplitDomains();
-  savedDomains = new SplitDomains(domainFilters.value);
+  splitDomains.value = createNormalizedSplitDomains(await vhApp.appClient.getSplitDomains());
+  savedDomains = createNormalizedSplitDomains(splitDomains.value);
   isLoading.value = false;
 });
 
 async function saveDomainList(): Promise<void> {
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setSplitDomains(new SplitDomains(domainFilters.value));
+  await vhApp.appClient.setSplitDomains(createNormalizedSplitDomains(splitDomains.value));
   await vhApp.saveUserSetting();
 }
 
 onBeforeRouteLeave(async (to, from, next) => {
   try {
-    if (domainFilters.value.excludes !== savedDomains.excludes ||
-      domainFilters.value.includes !== savedDomains.includes ||
-      domainFilters.value.blocks !== savedDomains.blocks)
+    if (splitDomains.value.excludes !== savedDomains.excludes ||
+      splitDomains.value.includes !== savedDomains.includes ||
+      splitDomains.value.blocks !== savedDomains.blocks)
       await saveDomainList();
     next();
   } catch (err: unknown) {
@@ -56,7 +64,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 function revertCurrentChange(): void {
-  domainFilters.value = new SplitDomains(savedDomains);
+  splitDomains.value = createNormalizedSplitDomains(savedDomains);
   showRevertButton.value = false;
 }
 </script>
@@ -88,14 +96,14 @@ function revertCurrentChange(): void {
       </v-card-item>
     </config-card>
     <split-domain-input
-      :excludes="domainFilters.excludes"
-      :includes="domainFilters.includes"
-      :blocks="domainFilters.blocks"
+      :excludes="splitDomains.excludes"
+      :includes="splitDomains.includes"
+      :blocks="splitDomains.blocks"
       :loading="isLoading"
       :disabled="!isEnabled"
-      @update:excludes="domainFilters.excludes = $event"
-      @update:includes="domainFilters.includes = $event"
-      @update:blocks="domainFilters.blocks = $event"
+      @update:excludes="splitDomains.excludes = $event"
+      @update:includes="splitDomains.includes = $event"
+      @update:blocks="splitDomains.blocks = $event"
     />
     <btn-style-3
       v-if="showRevertButton"

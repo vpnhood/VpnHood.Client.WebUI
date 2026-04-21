@@ -12,10 +12,20 @@ import { AppFeature } from '@/services/VpnHood.Client.Api';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+function createNormalizedSplitIps(value?: SplitIps | null): SplitIps {
+  return new SplitIps({
+    deviceExcludes: value?.deviceExcludes ?? '',
+    deviceIncludes: value?.deviceIncludes ?? '',
+    appExcludes: value?.appExcludes ?? '',
+    appIncludes: value?.appIncludes ?? '',
+    appBlocks: value?.appBlocks ?? ''
+  });
+}
+
 const isLoading = ref<boolean>(true);
-const ipFilters = ref<SplitIps>(new SplitIps());
+const ipFilters = ref<SplitIps>(createNormalizedSplitIps());
 const showRevertButton = ref<boolean>(false);
-let savedIps: SplitIps;
+let savedIps = createNormalizedSplitIps();
 
 const isEnabled = computed<boolean>({
   get: () => vhApp.data.userSettings.useSplitIpViaDevice,
@@ -26,15 +36,15 @@ const isEnabled = computed<boolean>({
 });
 
 onMounted(async () => {
-  ipFilters.value = await vhApp.appClient.getSplitIps();
-  savedIps = new SplitIps(ipFilters.value);
+  ipFilters.value = createNormalizedSplitIps(await vhApp.appClient.getSplitIps());
+  savedIps = createNormalizedSplitIps(ipFilters.value);
   isLoading.value = false;
 });
 
 async function saveIpList(): Promise<void> {
   if (vhApp.data.isConnected)
     await vhApp.disconnect();
-  await vhApp.appClient.setSplitIps(new SplitIps(ipFilters.value));
+  await vhApp.appClient.setSplitIps(createNormalizedSplitIps(ipFilters.value));
   await vhApp.saveUserSetting();
 }
 
@@ -52,7 +62,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 function revertCurrentChange(): void {
-  ipFilters.value = new SplitIps(savedIps);
+  ipFilters.value = createNormalizedSplitIps(savedIps);
   showRevertButton.value = false;
 }
 </script>
