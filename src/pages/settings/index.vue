@@ -71,14 +71,14 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name:'PROXIES'}"
     />
 
-    <!-- Split IP -->
+    <!-- Split Tunneling -->
     <settings-item
       :title="locale('SPLIT_TUNNELING')"
       :subtitle="locale('SPLIT_TUNNELING_DESC')"
       :is-show="true"
-      :isPremium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaApp)"
+      :isPremium="false"
       :status="{
-        state: vhApp.data.isSplitIpInUse,
+        state: vhApp.data.isSplitTunnelingInUse,
         onText: locale('ON'),
         offText: locale('OFF')
       }"

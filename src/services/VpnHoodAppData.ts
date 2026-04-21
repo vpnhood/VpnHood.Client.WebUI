@@ -106,8 +106,13 @@ export class VpnHoodAppData {
     return (!this.features.isPremiumFlagSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
   }
 
-  get isSplitIpInUse(): boolean {
-    return this.userSettings.useSplitIpViaDevice || this.userSettings.useSplitIpViaApp;
+  get isSplitTunnelingInUse(): boolean {
+    return  this.userSettings.useSplitIpViaDevice || 
+            this.userSettings.useSplitIpViaApp || 
+            this.userSettings.useSplitDomain ||
+            this.userSettings.useSplitLocalNetwork ||
+            this.userSettings.splitAppMode !== SplitMode.All ||
+            this.isSplitCountryActive;
   }
   get isSplitDomainInUse(): boolean {
     return this.userSettings.useSplitDomain;
@@ -256,6 +261,11 @@ export class VpnHoodAppData {
 
     // check if the current profile is premium
     return this.isPremiumUser;
+  }
+
+  get isSplitCountryActive(): boolean {
+    return this.userSettings.splitCountryMode != SplitCountryMode.IncludeAll ||
+          (this.userSettings.splitAppMode == SplitMode.Exclude && this.userSettings.splitApps.length > 0);
   }
 
   get splitCountryStatusText(): string {
