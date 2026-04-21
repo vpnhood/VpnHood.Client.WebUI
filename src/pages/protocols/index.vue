@@ -5,7 +5,7 @@ import i18n from '@/locales/i18n';
 import { computed } from 'vue';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
-import { ChannelProtocol } from '@/services/VpnHood.Client.Api';
+import { ChannelProtocol, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -53,7 +53,7 @@ const cloakMode = computed({
   },
   set: async (value: boolean) => {
     if (!vhApp.data.userSettings.isTcpProxyPrompted)
-      await router.push({name: 'CLOAK_MODE'});
+      await router.push({ name: 'CLOAK_MODE' });
 
     // Update session status to reflect the change immediately
     if (vhApp.data.state.sessionStatus)
@@ -78,54 +78,48 @@ const dropQuic = computed({
   }
 });
 
-const isCloakModeEnabled = computed(() => {
-  return vhApp.data.state.sessionInfo ? vhApp.data.state.sessionInfo.canChangeTcpProxy : true;
-})
+const canChangeCloakMode = computed<boolean>(() => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.None);
+const isCloakEnforcedByDomainFilter = computed<boolean>(() => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.SplitByDomainRequiredOn);
+const isCloakEnforecedByServer = computed<boolean>(() =>
+  vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOff ||
+  vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOn);
+
 
 </script>
 
 <template>
   <v-sheet>
-    <app-bar/>
+    <app-bar />
 
-    <p class="text-disabled text-caption mb-4">{{locale("PROTOCOL_DESC")}}</p>
+    <p class="text-disabled text-caption mb-4">{{ locale("PROTOCOL_DESC") }}</p>
 
     <!-- Cloak Mode -->
     <config-card v-if="vhApp.data.features.isTcpProxySupported" class="pb-3">
 
       <!-- Switch button -->
       <v-card-item class="pb-0">
-        <div
-          class="d-flex align-center justify-space-between"
-          :class="{'opacity-60': !isCloakModeEnabled}"
-        >
+        <div class="d-flex align-center justify-space-between" :class="{ 'opacity-60': !canChangeCloakMode }">
           <span>{{ locale('CLOAK_MODE') }}</span>
-          <v-switch v-model="cloakMode"  :disabled="!isCloakModeEnabled"/>
+          <v-switch v-model="cloakMode" :disabled="!canChangeCloakMode" />
         </div>
 
 
         <!-- Enforced by server alert -->
-        <alert-warning v-if="!isCloakModeEnabled"  :text="locale('ENFORCED_BY_SERVER')" class="mb-2" />
-
+        <alert-warning v-if="isCloakEnforecedByServer" :text="locale('ENFORCED_BY_SERVER')" class="mb-2" />
+        <alert-warning v-else-if="isCloakEnforcedByDomainFilter" :text="locale('ENFORCED_BY_DOMAIN_FILTER')"
+          class="mb-2" />
 
         <!-- Description and learn more button -->
         <v-card-subtitle class="pb-0">
-          <p>{{locale("CLOAK_MODE_SHORT_DESC")}}</p>
-          <v-btn
-            :text="locale('LEARN_MORE')"
-            variant="text"
-            class="pa-0"
-            :ripple="false"
-            color="highlight"
-            :append-icon="Util.getLocalizedRightChevron()"
-            @click="router.push({name: 'CLOAK_MODE'})"
-          />
+          <p>{{ locale("CLOAK_MODE_SHORT_DESC") }}</p>
+          <v-btn :text="locale('LEARN_MORE')" variant="text" class="pa-0" :ripple="false" color="highlight"
+            :append-icon="Util.getLocalizedRightChevron()" @click="router.push({ name: 'CLOAK_MODE' })" />
         </v-card-subtitle>
       </v-card-item>
 
       <!-- Block QUIC -->
       <v-card-item v-if="cloakMode">
-        <v-divider opacity=".1" class="mb-2"/>
+        <v-divider opacity=".1" class="mb-2" />
 
         <!-- Switch button -->
         <div class="d-flex align-center justify-space-between">
@@ -135,7 +129,7 @@ const isCloakModeEnabled = computed(() => {
 
         <!-- Description and learn more button -->
         <v-card-subtitle class="pb-0">
-          <p>{{locale("PROTOCOL_BLOCK_QUIC_DESC")}}</p>
+          <p>{{ locale("PROTOCOL_BLOCK_QUIC_DESC") }}</p>
         </v-card-subtitle>
       </v-card-item>
 
@@ -144,18 +138,9 @@ const isCloakModeEnabled = computed(() => {
     <!-- Protocols radio buttons -->
     <config-card class="pt-3">
       <v-card-item class="ps-2">
-        <v-radio-group
-          v-model="activeProtocol"
-          :hide-details="true"
-          color="highlight"
-        >
+        <v-radio-group v-model="activeProtocol" :hide-details="true" color="highlight">
           <template v-for="item in protocolItems" :key="item.value">
-            <v-radio
-              v-if="item.isShow"
-              :value="item.value"
-              :disabled="!item.isEnabled"
-              class="radio-icon-top mb-3"
-            >
+            <v-radio v-if="item.isShow" :value="item.value" :disabled="!item.isEnabled" class="radio-icon-top mb-3">
               <template v-slot:label>
                 <div class="d-flex flex-column align-start">
                   <!-- Radio label -->
@@ -164,27 +149,13 @@ const isCloakModeEnabled = computed(() => {
                     <span class="me-2">{{ locale(item.title) }}</span>
 
                     <!-- Default protocol badge -->
-                    <v-chip
-                      v-if="item.isDefault"
-                      color="highlight"
-                      :text="locale('DEFAULT')"
-                      size="small"
-                      variant="tonal"
-                      density="comfortable"
-                      tabindex="-1"
-                      class="me-1"
-                    />
+                    <v-chip v-if="item.isDefault" color="highlight" :text="locale('DEFAULT')" size="small"
+                      variant="tonal" density="comfortable" tabindex="-1" class="me-1" />
 
                     <!-- Not supported by server badge -->
-                    <v-chip
-                      v-if="!vhApp.data.isProtocolEnabled(item.value)"
-                      color="on-note"
-                      :text="locale('NOT_SUPPORTED_BY_SERVER')"
-                      size="small"
-                      variant="tonal"
-                      density="comfortable"
-                      tabindex="-1"
-                    />
+                    <v-chip v-if="!vhApp.data.isProtocolEnabled(item.value)" color="on-note"
+                      :text="locale('NOT_SUPPORTED_BY_SERVER')" size="small" variant="tonal" density="comfortable"
+                      tabindex="-1" />
                   </div>
 
                   <!-- Protocol short description -->

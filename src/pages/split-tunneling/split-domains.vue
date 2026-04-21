@@ -2,7 +2,7 @@
 import SplitDomainInput from '@/components/Settings/SplitDomainInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { AppFeature, SplitByDomains } from '@/services/VpnHood.Client.Api';
+import { AppFeature, SplitByDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -14,6 +14,10 @@ const isLoading = ref<boolean>(true);
 const domainFilters = ref<SplitByDomains>(new SplitByDomains());
 const showRevertButton = ref<boolean>(false);
 let savedDomains: SplitByDomains;
+
+const isDomainFilterAffectedByServer = computed<boolean>(
+  () => vhApp.data.state.tcpProxyUsageReason === TcpProxyUsageReason.ServerRequiredOff
+);
 
 const isEnabled = computed<boolean>({
   get: () => vhApp.data.userSettings.useSplitByDomain,
@@ -70,6 +74,7 @@ function revertCurrentChange(): void {
             hide-details
           />
         </div>
+        <alert-warning v-if="isDomainFilterAffectedByServer" :text="locale('DOMAIN_FILTER_SERVER_NO_CLOAK')" class="mt-2" />
       </v-card-item>
     </config-card>
     <split-domain-input

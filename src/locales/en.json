@@ -549,6 +549,8 @@
   "APP_SETTINGS": "App Settings",
   "PRIVACY_AND_SECURITY": "Privacy & Security",
   "ENFORCED_BY_SERVER": "Enforced by the server",
+  "ENFORCED_BY_DOMAIN_FILTER": "Enforced by the Split Domain settings",
+  "DOMAIN_FILTER_SERVER_NO_CLOAK": "Split Domain may not work properly because the server does not support Cloak Mode.",
   "LEARN_MORE_FREE_SERVERS_DISRUPTIONS_1": "Why Do Free Servers Experience Disruptions?",
   "LEARN_MORE_FREE_SERVERS_DISRUPTIONS_2": "Connection stability is a major challenge that both users and VPN service providers struggle with. Contrary to what some users believe, this difference in performance is not a marketing strategy to push people toward premium plans, it is a technical battle between filtering systems and VPN applications.",
   "LEARN_MORE_FREE_SERVERS_DISRUPTIONS_3": "Automatic IP Detection Due to High User Density",
