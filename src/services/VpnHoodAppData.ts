@@ -11,9 +11,9 @@ import {
   ClientProfileInfo,
   DnsMode,
   SplitCountryMode,
-  SplitMode,
   UiCultureInfo,
-  UserSettings
+  UserSettings,
+  SplitAppMode
 } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 
@@ -111,7 +111,7 @@ export class VpnHoodAppData {
             this.userSettings.useSplitIpViaApp || 
             this.userSettings.useSplitDomain ||
             this.userSettings.useSplitLocalNetwork ||
-            this.userSettings.splitAppMode !== SplitMode.All ||
+            this.userSettings.splitAppMode !== SplitAppMode.All ||
             this.isSplitCountryActive;
   }
   get isSplitDomainInUse(): boolean {
@@ -265,7 +265,7 @@ export class VpnHoodAppData {
 
   get isSplitCountryActive(): boolean {
     return this.userSettings.splitCountryMode != SplitCountryMode.IncludeAll ||
-          (this.userSettings.splitAppMode == SplitMode.Exclude && this.userSettings.splitApps.length > 0);
+          (this.userSettings.splitAppMode == SplitAppMode.Exclude && this.userSettings.splitApps.length > 0);
   }
 
   get splitCountryStatusText(): string {
@@ -291,9 +291,9 @@ export class VpnHoodAppData {
   get splitAppsStatusText(): string {
     const splitApps = this.userSettings.splitApps ?? [];
     switch (this.userSettings.splitAppMode) {
-      case SplitMode.Exclude:
+      case SplitAppMode.Exclude:
         return this.locale('ALL_EXCEPT_X', { x: splitApps.length });
-      case SplitMode.Include:
+      case SplitAppMode.Include:
         return this.locale('ONLY_X', { x: splitApps.length });
       default:
         return this.locale('ALL');

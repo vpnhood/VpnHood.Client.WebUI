@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SplitMode } from '@/services/VpnHood.Client.Api';
+import { SplitAppMode } from '@/services/VpnHood.Client.Api';
 import {UiConstants} from "@/helpers/UiConstants";
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -12,15 +12,15 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const appList = ref<IListItemInfo[]>([]);
-const splitMode = computed<SplitMode>({
+const splitMode = computed<SplitAppMode>({
   get: () => vhApp.data.userSettings.splitAppMode,
-  set: async (value: SplitMode) => vhApp.data.userSettings.splitAppMode = value
+  set: async (value: SplitAppMode) => vhApp.data.userSettings.splitAppMode = value
 });
 const selectedApps = computed<string[]>({
   get: () => vhApp.data.userSettings.splitApps,
   set: async (apps: string[]) => vhApp.data.userSettings.splitApps = apps
 });
-const isSaveRejected = computed(() => splitMode.value === SplitMode.Include && selectedApps.value.length == 0);
+const isSaveRejected = computed(() => splitMode.value === SplitAppMode.Include && selectedApps.value.length == 0);
 
 onMounted(async () => {
   if (vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported) {
@@ -31,16 +31,16 @@ onMounted(async () => {
       id: app.appId,
       name: app.appName,
       icon: 'data:image/png;base64, ' + app.iconPng,
-      isSelected: (splitMode.value === SplitMode.All)
-        || (splitMode.value === SplitMode.Include && selectedApps.value.some(x => x === app.appId))
-        || (splitMode.value === SplitMode.Exclude && selectedApps.value.every(x => x !== app.appId))
+      isSelected: (splitMode.value === SplitAppMode.All)
+        || (splitMode.value === SplitAppMode.Include && selectedApps.value.some(x => x === app.appId))
+        || (splitMode.value === SplitAppMode.Exclude && selectedApps.value.every(x => x !== app.appId))
     }));
 
     const futureInstalledAppInfo: IListItemInfo = {
       id: "$",
       name: locale('ALL_FUTURE_APPS'),
       icon: vhApp.isConnectApp() ? UiConstants.futureAppsIconConnect : UiConstants.futureAppsIconClient,
-      isSelected: splitMode.value === SplitMode.All || splitMode.value === SplitMode.Exclude
+      isSelected: splitMode.value === SplitAppMode.All || splitMode.value === SplitAppMode.Exclude
     };
     appList.value.push(futureInstalledAppInfo);
     sortApps(appList.value);
@@ -70,7 +70,7 @@ async function handleListUpdate(newList: IListItemInfo[]){
   // All apps
   const isAllSelectedApp = newList.every(x => x.isSelected);
   if (isAllSelectedApp) {
-    splitMode.value = SplitMode.All;
+    splitMode.value = SplitAppMode.All;
     selectedApps.value = [];
     await vhApp.saveUserSetting();
     return;
@@ -79,7 +79,7 @@ async function handleListUpdate(newList: IListItemInfo[]){
   // All apps except selected
   const isFutureAppSelected = newList.some(x => x.id === "$" && x.isSelected);
   if (isFutureAppSelected) {
-    splitMode.value = SplitMode.Exclude;
+    splitMode.value = SplitAppMode.Exclude;
     selectedApps.value = newList
       .filter(x => !x.isSelected && x.id !== "$")
       .map(x => x.id);
@@ -88,7 +88,7 @@ async function handleListUpdate(newList: IListItemInfo[]){
   }
 
   // Only selected apps
-  splitMode.value = SplitMode.Include;
+  splitMode.value = SplitAppMode.Include;
   selectedApps.value = newList
     .filter(x => x.isSelected && x.id !== "$")
     .map(x => x.id);

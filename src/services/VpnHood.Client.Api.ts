@@ -4984,7 +4984,7 @@ export class UserSettings implements IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     maxPacketChannelCount!: number;
-    splitAppMode!: SplitMode;
+    splitAppMode!: SplitAppMode;
     splitApps!: string[];
     splitCountryMode!: SplitCountryMode;
     splitCountries!: string[];
@@ -5136,7 +5136,7 @@ export interface IUserSettings {
     cultureCode?: string | null;
     clientProfileId?: string | null;
     maxPacketChannelCount: number;
-    splitAppMode: SplitMode;
+    splitAppMode: SplitAppMode;
     splitApps: string[];
     splitCountryMode: SplitCountryMode;
     splitCountries: string[];
@@ -5160,7 +5160,7 @@ export interface IUserSettings {
     dnsServers: string[];
 }
 
-export enum SplitMode {
+export enum SplitAppMode {
     All = "All",
     Exclude = "Exclude",
     Include = "Include",
