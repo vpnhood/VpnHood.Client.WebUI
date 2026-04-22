@@ -15,20 +15,15 @@ export class ConnectManager {
     if (!options?.prompt)
       return false;
 
-    // Config promote dialog
-    const promoteData = VpnHoodApp.instance.data.uiState.promotePremiumData;
-    promoteData.clientProfileId = clientProfileId;
-    promoteData.serverLocation = serverLocation;
-    promoteData.showRewardedAd = options.premiumByRewardedAd;
-    promoteData.showTryPremium = options.premiumByTrial;
-    promoteData.premiumByPurchase = options.premiumByPurchase;
-    promoteData.premiumByCode = options.premiumByCode;
-    promoteData.canGoPremium = options.canGoPremium;
-    promoteData.normal = options.normal;
-    promoteData.isPremiumLocation = isPremium;
-
     // Show promotes dialog
-    await router.push({name: 'PROMOTE_PREMIUM'});
+    await router.push({
+      name: 'PROMOTE_PREMIUM',
+      query: {
+        clientProfileId,
+        serverLocation,
+        isPremiumLocation: String(isPremium),
+      }
+    });
     return true;
   }
 

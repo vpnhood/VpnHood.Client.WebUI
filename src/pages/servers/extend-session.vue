@@ -7,13 +7,12 @@ import { ConnectPlanId } from '@/services/VpnHood.Client.Api';
 import { type MyConnectPlanId, MyPlanId } from '@/helpers/PromotePremium/MyConnectPlanIds';
 import PromoteConnectButton from '@/components/Servers/PromoteConnectButton.vue';
 import { Util } from '@/helpers/Util';
-import { PromotePremiumData } from '@/helpers/PromotePremium/PromotePremiumData';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const showLoadingAdDialog = ref<boolean>(false);
-const dialogData = computed<PromotePremiumData>(() => vhApp.data.uiState.promotePremiumData);
+const locationOptions = computed(() => vhApp.data.state.clientProfile?.selectedLocationInfo?.options);
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void>{
   switch (planId) {
     case MyPlanId.premiumByPurchase:
@@ -84,7 +83,7 @@ async function showRewardedAd(){
 
       <!-- Go premium -->
       <promote-connect-button
-        v-if="dialogData.premiumByPurchase || dialogData.premiumByCode"
+        v-if="locationOptions?.premiumByPurchase || locationOptions?.premiumByCode"
         icon="mdi-crown-circle-outline"
         :title="locale('GO_PREMIUM')"
         :description="locale('GO_PREMIUM_DESC')"

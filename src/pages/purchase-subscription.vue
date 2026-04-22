@@ -12,15 +12,21 @@ import PurchaseByStore from '@/components/PurchaseSubscription/PurchaseByStore.v
 import type { AppPurchaseOptions } from '@/services/VpnHood.Client.Api';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
+import { useRoute } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const route = useRoute();
 const purchaseOptions = ref<AppPurchaseOptions>();
 const isShowEnterPremiumCodeSheet = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
 
 onMounted(async () => {
-    const billingClient = ClientApiFactory.instance.createBillingClient();
-    purchaseOptions.value = await billingClient.getPurchaseOptions();
+    const clientProfileId = route.query.profileId as string ?? vhApp.data.clientProfileId;
+    if (!clientProfileId)
+      throw new Error('Client profile id is required.');
+
+    const clientProfileClient = ClientApiFactory.instance.createClientProfileClient();
+    purchaseOptions.value = await clientProfileClient.getPurchaseOptions(clientProfileId);
 });
 </script>
 
