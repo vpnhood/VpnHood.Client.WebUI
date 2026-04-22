@@ -89,10 +89,10 @@ onBeforeMount(() => {
   >
     <!-- Carousel arrows -->
     <template v-slot:prev="{ props }">
-      <v-btn color="highlight" :icon="Util.getLocalizedLeftChevron()" size="40" variant="text" @click="props.onClick" />
+      <v-btn v-if="displayedCarouselItems.length > 1" color="highlight" :icon="Util.getLocalizedLeftChevron()" size="40" variant="text" @click="props.onClick" />
     </template>
     <template v-slot:next="{ props }">
-      <v-btn color="highlight" :icon="Util.getLocalizedRightChevron()" size="40" variant="text"
+      <v-btn v-if="displayedCarouselItems.length > 1" color="highlight" :icon="Util.getLocalizedRightChevron()" size="40" variant="text"
              @click="props.onClick" />
     </template>
 
