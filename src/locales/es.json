@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Tráfico máximo permitido y usado desde el uso inicial.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Solo se permiten números.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "El código debe tener 20 caracteres.",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "Tu acceso premium ha caducado. Para seguir usando la aplicación, por favor, selecciona una opción a continuación.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Tu acceso premium ha caducado.",
   "YES_SWITCH_NOW": "Sí, cambiar ahora",
   "SERVER_KEY_EXPIRED": "Su clave de servidor ha caducado.",
   "INVALID_ACCESS_CODE": "El código premium no es válido. Si cree que esto es un error, por favor, contacte con soporte.",

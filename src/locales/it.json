@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Massimo traffico consentito e utilizzato dall'uso iniziale.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Sono consentiti solo numeri.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Il codice deve essere di 20 caratteri.",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "Il tuo accesso Premium è scaduto. Per continuare a usare l'app, seleziona un'opzione qui sotto.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Il tuo accesso premium è scaduto.",
   "YES_SWITCH_NOW": "Sì, passa ora",
   "SERVER_KEY_EXPIRED": "La tua chiave server è scaduta.",
   "INVALID_ACCESS_CODE": "Il codice premium non è valido. Se ritieni che si tratti di un errore, contatta il supporto.",

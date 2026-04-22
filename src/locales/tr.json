@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "İlk kullanımdan bu yana izin verilen maksimum ve kullanılan trafik.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Sadece sayılara izin verilir.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Kod 20 karakter olmalıdır.",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "Premium erişiminiz sona erdi. Uygulamayı kullanmaya devam etmek için lütfen aşağıdaki seçeneklerden birini belirleyin.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Premium erişiminizin süresi doldu.",
   "YES_SWITCH_NOW": "Evet, şimdi geç",
   "SERVER_KEY_EXPIRED": "Sunucu anahtarınızın süresi doldu.",
   "INVALID_ACCESS_CODE": "Premium kod geçerli değil. Bunun bir hata olduğunu düşünüyorsanız lütfen destekle iletişime geçin.",

@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "自首次使用以来的最大允许流量和已用流量。",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "仅允许数字。",
   "PREMIUM_CODE_COUNT_RULE_MSG": "代码必须是 20 个字符。",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "您的高级访问权限已过期。要继续使用本应用，请在下方选择一个选项。",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "您的高级会员权限已过期。",
   "YES_SWITCH_NOW": "是 立即切换",
   "SERVER_KEY_EXPIRED": "您的服务器密钥已过期。",
   "INVALID_ACCESS_CODE": "高级代码无效。如果您认为这是一个错误，请联系支持人员。",

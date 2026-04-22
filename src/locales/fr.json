@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Trafic maximal autorisé et utilisé depuis la première utilisation.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Seuls les chiffres sont autorisés.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Le code doit comporter 20 caractères.",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "Votre accès premium a expiré. Pour continuer à utiliser l'application, veuillez sélectionner une option ci-dessous.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Votre accès Premium a expiré.",
   "YES_SWITCH_NOW": "Oui, passer maintenant",
   "SERVER_KEY_EXPIRED": "Votre clé de serveur a expiré.",
   "INVALID_ACCESS_CODE": "Le code premium n'est pas valide. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support.",

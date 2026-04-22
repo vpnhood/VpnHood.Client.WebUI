@@ -461,7 +461,7 @@
   "STATISTICS_TOTAL_TRAFFIC_CARD_DESC": "Maximal zulässiger und verwendeter Datenverkehr seit der ersten Verwendung.",
   "PREMIUM_CODE_NUMBER_RULE_MSG": "Es sind nur Zahlen erlaubt.",
   "PREMIUM_CODE_COUNT_RULE_MSG": "Der Code muss 20 Zeichen lang sein.",
-  "PREMIUM_ACCESS_EXPIRED_MSG": "Ihr Premium-Zugang ist abgelaufen. Um die App weiterhin nutzen zu können, wählen Sie bitte eine der folgenden Optionen.",
+  "PREMIUM_ACCESS_EXPIRED_MSG": "Ihr Premium-Zugang ist abgelaufen.",
   "YES_SWITCH_NOW": "Ja, jetzt wechseln",
   "SERVER_KEY_EXPIRED": "Ihr Serverschlüssel ist abgelaufen.",
   "INVALID_ACCESS_CODE": "Der Premium-Code ist ungültig. Wenn Sie der Meinung sind, dass dies ein Fehler ist, wenden Sie sich bitte an den Support.",
