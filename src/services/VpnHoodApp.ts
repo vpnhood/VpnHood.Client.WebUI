@@ -321,8 +321,8 @@ export class VpnHoodApp {
     if (!clientProfile)
       throw new Error('Could not find the profile in the state for remove premium code.');
 
-    if (!clientProfile.isPremium && !clientProfile.hasAccessCode)
-      throw new Error('The profile is not for premium account or does not have premium code.');
+    if (!clientProfile.hasAccessCode)
+      throw new Error('The profile does not have a premium code.');
 
     if (this.data.isConnected)
       await this.disconnect();

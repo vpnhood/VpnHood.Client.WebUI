@@ -61,10 +61,17 @@ async function sendReport(): Promise<void> {
 }
 
 async function removePremiumCode(): Promise<void> {
+  try{
+    console.log('Removing premium code...');
+    vhApp.data.uiState.showLoadingDialog = true;
+    await vhApp.removePremiumCode();
+    console.log('Premium code removed successfully.');
+  } finally {
+    vhApp.data.uiState.showLoadingDialog = false;
+  }
+
+  // it must be at end otherwise the the raised alert will not be displayed properly.
   await closeDialog();
-  vhApp.data.uiState.showLoadingDialog = true;
-  await vhApp.removePremiumCode();
-  vhApp.data.uiState.showLoadingDialog = false;
 }
 async function renewPremium(): Promise<void> {
   await removePremiumCode();

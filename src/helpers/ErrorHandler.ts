@@ -17,7 +17,7 @@ interface ShowErrorOptions {
 }
 
 export class ErrorHandler {
-
+  
   public static async processError(err: unknown): Promise<void> {
 
     const errorOptions: ShowErrorOptions = await this.getErrorMessage(err);
@@ -205,7 +205,9 @@ export class ErrorHandler {
       // User is premium (by Code or Google) and attempt to connect while the premium is expired.
       case SessionErrorCode.AccessExpired:
         if (VpnHoodApp.instance.data.features.isPremiumFlagSupported) {
-          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: { showRemovePremium: true } };
+          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: { 
+            showRemovePremium: VpnHoodApp.instance.data.isPremiumUser } 
+          };
         }
         return { localeKey: 'SERVER_KEY_EXPIRED' };
 
