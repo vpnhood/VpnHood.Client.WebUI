@@ -15,6 +15,7 @@ import BadgeDialog from '@/components/Home/BadgeDialog.vue';
 import HomeAppBar from '@/components/Home/HomeAppBar.vue';
 import DeveloperDialog from '@/components/Home/DeveloperDialog.vue';
 import GoPremiumButton from '@/components/Home/GoPremiumButton.vue';
+import HomeBadge from '@/components/Home/HomeBadge.vue';
 import ConnectionInfo from '@/components/Home/ConnectionInfo.vue';
 import SplitCountryButton from '@/components/Home/SplitCountryButton.vue';
 import ServersButton from '@/components/Home/ServersButton.vue';
@@ -86,7 +87,12 @@ function connectButtonText(): string {
       <!-- Home page app bar & Go Premium or Countdown button & home badge -->
       <v-col cols="12">
         <home-app-bar/>
-        <go-premium-button/>
+        <v-row class="mt-0" align="center">
+          <v-col cols="12" class="text-center position-relative">
+            <home-badge />
+            <go-premium-button/>
+          </v-col>
+        </v-row>
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
