@@ -1,9 +1,13 @@
 ﻿<script setup lang="ts">
 import { Util } from '@/helpers/Util';
 import i18n from '@/locales/i18n';
-import { onBeforeMount } from 'vue';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { computed, onBeforeMount } from 'vue';
+
+const vhApp = VpnHoodApp.instance;
 
 const locale = i18n.global.t;
+
 interface CarouselItem {
   image: string,
   title: string,
@@ -61,6 +65,10 @@ const carouselItems: CarouselItem[] = [
   },
 ]
 
+const displayedCarouselItems = computed(() =>
+  vhApp.data.features.isPremiumFlagSupported ? carouselItems : carouselItems.filter(i => i.title === 'ULTRA_FAST_SPEED')
+);
+
 // preload the rocket images
 onBeforeMount(() => {
   ["rocket-bg.webp", "rocket-smoke.webp", "rocket.webp"]
@@ -89,7 +97,7 @@ onBeforeMount(() => {
     </template>
 
     <!-- Carousel items -->
-    <v-carousel-item v-for="item in carouselItems" :key="item.title" eager>
+    <v-carousel-item v-for="item in displayedCarouselItems" :key="item.title" eager>
       <template v-slot:default>
 
         <div v-if="item.title === 'ULTRA_FAST_SPEED'" id="rocketWrapper" class="mx-auto mb-4">
