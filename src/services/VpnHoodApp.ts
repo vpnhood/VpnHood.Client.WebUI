@@ -5,7 +5,6 @@ import {
   ClientProfileInfo,
   ClientProfileUpdateParams,
   ConfigParams,
-  ConnectPlanId,
   DeviceAppInfo,
   IntentsClient,
   PatchOfBoolean,
@@ -23,6 +22,7 @@ import { VhFirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
 import { createDeferred, type Deferred } from '@/helpers/Deferred';
+import { type ConnectParams } from '@/helpers/ConnectParams';
 
 export class VpnHoodApp {
   public data: VpnHoodAppData;
@@ -153,42 +153,29 @@ export class VpnHoodApp {
       this.data.userSettings.clientProfileId = config.clientProfileInfos[0]?.clientProfileId ?? null;
   }
 
-  public async connect({
-    clientProfileId,
-    serverLocation,
-    isPremium,
-    planId,
-    isDiagnose = false,
-    goToHome = true,
-  }: {
-    clientProfileId: string;
-    serverLocation: string | null;
-    isPremium: boolean;
-    planId: ConnectPlanId;
-    isDiagnose?: boolean;
-    goToHome?: boolean;
-  }): Promise<void> {
+  public async connect(connectParams: ConnectParams): Promise<void> {
     // Just for Development info
-    console.debug(`connect. Server location: ${serverLocation}, Plan id: ${planId}, Go to home: ${goToHome}`);
+    console.debug(`connect. Serverlocation: ${connectParams.serverLocation}, Planid: ${connectParams.planId}, GoTohome: ${connectParams.goToHome}`);
 
     // Navigate to home page
-    if (goToHome && router.currentRoute.value.name !== 'HOME') await router.replace({ name: 'HOME' });
+    if ((connectParams.goToHome) && router.currentRoute.value.name !== 'HOME')
+       await router.replace({ name: 'HOME' });
 
     this.data.uiState.uiConnectInProgress = true;
 
     try {
-      if (isDiagnose) await this.diagnose();
-      else await this.appClient.connect(clientProfileId, serverLocation, planId);
+      if (connectParams.isDiagnose) await this.diagnose();
+      else await this.appClient.connect(connectParams.clientProfileId, connectParams.serverLocation, connectParams.planId);
 
       // ClientProfile will be updated after connecting.
       await this.updateClientProfile(
-        clientProfileId,
+        connectParams.clientProfileId,
         new ClientProfileUpdateParams({
-          isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),
-          selectedLocation: new PatchOfString({ value: serverLocation }),
+          isPremiumLocationSelected: new PatchOfBoolean({ value: connectParams.isPremium }),
+          selectedLocation: new PatchOfString({ value: connectParams.serverLocation }),
         }),
       );
-      this.data.userSettings.clientProfileId = clientProfileId;
+      this.data.userSettings.clientProfileId = connectParams.clientProfileId;
       await this.saveUserSetting();
     } finally {
       // Reload to apply the latest clientProfileInfos updates
