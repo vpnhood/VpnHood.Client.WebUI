@@ -106,28 +106,46 @@ export class VpnHoodAppData {
     return (!this.features.isPremiumFlagSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
   }
 
-  get isSplitTunnelingInUse(): boolean {
-    return  this.userSettings.useSplitIpViaDevice || 
-            this.userSettings.useSplitIpViaApp || 
-            this.userSettings.useSplitDomain ||
-            this.userSettings.useSplitLocalNetwork ||
-            this.userSettings.splitAppMode !== SplitAppMode.All ||
-            this.isSplitCountryActive;
-  }
-  get isSplitDomainInUse(): boolean {
-    return this.userSettings.useSplitDomain;
+  get isSplitTunnelingActive(): boolean {
+    const settingsActive = this.isSplitIpViaDeviceActive ||
+      this.isSplitIpViaAppActive ||
+      this.isSplitDomainActive ||
+      this.userSettings.useSplitLocalNetwork ||
+      this.isSplitAppsActive ||
+      this.isSplitCountryActive;
+    return settingsActive;
   }
 
-  get isDnsInUse(): boolean{
-    return this.state.systemPrivateDns?.isActive || this.userSettings.dnsMode === DnsMode.AdapterDns;
+  get isSplitDomainActive(): boolean {
+    console.log("zzz", this.isPremiumFeatureAllowed(AppFeature.SplitDomain)); //todo
+    return this.userSettings.useSplitDomain && this.isPremiumFeatureAllowed(AppFeature.SplitDomain);
+  }
+
+  get isSplitIpViaDeviceActive(): boolean {
+    return this.userSettings.useSplitIpViaDevice && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaDevice);
+  }
+
+  get isSplitIpViaAppActive(): boolean {
+    return this.userSettings.useSplitIpViaApp && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp);
+  }
+
+  get isSplitAppsActive(): boolean {
+    return this.userSettings.splitAppMode !== SplitAppMode.All;
+  }
+
+  get isSplitLocalNetworkActive(): boolean {
+    return this.userSettings.useSplitLocalNetwork;
   }
 
   get isDnsCustomized(): boolean{
-    return this.state.systemPrivateDns?.provider !== null || this.userSettings.dnsMode === DnsMode.AdapterDns;
+    if ( this.state.systemPrivateDns?.isActive)
+      return true;
+
+    return this.userSettings.dnsMode === DnsMode.AdapterDns && this.isPremiumFeatureAllowed(AppFeature.CustomDns);
   }
 
 
-  get isCustomEndpointInUse(): boolean {
+  get isCustomEndpointActive(): boolean {
     const customServerEndpoints = this.state.clientProfile?.customServerEndpoints;
     return !!customServerEndpoints && customServerEndpoints.length > 0;
   }
@@ -256,7 +274,7 @@ export class VpnHoodAppData {
   public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {
 
     // not a premium feature
-    if (!this.isPremiumFeature(appFeature) || !this.features.isPremiumFlagSupported)
+    if (!this.isPremiumFeature(appFeature))
       return true;
 
     // check if the current profile is premium

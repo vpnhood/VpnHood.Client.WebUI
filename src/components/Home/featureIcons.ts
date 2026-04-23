@@ -17,20 +17,20 @@ export function getFeatureItems(): FeatureItem[] {
       secondIcon: 'mdi-ip-outline',
       title: 'SPLIT_IP',
       pageLink: { name: 'SPLIT_TUNNELING' },
-      isActive: vhApp.data.isSplitTunnelingInUse,
+      isActive: vhApp.data.isSplitTunnelingActive,
     },
     {
       icon: 'mdi-call-split',
       secondIcon: 'mdi-web',
       title: 'SPLIT_DOMAINS',
       pageLink: { name: 'SPLIT_DOMAINS' },
-      isActive: vhApp.data.isSplitDomainInUse,
+      isActive: vhApp.data.isSplitDomainActive,
     },
     {
       icon: 'mdi-ip-network',
       title: 'CUSTOM_ENDPOINT',
       pageLink: { name: 'SERVERS' },
-      isActive: vhApp.data.isCustomEndpointInUse,
+      isActive: vhApp.data.isCustomEndpointActive,
     },
     {
       icon: 'mdi-dns',

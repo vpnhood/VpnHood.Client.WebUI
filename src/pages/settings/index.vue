@@ -78,7 +78,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :is-show="true"
       :isPremium="false"
       :status="{
-        state: vhApp.data.isSplitTunnelingInUse,
+        state: vhApp.data.isSplitTunnelingActive,
         onText: locale('ON'),
         offText: locale('OFF')
       }"

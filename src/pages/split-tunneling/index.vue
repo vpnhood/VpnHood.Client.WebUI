@@ -41,7 +41,7 @@ const locale = i18n.global.t;
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitDomain)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitDomain,
+        state: vhApp.data.isSplitDomainActive,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -58,7 +58,7 @@ const locale = i18n.global.t;
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaDevice)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitIpViaDevice,
+        state: vhApp.data.isSplitIpViaDeviceActive,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -72,7 +72,7 @@ const locale = i18n.global.t;
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitIpViaApp)"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.useSplitIpViaApp,
+        state: vhApp.data.isSplitIpViaAppActive,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
@@ -90,7 +90,7 @@ const locale = i18n.global.t;
       :is-premium="false"
       
       :status="{
-        state: vhApp.data.userSettings.useSplitLocalNetwork,
+        state: vhApp.data.isSplitLocalNetworkActive,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
