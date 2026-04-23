@@ -1,27 +1,27 @@
 ﻿<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
-import { ClientProfileUpdateParams, ConnectPlanId, PatchOfString, } from '@/services/VpnHood.Client.Api';
+import { ClientProfileUpdateParams, ConnectPlanId, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { ref } from 'vue';
 import PendingDialog from '@/components/PurchaseSubscription/PendingDialog.vue';
 import PremiumCodeCompleteDialog from '@/components/PurchaseSubscription/PremiumCodeCompleteDialog.vue';
+import { ca } from 'vuetify/locale';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const props = defineProps<{
-  modelValue: boolean
+  modelValue: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void,
+  (e: 'update:modelValue', value: boolean): void;
 }>();
 
-
 const premiumCodeForm = ref<boolean>(false);
-const invalidCodeError = ref<null|string>(null);
+const invalidCodeError = ref<null | string>(null);
 const formattedPremiumCode = ref('');
-const premiumCodeRawNumber = ref<string|null>(null);
+const premiumCodeRawNumber = ref<string | null>(null);
 const isShowPremiumCodeCompleteDialog = ref(false);
 const isShowPendingDialog = ref(false);
 
@@ -47,51 +47,51 @@ const premiumCodeHandleInput = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   premiumCodeRawNumber.value = value;
 };
-async function validatePremiumCode(): Promise<void> {
+
+async function updatePremiumCode(): Promise<void> {
   const profileId = vhApp.data.state.clientProfile?.clientProfileId;
-  if (!profileId)
-    throw new Error(locale("PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG"));
+  if (!profileId) {
+    throw new Error(locale('PROFILE_ID_NOT_FOUND_DURING_VALIDATION_MSG'));
+  }
 
   try {
-    await vhApp.clientProfileClient.update(profileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({ value: premiumCodeRawNumber.value })
-    }));
+    // try to update premium code to client profile, if the code is invalid, it will throw error and show error message, if the code is valid, it will try to connect to access server with new code, if the connection is successful and premium by code is active, it will show complete dialog, otherwise it will remove the premium code from client profile
+    await vhApp.clientProfileClient.update(
+      profileId,
+      new ClientProfileUpdateParams({
+        accessCode: new PatchOfString({ value: premiumCodeRawNumber.value }),
+      }),
+    );
+  } catch {
+    invalidCodeError.value = locale('INVALID_PREMIUM_CODE_NUMBERS_MSG');
+    return;
+  }
 
-    await validateCodeViaAccessServer(profileId);
-  }
-  catch{
-    invalidCodeError.value = locale("INVALID_PREMIUM_CODE_NUMBERS_MSG");
-  }
-}
-async function validateCodeViaAccessServer(profileId: string): Promise<void>{
+  // try to connect to access server with new premium code
   try {
     emit('update:modelValue', false);
     isShowPendingDialog.value = true;
-    await vhApp.connect(profileId, undefined, true, ConnectPlanId.Normal, false, false);
+    await vhApp.connect(profileId, null, true, ConnectPlanId.Normal, false, false);
 
-    if (vhApp.data.isConnected && vhApp.data.isPremiumByCode)
+    if (vhApp.data.isConnected && vhApp.data.isPremiumUser) {
       isShowPremiumCodeCompleteDialog.value = true;
-  }
-  catch {
-    await vhApp.removePremiumCode()
-  }
-  finally {
+    }
+
+  } finally {
     isShowPendingDialog.value = false;
   }
 }
 </script>
 
 <template>
-
   <!-- Premium code sheet -->
   <v-bottom-sheet
     :modelValue="props.modelValue"
-    @update:modelValue="emit('update:modelValue',$event)"
+    @update:modelValue="emit('update:modelValue', $event)"
     contained
     width="100%"
     max-width="100%"
   >
-
     <v-card
       prepend-icon="mdi-key"
       color="background"
@@ -99,11 +99,15 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
       :title="locale('ENTER_PREMIUM_CODE')"
     >
       <v-card-item class="pt-0">
-        <alert-note :title="locale('NOTE')" :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')" class="mb-2" />
+        <alert-note
+          :title="locale('NOTE')"
+          :text="locale('ACTIVE_PREMIUM_KEY_EXPIRATION_NOTICE')"
+          class="mb-2"
+        />
 
         <v-form
           v-model="premiumCodeForm"
-          @submit.prevent="validatePremiumCode()"
+          @submit.prevent="updatePremiumCode()"
         >
           <v-text-field
             v-model="formattedPremiumCode"
@@ -113,7 +117,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
             hide-details="auto"
             single-line
             clearable
-            :on-click:clear="() => premiumCodeRawNumber = null"
+            :on-click:clear="() => (premiumCodeRawNumber = null)"
             autofocus
             spellcheck="false"
             autocomplete="off"
@@ -136,10 +140,7 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
             :text="locale('ACTIVATE')"
           />
         </v-form>
-
-
       </v-card-item>
-
     </v-card>
   </v-bottom-sheet>
 
@@ -148,5 +149,4 @@ async function validateCodeViaAccessServer(profileId: string): Promise<void>{
 
   <!-- Purchase complete dialog -->
   <premium-code-complete-dialog :model-value="isShowPremiumCodeCompleteDialog" />
-
 </template>

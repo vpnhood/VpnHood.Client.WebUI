@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SplitDomainInput from '@/components/Settings/SplitDomainInput.vue';
+import SplitDomainInput from '@/components/SplitTunneling/SplitDomainInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature, SplitDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';

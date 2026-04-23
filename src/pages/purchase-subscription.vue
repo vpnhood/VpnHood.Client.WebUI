@@ -18,7 +18,7 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const route = useRoute();
 const purchaseOptions = ref<AppPurchaseOptions>();
-const isShowEnterPremiumCodeSheet = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
+const premiumByCodeSheet = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
 
 onMounted(async () => {
     const clientProfileId = route.query.profileId as string ?? vhApp.data.clientProfileId;
@@ -99,12 +99,12 @@ onMounted(async () => {
         color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
         prepend-icon="mdi-key"
         :text="locale('I_HAVE_A_PREMIUM_CODE')"
-        @click="isShowEnterPremiumCodeSheet.show()"
+        @click="premiumByCodeSheet.show()"
       />
     </div>
 
     <!-- Input premium code -->
-    <premium-by-code v-model="isShowEnterPremiumCodeSheet.isVisible" />
+    <premium-by-code v-model="premiumByCodeSheet.isVisible" />
 
   </grad-sheet>
 </template>

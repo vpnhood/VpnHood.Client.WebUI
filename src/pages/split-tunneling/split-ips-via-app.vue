@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SplitIpInput from '@/components/Settings/SplitIpInput.vue';
+import SplitIpInput from '@/components/SplitTunneling/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature, SplitIps } from '@/services/VpnHood.Client.Api';
