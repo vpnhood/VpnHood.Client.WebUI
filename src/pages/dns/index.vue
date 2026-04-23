@@ -34,7 +34,7 @@ async function saveSettings() {
 
 onBeforeRouteLeave(
   async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    if ( isAdapterDnsAvailable.value ) {
+    if ( isAdapterDnsAvailable.value && customDnsForm.value ) {
       const result = await customDnsForm.value.validate();
       if (!result.valid){
         next(false);
