@@ -71,7 +71,7 @@ async function updatePremiumCode(): Promise<void> {
   try {
     emit('update:modelValue', false);
     isShowPendingDialog.value = true;
-    await vhApp.connect(profileId, null, true, ConnectPlanId.Normal, false, false);
+    await vhApp.connect({clientProfileId: profileId, serverLocation: null, isPremium: true, planId: ConnectPlanId.Normal, isDiagnose: false, goToHome: false});
 
     if (vhApp.data.isConnected && vhApp.data.isPremiumUser) {
       isShowPremiumCodeCompleteDialog.value = true;

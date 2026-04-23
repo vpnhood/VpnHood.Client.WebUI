@@ -48,7 +48,7 @@ async function onConnectButtonClick(): Promise<void> {
 
   // Connect
   if (vhApp.data.state.canConnect && !vhApp.data.uiState.uiConnectInProgress) {
-    await ConnectManager.connect1(false);
+    await ConnectManager.connect1({isDiagnose: false});
   }
 }
 

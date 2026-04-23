@@ -49,7 +49,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
 
   try {
     // All other actions continue with a direct connect attempt using the current route context.
-    await vhApp.connect(clientProfileId, serverLocation, isPremiumLocation, planId, false);
+    await vhApp.connect({clientProfileId, serverLocation, isPremium: isPremiumLocation, planId, isDiagnose: false});
   }
   catch{
     // Ignore message

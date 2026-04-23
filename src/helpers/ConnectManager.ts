@@ -27,7 +27,7 @@ export class ConnectManager {
     return true;
   }
 
-  public static async connect1(isDiagnose: boolean = false): Promise<void> {
+  public static async connect1({isDiagnose = false}: {isDiagnose?: boolean} = {}): Promise<void> {
     const clientProfileId = VpnHoodApp.instance.data.clientProfileId;
 
     // For developer
@@ -38,12 +38,12 @@ export class ConnectManager {
       await router.push({name: 'SERVERS'});
       return;
     }
-    await this.connect2(clientProfileId, isDiagnose);
+    await this.connect2({clientProfileId, isDiagnose});
   }
 
-  public static async connect2(clientProfileId: string, isDiagnose: boolean = false): Promise<void> {
+  public static async connect2({clientProfileId, isDiagnose = false}: {clientProfileId: string; isDiagnose?: boolean}): Promise<void> {
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
-    let serverLocation: string | undefined | null = clientProfileInfo.selectedLocationInfo?.serverLocation;
+    let serverLocation: string | null = clientProfileInfo.selectedLocationInfo?.serverLocation ?? null;
 
     // For developer
     console.debug('Connect2');
@@ -78,16 +78,22 @@ export class ConnectManager {
       serverLocation = VpnHoodApp.instance.data.uiState.autoLocationValue;
     }
 
-    await this.connect3(clientProfileId, serverLocation, isPremiumLocationSelected, isDiagnose, undefined);
+    await this.connect3({clientProfileId, serverLocation, isPremiumLocation: isPremiumLocationSelected, isDiagnose});
   }
 
-  public static async connect3(
-    clientProfileId: string,
-    serverLocation: string | undefined | null,
-    isPremiumLocation: boolean,
-    isDiagnose: boolean = false,
-    goToHome: boolean | undefined = true
-  ): Promise<void> {
+  public static async connect3({
+    clientProfileId,
+    serverLocation,
+    isPremiumLocation,
+    isDiagnose = false,
+    goToHome = true,
+  }: {
+    clientProfileId: string;
+    serverLocation: string | null;
+    isPremiumLocation: boolean;
+    isDiagnose?: boolean;
+    goToHome?: boolean;
+  }): Promise<void> {
     // For developer
     console.debug(`Connect3: isPremiumLocation: ${isPremiumLocation}, goToHome: ${goToHome}`);
 
@@ -95,7 +101,7 @@ export class ConnectManager {
       return;
 
     try {
-      await VpnHoodApp.instance.connect(clientProfileId, serverLocation, isPremiumLocation, ConnectPlanId.Normal, isDiagnose, goToHome);
+      await VpnHoodApp.instance.connect({clientProfileId, serverLocation, isPremium: isPremiumLocation, planId: ConnectPlanId.Normal, isDiagnose, goToHome});
     }
     catch{
       // Ignore message

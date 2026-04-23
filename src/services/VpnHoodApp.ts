@@ -11,7 +11,7 @@ import {
   PatchOfBoolean,
   PatchOfString,
   ProxyEndPointClient,
-  SessionSuppressType
+  SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { AppName, ComponentName, type ShowErrorActions } from '@/helpers/UiConstants';
@@ -36,9 +36,15 @@ export class VpnHoodApp {
   private lastReloadNumber: number = 0;
   private isSaving: boolean = false;
 
-  private constructor(appClient: AppClient, clientProfileClient: ClientProfileClient, intentsClient: IntentsClient, proxyEndPointClient: ProxyEndPointClient, appData: VpnHoodAppData, vhFirebase: VhFirebaseApp | null) {
-    if (VpnHoodApp._instance)
-      throw new Error('VpnHoodApp has been already initialized.');
+  private constructor(
+    appClient: AppClient,
+    clientProfileClient: ClientProfileClient,
+    intentsClient: IntentsClient,
+    proxyEndPointClient: ProxyEndPointClient,
+    appData: VpnHoodAppData,
+    vhFirebase: VhFirebaseApp | null,
+  ) {
+    if (VpnHoodApp._instance) throw new Error('VpnHoodApp has been already initialized.');
 
     this.data = reactive(appData);
     this.appClient = appClient;
@@ -52,8 +58,7 @@ export class VpnHoodApp {
   }
 
   public static get instance(): VpnHoodApp {
-    if (VpnHoodApp._instance == null)
-      throw new Error('VpnHoodApp has not been initialized.');
+    if (VpnHoodApp._instance == null) throw new Error('VpnHoodApp has not been initialized.');
     return VpnHoodApp._instance;
   }
 
@@ -64,15 +69,14 @@ export class VpnHoodApp {
     const clientProfileClient: ClientProfileClient = ClientApiFactory.instance.createClientProfileClient();
     const intentsClient: IntentsClient = ClientApiFactory.instance.createIntentClient();
     const proxyEndpointClient: ProxyEndPointClient = ClientApiFactory.instance.createProxyEndPointClient();
-    const config = await apiClient.configure(
-      new ConfigParams({ availableCultures: i18n.global.availableLocales }));
+    const config = await apiClient.configure(new ConfigParams({ availableCultures: i18n.global.availableLocales }));
     const appData = new VpnHoodAppData(
       config.state,
       config.userSettings,
       config.features,
       config.intentFeatures,
       config.clientProfileInfos,
-      config.availableCultureInfos
+      config.availableCultureInfos,
     );
 
     let firebase: VhFirebaseApp | null = null;
@@ -83,17 +87,14 @@ export class VpnHoodApp {
   }
 
   public async reloadState(): Promise<void> {
-    if (this.isSaving)
-      return;
-
+    if (this.isSaving) return;
 
     // Only reload state for the last reload.
     this.lastReloadNumber++;
     const reloadNumber = this.lastReloadNumber;
     const state = await this.appClient.getState();
 
-    if (reloadNumber !== this.lastReloadNumber)
-      return; // Discard old data
+    if (reloadNumber !== this.lastReloadNumber) return; // Discard old data
     this.data.state = state;
 
     // Setting has change and must reload
@@ -109,23 +110,28 @@ export class VpnHoodApp {
     }
 
     // Show the internal ad
-    if (this.data.state.isWaitingForInternalAd)
-      await router.replace({ name: 'INTERNAL_AD' });
+    if (this.data.state.isWaitingForInternalAd) await router.replace({ name: 'INTERNAL_AD' });
     // Show the Quick launch page if the internal ad is not shown
-    else if (this.data.state.isQuickLaunchRecommended)
-      await router.push({ name: 'QUICK_LAUNCH' });
-
+    else if (this.data.state.isQuickLaunchRecommended) await router.push({ name: 'QUICK_LAUNCH' });
 
     // Show the update message if the user has not ignored or more than 24 hours have passed
-    if (this.data.state.updaterStatus?.prompt)
-      this.data.uiState.showUpdateSnackbar = true;
+    if (this.data.state.updaterStatus?.prompt) this.data.uiState.showUpdateSnackbar = true;
 
     // Show 'suppress to' message
-    if (this.data.isConnected && this.data.state.sessionInfo?.suppressedTo &&
+    if (
+      this.data.isConnected &&
+      this.data.state.sessionInfo?.suppressedTo &&
       this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
       this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString() &&
-      !this.data.uiState.generalSnackbarData.isShow) {
-      this.showGeneralSnackbar(i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'), 'suppress-snackbar', false, undefined, true);
+      !this.data.uiState.generalSnackbarData.isShow
+    ) {
+      this.showGeneralSnackbar(
+        i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'),
+        'suppress-snackbar',
+        false,
+        undefined,
+        true,
+      );
     }
   }
 
@@ -137,47 +143,54 @@ export class VpnHoodApp {
     // Remove the built-in client profile if the user is premium
     this.data.clientProfileInfos = config.clientProfileInfos;
 
-    if (config.clientProfileInfos.length === 0)
-      this.data.userSettings.clientProfileId = null;
+    if (config.clientProfileInfos.length === 0) this.data.userSettings.clientProfileId = null;
 
     // select first profile if the current selected profile is not exist anymore after reload
-    if (this.data.userSettings.clientProfileId && !config.clientProfileInfos.some(p => p.clientProfileId === this.data.userSettings.clientProfileId))
+    if (
+      this.data.userSettings.clientProfileId &&
+      !config.clientProfileInfos.some((p) => p.clientProfileId === this.data.userSettings.clientProfileId)
+    )
       this.data.userSettings.clientProfileId = config.clientProfileInfos[0]?.clientProfileId ?? null;
   }
 
-  public async connect(
-    clientProfileId: string,
-    serverLocation: string | undefined | null,
-    isPremium: boolean,
-    planId: ConnectPlanId,
-    isDiagnose: boolean = false,
-    goToHome: boolean = true
-  ): Promise<void> {
-
+  public async connect({
+    clientProfileId,
+    serverLocation,
+    isPremium,
+    planId,
+    isDiagnose = false,
+    goToHome = true,
+  }: {
+    clientProfileId: string;
+    serverLocation: string | null;
+    isPremium: boolean;
+    planId: ConnectPlanId;
+    isDiagnose?: boolean;
+    goToHome?: boolean;
+  }): Promise<void> {
     // Just for Development info
     console.debug(`connect. Server location: ${serverLocation}, Plan id: ${planId}, Go to home: ${goToHome}`);
 
     // Navigate to home page
-    if (goToHome && router.currentRoute.value.name !== 'HOME')
-      await router.replace({ name: 'HOME' });
+    if (goToHome && router.currentRoute.value.name !== 'HOME') await router.replace({ name: 'HOME' });
 
     this.data.uiState.uiConnectInProgress = true;
 
     try {
-      if (isDiagnose)
-        await this.diagnose();
-      else
-        await this.appClient.connect(clientProfileId, serverLocation, planId);
+      if (isDiagnose) await this.diagnose();
+      else await this.appClient.connect(clientProfileId, serverLocation, planId);
 
       // ClientProfile will be updated after connecting.
-      await this.updateClientProfile(clientProfileId, new ClientProfileUpdateParams({
-        isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),
-        selectedLocation: new PatchOfString({ value: serverLocation })
-      }));
+      await this.updateClientProfile(
+        clientProfileId,
+        new ClientProfileUpdateParams({
+          isPremiumLocationSelected: new PatchOfBoolean({ value: isPremium }),
+          selectedLocation: new PatchOfString({ value: serverLocation }),
+        }),
+      );
       this.data.userSettings.clientProfileId = clientProfileId;
       await this.saveUserSetting();
-    }
-    finally {
+    } finally {
       // Reload to apply the latest clientProfileInfos updates
       await this.reloadSettings();
       this.data.uiState.uiConnectInProgress = false;
@@ -196,9 +209,7 @@ export class VpnHoodApp {
 
   public getAppVersion(isFull: boolean): string {
     const fullVersion: string = this.data.features.version;
-    return isFull
-      ? fullVersion.substring(0, fullVersion.lastIndexOf('.'))
-      : fullVersion.split('.')[2];
+    return isFull ? fullVersion.substring(0, fullVersion.lastIndexOf('.')) : fullVersion.split('.')[2];
   }
 
   // Save any change by user
@@ -206,8 +217,7 @@ export class VpnHoodApp {
     try {
       this.isSaving = true;
       await this.appClient.setUserSettings(this.data.userSettings);
-    }
-    finally {
+    } finally {
       this.isSaving = false;
     }
 
@@ -215,7 +225,10 @@ export class VpnHoodApp {
   }
 
   // Select a profile by user
-  public async updateClientProfile(clientProfileId: string, clientProfileUpdateParam: ClientProfileUpdateParams): Promise<void> {
+  public async updateClientProfile(
+    clientProfileId: string,
+    clientProfileUpdateParam: ClientProfileUpdateParams,
+  ): Promise<void> {
     await this.clientProfileClient.update(clientProfileId, clientProfileUpdateParam);
     await this.reloadSettings();
   }
@@ -234,8 +247,7 @@ export class VpnHoodApp {
   public async diagnose(): Promise<void> {
     try {
       await this.appClient.diagnose(this.data.userSettings.clientProfileId);
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       console.log(err);
     }
   }
@@ -306,7 +318,13 @@ export class VpnHoodApp {
     await this.reloadState();
   }
 
-  public showGeneralSnackbar(message: string, bgColor: string = "highlight", hasTimer: boolean = true, textColor?: string, hasCloseButton?: boolean): void {
+  public showGeneralSnackbar(
+    message: string,
+    bgColor: string = 'highlight',
+    hasTimer: boolean = true,
+    textColor?: string,
+    hasCloseButton?: boolean,
+  ): void {
     this.data.uiState.generalSnackbarData.message = message;
     this.data.uiState.generalSnackbarData.bgColor = bgColor;
     this.data.uiState.generalSnackbarData.hasTimer = hasTimer;
@@ -318,21 +336,20 @@ export class VpnHoodApp {
   public async removePremiumCode(): Promise<void> {
     const clientProfile = this.data.state.clientProfile;
 
-    if (!clientProfile)
-      throw new Error('Could not find the profile in the state for remove premium code.');
+    if (!clientProfile) throw new Error('Could not find the profile in the state for remove premium code.');
 
-    if (!clientProfile.hasAccessCode)
-      throw new Error('The profile does not have a premium code.');
+    if (!clientProfile.hasAccessCode) throw new Error('The profile does not have a premium code.');
 
-    if (this.data.isConnected)
-      await this.disconnect();
+    if (this.data.isConnected) await this.disconnect();
 
-    await this.clientProfileClient.update(clientProfile.clientProfileId, new ClientProfileUpdateParams({
-      accessCode: new PatchOfString({ value: null })
-    }));
+    await this.clientProfileClient.update(
+      clientProfile.clientProfileId,
+      new ClientProfileUpdateParams({
+        accessCode: new PatchOfString({ value: null }),
+      }),
+    );
 
-    if (this.data.userState.userAccount?.subscriptionId)
-      await this.loadAccount(true);
+    if (this.data.userState.userAccount?.subscriptionId) await this.loadAccount(true);
   }
 
   public async signIn(onPurchase = false): Promise<void> {
@@ -341,8 +358,7 @@ export class VpnHoodApp {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.signInWithGoogle();
       await this.loadAccount();
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;
 
       const { exceptionTypeName, statusCode } = err;
@@ -375,36 +391,40 @@ export class VpnHoodApp {
         default:
           throw err;
       }
-    }
-    finally {
+    } finally {
       this.data.uiState.showLoadingDialog = false;
     }
   }
 
   public async signOut(): Promise<void> {
     const result = await this.showConfirmDialog(
-      i18n.global.t('CONFIRM_SIGN_OUT_TITLE'), i18n.global.t('CONFIRM_SIGN_OUT_DESC')
+      i18n.global.t('CONFIRM_SIGN_OUT_TITLE'),
+      i18n.global.t('CONFIRM_SIGN_OUT_DESC'),
     );
     if (!result) return;
 
     const accountClient = ClientApiFactory.instance.createAccountClient();
     await accountClient.signOut();
     await this.loadAccount();
-    await router.replace({name: 'HOME'});
+    await router.replace({ name: 'HOME' });
   }
 
   public async loadAccount(withRefresh: boolean = false): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
-    if (withRefresh)
-      await accountClient.refresh();
+    if (withRefresh) await accountClient.refresh();
     this.data.userState.userAccount = await accountClient.get();
     // For developer
     console.debug(
-      'IsPremiumUser: ', this.data.isPremiumUser,
-      ' IsAccessCodeFromAccount: ', this.data.state.clientProfile?.isAccessCodeFromAccount,
-      ' CanGoPremium: ', this.data.state.clientProfile?.canGoPremium,
-      ' isPremiumFlagSupported: ', this.data.features.isPremiumFlagSupported,
-      'User Account: ', this.data.userState.userAccount
+      'IsPremiumUser: ',
+      this.data.isPremiumUser,
+      ' IsAccessCodeFromAccount: ',
+      this.data.state.clientProfile?.isAccessCodeFromAccount,
+      ' CanGoPremium: ',
+      this.data.state.clientProfile?.canGoPremium,
+      ' isPremiumFlagSupported: ',
+      this.data.features.isPremiumFlagSupported,
+      'User Account: ',
+      this.data.userState.userAccount,
     );
     await this.reloadSettings();
   }
@@ -419,12 +439,14 @@ export class VpnHoodApp {
     return this.confirmDialogDeferred.promise;
   }
 
-  public async disconnectAlert(): Promise<boolean>{
+  public async disconnectAlert(): Promise<boolean> {
     if (!this.data.isConnected) return true;
 
-    const result = await this.showConfirmDialog(i18n.global.t('DISCONNECT_ALERT'), i18n.global.t('DISCONNECT_ALERT_DESC'));
+    const result = await this.showConfirmDialog(
+      i18n.global.t('DISCONNECT_ALERT'),
+      i18n.global.t('DISCONNECT_ALERT_DESC'),
+    );
     if (result) await this.appClient.disconnect();
     return result;
   }
-
 }

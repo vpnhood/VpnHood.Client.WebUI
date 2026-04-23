@@ -28,7 +28,7 @@ async function changeLocationToAuto(clientProfileId: string): Promise<void> {
   updateParams.isPremiumLocationSelected = new PatchOfBoolean({value: false});
   await vhApp.clientProfileClient.update(clientProfileId, updateParams);
   await closeDialog();
-  await vhApp.connect(clientProfileId, vhApp.data.uiState.autoLocationValue, false, ConnectPlanId.Normal);
+  await vhApp.connect({clientProfileId, serverLocation: vhApp.data.uiState.autoLocationValue, isPremium: false, planId: ConnectPlanId.Normal});
 }
 
 // Reconnect by Try Premium
@@ -36,7 +36,7 @@ async function tryPremium(clientProfileId: string): Promise<void> {
   updateParams.isPremiumLocationSelected = new PatchOfBoolean({value: true});
   await vhApp.clientProfileClient.update(clientProfileId, updateParams);
   await closeDialog();
-  await vhApp.connect(clientProfileId, vhApp.data.uiState.autoLocationValue, true, ConnectPlanId.PremiumByTrial);
+  await vhApp.connect({clientProfileId, serverLocation: vhApp.data.uiState.autoLocationValue, isPremium: true, planId: ConnectPlanId.PremiumByTrial});
 }
 
 async function diagnose(): Promise<void> {

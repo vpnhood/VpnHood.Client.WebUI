@@ -49,7 +49,7 @@ async function connect(clientProfileId:string): Promise<void>{
   vhApp.showGeneralSnackbar(locale('NEW_SERVER_ADDED'), "active", true, undefined, false);
 
   // Connect to server
-  await ConnectManager.connect2(clientProfileId, false);
+  await ConnectManager.connect2({clientProfileId, isDiagnose: false});
 }
 
 </script>
