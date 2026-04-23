@@ -38,7 +38,7 @@ const protocolItems: ProtocolItem[] = [
 
 const activeProtocol = computed<ChannelProtocol>({
   get: () => {
-    return vhApp.data.getActiveProtocol;
+    return vhApp.data.activeProtocol;
   },
   set: async (value: ChannelProtocol) => {
     vhApp.data.userSettings.channelProtocol = value;

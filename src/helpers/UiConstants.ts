@@ -39,10 +39,3 @@ export enum AppPackageName {
   VpnHoodClient = 'com.vpnhood.client.android'
 }
 
-export interface ShowErrorActions {
-  showDiagnose?: boolean,
-  showChangeServerToAuto?: boolean,
-  showRemovePremium?: boolean,
-  isPrivateDnsError?: boolean,
-  showTryPremium?: boolean
-}

@@ -9,7 +9,7 @@ export class ConnectManager {
     const options: ServerLocationOptions | undefined = clientProfileInfo.locationInfos.find(
       x => x.serverLocation === serverLocation)?.options;
 
-    // Fore developer
+    // For developer
     console.debug('Show Prompt: ' + options?.prompt);
 
     if (!options?.prompt)
@@ -27,26 +27,26 @@ export class ConnectManager {
     return true;
   }
 
-  public static async connect1({isDiagnose = false}: {isDiagnose?: boolean} = {}): Promise<void> {
+  public static async connectWithCurrentProfile({isDiagnose = false}: {isDiagnose?: boolean} = {}): Promise<void> {
     const clientProfileId = VpnHoodApp.instance.data.clientProfileId;
 
     // For developer
-    console.debug('Connect1');
+    console.debug('connectWithCurrentProfile');
     console.debug(`ClientProfileId: ${clientProfileId}`);
 
     if (!clientProfileId) {
       await router.push({name: 'SERVERS'});
       return;
     }
-    await this.connect2({clientProfileId, isDiagnose});
+    await this.connectWithProfile({clientProfileId, isDiagnose});
   }
 
-  public static async connect2({clientProfileId, isDiagnose = false}: {clientProfileId: string; isDiagnose?: boolean}): Promise<void> {
+  public static async connectWithProfile({clientProfileId, isDiagnose = false}: {clientProfileId: string; isDiagnose?: boolean}): Promise<void> {
     const clientProfileInfo: ClientProfileInfo = await VpnHoodApp.instance.clientProfileClient.get(clientProfileId);
     let serverLocation: string | null = clientProfileInfo.selectedLocationInfo?.serverLocation ?? null;
 
     // For developer
-    console.debug('Connect2');
+    console.debug('connectWithProfile');
     console.debug('Detected server location: ' + serverLocation);
 
     if (!serverLocation && clientProfileInfo.selectedLocationInfo) {
@@ -78,10 +78,10 @@ export class ConnectManager {
       serverLocation = VpnHoodApp.instance.data.uiState.autoLocationValue;
     }
 
-    await this.connect3({clientProfileId, serverLocation, isPremiumLocation: isPremiumLocationSelected, isDiagnose});
+    await this.connectWithLocation({clientProfileId, serverLocation, isPremiumLocation: isPremiumLocationSelected, isDiagnose});
   }
 
-  public static async connect3({
+  public static async connectWithLocation({
     clientProfileId,
     serverLocation,
     isPremiumLocation,
@@ -95,7 +95,7 @@ export class ConnectManager {
     goToHome?: boolean;
   }): Promise<void> {
     // For developer
-    console.debug(`Connect3: isPremiumLocation: ${isPremiumLocation}, goToHome: ${goToHome}`);
+    console.debug(`connectWithLocation: isPremiumLocation: ${isPremiumLocation}, goToHome: ${goToHome}`);
 
     if (serverLocation && await this.showPromoteDialog(clientProfileId, serverLocation, isPremiumLocation))
       return;

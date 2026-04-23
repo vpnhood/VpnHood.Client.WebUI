@@ -3,7 +3,7 @@ import { StatusQuality } from '@/services/VpnHood.Client.Api';
 
 const locale = i18n.global.t;
 
-export function GetStatusQualityDisplay(quality?: StatusQuality): StatusQualityDisplay {
+export function getStatusQualityDisplay(quality?: StatusQuality): StatusQualityDisplay {
   switch (quality) {
     case StatusQuality.Excellent:
       return { text: locale('EXCELLENT'), color: 'enable-premium' };
@@ -28,7 +28,7 @@ export interface StatusQualityDisplay {
   color: string;
 }
 export enum ProxySheetType {
-  add = 'ADD_PROXY',
-  addList = 'ADD_PROXY_LIST',
-  edit = 'EDIT_PROXY'
+  Add = 'ADD_PROXY',
+  AddList = 'ADD_PROXY_LIST',
+  Edit = 'EDIT_PROXY'
 }

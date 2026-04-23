@@ -30,7 +30,7 @@ const oldProxyId = ref('');
 const proxyList = ref('');
 const isAddButtonAvailable = computed((): boolean => {
   if (isProcessing.value) return false;
-  if (props.proxyType === ProxySheetType.addList) return !Validators.isEmptyString(proxyList.value);
+  if (props.proxyType === ProxySheetType.AddList) return !Validators.isEmptyString(proxyList.value);
   return fieldRules.host() === true && fieldRules.port() === true;
 });
 
@@ -64,10 +64,10 @@ async function processHostField(): Promise<void> {
 async function addOrUpdateProxy(){
   isProcessing.value = true;
   switch (props.proxyType) {
-    case ProxySheetType.add:
+    case ProxySheetType.Add:
       await vhApp.proxyEndPointClient.add(proxy.value);
       break;
-    case ProxySheetType.addList:
+    case ProxySheetType.AddList:
       await vhApp.proxyEndPointClient.import(proxyList.value);
       break;
     default:
@@ -96,7 +96,7 @@ function closeSheet(){
   emit('update:modelValue',false);
   emit('refreshList');
   isProcessing.value = false;
-  if (props.proxyType === ProxySheetType.addList)
+  if (props.proxyType === ProxySheetType.AddList)
     proxyList.value = '';
 }
 
@@ -115,7 +115,7 @@ function closeSheet(){
 
       <v-card-item>
         <!-- Add proxy list -->
-        <template v-if="props.proxyType === ProxySheetType.addList">
+        <template v-if="props.proxyType === ProxySheetType.AddList">
           <p class="text-caption text-disabled mb-3">{{locale('PROXY_IMPORT_DESC')}}</p>
           <v-textarea
             v-model="proxyList"
@@ -136,7 +136,7 @@ function closeSheet(){
         />
       </v-card-item>
 
-      <template v-if="props.proxyType === ProxySheetType.edit">
+      <template v-if="props.proxyType === ProxySheetType.Edit">
         <v-divider/>
         <v-card-item class="py-1">
           <proxy-status :status="props.proxyStatus" />
@@ -146,7 +146,7 @@ function closeSheet(){
       <v-divider />
       <v-card-actions>
         <v-btn
-          v-if="props.proxyType === ProxySheetType.edit"
+          v-if="props.proxyType === ProxySheetType.Edit"
           :text="locale('REMOVE')"
           variant="text"
           density="comfortable"
@@ -166,7 +166,7 @@ function closeSheet(){
         <v-btn
           class="font-weight-bold text-transform-none"
           color="highlight"
-          :text="locale(props.proxyType === ProxySheetType.edit ? 'SAVE' : 'ADD')"
+          :text="locale(props.proxyType === ProxySheetType.Edit ? 'SAVE' : 'ADD')"
           :disabled="!isAddButtonAvailable"
           @click="addOrUpdateProxy()"
         />

@@ -4,7 +4,7 @@ import { Util } from '@/helpers/Util';
 import type { RouteLocationRaw } from 'vue-router';
 import router from '@/services/router';
 import { computed } from 'vue';
-import { getFeatureItems } from '@/components/Home/featureIcons';
+import { getFeatureItems } from '@/components/Home/FeatureIcons';
 import FeatureIconDisplay from '@/components/Home/FeatureIconDisplay.vue';
 
 const locale = i18n.global.t;

@@ -2,7 +2,7 @@
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import { ref, computed } from 'vue';
-import { getFeatureItems } from '@/components/Home/featureIcons';
+import { getFeatureItems } from '@/components/Home/FeatureIcons';
 import FeatureIconDisplay from '@/components/Home/FeatureIconDisplay.vue';
 
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));

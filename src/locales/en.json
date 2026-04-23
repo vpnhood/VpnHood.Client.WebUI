@@ -64,7 +64,7 @@
   "EXCLUDE_MY_COUNTRY": "Exclude my country",
   "SPLIT_EXCLUDE_MY_COUNTRY_DESC": "Bypasses the VPN for local traffic. Best balance of speed and privacy for daily use.",
   "SPLIT_COUNTRY_OFF_DESC": "Routes all traffic through the VPN. Maximize privacy, but local services and websites may load slower.",
-  "ALL_COUTRIES_EXCLUDED_ERROR_MSG": "All countries are excluded, so no traffic will be tunneled. Enable at least one country.",
+  "ALL_COUNTRIES_EXCLUDED_ERROR_MSG": "All countries are excluded, so no traffic will be tunneled. Enable at least one country.",
   "FASTER": "Faster",
   "INCLUDE_ALL": "Include all",
   "INCLUDE_ALL_DESC": "Routes all countries traffic through the VPN",

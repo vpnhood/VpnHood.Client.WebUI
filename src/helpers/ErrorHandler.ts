@@ -4,10 +4,17 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AnalyticsCustomEvent } from '@/services/Firebase';
 import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
-import type { ShowErrorActions } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import { Validators } from '@/helpers/Validators';
 import { Util } from './Util';
+
+export interface ShowErrorActions {
+  showDiagnose?: boolean,
+  showChangeServerToAuto?: boolean,
+  showRemovePremium?: boolean,
+  isPrivateDnsError?: boolean,
+  showTryPremium?: boolean
+}
 
 interface ShowErrorOptions {
   ignoreMessage?: boolean,
@@ -96,7 +103,7 @@ export class ErrorHandler {
 
         //  Could not connect to any server in the selected location
         // it same for premium and free users
-        if (!Util.ToBoolean(err.data?.IsAutoLocation))
+        if (!Util.toBoolean(err.data?.IsAutoLocation))
           return {
             localeKey: 'UNREACHABLE_SERVER_LOCATION_MESSAGE_WITH_CHANGE_TO_AUTO',
             action: { showChangeServerToAuto: true }

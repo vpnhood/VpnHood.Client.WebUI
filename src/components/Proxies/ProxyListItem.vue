@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import { AppProxyEndPointInfo } from '@/services/VpnHood.Client.Api';
-import { GetStatusQualityDisplay } from '@/components/Proxies/ProxyUtils';
+import { getStatusQualityDisplay } from '@/components/Proxies/ProxyUtils';
 import { Util } from '@/helpers/Util';
 
 const locale = i18n.global.t;
@@ -20,7 +20,7 @@ const title = computed(() => {
 });
 
 const statusQuality = computed(() => {
-    return GetStatusQualityDisplay(props.proxy.status?.quality);
+    return getStatusQualityDisplay(props.proxy.status?.quality);
 });
 
 const hasError = computed(() => {

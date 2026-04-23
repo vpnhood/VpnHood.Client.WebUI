@@ -100,7 +100,7 @@ async function closeCustomEndpointDialog(): Promise<void> {
 function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
   if (!Util.isSingleLocation(clientProfileInfo.locationInfos.length))
     return;
-  ConnectManager.connect2({clientProfileId: clientProfileInfo.clientProfileId, isDiagnose: false});
+  ConnectManager.connectWithProfile({clientProfileId: clientProfileInfo.clientProfileId, isDiagnose: false});
 }
 </script>
 
@@ -183,7 +183,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
                     :title="locale('DIAGNOSE')"
                     :disabled="!vhApp.data.state.canDiagnose"
                     prepend-icon="mdi-speedometer"
-                    @click="ConnectManager.connect2({clientProfileId: clientProfileInfo.clientProfileId, isDiagnose: true})"
+                    @click="ConnectManager.connectWithProfile({clientProfileId: clientProfileInfo.clientProfileId, isDiagnose: true})"
                   />
                   <v-divider v-if="vhApp.data.features.isAddAccessKeySupported"/>
 

@@ -64,7 +64,7 @@
   "EXCLUDE_MY_COUNTRY": "Ülkemi hariç tut",
   "SPLIT_EXCLUDE_MY_COUNTRY_DESC": "Yerel trafik için VPN'i atlar. Günlük kullanım için ideal hız ve gizlilik dengesi sağlar.",
   "SPLIT_COUNTRY_OFF_DESC": "Tüm trafiği VPN üzerinden yönlendirerek maksimum gizlilik sağlar. Yerel siteler daha yavaş yüklenebilir.",
-  "ALL_COUTRIES_EXCLUDED_ERROR_MSG": "Tüm ülkeler hariç tutuldu, bu nedenle trafik tünellenmeyecektir. En az bir ülkeyi etkinleştirin.",
+  "ALL_COUNTRIES_EXCLUDED_ERROR_MSG": "Tüm ülkeler hariç tutuldu, bu nedenle trafik tünellenmeyecektir. En az bir ülkeyi etkinleştirin.",
   "FASTER": "Daha Hızlı",
   "INCLUDE_ALL": "Tümünü dahil et",
   "INCLUDE_ALL_DESC": "Tüm ülkelerin trafiğini VPN üzerinden yönlendirir",

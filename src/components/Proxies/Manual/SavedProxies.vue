@@ -46,9 +46,9 @@ interface MenuItem {
 }
 
 enum FilterProxyStatus{
-  succeeded = 'SUCCEEDED',
-  failed = 'FAILED',
-  disabled = 'DISABLED'
+  Succeeded = 'SUCCEEDED',
+  Failed = 'FAILED',
+  Disabled = 'DISABLED'
 }
 
 const loading = toRef(props, 'isLoading');
@@ -58,7 +58,7 @@ const totalPages = computed(() => Math.ceil(props.totalProxyCount / itemsPerPage
 const isResettingStates = ref(false);
 const isImporting = ref(false);
 const showAddOrEditSheet = ref(new ComponentRouteController(ComponentName.AddOrEditProxySheet));
-const addOrdEditSheetType = ref<ProxySheetType>(ProxySheetType.add);
+const addOrEditSheetType = ref<ProxySheetType>(ProxySheetType.Add);
 const isDisableButtons = computed(() => isResettingStates.value || props.isLoading || isImporting.value);
 const proxyStatus = ref<ProxyEndPointStatus | null>(null);
 const selectedFilterProxy = ref<FilterProxyStatus | null>(null);
@@ -130,9 +130,9 @@ const menuItems = computed<MenuItem[]>(() => [
 ]);
 
 const filterItems = computed(() => [
-  { title: locale('SUCCEEDED'), value: FilterProxyStatus.succeeded },
-  { title: locale('FAILED'), value: FilterProxyStatus.failed },
-  { title: locale('DISABLED'), value: FilterProxyStatus.disabled }
+  { title: locale('SUCCEEDED'), value: FilterProxyStatus.Succeeded },
+  { title: locale('FAILED'), value: FilterProxyStatus.Failed },
+  { title: locale('DISABLED'), value: FilterProxyStatus.Disabled }
 ]);
 
 const paginationStatus = computed(() => {
@@ -169,17 +169,17 @@ async function runMenuAction(item: MenuItem) {
 function addProxy(): void {
   proxyEndPoint.value = createEmptyProxy();
   proxyStatus.value = null;
-  addOrdEditSheetType.value = ProxySheetType.add;
+  addOrEditSheetType.value = ProxySheetType.Add;
   showAddOrEditSheet.value.show();
 }
-function editeProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
+function editProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
   proxyStatus.value = selectedProxyEndPoint.status;
   proxyEndPoint.value =  selectedProxyEndPoint.endPoint;
-  addOrdEditSheetType.value = ProxySheetType.edit;
+  addOrEditSheetType.value = ProxySheetType.Edit;
   showAddOrEditSheet.value.show();
 }
 function addProxyList(): void {
-  addOrdEditSheetType.value = ProxySheetType.addList;
+  addOrEditSheetType.value = ProxySheetType.AddList;
   showAddOrEditSheet.value.show();
 }
 async function resetStates(): Promise<void> {
@@ -209,10 +209,10 @@ function handlePageChange(newPage: number) {
     'loadProxies',
     recordIndex,
     itemsPerPage,
-    !filter || filter === FilterProxyStatus.succeeded,
-    !filter || filter === FilterProxyStatus.failed,
+    !filter || filter === FilterProxyStatus.Succeeded,
+    !filter || filter === FilterProxyStatus.Failed,
     !filter, // includeUnknown
-    !filter || filter === FilterProxyStatus.disabled
+    !filter || filter === FilterProxyStatus.Disabled
   );
 }
 
@@ -368,7 +368,7 @@ watch(selectedFilterProxy, () => {
           :key="proxy.endPoint.id"
           :proxy="proxy"
           :class="{'border-b': index !== props.proxies.length - 1}"
-          @click="editeProxy(proxy)"
+          @click="editProxy(proxy)"
         />
       </v-list>
       <template v-if="props.totalProxyCount > itemsPerPage">
@@ -398,7 +398,7 @@ watch(selectedFilterProxy, () => {
 
   <add-or-edit-proxy
     v-model="showAddOrEditSheet.isVisible"
-    :proxy-type="addOrdEditSheetType"
+    :proxy-type="addOrEditSheetType"
     :selected-proxy-end-point="proxyEndPoint"
     :proxy-status="proxyStatus"
     @refresh-list="refreshList"

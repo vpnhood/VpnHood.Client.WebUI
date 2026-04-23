@@ -64,7 +64,7 @@
   "EXCLUDE_MY_COUNTRY": "Excluir mi país",
   "SPLIT_EXCLUDE_MY_COUNTRY_DESC": "Evita la VPN para el tráfico local. El equilibrio ideal entre velocidad y privacidad para tu día a día.",
   "SPLIT_COUNTRY_OFF_DESC": "Todo el tráfico pasa por la VPN. Máxima privacidad, aunque los sitios y servicios locales podrían cargar más lento.",
-  "ALL_COUTRIES_EXCLUDED_ERROR_MSG": "Todos los países están excluidos, por lo que no se canalizará ningún tráfico. Habilita al menos un país.",
+  "ALL_COUNTRIES_EXCLUDED_ERROR_MSG": "Todos los países están excluidos, por lo que no se canalizará ningún tráfico. Habilita al menos un país.",
   "FASTER": "Más rápido",
   "INCLUDE_ALL": "Incluir todos",
   "INCLUDE_ALL_DESC": "Enruta el tráfico de todos los países a través de la VPN",

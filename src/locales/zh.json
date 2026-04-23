@@ -64,7 +64,7 @@
   "EXCLUDE_MY_COUNTRY": "排除我的国家/地区",
   "SPLIT_EXCLUDE_MY_COUNTRY_DESC": "本地流量绕过 VPN。这是日常使用中速度与隐私的最佳平衡方案。",
   "SPLIT_COUNTRY_OFF_DESC": "所有流量均通过 VPN 传输。最大化隐私保护，但访问本地服务和网站的速度可能会变慢。",
-  "ALL_COUTRIES_EXCLUDED_ERROR_MSG": "所有国家/地区都被排除在外，因此不会有任何流量被隧道化。请启用至少一个国家/地区。",
+  "ALL_COUNTRIES_EXCLUDED_ERROR_MSG": "所有国家/地区都被排除在外，因此不会有任何流量被隧道化。请启用至少一个国家/地区。",
   "FASTER": "更快速",
   "INCLUDE_ALL": "包含全部",
   "INCLUDE_ALL_DESC": "将所有国家/地区的流量通过 VPN 路由",

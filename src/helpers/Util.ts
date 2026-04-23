@@ -170,7 +170,7 @@ export class Util {
     }
   }
 
-  public static ToBoolean(value: unknown): boolean {
+  public static toBoolean(value: unknown): boolean {
     if (value == null)
       return false;
 

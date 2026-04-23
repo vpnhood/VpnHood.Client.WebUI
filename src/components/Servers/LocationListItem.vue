@@ -26,7 +26,7 @@ function internalConnect(location: ClientServerLocationInfo): void {
     return;
   }
 
-  ConnectManager.connect3({clientProfileId: props.clientProfileId, serverLocation: location.serverLocation, isPremiumLocation: props.isPremiumGroup, isDiagnose: false});
+  ConnectManager.connectWithLocation({clientProfileId: props.clientProfileId, serverLocation: location.serverLocation, isPremiumLocation: props.isPremiumGroup, isDiagnose: false});
 }
 function isActiveItem(location: ClientServerLocationInfo): boolean{
   // This situation happened in the Client app

@@ -101,7 +101,7 @@ onBeforeRouteLeave(
     // Show error when the user excluded all countries
     if (isShowList.value && selectedCountries.value.length === vhApp.data.uiState.allCountriesCount){
       next(false);
-      await vhApp.processError(locale("ALL_COUTRIES_EXCLUDED_ERROR_MSG"));
+      await vhApp.processError(locale("ALL_COUNTRIES_EXCLUDED_ERROR_MSG"));
       return;
     }
 

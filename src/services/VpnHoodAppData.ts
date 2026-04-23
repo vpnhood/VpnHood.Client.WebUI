@@ -170,7 +170,7 @@ export class VpnHoodAppData {
     return this.state.clientProfile?.clientProfileId ?? this.userSettings.clientProfileId ?? null;
   }
 
-  get getEdgeToEdgeTopHeight(): number | null {
+  get edgeToEdgeTopHeight(): number | null {
 
     // Only available in the production mode.
     if (import.meta.env.DEV)
@@ -183,7 +183,7 @@ export class VpnHoodAppData {
     return topHeight > 0 ? topHeight : null;
   }
 
-  get getEdgeToEdgeBottomHeight(): number | null {
+  get edgeToEdgeBottomHeight(): number | null {
 
     // Only available in the production mode.
     if (import.meta.env.DEV)
@@ -200,7 +200,7 @@ export class VpnHoodAppData {
     return this.state.isNotificationEnabled === true
   }
 
-  get getActiveProtocol(): ChannelProtocol{
+  get activeProtocol(): ChannelProtocol{
     if (this.isConnected)
       return this.state.channelProtocol;
     return this.userSettings.channelProtocol;
@@ -223,8 +223,8 @@ export class VpnHoodAppData {
     if (import.meta.env.DEV)
       return;
 
-    const paddingTop = this.getEdgeToEdgeTopHeight;
-    const paddingBottom = this.getEdgeToEdgeBottomHeight;
+    const paddingTop = this.edgeToEdgeTopHeight;
+    const paddingBottom = this.edgeToEdgeBottomHeight;
 
     if (paddingTop === this.uiState.edgeToEdgeTop && paddingBottom === this.uiState.edgeToEdgeBottom)
       return;

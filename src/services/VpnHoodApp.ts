@@ -13,7 +13,8 @@ import {
   SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName, type ShowErrorActions } from '@/helpers/UiConstants';
+import { AppName, ComponentName } from '@/helpers/UiConstants';
+import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
 import i18n from '@/locales/i18n';

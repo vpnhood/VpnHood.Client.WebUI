@@ -64,7 +64,7 @@
   "EXCLUDE_MY_COUNTRY": "Mein Land ausschließen",
   "SPLIT_EXCLUDE_MY_COUNTRY_DESC": "Umgeht das VPN für lokalen Datenverkehr. Die ideale Balance aus Geschwindigkeit und Privatsphäre für den Alltag.",
   "SPLIT_COUNTRY_OFF_DESC": "Leitet den gesamten Datenverkehr durch das VPN. Maximaler Schutz, lokale Dienste laden jedoch eventuell langsamer.",
-  "ALL_COUTRIES_EXCLUDED_ERROR_MSG": "Alle Länder sind ausgeschlossen, daher wird kein Datenverkehr getunnelt. Aktivieren Sie mindestens ein Land.",
+  "ALL_COUNTRIES_EXCLUDED_ERROR_MSG": "Alle Länder sind ausgeschlossen, daher wird kein Datenverkehr getunnelt. Aktivieren Sie mindestens ein Land.",
   "FASTER": "Schneller",
   "INCLUDE_ALL": "Alle einschließen",
   "INCLUDE_ALL_DESC": "Leitet den Datenverkehr aller Länder durch das VPN",

@@ -48,7 +48,7 @@ async function onConnectButtonClick(): Promise<void> {
 
   // Connect
   if (vhApp.data.state.canConnect && !vhApp.data.uiState.uiConnectInProgress) {
-    await ConnectManager.connect1({isDiagnose: false});
+    await ConnectManager.connectWithCurrentProfile({isDiagnose: false});
   }
 }
 
@@ -161,7 +161,7 @@ function connectButtonText(): string {
 
           <!-- Text related to selected option -->
           <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
-            {{ locale(Util.protocolTitle(vhApp.data.getActiveProtocol)) }}
+            {{ locale(Util.protocolTitle(vhApp.data.activeProtocol)) }}
           </span>
 
           <!-- Cloak mode -->
