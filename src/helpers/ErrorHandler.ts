@@ -221,7 +221,9 @@ export class ErrorHandler {
 
       // Premium code is invalid
       case SessionErrorCode.AccessCodeRejected:
-        return { localeKey: 'INVALID_ACCESS_CODE' };
+        return { localeKey: 'INVALID_ACCESS_CODE', action: {
+          showRemovePremium: VpnHoodApp.instance.data.isPremiumUser }
+        };
 
       // Connection plan rejected by access server
       case SessionErrorCode.PlanRejected:

@@ -117,7 +117,6 @@ export class VpnHoodAppData {
   }
 
   get isSplitDomainActive(): boolean {
-    console.log("zzz", this.isPremiumFeatureAllowed(AppFeature.SplitDomain)); //todo
     return this.userSettings.useSplitDomain && this.isPremiumFeatureAllowed(AppFeature.SplitDomain);
   }
 
