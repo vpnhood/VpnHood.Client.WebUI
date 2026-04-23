@@ -3,6 +3,7 @@ import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import type { RouteLocationRaw } from 'vue-router';
 import router from '@/services/router';
+import { computed } from 'vue';
 import { getFeatureItems } from '@/components/Home/featureIcons';
 import FeatureIconDisplay from '@/components/Home/FeatureIconDisplay.vue';
 
@@ -16,7 +17,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
 }>();
 
-const featureItems = getFeatureItems();
+const featureItems = computed(() => getFeatureItems());
 
 async function navigateByRouter(to: RouteLocationRaw){
   await router.replace(to);

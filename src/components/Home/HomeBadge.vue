@@ -1,13 +1,13 @@
 ﻿<script setup lang="ts">
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { getFeatureItems } from '@/components/Home/featureIcons';
 import FeatureIconDisplay from '@/components/Home/FeatureIconDisplay.vue';
 
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 
-const featureItems = getFeatureItems();
+const featureItems = computed(() => getFeatureItems());
 </script>
 
 <template>
