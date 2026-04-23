@@ -12,7 +12,7 @@ import { Util } from '@/helpers/Util';
 import { computed, ref } from 'vue';
 import UserReviewDialog from '@/components/Home/UserReviewDialog.vue';
 import BadgeDialog from '@/components/Home/BadgeDialog.vue';
-import HomeAppBar from '@/components/Home/HomeAppBar.vue';
+import HomePageHeader from '@/components/Home/HomePageHeader.vue';
 import DeveloperDialog from '@/components/Home/DeveloperDialog.vue';
 import GoPremiumButton from '@/components/Home/GoPremiumButton.vue';
 import HomeBadge from '@/components/Home/HomeBadge.vue';
@@ -86,7 +86,7 @@ function connectButtonText(): string {
 
       <!-- Home page app bar & Go Premium or Countdown button & home badge -->
       <v-col cols="12">
-        <home-app-bar/>
+        <home-page-header/>
         <v-row class="mt-0" align="center">
           <v-col cols="12" class="text-center position-relative">
             <home-badge />

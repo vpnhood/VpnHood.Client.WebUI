@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed, ref } from 'vue';
-import type { GeneralSnackbarData } from '@/components/GeneralSnackbar/GeneralSnackbarData';
+import type { GeneralSnackbarState } from '@/helpers/ui-state/GeneralSnackbarState';
 import i18n from '@/locales/i18n';
 import vuetify from '@/theme/vuetify';
 
@@ -16,19 +16,19 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
 }>();
 
-const snackbarData = ref<GeneralSnackbarData>(VpnHoodApp.instance.data.uiState.generalSnackbarData);
+const snackbarState = ref<GeneralSnackbarState>(VpnHoodApp.instance.data.uiState.generalSnackbarState);
 const timeOut = computed(() => {
-  if (snackbarData.value.hasTimer){
-    return snackbarData.value.timeOut ?? 3000;
+  if (snackbarState.value.hasTimer){
+    return snackbarState.value.timeOut ?? 3000;
   }
   return -1;
 });
 
 function hasCloseButton(): boolean{
-  if (snackbarData.value.hasCloseBtn !== null)
-    return snackbarData.value.hasCloseBtn;
+  if (snackbarState.value.hasCloseBtn !== null)
+    return snackbarState.value.hasCloseBtn;
 
-  return !snackbarData.value.hasTimer;
+  return !snackbarState.value.hasTimer;
 }
 function onCloseButton(){
   // Set ignore time by user for 'suppress to' to prevent showing up again until a new connection is created
@@ -48,11 +48,11 @@ function onCloseButton(){
     class="pt-2"
     rounded="lg"
     vertical
-    :timer="snackbarData.hasTimer ? 'rgba(255,255,255,0.5)' : false"
+    :timer="snackbarState.hasTimer ? 'rgba(255,255,255,0.5)' : false"
     :timeout="timeOut"
-    :content-class="snackbarData.textColor ? `text-${snackbarData.textColor}` : ''"
-    :color="snackbarData.bgColor"
-    :text="snackbarData.message"
+    :content-class="snackbarState.textColor ? `text-${snackbarState.textColor}` : ''"
+    :color="snackbarState.bgColor"
+    :text="snackbarState.message"
   >
     <template v-slot:actions v-if="hasCloseButton()">
       <v-btn :text="locale('CLOSE')" size="small" @click="onCloseButton" />

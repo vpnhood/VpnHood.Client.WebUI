@@ -1,4 +1,4 @@
-export class GeneralSnackbarData {
+export class GeneralSnackbarState {
   public message: string = "";
   public bgColor: string = "highlight";
   public textColor: string | null = null;

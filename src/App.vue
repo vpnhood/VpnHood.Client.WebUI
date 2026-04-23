@@ -106,10 +106,10 @@ onMounted(async () => {
       <engine-error-dialog v-model="showEngineErrorDialog" />
 
       <!-- Global snackbar -->
-      <general-snackbar v-model="vhApp.data.uiState.generalSnackbarData.isShow" />
+      <general-snackbar v-model="vhApp.data.uiState.generalSnackbarState.isShow" />
 
       <!-- General confirm dialog -->
-      <confirm-dialog v-model="vhApp.data.uiState.confirmDialogData.isShow" />
+      <confirm-dialog v-model="vhApp.data.uiState.confirmDialogState.isShow" />
 
     </v-layout>
   </v-app>

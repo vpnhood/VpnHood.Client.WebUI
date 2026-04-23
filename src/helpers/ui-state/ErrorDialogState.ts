@@ -1,4 +1,4 @@
-export class ErrorDialogData {
+export class ErrorDialogState {
   public message: string = '';
   public showDiagnoseButton: boolean = false;
   public showLogButton: boolean = false;

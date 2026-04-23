@@ -124,7 +124,7 @@ export class VpnHoodApp {
       this.data.state.sessionInfo?.suppressedTo &&
       this.data.state.sessionInfo?.suppressedTo === SessionSuppressType.Other &&
       this.data.uiState.userIgnoreSuppressToTime?.toString() !== this.data.state.connectRequestTime?.toString() &&
-      !this.data.uiState.generalSnackbarData.isShow
+      !this.data.uiState.generalSnackbarState.isShow
     ) {
       this.showGeneralSnackbar(
         i18n.global.t('SESSION_SUPPRESSED_TO_OTHER'),
@@ -251,13 +251,13 @@ export class VpnHoodApp {
 
   // Show error dialog
   public async showErrorMessage(text: string, action?: ShowErrorActions): Promise<void> {
-    const errorDialogData = this.data.uiState.errorDialogData;
-    errorDialogData.message = text;
-    errorDialogData.showLogButton = this.data.state.promptForLog;
-    errorDialogData.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
-    errorDialogData.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
-    errorDialogData.showRemovePremium = action?.showRemovePremium ?? false;
-    errorDialogData.showTryPremium = action?.showTryPremium ?? false;
+    const errorDialogState = this.data.uiState.errorDialogState;
+    errorDialogState.message = text;
+    errorDialogState.showLogButton = this.data.state.promptForLog;
+    errorDialogState.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
+    errorDialogState.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
+    errorDialogState.showRemovePremium = action?.showRemovePremium ?? false;
+    errorDialogState.showTryPremium = action?.showTryPremium ?? false;
 
     await this.errorDialogModel.show(true);
   }
@@ -313,12 +313,12 @@ export class VpnHoodApp {
     textColor?: string,
     hasCloseButton?: boolean,
   ): void {
-    this.data.uiState.generalSnackbarData.message = message;
-    this.data.uiState.generalSnackbarData.bgColor = bgColor;
-    this.data.uiState.generalSnackbarData.hasTimer = hasTimer;
-    this.data.uiState.generalSnackbarData.textColor = textColor ?? null;
-    this.data.uiState.generalSnackbarData.hasCloseBtn = hasCloseButton ?? null;
-    this.data.uiState.generalSnackbarData.isShow = true;
+    this.data.uiState.generalSnackbarState.message = message;
+    this.data.uiState.generalSnackbarState.bgColor = bgColor;
+    this.data.uiState.generalSnackbarState.hasTimer = hasTimer;
+    this.data.uiState.generalSnackbarState.textColor = textColor ?? null;
+    this.data.uiState.generalSnackbarState.hasCloseBtn = hasCloseButton ?? null;
+    this.data.uiState.generalSnackbarState.isShow = true;
   }
 
   public async removePremiumCode(): Promise<void> {
@@ -418,10 +418,10 @@ export class VpnHoodApp {
   }
 
   public showConfirmDialog(title: string, message: string): Promise<boolean> {
-    const confirmDialogData = this.data.uiState.confirmDialogData;
-    confirmDialogData.isShow = true;
-    confirmDialogData.title = title;
-    confirmDialogData.message = message;
+    const confirmDialogState = this.data.uiState.confirmDialogState;
+    confirmDialogState.isShow = true;
+    confirmDialogState.title = title;
+    confirmDialogState.message = message;
 
     this.confirmDialogDeferred = createDeferred<boolean>();
     return this.confirmDialogDeferred.promise;

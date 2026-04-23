@@ -1,12 +1,12 @@
-import { ErrorDialogData } from '@/components/ErrorDialog/ErrorDialogData';
-import { GeneralSnackbarData } from '@/components/GeneralSnackbar/GeneralSnackbarData';
-import { ConfirmDialogData } from '@/components/ConfirmDialog/ConfirmDialogData';
+import { ErrorDialogState } from '@/helpers/ui-state/ErrorDialogState';
+import { GeneralSnackbarState } from '@/helpers/ui-state/GeneralSnackbarState';
+import { ConfirmDialogState } from '@/helpers/ui-state/ConfirmDialogState';
 
 export class UiState {
 
-  public errorDialogData: ErrorDialogData = new ErrorDialogData();
-  public generalSnackbarData: GeneralSnackbarData = new GeneralSnackbarData();
-  public confirmDialogData: ConfirmDialogData = new ConfirmDialogData();
+  public errorDialogState: ErrorDialogState = new ErrorDialogState();
+  public generalSnackbarState: GeneralSnackbarState = new GeneralSnackbarState();
+  public confirmDialogState: ConfirmDialogState = new ConfirmDialogState();
 
   // Suppress message state
   public userIgnoreSuppressToTime: Date | null = null;

@@ -11,11 +11,11 @@ const props = defineProps<{
 
 function onConfirm(): void{
   vhApp.confirmDialogDeferred?.resolve(true);
-  vhApp.data.uiState.confirmDialogData.isShow = false;
+  vhApp.data.uiState.confirmDialogState.isShow = false;
 }
 function onCancel(): void{
   vhApp.confirmDialogDeferred?.resolve(false);
-  vhApp.data.uiState.confirmDialogData.isShow = false;
+  vhApp.data.uiState.confirmDialogState.isShow = false;
 }
 </script>
 
@@ -25,12 +25,12 @@ function onCancel(): void{
       :persistent="true"
       >
       <v-card
-        :title="vhApp.data.uiState.confirmDialogData.title"
+        :title="vhApp.data.uiState.confirmDialogState.title"
         append-icon="mdi-alert-circle-outline"
         color="general-dialog"
       >
         <v-card-text class="text-general-dialog-text text-body-2">
-          {{ vhApp.data.uiState.confirmDialogData.message }}
+          {{ vhApp.data.uiState.confirmDialogState.message }}
         </v-card-text>
 
         <v-card-actions>

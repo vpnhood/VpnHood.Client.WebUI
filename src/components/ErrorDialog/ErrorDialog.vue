@@ -21,7 +21,7 @@ const emit = defineEmits<{
 const updateParams = new ClientProfileUpdateParams({
   selectedLocation: new PatchOfString({value: vhApp.data.uiState.autoLocationValue})
 });
-const dialogData = computed(() => vhApp.data.uiState.errorDialogData);
+const dialogState = computed(() => vhApp.data.uiState.errorDialogState);
 
 // Reconnect by Auto Location
 async function changeLocationToAuto(clientProfileId: string): Promise<void> {
@@ -95,17 +95,17 @@ async function closeDialog(): Promise<void> {
       color="dialog-alert"
     >
 
-      <v-card-text v-if="dialogData.showSystemSettingButton" class="text-dialog-alert-text text-body-2">
+      <v-card-text v-if="dialogState.showSystemSettingButton" class="text-dialog-alert-text text-body-2">
         <p>{{locale("AD_BLOCKER_MSG_PART_1")}}</p>
         <p class="my-3">{{locale("AD_BLOCKER_MSG_PART_2")}}</p>
         <p>{{locale("AD_BLOCKER_MSG_PART_3")}}</p>
       </v-card-text>
 
       <v-card-text v-else class="text-dialog-alert-text text-body-2">
-        {{ dialogData.message }}
+        {{ dialogState.message }}
 
         <learning-button
-          v-if="dialogData.showTryPremium && vhApp.data.clientProfileId"
+          v-if="dialogState.showTryPremium && vhApp.data.clientProfileId"
           :action="{ name: 'FREE_SERVERS_DISRUPTIONS' }"
         />
 
@@ -125,7 +125,7 @@ async function closeDialog(): Promise<void> {
           >
 
           <!-- Change location to auto -->
-          <v-btn v-if="dialogData.showChangeServerToAutoButton && vhApp.data.clientProfileId"
+          <v-btn v-if="dialogState.showChangeServerToAutoButton && vhApp.data.clientProfileId"
             variant="flat"
             :text="locale('CHANGE_TO_AUTO_AND_RECONNECT')"
             @click="changeLocationToAuto(vhApp.data.clientProfileId)"
@@ -133,14 +133,14 @@ async function closeDialog(): Promise<void> {
 
           <!-- Try premium -->
           <v-btn
-            v-if="dialogData.showTryPremium && vhApp.data.clientProfileId"
+            v-if="dialogState.showTryPremium && vhApp.data.clientProfileId"
            variant="flat"
            :text="locale('TRY_PREMIUM_FOR_FREE')"
            @click="tryPremium(vhApp.data.clientProfileId)"
           />
 
           <!-- Remove premium code or profile -->
-          <div v-if="dialogData.showRemovePremium">
+          <div v-if="dialogState.showRemovePremium">
             <v-btn
               variant="flat"
               :text="locale('RE_NEW_PREMIUM')"
@@ -154,14 +154,14 @@ async function closeDialog(): Promise<void> {
           </div>
 
           <!-- Diagnose -->
-          <v-btn v-if="dialogData.showDiagnoseButton"
+          <v-btn v-if="dialogState.showDiagnoseButton"
             prepend-icon="mdi-stethoscope"
             :text="locale('DIAGNOSE')"
             @click="diagnose()"
           />
 
           <!-- OpenReport -->
-          <v-btn v-if="dialogData.showLogButton && (!vhApp.data.features.isTv)"
+          <v-btn v-if="dialogState.showLogButton && (!vhApp.data.features.isTv)"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"
@@ -169,7 +169,7 @@ async function closeDialog(): Promise<void> {
           />
 
           <!-- SendReport -->
-          <v-btn v-if="dialogData.showLogButton"
+          <v-btn v-if="dialogState.showLogButton"
             prepend-icon="mdi-send-outline"
             target="_blank"
             :text="locale('SEND_REPORT')"
