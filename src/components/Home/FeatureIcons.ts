@@ -17,7 +17,7 @@ export function getFeatureItems(): FeatureItem[] {
       secondIcon: 'mdi-ip-outline',
       title: 'SPLIT_IP',
       pageLink: { name: 'SPLIT_TUNNELING' },
-      isActive: vhApp.data.isSplitTunnelingActive,
+      isActive: vhApp.data.isSplitIpViaDeviceActive || vhApp.data.isSplitIpViaAppActive,
     },
     {
       icon: 'mdi-call-split',
