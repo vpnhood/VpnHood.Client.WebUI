@@ -85,8 +85,8 @@ export class ConnectManager {
     clientProfileId,
     serverLocation,
     isPremiumLocation,
-    isDiagnose = false,
-    goToHome = true,
+    isDiagnose,
+    goToHome,
   }: {
     clientProfileId: string;
     serverLocation: string | null;
