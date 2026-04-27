@@ -159,7 +159,7 @@ export class VpnHoodApp {
     console.debug(`connect. Serverlocation: ${connectParams.serverLocation}, Planid: ${connectParams.planId}, GoTohome: ${connectParams.goToHome}`);
 
     // Navigate to home page
-    if ((connectParams.goToHome) && router.currentRoute.value.name !== 'HOME')
+    if ((connectParams.goToHome ?? true) && router.currentRoute.value.name !== 'HOME')
        await router.replace({ name: 'HOME' });
 
     this.data.uiState.uiConnectInProgress = true;
