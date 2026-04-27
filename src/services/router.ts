@@ -4,7 +4,8 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior: (_to, _from, savedPosition) => savedPosition ?? { top: 0 }
 });
 
 // Change page title and add transition
