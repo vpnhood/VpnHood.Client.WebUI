@@ -80,7 +80,7 @@ const locale = i18n.global.t;
     />
 
     <!-- Location -->
-    <settings-section-title :title="locale('LOCATIONS')"/>
+    <settings-section-title :title="vhApp.isConnectApp() ? locale('LOCATIONS_TMP') : locale('LOCATIONS')"/>
 
     <!-- Local network -->
     <settings-item
