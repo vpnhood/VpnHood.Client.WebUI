@@ -1,5 +1,5 @@
 {
-  "SYSTEM_DEFAULT_LANGUAGE": "Система по умолчанию",
+  "SYSTEM_DEFAULT_LANGUAGE": "Системный язык",
   "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "Язык",
   "ENGINE_NAME": "VpnHood!",
@@ -332,6 +332,9 @@
   "SELECTED_FREE_SERVER": "Бесплатный сервер",
   "SELECTED_FREE_SERVER_DESC": "Неограниченный доступ.",
   "SELECTED_FREE_SERVER_UNLIMITED_DESC": "Бесплатный доступ на {minutes} минут.",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD": "Бесплатный сервер за рекламу",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_DESC": "Смотрите рекламу и получите {minutes} минут бесплатного доступа.",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_UNLIMITED_DESC": "Безлимитный доступ.",
   "WATCH_REWARDED_AD": "Смотреть рекламу",
   "WATCH_REWARDED_AD_DESC": "Премиум на {minutes} минут.",
   "TRY_PREMIUM": "Попробовать Премиум",

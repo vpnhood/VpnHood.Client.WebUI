@@ -1,5 +1,5 @@
 {
-  "SYSTEM_DEFAULT_LANGUAGE": "Défaut du système",
+  "SYSTEM_DEFAULT_LANGUAGE": "Par défaut (système)",
   "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "Langue",
   "ENGINE_NAME": "VpnHood!",
@@ -332,6 +332,9 @@
   "SELECTED_FREE_SERVER": "Serveur Gratuit",
   "SELECTED_FREE_SERVER_DESC": "Accès illimité",
   "SELECTED_FREE_SERVER_UNLIMITED_DESC": "Accès gratuit pendant {minutes} minutes.",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD": "Serveur gratuit par publicité",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_DESC": "Regardez une publicité pour {minutes} minutes d'accès gratuit.",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_UNLIMITED_DESC": "Accès illimité.",
   "WATCH_REWARDED_AD": "Regarder une pub",
   "WATCH_REWARDED_AD_DESC": "Premium pendant {minutes} minutes.",
   "TRY_PREMIUM": "Essayer Premium",

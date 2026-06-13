@@ -1,5 +1,5 @@
 {
-  "SYSTEM_DEFAULT_LANGUAGE": "系统默认",
+  "SYSTEM_DEFAULT_LANGUAGE": "跟随系统",
   "SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC": "Your device language isn't supported; English will be displayed instead.",
   "LANGUAGE": "语言",
   "ENGINE_NAME": "VpnHood!",
@@ -332,6 +332,9 @@
   "SELECTED_FREE_SERVER": "免费服务器",
   "SELECTED_FREE_SERVER_DESC": "无限访问",
   "SELECTED_FREE_SERVER_UNLIMITED_DESC": "免费访问 {minutes} 分钟.",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD": "观看广告解锁免费节点",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_DESC": "观看广告即可获得 {minutes} 分钟免费使用时长。",
+  "SELECTED_FREE_SERVER_BY_REWARDED_AD_UNLIMITED_DESC": "无限访问时长。",
   "WATCH_REWARDED_AD": "观看广告",
   "WATCH_REWARDED_AD_DESC": "高级版 {minutes} 分钟。",
   "TRY_PREMIUM": "尝试高级",
