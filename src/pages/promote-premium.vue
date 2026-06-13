@@ -40,6 +40,12 @@ function isFreeAvailable(){
   return !isPremiumLocation && locationOptions.value?.normal !== null && locationOptions.value?.normal !== undefined;
 }
 
+function isFreeByRewardedAdAvailable(){
+  // Same free fallback, but unlocked by a rewarded ad. 0 means uninterrupted access, so only null/undefined hides it.
+  return !isPremiumLocation && locationOptions.value?.normalByRewardedAd !== null &&
+    locationOptions.value?.normalByRewardedAd !== undefined;
+}
+
 async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
   // Open the PurchaseSubscription page
   if (planId === MyPlanId.premiumByPurchase || planId === MyPlanId.premiumByCode){
@@ -114,6 +120,34 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
             <p class="text-white opacity-40 text-caption" style="line-height: 1.3">
               {{ locationOptions?.normal === 0 ? locale('SELECTED_FREE_SERVER_DESC')
               : locale('SELECTED_FREE_SERVER_UNLIMITED_DESC', {minutes: locationOptions?.normal}) }}
+            </p>
+          </v-col>
+          <v-col cols="auto" class="pe-0 action-btn">
+            <v-chip
+              variant="flat"
+              color="btn-style-2"
+              class="font-weight-bold"
+              size="small"
+              tabindex="-1"
+              :text="locale('CONNECT')"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Free server unlocked by a rewarded ad (longer/uninterrupted free session) -->
+        <v-row v-if="isFreeByRewardedAdAvailable()"
+           dense
+           v-ripple
+           align="center"
+           class="px-2 py-1 mx-0 mt-3 rounded-lg card-on-grad-bg"
+           tabindex="1"
+           @click="actionByConnectPlan(ConnectPlanId.NormalByRewardedAd)"
+        >
+          <v-col>
+            <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER_BY_REWARDED_AD')}}</h4>
+            <p class="text-white opacity-40 text-caption">
+              {{ locationOptions?.normalByRewardedAd === 0 ? locale('SELECTED_FREE_SERVER_BY_REWARDED_AD_UNLIMITED_DESC')
+              : locale('SELECTED_FREE_SERVER_BY_REWARDED_AD_DESC', {minutes: locationOptions?.normalByRewardedAd}) }}
             </p>
           </v-col>
           <v-col cols="auto" class="pe-0 action-btn">
