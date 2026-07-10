@@ -13,7 +13,10 @@ interface CarouselItem {
   title: string,
   description: string,
   height: string,
+  // Some features depend on OS capabilities; undefined means supported on all platforms
+  isSupported?: boolean,
 }
+const intentFeatures = vhApp.data.intentFeatures;
 const carouselItems: CarouselItem[] = [
   {
     image: "ultra-fast-server.webp",
@@ -44,18 +47,21 @@ const carouselItems: CarouselItem[] = [
     title: "PRIVATE_AND_CUSTOM_DNS",
     description: "PRIVATE_AND_CUSTOM_DNS_DESC",
     height: "200px",
+    isSupported: intentFeatures.isPrivateDnsSettingsSupported,
   },
   {
     image: "quick-launch.webp",
     title: "QUICK_LAUNCH",
     description: "QUICK_LAUNCH_DESC",
     height: "200px",
+    isSupported: intentFeatures.isQuickLaunchSupported,
   },
   {
     image: "always-on.webp",
     title: "ALWAYS_ON",
     description: "ALWAYS_ON_PREMIUM_DESC",
     height: "200px",
+    isSupported: intentFeatures.isAlwaysOnSettingsSupported,
   },
   {
     image: "support.webp",
@@ -65,9 +71,16 @@ const carouselItems: CarouselItem[] = [
   },
 ]
 
-const displayedCarouselItems = computed(() =>
-  vhApp.data.features.isPremiumFlagSupported ? carouselItems : carouselItems.filter(i => i.title === 'ULTRA_FAST_SPEED')
-);
+const displayedCarouselItems = computed(() => {
+  // filter out unsupported features
+  let supportedItems = carouselItems.filter(i => i.isSupported !== false);
+
+  // filter out features that are not supported, when the premium flag is not supported because we already have all features
+  if (!vhApp.data.features.isPremiumFlagSupported)
+    supportedItems = supportedItems.filter(i => i.title !== 'ULTRA_FAST_SPEED');
+  
+    return supportedItems;
+});
 
 // preload the rocket images
 onBeforeMount(() => {
