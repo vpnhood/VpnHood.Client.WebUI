@@ -10,7 +10,7 @@ const vhApp = VpnHoodApp.instance;
 
 const proxies = ref<AppProxyEndPointInfo[]>([]);
 const isLoading = ref<boolean>(false);
-const proxyStats = computed(() => vhApp.data.state.proxyEndPointManagerStatus);
+const proxyStats = computed(() => vhApp.data.state.proxyConnectorStatus);
 const totalProxyCount = ref(0);
 const latestRecordIndex = ref(0);
 const latestRecordCount = ref(10);

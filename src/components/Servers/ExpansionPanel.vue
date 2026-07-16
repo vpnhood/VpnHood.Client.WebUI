@@ -172,11 +172,11 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
 
                   <!-- Rename item -->
                   <v-list-item
-                    v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"
+                    v-if="!clientProfileInfo.isBuiltIn"
                     :title="locale('RENAME')" prepend-icon="mdi-pencil"
                     @click="showRenameDialog(clientProfileInfo)"
                   />
-                  <v-divider v-if="clientProfileInfo.clientProfileId !== vhApp.data.features.builtInClientProfileId"/>
+                  <v-divider v-if="!clientProfileInfo.isBuiltIn"/>
 
                   <!-- Diagnose item -->
                   <v-list-item

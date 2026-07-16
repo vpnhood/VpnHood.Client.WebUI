@@ -1,10 +1,10 @@
 ﻿<script setup lang="ts">
 import i18n from '@/locales/i18n';
-import type { AppProxyEndPointManagerStatus } from '@/services/VpnHood.Client.Api';
+import type { AppProxyConnectorStatus } from '@/services/VpnHood.Client.Api';
 
 const locale = i18n.global.t;
 const props = defineProps<{
-  proxyStats: AppProxyEndPointManagerStatus,
+  proxyStats: AppProxyConnectorStatus,
   totalProxyCount: number
 }>();
 </script>
