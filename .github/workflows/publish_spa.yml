@@ -57,11 +57,13 @@ jobs:
           git push origin "HEAD:${{ github.ref_name }}"
           if ($LASTEXITCODE -ne 0) { throw "git push failed (exit $LASTEXITCODE)" }
 
-      # Fail-closed by construction. workflow_dispatch is used instead of repository_dispatch
-      # precisely because it 404s when the target workflow or ref is missing — repository_dispatch
-      # returns 204 and silently drops the event, so a mis-wired pipeline looks green while
-      # producing no package. Belt and braces: we also confirm a run really started, and mirror its
-      # outcome, so a ClassicSpa failure turns THIS run red instead of hiding in another repo.
+      # repository_dispatch, not `gh workflow run`: dispatching a workflow BY NAME needs the PAT to
+      # hold `Actions: write`, which the org declines to grant, while repository_dispatch needs only
+      # `Contents: write`. The cost is that repository_dispatch returns 204 even when nothing
+      # handles the event — so we do not trust it. The two checks below turn that silence into a
+      # failure: confirm a run really started, then mirror its outcome so a ClassicSpa failure turns
+      # THIS run red instead of hiding in another repo's Actions tab.
+      # Both checks need only `Actions: read`.
       - name: Dispatch ClassicSpa publish
         env:
           GH_TOKEN: ${{ secrets.VH_DISPATCH_TOKEN }}
@@ -79,9 +81,11 @@ jobs:
           BEFORE=$(gh run list --repo "$REPO" --workflow publish_nugets.yml --limit 1 --json databaseId --jq '.[0].databaseId // 0')
 
           # ClassicSpa clones this branch, whose tip is now the bump commit above.
-          gh workflow run publish_nugets.yml --repo "$REPO" --ref develop \
-            -f webui_ref='${{ github.ref_name }}' \
-            -f prerelease="$PRERELEASE"
+          gh api "repos/$REPO/dispatches" \
+            -f event_type=webui-published \
+            -f client_payload[ref]='${{ github.ref_name }}' \
+            -f client_payload[prerelease]="$PRERELEASE" \
+            -f client_payload[spa_version]='${{ steps.bump.outputs.version }}'
 
           # A dispatch that is accepted but produces no run is still a failure.
           RUN_ID=0
@@ -91,7 +95,7 @@ jobs:
             if [ "$CURRENT" != "$BEFORE" ]; then RUN_ID="$CURRENT"; break; fi
           done
           if [ "$RUN_ID" = "0" ]; then
-            echo "::error::Dispatched publish_nugets.yml on $REPO but no run appeared within 60s."
+            echo "::error::Dispatched webui-published to $REPO but no publish_nugets.yml run appeared within 60s. Check that publish_nugets.yml is on that repo's DEFAULT branch and handles the webui-published event type."
             exit 1
           fi
 
