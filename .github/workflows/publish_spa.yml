@@ -1,0 +1,72 @@
+name: Publish SPA
+
+# Bumps this repo's SPA version, then tells vpnhood/VpnHood.AppLib.Assets.ClassicSpa to publish.
+# THAT repo checks this one out, builds the SPA and packs it into its NuGet — keeping the build on
+# the consuming side means one job produces the package, with no 15 MB spa.zip committed across repos.
+#
+#   develop -> X.Y.Z-prerelease   (consumers only get it if they opt into prereleases)
+#   main    -> X.Y.Z              (stable)
+#
+# The bump happens HERE, not in the ClassicSpa build, so the version line stays owned by the repo it
+# describes: every published bundle's 4th version segment maps to a commit in this repo. Local builds
+# never bump — they are identified by build time instead (see vite.config.ts).
+#
+# Requires the VH_DISPATCH_TOKEN secret: a token with `contents: write` on the ClassicSpa repo. The
+# automatic GITHUB_TOKEN cannot trigger workflows in another repository.
+
+on:
+  push:
+    branches: [develop, main]
+    # Docs and CI config never change the shipped bundle.
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    # Only the canonical repo publishes the shared package; forks push nothing.
+    if: github.repository_owner == 'vpnhood'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # push the version-bump commit back to this branch
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Check out the branch itself, not the detached push SHA, so the bump can be pushed back.
+          ref: ${{ github.ref_name }}
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: Bump SPA version
+        id: bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          npm version patch --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          git add package.json package-lock.json
+          # [skip ci] stops this push from re-entering this workflow — without it the bump commit
+          # would trigger another bump, forever.
+          git commit -m "Bump SPA version to $VERSION [skip ci]"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Dispatch ClassicSpa publish
+        env:
+          GH_TOKEN: ${{ secrets.VH_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::VH_DISPATCH_TOKEN is not set — cannot trigger the ClassicSpa publish."
+            exit 1
+          fi
+          # main is the stable line; every other branch publishes a prerelease.
+          if [ "${{ github.ref_name }}" = "main" ]; then PRERELEASE=false; else PRERELEASE=true; fi
+          echo "Dispatching ClassicSpa publish for ${{ github.ref_name }} (SPA ${{ steps.bump.outputs.version }}, prerelease=$PRERELEASE)"
+          # ClassicSpa clones this branch, whose tip is now the bump commit above.
+          gh api repos/vpnhood/VpnHood.AppLib.Assets.ClassicSpa/dispatches \
+            -f event_type=webui-published \
+            -f client_payload[ref]='${{ github.ref_name }}' \
+            -f client_payload[prerelease]="$PRERELEASE" \
+            -f client_payload[spa_version]='${{ steps.bump.outputs.version }}'

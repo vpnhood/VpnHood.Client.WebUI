@@ -39,16 +39,24 @@ async function diagnose(): Promise<void> {
   await vhApp.diagnose();
 }
 
+// Displayed as app.major.minor.build + the SPA's build number as the 4th segment, so one string
+// identifies both: app "8.0.834" carrying SPA "1.0.975" reads as 8.0.834.975. CI bumps the SPA
+// patch on every published build, so that last segment maps to a commit in the WebUI repo.
 function mergedAppAndUiVersion(): string {
   const appVersion = vhApp.data.features.version.split('.');
   const uiVersion = import.meta.env.PACKAGE_VERSION?.split('.');
-  if (uiVersion) {
-    appVersion[appVersion.length - 1] = uiVersion[2];
-    return appVersion.join('.');
-  } else {
+  if (!uiVersion || uiVersion.length < 3) {
     console.error('could not find UI package version.');
     return vhApp.data.features.version;
   }
+  return [appVersion[0], appVersion[1], appVersion[2], uiVersion[2]].join('.');
+}
+
+// Only CI bumps the SPA version, so on a local build the version above is whatever the last
+// published build left behind and cannot prove which bundle is being served. The build time is
+// baked into this bundle and can, so show it — a stale local build becomes obvious instead of silent.
+function localBuildText(): string | null {
+  return import.meta.env.SPA_IS_CI_BUILD ? null : `local · built ${import.meta.env.SPA_BUILD_TIME}`;
 }
 
 async function checkForUpdate() {
@@ -120,6 +128,11 @@ function edgeToEdgeHeight(bottom: boolean): string{
         <div class="text-navigation-drawer-version text-caption">
           <span class="me-2">{{ locale('VERSION') }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
+        </div>
+
+        <!-- Local (non-CI) SPA build: show when it was built, to expose a stale bundle -->
+        <div v-if="localBuildText()" dir="ltr" class="text-navigation-drawer-version text-caption opacity-60">
+          {{ localBuildText() }}
         </div>
       </div>
 

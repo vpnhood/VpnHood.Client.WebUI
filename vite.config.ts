@@ -8,6 +8,14 @@ import legacy from '@vitejs/plugin-legacy';
 import postcssPresetEnv from 'postcss-preset-env';
 import { version } from './package.json';
 
+// The SPA carries its own version line, bumped by CI on every published build, so a shipped bundle
+// traces back to a commit in this repo. Local builds do NOT bump — nothing increments, so the
+// version alone cannot tell a fresh local build from a stale one. The build time can, and is shown
+// instead of the version for local builds.
+// 'sv-SE' formats as "2026-07-19 14:32:05"; GitHub Actions sets CI=true.
+const buildTime = new Date().toLocaleString('sv-SE').slice(0, 16);
+const isCiBuild = process.env.CI === 'true';
+
 // https://vite.dev/config/
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
@@ -85,5 +93,7 @@ export default defineConfig({
   //------------------------------
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(version),
+    'import.meta.env.SPA_BUILD_TIME': JSON.stringify(buildTime),
+    'import.meta.env.SPA_IS_CI_BUILD': JSON.stringify(isCiBuild),
   }
 });
