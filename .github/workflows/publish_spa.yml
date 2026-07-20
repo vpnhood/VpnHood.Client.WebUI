@@ -36,37 +36,65 @@ jobs:
           # Check out the branch itself, not the detached push SHA, so the bump can be pushed back.
           ref: ${{ github.ref_name }}
           persist-credentials: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: '22' }
 
+      # Same adopt-or-self-bump rule as the vpnhood module repos, so the SPA stays on the family
+      # version line rather than running an unrelated counter. The script writes GITHUB_OUTPUT.
       - name: Bump SPA version
         id: bump
+        shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          npm version patch --no-git-tag-version
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          & "$env:GITHUB_WORKSPACE/pub/Bump-SpaVersion.ps1"
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
           git add package.json package-lock.json
           # [skip ci] stops this push from re-entering this workflow — without it the bump commit
           # would trigger another bump, forever.
-          git commit -m "Bump SPA version to $VERSION [skip ci]"
-          git push origin HEAD:${{ github.ref_name }}
+          git commit -m "Bump SPA version to $version [skip ci]"
+          if ($LASTEXITCODE -ne 0) { throw "git commit failed (exit $LASTEXITCODE)" }
+          git push origin "HEAD:${{ github.ref_name }}"
+          if ($LASTEXITCODE -ne 0) { throw "git push failed (exit $LASTEXITCODE)" }
 
+      # Fail-closed by construction. workflow_dispatch is used instead of repository_dispatch
+      # precisely because it 404s when the target workflow or ref is missing — repository_dispatch
+      # returns 204 and silently drops the event, so a mis-wired pipeline looks green while
+      # producing no package. Belt and braces: we also confirm a run really started, and mirror its
+      # outcome, so a ClassicSpa failure turns THIS run red instead of hiding in another repo.
       - name: Dispatch ClassicSpa publish
         env:
           GH_TOKEN: ${{ secrets.VH_DISPATCH_TOKEN }}
+          REPO: vpnhood/VpnHood.AppLib.Assets.ClassicSpa
         run: |
-          if [ -z "$GH_TOKEN" ]; then
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
             echo "::error::VH_DISPATCH_TOKEN is not set — cannot trigger the ClassicSpa publish."
             exit 1
           fi
           # main is the stable line; every other branch publishes a prerelease.
           if [ "${{ github.ref_name }}" = "main" ]; then PRERELEASE=false; else PRERELEASE=true; fi
-          echo "Dispatching ClassicSpa publish for ${{ github.ref_name }} (SPA ${{ steps.bump.outputs.version }}, prerelease=$PRERELEASE)"
+          echo "Dispatching $REPO publish_nugets.yml for WebUI ${{ github.ref_name }} (SPA ${{ steps.bump.outputs.version }}, prerelease=$PRERELEASE)"
+
+          BEFORE=$(gh run list --repo "$REPO" --workflow publish_nugets.yml --limit 1 --json databaseId --jq '.[0].databaseId // 0')
+
           # ClassicSpa clones this branch, whose tip is now the bump commit above.
-          gh api repos/vpnhood/VpnHood.AppLib.Assets.ClassicSpa/dispatches \
-            -f event_type=webui-published \
-            -f client_payload[ref]='${{ github.ref_name }}' \
-            -f client_payload[prerelease]="$PRERELEASE" \
-            -f client_payload[spa_version]='${{ steps.bump.outputs.version }}'
+          gh workflow run publish_nugets.yml --repo "$REPO" --ref develop \
+            -f webui_ref='${{ github.ref_name }}' \
+            -f prerelease="$PRERELEASE"
+
+          # A dispatch that is accepted but produces no run is still a failure.
+          RUN_ID=0
+          for _ in $(seq 1 12); do
+            sleep 5
+            CURRENT=$(gh run list --repo "$REPO" --workflow publish_nugets.yml --limit 1 --json databaseId --jq '.[0].databaseId // 0')
+            if [ "$CURRENT" != "$BEFORE" ]; then RUN_ID="$CURRENT"; break; fi
+          done
+          if [ "$RUN_ID" = "0" ]; then
+            echo "::error::Dispatched publish_nugets.yml on $REPO but no run appeared within 60s."
+            exit 1
+          fi
+
+          echo "ClassicSpa run: https://github.com/$REPO/actions/runs/$RUN_ID"
+          # --exit-status makes a failed publish fail this step too.
+          gh run watch "$RUN_ID" --repo "$REPO" --exit-status
