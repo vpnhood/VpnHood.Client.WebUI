@@ -37,10 +37,10 @@ try {
 	if ($dirty) { throw "_publish: working tree has uncommitted changes; commit or stash them first.`n$($dirty -join "`n")"; }
 
 	# Prompt for the release type unless it was passed explicitly (so automation can still be silent).
-	# Enter defaults to prerelease (Y) — a bare Enter must not cut a stable release that ff's main.
+	# Enter defaults to stable (N); prerelease requires an explicit y.
 	if (-not $PSBoundParameters.ContainsKey('prerelease')) {
-		$answer = Read-Host "Publish as prerelease? [Y/n]";
-		$prerelease = ($answer -notmatch '^\s*[nN]');
+		$answer = Read-Host "Publish as prerelease? [y/N]";
+		$prerelease = ($answer -match '^\s*[yY]');
 	}
 
 	git pull origin develop --no-rebase;
