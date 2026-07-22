@@ -4,7 +4,7 @@
 	     package.json carries the identical number so the SPA and the package always agree.
 	     Keep it first in the file: the stamper rewrites the FIRST <Version> it finds. -->
 	<PropertyGroup>
-		<Version>8.0.835</Version>
+		<Version>8.0.836</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
