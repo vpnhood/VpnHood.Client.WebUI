@@ -4,7 +4,7 @@
 	     identical number so the SPA and the package always agree.
 	     Keep it first in the file: the stamper rewrites the FIRST <Version> it finds. -->
 	<PropertyGroup>
-		<Version>8.0.838</Version>
+		<Version>8.0.839</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
