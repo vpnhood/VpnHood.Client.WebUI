@@ -1,7 +1,7 @@
 <Project>
-	<!-- The single <Version> the nuget project inherits. Stamped from pub/PubVersion.json by
-	     pub/Bump-SpaVersion.ps1 (adopt-or-self-bump against the monorepo) — do not edit by hand.
-	     package.json carries the identical number so the SPA and the package always agree.
+	<!-- The single <Version> the nuget project inherits. Stamped by pub/Bump-SpaVersion.ps1
+	     (adopt-or-self-bump against the monorepo) — do not edit by hand. package.json carries the
+	     identical number so the SPA and the package always agree.
 	     Keep it first in the file: the stamper rewrites the FIRST <Version> it finds. -->
 	<PropertyGroup>
 		<Version>8.0.836</Version>

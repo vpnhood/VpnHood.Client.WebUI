@@ -17,22 +17,38 @@ $repoDir = Split-Path -Parent $PSScriptRoot;
 $distDir = Join-Path $repoDir "dist";
 $spaZipFile = Join-Path $repoDir "nuget/VpnHood.AppLib.Assets.ClassicSpa/Resources/spa.zip";
 
+if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
+	throw "Build-Spa: 'npm' is not on PATH. Install Node.js (CI: actions/setup-node) before building the SPA.";
+}
+$modulesDir = Join-Path $repoDir "node_modules";
+
 Push-Location $repoDir;
 try {
-	if (-not $noInstall) {
+	if ($noInstall) {
+		# -noInstall trusts an existing install; a missing one would fail later as a cryptic
+		# "run-p: not found" (exit 127), so catch it here with a message that names the cause.
+		if (!(Test-Path $modulesDir)) {
+			throw "Build-Spa: -noInstall was set but $modulesDir does not exist. Drop -noInstall (or run 'npm ci') so build tools like run-p are present.";
+		}
+	}
+	else {
 		npm ci;
-		if ($LASTEXITCODE -gt 0) { throw "Build-Spa: npm ci failed (exit $LASTEXITCODE)."; }
+		if ($LASTEXITCODE -ne 0) { throw "Build-Spa: 'npm ci' failed (exit $LASTEXITCODE) in $repoDir."; }
 	}
 	# `npm run build` = type-check + vite build. A type error must fail the publish, not ship.
 	npm run build;
-	if ($LASTEXITCODE -gt 0) { throw "Build-Spa: npm run build failed (exit $LASTEXITCODE)."; }
+	if ($LASTEXITCODE -ne 0) {
+		$hint = if ($LASTEXITCODE -eq 127) { " (exit 127 = a build tool was not found — node_modules is likely missing or incomplete)" } else { "" };
+		throw "Build-Spa: 'npm run build' failed (exit $LASTEXITCODE) in $repoDir$hint.";
+	}
 }
 finally {
 	Pop-Location;
 }
 
-if (!(Test-Path (Join-Path $distDir "index.html"))) {
-	throw "Build-Spa: $distDir/index.html not found — the SPA build produced no usable output.";
+$indexHtml = Join-Path $distDir "index.html";
+if (!(Test-Path $indexHtml)) {
+	throw "Build-Spa: the build reported success but $indexHtml is missing — vite produced no usable output.";
 }
 
 New-Item -ItemType Directory -Path (Split-Path -Parent $spaZipFile) -Force | Out-Null;

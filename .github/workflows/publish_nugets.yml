@@ -90,9 +90,10 @@ jobs:
           }
 
       # Build AFTER the commit so the bundle embeds the freshly translated locales.
+      # No -noInstall: a fresh runner has no node_modules, so Build-Spa must run 'npm ci' first.
       - name: Build SPA bundle
         shell: pwsh
-        run: ./pub/Build-Spa.ps1 -noInstall
+        run: ./pub/Build-Spa.ps1
 
       # Trusted publishing: exchange the workflow's OIDC token for a short-lived nuget.org key.
       # No NUGET_API_KEY secret — nuget.org authorizes by the trusted-publisher policy configured
