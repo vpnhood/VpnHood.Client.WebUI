@@ -128,10 +128,11 @@ jobs:
               --api-key $env:NUGET_API_KEY --skip-duplicate
             if ($LASTEXITCODE -ne 0) {
               throw ("nuget push failed for $($pkg.Name) (exit $LASTEXITCODE). A 403 means the " +
-                "trusted-publishing key lacks permission for this package: the nuget.org Trusted " +
-                "Publishing policy must live under the package OWNER (the 'vpnhood' org, per " +
-                "nuget.org owners) and cover 'VpnHood.AppLib.Assets.ClassicSpa', and the NUGET_USER " +
-                "variable ('${{ vars.NUGET_USER }}') must equal that owner.")
+                "trusted-publishing policy created by '${{ vars.NUGET_USER }}' does not grant push " +
+                "to 'VpnHood.AppLib.Assets.ClassicSpa'. On nuget.org, that user's policy must list " +
+                "this package (or a matching glob), AND the user must be a co-owner of it — the " +
+                "package is owned by the 'vpnhood' org, so '${{ vars.NUGET_USER }}' has to be a " +
+                "member with push rights.")
             }
           }
           Write-Host "Published VpnHood.AppLib.Assets.ClassicSpa $nugetVersion" -ForegroundColor Green
