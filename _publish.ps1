@@ -37,14 +37,10 @@ try {
 	if ($dirty) { throw "_publish: working tree has uncommitted changes; commit or stash them first.`n$($dirty -join "`n")"; }
 
 	# Prompt for the release type unless it was passed explicitly (so automation can still be silent).
+	# Enter defaults to prerelease (Y) — a bare Enter must not cut a stable release that ff's main.
 	if (-not $PSBoundParameters.ContainsKey('prerelease')) {
-		$choices = @(
-			[System.Management.Automation.Host.ChoiceDescription]::new("&Prerelease", "Publish X.Y.Z-prerelease from develop; leave main untouched"),
-			[System.Management.Automation.Host.ChoiceDescription]::new("&Stable", "Publish stable X.Y.Z and fast-forward main")
-		);
-		# Default (Enter) = Prerelease, the safer choice.
-		$decision = $Host.UI.PromptForChoice("Publish SPA", "Which release type?", $choices, 0);
-		$prerelease = ($decision -eq 0);
+		$answer = Read-Host "Publish as prerelease? [Y/n]";
+		$prerelease = ($answer -notmatch '^\s*[nN]');
 	}
 
 	git pull origin develop --no-rebase;
