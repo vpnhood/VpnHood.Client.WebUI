@@ -20,19 +20,63 @@ $vhDir = Split-Path -parent $solutionDir;
 $nugetSolutionDir = Join-Path $vhDir "VpnHood.AppLib.Assets.ClassicSpa";
 $nugetProjectDir = Join-Path $nugetSolutionDir "VpnHood.AppLib.Assets.ClassicSpa";
 $buildSpaScript = Join-Path $nugetSolutionDir "pub/Build-Spa.ps1";
-$translatorFile = Join-Path $vhDir "VpnHood.ResourceTranslator/VpnHood.ResourceTranslator/bin/Debug/net10.0/vhtranslator.exe";
+
+# Run the translator from SOURCE, not from a published package or a stale bin folder, so any local
+# change to the translator applies to the very next run of this script with no publish round-trip.
+# `dotnet run` rebuilds it first.
+$translatorProjectCandidates = @(
+    (Join-Path $vhDir "VpnHood.Tools.ResourceTranslator/src/VpnHood.Tools.ResourceTranslator/VpnHood.Tools.ResourceTranslator.csproj"),
+    (Join-Path $vhDir "VpnHood.ResourceTranslator/src/VpnHood.Tools.ResourceTranslator/VpnHood.Tools.ResourceTranslator.csproj")
+);
+$translatorProject = $translatorProjectCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1;
 
 if (!(Test-Path $buildSpaScript)) {
     throw "Could not find $buildSpaScript — is the VpnHood.AppLib.Assets.ClassicSpa repo checked out beside this one?";
 }
 
-# translate
+if (!$translatorProject) {
+    throw "Could not find the translator project — is the VpnHood.Tools.ResourceTranslator repo checked out beside this one?";
+}
+
+# The Gemini key lives in the private OmegaHood.Secrets checkout (<Vh>/.user), never in this repo.
+# Per-repo location first, then the older repo-root spellings.
+$geminiKeyCandidates = @(
+    (Join-Path $vhDir ".user/VpnHood.Client.WebUI/google_gemini_api_key.txt"),
+    (Join-Path $vhDir ".user/google_gemini_api_key.txt"),
+    (Join-Path $vhDir ".user/goolge_gemini_api_key.txt")
+);
+$geminiKeyFile = $geminiKeyCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1;
+
+if (!$geminiKeyFile) {
+    throw "Could not find google_gemini_api_key.txt — expected it in $vhDir/.user/VpnHood.Client.WebUI.";
+}
+
+# Passed by environment rather than --api-key so the secret never appears in a command line.
+$env:GEMINI_API_KEY = (Get-Content $geminiKeyFile -Raw).Trim();
+if ([string]::IsNullOrWhiteSpace($env:GEMINI_API_KEY)) {
+    throw "The Gemini API key file $geminiKeyFile is empty.";
+}
+
+# translate — a silent skip here produces a bundle with stale locales, so this fails loudly instead.
+# --no-launch-profile keeps a developer's launchSettings.json (base path, model) from overriding
+# the arguments below.
 Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
-if (Test-Path $translatorFile) {
-    & $translatorFile --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
+dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
+if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
+
+# Commit the results (locale files AND vh_translator/en_watch.json). The watch file records the
+# source text behind every key; if it is not committed, the next machine to run this retranslates
+# everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
+# have staged is left untouched.
+$localesPath = "src/locales";
+if (git -C $solutionDir status --porcelain -- $localesPath) {
+    Write-Host "Committing updated locales ..." -ForegroundColor Magenta;
+    git -C $solutionDir add -A -- $localesPath;
+    git -C $solutionDir commit -m "Update translated locales" -- $localesPath;
+    if ($LASTEXITCODE -gt 0) { throw "Could not commit locales. ExitCode: $LASTEXITCODE"; }
 }
 else {
-    Write-Host "Translator app not found. Skipping translation step." -ForegroundColor Yellow;
+    Write-Host "Locales unchanged — nothing to commit." -ForegroundColor DarkGray;
 }
 
 # build + zip — the same script CI runs, pointed at this checkout, so local and published bundles
