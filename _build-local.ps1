@@ -1,13 +1,12 @@
 # LOCAL development build — no version bump, no NuGet, nothing pushed.
 #
-# Builds this SPA into the sibling VpnHood.AppLib.Assets.ClassicSpa project and compiles that project
-# in Release, which is exactly what `VpnHood.App.Client.csproj` picks up when the switch file
-# `<Vh>/.user/use-local-spa.txt` exists. Create that file to run the app against this build; delete it
-# to go back to the published NuGet.
+# Builds this SPA into the in-repo nuget/ project and compiles that project in Release, which is
+# exactly what `VpnHood.App.Client.csproj` picks up when the switch file `<Vh>/.user/use-local-spa.txt`
+# exists. Create that file to run the app against this build; delete it to go back to the published
+# NuGet.
 #
-# The real publish is CI-only: push to develop/main here and .github/workflows/publish_spa.yml
-# dispatches the ClassicSpa repo, which rebuilds the SPA and publishes the package. Nothing in this
-# script affects a published version.
+# The real publish is done by _publish.ps1 (bump + push + dispatch publish_nugets.yml). Nothing in
+# this script affects a published version.
 #
 # Because nothing increments locally, the app reports this build by its BUILD TIME (shown under the
 # version in the navigation drawer as "local · built ..."). If that timestamp is not the moment you
@@ -17,9 +16,8 @@ $ErrorActionPreference = "Stop";
 
 $solutionDir = $PSScriptRoot;
 $vhDir = Split-Path -parent $solutionDir;
-$nugetSolutionDir = Join-Path $vhDir "VpnHood.AppLib.Assets.ClassicSpa";
-$nugetProjectDir = Join-Path $nugetSolutionDir "VpnHood.AppLib.Assets.ClassicSpa";
-$buildSpaScript = Join-Path $nugetSolutionDir "pub/Build-Spa.ps1";
+$nugetProjectDir = Join-Path $solutionDir "nuget/VpnHood.AppLib.Assets.ClassicSpa";
+$buildSpaScript = Join-Path $solutionDir "pub/Build-Spa.ps1";
 
 # Run the translator from SOURCE, not from a published package or a stale bin folder, so any local
 # change to the translator applies to the very next run of this script with no publish round-trip.
@@ -31,7 +29,7 @@ $translatorProjectCandidates = @(
 $translatorProject = $translatorProjectCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1;
 
 if (!(Test-Path $buildSpaScript)) {
-    throw "Could not find $buildSpaScript — is the VpnHood.AppLib.Assets.ClassicSpa repo checked out beside this one?";
+    throw "Could not find $buildSpaScript.";
 }
 
 if (!$translatorProject) {
@@ -79,10 +77,9 @@ else {
     Write-Host "Locales unchanged — nothing to commit." -ForegroundColor DarkGray;
 }
 
-# build + zip — the same script CI runs, pointed at this checkout, so local and published bundles
-# are produced identically.
+# build + zip — the same script CI runs, so local and published bundles are produced identically.
 Write-Host "Building SPA ..." -ForegroundColor Magenta;
-& $buildSpaScript -webUiDir $solutionDir;
+& $buildSpaScript;
 if ($LASTEXITCODE -gt 0) { throw "Could not build the SPA. ExitCode: $LASTEXITCODE"; }
 
 # build the asset assembly so the use-local-spa switch has a Release DLL to reference

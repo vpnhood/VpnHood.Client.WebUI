@@ -8,16 +8,20 @@
 # what keeps the 4th segment shown in the UI (app.major.minor.build + SPA build) comparable across
 # products instead of being an unrelated counter.
 #
-# package.json IS the SPA's version file — there is no separate pub/PubVersion.json here.
+# This repo holds BOTH the SPA and the nuget that packages it, so one number serves both:
+#   - package.json  -> npm, vite, and the version shown in the UI
+#   - Directory.Build.props <Version> -> the VpnHood.AppLib.Assets.ClassicSpa nuget
+# Both are written here so they can never disagree. There is no PubVersion.json — this repo does not
+# use the shared VpnHood publish module (it builds and packs itself), so nothing would consume one.
 #
-# CI-only. Local builds never bump: nothing increments locally, so a local bundle is identified by
-# its build time instead (see vite.config.ts / NavigationDrawer.vue).
+# Invoked by publish_nugets.yml in CI (CI owns the bump). A plain local build never bumps, so a local
+# bundle is identified by its build time instead (see vite.config.ts / NavigationDrawer.vue).
 
 param(
 	# Monorepo version source. The raw develop URL keeps "always read develop" true wherever this
 	# runs (develop always carries the highest version); a local file path also works for testing.
 	[string]$vhVersionSource = "https://raw.githubusercontent.com/vpnhood/VpnHood/develop/pub/PubVersion.json",
-	# Compute and print the next version without writing package.json.
+	# Compute and print the next version without writing anything.
 	[switch]$whatIf
 );
 
@@ -38,11 +42,11 @@ $reason = if ($vhVersion -gt $spaVersion) { "adopted monorepo $vhVersion" } else
 Write-Host "SPA version: $spaVersion -> $newVersion ($reason)" -ForegroundColor Blue;
 
 if ($whatIf) {
-	Write-Host "whatIf set: package.json not written." -ForegroundColor Yellow;
+	Write-Host "whatIf set: nothing written." -ForegroundColor Yellow;
 	return;
 }
 
-# npm owns the write so package-lock.json stays in sync with package.json.
+# npm owns the package.json write so package-lock.json stays in sync.
 Push-Location $projectDir;
 try {
 	npm version $newVersion --no-git-tag-version --allow-same-version | Out-Null;
@@ -51,5 +55,12 @@ try {
 finally {
 	Pop-Location;
 }
+
+# Mirror into the nuget's Directory.Build.props — first <Version> only (kept first in the file).
+$propsFile = Join-Path $projectDir "Directory.Build.props";
+if (!(Test-Path $propsFile)) { throw "Bump-SpaVersion: $propsFile not found."; }
+$props = Get-Content $propsFile -Raw;
+$props = ([regex]"<Version>.*?</Version>").Replace($props, "<Version>$newVersion</Version>", 1);
+Set-Content -Path $propsFile -Value $props -Encoding utf8 -NoNewline;
 
 if ($env:GITHUB_OUTPUT) { "version=$newVersion" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8; }

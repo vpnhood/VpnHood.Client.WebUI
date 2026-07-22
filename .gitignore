@@ -228,3 +228,10 @@ FodyWeavers.xsd
 *.sln.iml
 .vs
 /.env.locale
+
+# nuget project build output
+nuget/**/bin/
+nuget/**/obj/
+# The SPA bundle is a build artifact, always regenerated from src/ by pub/Build-Spa.ps1
+# (locally or in CI) before the nuget is packed — never committed.
+nuget/**/Resources/spa.zip

@@ -1,0 +1,36 @@
+<Project>
+	<!-- The single <Version> the nuget project inherits. Stamped from pub/PubVersion.json by
+	     pub/Bump-SpaVersion.ps1 (adopt-or-self-bump against the monorepo) — do not edit by hand.
+	     package.json carries the identical number so the SPA and the package always agree.
+	     Keep it first in the file: the stamper rewrites the FIRST <Version> it finds. -->
+	<PropertyGroup>
+		<Version>8.0.835</Version>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<!-- Package metadata shared by every packable project here. -->
+	<PropertyGroup>
+		<Authors>VpnHood</Authors>
+		<Company>OmegaHood LLC</Company>
+		<Copyright>© OmegaHood LLC. All rights reserved.</Copyright>
+		<NeutralLanguage>en</NeutralLanguage>
+		<PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
+		<PackageIcon>VpnHood.png</PackageIcon>
+		<PackageProjectUrl>https://github.com/vpnhood/VpnHood.AppLib.Assets.ClassicSpa</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/vpnhood/VpnHood.AppLib.Assets.ClassicSpa</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.M.d.HHmm"))</FileVersion>
+	</PropertyGroup>
+
+	<!-- Reproducible builds when CI builds the package. -->
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)'=='true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+</Project>
