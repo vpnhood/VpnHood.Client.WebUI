@@ -39,7 +39,7 @@ try {
 	# Prompt for the release type unless it was passed explicitly (so automation can still be silent).
 	# Enter defaults to stable (N); prerelease requires an explicit y.
 	if (-not $PSBoundParameters.ContainsKey('prerelease')) {
-		$answer = Read-Host "Publish as prerelease? [y/N]";
+		$answer = Read-Host "Publish as a prerelease? [y/N]";
 		$prerelease = ($answer -match '^\s*[yY]');
 	}
 

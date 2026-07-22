@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write   # bump + translated locales are committed back via GITHUB_TOKEN
+      id-token: write   # OIDC token for NuGet trusted publishing (no long-lived API key)
     env:
       DOTNET_NOLOGO: "1"
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
@@ -93,12 +94,21 @@ jobs:
         shell: pwsh
         run: ./pub/Build-Spa.ps1 -noInstall
 
+      # Trusted publishing: exchange the workflow's OIDC token for a short-lived nuget.org key.
+      # No NUGET_API_KEY secret — nuget.org authorizes by the trusted-publisher policy configured
+      # for this repo + workflow. `user` is the nuget.org account that owns the policy.
+      - name: NuGet login (trusted publishing)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ vars.NUGET_USER }}
+
       - name: Pack and push
         shell: pwsh
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) { throw "NUGET_API_KEY is not set." }
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) { throw "trusted-publishing login returned no key." }
           $base = "${{ steps.bump.outputs.version }}"
           # Prerelease appends the suffix to the NUGET only; the committed number stays clean.
           $nugetVersion = if ('${{ inputs.prerelease }}' -eq 'true') { "$base-prerelease" } else { $base }
