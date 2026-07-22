@@ -11,8 +11,9 @@
 #   3. Dispatch publish_nugets.yml on develop. A stable run also fast-forwards main (in CI).
 #
 # Usage:
-#   ./_publish.ps1               # stable:     commit X.Y.Z on develop, ff main, NuGet X.Y.Z
+#   ./_publish.ps1               # prompts for Prerelease / Stable
 #   ./_publish.ps1 -prerelease   # prerelease: commit X.Y.Z on develop,        NuGet X.Y.Z-prerelease
+#   ./_publish.ps1 -prerelease:$false  # stable:  commit X.Y.Z on develop, ff main, NuGet X.Y.Z
 #
 # To run the app against an UNPUBLISHED local SPA, use ./_build-local.ps1 instead — it translates and
 # builds the in-repo nuget project locally and never bumps, pushes or publishes anything.
@@ -20,8 +21,8 @@
 # Requires the GitHub CLI (gh) authenticated for the vpnhood org.
 
 param(
-	# Publish X.Y.Z-prerelease and leave main untouched. Without it, a stable X.Y.Z is published and
-	# develop is fast-forwarded onto main (in CI).
+	# Publish X.Y.Z-prerelease and leave main untouched; -prerelease:$false publishes a stable X.Y.Z
+	# and fast-forwards main. Omit it entirely to be prompted (a publish is public — no silent default).
 	[switch]$prerelease
 );
 
@@ -34,6 +35,17 @@ try {
 
 	$dirty = git status --porcelain;
 	if ($dirty) { throw "_publish: working tree has uncommitted changes; commit or stash them first.`n$($dirty -join "`n")"; }
+
+	# Prompt for the release type unless it was passed explicitly (so automation can still be silent).
+	if (-not $PSBoundParameters.ContainsKey('prerelease')) {
+		$choices = @(
+			[System.Management.Automation.Host.ChoiceDescription]::new("&Prerelease", "Publish X.Y.Z-prerelease from develop; leave main untouched"),
+			[System.Management.Automation.Host.ChoiceDescription]::new("&Stable", "Publish stable X.Y.Z and fast-forward main")
+		);
+		# Default (Enter) = Prerelease, the safer choice.
+		$decision = $Host.UI.PromptForChoice("Publish SPA", "Which release type?", $choices, 0);
+		$prerelease = ($decision -eq 0);
+	}
 
 	git pull origin develop --no-rebase;
 	if ($LASTEXITCODE -ne 0) { throw "_publish: git pull failed (exit $LASTEXITCODE) — resolve and retry."; }
