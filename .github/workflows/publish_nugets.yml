@@ -126,6 +126,12 @@ jobs:
           foreach ($pkg in Get-ChildItem $packDir -Filter *.nupkg) {
             dotnet nuget push $pkg.FullName --source "https://api.nuget.org/v3/index.json" `
               --api-key $env:NUGET_API_KEY --skip-duplicate
-            if ($LASTEXITCODE -gt 0) { throw "nuget push failed for $($pkg.Name) (exit $LASTEXITCODE)." }
+            if ($LASTEXITCODE -ne 0) {
+              throw ("nuget push failed for $($pkg.Name) (exit $LASTEXITCODE). A 403 means the " +
+                "trusted-publishing key lacks permission for this package: the nuget.org Trusted " +
+                "Publishing policy must live under the package OWNER (the 'vpnhood' org, per " +
+                "nuget.org owners) and cover 'VpnHood.AppLib.Assets.ClassicSpa', and the NUGET_USER " +
+                "variable ('${{ vars.NUGET_USER }}') must equal that owner.")
+            }
           }
           Write-Host "Published VpnHood.AppLib.Assets.ClassicSpa $nugetVersion" -ForegroundColor Green
