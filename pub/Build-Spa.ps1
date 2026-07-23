@@ -13,6 +13,13 @@ param(
 
 $ErrorActionPreference = "Stop";
 
+# Require PowerShell 7+ (pwsh). Windows PowerShell 5.1's Compress-Archive writes backslash zip
+# separators, which .NET's ZipArchive reads as literal filenames on Linux — breaking every
+# branding/<theme>/... lookup in SpaResourcesFactory. Fail loudly rather than ship a broken bundle.
+if ($PSVersionTable.PSEdition -ne "Core") {
+	throw "Build-Spa requires PowerShell 7+ (pwsh); Windows PowerShell 5.1 writes backslash zip separators that break on Linux.";
+}
+
 $repoDir = Split-Path -Parent $PSScriptRoot;
 $distDir = Join-Path $repoDir "dist";
 $spaZipFile = Join-Path $repoDir "nuget/VpnHood.AppLib.Assets.ClassicSpa/Resources/spa.zip";
