@@ -48,6 +48,9 @@ jobs:
         with: { node-version: "22" }
       - uses: actions/setup-dotnet@v5
         with: { dotnet-version: "10.0.x" }
+      # nuget.exe packs the pure .nuspec (the package has no C# project). On ubuntu it runs via the
+      # runner's preinstalled mono; setup-nuget puts `nuget` on PATH.
+      - uses: nuget/setup-nuget@v2
       - name: Configure git identity
         run: |
           git config user.name "github-actions[bot]"
@@ -117,12 +120,12 @@ jobs:
 
           $packDir = "pub/bin/nuget"
           Remove-Item $packDir -Recurse -Force -ErrorAction Ignore
-          dotnet pack nuget/VpnHood.AppLib.Assets.ClassicSpa/VpnHood.AppLib.Assets.ClassicSpa.csproj `
-            -c Release -o $packDir -p:Version=$nugetVersion `
-            -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-          if ($LASTEXITCODE -gt 0) { throw "dotnet pack failed (exit $LASTEXITCODE)." }
+          # Pure .nuspec, no C# project: pack with nuget.exe. No compiled output, so no symbols
+          # (.snupkg). Version comes from the bump step, not the nuspec's 0.0.0 placeholder.
+          nuget pack nuget/VpnHood.AppLib.Assets.ClassicSpa/VpnHood.AppLib.Assets.ClassicSpa.nuspec `
+            -Version $nugetVersion -OutputDirectory $packDir
+          if ($LASTEXITCODE -gt 0) { throw "nuget pack failed (exit $LASTEXITCODE)." }
 
-          # Pushing a .nupkg also pushes its adjacent .snupkg symbols.
           foreach ($pkg in Get-ChildItem $packDir -Filter *.nupkg) {
             dotnet nuget push $pkg.FullName --source "https://api.nuget.org/v3/index.json" `
               --api-key $env:NUGET_API_KEY --skip-duplicate

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ZIP-ONLY package, authored as a pure .nuspec — there is NO C# project and NOTHING is compiled.
+     The package ships only data + inspectable MSBuild XML:
+       build/spa.zip                                  the SPA bundle (colors/icons live inside it,
+                                                       at branding/<theme>/manifest.json)
+       build/VpnHood.AppLib.Assets.ClassicSpa.targets NuGet auto-imports this for the consumer; it
+                                                       embeds spa.zip into the consuming assembly
+       VpnHood.png                                    package icon (package root)
+     Packed by CI with `nuget pack ... -Version <X>` (see .github/workflows/publish_nugets.yml). The
+     version is supplied on the command line from the bump step; the 0.0.0 below is only a placeholder
+     so a version-less local pack is obviously wrong.
+     Metadata here duplicates what Directory.Build.props gives MSBuild projects, because `nuget pack`
+     of a bare nuspec does not read Directory.Build.props. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>VpnHood.AppLib.Assets.ClassicSpa</id>
+    <version>0.0.0</version>
+    <authors>VpnHood</authors>
+    <owners>VpnHood</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">LGPL-2.1-only</license>
+    <icon>VpnHood.png</icon>
+    <projectUrl>https://github.com/vpnhood/VpnHood.AppLib.Assets.ClassicSpa</projectUrl>
+    <description>VpnHood client SPA bundle (spa.zip) as an inert asset package — no compiled code. The consuming project's build embeds spa.zip via the included MSBuild targets.</description>
+    <copyright>© OmegaHood LLC. All rights reserved.</copyright>
+    <repository type="git" url="https://github.com/vpnhood/VpnHood.AppLib.Assets.ClassicSpa" />
+    <language>en</language>
+  </metadata>
+  <files>
+    <file src="Resources/spa.zip" target="build/spa.zip" />
+    <file src="build/VpnHood.AppLib.Assets.ClassicSpa.targets" target="build/" />
+    <file src="../VpnHood.png" target="" />
+  </files>
+</package>

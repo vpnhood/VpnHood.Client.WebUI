@@ -16,7 +16,6 @@ $ErrorActionPreference = "Stop";
 
 $solutionDir = $PSScriptRoot;
 $vhDir = Split-Path -parent $solutionDir;
-$nugetProjectDir = Join-Path $solutionDir "nuget/VpnHood.AppLib.Assets.ClassicSpa";
 $buildSpaScript = Join-Path $solutionDir "pub/Build-Spa.ps1";
 
 # Run the translator from SOURCE, not from a published package or a stale bin folder, so any local
@@ -78,14 +77,11 @@ else {
 }
 
 # build + zip — the same script CI runs, so local and published bundles are produced identically.
+# This writes nuget/.../Resources/spa.zip. The use-local-spa switch embeds THAT zip straight into
+# VpnHood.App.Client (see its csproj) — there is no asset DLL to build anymore; the package is
+# zip-only and its build targets do the embedding in production.
 Write-Host "Building SPA ..." -ForegroundColor Magenta;
 & $buildSpaScript;
 if ($LASTEXITCODE -gt 0) { throw "Could not build the SPA. ExitCode: $LASTEXITCODE"; }
-
-# build the asset assembly so the use-local-spa switch has a Release DLL to reference
-Write-Host "Building local ClassicSpa assembly ..." -ForegroundColor Magenta;
-dotnet clean $nugetProjectDir -c "Release";
-dotnet build $nugetProjectDir -c "Release" --no-incremental;
-if ($LASTEXITCODE -gt 0) { throw "Could not build the ClassicSpa project. ExitCode: $LASTEXITCODE"; }
 
 Write-Host "Done. Create <Vh>/.user/use-local-spa.txt to run the app against this build." -ForegroundColor Green;
