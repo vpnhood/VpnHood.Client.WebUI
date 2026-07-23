@@ -117,11 +117,11 @@ jobs:
 
           $packDir = "pub/bin/nuget"
           Remove-Item $packDir -Recurse -Force -ErrorAction Ignore
-          # Inert data package: a packing-only shim csproj (emits no assembly) drives the .nuspec via
-          # `dotnet pack`, so this runs on any OS with no mono/nuget.exe. The version is substituted
-          # into the nuspec's $version$ token; no compiled output means no symbols (.snupkg).
+          # Inert data package: a packing-only csproj (emits no assembly) declares the payload and is
+          # packed by `dotnet pack`, so this runs on any OS with no mono/nuget.exe. No compiled
+          # output means no symbols (.snupkg). The version overrides Directory.Build.props' base.
           dotnet pack nuget/VpnHood.AppLib.Assets.ClassicSpa/VpnHood.AppLib.Assets.ClassicSpa.pack.csproj `
-            -c Release -p:NuspecProperties="version=$nugetVersion" --output $packDir
+            -c Release -p:PackageVersion=$nugetVersion --output $packDir
           if ($LASTEXITCODE -gt 0) { throw "dotnet pack failed (exit $LASTEXITCODE)." }
 
           foreach ($pkg in Get-ChildItem $packDir -Filter *.nupkg) {
