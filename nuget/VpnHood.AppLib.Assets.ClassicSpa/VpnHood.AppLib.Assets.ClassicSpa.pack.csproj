@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Packaging SHIM ONLY. This project ships nothing and is never referenced: its sole job is to let
+       `dotnet pack` build the inert VpnHood.AppLib.Assets.ClassicSpa package from the hand-authored
+       .nuspec on any OS with no mono / nuget.exe (ubuntu-latest dropped mono, which nuget.exe needs).
+       Every byte of the .nupkg comes from the .nuspec's <files> — this csproj contributes no
+       assembly, no code, no dependency. The shipped package stays pure data, exactly as before. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+
+    <!-- Pack straight from the .nuspec; version flows in via -p:NuspecProperties=version=X (the $version$
+         token). Base path is this folder so the .nuspec's relative <file src> entries resolve. -->
+    <NuspecFile>VpnHood.AppLib.Assets.ClassicSpa.nuspec</NuspecFile>
+    <NuspecBasePath>$(MSBuildProjectDirectory)</NuspecBasePath>
+
+    <!-- Emit no assembly into the package and nothing to symbolize; compile no stray files. -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+</Project>

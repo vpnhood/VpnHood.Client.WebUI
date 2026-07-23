@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ZIP-ONLY package, authored as a pure .nuspec — there is NO C# project and NOTHING is compiled.
-     The package ships only data + inspectable MSBuild XML:
+<!-- ZIP-ONLY package: the shipped .nupkg contains only data + inspectable MSBuild XML, NO compiled
+     code. The package ships:
        build/spa.zip                                  the SPA bundle (colors/icons live inside it,
                                                        at branding/<theme>/manifest.json)
        build/VpnHood.AppLib.Assets.ClassicSpa.targets NuGet auto-imports this for the consumer; it
                                                        embeds spa.zip into the consuming assembly
        VpnHood.png                                    package icon (package root)
-     Packed by CI with `nuget pack ... -Version <X>` (see .github/workflows/publish_nugets.yml). The
-     version is supplied on the command line from the bump step; the 0.0.0 below is only a placeholder
-     so a version-less local pack is obviously wrong.
-     Metadata here duplicates what Directory.Build.props gives MSBuild projects, because `nuget pack`
-     of a bare nuspec does not read Directory.Build.props. -->
+     Packed by CI with `dotnet pack VpnHood.AppLib.Assets.ClassicSpa.pack.csproj` — a mono-free,
+     cross-platform packing SHIM that emits no assembly and only drives this .nuspec (ubuntu-latest
+     no longer ships the mono that nuget.exe needs). The version flows in from the bump step via
+     -p:NuspecProperties=version=<X>, substituted into the $version$ token below.
+     Metadata here duplicates what Directory.Build.props gives MSBuild projects, because nuspec-based
+     packing ignores Directory.Build.props. -->
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>VpnHood.AppLib.Assets.ClassicSpa</id>
-    <version>0.0.0</version>
+    <version>$version$</version>
     <authors>VpnHood</authors>
     <owners>VpnHood</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

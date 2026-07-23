@@ -48,9 +48,6 @@ jobs:
         with: { node-version: "22" }
       - uses: actions/setup-dotnet@v5
         with: { dotnet-version: "10.0.x" }
-      # nuget.exe packs the pure .nuspec (the package has no C# project). On ubuntu it runs via the
-      # runner's preinstalled mono; setup-nuget puts `nuget` on PATH.
-      - uses: nuget/setup-nuget@v2
       - name: Configure git identity
         run: |
           git config user.name "github-actions[bot]"
@@ -120,11 +117,12 @@ jobs:
 
           $packDir = "pub/bin/nuget"
           Remove-Item $packDir -Recurse -Force -ErrorAction Ignore
-          # Pure .nuspec, no C# project: pack with nuget.exe. No compiled output, so no symbols
-          # (.snupkg). Version comes from the bump step, not the nuspec's 0.0.0 placeholder.
-          nuget pack nuget/VpnHood.AppLib.Assets.ClassicSpa/VpnHood.AppLib.Assets.ClassicSpa.nuspec `
-            -Version $nugetVersion -OutputDirectory $packDir
-          if ($LASTEXITCODE -gt 0) { throw "nuget pack failed (exit $LASTEXITCODE)." }
+          # Inert data package: a packing-only shim csproj (emits no assembly) drives the .nuspec via
+          # `dotnet pack`, so this runs on any OS with no mono/nuget.exe. The version is substituted
+          # into the nuspec's $version$ token; no compiled output means no symbols (.snupkg).
+          dotnet pack nuget/VpnHood.AppLib.Assets.ClassicSpa/VpnHood.AppLib.Assets.ClassicSpa.pack.csproj `
+            -c Release -p:NuspecProperties="version=$nugetVersion" --output $packDir
+          if ($LASTEXITCODE -gt 0) { throw "dotnet pack failed (exit $LASTEXITCODE)." }
 
           foreach ($pkg in Get-ChildItem $packDir -Filter *.nupkg) {
             dotnet nuget push $pkg.FullName --source "https://api.nuget.org/v3/index.json" `
