@@ -856,6 +856,50 @@ export class AppClient {
         return Promise.resolve<void>(null as any);
     }
 
+    clearReconnectRequired( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/app/clear-reconnect-required";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processClearReconnectRequired(_response);
+        });
+    }
+
+    protected processClearReconnectRequired(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
     extendByRewardedAd( cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/app/extend-by-rewarded-ad";
         url_ = url_.replace(/[?&]$/, "");
