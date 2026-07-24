@@ -2,7 +2,7 @@
 import SplitIpInput from '@/components/SplitTunneling/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { AppFeature, SplitIps } from '@/services/VpnHood.Client.Api';
+import { AppFeature, SplitIpsViaApp } from '@/services/VpnHood.Client.Api';
 import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
@@ -11,18 +11,16 @@ import i18n from '@/locales/i18n';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-function createNormalizedSplitIps(value?: SplitIps | null): SplitIps {
-  return new SplitIps({
-    deviceExcludes: value?.deviceExcludes ?? '',
-    deviceIncludes: value?.deviceIncludes ?? '',
-    appExcludes: value?.appExcludes ?? '',
-    appIncludes: value?.appIncludes ?? '',
-    appBlocks: value?.appBlocks ?? ''
+function createNormalizedSplitIps(value?: SplitIpsViaApp | null): SplitIpsViaApp {
+  return new SplitIpsViaApp({
+    includes: value?.includes ?? '',
+    excludes: value?.excludes ?? '',
+    blocks: value?.blocks ?? ''
   });
 }
 
 const isLoading = ref<boolean>(true);
-const splitIps = ref<SplitIps>(createNormalizedSplitIps());
+const splitIps = ref<SplitIpsViaApp>(createNormalizedSplitIps());
 const showRevertButton = ref<boolean>(false);
 let savedIps = createNormalizedSplitIps();
 
@@ -35,22 +33,22 @@ const isEnabled = computed<boolean>({
 });
 
 onMounted(async () => {
-  splitIps.value = createNormalizedSplitIps(await vhApp.appClient.getSplitIps());
+  splitIps.value = createNormalizedSplitIps(await vhApp.appClient.getSplitIpsViaApp());
   savedIps = createNormalizedSplitIps(splitIps.value);
   isLoading.value = false;
 });
 
 async function saveIpList(): Promise<void> {
   // no disconnect: the app live-applies the new list to a running session
-  await vhApp.appClient.setSplitIps(createNormalizedSplitIps(splitIps.value));
+  await vhApp.appClient.setSplitIpsViaApp(createNormalizedSplitIps(splitIps.value));
   await vhApp.saveUserSetting();
 }
 
 onBeforeRouteLeave(async (to, from, next) => {
   try {
-    if (splitIps.value.appExcludes !== savedIps.appExcludes ||
-      splitIps.value.appIncludes !== savedIps.appIncludes ||
-      splitIps.value.appBlocks !== savedIps.appBlocks)
+    if (splitIps.value.excludes !== savedIps.excludes ||
+      splitIps.value.includes !== savedIps.includes ||
+      splitIps.value.blocks !== savedIps.blocks)
       await saveIpList();
     next();
   } catch (err: unknown) {
@@ -93,14 +91,14 @@ function revertCurrentChange(): void {
       </v-card-item>
     </config-card>
     <split-ip-input
-      :excludes="splitIps.appExcludes"
-      :includes="splitIps.appIncludes"
-      :blocks="splitIps.appBlocks"
+      :excludes="splitIps.excludes"
+      :includes="splitIps.includes"
+      :blocks="splitIps.blocks"
       :loading="isLoading"
       :disabled="!isEnabled"
-      @update:excludes="splitIps.appExcludes = $event"
-      @update:includes="splitIps.appIncludes = $event"
-      @update:blocks="splitIps.appBlocks = $event"
+      @update:excludes="splitIps.excludes = $event"
+      @update:includes="splitIps.includes = $event"
+      @update:blocks="splitIps.blocks = $event"
     />
     <btn-style-3
       v-if="showRevertButton"
