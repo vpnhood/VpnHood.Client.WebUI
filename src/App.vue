@@ -11,6 +11,7 @@ import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
 import EngineErrorDialog from '@/components/EngineErrorDialog.vue';
+import ReconnectRequiredAlert from '@/components/ReconnectRequiredAlert.vue';
 import { AxiosError } from 'axios';
 
 const vhApp = VpnHoodApp.instance;
@@ -85,6 +86,10 @@ onMounted(async () => {
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
       <v-main class="fill-height">
+
+        <!-- Reconnect required bar -->
+        <reconnect-required-alert />
+
         <!-- Privacy policy page -->
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true" />
 

@@ -64,7 +64,6 @@ function sortApps(installedApps: IListItemInfo[]) {
 }
 
 async function handleListUpdate(newList: IListItemInfo[]){
-  if (!await vhApp.disconnectAlert()) return;
   appList.value = newList;
 
   // All apps
@@ -125,7 +124,6 @@ onBeforeRouteLeave(
         :list="appList"
         :loading="appList.length < 1"
         icon-size="30"
-        :disconnect-required="true"
         @update:list="handleListUpdate"
       />
   </v-sheet>

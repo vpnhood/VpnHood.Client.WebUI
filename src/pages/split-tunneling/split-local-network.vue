@@ -3,7 +3,6 @@ import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 
 const vhApp = VpnHoodApp.instance;
@@ -26,9 +25,6 @@ const isEnabled = computed<boolean>({
 
     <!-- Enforced by server alert -->
     <alert-warning v-if="!vhApp.data.isLocalNetworkAvailable" :text="locale('ENFORCED_BY_SERVER')" class="mb-4" />
-
-    <!-- Disconnecting alert -->
-    <disconnect-required-alert class="mb-4"/>
 
     <config-card class="pb-2">
       <v-card-item>

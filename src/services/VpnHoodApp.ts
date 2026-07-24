@@ -426,15 +426,4 @@ export class VpnHoodApp {
     this.confirmDialogDeferred = createDeferred<boolean>();
     return this.confirmDialogDeferred.promise;
   }
-
-  public async disconnectAlert(): Promise<boolean> {
-    if (!this.data.isConnected) return true;
-
-    const result = await this.showConfirmDialog(
-      i18n.global.t('DISCONNECT_ALERT'),
-      i18n.global.t('DISCONNECT_ALERT_DESC'),
-    );
-    if (result) await this.appClient.disconnect();
-    return result;
-  }
 }

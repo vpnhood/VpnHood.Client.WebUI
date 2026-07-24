@@ -43,8 +43,6 @@ onMounted(async () => {
 });
 
 async function saveDomainList(): Promise<void> {
-  if (vhApp.data.isConnected)
-    await vhApp.disconnect();
   await vhApp.appClient.setSplitDomains(createNormalizedSplitDomains(splitDomains.value));
   await vhApp.saveUserSetting();
 }

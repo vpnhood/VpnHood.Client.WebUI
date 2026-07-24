@@ -3499,6 +3499,7 @@ export class AppState implements IAppState {
     promptForLog!: boolean;
     logExists!: boolean;
     hasDiagnoseRequested!: boolean;
+    isReconnectRequired!: boolean;
     updaterStatus?: AppUpdaterStatus | null;
     canDisconnect!: boolean;
     canConnect!: boolean;
@@ -3549,6 +3550,7 @@ export class AppState implements IAppState {
             this.promptForLog = _data["promptForLog"] !== undefined ? _data["promptForLog"] : null as any;
             this.logExists = _data["logExists"] !== undefined ? _data["logExists"] : null as any;
             this.hasDiagnoseRequested = _data["hasDiagnoseRequested"] !== undefined ? _data["hasDiagnoseRequested"] : null as any;
+            this.isReconnectRequired = _data["isReconnectRequired"] !== undefined ? _data["isReconnectRequired"] : null as any;
             this.updaterStatus = _data["updaterStatus"] ? AppUpdaterStatus.fromJS(_data["updaterStatus"]) : null as any;
             this.canDisconnect = _data["canDisconnect"] !== undefined ? _data["canDisconnect"] : null as any;
             this.canConnect = _data["canConnect"] !== undefined ? _data["canConnect"] : null as any;
@@ -3594,6 +3596,7 @@ export class AppState implements IAppState {
         data["promptForLog"] = this.promptForLog !== undefined ? this.promptForLog : null as any;
         data["logExists"] = this.logExists !== undefined ? this.logExists : null as any;
         data["hasDiagnoseRequested"] = this.hasDiagnoseRequested !== undefined ? this.hasDiagnoseRequested : null as any;
+        data["isReconnectRequired"] = this.isReconnectRequired !== undefined ? this.isReconnectRequired : null as any;
         data["updaterStatus"] = this.updaterStatus ? this.updaterStatus.toJSON() : null as any;
         data["canDisconnect"] = this.canDisconnect !== undefined ? this.canDisconnect : null as any;
         data["canConnect"] = this.canConnect !== undefined ? this.canConnect : null as any;
@@ -3632,6 +3635,7 @@ export interface IAppState {
     promptForLog: boolean;
     logExists: boolean;
     hasDiagnoseRequested: boolean;
+    isReconnectRequired: boolean;
     updaterStatus?: AppUpdaterStatus | null;
     canDisconnect: boolean;
     canConnect: boolean;
