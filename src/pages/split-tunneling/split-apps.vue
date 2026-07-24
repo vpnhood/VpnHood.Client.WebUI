@@ -125,6 +125,7 @@ onBeforeRouteLeave(
         :list="appList"
         :loading="appList.length < 1"
         icon-size="30"
+        :disconnect-required="true"
         @update:list="handleListUpdate"
       />
   </v-sheet>

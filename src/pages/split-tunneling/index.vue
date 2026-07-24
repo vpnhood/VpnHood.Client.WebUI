@@ -1,5 +1,4 @@
 ﻿<script setup lang="ts">
-import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -18,8 +17,6 @@ const locale = i18n.global.t;
     <app-bar/>
 
     <small-feature-image-and-description image="split-ip.webp" :description="locale('SPLIT_TUNNELING_DESC')" />
-
-    <disconnect-required-alert class="mb-4"/>
 
     <!-- Apps & Domains -->
     <settings-section-title :title="locale('APPS_AND_DOMAINS')"/>

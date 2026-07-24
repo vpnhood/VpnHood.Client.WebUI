@@ -18,6 +18,9 @@ const props = defineProps<{
   loading: boolean;
   iconSize: string;
   isIconAsFlag?: boolean;
+  // set when the owner's filter only applies at connect (e.g. split apps): confirm & disconnect
+  // before a change; live-applied filters (e.g. split countries) leave it off
+  disconnectRequired?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -36,7 +39,7 @@ const filteredListItem = computed(() => {
 
 /*** Toggles a single item selection and notifies parent ***/
 const toggleListItem = async (x: IListItemInfo) => {
-  if (!await vhApp.disconnectAlert()) return;
+  if (props.disconnectRequired && !await vhApp.disconnectAlert()) return;
   const updatedList = props.list.map(item =>
     item.id === x.id ? { ...item, isSelected: !item.isSelected } : item
   );
@@ -45,7 +48,7 @@ const toggleListItem = async (x: IListItemInfo) => {
 
 /*** Select all items and notifies parent ***/
 async function onSelectAll() {
-  if (!await vhApp.disconnectAlert()) return;
+  if (props.disconnectRequired && !await vhApp.disconnectAlert()) return;
   const result = await vhApp.showConfirmDialog(locale('SELECT_ALL_ITEMS'), locale('ARE_YOU_SURE'));
   if (result)
     emit('update:list', props.list.map(x => ({ ...x, isSelected: true })));
@@ -53,7 +56,7 @@ async function onSelectAll() {
 
 /*** Deselect all items and notifies parent ***/
 async function onClearAll() {
-  if (!await vhApp.disconnectAlert()) return;
+  if (props.disconnectRequired && !await vhApp.disconnectAlert()) return;
   const result = await vhApp.showConfirmDialog(locale('CLEAR_ALL_ITEMS'), locale('ARE_YOU_SURE'));
   if (result)
     emit('update:list', props.list.map(x => ({ ...x, isSelected: false })));

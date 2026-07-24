@@ -41,8 +41,7 @@ onMounted(async () => {
 });
 
 async function saveIpList(): Promise<void> {
-  if (vhApp.data.isConnected)
-    await vhApp.disconnect();
+  // no disconnect: the app live-applies the new list to a running session
   await vhApp.appClient.setSplitIps(createNormalizedSplitIps(splitIps.value));
   await vhApp.saveUserSetting();
 }

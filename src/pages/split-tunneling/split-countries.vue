@@ -81,11 +81,6 @@ async function onSplitModeChange(value: SplitCountryMode | null) {
     return;
   }
 
-  if (!await vhApp.disconnectAlert()) {
-    localSplitMode.value = oldValue;
-    return;
-  }
-
   // Update logic
   if (value === SplitCountryMode.ExcludeMyCountry) {
     selectedCountries.value = [];

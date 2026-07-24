@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SplitIpInput from '@/components/SplitTunneling/SplitIpInput.vue';
 import AppBar from '@/components/AppBar.vue';
+import DisconnectRequiredAlert from '@/components/DisconnectRequiredAlert.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { SplitIps } from '@/services/VpnHood.Client.Api';
 import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
@@ -79,6 +80,9 @@ function revertCurrentChange(): void {
 
   <v-sheet v-else>
     <app-bar/>
+
+    <!-- device-level ranges only apply at connect; changing them disconnects the session -->
+    <disconnect-required-alert class="mb-4"/>
 
     <config-card class="pb-2">
       <v-card-item>
