@@ -1,17 +1,15 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
 import { en, fa } from 'vuetify/locale';
+// Components rendered as <v-*> are imported by vite-plugin-vuetify's autoImport. These four are
+// imported by hand because the aliases below reference them as values, not as template tags.
 import { VCard, VAlert, VBtn, VSheet } from 'vuetify/components';
 import { AppName } from '@/helpers/UiConstants';
 import { vhClientThemeColors, vhConnectThemeColors } from '@/theme/themes';
 import { vuetifyDefaults, buttonAliases } from '@/theme/defaults';
 
 export default createVuetify({
-  components,
-  directives,
   locale: {
     locale: 'en',
     fallback: 'en',

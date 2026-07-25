@@ -7,7 +7,7 @@ import App from './App.vue'
 import { VpnHoodApp } from './services/VpnHoodApp'
 import { AppName } from '@/helpers/UiConstants'
 import vuetify from './theme/vuetify'
-import i18n from './locales/i18n'
+import i18n, { availableLocales, loadLocale } from './locales/i18n'
 import router from './services/router'
 import EngineError from "./pages/engine-error.vue"
 import './assets/styles/general.css'
@@ -25,9 +25,13 @@ async function main(): Promise<void> {
     // Set the app theme
     vuetify.theme.change(vpnHoodApp.data.features.uiName ?? AppName.VpnHoodClient);
 
-    // Set the default UI language
-    const isUserSetDefaultLanguage: boolean = i18n.global.availableLocales.includes(vpnHoodApp.data.state.currentUiCultureInfo.code);
-    if (isUserSetDefaultLanguage) i18n.global.locale.value = vpnHoodApp.data.state.currentUiCultureInfo.code;
+    // Set the default UI language. Its messages live in their own chunk, so they must arrive before
+    // the app mounts — otherwise the first paint is in English and then snaps to the real language.
+    const cultureCode: string = vpnHoodApp.data.state.currentUiCultureInfo.code;
+    if (availableLocales.includes(cultureCode)) {
+      await loadLocale(cultureCode);
+      i18n.global.locale.value = cultureCode;
+    }
     // Set Vuetify current language
     vuetify.locale.current.value = i18n.global.locale.value;
 

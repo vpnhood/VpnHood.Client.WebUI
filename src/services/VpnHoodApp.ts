@@ -1,6 +1,7 @@
 import {
   ApiException,
   AppClient,
+  AppFeatures,
   ClientProfileClient,
   ClientProfileInfo,
   ClientProfileUpdateParams,
@@ -17,9 +18,9 @@ import { AppName, ComponentName } from '@/helpers/UiConstants';
 import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
-import i18n from '@/locales/i18n';
+import i18n, { availableLocales } from '@/locales/i18n';
 import router from '@/services/router';
-import { VhFirebaseApp } from '@/services/Firebase';
+import type { VhFirebaseApp } from '@/services/Firebase';
 import { ErrorHandler } from '@/helpers/ErrorHandler';
 import { VpnHoodAppData } from '@/services/VpnHoodAppData';
 import { createDeferred, type Deferred } from '@/helpers/Deferred';
@@ -70,7 +71,9 @@ export class VpnHoodApp {
     const clientProfileClient: ClientProfileClient = ClientApiFactory.instance.createClientProfileClient();
     const intentsClient: IntentsClient = ClientApiFactory.instance.createIntentClient();
     const proxyEndpointClient: ProxyEndPointClient = ClientApiFactory.instance.createProxyEndPointClient();
-    const config = await apiClient.configure(new ConfigParams({ availableCultures: i18n.global.availableLocales }));
+    // availableLocales, not i18n.global.availableLocales: only the fallback is loaded at this point,
+    // so asking the i18n instance would report a single culture to the backend.
+    const config = await apiClient.configure(new ConfigParams({ availableCultures: availableLocales }));
     const appData = new VpnHoodAppData(
       config.state,
       config.userSettings,
@@ -80,11 +83,17 @@ export class VpnHoodApp {
       config.availableCultureInfos,
     );
 
-    let firebase: VhFirebaseApp | null = null;
-    if (!import.meta.env.DEV)
-      firebase = VhFirebaseApp.tryCreate(config.features.customData?.firebaseOptions, config.features.clientId);
+    const firebase = import.meta.env.DEV ? null : await VpnHoodApp.createFirebase(config.features);
 
     return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, proxyEndpointClient, appData, firebase);
+  }
+
+  // Firebase does analytics and report uploads — nothing the first paint needs — so the SDK is
+  // fetched on demand rather than riding along in the startup chunk.
+  private static async createFirebase(features: AppFeatures): Promise<VhFirebaseApp | null> {
+    const { VhFirebaseApp } = await import('@/services/Firebase');
+
+    return VhFirebaseApp.tryCreate(features.customData?.firebaseOptions, features.clientId);
   }
 
   public async reloadState(): Promise<void> {

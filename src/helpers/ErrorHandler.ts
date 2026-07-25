@@ -1,7 +1,7 @@
 import { ApiException, AppFeature, ExceptionType, SessionErrorCode } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { AnalyticsCustomEvent } from '@/services/Firebase';
+import { AnalyticsCustomEvent } from '@/helpers/UiConstants';
 import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
 import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 import router from '@/services/router';

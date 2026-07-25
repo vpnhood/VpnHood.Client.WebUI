@@ -109,7 +109,3 @@ export class VhFirebaseApp {
     window.open(link, 'VpnHood-BugReport');
   }
 }
-
-export enum AnalyticsCustomEvent {
-    AlertDialogEventName = "vh_alert_dialog_message",
-}
