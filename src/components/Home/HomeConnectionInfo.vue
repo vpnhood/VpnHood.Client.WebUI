@@ -122,11 +122,11 @@ function processConnectedAnimation(): void {
     <div class="d-flex flex-column align-center justify-center position-relative fill-height">
 
       <!-- Connection state text -->
-      <span class="text-caption">{{ vhApp.data.connectionStateText }}</span>
+      <span class="text-body-small">{{ vhApp.data.connectionStateText }}</span>
 
       <!-- Progress bar for connecting state -->
       <div v-if="vhApp.data.state.stateProgress !== null"
-           class="w-50 text-center text-caption position-absolute"
+           class="w-50 text-center text-body-small position-absolute"
            style="bottom: 10px;"
       >
         <v-progress-linear
@@ -146,7 +146,7 @@ function processConnectedAnimation(): void {
 
       <!-- Usage -->
       <div class="d-flex flex-column align-center" v-if="vhApp.data.isConnected && bandwidthUsage()">
-        <span class="text-body-1">{{ bandwidthUsage()?.Used }} {{ locale('OF') }}</span>
+        <span class="text-body-large">{{ bandwidthUsage()?.Used }} {{ locale('OF') }}</span>
         <span class="text-total-bandwidth">{{ bandwidthUsage()?.Total }}</span>
       </div>
 
@@ -155,7 +155,7 @@ function processConnectedAnimation(): void {
 
       <!-- Access Key expire date -->
       <p v-if="getExpireDate()"
-         :class="[alertForExpire() ? 'text-expire-date-warning' : 'text-expire-date-alert', 'text-caption mt-2']">
+         :class="[alertForExpire() ? 'text-expire-date-warning' : 'text-expire-date-alert', 'text-body-small mt-2']">
         {{ locale('EXPIRE') + ': ' + getExpireDate() }}</p>
 
     </div>

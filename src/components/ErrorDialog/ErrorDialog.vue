@@ -95,13 +95,13 @@ async function closeDialog(): Promise<void> {
       color="dialog-alert"
     >
 
-      <v-card-text v-if="dialogState.showSystemSettingButton" class="text-dialog-alert-text text-body-2">
+      <v-card-text v-if="dialogState.showSystemSettingButton" class="text-dialog-alert-text text-body-medium">
         <p>{{locale("AD_BLOCKER_MSG_PART_1")}}</p>
         <p class="my-3">{{locale("AD_BLOCKER_MSG_PART_2")}}</p>
         <p>{{locale("AD_BLOCKER_MSG_PART_3")}}</p>
       </v-card-text>
 
-      <v-card-text v-else class="text-dialog-alert-text text-body-2">
+      <v-card-text v-else class="text-dialog-alert-text text-body-medium">
         {{ dialogState.message }}
 
         <learning-button

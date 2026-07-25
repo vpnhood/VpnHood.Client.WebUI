@@ -82,11 +82,11 @@ const statusItems = [
           min-height="36px"
           class="pa-0"
         >
-            <v-list-item-title class="text-caption text-disabled">
+            <v-list-item-title class="text-body-small text-disabled">
               {{ item.title }}
             </v-list-item-title>
           <template v-slot:append>
-            <span :class="['text-caption',`text-${item.valueColor}`]">{{item.value}}</span>
+            <span :class="['text-body-small',`text-${item.valueColor}`]">{{item.value}}</span>
           </template>
         </v-list-item>
       </template>

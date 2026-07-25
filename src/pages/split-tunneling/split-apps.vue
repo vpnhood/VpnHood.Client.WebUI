@@ -113,7 +113,7 @@ onBeforeRouteLeave(async () => {
     <app-bar/>
 
     <!-- Feature description -->
-    <p class="text-disabled text-caption mb-4">{{locale("SPLIT_APPS_DESC")}}</p>
+    <p class="text-disabled text-body-small mb-4">{{locale("SPLIT_APPS_DESC")}}</p>
 
       <!-- Apps list -->
       <filter-list

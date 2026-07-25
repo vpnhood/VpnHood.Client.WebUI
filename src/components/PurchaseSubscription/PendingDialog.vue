@@ -15,7 +15,7 @@ const props = defineProps<{
     :persistent="true"
   >
     <v-card color="general-dialog">
-      <v-card-text class="text-general-dialog-text text-body-2">
+      <v-card-text class="text-general-dialog-text text-body-medium">
         {{ locale('WAITING_TO_COMPLETE_ORDER_PROCESS') }}
         <v-progress-linear :indeterminate="true" height="2" rounded="true" class="my-3" />
       </v-card-text>

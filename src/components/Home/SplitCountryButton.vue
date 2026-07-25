@@ -46,7 +46,7 @@ const isShowSplitCountryText = computed(() => !allowMultipleFlags.value || exclu
     <!-- Text related to selected option -->
     <span
       v-if="isShowSplitCountryText"
-      class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50"
+      class="config-btn-value text-white text-capitalize text-body-small text-truncate limited-width-to-truncate opacity-50"
     >
       {{ vhApp.data.splitCountryStatusText }}
     </span>

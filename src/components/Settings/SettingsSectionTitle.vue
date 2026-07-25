@@ -6,7 +6,7 @@ const props = defineProps< {
 
 <template>
   <div class="settings-section-title d-flex align-center mb-3">
-    <span class="flex-shrink-0 me-2 text-caption text-disabled">{{props.title}}</span>
+    <span class="flex-shrink-0 me-2 text-body-small text-disabled">{{props.title}}</span>
     <v-divider color="disabled" opacity=".2" class="flex-grow-1"></v-divider>
   </div>
 </template>

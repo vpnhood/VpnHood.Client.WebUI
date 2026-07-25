@@ -21,7 +21,7 @@ const componentProps = defineProps<{
           <template v-slot:activator="{ props }">
             <v-list-item
               v-bind="props"
-              class="server-item-group text-caption"
+              class="server-item-group text-body-small"
               base-color="disabled"
             >
               <div class="d-flex align-center ga-3">

@@ -19,23 +19,23 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
 
         <!-- Created time -->
         <li>
-          <span class="text-subtitle-2 text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
-          <span class="text-subtitle-2">{{ Util.getShortDate(userAccount?.createdTime) }}</span>
+          <span class="text-label-large text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
+          <span class="text-label-large">{{ Util.getShortDate(userAccount?.createdTime) }}</span>
         </li>
 
         <!-- Next payment or Expiration time -->
         <li>
-            <span class="text-subtitle-2 text-disabled">
+            <span class="text-label-large text-disabled">
               {{ userAccount?.isAutoRenew ? locale('NEXT_PAYMENT') : locale('EXPIRATION_TIME') }}:
             </span>
-          <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-subtitle-2']">
+          <span :class="[userAccount?.isAutoRenew ? 'text-active' : 'text-error', 'text-label-large']">
               {{ Util.getShortDate(userAccount?.expirationTime) }}
             </span>
         </li>
 
         <!-- Auto renew -->
         <li>
-          <span class="text-subtitle-2 text-disabled">{{ locale('AUTO_RENEW') }}:</span>
+          <span class="text-label-large text-disabled">{{ locale('AUTO_RENEW') }}:</span>
           <v-chip
             variant="tonal"
             density="compact"
@@ -47,9 +47,9 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
 
         <!-- Price -->
         <li>
-          <span class="text-subtitle-2 text-disabled">{{ locale('PRICE') }}:</span>
-          <span class="text-subtitle-2">
-                <span class="text-caption text-disabled">{{ userAccount?.priceCurrency }}</span>
+          <span class="text-label-large text-disabled">{{ locale('PRICE') }}:</span>
+          <span class="text-label-large">
+                <span class="text-body-small text-disabled">{{ userAccount?.priceCurrency }}</span>
                 {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
               </span>
         </li>

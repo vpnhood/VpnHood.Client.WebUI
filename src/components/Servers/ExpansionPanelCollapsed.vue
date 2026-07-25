@@ -49,7 +49,7 @@ function isShowFlagOnCollapseState(serverLocationInfo: ClientServerLocationInfo,
     <!-- More countries number -->
     <span
       v-if="Util.calcLocationCount(clientProfileInfo) > UiConstants.locationNumberOnCollapsedProfile"
-      class="text-caption text-lowercase ps-3"
+      class="text-body-small text-lowercase ps-3"
     >
       +{{ Util.calcLocationCount(clientProfileInfo) - UiConstants.locationNumberOnCollapsedProfile }}
     </span>

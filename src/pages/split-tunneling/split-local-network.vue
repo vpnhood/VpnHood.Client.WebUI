@@ -36,7 +36,7 @@ const isEnabled = computed<boolean>({
             hide-details
           />
         </div>
-        <p class="text-caption text-disabled">{{ locale('SPLIT_LOCAL_NETWORK_DESC') }}</p>
+        <p class="text-body-small text-disabled">{{ locale('SPLIT_LOCAL_NETWORK_DESC') }}</p>
       </v-card-item>
     </config-card>
   </v-sheet>

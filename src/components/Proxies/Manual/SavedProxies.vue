@@ -384,7 +384,7 @@ watch(selectedFilterProxy, () => {
           class="my-3"
           @update:model-value="handlePageChange"
         />
-        <p class="text-disabled text-caption text-center mb-3">{{paginationStatus}}</p>
+        <p class="text-disabled text-body-small text-center mb-3">{{paginationStatus}}</p>
       </template>
     </template>
 

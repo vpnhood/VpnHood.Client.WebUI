@@ -117,7 +117,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER')}}</h4>
-            <p class="text-white opacity-40 text-caption" style="line-height: 1.3">
+            <p class="text-white opacity-40 text-body-small" style="line-height: 1.3">
               {{ locationOptions?.normal === 0 ? locale('SELECTED_FREE_SERVER_DESC')
               : locale('SELECTED_FREE_SERVER_UNLIMITED_DESC', {minutes: locationOptions?.normal}) }}
             </p>
@@ -145,7 +145,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         >
           <v-col>
             <h4 class="text-capitalize">{{locale('SELECTED_FREE_SERVER_BY_REWARDED_AD')}}</h4>
-            <p class="text-white opacity-40 text-caption">
+            <p class="text-white opacity-40 text-body-small">
               {{ locationOptions?.normalByRewardedAd === 0 ? locale('SELECTED_FREE_SERVER_BY_REWARDED_AD_UNLIMITED_DESC')
               : locale('SELECTED_FREE_SERVER_BY_REWARDED_AD_DESC', {minutes: locationOptions?.normalByRewardedAd}) }}
             </p>

@@ -35,7 +35,7 @@ const addServerDialogModel = ref(new ComponentRouteController(ComponentName.AddS
     <div v-if="vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length === 0">
       <alert-warning :title="locale('WARNING')" :text="locale('NO_SERVER_AVAILABLE')" class="mb-4" />
       <config-card>
-        <div v-html="locale('GET_SERVER_KEY_METHODS_DESC')" class="pa-4 text-caption"></div>
+        <div v-html="locale('GET_SERVER_KEY_METHODS_DESC')" class="pa-4 text-body-small"></div>
       </config-card>
     </div>
 

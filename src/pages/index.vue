@@ -143,7 +143,7 @@ function connectButtonText(): string {
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
-          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          <span class="config-btn-value text-white text-capitalize text-body-small text-truncate limited-width-to-truncate opacity-50">
             {{ vhApp.data.splitAppsStatusText }}
           </span>
         </home-config-btn>
@@ -160,7 +160,7 @@ function connectButtonText(): string {
           <v-icon :icon="Util.getLocalizedRightChevron()" />
 
           <!-- Text related to selected option -->
-          <span class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+          <span class="config-btn-value text-white text-capitalize text-body-small text-truncate limited-width-to-truncate opacity-50">
             {{ locale(Util.protocolTitle(vhApp.data.activeProtocol)) }}
           </span>
 

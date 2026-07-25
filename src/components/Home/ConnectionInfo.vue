@@ -21,7 +21,7 @@ function formatSpeed(speed: number): string | void {
   >
 
     <!-- ConnectionStatistics -->
-    <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40">
+    <v-col cols="12" class="d-flex justify-center align-center text-white text-body-medium opacity-40">
       <v-btn
         :text="locale('STATISTICS')"
         :tabindex="vhApp.data.isConnected ? '3' : null"
@@ -42,7 +42,7 @@ function formatSpeed(speed: number): string | void {
         icon="mdi-arrow-down-thin"
         tabindex="-1"
       />
-      <span class="pe-1 text-body-2 text-white">
+      <span class="pe-1 text-body-medium text-white">
         {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.received ?? 1) }}
       </span>
       <span class="text-white opacity-40 align-self-center" style="font-size: 10px">Mbps</span>
@@ -56,7 +56,7 @@ function formatSpeed(speed: number): string | void {
         icon="mdi-arrow-up-thin"
         tabindex="-1"
       />
-      <span class="pe-1 text-body-2 text-white">
+      <span class="pe-1 text-body-medium text-white">
         {{ formatSpeed(vhApp.data.state.sessionStatus?.speed.sent ?? 1) }}
       </span>
       <span class="text-white opacity-40 order-last align-self-center" style="font-size: 10px">Mbps</span>

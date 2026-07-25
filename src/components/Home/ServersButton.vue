@@ -55,7 +55,7 @@ function buttonClickHandler() {
     </span>
     <v-icon :icon="Util.getLocalizedRightChevron()" />
     <span
-      class="config-btn-value text-white text-capitalize text-caption text-truncate limited-width-to-truncate opacity-50">
+      class="config-btn-value text-white text-capitalize text-body-small text-truncate limited-width-to-truncate opacity-50">
       {{ getActiveServerNameOrLocation() }}
     </span>
 

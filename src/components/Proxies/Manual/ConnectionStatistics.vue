@@ -35,7 +35,7 @@ const props = defineProps<{
 
       <!-- Recent connections -->
       <div class="d-flex align-center ga-2 my-4">
-        <span class="text-caption text-disabled text-no-wrap">{{locale('RECENT_CONNECTIONS')}}</span>
+        <span class="text-body-small text-disabled text-no-wrap">{{locale('RECENT_CONNECTIONS')}}</span>
         <v-divider class="flex-grow-1 opacity-40" variant="dotted"></v-divider>
         <div class="d-flex align-center ga-2">
           <v-chip
@@ -57,7 +57,7 @@ const props = defineProps<{
 
       <!-- Servers -->
       <div class="d-flex align-center ga-2">
-        <span class="text-caption text-disabled text-no-wrap">{{locale('SERVERS')}} ({{props.totalProxyCount}})</span>
+        <span class="text-body-small text-disabled text-no-wrap">{{locale('SERVERS')}} ({{props.totalProxyCount}})</span>
         <v-divider class="flex-grow-1 opacity-40" variant="dotted"></v-divider>
         <div class="d-flex align-center ga-2">
           <v-chip
@@ -85,7 +85,7 @@ const props = defineProps<{
         </div>
       </div>
       <v-divider class="mt-4 mb-2"/>
-      <p class="text-caption text-disabled">{{locale("PROXY_LEARNING_MSG")}}</p>
+      <p class="text-body-small text-disabled">{{locale("PROXY_LEARNING_MSG")}}</p>
 
     </v-card-item>
   </config-card>

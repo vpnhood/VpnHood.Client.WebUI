@@ -107,7 +107,7 @@ onBeforeRouteLeave(async () => {
     <app-bar/>
 
     <!-- Feature description -->
-    <p class="text-disabled text-caption mb-4">{{locale("SPLIT_COUNTRIES_DESC")}}</p>
+    <p class="text-disabled text-body-small mb-4">{{locale("SPLIT_COUNTRIES_DESC")}}</p>
 
     <config-card class="pt-3">
 
@@ -126,7 +126,7 @@ onBeforeRouteLeave(async () => {
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>{{ locale("INCLUDE_ALL") }}</span>
-                <span class="text-disabled text-caption">{{ locale("INCLUDE_ALL_DESC") }}</span>
+                <span class="text-disabled text-body-small">{{ locale("INCLUDE_ALL_DESC") }}</span>
               </div>
             </template>
           </v-radio>
@@ -148,7 +148,7 @@ onBeforeRouteLeave(async () => {
                     tabindex="-1"
                   />
                 </span>
-                <span class="text-disabled text-caption">
+                <span class="text-disabled text-body-small">
                     {{ locale("SPLIT_EXCLUDE_MY_COUNTRY_DESC") }}
                 </span>
               </div>
@@ -162,7 +162,7 @@ onBeforeRouteLeave(async () => {
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>{{ locale("CUSTOM_INCLUDE_LIST") }}</span>
-                <span class="text-disabled text-caption">{{ locale("CUSTOM_INCLUDE_LIST_DESC") }}</span>
+                <span class="text-disabled text-body-small">{{ locale("CUSTOM_INCLUDE_LIST_DESC") }}</span>
               </div>
             </template>
           </v-radio>

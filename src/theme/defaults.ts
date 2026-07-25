@@ -8,7 +8,7 @@ const baseAlert = {
   icon: false,
   density: 'compact',
   rounded: 'lg',
-  class: 'text-caption pt-1 text-start',
+  class: 'text-body-small pt-1 text-start',
   VAlertTitle: { style: 'font-weight: 600; font-size: 0.9rem;' },
 };
 
@@ -46,7 +46,7 @@ export const vuetifyDefaults = {
     class: 'config-card',
     rounded: 'lg',
     VCardTitle: { class: 'd-flex justify-space-between align-center pt-3 pb-0' },
-    VCardSubtitle: { class: 'text-disabled text-wrap text-caption' },
+    VCardSubtitle: { class: 'text-disabled text-wrap text-body-small' },
     VSwitch: { class: 'px-2', color: 'switch-btn', density: 'compact', hideDetails: true },
     VProgressLinear: { color: 'switch-btn' },
   },
@@ -55,7 +55,7 @@ export const vuetifyDefaults = {
     class: 'card-on-grad-bg',
     rounded: 'lg',
     VCardTitle: { class: 'd-flex justify-space-between align-center pt-3 pb-0' },
-    VCardSubtitle: { class: 'text-disabled text-wrap text-caption' },
+    VCardSubtitle: { class: 'text-disabled text-wrap text-body-small' },
     VSwitch: { class: 'px-2', color: 'switch-btn', density: 'compact', hideDetails: true },
   },
   HomeConfigBtn: { block: true, variant: 'text', size: 'small', class: 'config-item' },

@@ -36,7 +36,7 @@ async function ignoreUpdate() {
     'update-snackbar-alert'"
     :style="`margin-top: ${vhApp.data.edgeToEdgeTopHeight}px;`"
   >
-    <p class="text-subtitle-1 mb-3">
+    <p class="text-body-large mb-3">
       {{vhApp.data.state.updaterStatus?.versionStatus === VersionStatus.Deprecated
       ? locale("VERSION_IS_DEPRECATED") : locale("VERSION_IS_OLD") }}
     </p>
@@ -68,7 +68,7 @@ async function ignoreUpdate() {
     <!-- Do not access to google play question -->
     <v-btn
       v-if="vhApp.data.state.updaterStatus?.publishInfo?.googlePlayUrl && !showAlternativeDownloadLink"
-      class="mt-2 text-lowercase text-caption"
+      class="mt-2 text-lowercase text-body-small"
       @click="showAlternativeDownloadLink = true"
       variant="text"
       block
@@ -99,7 +99,7 @@ async function ignoreUpdate() {
 
     <div class="d-flex align-center justify-space-between">
       <!-- Compare versions -->
-      <div class="text-caption">
+      <div class="text-body-small">
         <p class="opacity-60"> {{ locale("CURRENT_VERSION") }} {{ vhApp.getAppVersion(true) }}</p>
         <p> {{ locale("NEW_VERSION") }} {{ vhApp.data.state.updaterStatus?.publishInfo?.version }}</p>
       </div>

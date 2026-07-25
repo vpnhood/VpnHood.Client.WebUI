@@ -70,7 +70,7 @@ async function connect(clientProfileId:string): Promise<void>{
       variant="flat"
       :title="locale('ADD_ACCESS_KEY_TITLE')"
     >
-      <v-card-text class="test-disabled text-caption">{{ locale('ADD_ACCESS_KEY_SUBTITLE') }}</v-card-text>
+      <v-card-text class="test-disabled text-body-small">{{ locale('ADD_ACCESS_KEY_SUBTITLE') }}</v-card-text>
       <v-card-item>
         <v-text-field
           v-model="accessKey"

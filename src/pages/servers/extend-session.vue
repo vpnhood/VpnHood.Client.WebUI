@@ -97,7 +97,7 @@ async function showRewardedAd(){
     <!--TODO: Use general dialog-->
     <v-dialog v-model="showLoadingAdDialog" :persistent="true">
       <v-card color="general-dialog" :title="locale('LOADING_AD')">
-        <v-card-text class="text-general-dialog-text text-body-2">
+        <v-card-text class="text-general-dialog-text text-body-medium">
           {{locale('EXTEND_BY_REWARDED_AD_NOTE')}}
         </v-card-text>
         <v-card-item class="text-center pt-0">

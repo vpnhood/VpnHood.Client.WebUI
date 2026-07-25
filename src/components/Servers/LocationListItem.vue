@@ -66,7 +66,7 @@ function listItemClass(index: number): string{
   >
 
     <v-list-item-title
-      class="d-flex align-center justify-space-between text-subtitle-2"
+      class="d-flex align-center justify-space-between text-label-large"
       :class="{'ps-4': location.isNestedCountry}"
     >
 
@@ -89,12 +89,12 @@ function listItemClass(index: number): string{
       <!---------------------------- End of location flag ---------------------------->
 
       <!------------------------------- Location name -------------------------------->
-        <div :class="[{'text-caption': location.isNestedCountry},'text-truncate flex-1-1-0']">
+        <div :class="[{'text-body-small': location.isNestedCountry},'text-truncate flex-1-1-0']">
 
           <!---- Fastest name ---->
           <template v-if="vhApp.data.isLocationAutoSelected(location.countryCode)" >
             <span>{{ locale('FASTEST') }}</span>
-            <span class="flasher text-disabled text-caption ms-1">({{ locale('RECOMMENDED') }})</span>
+            <span class="flasher text-disabled text-body-small ms-1">({{ locale('RECOMMENDED') }})</span>
           </template>
 
           <!---- Country name ---->

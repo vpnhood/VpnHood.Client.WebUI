@@ -129,7 +129,7 @@ watch(isAddByUrlEnabled, async (newVal, oldVal) => {
 
 
         <div class="d-flex align-center justify-space-between">
-          <span :class="{'text-disabled': !hasUrl}" class="text-subtitle-2">{{ locale('AUTO_UPDATE') }}</span>
+          <span :class="{'text-disabled': !hasUrl}" class="text-label-large">{{ locale('AUTO_UPDATE') }}</span>
 
           <v-select
             v-model="autoUpdateInterval"

@@ -26,7 +26,7 @@ const emits = defineEmits<{
         <v-icon :icon="props.icon" color="promote-premium-color-premium" size="25" class="me-2" />
         <h4 class="text-capitalize">{{props.title}}</h4>
       </div>
-      <p class="text-white opacity-40 text-caption">{{ props.description }}</p>
+      <p class="text-white opacity-40 text-body-small">{{ props.description }}</p>
     </v-col>
     <v-col cols="auto" class="action-btn pe-0">
       <v-chip

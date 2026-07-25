@@ -116,7 +116,7 @@ function closeSheet(){
       <v-card-item>
         <!-- Add proxy list -->
         <template v-if="props.proxyType === ProxySheetType.AddList">
-          <p class="text-caption text-disabled mb-3">{{locale('PROXY_IMPORT_DESC')}}</p>
+          <p class="text-body-small text-disabled mb-3">{{locale('PROXY_IMPORT_DESC')}}</p>
           <v-textarea
             v-model="proxyList"
             :label="locale('PROXY_IMPORT_LABEL')"

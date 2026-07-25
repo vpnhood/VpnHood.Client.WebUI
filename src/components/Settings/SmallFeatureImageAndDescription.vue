@@ -15,5 +15,5 @@ const props = defineProps<{
     max-height="130px"
     class="mx-auto"
   />
-  <p class="mt-2 mb-5 text-disabled text-caption px-3">{{ props.description }}</p>
+  <p class="mt-2 mb-5 text-disabled text-body-small px-3">{{ props.description }}</p>
 </template>

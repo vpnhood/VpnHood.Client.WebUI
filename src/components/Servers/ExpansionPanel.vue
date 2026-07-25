@@ -221,7 +221,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
       </template>
 
       <!-- Support id &  -->
-      <div class="d-flex align-center justify-space-between text-disabled text-caption px-4 mt-2">
+      <div class="d-flex align-center justify-space-between text-disabled text-body-small px-4 mt-2">
         <span>SID:{{ clientProfileInfo.supportId }}</span>
         <span>{{ clientProfileInfo.hostNames[0] }}</span>
       </div>
@@ -278,7 +278,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
           </v-text-field>
         </v-locale-provider>
 
-        <p class="text-caption mb-2">{{locale('CUSTOM_ENDPOINT_DESC')}}</p>
+        <p class="text-body-small mb-2">{{locale('CUSTOM_ENDPOINT_DESC')}}</p>
         <div class="d-flex flex-wrap ga-2">
           <v-chip
             density="compact"
@@ -318,7 +318,7 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
     <v-card color="general-dialog" :title="locale('WARNING')">
 
       <v-card-text class="text-general-dialog-text">
-        <p class="text-caption mb-3">{{ locale("CONFIRM_REMOVE_SERVER") }}</p>
+        <p class="text-body-small mb-3">{{ locale("CONFIRM_REMOVE_SERVER") }}</p>
         <strong>{{ currentClientProfileInfo.clientProfileName }}</strong>
       </v-card-text>
 

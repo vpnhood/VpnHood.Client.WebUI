@@ -10,7 +10,6 @@ import vuetify from './theme/vuetify'
 import i18n, { availableLocales, loadLocale } from './locales/i18n'
 import router from './services/router'
 import EngineError from "./pages/engine-error.vue"
-import './assets/styles/vuetify3-typography.css'
 import './assets/styles/general.css'
 import './assets/styles/override.css'
 import './assets/styles/rtl.css'

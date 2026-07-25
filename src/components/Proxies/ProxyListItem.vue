@@ -69,8 +69,8 @@ const errorMessage = computed(() => {
 
       <template v-slot:subtitle>
 
-        <div class="d-flex align-center justify-space-between text-caption mt-3">
-          <div id="proxyItemSubtitle" class="d-flex align-center ga-3 text-caption">
+        <div class="d-flex align-center justify-space-between text-body-small mt-3">
+          <div id="proxyItemSubtitle" class="d-flex align-center ga-3 text-body-small">
 
             <!-- Succeeded connections -->
             <div>
@@ -107,7 +107,7 @@ const errorMessage = computed(() => {
         </div>
 
         <!-- Error message -->
-        <p v-if="hasError" class="text-caption text-disabled opacity-60 mt-2">{{ errorMessage }}</p>
+        <p v-if="hasError" class="text-body-small text-disabled opacity-60 mt-2">{{ errorMessage }}</p>
 
       </template>
     </v-list-item>

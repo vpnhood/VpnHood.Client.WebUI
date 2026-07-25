@@ -125,13 +125,13 @@ function edgeToEdgeHeight(bottom: boolean): string{
         </h4>
 
         <!-- App full version -->
-        <div class="text-navigation-drawer-version text-caption">
+        <div class="text-navigation-drawer-version text-body-small">
           <span class="me-2">{{ locale('VERSION') }}:</span>
           <span>{{ mergedAppAndUiVersion() }}</span>
         </div>
 
         <!-- Local (non-CI) SPA build: show when it was built, to expose a stale bundle -->
-        <div v-if="localBuildText()" dir="ltr" class="text-navigation-drawer-version text-caption opacity-60">
+        <div v-if="localBuildText()" dir="ltr" class="text-navigation-drawer-version text-body-small opacity-60">
           {{ localBuildText() }}
         </div>
       </div>
@@ -164,7 +164,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
           <v-icon icon="mdi-account" />
           <span class="ms-3 d-flex flex-column">
             <span>{{ vhApp.data.userState.userAccount ? locale('ACCOUNT') : locale('SIGN_IN_WITH_GOOGLE') }}</span>
-            <span v-if="vhApp.data.userState.userAccount" class="text-disabled text-caption text-truncate" style="max-width: 195px">
+            <span v-if="vhApp.data.userState.userAccount" class="text-disabled text-body-small text-truncate" style="max-width: 195px">
               {{vhApp.data.userState.userAccount.email}}
             </span>
           </span>
@@ -218,7 +218,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
         <v-list-item-title>
           <v-icon icon="mdi-bullhorn" />
-          <span class="ms-3 text-caption">{{ locale('WHATS_NEW') }}</span>
+          <span class="ms-3 text-body-small">{{ locale('WHATS_NEW') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -234,7 +234,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
         <v-list-item-title>
           <v-icon icon="mdi-message-alert" />
-          <span class="ms-3 text-caption">{{ locale('SEND_FEEDBACK') }}</span>
+          <span class="ms-3 text-body-small">{{ locale('SEND_FEEDBACK') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -250,7 +250,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
         <v-list-item-title>
           <v-icon icon="mdi-server" />
-          <span class="ms-3 text-caption">{{ locale('CREATE_PERSONAL_SERVER') }}</span>
+          <span class="ms-3 text-body-small">{{ locale('CREATE_PERSONAL_SERVER') }}</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -266,7 +266,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
         <v-list-item-title>
           <v-icon icon="mdi-web" />
-          <span class="ms-3 text-caption">vpnhood.com</span>
+          <span class="ms-3 text-body-small">vpnhood.com</span>
         </v-list-item-title>
       </v-list-item>
 
@@ -311,7 +311,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Powered by button -->
       <a
-        class="d-block mb-2 text-caption text-decoration-none text-active"
+        class="d-block mb-2 text-body-small text-decoration-none text-active"
         :href="!vhApp.data.features.isTv ? 'https://github.com/vpnhood/VpnHood' : ''"
         target="_blank"
         tabindex="-1"

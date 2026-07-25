@@ -43,6 +43,7 @@
     "baseline-browser-mapping": "^2.11.1",
     "eslint": "^10.8.0",
     "eslint-plugin-vue": "^10.10.0",
+    "eslint-plugin-vuetify": "^2.7.2",
     "npm-run-all2": "^9.0.2",
     "playwright": "^1.62.0",
     "postcss": "^8.5.23",

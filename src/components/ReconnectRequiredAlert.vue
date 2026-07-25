@@ -32,7 +32,7 @@ async function reconnect(): Promise<void> {
       :icon="false"
       density="compact"
       type="warning"
-      class="text-caption reconnect-alert-bar elevation-3"
+      class="text-body-small reconnect-alert-bar elevation-3"
       @click:close="dismiss()"
     >
       {{ locale('RECONNECT_REQUIRED_MSG') }}

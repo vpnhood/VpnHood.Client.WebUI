@@ -91,7 +91,7 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
   <v-sheet>
     <app-bar />
 
-    <p class="text-disabled text-caption mb-4">{{ locale("PROTOCOL_DESC") }}</p>
+    <p class="text-disabled text-body-small mb-4">{{ locale("PROTOCOL_DESC") }}</p>
 
     <!-- Cloak Mode -->
     <config-card v-if="vhApp.data.features.isTcpProxySupported" class="pb-3">
@@ -159,7 +159,7 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
                   </div>
 
                   <!-- Protocol short description -->
-                  <p class="text-disabled text-caption">{{ locale(item.subtitle) }}</p>
+                  <p class="text-disabled text-body-small">{{ locale(item.subtitle) }}</p>
                 </div>
               </template>
             </v-radio>

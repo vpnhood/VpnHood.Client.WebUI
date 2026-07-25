@@ -10,16 +10,17 @@
 html {overflow-y: auto;}
 html,
 body,
-.v-application:not(.v-locale--is-rtl),
-.text-caption,
-.text-body-1,
-.text-body-2,
-.text-subtitle-1,
-.text-subtitle-2{
+.v-application:not(.v-locale--is-rtl){
     font-family: "English-Regular", "IranSans-Regular", "Noto-Regular", sans-serif !important;
 }
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     font-family: "English-Bold", "IranSans-Bold", "Noto-Bold", sans-serif !important;
+}
+/* Vuetify 4's MD3 typography classes (text-body-small, text-headline-*, ...) take their
+   font-family from these variables instead of inheriting, so the app fonts are set here too. */
+:root{
+    --v-font-body: "English-Regular", "IranSans-Regular", "Noto-Regular", sans-serif;
+    --v-font-heading: "English-Bold", "IranSans-Bold", "Noto-Bold", sans-serif;
 }
 .v-application:not(.v-locale--is-rtl){font-size: 15px !important;}
 

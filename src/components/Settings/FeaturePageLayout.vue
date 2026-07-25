@@ -83,7 +83,7 @@ function actionButtonClick(): void | null {
         <v-col>
           <div class="d-flex align-center">
             <v-icon icon="mdi-server-off" color="promote-premium-color-free" size="25" class="me-2" />
-            <p class="text-white text-caption">{{ locale("PRIVATE_DNS_TURN_OFF_MSG") }}</p>
+            <p class="text-white text-body-small">{{ locale("PRIVATE_DNS_TURN_OFF_MSG") }}</p>
           </div>
         </v-col>
         <v-col cols="auto" class="pe-0 action-btn">
@@ -115,7 +115,7 @@ function actionButtonClick(): void | null {
         <v-col>
           <div class="d-flex align-center">
             <v-icon icon="mdi-crown" color="promote-premium-color-premium" size="25" class="me-2" />
-            <p class="text-white text-caption">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
+            <p class="text-white text-body-small">{{ locale("GO_PREMIUM_AND_UNLOCK_FEATURES") }}</p>
           </div>
 
         </v-col>
@@ -137,7 +137,7 @@ function actionButtonClick(): void | null {
 
       <!-- Help steps -->
         <v-card-item v-if="props.listStep">
-        <ol class="ms-3 d-flex flex-column ga-2 text-caption" style="line-height: 20px">
+        <ol class="ms-3 d-flex flex-column ga-2 text-body-small" style="line-height: 20px">
             <li
               v-for="(item, index) in props.listStep"
               :key="index"

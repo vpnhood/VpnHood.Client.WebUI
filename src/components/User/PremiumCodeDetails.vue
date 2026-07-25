@@ -40,8 +40,8 @@ async function copyPremiumCode(){
 
         <!-- Code -->
         <li>
-          <span class="text-subtitle-2 text-disabled">{{ locale('CODE') }}:</span>
-          <span class="text-subtitle-2 text-active">
+          <span class="text-label-large text-disabled">{{ locale('CODE') }}:</span>
+          <span class="text-label-large text-active">
                 {{premiumCode}}
                 <v-btn
                   size="small"
@@ -56,8 +56,8 @@ async function copyPremiumCode(){
         <template v-if="vhApp.data.state.sessionInfo?.accessInfo">
           <!-- Max Device -->
           <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('MAX_DEVICE') }}:</span>
-            <span class="text-subtitle-2 text-active">
+            <span class="text-label-large text-disabled">{{ locale('MAX_DEVICE') }}:</span>
+            <span class="text-label-large text-active">
                   {{ vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount > 0
               ? vhApp.data.state.sessionInfo.accessInfo.maxDeviceCount
               : locale('UNLIMITED')}}
@@ -66,7 +66,7 @@ async function copyPremiumCode(){
 
           <!-- Used device -->
           <li>
-            <span class="text-subtitle-2 text-disabled">{{locale('USED_DEVICE')}}:</span>
+            <span class="text-label-large text-disabled">{{locale('USED_DEVICE')}}:</span>
             <span v-if="vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.hasMoreDevices" class="text-highlight">
                   {{locale('MORE_THAN_X_DEVICES', {x: vhApp.data.state.sessionInfo.accessInfo.devicesSummary?.deviceCount})}}
                 </span>
@@ -77,15 +77,15 @@ async function copyPremiumCode(){
 
           <!-- Activation time -->
           <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('ACTIVATED_ON') }}:</span>
-            <span class="text-subtitle-2 text-active">
+            <span class="text-label-large text-disabled">{{ locale('ACTIVATED_ON') }}:</span>
+            <span class="text-label-large text-active">
                   {{Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.createdTime) }}
                 </span>
           </li>
 
           <!-- Expiration time -->
           <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('EXPIRATION_DATE') }}:</span>
+            <span class="text-label-large text-disabled">{{ locale('EXPIRATION_DATE') }}:</span>
             <span :class="[vhApp.data.state.sessionInfo.accessInfo.expirationTime ? 'text-error' : 'text-active']">
                   {{ vhApp.data.state.sessionInfo.accessInfo.expirationTime
               ? Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.expirationTime)
@@ -95,7 +95,7 @@ async function copyPremiumCode(){
 
           <!-- Last use -->
           <li>
-            <span class="text-subtitle-2 text-disabled">{{ locale('LAST_USED') }}:</span>
+            <span class="text-label-large text-disabled">{{ locale('LAST_USED') }}:</span>
             <span class="text-highlight">
                   {{ Util.getShortDate(vhApp.data.state.sessionInfo.accessInfo.lastUsedTime) }}
                 </span>
@@ -104,7 +104,7 @@ async function copyPremiumCode(){
       </ul>
 
       <!-- If disconnected -->
-      <div v-if="!vhApp.data.state.sessionInfo?.accessInfo" class="text-center text-caption text-disabled mt-4">
+      <div v-if="!vhApp.data.state.sessionInfo?.accessInfo" class="text-center text-body-small text-disabled mt-4">
         <v-icon icon="mdi-information-outline" size="30"/>
         <p class="mt-3">{{locale('DISPLAY_INFO_AFTER_CONNECTION')}}</p>
       </div>

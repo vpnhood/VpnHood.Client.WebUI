@@ -15,7 +15,7 @@ const props = defineProps<{
     color="rgba(var(--v-theme-card-on-grad-bg), 0.3)"
   >
     <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline" />
-    <span class="text-error text-caption">{{ locale('ONLINE_PURCHASE_IS_NOT_AVAILABLE') }}</span>
+    <span class="text-error text-body-small">{{ locale('ONLINE_PURCHASE_IS_NOT_AVAILABLE') }}</span>
     <v-btn
       :text="locale('MORE_INFO')"
       color="error"

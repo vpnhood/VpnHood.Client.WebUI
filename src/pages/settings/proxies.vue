@@ -51,7 +51,7 @@ const proxyMode = computed<AppProxyMode>({
         class="mx-auto"
         style="transition: all .3s ease-in-out"
       />
-      <p class="mt-2 mb-5 text-disabled text-caption px-3">{{locale('PROXY_NOTE')}}</p>
+      <p class="mt-2 mb-5 text-disabled text-body-small px-3">{{locale('PROXY_NOTE')}}</p>
 
 
       <!-- Proxy mode select-->

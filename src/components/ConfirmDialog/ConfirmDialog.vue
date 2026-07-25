@@ -29,7 +29,7 @@ function onCancel(): void{
         append-icon="mdi-alert-circle-outline"
         color="general-dialog"
       >
-        <v-card-text class="text-general-dialog-text text-body-2">
+        <v-card-text class="text-general-dialog-text text-body-medium">
           {{ vhApp.data.uiState.confirmDialogState.message }}
         </v-card-text>
 

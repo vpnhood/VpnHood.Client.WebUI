@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
         :text="remainingTimeSecond > 0 ? remainingTimeSecond : ''"
         variant="tonal"
         color="white"
-        class="ms-auto text-caption"
+        class="ms-auto text-body-small"
         density="compact"
         @click="internalAdDismissed(false)"
       />

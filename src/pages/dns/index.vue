@@ -157,7 +157,7 @@ function isShowEnforcedByServerAlert() {
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale("DEFAULT") }}</span>
-              <span class="text-disabled text-caption">{{ locale("ADAPTER_DNS_AUTO_DESC") }}</span>
+              <span class="text-disabled text-body-small">{{ locale("ADAPTER_DNS_AUTO_DESC") }}</span>
             </div>
           </template>
         </v-radio>
@@ -166,7 +166,7 @@ function isShowEnforcedByServerAlert() {
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale("CUSTOM") }}</span>
-              <span class="text-disabled text-caption">{{ locale("ADAPTER_DNS_CUSTOM_DESC") }}</span>
+              <span class="text-disabled text-body-small">{{ locale("ADAPTER_DNS_CUSTOM_DESC") }}</span>
             </div>
           </template>
         </v-radio>

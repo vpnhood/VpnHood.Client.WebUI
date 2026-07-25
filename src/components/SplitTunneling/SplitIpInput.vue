@@ -62,7 +62,7 @@ const blockIpFilters = computed<string>({
 
     <!-- Sample ip format -->
    <config-card class="pa-4 mb-2">
-     <ul class="text-caption text-disabled" style="list-style: none">
+     <ul class="text-body-small text-disabled" style="list-style: none">
        <li>
          {{locale('SINGLE_IP')}}
          <v-chip text="192.168.1.1" tabindex="-1"/>

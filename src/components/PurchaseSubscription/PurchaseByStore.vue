@@ -133,16 +133,16 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
             <!-- Base price -->
             <span
               v-if="isShowDiscount(plan.currentPrice, plan.period)"
-              class="text-decoration-line-through text-caption text-disabled"
+              class="text-decoration-line-through text-body-small text-disabled"
               style="line-height: 1"
             >
               {{ plan.currencySymbol }}{{ calcBasePrice(plan.period) }}
             </span>
 
             <!-- Discounted price -->
-            <span class="d-flex align-center text-subtitle-1" style="line-height: 1">
+            <span class="d-flex align-center text-body-large" style="line-height: 1">
               {{ plan.currencySymbol }}{{ plan.currentPrice }}
-              <span class="text-caption text-disabled ms-1">
+              <span class="text-body-small text-disabled ms-1">
                 {{ locale(getPlanPricePeriod(plan.period)) }}
               </span>
             </span>
@@ -153,7 +153,7 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
     </v-list>
 
     <!-- Plan Descriptions -->
-    <ul class="text-white opacity-40 ps-4 mb-3 mt-2 text-caption">
+    <ul class="text-white opacity-40 ps-4 mb-3 mt-2 text-body-small">
       <li>
         {{ locale('AUTO_RENEW_AT') }}
         {{ selectedPlan.currencySymbol }}{{ selectedPlan.basePrice }}{{

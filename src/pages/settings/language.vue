@@ -70,7 +70,7 @@ onMounted(() => {
             <span>{{ item.nativeName }}</span>
 
             <!-- System default language name -->
-            <span v-if="item.code === LanguagesCode.SystemDefault" class="text-disabled text-caption ms-1">
+            <span v-if="item.code === LanguagesCode.SystemDefault" class="text-disabled text-body-small ms-1">
               ({{ vhApp.data.state.systemUiCultureInfo.nativeName }})
             </span>
 
@@ -80,7 +80,7 @@ onMounted(() => {
           <p v-if="item.code === LanguagesCode.SystemDefault &&
             !myLocales.find(x => x.code === vhApp.data.state.systemUiCultureInfo.code)"
             dir="ltr"
-            class="text-disabled text-caption"
+            class="text-disabled text-body-small"
           >
             {{ locale("SYSTEM_DEFAULT_LANGUAGE_NOT_SUPPORTED_DESC") }}
           </p>

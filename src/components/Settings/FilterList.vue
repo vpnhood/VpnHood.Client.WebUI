@@ -64,7 +64,7 @@ async function onClearAll() {
         <!-- Select all apps button -->
         <btn-style-5
           prepend-icon="mdi-select-all"
-          class="flex-grow-1 text-caption"
+          class="flex-grow-1 text-body-small"
           :text="locale('SELECT_ALL')"
           @click="onSelectAll()"
         />
@@ -72,7 +72,7 @@ async function onClearAll() {
         <!-- Clear all apps button -->
         <btn-style-5
           prepend-icon="mdi-select-remove"
-          class="flex-grow-1 text-caption"
+          class="flex-grow-1 text-body-small"
           :text="locale('CLEAR_ALL')"
           @click="onClearAll()"
         />
@@ -81,7 +81,7 @@ async function onClearAll() {
         <btn-style-5
           v-if="!isShowSearchBox"
           prepend-icon="mdi-magnify"
-          class="flex-grow-1 text-caption"
+          class="flex-grow-1 text-body-small"
           :text="locale('SEARCH')"
           @click="isShowSearchBox = !isShowSearchBox"
         />
@@ -127,7 +127,7 @@ async function onClearAll() {
         :title="item.name"
         :ripple="true"
         :active="false"
-        class="text-caption"
+        class="text-body-small"
         :class="{'border-b': filteredListItem.length > index + 1}"
         @click="toggleListItem(item)"
       >

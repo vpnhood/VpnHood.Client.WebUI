@@ -17,7 +17,7 @@ const props = defineProps<{
     <v-card color="active">
 
       <v-card-title class="text-center pt-4">
-        <v-icon class="text-h2">mdi-party-popper</v-icon>
+        <v-icon class="text-display-medium">mdi-party-popper</v-icon>
         <h2>{{ locale('CONGRATULATIONS') }}</h2>
       </v-card-title>
 

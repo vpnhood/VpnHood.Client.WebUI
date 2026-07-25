@@ -38,7 +38,7 @@ const premiumCodeExpirationDate = computed(() =>
     <v-card color="active">
 
       <v-card-title class="text-center pt-4">
-        <v-icon class="text-h2">mdi-party-popper</v-icon>
+        <v-icon class="text-display-medium">mdi-party-popper</v-icon>
         <h2>{{ locale('CONGRATULATIONS') }}</h2>
       </v-card-title>
 
@@ -51,7 +51,7 @@ const premiumCodeExpirationDate = computed(() =>
           color="#17083d"
           density="compact"
           rounded="lg"
-          class="text-caption mt-4"
+          class="text-body-small mt-4"
         >
 
           <span v-if="!isNewCode && premiumCodeDeviceCount > 1" class="mb-2">

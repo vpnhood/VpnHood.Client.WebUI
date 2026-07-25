@@ -1,4 +1,5 @@
 import pluginVue from 'eslint-plugin-vue'
+import pluginVuetify from 'eslint-plugin-vuetify'
 import vueTsEslintConfig from '@vue/eslint-config-typescript'
 
 export default [
@@ -20,6 +21,18 @@ export default [
     files: ['src/pages/**/*.vue'],
     rules: {
       'vue/multi-word-component-names': 'off',
+    },
+  },
+
+  {
+    // Vuetify migrated its type scale to Material Design 3; the MD2 class names (text-h6,
+    // text-caption, ...) no longer exist in its stylesheets. This rule flags — and with --fix
+    // rewrites — any MD2 typography class left behind in a template.
+    name: 'app/vuetify',
+    files: ['**/*.vue'],
+    plugins: { vuetify: pluginVuetify },
+    rules: {
+      'vuetify/no-deprecated-typography': 'error',
     },
   }
 ]

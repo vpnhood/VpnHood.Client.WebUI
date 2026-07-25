@@ -36,7 +36,7 @@ function calcUnit(total: number): string{
 
     <v-defaults-provider :defaults="{
       'VIcon':{size:'18', disabled: true},
-      'VCardText':{class: 'text-disabled text-caption'}
+      'VCardText':{class: 'text-disabled text-body-small'}
     }">
 
       <!-- Date -->
@@ -238,7 +238,7 @@ function calcUnit(total: number): string{
         </v-card-title>
         <v-card-subtitle>{{locale('STATISTICS_TOTAL_TRAFFIC_CARD_DESC')}}</v-card-subtitle>
 
-        <v-card-text class="text-disabled text-caption mt-3">
+        <v-card-text class="text-disabled text-body-small mt-3">
           <ul class="info-table">
             <li class="border-b">
               <span>{{locale('USED')}}</span>

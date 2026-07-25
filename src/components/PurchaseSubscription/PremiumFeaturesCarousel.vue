@@ -128,7 +128,7 @@ onBeforeMount(() => {
           class="mx-auto mb-5"
         />
         <h3 class="mb-2">{{locale(item.title)}}</h3>
-        <p class="text-subtitle-2 text-medium-emphasis px-3">{{locale(item.description)}}</p>
+        <p class="text-label-large text-medium-emphasis px-3">{{locale(item.description)}}</p>
       </template>
     </v-carousel-item>
   </v-carousel>

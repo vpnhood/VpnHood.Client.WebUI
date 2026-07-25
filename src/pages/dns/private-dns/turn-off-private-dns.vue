@@ -23,7 +23,7 @@ const locale = i18n.global.t;
 
       <v-card color="config-card-bg" class="my-5" rounded="xl">
         <v-card-item>
-          <ol class="ms-5 d-flex flex-column ga-2 py-3 text-disabled text-caption" style="line-height: 28px">
+          <ol class="ms-5 d-flex flex-column ga-2 py-3 text-disabled text-body-small" style="line-height: 28px">
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_1')"/>
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_2')"/>
             <li v-html="locale('PRIVATE_DNS_TURN_OFF_STEP_3')"/>

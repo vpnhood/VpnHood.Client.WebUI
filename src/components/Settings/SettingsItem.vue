@@ -72,7 +72,7 @@ const props = defineProps< {
     </div>
 
     <!-- Language contribute link -->
-    <div v-if="props.languageMoreAction" class="text-caption">
+    <div v-if="props.languageMoreAction" class="text-body-small">
       <v-divider class="my-3"/>
 
       <!-- Description -->

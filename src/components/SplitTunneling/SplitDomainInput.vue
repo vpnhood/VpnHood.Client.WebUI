@@ -62,7 +62,7 @@ const blockDomainFilters = computed<string>({
 
     <!-- Domain format hints -->
     <config-card class="pa-4 mb-2">
-      <ul class="text-caption text-disabled" style="list-style: none">
+      <ul class="text-body-small text-disabled" style="list-style: none">
         <li>
           {{ locale('EXACT_DOMAIN') }}
           <v-chip text="example.com" tabindex="-1"/>

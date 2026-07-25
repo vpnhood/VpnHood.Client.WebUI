@@ -31,7 +31,7 @@ async function navigateByRouter(to: RouteLocationRaw){
   >
     <v-card :title="locale('IN_USE_FEATURES')" color="general-dialog">
 
-      <v-card-text class="text-disabled text-caption">{{locale('IN_USE_FEATURES_DESC')}}</v-card-text>
+      <v-card-text class="text-disabled text-body-small">{{locale('IN_USE_FEATURES_DESC')}}</v-card-text>
 
       <v-list id="badgeList" >
         <template v-for="(feature, index) in featureItems" :key="index">
