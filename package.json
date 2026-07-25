@@ -14,7 +14,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
-    "i18n:unused": "node scripts/find-unused-i18n-keys.mjs"
+    "i18n:unused": "node scripts/find-unused-i18n-keys.mjs",
+    "test:e2e": "node e2e/smoke.mjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -43,6 +44,7 @@
     "eslint": "^10.8.0",
     "eslint-plugin-vue": "^10.10.0",
     "npm-run-all2": "^9.0.2",
+    "playwright": "^1.62.0",
     "postcss": "^8.5.23",
     "postcss-preset-env": "^11.3.2",
     "typescript": "~6.0.0",

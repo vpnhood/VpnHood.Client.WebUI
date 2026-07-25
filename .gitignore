@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# e2e smoke-test output (e2e/smoke.mjs)
+/test-results
+
 
 # local env files
 .env.local

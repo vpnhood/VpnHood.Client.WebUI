@@ -88,12 +88,19 @@ export class VpnHoodApp {
     return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, proxyEndpointClient, appData, firebase);
   }
 
-  // Firebase does analytics and report uploads — nothing the first paint needs — so the SDK is
-  // fetched on demand rather than riding along in the startup chunk.
+  // Firebase does analytics and report uploads. Loading it as its own chunk keeps the SDK out of
+  // the startup bundle, but it stays best-effort: tryCreate already degrades to null on a bad
+  // config, so a chunk that fails to load must degrade the same way rather than fail the launch.
   private static async createFirebase(features: AppFeatures): Promise<VhFirebaseApp | null> {
-    const { VhFirebaseApp } = await import('@/services/Firebase');
+    try {
+      const { VhFirebaseApp } = await import('@/services/Firebase');
 
-    return VhFirebaseApp.tryCreate(features.customData?.firebaseOptions, features.clientId);
+      return VhFirebaseApp.tryCreate(features.customData?.firebaseOptions, features.clientId);
+    }
+    catch (err: unknown) {
+      console.error('Firebase: Failed to load the Firebase module.', err);
+      return null;
+    }
   }
 
   public async reloadState(): Promise<void> {

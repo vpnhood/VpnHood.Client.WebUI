@@ -8,12 +8,12 @@ const router = createRouter({
   scrollBehavior: (_to, _from, savedPosition) => savedPosition ?? { top: 0 }
 });
 
-// Change page title and add transition
-router.beforeEach((to, from, next) => {
+// Change page title and add transition. Returning nothing continues the navigation; the next()
+// callback is deprecated in vue-router 5.
+router.beforeEach((to, from) => {
   const toDepth = to.path.split('/').length;
   const fromDepth = from.path.split('/').length;
   to.meta.transition = toDepth >= fromDepth ? 'translate-with-fade' : 'short-translate';
-  next();
 });
 
 // Update document title after navigation. Dont change the page title in beforeEach
