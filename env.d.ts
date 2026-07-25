@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 // vite-env.d.ts
-/// <reference types="unplugin-vue-router/client" />
 
 // Stamped by vite.config.ts at build time.
 interface ImportMetaEnv {

@@ -5,7 +5,6 @@ import { ClientProfileUpdateParams, ConnectPlanId, PatchOfString } from '@/servi
 import { ref } from 'vue';
 import PendingDialog from '@/components/PurchaseSubscription/PendingDialog.vue';
 import PremiumCodeCompleteDialog from '@/components/PurchaseSubscription/PremiumCodeCompleteDialog.vue';
-import { ca } from 'vuetify/locale';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;

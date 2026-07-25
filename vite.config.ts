@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
-import VueRouter from 'unplugin-vue-router/vite'
+import VueRouter from 'vue-router/vite'
 import vue from '@vitejs/plugin-vue';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import legacy from '@vitejs/plugin-legacy';
@@ -43,22 +43,17 @@ export default defineConfig({
         },
       ],
       extendRoute(route) {
-        if (route.name === '/') {
-          route.name = 'HOME';
-        }
-        else if (route.name) {
+        // vue-router types a nameless route as `false`; every file-based route here carries a name.
+        const rawName = route.name === false ? '' : route.name;
 
-          // Remove leading and trailing slashes
-          const normalizedPath = route.name.replace(/^\/|\/$/g, '');
+        // Remove leading and trailing slashes, then extract the segment after the last "/"
+        const segments = rawName.replace(/^\/|\/$/g, '').split('/');
+        const lastSegment = segments[segments.length - 1];
 
-          // Extract the last segment after the last "/"
-          const segments = normalizedPath.split('/');
-          const lastSegment = segments[segments.length - 1];
+        const name = rawName === '/' ? 'HOME' : lastSegment.toUpperCase().replace(/-/g, '_');
+        route.name = name;
 
-          route.name = lastSegment.toUpperCase().replace(/-/g, '_');
-        }
-
-        const pageTitle = route.name.toLowerCase().split('_');
+        const pageTitle = name.toLowerCase().split('_');
         route.meta = {
           title: pageTitle.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
         };

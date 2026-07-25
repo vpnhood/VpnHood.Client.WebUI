@@ -48,7 +48,8 @@ function onCloseButton(){
     class="pt-2"
     rounded="lg"
     vertical
-    :timer="snackbarState.hasTimer ? 'rgba(255,255,255,0.5)' : false"
+    :timer="snackbarState.hasTimer ?? false"
+    timer-color="rgba(255,255,255,0.5)"
     :timeout="timeOut"
     :content-class="snackbarState.textColor ? `text-${snackbarState.textColor}` : ''"
     :color="snackbarState.bgColor"
