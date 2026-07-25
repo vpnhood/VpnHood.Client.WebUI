@@ -15,7 +15,8 @@
 # use the shared VpnHood publish module (it builds and packs itself), so nothing would consume one.
 #
 # Invoked by publish_nugets.yml in CI (CI owns the bump). A plain local build never bumps, so a local
-# bundle is identified by its build time instead (see vite.config.ts / NavigationDrawer.vue).
+# bundle is identified by an untracked per-machine build counter instead — .local-build-number, shown
+# as "local · build #N" (see vite.config.ts / NavigationDrawer.vue).
 
 param(
 	# Monorepo version source. The raw develop URL keeps "always read develop" true wherever this

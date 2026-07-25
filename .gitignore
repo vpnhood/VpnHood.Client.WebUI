@@ -232,6 +232,11 @@ FodyWeavers.xsd
 .vs
 /.env.locale
 
+# Per-machine local build counter, stepped by vite.config.ts on every local `vite build` and shown
+# in the app as "local · build #N". It must stay untracked — it is one developer's build count, not
+# a version, and committing it would conflict on every build.
+/.local-build-number
+
 # nuget project build output
 nuget/**/bin/
 nuget/**/obj/

@@ -53,10 +53,11 @@ function mergedAppAndUiVersion(): string {
 }
 
 // Only CI bumps the SPA version, so on a local build the version above is whatever the last
-// published build left behind and cannot prove which bundle is being served. The build time is
-// baked into this bundle and can, so show it — a stale local build becomes obvious instead of silent.
+// published build left behind and cannot prove which bundle is being served. The local build number
+// is baked into this bundle and steps by one on every local build, so show it — a stale local build
+// becomes obvious instead of silent (vite.config.ts keeps the counter, untracked, per machine).
 function localBuildText(): string | null {
-  return import.meta.env.SPA_IS_CI_BUILD ? null : `local · built ${import.meta.env.SPA_BUILD_TIME}`;
+  return import.meta.env.SPA_IS_CI_BUILD ? null : `local · build #${import.meta.env.SPA_LOCAL_BUILD_NUMBER}`;
 }
 
 async function checkForUpdate() {

@@ -8,9 +8,11 @@
 # The real publish is done by _publish.ps1 (bump + push + dispatch publish_nugets.yml). Nothing in
 # this script affects a published version.
 #
-# Because nothing increments locally, the app reports this build by its BUILD TIME (shown under the
-# version in the navigation drawer as "local · built ..."). If that timestamp is not the moment you
-# ran this script, you are looking at a stale bundle — not a fresh one.
+# Because the published version never increments locally, the app reports this build by a LOCAL BUILD
+# NUMBER instead (shown under the version in the navigation drawer as "local · build #N"). Every run
+# of this script steps it by one, and it is kept in the untracked <WebUI>/.local-build-number file —
+# per machine, never committed. If the number the app shows is not the one this script just printed,
+# you are looking at a stale bundle — not a fresh one.
 
 $ErrorActionPreference = "Stop";
 
@@ -83,5 +85,12 @@ else {
 Write-Host "Building SPA ..." -ForegroundColor Magenta;
 & $buildSpaScript;
 if ($LASTEXITCODE -gt 0) { throw "Could not build the SPA. ExitCode: $LASTEXITCODE"; }
+
+# Echo the number vite just consumed, so the "local · build #N" line in the app can be compared
+# against the build that was actually produced here.
+$localBuildNumberFile = Join-Path $solutionDir ".local-build-number";
+if (Test-Path $localBuildNumberFile) {
+    Write-Host "Local build #$((Get-Content $localBuildNumberFile -Raw).Trim())" -ForegroundColor Green;
+}
 
 Write-Host "Done. Create <Vh>/.user/use-local-spa.txt to run the app against this build." -ForegroundColor Green;
