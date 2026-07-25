@@ -48,6 +48,10 @@ export const myColors = {
     200: "#ffe648",
     300: "#704d00",
   },
+  orange: {
+    100: "#fb8c00",
+    300: "#4a2800",
+  },
   cream: {
     100: "#e7b481",
   },

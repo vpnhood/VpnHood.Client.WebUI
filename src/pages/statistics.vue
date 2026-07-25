@@ -266,6 +266,11 @@ function calcUnit(total: number): string{
 </template>
 
 <style scoped>
+.info-table{
+  /* A plain ul keeps the browser's 40px start padding and bullets; this table look needs neither. */
+  padding: 0;
+  list-style: none;
+}
 .info-table>li{
   display: flex;
   align-content: center;

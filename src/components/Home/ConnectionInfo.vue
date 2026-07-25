@@ -17,11 +17,11 @@ function formatSpeed(speed: number): string | void {
     align-content="center"
     justify="center"
     dir="ltr"
-    :class="[vhApp.data.isConnected ? 'opacity-100' : 'opacity-0', 'mb-2']"
+    :class="[vhApp.data.isConnected ? 'opacity-100' : 'opacity-0', 'mb-2', 'connection-info-row']"
   >
 
     <!-- ConnectionStatistics -->
-    <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40 pb-0">
+    <v-col cols="12" class="d-flex justify-center align-center text-white text-body-2 opacity-40">
       <v-btn
         :text="locale('STATISTICS')"
         :tabindex="vhApp.data.isConnected ? '3' : null"
@@ -35,7 +35,7 @@ function formatSpeed(speed: number): string | void {
     </v-col>
 
     <!-- Download speed -->
-    <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
+    <v-col cols="auto" dir="ltr" class="d-inline-flex">
       <v-icon
         color="active"
         size="small"
@@ -49,7 +49,7 @@ function formatSpeed(speed: number): string | void {
     </v-col>
 
     <!-- Upload speed -->
-    <v-col cols="auto" dir="ltr" class="d-inline-flex pt-1">
+    <v-col cols="auto" dir="ltr" class="d-inline-flex">
       <v-icon
         color="error"
         size="small"
@@ -63,3 +63,12 @@ function formatSpeed(speed: number): string | void {
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+/* Vuetify 4's grid spaces columns with a 24px row gap instead of per-column padding, which pushed
+   the speed row far below the Statistics button (and down toward the connect circle). Restore the
+   pre-upgrade 4px vertical rhythm through the grid's own variable. */
+.connection-info-row {
+  --v-col-gap-y: 4px;
+}
+</style>
