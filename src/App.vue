@@ -85,7 +85,8 @@ onMounted(async () => {
       <NavigationDrawer v-model="navigationDrawerModel.isVisible" />
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
-      <v-main class="fill-height">
+      <!-- position-relative anchors the overlaid reconnect-required bar to this element -->
+      <v-main class="fill-height position-relative">
 
         <!-- Reconnect required bar -->
         <reconnect-required-alert />

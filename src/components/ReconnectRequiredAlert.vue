@@ -22,18 +22,46 @@ async function reconnect(): Promise<void> {
 </script>
 
 <template>
-  <v-alert
-    v-if="vhApp.data.state.isReconnectRequired && vhApp.data.isConnected"
-    closable
-    :icon="false"
-    density="compact"
-    type="warning"
-    class="text-caption"
-    @click:close="dismiss()"
-  >
-    {{ locale('RECONNECT_REQUIRED_MSG') }}
-    <a class="text-decoration-underline font-weight-bold" href="#" @click.prevent="reconnect()">
-      {{ locale('RECONNECT') }}
-    </a>
-  </v-alert>
+  <!-- Overlaid on top of the page content instead of participating in layout: showing the bar
+       must not push the page (and the mobile footer) down. Anchors to v-main, which App.vue
+       makes position-relative. -->
+  <transition name="reconnect-alert">
+    <v-alert
+      v-if="vhApp.data.state.isReconnectRequired && vhApp.data.isConnected"
+      closable
+      :icon="false"
+      density="compact"
+      type="warning"
+      class="text-caption reconnect-alert-bar elevation-3"
+      @click:close="dismiss()"
+    >
+      {{ locale('RECONNECT_REQUIRED_MSG') }}
+      <a class="text-decoration-underline font-weight-bold" href="#" @click.prevent="reconnect()">
+        {{ locale('RECONNECT') }}
+      </a>
+    </v-alert>
+  </transition>
 </template>
+
+<style scoped>
+/* Physical top/left/right rather than logical inset properties: their postcss transpilation is
+   disabled for legacy browsers (see vite.config.ts), and the bar is symmetric so RTL is unaffected. */
+.reconnect-alert-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+}
+
+.reconnect-alert-enter-active,
+.reconnect-alert-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.reconnect-alert-enter-from,
+.reconnect-alert-leave-to {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+</style>
