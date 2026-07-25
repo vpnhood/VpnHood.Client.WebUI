@@ -43,16 +43,16 @@ async function saveIpList(): Promise<void> {
   await vhApp.saveUserSetting();
 }
 
-onBeforeRouteLeave(async (to, from, next) => {
+// Returning false cancels the navigation; returning nothing allows it (vue-router 5 guard style).
+onBeforeRouteLeave(async () => {
   try {
     if (ipFilters.value.excludes !== savedIps.excludes ||
       ipFilters.value.includes !== savedIps.includes)
       await saveIpList();
-    next();
   } catch (err: unknown) {
-    next(false);
     showRevertButton.value = true;
     await vhApp.processError(err);
+    return false;
   }
 });
 

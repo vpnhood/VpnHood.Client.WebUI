@@ -6,7 +6,7 @@ import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import FilterList, { type IListItemInfo } from '@/components/Settings/FilterList.vue';
-import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized } from 'vue-router';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -96,20 +96,16 @@ async function handleListUpdate(newList: IListItemInfo[]){
     await vhApp.saveUserSetting();
 }
 
-onBeforeRouteLeave(
-  async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-
-    // Show error when the user excluded all countries
-    if (isSaveRejected.value){
-      next(false);
-      await vhApp.processError(locale("ALL_APPS_EXCLUDED_ERROR_MSG"));
-      return;
-    }
-
-    await vhApp.saveUserSetting();
-    next();
+// Returning false cancels the navigation; returning nothing allows it (vue-router 5 guard style).
+onBeforeRouteLeave(async () => {
+  // Show error when the user excluded all apps
+  if (isSaveRejected.value) {
+    await vhApp.processError(locale("ALL_APPS_EXCLUDED_ERROR_MSG"));
+    return false;
   }
-);
+
+  await vhApp.saveUserSetting();
+});
 </script>
 
 <template>

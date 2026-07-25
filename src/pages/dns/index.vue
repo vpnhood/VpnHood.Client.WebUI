@@ -4,7 +4,7 @@ import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import AppBar from '@/components/AppBar.vue';
-import { type NavigationGuardNext, onBeforeRouteLeave, type RouteLocationNormalized, } from 'vue-router';
+import { onBeforeRouteLeave } from 'vue-router';
 import { AppFeature, DnsMode } from '@/services/VpnHood.Client.Api';
 import PremiumIcon from '@/components/PremiumIcon.vue';
 import { computed, ref, watch } from 'vue';
@@ -32,25 +32,21 @@ async function saveSettings() {
   await vhApp.saveUserSetting();
 }
 
-onBeforeRouteLeave(
-  async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    if ( isAdapterDnsAvailable.value && customDnsForm.value ) {
-      const result = await customDnsForm.value.validate();
-      if (!result.valid){
-        next(false);
-        return;
-      }
-    }
-
-    try {
-      await saveSettings();
-      next();
-    } catch (err: unknown) {
-      next(false);
-      await vhApp.processError(err);
-    }
+// Returning false cancels the navigation; returning nothing allows it (vue-router 5 guard style).
+onBeforeRouteLeave(async () => {
+  if ( isAdapterDnsAvailable.value && customDnsForm.value ) {
+    const result = await customDnsForm.value.validate();
+    if (!result.valid)
+      return false;
   }
-);
+
+  try {
+    await saveSettings();
+  } catch (err: unknown) {
+    await vhApp.processError(err);
+    return false;
+  }
+});
 
 // Dns1 Live formatting
 watch(dns1, (newVal) => {

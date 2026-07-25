@@ -47,17 +47,17 @@ async function saveDomainList(): Promise<void> {
   await vhApp.saveUserSetting();
 }
 
-onBeforeRouteLeave(async (to, from, next) => {
+// Returning false cancels the navigation; returning nothing allows it (vue-router 5 guard style).
+onBeforeRouteLeave(async () => {
   try {
     if (splitDomains.value.excludes !== savedDomains.excludes ||
       splitDomains.value.includes !== savedDomains.includes ||
       splitDomains.value.blocks !== savedDomains.blocks)
       await saveDomainList();
-    next();
   } catch (err: unknown) {
-    next(false);
     showRevertButton.value = true;
     await vhApp.processError(err);
+    return false;
   }
 });
 

@@ -84,13 +84,8 @@ async function internalAdDismissed(learnMore: boolean, adError: string | null = 
   await router.replace({ name: learnMore ? 'PURCHASE_SUBSCRIPTION' : 'HOME' });
 }
 
-onBeforeRouteLeave((to, from, next) => {
-  if (allowLeavePage.value) {
-    next(); // allow navigation
-  } else {
-    next(false); // block back button
-  }
-});
+// Returning false blocks the back button until the ad allows leaving (vue-router 5 guard style).
+onBeforeRouteLeave(() => allowLeavePage.value);
 
 onMounted(() => {
   const video = getVideo();

@@ -5,6 +5,12 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VpnHood App</title>
+    <style>
+      /* Paint the app's dark background before any bundle loads, so a refresh never flashes
+         white. Matches the VpnHoodClient theme background (purple-500 in src/theme/colors.ts);
+         the Connect theme is close enough that the difference is imperceptible for one frame. */
+      html { background-color: #150e3d; color-scheme: dark; }
+    </style>
   </head>
   <body>
     <div id="app"></div>
