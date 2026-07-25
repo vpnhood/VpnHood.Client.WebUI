@@ -3,6 +3,10 @@
   "version": "8.0.842",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^24.15.0 || >=26.0.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -27,9 +31,9 @@
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^11.2.4",
-    "@tsconfig/node22": "^22.0.5",
+    "@tsconfig/node24": "^24.0.4",
     "@types/core-js": "^2.5.8",
-    "@types/node": "^22.20.1",
+    "@types/node": "^24.13.3",
     "@types/postcss-rtl": "^2.0.0",
     "@vitejs/plugin-legacy": "^8.2.2",
     "@vitejs/plugin-vue": "^6.0.8",
@@ -38,7 +42,7 @@
     "baseline-browser-mapping": "^2.11.1",
     "eslint": "^10.8.0",
     "eslint-plugin-vue": "^10.10.0",
-    "npm-run-all2": "^8.0.4",
+    "npm-run-all2": "^9.0.2",
     "postcss": "^8.5.23",
     "postcss-preset-env": "^11.3.2",
     "typescript": "~5.9.3",

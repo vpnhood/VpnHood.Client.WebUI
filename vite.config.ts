@@ -79,7 +79,10 @@ export default defineConfig({
           features:{
             'not-pseudo-class':true,
             'logical-properties-and-values': false,
-            'logical-viewport-units': false
+            'logical-viewport-units': false,
+            // Vuetify ships @layer with revert-layer, which the cascade-layers polyfill cannot
+            // emulate; it warns and flattens to different styles. Keep layers native instead.
+            'cascade-layers': false
           }
         }),
       ]
