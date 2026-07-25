@@ -5,7 +5,7 @@ import { computed, onUnmounted, ref, toRef, watch } from 'vue';
 import i18n from '@/locales/i18n';
 import {
   AppConnectionState,
-  type AppProxyEndPointInfo, CustomData,
+  type AppProxyEndPointInfo,
   ProxyEndPoint,
   ProxyEndPointInfo,
   type ProxyEndPointStatus,
@@ -68,7 +68,7 @@ let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const enableAutoRefreshProxyList = computed({
   get: () => vhApp.data.userSettings.customData?.enableAutoRefreshProxyList,
   set: async (value: boolean) => {
-    (vhApp.data.userSettings.customData ??= new CustomData()).enableAutoRefreshProxyList = value;
+    (vhApp.data.userSettings.customData ??= {}).enableAutoRefreshProxyList = value;
     await vhApp.saveUserSetting();
   }
 })
