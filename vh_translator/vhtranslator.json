@@ -1,0 +1,5 @@
+{
+  "base": "src/locales/en.json",
+  "model": "gemini-flash-lite-latest",
+  "batch": 20
+}

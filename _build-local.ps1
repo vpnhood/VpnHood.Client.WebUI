@@ -63,10 +63,16 @@ Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
 dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
 if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
 
-# Commit the results (locale files AND vh_translator/en_watch.json). The watch file records the
-# source text behind every key; if it is not committed, the next machine to run this retranslates
+# Commit the results (locale files AND vh_translator/watches/en_watch.json). The watch file records
+# the source text behind every key; if it is not committed, the next machine to run this retranslates
 # everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
 # have staged is left untouched.
+#
+# The watch file used to sit directly in vh_translator/; newer translator versions keep it in the
+# watches/ subfolder and migrate the old file on their first save (read from the old path, written
+# to the new one, old one deleted). `git add -A` below stages both sides of that move, so the
+# incremental state survives — do NOT move the file by hand, or an older translator build would
+# stop finding it and retranslate every language.
 $localesPath = "src/locales";
 if (git -C $solutionDir status --porcelain -- $localesPath) {
     Write-Host "Committing updated locales ..." -ForegroundColor Magenta;
