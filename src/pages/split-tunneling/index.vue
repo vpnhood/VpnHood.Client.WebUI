@@ -6,9 +6,13 @@ import { AppFeature } from '@/services/VpnHood.Client.Api';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 import SettingsItem from '@/components/Settings/SettingsItem.vue';
 import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
+import LeakCausesDialog from '@/components/LeakCausesDialog.vue';
+import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+
+const showLeakCauses = ref(false);
 </script>
 
 <template>
@@ -116,7 +120,11 @@ const locale = i18n.global.t;
       :selected-item="vhApp.data.canLeak ? undefined : locale('PROTECTED')"
       :warning="vhApp.data.canLeak ? locale('CAN_LEAK') : undefined"
       :click="{name: 'LEAK_PROTECTION'}"
+      @warning-click="showLeakCauses = true"
     />
+
+    <!-- What is leaking right now, and where to turn each cause off -->
+    <leak-causes-dialog v-model="showLeakCauses"/>
 
   </v-sheet>
 </template>

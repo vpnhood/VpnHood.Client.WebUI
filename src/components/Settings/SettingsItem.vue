@@ -23,6 +23,10 @@ const props = defineProps< {
   languageMoreAction?: boolean
 }>();
 
+const emit = defineEmits<{
+  (e: 'warning-click'): void,
+}>();
+
 
 </script>
 
@@ -58,13 +62,15 @@ const props = defineProps< {
           />
 
           <!-- Warning chip if available (e.g. a setting whose current posture can leak); shown alongside
-               the selected item or status, never instead of them -->
+               the selected item or status, never instead of them. Opens its own explanation instead of
+               following the item's link. -->
           <v-chip v-if="props.warning"
             :text="props.warning"
             size="small"
             variant="tonal"
             density="comfortable"
             color="warning"
+            @click.stop="emit('warning-click')"
           />
 
         </div>

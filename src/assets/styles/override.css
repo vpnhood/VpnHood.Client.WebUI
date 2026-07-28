@@ -1,6 +1,35 @@
+/*** ---------------- Vuetify 3 typography compat ----------------
+ Vuetify 4 swapped the MD2 type scale for MD3, which runs tighter and tracks wider than
+ the scale this UI was drawn against: caption line-height dropped 1.667 -> 1.333, list
+ titles went from .009375em to .03125em, card titles lost their 500 weight, and .v-btn
+ no longer uppercases or tracks its label. These rules put the old metrics back.
+ Remove the block if the UI is ever deliberately re-tuned for MD3.                    ***/
+
+/* was .text-caption */
+.text-body-small{
+    line-height: 1.667;
+}
+/* was .text-subtitle-2, whose size and tracking outranked .v-list-item-title below */
+.text-label-large{
+    font-size: 0.875rem !important;
+    line-height: 1.6;
+    letter-spacing: 0.0071428571em !important;
+}
+/* was .v-btn's own uppercase + tracking, which every button label inherited */
+.v-btn{
+    letter-spacing: 0.0892857143em;
+}
+/* the home config buttons (Server / Split countries / Protocol) took their caps from .v-btn */
+.config-btn-title{
+    text-transform: uppercase;
+}
+
 .v-card-title{
     font-family: "English-Bold", "IranSans-Bold", sans-serif !important;
     font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.0125em;
 }
 
 /*noinspection CssUnusedSymbol*/
@@ -21,8 +50,14 @@
 .v-main {
     flex-basis: 0;
 }
+/* font-weight/line-height/letter-spacing: what Vuetify 3's own .v-list-item-title set.
+   Kept after the compat block above so a list title still wins over .text-label-large,
+   exactly as it did in Vuetify 3. */
 .v-list-item-title{
     font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.009375em;
 }
 .v-messages__message{
     line-height: 16px;

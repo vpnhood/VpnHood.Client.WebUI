@@ -11,8 +11,6 @@ import {
   ClientProfileInfo,
   DnsMode,
   SplitCountryMode,
-  SplitDnsMode,
-  UnsupportedIpMode,
   UiCultureInfo,
   UserSettings,
   SplitAppMode
@@ -307,11 +305,11 @@ export class VpnHoodAppData {
     return this.locale('ALL');
   }
 
-  // The settings POSTURE can leak — exactly the two permissive leak-policy choices. Deliberate splits
-  // (apps, countries, LAN) never count: the user asked for those.
+  // Whether any option can push traffic outside the VPN right now. The app computes the causes: an option
+  // that can not actually leak in the current state (e.g. unsupported IPs excluded but the server routes
+  // everything) is not reported, so the badge stays honest.
   get canLeak(): boolean {
-    return this.userSettings.splitDnsMode === SplitDnsMode.DefaultRoute ||
-      this.userSettings.unsupportedIpMode === UnsupportedIpMode.Exclude;
+    return this.state.leakCauses.length > 0;
   }
 
   get splitAppsStatusText(): string {
