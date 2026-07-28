@@ -104,17 +104,18 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_COUNTRIES'}"
     />
 
-    <!-- DNS -->
-    <settings-section-title :title="locale('DNS')"/>
+    <!-- Leak Protection -->
+    <settings-section-title :title="locale('LEAK_PROTECTION')"/>
 
-    <!-- DNS routing -->
+    <!-- What happens to traffic the tunnel can not carry: DNS pushed out by splits, server-unsupported IPs -->
     <settings-item
-      :title="locale('SPLIT_DNS')"
-      :subtitle="locale('SPLIT_DNS_SHORT_DESC')"
+      :title="locale('LEAK_PROTECTION')"
+      :subtitle="locale('LEAK_PROTECTION_SHORT_DESC')"
       :is-show="true"
       :is-premium="false"
-      :selected-item="vhApp.data.splitDnsStatusText"
-      :click="{name: 'SPLIT_DNS'}"
+      :selected-item="vhApp.data.canLeak ? undefined : locale('PROTECTED')"
+      :warning="vhApp.data.canLeak ? locale('CAN_LEAK') : undefined"
+      :click="{name: 'LEAK_PROTECTION'}"
     />
 
   </v-sheet>

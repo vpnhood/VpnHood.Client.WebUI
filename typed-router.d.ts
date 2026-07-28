@@ -192,6 +192,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'LEAK_PROTECTION': RouteRecordInfo<
+      'LEAK_PROTECTION',
+      '/split-tunneling/leak-protection',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'SPLIT_APPS': RouteRecordInfo<
       'SPLIT_APPS',
       '/split-tunneling/split-apps',
@@ -202,13 +209,6 @@ declare module 'vue-router/auto-routes' {
     'SPLIT_COUNTRIES': RouteRecordInfo<
       'SPLIT_COUNTRIES',
       '/split-tunneling/split-countries',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    'SPLIT_DNS': RouteRecordInfo<
-      'SPLIT_DNS',
-      '/split-tunneling/split-dns',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -452,6 +452,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'src/pages/split-tunneling/leak-protection.vue': {
+      routes:
+        | 'LEAK_PROTECTION'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'src/pages/split-tunneling/split-apps.vue': {
       routes:
         | 'SPLIT_APPS'
@@ -463,14 +471,6 @@ declare module 'vue-router/auto-routes' {
     'src/pages/split-tunneling/split-countries.vue': {
       routes:
         | 'SPLIT_COUNTRIES'
-      views:
-        | never
-      pathParamNames:
-        | never
-    }
-    'src/pages/split-tunneling/split-dns.vue': {
-      routes:
-        | 'SPLIT_DNS'
       views:
         | never
       pathParamNames:

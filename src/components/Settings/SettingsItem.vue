@@ -13,6 +13,7 @@ const props = defineProps< {
   isPremium: boolean,
   click: RouteLocationRaw,
   selectedItem?: string,
+  warning?: string,
   status?: {
     state: boolean,
     onText: string,
@@ -54,6 +55,16 @@ const props = defineProps< {
             density="comfortable"
             :disabled="!props.status.state"
             :color="props.status.state ? 'enable-premium' : ''"
+          />
+
+          <!-- Warning chip if available (e.g. a setting whose current posture can leak); shown alongside
+               the selected item or status, never instead of them -->
+          <v-chip v-if="props.warning"
+            :text="props.warning"
+            size="small"
+            variant="tonal"
+            density="comfortable"
+            color="warning"
           />
 
         </div>

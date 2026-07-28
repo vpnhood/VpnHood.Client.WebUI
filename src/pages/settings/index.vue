@@ -82,6 +82,7 @@ function isShowConnectivitySectionTitle(): boolean {
         onText: locale('ON'),
         offText: locale('OFF')
       }"
+      :warning="vhApp.data.canLeak ? locale('CAN_LEAK') : undefined"
       :click="{name: 'SPLIT_TUNNELING'}"
     />
 

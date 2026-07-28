@@ -12,6 +12,7 @@ import {
   DnsMode,
   SplitCountryMode,
   SplitDnsMode,
+  UnsupportedIpMode,
   UiCultureInfo,
   UserSettings,
   SplitAppMode
@@ -306,10 +307,11 @@ export class VpnHoodAppData {
     return this.locale('ALL');
   }
 
-  get splitDnsStatusText(): string {
-    return this.userSettings.splitDnsMode === SplitDnsMode.DefaultRoute
-      ? this.locale('SPLIT_DNS_DEFAULT_ROUTE')
-      : this.locale('SPLIT_DNS_INCLUDE_ALL');
+  // The settings POSTURE can leak — exactly the two permissive leak-policy choices. Deliberate splits
+  // (apps, countries, LAN) never count: the user asked for those.
+  get canLeak(): boolean {
+    return this.userSettings.splitDnsMode === SplitDnsMode.DefaultRoute ||
+      this.userSettings.unsupportedIpMode === UnsupportedIpMode.Exclude;
   }
 
   get splitAppsStatusText(): string {
