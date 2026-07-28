@@ -29,9 +29,9 @@ const isDomainFilterAffectedByServer = computed<boolean>(
 );
 
 const isEnabled = computed<boolean>({
-  get: () => vhApp.data.userSettings.useSplitDomain,
+  get: () => vhApp.data.userSettings.splitTunneling.useDomain,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useSplitDomain = value;
+    vhApp.data.userSettings.splitTunneling.useDomain = value;
     await vhApp.saveUserSetting();
   }
 });

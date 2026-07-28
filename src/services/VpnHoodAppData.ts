@@ -110,30 +110,30 @@ export class VpnHoodAppData {
     const settingsActive = this.isSplitIpViaDeviceActive ||
       this.isSplitIpViaAppActive ||
       this.isSplitDomainActive ||
-      this.userSettings.useSplitLocalNetwork ||
+      this.userSettings.splitTunneling.useLocalNetwork ||
       this.isSplitAppsActive ||
       this.isSplitCountryActive;
     return settingsActive;
   }
 
   get isSplitDomainActive(): boolean {
-    return this.userSettings.useSplitDomain && this.isPremiumFeatureAllowed(AppFeature.SplitDomain);
+    return this.userSettings.splitTunneling.useDomain && this.isPremiumFeatureAllowed(AppFeature.SplitDomain);
   }
 
   get isSplitIpViaDeviceActive(): boolean {
-    return this.userSettings.useSplitIpViaDevice && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaDevice);
+    return this.userSettings.splitTunneling.useIpViaDevice && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaDevice);
   }
 
   get isSplitIpViaAppActive(): boolean {
-    return this.userSettings.useSplitIpViaApp && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp);
+    return this.userSettings.splitTunneling.useIpViaApp && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp);
   }
 
   get isSplitAppsActive(): boolean {
-    return this.userSettings.splitAppMode !== SplitAppMode.All;
+    return this.userSettings.splitTunneling.appMode !== SplitAppMode.All;
   }
 
   get isSplitLocalNetworkActive(): boolean {
-    return this.userSettings.useSplitLocalNetwork;
+    return this.userSettings.splitTunneling.useLocalNetwork;
   }
 
   get isDnsCustomized(): boolean{
@@ -281,13 +281,13 @@ export class VpnHoodAppData {
   }
 
   get isSplitCountryActive(): boolean {
-    return this.userSettings.splitCountryMode != SplitCountryMode.IncludeAll ||
-          (this.userSettings.splitAppMode == SplitAppMode.Exclude && this.userSettings.splitApps.length > 0);
+    return this.userSettings.splitTunneling.countryMode != SplitCountryMode.IncludeAll ||
+          (this.userSettings.splitTunneling.appMode == SplitAppMode.Exclude && this.userSettings.splitTunneling.apps.length > 0);
   }
 
   get splitCountryStatusText(): string {
-    const mode = this.userSettings.splitCountryMode;
-    const excludedCountries = this.userSettings.splitCountries ?? [];
+    const mode = this.userSettings.splitTunneling.countryMode;
+    const excludedCountries = this.userSettings.splitTunneling.countries ?? [];
     const allCountriesCount = this.uiState.allCountriesCount;
     const maxFlags = 3;
 
@@ -313,8 +313,8 @@ export class VpnHoodAppData {
   }
 
   get splitAppsStatusText(): string {
-    const splitApps = this.userSettings.splitApps ?? [];
-    switch (this.userSettings.splitAppMode) {
+    const splitApps = this.userSettings.splitTunneling.apps ?? [];
+    switch (this.userSettings.splitTunneling.appMode) {
       case SplitAppMode.Exclude:
         return this.locale('ALL_EXCEPT_X', { x: splitApps.length });
       case SplitAppMode.Include:

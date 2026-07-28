@@ -2,6 +2,7 @@
 - Follow the existing code style.
 - Localize all user-facing strings in en.json (i18n).
 - Don't add any item in i18n files except en.json.
+- Never run the translator (vh_translator); it is run at publish time.
 - Let global error handler handle errors (vhApp.processError).
 - Do not use [id].vue filename for dynamic routes and customize route param name instead.
 - Do not update the VpnHood.Client.Api.ts file manually, it is auto-generated from the API project.

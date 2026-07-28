@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import router from '@/services/router';
 import { Util } from '@/helpers/Util';
 import i18n from '@/locales/i18n';
@@ -10,8 +10,8 @@ import CountryFlagWrapper from '@/components/CountryFlagWrapper.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const mode = computed(() => vhApp.data.userSettings.splitCountryMode);
-const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitCountries ?? []);
+const mode = computed(() => vhApp.data.userSettings.splitTunneling.countryMode);
+const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitTunneling.countries ?? []);
 const maxFlags = 3;
 
 // Flag Display Logic

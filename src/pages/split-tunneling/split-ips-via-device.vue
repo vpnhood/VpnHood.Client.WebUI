@@ -25,9 +25,9 @@ const showRevertButton = ref<boolean>(false);
 let savedIps = createNormalizedSplitIps();
 
 const isEnabled = computed<boolean>({
-  get: () => vhApp.data.userSettings.useSplitIpViaDevice,
+  get: () => vhApp.data.userSettings.splitTunneling.useIpViaDevice,
   set: async (value: boolean) => {
-    vhApp.data.userSettings.useSplitIpViaDevice = value;
+    vhApp.data.userSettings.splitTunneling.useIpViaDevice = value;
     await vhApp.saveUserSetting();
   }
 });

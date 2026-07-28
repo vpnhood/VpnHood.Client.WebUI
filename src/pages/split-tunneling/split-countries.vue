@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -12,18 +12,18 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const countryList = ref<IListItemInfo[]>([]);
-const isShowList = computed(() => vhApp.data.userSettings.splitCountryMode === SplitCountryMode.ExcludeList);
-const localSplitMode = ref(vhApp.data.userSettings.splitCountryMode);
+const isShowList = computed(() => vhApp.data.userSettings.splitTunneling.countryMode === SplitCountryMode.ExcludeList);
+const localSplitMode = ref(vhApp.data.userSettings.splitTunneling.countryMode);
 const selectedCountries = computed<string[]>({
-  get: () => vhApp.data.userSettings.splitCountries,
-  set: async (countiresCode: string[]) => vhApp.data.userSettings.splitCountries = countiresCode
+  get: () => vhApp.data.userSettings.splitTunneling.countries,
+  set: async (countiresCode: string[]) => vhApp.data.userSettings.splitTunneling.countries = countiresCode
 });
 
 watch(isShowList, () => {
   if (isShowList.value) fetchCountries();
 });
 
-watch(() => vhApp.data.userSettings.splitCountryMode, (newVal) => {
+watch(() => vhApp.data.userSettings.splitTunneling.countryMode, (newVal) => {
   localSplitMode.value = newVal;
 });
 
@@ -74,7 +74,7 @@ async function handleListUpdate(newList: IListItemInfo[]){
 }
 
 async function onSplitModeChange(value: SplitCountryMode | null) {
-  const oldValue = vhApp.data.userSettings.splitCountryMode;
+  const oldValue = vhApp.data.userSettings.splitTunneling.countryMode;
 
   if (value === null) {
     localSplitMode.value = oldValue;
@@ -86,7 +86,7 @@ async function onSplitModeChange(value: SplitCountryMode | null) {
     selectedCountries.value = [];
   }
 
-  vhApp.data.userSettings.splitCountryMode = value;
+  vhApp.data.userSettings.splitTunneling.countryMode = value;
   await vhApp.saveUserSetting();
 }
 

@@ -13,12 +13,12 @@ const locale = i18n.global.t;
 
 const appList = ref<IListItemInfo[]>([]);
 const splitMode = computed<SplitAppMode>({
-  get: () => vhApp.data.userSettings.splitAppMode,
-  set: async (value: SplitAppMode) => vhApp.data.userSettings.splitAppMode = value
+  get: () => vhApp.data.userSettings.splitTunneling.appMode,
+  set: async (value: SplitAppMode) => vhApp.data.userSettings.splitTunneling.appMode = value
 });
 const selectedApps = computed<string[]>({
-  get: () => vhApp.data.userSettings.splitApps,
-  set: async (apps: string[]) => vhApp.data.userSettings.splitApps = apps
+  get: () => vhApp.data.userSettings.splitTunneling.apps,
+  set: async (apps: string[]) => vhApp.data.userSettings.splitTunneling.apps = apps
 });
 const isSaveRejected = computed(() => splitMode.value === SplitAppMode.Include && selectedApps.value.length == 0);
 

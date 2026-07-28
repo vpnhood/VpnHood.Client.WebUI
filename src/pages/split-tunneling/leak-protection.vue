@@ -4,42 +4,42 @@ import i18n from '@/locales/i18n';
 import { computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
-import { SplitDnsMode, UnsupportedIpMode } from '@/services/VpnHood.Client.Api';
+import { SplitDnsMode, SplitUnsupportedIpMode } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const localSplitDnsMode = ref(vhApp.data.userSettings.splitDnsMode);
-const localUnsupportedIpMode = ref(vhApp.data.userSettings.unsupportedIpMode);
+const localSplitDnsMode = ref(vhApp.data.userSettings.splitTunneling.dnsMode);
+const localUnsupportedIpMode = ref(vhApp.data.userSettings.splitTunneling.unsupportedIpMode);
 
 // the permissive choice of each policy lets traffic out of the tunnel, which is worth saying out loud
 const isDnsLeaking = computed<boolean>(() => localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
-const isIpLeaking = computed<boolean>(() => localUnsupportedIpMode.value === UnsupportedIpMode.Exclude);
+const isIpLeaking = computed<boolean>(() => localUnsupportedIpMode.value === SplitUnsupportedIpMode.Exclude);
 
-watch(() => vhApp.data.userSettings.splitDnsMode, (newVal) => {
+watch(() => vhApp.data.userSettings.splitTunneling.dnsMode, (newVal) => {
   localSplitDnsMode.value = newVal;
 });
-watch(() => vhApp.data.userSettings.unsupportedIpMode, (newVal) => {
+watch(() => vhApp.data.userSettings.splitTunneling.unsupportedIpMode, (newVal) => {
   localUnsupportedIpMode.value = newVal;
 });
 
 async function onSplitDnsModeChange(value: SplitDnsMode | null) {
   if (value === null) {
-    localSplitDnsMode.value = vhApp.data.userSettings.splitDnsMode;
+    localSplitDnsMode.value = vhApp.data.userSettings.splitTunneling.dnsMode;
     return;
   }
 
-  vhApp.data.userSettings.splitDnsMode = value;
+  vhApp.data.userSettings.splitTunneling.dnsMode = value;
   await vhApp.saveUserSetting();
 }
 
-async function onUnsupportedIpModeChange(value: UnsupportedIpMode | null) {
+async function onUnsupportedIpModeChange(value: SplitUnsupportedIpMode | null) {
   if (value === null) {
-    localUnsupportedIpMode.value = vhApp.data.userSettings.unsupportedIpMode;
+    localUnsupportedIpMode.value = vhApp.data.userSettings.splitTunneling.unsupportedIpMode;
     return;
   }
 
-  vhApp.data.userSettings.unsupportedIpMode = value;
+  vhApp.data.userSettings.splitTunneling.unsupportedIpMode = value;
   await vhApp.saveUserSetting();
 }
 </script>
@@ -122,7 +122,7 @@ async function onUnsupportedIpModeChange(value: UnsupportedIpMode | null) {
           color="highlight"
         >
           <v-radio
-            :value="UnsupportedIpMode.Block"
+            :value="SplitUnsupportedIpMode.Block"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
@@ -144,7 +144,7 @@ async function onUnsupportedIpModeChange(value: UnsupportedIpMode | null) {
           </v-radio>
 
           <v-radio
-            :value="UnsupportedIpMode.Exclude"
+            :value="SplitUnsupportedIpMode.Exclude"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
