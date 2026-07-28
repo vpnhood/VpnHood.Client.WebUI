@@ -394,7 +394,7 @@
   "SPLIT_IPS_VIA_APP": "Uygulama bazlı IP ayırma",
   "SPLIT_IPS_VIA_APP_DESC": "Belirli IP adreslerini uygulama seviyesinde dahil edin, hariç tutun veya engelleyin.",
   "SPLIT_IPS_VIA_APP_SHORT_DESC": "Uygulama içerisinde hangi IP adreslerinin VPN kullanacağını, VPN'i atlayacağını veya engelleneceğini seçin.",
-  "SPLIT_DNS": "DNS Yönlendirmesi",
+  "SPLIT_DNS": "Bölünmüş DNS",
   "SPLIT_DNS_SHORT_DESC": "DNS sorgularının her zaman VPN üzerinden geçip geçmeyeceğini seçin.",
   "SPLIT_DNS_DESC": "DNS sorguları ziyaret ettiğiniz her web sitesini açık eder. VPN dışına çıktıklarında, trafiğinizin geri kalanı nasıl yönlendirilirse yönlendirilsin, ağ sağlayıcınız bunları görebilir ve hatta yanıtlayabilir.",
   "SPLIT_DNS_LEAK_WARNING": "Bu seçenek, DNS sorgularının ağınızın görebileceği şekilde VPN dışına çıkmasına izin verir.",

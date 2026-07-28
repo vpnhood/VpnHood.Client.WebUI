@@ -394,7 +394,7 @@
   "SPLIT_IPS_VIA_APP": "Dividir IPs por app",
   "SPLIT_IPS_VIA_APP_DESC": "Incluye, excluye o bloquea direcciones IP a nivel de cada aplicación.",
   "SPLIT_IPS_VIA_APP_SHORT_DESC": "Controla el acceso de IPs a través de la VPN para cada app.",
-  "SPLIT_DNS": "Enrutamiento DNS",
+  "SPLIT_DNS": "DNS dividido",
   "SPLIT_DNS_SHORT_DESC": "Elige si las consultas DNS pasan siempre por la VPN.",
   "SPLIT_DNS_DESC": "Las consultas DNS revelan cada sitio web que visitas. Si viajan fuera de la VPN, tu proveedor de red puede verlas y responderlas, sin importar por dónde vaya el resto de tu tráfico.",
   "SPLIT_DNS_LEAK_WARNING": "Esta opción permite que las consultas DNS viajen fuera de la VPN, donde tu red puede verlas.",

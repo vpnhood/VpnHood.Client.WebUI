@@ -394,7 +394,7 @@
   "SPLIT_IPS_VIA_APP": "Split IPs using app",
   "SPLIT_IPS_VIA_APP_DESC": "Include, exclude, or block specific IP addresses at the app level.",
   "SPLIT_IPS_VIA_APP_SHORT_DESC": "Choose which IP addresses use the VPN, bypass it, or are blocked in the app.",
-  "SPLIT_DNS": "DNS routing",
+  "SPLIT_DNS": "Split DNS",
   "SPLIT_DNS_SHORT_DESC": "Choose whether DNS queries always go through the VPN.",
   "SPLIT_DNS_DESC": "DNS queries reveal every website you visit. When they travel outside the VPN, your network provider can see and even answer them, no matter how the rest of your traffic is routed.",
   "SPLIT_DNS_LEAK_WARNING": "This option lets DNS queries travel outside the VPN, where your network can see them.",

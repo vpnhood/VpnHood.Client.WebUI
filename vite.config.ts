@@ -1,11 +1,9 @@
 import { defineConfig } from 'vite';
-import { dirname, resolve } from 'node:path';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'url';
 import VueRouter from 'vue-router/vite'
 import vue from '@vitejs/plugin-vue';
 import vuetify from 'vite-plugin-vuetify';
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import legacy from '@vitejs/plugin-legacy';
 import postcssPresetEnv from 'postcss-preset-env';
 import { version } from './package.json';
@@ -91,13 +89,6 @@ export default defineConfig(({ command }) => ({
     // Imports only the Vuetify components a template actually renders. Without this the app
     // registers all of them up front, which is most of the main chunk.
     vuetify({ autoImport: true }),
-    VueI18nPlugin({
-      // locale messages resource pre-compile option
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales'),
-      runtimeOnly: false,
-      compositionOnly: false,
-      fullInstall: true,
-    }),
     //--- Handle legacy browsers ---
     legacy(),
     //------------------------------

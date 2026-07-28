@@ -394,7 +394,7 @@
   "SPLIT_IPS_VIA_APP": "应用级 IP 拆分",
   "SPLIT_IPS_VIA_APP_DESC": "为每个应用单独设置 IP 策略，包含、排除或拦截指定地址。",
   "SPLIT_IPS_VIA_APP_SHORT_DESC": "灵活控制各应用对应的 IP 连接与拦截权限。",
-  "SPLIT_DNS": "DNS 路由",
+  "SPLIT_DNS": "分流 DNS",
   "SPLIT_DNS_SHORT_DESC": "选择是否让 DNS 查询始终通过 VPN。",
   "SPLIT_DNS_DESC": "DNS 查询会暴露您访问的每个网站。当它们在 VPN 外部传输时，您的网络运营商可以监控甚至劫持它们，无论您的其他流量如何路由。",
   "SPLIT_DNS_LEAK_WARNING": "此选项允许 DNS 查询在 VPN 外部传输，您的网络运营商可能会看到它们。",

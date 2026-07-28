@@ -394,7 +394,7 @@
   "SPLIT_IPS_VIA_APP": "Gestion IP par application",
   "SPLIT_IPS_VIA_APP_DESC": "Contrôlez finement vos connexions IP pour chaque application.",
   "SPLIT_IPS_VIA_APP_SHORT_DESC": "Définissez les règles IP de vos applications en un clic.",
-  "SPLIT_DNS": "Routage DNS",
+  "SPLIT_DNS": "DNS divisé",
   "SPLIT_DNS_SHORT_DESC": "Choisissez si vos requêtes DNS passent toujours par le VPN.",
   "SPLIT_DNS_DESC": "Les requêtes DNS révèlent les sites visités. Hors du VPN, votre opérateur peut les intercepter, peu importe le reste de votre trafic.",
   "SPLIT_DNS_LEAK_WARNING": "Cette option laisse les requêtes DNS transiter hors du VPN, exposant votre activité à votre réseau.",

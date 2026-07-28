@@ -31,7 +31,6 @@
     "vuetify": "^4.1.6"
   },
   "devDependencies": {
-    "@intlify/unplugin-vue-i18n": "^11.2.4",
     "@tsconfig/node24": "^24.0.4",
     "@types/core-js": "^2.5.8",
     "@types/node": "^24.13.3",
