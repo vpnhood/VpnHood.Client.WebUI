@@ -206,6 +206,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'SPLIT_DNS': RouteRecordInfo<
+      'SPLIT_DNS',
+      '/split-tunneling/split-dns',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'SPLIT_DOMAINS': RouteRecordInfo<
       'SPLIT_DOMAINS',
       '/split-tunneling/split-domains',
@@ -456,6 +463,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/split-tunneling/split-countries.vue': {
       routes:
         | 'SPLIT_COUNTRIES'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/split-tunneling/split-dns.vue': {
+      routes:
+        | 'SPLIT_DNS'
       views:
         | never
       pathParamNames:

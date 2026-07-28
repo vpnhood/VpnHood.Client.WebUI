@@ -104,6 +104,19 @@ const locale = i18n.global.t;
       :click="{name: 'SPLIT_COUNTRIES'}"
     />
 
+    <!-- DNS -->
+    <settings-section-title :title="locale('DNS')"/>
+
+    <!-- DNS routing -->
+    <settings-item
+      :title="locale('SPLIT_DNS')"
+      :subtitle="locale('SPLIT_DNS_SHORT_DESC')"
+      :is-show="true"
+      :is-premium="false"
+      :selected-item="vhApp.data.splitDnsStatusText"
+      :click="{name: 'SPLIT_DNS'}"
+    />
+
   </v-sheet>
 </template>
 

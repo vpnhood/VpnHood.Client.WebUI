@@ -11,6 +11,7 @@ import {
   ClientProfileInfo,
   DnsMode,
   SplitCountryMode,
+  SplitDnsMode,
   UiCultureInfo,
   UserSettings,
   SplitAppMode
@@ -303,6 +304,12 @@ export class VpnHoodAppData {
       return this.locale('ONLY_X', { x: allCountriesCount - count });
     }
     return this.locale('ALL');
+  }
+
+  get splitDnsStatusText(): string {
+    return this.userSettings.splitDnsMode === SplitDnsMode.DefaultRoute
+      ? this.locale('SPLIT_DNS_DEFAULT_ROUTE')
+      : this.locale('SPLIT_DNS_INCLUDE_ALL');
   }
 
   get splitAppsStatusText(): string {
