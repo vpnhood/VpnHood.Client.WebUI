@@ -32,8 +32,9 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
   <v-sheet>
     <app-bar/>
 
-    <!-- Feature description -->
-    <p class="text-disabled text-body-small mb-4">{{ locale("SPLIT_IPV6_DESC") }}</p>
+    <!-- Feature description; the closing sentence is bold, so it carries markup like the other
+         emphasized descriptions -->
+    <p class="text-disabled text-body-small mb-4" v-html="locale('SPLIT_IPV6_DESC')"/>
 
     <!-- Leak warning for the mode that lets IPv6 out of the tunnel -->
     <alert-warning v-if="isIpV6Leaking" :text="locale('SPLIT_IPV6_LEAK_WARNING')" class="mb-4"/>
