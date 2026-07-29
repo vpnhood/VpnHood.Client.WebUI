@@ -13,18 +13,14 @@ export function getFeatureItems(): FeatureItem[] {
   const vhApp = VpnHoodApp.instance;
   return [
     {
-      icon: 'mdi-call-split',
-      secondIcon: 'mdi-ip-outline',
-      title: 'SPLIT_IP',
-      pageLink: { name: 'SPLIT_TUNNELING' },
-      isActive: vhApp.data.isSplitIpViaDeviceActive || vhApp.data.isSplitIpViaAppActive,
-    },
-    {
+      // One badge for the whole feature: the app reports whether ANY public traffic can travel
+      // outside the tunnel right now (client splits, server splits, bypassed IPv6). It disappears
+      // by itself when the split-tunneling toggle is off — the state reports no splitting.
       icon: 'mdi-call-split',
       secondIcon: 'mdi-web',
-      title: 'SPLIT_DOMAINS',
-      pageLink: { name: 'SPLIT_DOMAINS' },
-      isActive: vhApp.data.isSplitDomainActive,
+      title: 'SPLIT_TUNNELING',
+      pageLink: { name: 'SPLIT_TUNNELING' },
+      isActive: vhApp.data.state.splitTunnelingState.isSplittingTraffic,
     },
     {
       icon: 'mdi-ip-network',

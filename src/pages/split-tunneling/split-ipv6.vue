@@ -3,27 +3,27 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
-import { SplitDnsMode } from '@/services/VpnHood.Client.Api';
+import { SplitUnsupportedIpMode } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const localSplitDnsMode = ref(vhApp.data.userSettings.splitTunneling.dnsMode);
+const localMode = ref(vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode);
 
-// the permissive choice lets DNS follow the splits out of the tunnel, which is worth saying out loud
-const isDnsLeaking = computed<boolean>(() => localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
+// the permissive choice lets IPv6 travel outside the tunnel on a v4-only server
+const isIpV6Leaking = computed<boolean>(() => localMode.value === SplitUnsupportedIpMode.Exclude);
 
-watch(() => vhApp.data.userSettings.splitTunneling.dnsMode, (newVal) => {
-  localSplitDnsMode.value = newVal;
+watch(() => vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode, (newVal) => {
+  localMode.value = newVal;
 });
 
-async function onSplitDnsModeChange(value: SplitDnsMode | null) {
+async function onModeChange(value: SplitUnsupportedIpMode | null) {
   if (value === null) {
-    localSplitDnsMode.value = vhApp.data.userSettings.splitTunneling.dnsMode;
+    localMode.value = vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode;
     return;
   }
 
-  vhApp.data.userSettings.splitTunneling.dnsMode = value;
+  vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode = value;
   await vhApp.saveUserSetting();
 }
 </script>
@@ -33,28 +33,28 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
     <app-bar/>
 
     <!-- Feature description -->
-    <p class="text-disabled text-body-small mb-4">{{ locale("SPLIT_DNS_DESC") }}</p>
+    <p class="text-disabled text-body-small mb-4">{{ locale("SPLIT_IPV6_DESC") }}</p>
 
-    <!-- Leak warning for the mode that lets DNS out of the tunnel -->
-    <alert-warning v-if="isDnsLeaking" :text="locale('SPLIT_DNS_LEAK_WARNING')" class="mb-4"/>
+    <!-- Leak warning for the mode that lets IPv6 out of the tunnel -->
+    <alert-warning v-if="isIpV6Leaking" :text="locale('SPLIT_IPV6_LEAK_WARNING')" class="mb-4"/>
 
     <config-card class="pt-3">
       <v-card-item class="ps-1">
 
         <v-radio-group
-          v-model="localSplitDnsMode"
-          @update:model-value="onSplitDnsModeChange"
+          v-model="localMode"
+          @update:model-value="onModeChange"
           hide-details="auto"
           color="highlight"
         >
           <v-radio
-            :value="SplitDnsMode.IncludeAll"
+            :value="SplitUnsupportedIpMode.Block"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
                 <span>
-                  {{ locale("SPLIT_DNS_INCLUDE_ALL") }}
+                  {{ locale("SPLIT_IPV6_BLOCK") }}
                   <v-chip
                     color="highlight"
                     :text="locale('RECOMMENDED')"
@@ -64,19 +64,19 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
                     tabindex="-1"
                   />
                 </span>
-                <span class="text-disabled text-body-small">{{ locale("SPLIT_DNS_INCLUDE_ALL_DESC") }}</span>
+                <span class="text-disabled text-body-small">{{ locale("SPLIT_IPV6_BLOCK_DESC") }}</span>
               </div>
             </template>
           </v-radio>
 
           <v-radio
-            :value="SplitDnsMode.DefaultRoute"
+            :value="SplitUnsupportedIpMode.Exclude"
             class="radio-icon-top mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
-                <span>{{ locale("SPLIT_DNS_DEFAULT_ROUTE") }}</span>
-                <span class="text-disabled text-body-small">{{ locale("SPLIT_DNS_DEFAULT_ROUTE_DESC") }}</span>
+                <span>{{ locale("SPLIT_IPV6_EXCLUDE") }}</span>
+                <span class="text-disabled text-body-small">{{ locale("SPLIT_IPV6_EXCLUDE_DESC") }}</span>
               </div>
             </template>
           </v-radio>

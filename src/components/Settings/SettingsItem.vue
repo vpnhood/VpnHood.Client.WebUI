@@ -20,6 +20,9 @@ const props = defineProps< {
     offText: string,
   },
   isShow: boolean,
+  // dims the whole item and blocks navigation; stored values keep showing so the user sees what
+  // would come back when the item's master switch is turned on again
+  disabled?: boolean,
   languageMoreAction?: boolean
 }>();
 
@@ -31,9 +34,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <config-card v-if="props.isShow" class="pa-3">
+  <config-card v-if="props.isShow" class="pa-3" :disabled="props.disabled">
 
-    <div @click="router.push(props.click)" >
+    <div @click="!props.disabled && router.push(props.click)" >
 
       <!-- Title, selected item and status (If available) and premium icon (If available) -->
       <div class="d-flex align-center justify-space-between pb-1">

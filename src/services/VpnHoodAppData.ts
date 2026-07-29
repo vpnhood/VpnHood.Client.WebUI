@@ -106,34 +106,30 @@ export class VpnHoodAppData {
     return (!this.features.isPremiumFlagSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
   }
 
+  // The split flags come from the app state, never computed here: the app owns the business logic
+  // (the super toggle's AND, premium gating, the live session's word) and the UI just displays it.
   get isSplitTunnelingActive(): boolean {
-    const settingsActive = this.isSplitIpViaDeviceActive ||
-      this.isSplitIpViaAppActive ||
-      this.isSplitDomainActive ||
-      this.userSettings.splitTunneling.useLocalNetwork ||
-      this.isSplitAppsActive ||
-      this.isSplitCountryActive;
-    return settingsActive;
+    return this.state.splitTunnelingState.isSplittingTraffic;
   }
 
   get isSplitDomainActive(): boolean {
-    return this.userSettings.splitTunneling.useDomain && this.isPremiumFeatureAllowed(AppFeature.SplitDomain);
+    return this.state.splitTunnelingState.isDomainSplit;
   }
 
   get isSplitIpViaDeviceActive(): boolean {
-    return this.userSettings.splitTunneling.useIpViaDevice && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaDevice);
+    return this.state.splitTunnelingState.isIpViaDeviceSplit;
   }
 
   get isSplitIpViaAppActive(): boolean {
-    return this.userSettings.splitTunneling.useIpViaApp && this.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp);
+    return this.state.splitTunnelingState.isIpViaAppSplit;
   }
 
   get isSplitAppsActive(): boolean {
-    return this.userSettings.splitTunneling.appMode !== SplitAppMode.All;
+    return this.state.splitTunnelingState.isAppSplit;
   }
 
   get isSplitLocalNetworkActive(): boolean {
-    return this.userSettings.splitTunneling.useLocalNetwork;
+    return this.state.splitTunnelingState.isLocalNetworkSplit;
   }
 
   get isDnsCustomized(): boolean{
@@ -281,8 +277,7 @@ export class VpnHoodAppData {
   }
 
   get isSplitCountryActive(): boolean {
-    return this.userSettings.splitTunneling.countryMode != SplitCountryMode.IncludeAll ||
-          (this.userSettings.splitTunneling.appMode == SplitAppMode.Exclude && this.userSettings.splitTunneling.apps.length > 0);
+    return this.state.splitTunnelingState.isCountrySplit;
   }
 
   get splitCountryStatusText(): string {
@@ -303,13 +298,6 @@ export class VpnHoodAppData {
       return this.locale('ONLY_X', { x: allCountriesCount - count });
     }
     return this.locale('ALL');
-  }
-
-  // Whether any option can push traffic outside the VPN right now. The app computes the causes: an option
-  // that can not actually leak in the current state (e.g. unsupported IPs excluded but the server routes
-  // everything) is not reported, so the badge stays honest.
-  get canLeak(): boolean {
-    return this.state.leakCauses.length > 0;
   }
 
   get splitAppsStatusText(): string {

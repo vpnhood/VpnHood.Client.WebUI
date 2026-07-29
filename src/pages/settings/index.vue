@@ -6,13 +6,11 @@ import { LanguagesCode } from '@/helpers/UiConstants';
 import SettingsItem from '@/components/Settings/SettingsItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
-import LeakCausesDialog from '@/components/LeakCausesDialog.vue';
 import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const proxySelectedMode = ref(vhApp.data.userSettings.proxySettings?.mode);
-const showLeakCauses = ref(false);
 
 function isShowConnectivitySectionTitle(): boolean {
   return vhApp.data.features.isProxySupported ||
@@ -84,13 +82,8 @@ function isShowConnectivitySectionTitle(): boolean {
         onText: locale('ON'),
         offText: locale('OFF')
       }"
-      :warning="vhApp.data.canLeak ? locale('CAN_LEAK') : undefined"
       :click="{name: 'SPLIT_TUNNELING'}"
-      @warning-click="showLeakCauses = true"
     />
-
-    <!-- What is leaking right now, and where to turn each cause off -->
-    <leak-causes-dialog v-model="showLeakCauses"/>
 
     <!-- Quick launch -->
     <settings-item
