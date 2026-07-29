@@ -281,8 +281,9 @@ export class VpnHoodAppData {
   }
 
   get splitCountryStatusText(): string {
-    const mode = this.userSettings.splitTunneling.countryMode;
-    const excludedCountries = this.userSettings.splitTunneling.countries ?? [];
+    // the EFFECTIVE mode from state: a split the toggle or the plan silenced reads as 'All'
+    const mode = this.state.splitTunnelingState.countryMode;
+    const excludedCountries = this.state.splitTunnelingState.countries ?? [];
     const allCountriesCount = this.uiState.allCountriesCount;
     const maxFlags = 3;
 

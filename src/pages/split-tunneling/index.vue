@@ -12,8 +12,9 @@ import { computed } from 'vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-// All on/off displays come from the app state (already ANDed by the super toggle and premium
-// gating); the UI adds no logic of its own. Only mode LABELS read the stored settings.
+// Every display — on/off states AND mode labels — comes from the app state (already resolved by
+// the super toggle and premium gating); the UI adds no logic of its own. Only the toggle's v-model
+// reads and writes the stored setting.
 const splitState = computed(() => vhApp.data.state.splitTunnelingState);
 
 const isEnabled = computed<boolean>({
@@ -116,9 +117,10 @@ const isEnabled = computed<boolean>({
       :is-premium="false"
       :is-show="true"
       :status="{
-        state: vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode === SplitUnsupportedIpMode.Exclude,
+        state: splitState.unsupportedIpV6Mode === SplitUnsupportedIpMode.Exclude,
         onText: locale('SPLIT_IPV6_EXCLUDE'),
-        offText: locale('SPLIT_IPV6_BLOCK')
+        offText: locale('SPLIT_IPV6_BLOCK'),
+        onColor: 'warning'
       }"
       :disabled="!splitState.isEnabled"
       :click="{name: 'SPLIT_IPV6'}"
@@ -162,9 +164,10 @@ const isEnabled = computed<boolean>({
       :is-show="true"
       :is-premium="false"
       :status="{
-        state: vhApp.data.userSettings.splitTunneling.dnsMode === SplitDnsMode.DefaultRoute,
+        state: splitState.dnsMode === SplitDnsMode.DefaultRoute,
         onText: locale('SPLIT_DNS_DEFAULT_ROUTE'),
-        offText: locale('SPLIT_DNS_INCLUDE_ALL')
+        offText: locale('SPLIT_DNS_INCLUDE_ALL'),
+        onColor: 'warning'
       }"
       :disabled="!splitState.isEnabled"
       :click="{name: 'SPLIT_DNS'}"

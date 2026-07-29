@@ -18,6 +18,9 @@ const props = defineProps< {
     state: boolean,
     onText: string,
     offText: string,
+    // color of the on-state chip; a setting whose on-state weakens protection passes 'warning' so the
+    // chip does not read as a healthy state
+    onColor?: string,
   },
   isShow: boolean,
   // dims the whole item and blocks navigation; stored values keep showing so the user sees what
@@ -61,7 +64,7 @@ const emit = defineEmits<{
             variant="tonal"
             density="comfortable"
             :disabled="!props.status.state"
-            :color="props.status.state ? 'enable-premium' : ''"
+            :color="props.status.state ? (props.status.onColor ?? 'enable-premium') : ''"
           />
 
           <!-- Warning chip if available (e.g. a setting whose current posture can leak); shown alongside

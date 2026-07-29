@@ -10,8 +10,9 @@ import CountryFlagWrapper from '@/components/CountryFlagWrapper.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const mode = computed(() => vhApp.data.userSettings.splitTunneling.countryMode);
-const excludedCountries = computed((): string[] => vhApp.data.userSettings.splitTunneling.countries ?? []);
+// the EFFECTIVE mode from state: a split the toggle or the plan silenced shows no flags
+const mode = computed(() => vhApp.data.state.splitTunnelingState.countryMode);
+const excludedCountries = computed((): string[] => vhApp.data.state.splitTunnelingState.countries ?? []);
 const maxFlags = 3;
 
 // Flag Display Logic
