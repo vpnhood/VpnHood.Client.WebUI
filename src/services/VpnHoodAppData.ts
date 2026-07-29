@@ -281,24 +281,26 @@ export class VpnHoodAppData {
   }
 
   get splitCountryStatusText(): string {
-    // the EFFECTIVE mode from state: a split the toggle or the plan silenced reads as 'All'
+    // the EFFECTIVE mode from state: a split the toggle or the plan silenced reads as 'Off'.
+    // Every branch that splits nothing reports 'Off' rather than naming its mode: the row asks
+    // whether traffic is being split, and 'All' answers that question with its own opposite.
     const mode = this.state.splitTunnelingState.countryMode;
     const excludedCountries = this.state.splitTunnelingState.countries ?? [];
     const allCountriesCount = this.uiState.allCountriesCount;
     const maxFlags = 3;
 
     if (mode === SplitCountryMode.IncludeAll)
-      return this.locale('ALL');
+      return this.locale('OFF');
     if (mode === SplitCountryMode.ExcludeMyCountry)
       return this.locale('EXCLUDE_MY_COUNTRY');
     if (mode === SplitCountryMode.ExcludeList) {
       const count = excludedCountries.length;
-      if (count === 0) return this.locale('ALL');
+      if (count === 0) return this.locale('OFF');
       if (count < maxFlags) return this.locale('EXCLUDE');
       if (count < allCountriesCount / 2) return this.locale('ALL_EXCEPT_X', { x: count });
       return this.locale('ONLY_X', { x: allCountriesCount - count });
     }
-    return this.locale('ALL');
+    return this.locale('OFF');
   }
 
   get splitAppsStatusText(): string {

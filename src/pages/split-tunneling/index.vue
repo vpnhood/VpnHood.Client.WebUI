@@ -110,7 +110,9 @@ const isEnabled = computed<boolean>({
       :click="{name: 'SPLIT_IPS_VIA_APP'}"
     />
 
-    <!-- IPv6 on a server that cannot carry it: bypass or block -->
+    <!-- IPv6 on a server that cannot carry it: bypass or block. The chip answers whether IPv6 is
+         being split out, so the safe mode reads 'Off' like every other row and only the mode that
+         lets IPv6 leave the tunnel spells out its effect. -->
     <settings-item
       :title="locale('SPLIT_IPV6')"
       :subtitle="locale('SPLIT_IPV6_SHORT_DESC')"
@@ -119,7 +121,7 @@ const isEnabled = computed<boolean>({
       :status="{
         state: splitState.unsupportedIpV6Mode === SplitUnsupportedIpMode.Exclude,
         onText: locale('SPLIT_IPV6_EXCLUDE'),
-        offText: locale('SPLIT_IPV6_BLOCK'),
+        offText: locale('OFF'),
         onColor: 'warning'
       }"
       :disabled="!splitState.isEnabled"
@@ -143,13 +145,19 @@ const isEnabled = computed<boolean>({
       :click="{name: 'SPLIT_LOCAL_NETWORK'}"
     />
 
-    <!-- Split countries -->
+    <!-- Split countries: a status rather than a selected item, so a mode that splits nothing dims to
+         'Off' like its neighbours; the active chip keeps the selected-item color it always had -->
     <settings-item
       :title="locale('SPLIT_COUNTRIES')"
       :subtitle="locale('SPLIT_COUNTRIES_SHORT_DESC')"
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitCountry)"
       :is-show="true"
-      :selected-item="vhApp.data.splitCountryStatusText"
+      :status="{
+        state: splitState.isCountrySplit,
+        onText: vhApp.data.splitCountryStatusText,
+        offText: locale('OFF'),
+        onColor: 'switch-btn'
+      }"
       :disabled="!splitState.isEnabled"
       :click="{name: 'SPLIT_COUNTRIES'}"
     />
@@ -166,7 +174,7 @@ const isEnabled = computed<boolean>({
       :status="{
         state: splitState.dnsMode === SplitDnsMode.DefaultRoute,
         onText: locale('SPLIT_DNS_DEFAULT_ROUTE'),
-        offText: locale('SPLIT_DNS_INCLUDE_ALL'),
+        offText: locale('OFF'),
         onColor: 'warning'
       }"
       :disabled="!splitState.isEnabled"
