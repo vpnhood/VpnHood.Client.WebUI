@@ -4,6 +4,7 @@ import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature, SplitDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
 import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
+import SettingsToggleItem from '@/components/Settings/SettingsToggleItem.vue';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -80,19 +81,13 @@ function revertCurrentChange(): void {
   <v-sheet v-else>
     <app-bar/>
 
-    <config-card class="pb-2">
-      <v-card-item>
-        <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('SPLIT_DOMAINS') }}</span>
-          <v-switch
-            v-model="isEnabled"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitDomain)"
-            hide-details
-          />
-        </div>
-        <alert-warning v-if="isDomainFilterAffectedByServer" :text="locale('DOMAIN_FILTER_SERVER_NO_CLOAK')" class="mt-2" />
-      </v-card-item>
-    </config-card>
+    <settings-toggle-item
+      v-model="isEnabled"
+      :title="locale('SPLIT_DOMAINS')"
+      :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitDomain)"
+    >
+      <alert-warning v-if="isDomainFilterAffectedByServer" :text="locale('DOMAIN_FILTER_SERVER_NO_CLOAK')" class="mt-2" />
+    </settings-toggle-item>
     <split-domain-input
       :excludes="splitDomains.excludes"
       :includes="splitDomains.includes"

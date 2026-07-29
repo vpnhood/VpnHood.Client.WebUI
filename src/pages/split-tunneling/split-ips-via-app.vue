@@ -4,6 +4,7 @@ import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature, SplitIpsViaApp } from '@/services/VpnHood.Client.Api';
 import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
+import SettingsToggleItem from '@/components/Settings/SettingsToggleItem.vue';
 import { computed, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import i18n from '@/locales/i18n';
@@ -77,19 +78,12 @@ function revertCurrentChange(): void {
   <v-sheet v-else>
     <app-bar/>
 
-    <config-card class="pb-2">
-      <v-card-item>
-        <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('SPLIT_IPS_VIA_APP') }}</span>
-          <v-switch
-            v-model="isEnabled"
-            :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp)"
-            hide-details
-          />
-        </div>
-        <p class="text-body-small text-disabled">{{ locale('SPLIT_IPS_VIA_APP_SHORT_DESC') }}</p>
-      </v-card-item>
-    </config-card>
+    <settings-toggle-item
+      v-model="isEnabled"
+      :title="locale('SPLIT_IPS_VIA_APP')"
+      :description="locale('SPLIT_IPS_VIA_APP_SHORT_DESC')"
+      :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp)"
+    />
     <split-ip-input
       :excludes="splitIps.excludes"
       :includes="splitIps.includes"

@@ -5,6 +5,7 @@ import i18n from '@/locales/i18n';
 import { AppFeature, SplitDnsMode, SplitUnsupportedIpMode } from '@/services/VpnHood.Client.Api';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
 import SettingsItem from '@/components/Settings/SettingsItem.vue';
+import SettingsToggleItem from '@/components/Settings/SettingsToggleItem.vue';
 import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
 import { computed } from 'vue';
 
@@ -15,13 +16,13 @@ const locale = i18n.global.t;
 // gating); the UI adds no logic of its own. Only mode LABELS read the stored settings.
 const splitState = computed(() => vhApp.data.state.splitTunnelingState);
 
-async function onToggleChange(value: boolean | null) {
-  if (value === null)
-    return;
-
-  vhApp.data.userSettings.splitTunneling.enabled = value;
-  await vhApp.saveUserSetting();
-}
+const isEnabled = computed<boolean>({
+  get: () => vhApp.data.userSettings.splitTunneling.enabled,
+  set: async (value: boolean) => {
+    vhApp.data.userSettings.splitTunneling.enabled = value;
+    await vhApp.saveUserSetting();
+  }
+});
 </script>
 
 <template>
@@ -33,35 +34,15 @@ async function onToggleChange(value: boolean | null) {
 
     <!-- The super toggle: allow splitting at all. Off is the one-tap guarantee that nothing escapes
          the tunnel; every item below turns inert except the local network (it cannot leak the
-         public IP, so it is exempt). -->
-    <config-card class="pb-2 mb-4">
-      <v-card-item>
-        <div class="d-flex align-center justify-space-between">
-          <div class="d-flex align-center ga-2">
-            <span>{{ locale('SPLIT_TUNNELING_TOGGLE') }}</span>
-
-            <!-- the whole caution of the feature, said quietly and only while it applies -->
-            <v-chip
-              v-if="splitState.isEnabled"
-              :text="locale('LEAK_IP')"
-              size="small"
-              variant="tonal"
-              density="comfortable"
-              color="warning"
-              tabindex="-1"
-            />
-          </div>
-          <v-switch
-            :model-value="vhApp.data.userSettings.splitTunneling.enabled"
-            @update:model-value="onToggleChange"
-            hide-details
-          />
-        </div>
-        <p class="text-body-small text-disabled">
-          {{ splitState.isEnabled ? locale('SPLIT_TUNNELING_TOGGLE_DESC') : locale('SPLIT_TUNNELING_DISABLED_DESC') }}
-        </p>
-      </v-card-item>
-    </config-card>
+         public IP, so it is exempt). The warning chip is the whole caution of the feature, said
+         quietly and only while it applies. -->
+    <settings-toggle-item
+      v-model="isEnabled"
+      class="mb-4"
+      :title="locale('SPLIT_TUNNELING_TOGGLE')"
+      :warning="splitState.isEnabled ? locale('LEAK_IP') : undefined"
+      :description="splitState.isEnabled ? locale('SPLIT_TUNNELING_TOGGLE_DESC') : locale('SPLIT_TUNNELING_DISABLED_DESC')"
+    />
 
     <!-- The server leaves some public destinations outside the tunnel while splitting is allowed -->
     <alert-info v-if="splitState.isSplitByServer" :text="locale('SERVER_SPLIT_TRAFFIC_NOTICE')" class="mb-4"/>

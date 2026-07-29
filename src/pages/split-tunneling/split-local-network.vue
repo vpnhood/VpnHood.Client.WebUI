@@ -4,6 +4,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { computed } from 'vue';
 import i18n from '@/locales/i18n';
 import SmallFeatureImageAndDescription from '@/components/Settings/SmallFeatureImageAndDescription.vue';
+import SettingsToggleItem from '@/components/Settings/SettingsToggleItem.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -26,18 +27,11 @@ const isEnabled = computed<boolean>({
     <!-- Enforced by server alert -->
     <alert-warning v-if="!vhApp.data.isLocalNetworkAvailable" :text="locale('ENFORCED_BY_SERVER')" class="mb-4" />
 
-    <config-card class="pb-2">
-      <v-card-item>
-        <div class="d-flex align-center justify-space-between">
-          <span>{{ locale('SPLIT_LOCAL_NETWORK') }}</span>
-          <v-switch
-            v-model="isEnabled"
-            :disabled="!vhApp.data.isLocalNetworkAvailable"
-            hide-details
-          />
-        </div>
-        <p class="text-body-small text-disabled">{{ locale('SPLIT_LOCAL_NETWORK_DESC') }}</p>
-      </v-card-item>
-    </config-card>
+    <settings-toggle-item
+      v-model="isEnabled"
+      :title="locale('SPLIT_LOCAL_NETWORK')"
+      :description="locale('SPLIT_LOCAL_NETWORK_DESC')"
+      :disabled="!vhApp.data.isLocalNetworkAvailable"
+    />
   </v-sheet>
 </template>
