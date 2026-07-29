@@ -52,13 +52,20 @@ const isEnabled = computed<boolean>({
     <settings-section-title :title="locale('APPS_AND_DOMAINS')"/>
 
     <!-- Split apps: exempt from the super toggle — an app kept out of the VPN is a per-app choice
-         and cannot expose the IP of the apps that stay inside, same reasoning as the local network -->
+         and cannot expose the IP of the apps that stay inside, same reasoning as the local network.
+         A status rather than a selected item, so a mode that splits nothing dims to 'Off'; no
+         warning color because the on-state is not a leak. -->
     <settings-item
       :title="locale('SPLIT_APPS')"
       :subtitle="locale('SPLIT_APPS_SHORT_DESC')"
       :is-premium="false"
       :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
-      :selected-item="vhApp.data.splitAppsStatusText"
+      :status="{
+        state: splitState.isAppSplit,
+        onText: vhApp.data.splitAppsStatusText,
+        offText: locale('OFF'),
+        onColor: 'switch-btn'
+      }"
       :click="{name: 'SPLIT_APPS'}"
     />
 

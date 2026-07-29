@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import i18n from '@/locales/i18n';
+import router from '@/services/router';
 import AppBar from '@/components/AppBar.vue';
 import { AppFeature, AppProxyMode } from '@/services/VpnHood.Client.Api';
 import { LanguagesCode } from '@/helpers/UiConstants';
@@ -71,17 +72,23 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name:'PROXIES'}"
     />
 
-    <!-- Split Tunneling -->
+    <!-- Split Tunneling: two chips for two facts. The status mirrors the master switch, so it can
+         never contradict the toggle the user meets on the page; the warning fires only while public
+         traffic actually leaves the tunnel (isSplittingTraffic already resolves the toggle, the plan,
+         the server's IPv6 support, and server-side splits). The warning chip swallows its own click,
+         so it is wired to the same page as the row. -->
     <settings-item
       :title="locale('SPLIT_TUNNELING')"
       :subtitle="locale('SPLIT_TUNNELING_DESC')"
       :is-show="true"
       :isPremium="false"
       :status="{
-        state: vhApp.data.isSplitTunnelingActive,
+        state: vhApp.data.state.splitTunnelingState.isEnabled,
         onText: locale('ON'),
         offText: locale('OFF')
       }"
+      :warning="vhApp.data.isSplitTunnelingActive ? locale('LEAK_IP') : undefined"
+      @warning-click="router.push({name: 'SPLIT_TUNNELING'})"
       :click="{name: 'SPLIT_TUNNELING'}"
     />
 

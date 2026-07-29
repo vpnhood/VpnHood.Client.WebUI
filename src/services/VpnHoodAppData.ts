@@ -304,14 +304,18 @@ export class VpnHoodAppData {
   }
 
   get splitAppsStatusText(): string {
+    // branches mirror IsAppSplit in StateHelper: an empty exclude list excludes nothing, so it
+    // reads 'Off' rather than 'All Except 0', and mode All splits nothing so it reads 'Off' too
     const splitApps = this.userSettings.splitTunneling.apps ?? [];
     switch (this.userSettings.splitTunneling.appMode) {
       case SplitAppMode.Exclude:
-        return this.locale('ALL_EXCEPT_X', { x: splitApps.length });
+        return splitApps.length > 0
+          ? this.locale('ALL_EXCEPT_X', { x: splitApps.length })
+          : this.locale('OFF');
       case SplitAppMode.Include:
         return this.locale('ONLY_X', { x: splitApps.length });
       default:
-        return this.locale('ALL');
+        return this.locale('OFF');
     }
   }
 }
