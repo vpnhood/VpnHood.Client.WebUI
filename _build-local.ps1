@@ -16,6 +16,10 @@
 
 $ErrorActionPreference = "Stop";
 
+# The translator prints UTF-8 (e.g. '✓'); without this, PowerShell decodes captured native output
+# with the OEM codepage and shows mojibake like 'Γ£ô'.
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;
+
 $solutionDir = $PSScriptRoot;
 $vhDir = Split-Path -parent $solutionDir;
 $buildSpaScript = Join-Path $solutionDir "pub/Build-Spa.ps1";

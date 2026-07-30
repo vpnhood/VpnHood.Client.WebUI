@@ -54,6 +54,12 @@ export default defineConfig(({ command }) => ({
     //host: '0.0.0.0',
     port: 8080,
   },
+  // autoImport rewrites templates to per-component subpath imports (vuetify/components/VBtn, ...),
+  // which the dep optimizer only discovers as lazy routes are visited — each discovery forces a
+  // re-optimize + full reload and can 404 stale pre-bundled chunks. Vuetify is ESM, so skip it.
+  optimizeDeps: {
+    exclude: ['vuetify'],
+  },
   plugins: [
     VueRouter({
       extensions: ['.vue'],
