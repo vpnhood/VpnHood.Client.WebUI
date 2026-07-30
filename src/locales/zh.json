@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "将您的VPN流量伪装成常规网络流量，以突破VPN封锁。",
   "SELECTED_APPS": "选定的应用程序",
   "NEW_SERVER_ADDED": "已添加新服务器。",
+  "LOCAL_NETWORK": "本地网络",
   "SPLIT_LOCAL_NETWORK": "本地网络拆分",
   "SPLIT_LOCAL_NETWORK_DESC": "排除本地网络流量，确保您可以顺畅访问电视、打印机等局域网设备。",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "支持直接访问打印机、电视等本地设备。",

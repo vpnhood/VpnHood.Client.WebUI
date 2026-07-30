@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "VPN trafiğinizi normal web trafiği olarak kamufle ederek VPN engellerini aşar.",
   "SELECTED_APPS": "Seçili Uygulamalar",
   "NEW_SERVER_ADDED": "Yeni bir sunucu eklendi.",
+  "LOCAL_NETWORK": "Yerel Ağ",
   "SPLIT_LOCAL_NETWORK": "Yerel Ağı Ayır",
   "SPLIT_LOCAL_NETWORK_DESC": "Yerel ağ trafiğini hariç tutarak TV veya yazıcı gibi cihazlarınıza VPN'e bağlıyken de erişin.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Yazıcı ve TV gibi yerel cihazlarınıza kolayca erişin.",

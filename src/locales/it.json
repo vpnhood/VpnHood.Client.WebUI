@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "Supera i blocchi VPN mascherando il tuo traffico come normale traffico web.",
   "SELECTED_APPS": "App Selezionate",
   "NEW_SERVER_ADDED": "È stato aggiunto un nuovo server.",
+  "LOCAL_NETWORK": "Rete locale",
   "SPLIT_LOCAL_NETWORK": "Escludi rete locale",
   "SPLIT_LOCAL_NETWORK_DESC": "Escludi il traffico locale dalla VPN per comunicare facilmente con stampanti, smart TV e altri dispositivi di casa.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Accedi direttamente a stampanti, TV e dispositivi locali.",
