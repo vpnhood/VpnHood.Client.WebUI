@@ -11,10 +11,14 @@ const locale = i18n.global.t;
 
 const localMode = ref(vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode);
 
+// master gate: the controls below are inert while splitting is off; SplitTunnelingDisabledAlert
+// explains and repairs
+const isSplitTunnelingEnabled = computed<boolean>(() => vhApp.data.userSettings.splitTunneling.enabled);
+
 // the permissive choice lets IPv6 travel outside the tunnel on a v4-only server — a live risk only
 // while the master toggle allows splitting; otherwise the disabled alert speaks
 const isIpV6Leaking = computed<boolean>(() =>
-  vhApp.data.userSettings.splitTunneling.enabled && localMode.value === SplitUnsupportedIpMode.Exclude);
+  isSplitTunnelingEnabled.value && localMode.value === SplitUnsupportedIpMode.Exclude);
 
 watch(() => vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode, (newVal) => {
   localMode.value = newVal;
@@ -44,7 +48,9 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
     <!-- Leak warning for the mode that lets IPv6 out of the tunnel -->
     <alert-warning v-if="isIpV6Leaking" :text="locale('SPLIT_IPV6_LEAK_WARNING')" class="mb-4"/>
 
-    <config-card class="pt-3">
+    <!-- disabled on the group as well as the card: the card's pointer-events block does not stop
+         keyboard focus, and TV devices navigate by keyboard alone -->
+    <config-card class="pt-3" :disabled="!isSplitTunnelingEnabled">
       <v-card-item class="ps-1">
 
         <v-radio-group
@@ -52,6 +58,7 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
           @update:model-value="onModeChange"
           hide-details="auto"
           color="highlight"
+          :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
             :value="SplitUnsupportedIpMode.Block"

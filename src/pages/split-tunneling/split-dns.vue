@@ -11,10 +11,14 @@ const locale = i18n.global.t;
 
 const localSplitDnsMode = ref(vhApp.data.userSettings.splitTunneling.dnsMode);
 
+// master gate: the controls below are inert while splitting is off; SplitTunnelingDisabledAlert
+// explains and repairs
+const isSplitTunnelingEnabled = computed<boolean>(() => vhApp.data.userSettings.splitTunneling.enabled);
+
 // the permissive choice lets DNS follow the splits out of the tunnel, which is worth saying out
 // loud — but only while the master toggle allows splitting; otherwise the disabled alert speaks
 const isDnsLeaking = computed<boolean>(() =>
-  vhApp.data.userSettings.splitTunneling.enabled && localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
+  isSplitTunnelingEnabled.value && localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
 
 watch(() => vhApp.data.userSettings.splitTunneling.dnsMode, (newVal) => {
   localSplitDnsMode.value = newVal;
@@ -43,7 +47,9 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
     <!-- Leak warning for the mode that lets DNS out of the tunnel -->
     <alert-warning v-if="isDnsLeaking" :text="locale('SPLIT_DNS_LEAK_WARNING')" class="mb-4"/>
 
-    <config-card class="pt-3">
+    <!-- disabled on the group as well as the card: the card's pointer-events block does not stop
+         keyboard focus, and TV devices navigate by keyboard alone -->
+    <config-card class="pt-3" :disabled="!isSplitTunnelingEnabled">
       <v-card-item class="ps-1">
 
         <v-radio-group
@@ -51,6 +57,7 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
           @update:model-value="onSplitDnsModeChange"
           hide-details="auto"
           color="highlight"
+          :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
             :value="SplitDnsMode.IncludeAll"

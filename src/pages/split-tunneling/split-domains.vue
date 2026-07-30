@@ -38,6 +38,10 @@ const isEnabled = computed<boolean>({
   }
 });
 
+// master gate: the controls below are inert while splitting is off; SplitTunnelingDisabledAlert
+// explains and repairs
+const isSplitTunnelingEnabled = computed<boolean>(() => vhApp.data.userSettings.splitTunneling.enabled);
+
 onMounted(async () => {
   splitDomains.value = createNormalizedSplitDomains(await vhApp.appClient.getSplitDomains());
   savedDomains = createNormalizedSplitDomains(splitDomains.value);
@@ -87,7 +91,7 @@ function revertCurrentChange(): void {
     <settings-toggle-item
       v-model="isEnabled"
       :title="locale('SPLIT_DOMAINS')"
-      :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitDomain)"
+      :disabled="!isSplitTunnelingEnabled || !vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitDomain)"
     >
       <alert-warning v-if="isDomainFilterAffectedByServer" :text="locale('DOMAIN_FILTER_SERVER_NO_CLOAK')" class="mt-2" />
     </settings-toggle-item>
@@ -96,7 +100,7 @@ function revertCurrentChange(): void {
       :includes="splitDomains.includes"
       :blocks="splitDomains.blocks"
       :loading="isLoading"
-      :disabled="!isEnabled"
+      :disabled="!isSplitTunnelingEnabled || !isEnabled"
       @update:excludes="splitDomains.excludes = $event"
       @update:includes="splitDomains.includes = $event"
       @update:blocks="splitDomains.blocks = $event"

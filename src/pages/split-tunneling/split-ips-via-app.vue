@@ -34,6 +34,10 @@ const isEnabled = computed<boolean>({
   }
 });
 
+// master gate: the controls below are inert while splitting is off; SplitTunnelingDisabledAlert
+// explains and repairs
+const isSplitTunnelingEnabled = computed<boolean>(() => vhApp.data.userSettings.splitTunneling.enabled);
+
 onMounted(async () => {
   splitIps.value = createNormalizedSplitIps(await vhApp.appClient.getSplitIpsViaApp());
   savedIps = createNormalizedSplitIps(splitIps.value);
@@ -85,14 +89,14 @@ function revertCurrentChange(): void {
       v-model="isEnabled"
       :title="locale('SPLIT_IPS_VIA_APP')"
       :description="locale('SPLIT_IPS_VIA_APP_SHORT_DESC')"
-      :disabled="!vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp)"
+      :disabled="!isSplitTunnelingEnabled || !vhApp.data.isPremiumFeatureAllowed(AppFeature.SplitIpViaApp)"
     />
     <split-ip-input
       :excludes="splitIps.excludes"
       :includes="splitIps.includes"
       :blocks="splitIps.blocks"
       :loading="isLoading"
-      :disabled="!isEnabled"
+      :disabled="!isSplitTunnelingEnabled || !isEnabled"
       @update:excludes="splitIps.excludes = $event"
       @update:includes="splitIps.includes = $event"
       @update:blocks="splitIps.blocks = $event"

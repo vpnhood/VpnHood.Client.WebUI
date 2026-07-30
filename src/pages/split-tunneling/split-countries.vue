@@ -14,6 +14,10 @@ const locale = i18n.global.t;
 
 const countryList = ref<IListItemInfo[]>([]);
 const isShowList = computed(() => vhApp.data.userSettings.splitTunneling.countryMode === SplitCountryMode.ExcludeList);
+
+// master gate: the controls below are inert while splitting is off; SplitTunnelingDisabledAlert
+// explains and repairs
+const isSplitTunnelingEnabled = computed<boolean>(() => vhApp.data.userSettings.splitTunneling.enabled);
 const localSplitMode = ref(vhApp.data.userSettings.splitTunneling.countryMode);
 const selectedCountries = computed<string[]>({
   get: () => vhApp.data.userSettings.splitTunneling.countries,
@@ -112,7 +116,9 @@ onBeforeRouteLeave(async () => {
     <!-- Feature description -->
     <p class="text-disabled text-body-small mb-4">{{locale("SPLIT_COUNTRIES_DESC")}}</p>
 
-    <config-card class="pt-3">
+    <!-- disabled on the group as well as the card: the card's pointer-events block does not stop
+         keyboard focus, and TV devices navigate by keyboard alone -->
+    <config-card class="pt-3" :disabled="!isSplitTunnelingEnabled">
 
       <v-card-item class="ps-1">
 
@@ -121,6 +127,7 @@ onBeforeRouteLeave(async () => {
           @update:model-value="onSplitModeChange"
           hide-details="auto"
           color="highlight"
+          :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
             :value="SplitCountryMode.IncludeAll"
@@ -181,6 +188,7 @@ onBeforeRouteLeave(async () => {
     :loading="countryList.length < 1"
     icon-size="30"
     :is-icon-as-flag="true"
+    :disabled="!isSplitTunnelingEnabled"
     @update:list="handleListUpdate"
   />
 

@@ -18,6 +18,9 @@ const props = defineProps<{
   loading: boolean;
   iconSize: string;
   isIconAsFlag?: boolean;
+  // dims the whole list and blocks input (pointer and keyboard); the stored selection keeps
+  // showing so the user sees what would come back when the blocking condition lifts
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -58,7 +61,9 @@ async function onClearAll() {
 </script>
 
 <template>
-  <config-card :loading="loading" class="pt-3">
+  <!-- disabled also lands on every interactive child: the card's pointer-events block does not
+       stop keyboard focus, and TV devices navigate by keyboard alone -->
+  <config-card :loading="loading" :disabled="disabled" class="pt-3">
     <v-card-item>
       <div class="d-flex flex-wrap ga-2">
         <!-- Select all apps button -->
@@ -66,6 +71,7 @@ async function onClearAll() {
           prepend-icon="mdi-select-all"
           class="flex-grow-1 text-body-small"
           :text="locale('SELECT_ALL')"
+          :disabled="disabled"
           @click="onSelectAll()"
         />
 
@@ -74,6 +80,7 @@ async function onClearAll() {
           prepend-icon="mdi-select-remove"
           class="flex-grow-1 text-body-small"
           :text="locale('CLEAR_ALL')"
+          :disabled="disabled"
           @click="onClearAll()"
         />
 
@@ -83,6 +90,7 @@ async function onClearAll() {
           prepend-icon="mdi-magnify"
           class="flex-grow-1 text-body-small"
           :text="locale('SEARCH')"
+          :disabled="disabled"
           @click="isShowSearchBox = !isShowSearchBox"
         />
       </div>
@@ -100,6 +108,7 @@ async function onClearAll() {
         rounded="pill"
         color="highlight"
         class="my-search-field"
+        :disabled="disabled"
         :placeholder="locale('SEARCH')"
       />
     </v-card-item>
@@ -119,6 +128,7 @@ async function onClearAll() {
       select-strategy="classic"
       bg-color="transparent"
       selectable
+      :disabled="disabled"
     >
       <v-list-item
         v-for="(item, index) in filteredListItem"
