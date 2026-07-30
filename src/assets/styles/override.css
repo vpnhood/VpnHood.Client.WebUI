@@ -20,6 +20,20 @@
     letter-spacing: 0.0892857143em;
 }
 
+/*** ---------------- Vuetify 3 reset compat ----------------
+ Vuetify 3's ress-based reset zeroed every element's margin and padding; Vuetify 4 keeps
+ only html/body, so UA defaults came back (h1-h6 margin-block 1.33em, p 1em, ul padding):
+ the home title row grew from 48px to 62px from the h4's margins alone, and every bare
+ heading/paragraph in the app inflates its container the same way. Restored in the
+ vuetify-core.reset layer — the bottom of the cascade, exactly where v3 had it, so any
+ other author rule still wins.                                                        ***/
+@layer vuetify-core.reset {
+    * {
+        padding: 0;
+        margin: 0;
+    }
+}
+
 /*** ---------------- Vuetify 3 grid compat ----------------
  Vuetify 4 moved gutters from column padding + negative row margins to a gap on the row,
  which keeps column-to-column spacing but removes the 12px edge insets this UI's layouts

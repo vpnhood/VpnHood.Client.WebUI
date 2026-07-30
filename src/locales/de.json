@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "Tarnt Ihren VPN-Verkehr als normalen Web-Traffic, um VPN-Sperren zu umgehen.",
   "SELECTED_APPS": "Ausgewählte Apps",
   "NEW_SERVER_ADDED": "Ein neuer Server wurde hinzugefügt.",
+  "LOCAL_NETWORK": "Lokales Netzwerk",
   "SPLIT_LOCAL_NETWORK": "Lokales Netzwerk teilen",
   "SPLIT_LOCAL_NETWORK_DESC": "Greifen Sie nahtlos auf lokale Geräte wie Drucker oder Smart-TVs zu, indem Sie diese vom VPN-Traffic ausschließen.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Ermöglicht den Zugriff auf lokale Geräte wie Drucker und Fernseher.",

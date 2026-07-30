@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "Evita los bloqueos de VPN camuflando tu tráfico como si fuera navegación web normal.",
   "SELECTED_APPS": "Aplicaciones seleccionadas",
   "NEW_SERVER_ADDED": "Se ha añadido un nuevo servidor.",
+  "LOCAL_NETWORK": "Red local",
   "SPLIT_LOCAL_NETWORK": "Dividir red local",
   "SPLIT_LOCAL_NETWORK_DESC": "Accede a tus dispositivos locales (como impresoras o TV) excluyéndolos de la VPN.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Conéctate a tus dispositivos locales (impresoras, TV, etc.).",

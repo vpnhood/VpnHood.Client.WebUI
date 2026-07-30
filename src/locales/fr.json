@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "Déjoue les blocages VPN en masquant votre trafic comme du trafic web normal.",
   "SELECTED_APPS": "Applications sélectionnées",
   "NEW_SERVER_ADDED": "Un nouveau serveur a été ajouté.",
+  "LOCAL_NETWORK": "Réseau local",
   "SPLIT_LOCAL_NETWORK": "Réseau local",
   "SPLIT_LOCAL_NETWORK_DESC": "Accédez facilement à vos appareils locaux (TV, imprimante) en toute transparence.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Accédez sans interruption à vos appareils locaux.",
