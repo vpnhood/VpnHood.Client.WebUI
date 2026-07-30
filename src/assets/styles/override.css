@@ -19,6 +19,39 @@
 .v-btn{
     letter-spacing: 0.0892857143em;
 }
+
+/*** ---------------- Vuetify 3 grid compat ----------------
+ Vuetify 4 moved gutters from column padding + negative row margins to a gap on the row,
+ which keeps column-to-column spacing but removes the 12px edge insets this UI's layouts
+ were drawn against (home badge anchor, expansion-panel title rows, ...). These rules put
+ the v3 box model back. They must stay inside the vuetify-components layer: unlayered they
+ would also outrank the spacing utilities (mx-0, mt-0, ...), which live in the higher
+ vuetify-utilities layer — in this layer the compat beats the grid defaults by source
+ order while utilities still win, exactly the v3 cascade.                              ***/
+@layer vuetify-components {
+    .v-row {
+        --v-col-gap-x: 0px;
+        --v-col-gap-y: 0px;
+        margin: -12px;
+    }
+    .v-row + .v-row {
+        margin-top: -12px;
+    }
+    .v-row > .v-col,
+    .v-row > [class*="v-col-"] {
+        padding: 12px;
+    }
+    .v-row--no-gutters {
+        margin: 0;
+    }
+    .v-row + .v-row--no-gutters {
+        margin-top: 0;
+    }
+    .v-row--no-gutters > .v-col,
+    .v-row--no-gutters > [class*="v-col-"] {
+        padding: 0;
+    }
+}
 /* the home config buttons (Server / Split countries / Protocol) took their caps from .v-btn */
 .config-btn-title{
     text-transform: uppercase;

@@ -91,6 +91,7 @@
   "CLOAK_MODE_SHORT_DESC": "Overcomes VPN blocks by disguising your VPN traffic as regular web traffic.",
   "SELECTED_APPS": "Selected Apps",
   "NEW_SERVER_ADDED": "A new server has been added.",
+  "LOCAL_NETWORK": "Local Network",
   "SPLIT_LOCAL_NETWORK": "Split Local Network",
   "SPLIT_LOCAL_NETWORK_DESC": "Allow access to local devices (e.g., TV, printer) by excluding local network traffic.",
   "SPLIT_LOCAL_NETWORK_SHORT_DESC": "Allow access to local devices like printers and TVs.",

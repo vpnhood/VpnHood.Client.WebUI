@@ -16,10 +16,14 @@
          the chunk carrying Vuetify's own order statement — inverting the layers so the
          vuetify-core reset overrides component sizing (e.g. small buttons inherit the app
          font size). Pinning the order here, before any stylesheet link, keeps the layers in
-         Vuetify's intended order. Mirrors vuetify/lib/styles/main.css verbatim. */
+         Vuetify's intended order. Mirrors vuetify/lib/styles/main.css verbatim — the
+         Vuetify-3 grid compat in override.css relies on vuetify-utilities outranking
+         vuetify-components, so keep the full list in sync when upgrading Vuetify. */
       @layer vuetify-core { @layer reset, base; }
       @layer vuetify-components;
       @layer vuetify-overrides;
+      @layer vuetify-utilities { @layer theme-base; @layer typography; @layer helpers; @layer theme-background; @layer theme-foreground; }
+      @layer vuetify-final { @layer transitions, trumps; }
     </style>
   </head>
   <body>

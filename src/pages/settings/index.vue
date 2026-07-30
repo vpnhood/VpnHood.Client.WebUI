@@ -7,11 +7,12 @@ import { LanguagesCode } from '@/helpers/UiConstants';
 import SettingsItem from '@/components/Settings/SettingsItem.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import SettingsSectionTitle from '@/components/Settings/SettingsSectionTitle.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const proxySelectedMode = ref(vhApp.data.userSettings.proxySettings?.mode);
+const splitState = computed(() => vhApp.data.state.splitTunnelingState);
 
 function isShowConnectivitySectionTitle(): boolean {
   return vhApp.data.features.isProxySupported ||
@@ -72,19 +73,20 @@ function isShowConnectivitySectionTitle(): boolean {
       :click="{name:'PROXIES'}"
     />
 
-    <!-- Split Tunneling: two chips for two facts. The status mirrors the master switch, so it can
-         never contradict the toggle the user meets on the page; the warning fires only while public
-         traffic actually leaves the tunnel (isSplittingTraffic already resolves the toggle, the plan,
-         the server's IPv6 support, and server-side splits). The warning chip swallows its own click,
-         so it is wired to the same page as the row. -->
+    <!-- Split Tunneling: two chips for two facts. The status mirrors the master switch, except that
+         the local network split is exempt from the super toggle — while the master is off but the
+         LAN stays out of the tunnel, the chip says 'Local Network' instead of a false 'Off'. The
+         warning fires only while public traffic actually leaves the tunnel (isSplittingTraffic
+         already resolves the toggle, the plan, the server's IPv6 support, and server-side splits).
+         The warning chip swallows its own click, so it is wired to the same page as the row. -->
     <settings-item
       :title="locale('SPLIT_TUNNELING')"
       :subtitle="locale('SPLIT_TUNNELING_DESC')"
       :is-show="true"
       :isPremium="false"
       :status="{
-        state: vhApp.data.state.splitTunnelingState.isEnabled,
-        onText: locale('ON'),
+        state: splitState.isEnabled || splitState.isLocalNetworkSplit,
+        onText: splitState.isEnabled ? locale('ON') : locale('LOCAL_NETWORK'),
         offText: locale('OFF')
       }"
       :warning="vhApp.data.isSplitTunnelingActive ? locale('LEAK_IP') : undefined"
