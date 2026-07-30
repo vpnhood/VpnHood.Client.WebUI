@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SplitDomainInput from '@/components/SplitTunneling/SplitDomainInput.vue';
+import SplitTunnelingDisabledAlert from '@/components/SplitTunneling/SplitTunnelingDisabledAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AppFeature, SplitDomains, TcpProxyUsageReason } from '@/services/VpnHood.Client.Api';
@@ -80,6 +81,8 @@ function revertCurrentChange(): void {
 
   <v-sheet v-else>
     <app-bar/>
+
+    <split-tunneling-disabled-alert/>
 
     <settings-toggle-item
       v-model="isEnabled"

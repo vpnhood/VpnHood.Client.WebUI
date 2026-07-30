@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SplitIpInput from '@/components/SplitTunneling/SplitIpInput.vue';
+import SplitTunnelingDisabledAlert from '@/components/SplitTunneling/SplitTunnelingDisabledAlert.vue';
 import AppBar from '@/components/AppBar.vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { SplitIpsViaDevice } from '@/services/VpnHood.Client.Api';
@@ -75,6 +76,8 @@ function revertCurrentChange(): void {
 
   <v-sheet v-else>
     <app-bar/>
+
+    <split-tunneling-disabled-alert/>
 
     <settings-toggle-item
       v-model="isEnabled"

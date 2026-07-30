@@ -3,6 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
+import SplitTunnelingDisabledAlert from '@/components/SplitTunneling/SplitTunnelingDisabledAlert.vue';
 import { SplitUnsupportedIpMode } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
@@ -10,8 +11,10 @@ const locale = i18n.global.t;
 
 const localMode = ref(vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode);
 
-// the permissive choice lets IPv6 travel outside the tunnel on a v4-only server
-const isIpV6Leaking = computed<boolean>(() => localMode.value === SplitUnsupportedIpMode.Exclude);
+// the permissive choice lets IPv6 travel outside the tunnel on a v4-only server — a live risk only
+// while the master toggle allows splitting; otherwise the disabled alert speaks
+const isIpV6Leaking = computed<boolean>(() =>
+  vhApp.data.userSettings.splitTunneling.enabled && localMode.value === SplitUnsupportedIpMode.Exclude);
 
 watch(() => vhApp.data.userSettings.splitTunneling.unsupportedIpV6Mode, (newVal) => {
   localMode.value = newVal;
@@ -31,6 +34,8 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
 <template>
   <v-sheet>
     <app-bar/>
+
+    <split-tunneling-disabled-alert/>
 
     <!-- Feature description; the closing sentence is bold, so it carries markup like the other
          emphasized descriptions -->

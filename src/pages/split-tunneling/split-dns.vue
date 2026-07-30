@@ -3,6 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
+import SplitTunnelingDisabledAlert from '@/components/SplitTunneling/SplitTunnelingDisabledAlert.vue';
 import { SplitDnsMode } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
@@ -10,8 +11,10 @@ const locale = i18n.global.t;
 
 const localSplitDnsMode = ref(vhApp.data.userSettings.splitTunneling.dnsMode);
 
-// the permissive choice lets DNS follow the splits out of the tunnel, which is worth saying out loud
-const isDnsLeaking = computed<boolean>(() => localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
+// the permissive choice lets DNS follow the splits out of the tunnel, which is worth saying out
+// loud — but only while the master toggle allows splitting; otherwise the disabled alert speaks
+const isDnsLeaking = computed<boolean>(() =>
+  vhApp.data.userSettings.splitTunneling.enabled && localSplitDnsMode.value === SplitDnsMode.DefaultRoute);
 
 watch(() => vhApp.data.userSettings.splitTunneling.dnsMode, (newVal) => {
   localSplitDnsMode.value = newVal;
@@ -31,6 +34,8 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
 <template>
   <v-sheet>
     <app-bar/>
+
+    <split-tunneling-disabled-alert/>
 
     <!-- Feature description -->
     <p class="text-disabled text-body-small mb-4">{{ locale("SPLIT_DNS_DESC") }}</p>

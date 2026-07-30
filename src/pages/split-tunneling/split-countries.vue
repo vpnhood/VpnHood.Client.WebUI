@@ -3,6 +3,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 import AppBar from '@/components/AppBar.vue';
+import SplitTunnelingDisabledAlert from '@/components/SplitTunneling/SplitTunnelingDisabledAlert.vue';
 import { SplitCountryMode } from '@/services/VpnHood.Client.Api';
 import FilterList, { type IListItemInfo } from '@/components/Settings/FilterList.vue';
 import { onBeforeRouteLeave } from 'vue-router';
@@ -105,6 +106,8 @@ onBeforeRouteLeave(async () => {
 <template>
   <v-sheet>
     <app-bar/>
+
+    <split-tunneling-disabled-alert/>
 
     <!-- Feature description -->
     <p class="text-disabled text-body-small mb-4">{{locale("SPLIT_COUNTRIES_DESC")}}</p>

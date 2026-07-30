@@ -405,6 +405,8 @@
   "SPLIT_TUNNELING_TOGGLE": "Allow Split Tunneling",
   "SPLIT_TUNNELING_TOGGLE_DESC": "Selected apps and destinations connect directly for better speed and experience, but your IP address can be exposed to them.",
   "SPLIT_TUNNELING_DISABLED_DESC": "All traffic stays inside the VPN. Destinations the server cannot carry are blocked instead of connecting directly, so your IP address is never exposed. Per-app and local network choices below still apply.",
+  "SPLIT_TUNNELING_DISABLED_ALERT": "Split tunneling is off, so this setting has no effect.",
+  "TURN_ON": "Turn On",
   "LEAK_IP": "IP Leak Risk",
   "SERVER_SPLIT_TRAFFIC_NOTICE": "This server does not carry every destination; unsupported ones connect directly while splitting is allowed.",
   "SPLIT_IPV6": "Split IPv6",
