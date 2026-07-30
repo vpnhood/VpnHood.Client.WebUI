@@ -10,6 +10,16 @@
          white. Matches the VpnHoodClient theme background (purple-500 in src/theme/colors.ts);
          the Connect theme is close enough that the difference is imperceptible for one frame. */
       html { background-color: #150e3d; color-scheme: dark; }
+
+      /* Vuetify's cascade-layer priority is fixed by whichever stylesheet declares a layer
+         first, and the built bundle links split per-component CSS (VBtn, VCard, ...) ahead of
+         the chunk carrying Vuetify's own order statement — inverting the layers so the
+         vuetify-core reset overrides component sizing (e.g. small buttons inherit the app
+         font size). Pinning the order here, before any stylesheet link, keeps the layers in
+         Vuetify's intended order. Mirrors vuetify/lib/styles/main.css verbatim. */
+      @layer vuetify-core { @layer reset, base; }
+      @layer vuetify-components;
+      @layer vuetify-overrides;
     </style>
   </head>
   <body>

@@ -67,7 +67,7 @@ Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
 dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
 if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
 
-# Commit the results (locale files AND vh_translator/watches/en_watch.json). The watch file records
+# Commit the results (locale files AND vh_translator/watches/en.watch.json). The watch file records
 # the source text behind every key; if it is not committed, the next machine to run this retranslates
 # everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
 # have staged is left untouched.
