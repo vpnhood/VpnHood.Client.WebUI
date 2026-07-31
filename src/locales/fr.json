@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Le code saisi est invalide. Veuillez vérifier les chiffres et réessayer.",
   "LOGIN_CONNECTION_ERROR_MSG": "Impossible de se connecter au serveur. Veuillez réessayer. Si le problème persiste, faites-le nous savoir.",
   "CUSTOM_ENDPOINT": "Adresse de serveur personnalisée",
+  "CUSTOM_ENDPOINT_ENABLE": "Utiliser une adresse de serveur personnalisée",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "IP et port du serveur",
   "CUSTOM_ENDPOINT_DESC": "Entrez une adresse IP et un port de serveur dans le format suivant :",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Veuillez entrer une adresse IP valide (IPv4 ou IPv6).",

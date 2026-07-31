@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "کد وارد شده نامعتبر است. لطفاً اعداد را بررسی کرده و دوباره امتحان کنید.",
   "LOGIN_CONNECTION_ERROR_MSG": "اتصال به سرور انجام نشد. لطفاً دوباره امتحان کنید. اگر مشکل ادامه داشت، به ما اطلاع دهید.",
   "CUSTOM_ENDPOINT": "آدرس سرور سفارشی",
+  "CUSTOM_ENDPOINT_ENABLE": "استفاده از آدرس سرور دلخواه",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "IP و پورت سرور",
   "CUSTOM_ENDPOINT_DESC": "یک IP و پورت سرور را با قالب زیر وارد کنید:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "لطفاً یک آدرس IP معتبر (IPv4 یا IPv6) وارد کنید.",

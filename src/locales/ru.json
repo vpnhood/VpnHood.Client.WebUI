@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Введенный код недействителен. Пожалуйста, проверьте цифры и попробуйте еще раз.",
   "LOGIN_CONNECTION_ERROR_MSG": "Не удалось подключиться к серверу. Пожалуйста, попробуйте еще раз. Если проблема сохранится, дайте нам знать.",
   "CUSTOM_ENDPOINT": "Пользовательский адрес сервера",
+  "CUSTOM_ENDPOINT_ENABLE": "Свой адрес сервера",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "IP-адрес сервера и порт",
   "CUSTOM_ENDPOINT_DESC": "Введите IP-адрес сервера и порт в следующем формате:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Пожалуйста, введите действительный IP-адрес (IPv4 или IPv6).",

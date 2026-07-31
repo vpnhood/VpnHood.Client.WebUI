@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Girilen kod geçersiz. Lütfen numaraları kontrol edin ve tekrar deneyin.",
   "LOGIN_CONNECTION_ERROR_MSG": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin. Sorun devam ederse bize bildirin.",
   "CUSTOM_ENDPOINT": "Özel sunucu adresi",
+  "CUSTOM_ENDPOINT_ENABLE": "Özel sunucu adresi kullan",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "Sunucu IP'si ve portu",
   "CUSTOM_ENDPOINT_DESC": "Aşağıdaki formatta bir sunucu IP'si ve port girin:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Lütfen geçerli bir IP adresi (IPv4 veya IPv6) girin.",

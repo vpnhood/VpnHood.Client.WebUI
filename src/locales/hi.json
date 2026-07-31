@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "दर्ज किया गया कोड अमान्य है। कृपया संख्याएं जांचें और पुनः प्रयास करें।",
   "LOGIN_CONNECTION_ERROR_MSG": "सर्वर से कनेक्ट नहीं हो सका। कृपया पुनः प्रयास करें। यदि समस्या बनी रहती है, तो हमें बताएं।",
   "CUSTOM_ENDPOINT": "कस्टम सर्वर पता",
+  "CUSTOM_ENDPOINT_ENABLE": "कस्टम सर्वर पता उपयोग करें",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "सर्वर IP और पोर्ट",
   "CUSTOM_ENDPOINT_DESC": "निम्नलिखित प्रारूप में एक सर्वर IP और पोर्ट दर्ज करें:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "कृपया एक वैध आईपी पता (IPv4 या IPv6) दर्ज करें।",

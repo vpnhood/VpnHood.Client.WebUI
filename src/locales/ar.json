@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "الرمز المدخل غير صالح. يرجى التحقق من الأرقام والمحاولة مرة أخرى.",
   "LOGIN_CONNECTION_ERROR_MSG": "تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى. إذا استمرت المشكلة، فأخبرنا بذلك.",
   "CUSTOM_ENDPOINT": "عنوان الخادم المخصص",
+  "CUSTOM_ENDPOINT_ENABLE": "استخدم عنوان خادم مخصص",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "عنوان IP الخاص بالخادم والمنفذ",
   "CUSTOM_ENDPOINT_DESC": "أدخل عنوان IP ومنفذ الخادم بالتنسيق التالي:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "الرجاء إدخال عنوان IP صالح (IPv4 أو IPv6).",

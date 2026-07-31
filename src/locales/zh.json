@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "输入的代码无效。请检查数字并重试。",
   "LOGIN_CONNECTION_ERROR_MSG": "无法连接到服务器。请重试。如果问题仍然存在，请告诉我们。",
   "CUSTOM_ENDPOINT": "自定义服务器地址",
+  "CUSTOM_ENDPOINT_ENABLE": "使用自定义服务器地址",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "服务器 IP 和端口",
   "CUSTOM_ENDPOINT_DESC": "请输入以下格式的服务器 IP 和端口：",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "请输入有效的IP地址 (IPv4 或 IPv6)。",

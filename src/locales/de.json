@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "Der eingegebene Code ist ungültig. Bitte überprüfen Sie die Zahlen und versuchen Sie es erneut.",
   "LOGIN_CONNECTION_ERROR_MSG": "Verbindung zum Server konnte nicht hergestellt werden. Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, lassen Sie es uns wissen.",
   "CUSTOM_ENDPOINT": "Benutzerdefinierte Serveradresse",
+  "CUSTOM_ENDPOINT_ENABLE": "Eigene Serveradresse verwenden",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "Server-IP und Port",
   "CUSTOM_ENDPOINT_DESC": "Gib eine Server-IP und einen Port im folgenden Format ein:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Bitte geben Sie eine gültige IP-Adresse (IPv4 oder IPv6) ein.",

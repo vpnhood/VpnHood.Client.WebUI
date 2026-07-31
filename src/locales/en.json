@@ -518,6 +518,7 @@
   "INVALID_PREMIUM_CODE_NUMBERS_MSG": "The code entered is invalid. Please check the numbers and try again.",
   "LOGIN_CONNECTION_ERROR_MSG": "Could not connect to the server. Please try again. If the issue persists, let us know.",
   "CUSTOM_ENDPOINT": "Custom server address",
+  "CUSTOM_ENDPOINT_ENABLE": "Use custom server address",
   "CUSTOM_ENDPOINT_PLACE_HOLDER": "Server IP and port",
   "CUSTOM_ENDPOINT_DESC": "Enter an server IP and port in the following format:",
   "CUSTOM_ENDPOINT_VALIDATION_ERROR": "Please enter a valid IP address (IPv4 or IPv6).",
