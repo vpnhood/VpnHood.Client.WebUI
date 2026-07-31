@@ -42,7 +42,8 @@ if (!$translatorProject) {
 }
 
 # The Gemini key lives in the private OmegaHood.Secrets checkout (<Vh>/.user), never in this repo.
-# Per-repo location first, then the older repo-root spellings.
+# Per-repo location first, then the older repo-root spellings. The key is optional for a LOCAL build:
+# without it the translation step is skipped and src/locales is bundled exactly as it sits on disk.
 $geminiKeyCandidates = @(
     (Join-Path $vhDir ".user/VpnHood.Client.WebUI/google_gemini_api_key.txt"),
     (Join-Path $vhDir ".user/google_gemini_api_key.txt"),
@@ -50,42 +51,46 @@ $geminiKeyCandidates = @(
 );
 $geminiKeyFile = $geminiKeyCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1;
 
-if (!$geminiKeyFile) {
-    throw "Could not find google_gemini_api_key.txt — expected it in $vhDir/.user/VpnHood.Client.WebUI.";
-}
-
 # Passed by environment rather than --api-key so the secret never appears in a command line.
-$env:GEMINI_API_KEY = (Get-Content $geminiKeyFile -Raw).Trim();
+$env:GEMINI_API_KEY = if ($geminiKeyFile) { (Get-Content $geminiKeyFile -Raw).Trim() } else { "" };
+
 if ([string]::IsNullOrWhiteSpace($env:GEMINI_API_KEY)) {
-    throw "The Gemini API key file $geminiKeyFile is empty.";
-}
-
-# translate — a silent skip here produces a bundle with stale locales, so this fails loudly instead.
-# --no-launch-profile keeps a developer's launchSettings.json (base path, model) from overriding
-# the arguments below.
-Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
-dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
-if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
-
-# Commit the results (locale files AND vh_translator/watches/en.watch.json). The watch file records
-# the source text behind every key; if it is not committed, the next machine to run this retranslates
-# everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
-# have staged is left untouched.
-#
-# The watch file used to sit directly in vh_translator/; newer translator versions keep it in the
-# watches/ subfolder and migrate the old file on their first save (read from the old path, written
-# to the new one, old one deleted). `git add -A` below stages both sides of that move, so the
-# incremental state survives — do NOT move the file by hand, or an older translator build would
-# stop finding it and retranslate every language.
-$localesPath = "src/locales";
-if (git -C $solutionDir status --porcelain -- $localesPath) {
-    Write-Host "Committing updated locales ..." -ForegroundColor Magenta;
-    git -C $solutionDir add -A -- $localesPath;
-    git -C $solutionDir commit -m "Update translated locales" -- $localesPath;
-    if ($LASTEXITCODE -gt 0) { throw "Could not commit locales. ExitCode: $LASTEXITCODE"; }
+    if ($geminiKeyFile) {
+        Write-Warning "The Gemini API key file $geminiKeyFile is empty.";
+    }
+    else {
+        Write-Warning "Could not find google_gemini_api_key.txt — expected it in $vhDir/.user/VpnHood.Client.WebUI.";
+    }
+    Write-Warning "Skipping translation: the bundle keeps the locale files as they are, so anything you changed in en.json stays untranslated in the other languages.";
 }
 else {
-    Write-Host "Locales unchanged — nothing to commit." -ForegroundColor DarkGray;
+    # translate — a silent skip here produces a bundle with stale locales, so this fails loudly instead.
+    # --no-launch-profile keeps a developer's launchSettings.json (base path, model) from overriding
+    # the arguments below.
+    Write-Host "Translating the new locales string ..." -ForegroundColor Magenta;
+    dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
+    if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
+
+    # Commit the results (locale files AND vh_translator/watches/en.watch.json). The watch file records
+    # the source text behind every key; if it is not committed, the next machine to run this retranslates
+    # everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
+    # have staged is left untouched.
+    #
+    # The watch file used to sit directly in vh_translator/; newer translator versions keep it in the
+    # watches/ subfolder and migrate the old file on their first save (read from the old path, written
+    # to the new one, old one deleted). `git add -A` below stages both sides of that move, so the
+    # incremental state survives — do NOT move the file by hand, or an older translator build would
+    # stop finding it and retranslate every language.
+    $localesPath = "src/locales";
+    if (git -C $solutionDir status --porcelain -- $localesPath) {
+        Write-Host "Committing updated locales ..." -ForegroundColor Magenta;
+        git -C $solutionDir add -A -- $localesPath;
+        git -C $solutionDir commit -m "Update translated locales" -- $localesPath;
+        if ($LASTEXITCODE -gt 0) { throw "Could not commit locales. ExitCode: $LASTEXITCODE"; }
+    }
+    else {
+        Write-Host "Locales unchanged — nothing to commit." -ForegroundColor DarkGray;
+    }
 }
 
 # build + zip — the same script CI runs, so local and published bundles are produced identically.

@@ -5,6 +5,7 @@ import {
   ApiException,
   ClientProfileInfo,
   ClientProfileUpdateParams,
+  PatchOfBoolean,
   PatchOfString,
   PatchOfStringOf
 } from '@/services/VpnHood.Client.Api';
@@ -26,6 +27,7 @@ const currentClientProfileInfo = ref<ClientProfileInfo>(new ClientProfileInfo())
 const newClientProfileName = ref<string>("");
 const expandedPanels = ref<number[]>([]);
 const customEndpoint = ref<string | null>(null);
+const isCustomEndpointEnabled = ref<boolean>(true);
 const invalidIpError = ref<string | null>(null);
 
 onMounted(() => {
@@ -60,7 +62,15 @@ async function showEndpointDialog(clientProfileInfo: ClientProfileInfo): Promise
   currentClientProfileInfo.value = clientProfileInfo;
   const endpoint = clientProfileInfo.customServerEndpoints;
   customEndpoint.value = (endpoint && endpoint.length > 0) ? endpoint[0] : null;
+  isCustomEndpointEnabled.value = clientProfileInfo.isCustomServerEndpointsEnabled;
+  invalidIpError.value = null;
   await customEndpointModel.value.show();
+}
+
+// Is the profile custom endpoint set and enabled
+function isCustomEndpointActive(clientProfileInfo: ClientProfileInfo): boolean {
+  const endpoint = clientProfileInfo.customServerEndpoints;
+  return clientProfileInfo.isCustomServerEndpointsEnabled && !!endpoint && endpoint.length > 0;
 }
 
 // Rename server by user
@@ -79,7 +89,8 @@ async function saveCustomEndpoint(): Promise<void> {
     const endpointValue = customEndpoint.value?.trim();
     const newEndpoint = endpointValue ? [endpointValue] : null;
     const params = new ClientProfileUpdateParams({
-      customServerEndpoints: new PatchOfStringOf({ value: newEndpoint })
+      customServerEndpoints: new PatchOfStringOf({ value: newEndpoint }),
+      isCustomServerEndpointsEnabled: new PatchOfBoolean({ value: isCustomEndpointEnabled.value })
     });
     await vhApp.updateClientProfile(currentClientProfileInfo.value.clientProfileId, params);
     await closeCustomEndpointDialog();
@@ -220,10 +231,13 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
         <LocationList :client-profile="clientProfileInfo"/>
       </template>
 
-      <!-- Support id &  -->
+      <!-- Support id & redacted host with custom server address badge -->
       <div class="d-flex align-center justify-space-between text-disabled text-body-small px-4 mt-2">
         <span>SID:{{ clientProfileInfo.supportId }}</span>
-        <span>{{ clientProfileInfo.hostNames[0] }}</span>
+        <span class="d-flex align-center ga-1">
+          <v-icon v-if="isCustomEndpointActive(clientProfileInfo)" icon="mdi-ip-network" size="16" />
+          {{ clientProfileInfo.hostNames[0] }}
+        </span>
       </div>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -265,6 +279,12 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
     <v-card :title="locale('CUSTOM_ENDPOINT')" color="general-dialog">
 
       <v-card-text class="text-general-dialog-text">
+        <!-- Enable/disable custom endpoint -->
+        <div class="d-flex align-center justify-space-between">
+          <span>{{ locale('CUSTOM_ENDPOINT_ENABLE') }}</span>
+          <v-switch v-model="isCustomEndpointEnabled" density="compact" hide-details/>
+        </div>
+
         <!-- IP text field -->
         <v-locale-provider :rtl="false">
           <v-text-field

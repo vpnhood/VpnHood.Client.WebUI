@@ -141,7 +141,11 @@ export class VpnHoodAppData {
 
 
   get isCustomEndpointActive(): boolean {
-    const customServerEndpoints = this.state.clientProfile?.customServerEndpoints;
+    const clientProfile = this.state.clientProfile;
+    if (!clientProfile?.isCustomServerEndpointsEnabled)
+      return false;
+
+    const customServerEndpoints = clientProfile.customServerEndpoints;
     return !!customServerEndpoints && customServerEndpoints.length > 0;
   }
 
