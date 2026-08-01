@@ -23,6 +23,17 @@ const projectRoot = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)
 export const ANGLE = { rotateX: 0, rotateY: 0, rotateZ: 0 };
 
 /**
+ * Locales generated for every platform, first one primary (`--install` copies only that one, since
+ * every installDir names a single store locale folder). `tag` is the store-style filename suffix;
+ * `culture` is the SPA language, applied through state.currentUiCultureInfo like the client does.
+ * fa is Persian — it exercises the whole RTL path (rtl.css, IranSans faces, mirrored layouts).
+ */
+export const LOCALES = [
+  { tag: 'en-US', culture: 'en' },
+  { tag: 'fa', culture: 'fa' },
+];
+
+/**
  * Patches applied to the mocked API for a shot, as a deep merge over fixture.json (after the
  * platform patch). Only the fields that matter to the screen need to appear.
  *
@@ -39,82 +50,97 @@ const CONNECTED = {
 };
 
 // The CLIENT app ships with no servers — users bring their own key, and the store page must not
-// suggest a bundled server list (that is the VpnHood! CONNECT story). Live-captured Servers shots
-// use this; the reused Play capture (see SERVERS_PLAY_PNG) predates the rule and shows a demo list.
+// suggest a bundled server list (that is the VpnHood! CONNECT story).
 const NO_SERVERS = { clientProfileInfos: [] };
 
 /**
  * The Apps Filter page calls GET /api/app/installed-apps, which on a real device returns the
- * installed apps with their icons. The mock answers with common-category demo apps whose icons are
- * SYNTHESIZED by prepare() below — monogram tiles, not real brand artwork: a screenshot of a real
- * phone incidentally showing Google's icons is one thing, committing their artwork as fixture data
- * is another.
+ * installed apps with their icons. The mock answers with famous apps whose icons are SYNTHESIZED by
+ * prepare() below from the Material Design Icons webfont already shipped as a project dependency
+ * (@mdi/font) — the same recognizable brand glyphs, without committing anyone's icon artwork as
+ * fixture data.
+ *
+ * `bg`/`fg` take 1 colour (flat) or several (gradient); `icon` is the mdi glyph name, resolved
+ * against the installed font's CSS at run time so a renamed glyph fails the run instead of shipping
+ * a blank tile.
  */
 const DEMO_APPS = [
-  { appId: 'com.demo.browser', appName: 'Browser', hue: 210, letter: 'B' },
-  { appId: 'com.demo.messages', appName: 'Messages', hue: 130, letter: 'M' },
-  { appId: 'com.demo.video', appName: 'Video Player', hue: 0, letter: 'V' },
-  { appId: 'com.demo.music', appName: 'Music', hue: 25, letter: 'M' },
-  { appId: 'com.demo.photos', appName: 'Photos', hue: 280, letter: 'P' },
-  { appId: 'com.demo.maps', appName: 'Maps', hue: 160, letter: 'M' },
-  { appId: 'com.demo.mail', appName: 'Mail', hue: 200, letter: 'M' },
-  { appId: 'com.demo.camera', appName: 'Camera', hue: 340, letter: 'C' },
-  { appId: 'com.demo.social', appName: 'Social', hue: 190, letter: 'S' },
-  { appId: 'com.demo.games', appName: 'Games', hue: 45, letter: 'G' },
+  { appId: 'com.android.vending', appName: 'Play Store', icon: 'google-play', bg: ['#fff'], fg: ['#00c4ff', '#00e59d'] },
+  { appId: 'com.whatsapp', appName: 'WhatsApp', icon: 'whatsapp', bg: ['#25D366'], fg: ['#fff'] },
+  { appId: 'com.android.calculator', appName: 'Calculator', icon: 'calculator', bg: ['#43A047'], fg: ['#fff'] },
+  { appId: 'com.android.calendar', appName: 'Calendar', icon: 'calendar-month', bg: ['#1E88E5'], fg: ['#fff'] },
+  { appId: 'com.android.camera', appName: 'Camera', icon: 'camera', bg: ['#E53935'], fg: ['#fff'] },
+  { appId: 'com.android.chrome', appName: 'Chrome', icon: 'google-chrome', bg: ['#4285F4'], fg: ['#fff'] },
+  { appId: 'com.android.deskclock', appName: 'Clock', icon: 'clock-outline', bg: ['#5C6BC0'], fg: ['#fff'] },
+  { appId: 'com.facebook.katana', appName: 'Facebook', icon: 'facebook', bg: ['#1877F2'], fg: ['#fff'] },
+  { appId: 'com.google.android.gm', appName: 'Gmail', icon: 'gmail', bg: ['#fff'], fg: ['#EA4335'] },
+  { appId: 'com.instagram.android', appName: 'Instagram', icon: 'instagram', bg: ['#F58529', '#DD2A7B', '#8134AF'], fg: ['#fff'] },
+  { appId: 'com.google.android.apps.maps', appName: 'Maps', icon: 'google-maps', bg: ['#fff'], fg: ['#34A853'] },
+  { appId: 'com.spotify.music', appName: 'Spotify', icon: 'spotify', bg: ['#1DB954'], fg: ['#fff'] },
+  { appId: 'com.google.android.youtube', appName: 'YouTube', icon: 'youtube', bg: ['#FF0000'], fg: ['#fff'] },
 ];
 
 /**
  * Renders the demo app icons through the engine's Chromium and plants them on the fixture before
- * any capture runs. Deterministic on any machine: fixed hues, and the app's own Poppins face is
- * inlined so no system font can drift the glyphs between a dev box and CI.
+ * any capture runs. Deterministic on any machine: fixed colours, and the glyph font is inlined so
+ * nothing depends on what the box has installed.
  */
 export async function prepare(browser, fixture) {
-  const font = await fs.readFile(path.join(projectRoot, 'src', 'assets', 'fonts', 'Poppins-SemiBold.ttf'));
+  // Resolve each glyph's codepoint from the installed @mdi/font CSS — fail loud on a miss.
+  const mdiCss = await fs.readFile(path.join(projectRoot, 'node_modules', '@mdi', 'font', 'css', 'materialdesignicons.css'), 'utf8');
+  const codepoint = (name) => {
+    const match = mdiCss.match(new RegExp(`\\.mdi-${name}::before\\s*\\{\\s*content:\\s*"\\\\([0-9A-F]+)"`));
+    if (!match) throw new Error(`@mdi/font has no glyph named "${name}" — pick another in DEMO_APPS.`);
+    return parseInt(match[1], 16);
+  };
+  const apps = DEMO_APPS.map(app => ({ ...app, glyph: codepoint(app.icon) }));
+
+  const mdiFont = await fs.readFile(path.join(projectRoot, 'node_modules', '@mdi', 'font', 'fonts', 'materialdesignicons-webfont.ttf'));
   const page = await browser.newPage();
   const icons = await page.evaluate(async ({ apps, fontB64 }) => {
-    const face = new FontFace('StoreFrame', `url(data:font/ttf;base64,${fontB64})`);
+    const face = new FontFace('MdiGlyphs', `url(data:font/ttf;base64,${fontB64})`);
     await face.load();
     document.fonts.add(face);
+
+    const paint = (ctx, stops) => {
+      if (stops.length === 1) return stops[0];
+      const fill = ctx.createLinearGradient(0, 0, 96, 96);
+      stops.forEach((stop, i) => fill.addColorStop(i / (stops.length - 1), stop));
+      return fill;
+    };
 
     return apps.map(app => {
       const canvas = document.createElement('canvas');
       canvas.width = canvas.height = 96;
       const ctx = canvas.getContext('2d');
-      const fill = ctx.createLinearGradient(0, 0, 96, 96);
-      fill.addColorStop(0, `hsl(${app.hue} 72% 58%)`);
-      fill.addColorStop(1, `hsl(${app.hue + 20} 76% 40%)`);
-      ctx.fillStyle = fill;
-      ctx.beginPath();
-      ctx.roundRect(0, 0, 96, 96, 24);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = '600 46px StoreFrame';
+      ctx.fillStyle = paint(ctx, app.bg);
+      ctx.fillRect(0, 0, 96, 96); // the app's list avatar clips to a circle itself
+      ctx.fillStyle = paint(ctx, app.fg);
+      ctx.font = '58px MdiGlyphs';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(app.letter, 48, 52);
+      ctx.fillText(String.fromCodePoint(app.glyph), 48, 50);
       // The SPA prepends 'data:image/png;base64, ' itself (split-apps.vue), so strip the header.
       return canvas.toDataURL('image/png').split(',')[1];
     });
-  }, { apps: DEMO_APPS, fontB64: font.toString('base64') });
+  }, { apps, fontB64: mdiFont.toString('base64') });
   await page.close();
 
-  fixture.installedApps = DEMO_APPS.map((app, i) => ({
+  fixture.installedApps = apps.map((app, i) => ({
     appId: app.appId, appName: app.appName, iconPng: icons[i],
   }));
 }
 
-// "All except 2 apps": Browser and Social ride outside the tunnel, mirroring the story the old
-// hand-shot listing told with Play Store and WhatsApp.
+// "All except 2 apps": Play Store and WhatsApp ride outside the tunnel — the exact story the old
+// hand-shot listing told.
 const APPS_FILTER = {
-  num: '3', route: '/split-tunneling/split-apps', label: 'Apps Filter',
-  patch: { userSettings: { splitTunneling: { appMode: 'Exclude', apps: ['com.demo.browser', 'com.demo.social'] } } },
+  route: '/split-tunneling/split-apps', label: 'Apps Filter',
+  patch: { userSettings: { splitTunneling: { appMode: 'Exclude', apps: ['com.android.vending', 'com.whatsapp'] } } },
 };
 
-// The Servers page renders the fixture's sanitised demo profiles, so a live mock capture leaks
-// nothing — but the committed Play capture shows the richer demo country list, which the
-// two-profile fixture cannot reproduce. The two portrait phone-aspect sets reuse it; every other
-// aspect captures live, because cover-cropping a 1440x2960 portrait would cut the list off anyway.
-const SERVERS_PLAY_PNG = '../VpnHood/fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png';
+// Every platform shoots Servers with NO_SERVERS: the page then renders its add-a-key guidance
+// (and the pointer to VpnHood! CONNECT), which is the truthful CLIENT first-run story.
+const SERVERS_EMPTY = { route: '/servers', label: 'Servers (empty)', patch: NO_SERVERS };
 
 // The "IP Leak Risk" chip is an accurate in-app caution about a setting the user opts into (split
 // tunneling exposes your IP to whatever you route around the tunnel — true of every VPN). Out of
@@ -196,23 +222,27 @@ const ANDROID_PATCH = {
 };
 
 /**
- * Google Play accepts AT MOST 8 screenshots per device type. The Android sets deliberately generate
- * more than 8 so every marketable screen exists — pick the 8 to upload when installing (the
- * destination workflow is still to be decided).
+ * Array order IS the store order — filenames number by position. The arc: proof first (connected,
+ * real speeds), then the differentiator (Cloak Mode), then the CLIENT model told upfront (the
+ * add-your-key Servers page), then Protocols, then the visually self-explanatory features and the
+ * security promise. Tech pages follow, niche last. No Settings shot: every page it lists has its
+ * own screenshot.
+ *
+ * Google Play accepts AT MOST 8 screenshots per device type. The set deliberately generates every
+ * marketable screen — upload the first 8 (the destination workflow is still to be decided).
  */
 const ANDROID_SHOTS = [
-  { num: '1', route: '/', label: 'Home (connected)', patch: CONNECTED },
-  { num: '2', label: 'Servers', source: SERVERS_PLAY_PNG },
+  { route: '/', label: 'Home (connected)', patch: CONNECTED },
+  { route: '/protocols/cloak-mode', label: 'Cloak Mode' },
+  SERVERS_EMPTY,
+  { route: '/protocols', label: 'Protocols' },
   APPS_FILTER,
-  { num: '4', route: '/protocols', label: 'Protocols' },
-  { num: '5', route: '/protocols/cloak-mode', label: 'Cloak Mode' },
-  { num: '6', route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
-  { num: '7', route: '/dns', label: 'DNS' },                       // shows the Private DNS card too
-  { num: '8', route: '/settings/kill-switch', label: 'Kill Switch' },
-  { num: '9', route: '/settings/always-on', label: 'Always On' },
-  { num: '10', route: '/settings/quick-launch', label: 'Quick Launch' },
-  { num: '11', route: '/settings/proxies', label: 'Proxies' },
-  { num: '12', route: '/settings', label: 'Settings' },
+  { route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
+  { route: '/settings/kill-switch', label: 'Kill Switch' },
+  { route: '/dns', label: 'DNS' },                       // shows the Private DNS card too
+  { route: '/settings/always-on', label: 'Always On' },
+  { route: '/settings/quick-launch', label: 'Quick Launch' },
+  { route: '/settings/proxies', label: 'Proxies' },
 ];
 
 /** installDir is relative to the WebUI repo root; used only when `--install` is passed. The npm
@@ -229,18 +259,17 @@ export const PLATFORMS = {
     devices: IOS_DEVICES,
     shots: [
       {
-        num: '1', route: '/', label: 'Home (connected)',
+        route: '/', label: 'Home (connected)',
         // The only screen that needs a session. Everything else looks identical disconnected, which
         // is why the fixture does not have to simulate a whole tunnel.
         patch: CONNECTED,
       },
-      { num: '2', label: 'Servers', source: SERVERS_PLAY_PNG },
-      { num: '3', route: '/protocols', label: 'Protocols' },
-      { num: '4', route: '/protocols/cloak-mode', label: 'Cloak Mode' },
-      { num: '5', route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
-      { num: '6', route: '/dns', label: 'DNS' },
-      { num: '7', route: '/settings/proxies', label: 'Proxies' },
-      { num: '8', route: '/settings', label: 'Settings' },
+      { route: '/protocols/cloak-mode', label: 'Cloak Mode' },
+      SERVERS_EMPTY,
+      { route: '/protocols', label: 'Protocols' },
+      { route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
+      { route: '/dns', label: 'DNS' },
+      { route: '/settings/proxies', label: 'Proxies' },
     ],
   },
 
@@ -257,7 +286,7 @@ export const PLATFORMS = {
         cssWidth: 360, cssHeight: 740, scale: 4,  // -> 1440x2960, same as the hand-shot set
         safeTop: 28, safeBottom: 20,
         screenW: 288,
-        bezel: 8, outerRadius: 44, screenRadius: 36,
+        bezel: 4, outerRadius: 40, screenRadius: 36,  // slim rim: a modern Android is nearly all screen
         island: null, punchHole: { size: 12 },
         statusFont: 11, statusPad: 22,
         indicatorWidth: 96,
@@ -349,14 +378,13 @@ export const PLATFORMS = {
     // No Apps Filter (FilterList is finger-driven and the page is not in the TV remote flow) and no
     // Kill Switch / Always On / Quick Launch (every one is gated `!IsTv`).
     shots: [
-      { num: '1', route: '/', label: 'Home (connected)', patch: CONNECTED },
-      { num: '2', route: '/servers', label: 'Servers' },
-      { num: '3', route: '/protocols', label: 'Protocols' },
-      { num: '4', route: '/protocols/cloak-mode', label: 'Cloak Mode' },
-      { num: '5', route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
-      { num: '6', route: '/dns', label: 'DNS' },
-      { num: '7', route: '/settings/proxies', label: 'Proxies' },
-      { num: '8', route: '/settings', label: 'Settings' },
+      { route: '/', label: 'Home (connected)', patch: CONNECTED },
+      { route: '/protocols/cloak-mode', label: 'Cloak Mode' },
+      SERVERS_EMPTY,
+      { route: '/protocols', label: 'Protocols' },
+      { route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
+      { route: '/dns', label: 'DNS' },
+      { route: '/settings/proxies', label: 'Proxies' },
     ],
   },
 
@@ -384,16 +412,13 @@ export const PLATFORMS = {
       },
     },
     shots: [
-      { num: '1', route: '/', label: 'Home (connected)', patch: CONNECTED },
-      // A brand-new listing must open on the truthful first-run story: no bundled servers, the
-      // user adds a key.
-      { num: '2', route: '/servers', label: 'Servers (empty)', patch: NO_SERVERS },
-      { num: '3', route: '/protocols', label: 'Protocols' },
-      { num: '4', route: '/protocols/cloak-mode', label: 'Cloak Mode' },
-      { num: '5', route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
-      { num: '6', route: '/dns', label: 'DNS' },
-      { num: '7', route: '/settings/proxies', label: 'Proxies' },
-      { num: '8', route: '/settings', label: 'Settings' },
+      { route: '/', label: 'Home (connected)', patch: CONNECTED },
+      { route: '/protocols/cloak-mode', label: 'Cloak Mode' },
+      SERVERS_EMPTY,
+      { route: '/protocols', label: 'Protocols' },
+      { route: '/split-tunneling', label: 'Split Tunneling', hide: HIDE_LEAK_CHIP },
+      { route: '/dns', label: 'DNS' },
+      { route: '/settings/proxies', label: 'Proxies' },
     ],
   },
 };

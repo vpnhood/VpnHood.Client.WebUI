@@ -28,6 +28,7 @@
  *   node e2e/store-screenshots.mjs --platform android-phone,android-tv
  *   node e2e/store-screenshots.mjs --platform ios --only 1 --device ipad-13
  *   node e2e/store-screenshots.mjs --frame-only            re-frame without re-capturing
+ *   node e2e/store-screenshots.mjs --locale fa             one locale (default: all in LOCALES)
  *   node e2e/store-screenshots.mjs --api http://127.0.0.1:4700   against a live Release client
  *
  * Chromium once per machine: npx playwright install --with-deps chromium
@@ -37,7 +38,7 @@ import http from 'http';
 import path from 'path';
 import url from 'url';
 import { chromium } from 'playwright';
-import { ANGLE, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
+import { ANGLE, LOCALES, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
@@ -56,6 +57,14 @@ const doFrame = !args.includes('--capture-only');
 const doInstall = args.includes('--install');
 const only = argValue('--only', null)?.split(',').map(s => s.trim()).filter(Boolean) ?? null;
 
+// A project.mjs that predates locale support keeps the historic single-locale behaviour.
+const locales = LOCALES?.length ? LOCALES : [{ tag: 'en-US', culture: 'en' }];
+const localeFilter = argValue('--locale', null)?.split(',').map(s => s.trim()).filter(Boolean) ?? null;
+for (const tag of localeFilter ?? [])
+  if (!locales.some(l => l.tag === tag))
+    throw new Error(`Unknown --locale "${tag}". Known: ${locales.map(l => l.tag).join(', ')}.`);
+const selectedLocales = localeFilter ? locales.filter(l => localeFilter.includes(l.tag)) : locales;
+
 // Capture above the output scale: the app is drawn into a device narrower than the canvas, so it is
 // downscaled on the way in, and shooting at the output scale leaves visibly soft text.
 const CAPTURE_SUPERSAMPLE = 2;
@@ -69,6 +78,12 @@ for (const key of platformKeys)
   if (!PLATFORMS[key])
     throw new Error(`Unknown --platform "${key}". Known: ${Object.keys(PLATFORMS).join(', ')}.`);
 
+// Shot numbers — and so the store filenames — follow array position in project.mjs: reordering a
+// set is moving array items, never renumbering. Shots are copied per platform so a shot object
+// shared between platforms still numbers independently in each.
+for (const platform of Object.values(PLATFORMS))
+  platform.shots = platform.shots.map((shot, i) => ({ ...shot, num: String(i + 1) }));
+
 const deviceArg = argValue('--device', null);
 const deviceFilter = deviceArg ? deviceArg.split(',').map(s => s.trim()) : null;
 if (deviceFilter) {
@@ -81,7 +96,7 @@ if (deviceFilter) {
 const platformDevices = (platform) =>
   Object.entries(platform.devices).filter(([key]) => !deviceFilter || deviceFilter.includes(key)).map(([, d]) => d);
 const selected = (platform) => only ? platform.shots.filter(s => only.includes(s.num)) : platform.shots;
-const fileName = (device, shot) => `${device.prefix}${shot.num}_en-US.png`;
+const fileName = (device, shot, locale) => `${device.prefix}${shot.num}_${locale.tag}.png`;
 const finalSize = (device) => device.frame === 'desktop'
   ? { width: device.canvas.width, height: device.canvas.height }
   : { width: device.cssWidth * device.scale, height: device.cssHeight * device.scale };
@@ -145,28 +160,32 @@ async function mockApi(page, fixture, shot) {
   return unhandled;
 }
 
+/** The SPA reads its UI language from the boot state, so a locale is one more state patch. */
+const localePatch = (locale) => ({ state: { currentUiCultureInfo: { code: locale.culture } } });
+
 /** Layers the live client's real responses with the same per-shot patch the mock would apply. */
-async function patchLiveApi(page, shot) {
-  if (!shot.patch) return;
+async function patchLiveApi(page, shot, locale) {
+  const patch = deepMerge(localePatch(locale), shot.patch ?? {});
   await page.route('**/api/app/**', async (route) => {
     const response = await route.fetch();
     const body = await response.json().catch(() => null);
     if (!body) return route.fulfill({ response });
     // /api/app/state is the AppState itself; /api/app/config nests it under .state.
-    const patch = body.connectionState !== undefined ? shot.patch.state : shot.patch;
-    return route.fulfill({ response, json: deepMerge(body, patch ?? {}) });
+    const p = body.connectionState !== undefined ? patch.state : patch;
+    return route.fulfill({ response, json: deepMerge(body, p ?? {}) });
   });
 }
 
 async function captureDevice(browser, platform, device, origin, fixture, rawDir) {
   const unhandledAll = new Set();
 
+  for (const locale of selectedLocales)
   for (const shot of selected(platform)) {
     // A static source is device-independent: the frame pass fits and crops it to each device's
     // content box, so one PNG serves every slot.
     if (shot.source) {
-      await fs.copyFile(path.resolve(projectRoot, shot.source), path.join(rawDir, fileName(device, shot)));
-      console.log(`reused    ${device.label.padEnd(11)} ${fileName(device, shot)}  ${shot.label}  <- ${path.basename(shot.source)}`);
+      await fs.copyFile(path.resolve(projectRoot, shot.source), path.join(rawDir, fileName(device, shot, locale)));
+      console.log(`reused    ${device.label.padEnd(11)} ${fileName(device, shot, locale)}  ${shot.label}  <- ${path.basename(shot.source)}`);
       continue;
     }
 
@@ -190,7 +209,9 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
       if (msg.type() === 'error') failures.push(firstLine(msg.text()));
     });
 
-    const unhandled = liveApi ? (await patchLiveApi(page, shot), new Set()) : await mockApi(page, fixture, shot);
+    const unhandled = liveApi
+      ? (await patchLiveApi(page, shot, locale), new Set())
+      : await mockApi(page, deepMerge(fixture, localePatch(locale)), shot);
 
     await page.goto(origin + shot.route, { waitUntil: 'load', timeout: 30000 });
     await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
@@ -206,7 +227,7 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
       // would otherwise silently put a hidden chip back into the listing.
       const matched = await page.locator(selector).count();
       if (matched === 0)
-        throw new Error(`${fileName(device, shot)}: nothing matched "${selector}", so it was not hidden.`);
+        throw new Error(`${fileName(device, shot, locale)}: nothing matched "${selector}", so it was not hidden.`);
       await page.addStyleTag({ content: `${selector} { display: none !important; }` });
       await page.waitForTimeout(150); // the row reflows without the chip
     }
@@ -225,11 +246,11 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
 
     if (failures.length)
       throw new Error(
-        `${fileName(device, shot)}: the app errored while rendering, so the capture would show a ` +
+        `${fileName(device, shot, locale)}: the app errored while rendering, so the capture would show a ` +
         'dialog over the screen.\n  ' + [...new Set(failures)].slice(0, 5).join('\n  '));
 
-    await page.screenshot({ path: path.join(rawDir, fileName(device, shot)) });
-    console.log(`captured  ${device.label.padEnd(11)} ${fileName(device, shot)}  ${shot.label}`);
+    await page.screenshot({ path: path.join(rawDir, fileName(device, shot, locale)) });
+    console.log(`captured  ${device.label.padEnd(11)} ${fileName(device, shot, locale)}  ${shot.label}`);
     unhandled.forEach(u => unhandledAll.add(u));
     await context.close();
   }
@@ -493,8 +514,9 @@ async function frameDevice(browser, resizer, platform, device, fontDataUri, rawD
     : null;
 
   let count = 0;
+  for (const locale of selectedLocales)
   for (const shot of selected(platform)) {
-    const name = fileName(device, shot);
+    const name = fileName(device, shot, locale);
     const png = await fs.readFile(path.join(rawDir, name)).catch(() => null);
     if (!png) {
       console.log(`skipped   ${device.label.padEnd(11)} ${name}  (not in raw/${path.basename(rawDir)})`);
@@ -524,21 +546,39 @@ async function frameDevice(browser, resizer, platform, device, fontDataUri, rawD
 }
 
 /**
+ * Deletes numbered files a device's shot list no longer produces, so a shrunk or reordered set
+ * cannot leave stale screenshots behind — in the store installDir or in test-results. Matches by
+ * this device's own naming pattern (the iPhone pass cannot touch ipad_ files) and always against
+ * the FULL shot list, never the --only filter, so a partial run cannot delete the rest.
+ */
+async function pruneDir(dir, platform, device, dirLocales = locales) {
+  const expected = new Set(platform.shots.flatMap(shot => dirLocales.map(locale => fileName(device, shot, locale))));
+  const pattern = new RegExp(`^${device.prefix}\\d+_[A-Za-z][\\w-]*\\.png$`);
+  for (const existing of await fs.readdir(dir)) {
+    if (!pattern.test(existing) || expected.has(existing)) continue;
+    await fs.rm(path.join(dir, existing));
+    console.log(`pruned    ${device.label.padEnd(11)} ${existing}  (no longer in the set)`);
+  }
+}
+
+/**
  * Copies a platform's finals into its installDir and prunes numbered files the set no longer
  * produces — so a shrunk set (e.g. TV going 8 -> 6) cannot leave stale screenshots for the
- * uploader to ship. The expected-name list always comes from the FULL shot list, never the --only
- * filter, so a partial run installs what it produced without deleting the rest.
+ * uploader to ship.
  */
 async function installPlatform(platform, devices, finalDir) {
   const destDir = path.resolve(projectRoot, platform.installDir);
   await fs.mkdir(destDir, { recursive: true });
   let copied = 0;
 
-  for (const device of devices) {
-    const expected = new Set(platform.shots.map(shot => fileName(device, shot)));
+  // Every store keeps one directory per locale and installDir names exactly one of them, so only
+  // the primary locale is installed; per-locale destinations are part of the (still open)
+  // destination decision.
+  const locale = locales[0];
 
+  for (const device of devices) {
     for (const shot of platform.shots) {
-      const name = fileName(device, shot);
+      const name = fileName(device, shot, locale);
       const from = path.join(finalDir, name);
       const to = path.join(destDir, name);
       // A static source that IS the installed file must not be overwritten with its own re-encode:
@@ -552,13 +592,7 @@ async function installPlatform(platform, devices, finalDir) {
       copied++;
     }
 
-    // Prune by this device's own naming pattern, so the iPhone pass cannot touch ipad_ files.
-    const pattern = new RegExp(`^${device.prefix}\\d+_en-US\\.png$`);
-    for (const existing of await fs.readdir(destDir)) {
-      if (!pattern.test(existing) || expected.has(existing)) continue;
-      await fs.rm(path.join(destDir, existing));
-      console.log(`pruned    ${device.label.padEnd(11)} ${existing}  (no longer in the set)`);
-    }
+    await pruneDir(destDir, platform, device, [locale]);
   }
 
   console.log(`installed ${copied} file(s) -> ${path.relative(projectRoot, destDir)}`);
@@ -594,8 +628,10 @@ for (const platform of selectedPlatforms) {
     await fs.mkdir(rawDir, { recursive: true });
     const fixture = baseFixture ? deepMerge(baseFixture, platform.patch ?? {}) : null;
     const unhandled = new Set();
-    for (const device of devices)
+    for (const device of devices) {
       (await captureDevice(browser, platform, device, origin, fixture, rawDir)).forEach(u => unhandled.add(u));
+      await pruneDir(rawDir, platform, device);
+    }
     if (unhandled.size)
       console.log(`unmocked endpoints (answered null, add to ROUTES in e2e/store/project.mjs):\n  ${[...unhandled].join('\n  ')}`);
   }
@@ -606,8 +642,10 @@ for (const platform of selectedPlatforms) {
     const font = await fs.readFile(path.join(projectRoot, 'src', 'assets', 'fonts', 'Poppins-SemiBold.ttf'));
     const fontDataUri = `data:font/ttf;base64,${font.toString('base64')}`;
     let total = 0;
-    for (const device of devices)
+    for (const device of devices) {
       total += await frameDevice(browser, resizer, platform, device, fontDataUri, rawDir, finalDir);
+      await pruneDir(finalDir, platform, device);
+    }
     await resizer.close();
     const sizes = devices.map(d => `${d.label} ${finalSize(d).width}x${finalSize(d).height}`);
     console.log(`${total} screenshot(s) in ${path.relative(projectRoot, finalDir)} — ${sizes.join(', ')}`);

@@ -71,4 +71,14 @@ function formatSpeed(speed: number): string | void {
 .connection-info-row {
   --v-col-gap-y: 4px;
 }
+
+/* The speeds belong visually to the Statistics button above them, not to the connect circle below.
+   The Vuetify-3 grid compat (override.css) spaces the two wrapped grid lines with 12px + 12px of
+   column padding; stripping that padding would shrink the row and pull the circle up, so the speed
+   columns are instead painted 24px higher — a transform moves no layout box, the row keeps its
+   height and the circle stays put. The 24px mirrors those compat paddings and goes with them. */
+.connection-info-row > .v-col:not(:first-child),
+.connection-info-row > [class*="v-col-"]:not(:first-child) {
+  transform: translateY(-24px);
+}
 </style>
