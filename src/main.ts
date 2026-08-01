@@ -38,6 +38,13 @@ async function main(): Promise<void> {
     // Add language code as a class to the body element
     window.document.body.classList.add(i18n.global.locale.value);
 
+    // The document must carry the real language, not index.html's static lang="en". The production
+    // build lowers Vuetify's logical properties (border-start-start-radius, …) into :lang()-guarded
+    // physical rules for older engines, so with a wrong lang the RTL branch never matches and RTL
+    // fields draw their rounded caps on the wrong side. Dev builds skip the lowering, which hides
+    // the bug there.
+    window.document.documentElement.lang = i18n.global.locale.value;
+
     // Apply custom CSS for scrollbar on the Windows platform
     if (vuetify.display.platform.value.win) {
       const styleElement = document.createElement('style');
