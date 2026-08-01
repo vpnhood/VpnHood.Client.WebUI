@@ -45,15 +45,7 @@
       "Quic"
     ],
     "customData": {
-      "firebaseOptions": {
-        "apiKey": null,
-        "authDomain": "vpnhood-client.firebaseapp.com",
-        "projectId": "vpnhood-client",
-        "storageBucket": "vpnhood-client.appspot.com",
-        "messagingSenderId": "394312577363",
-        "appId": "1:394312577363:web:bb45a00044ce6bf02471a6",
-        "measurementId": "G-ZF424EEVF4"
-      }
+      "firebaseOptions": null
     },
     "version": "8.1.835.0"
   },
@@ -172,7 +164,9 @@
       "clientPublicIpAddress": null,
       "createdTime": "2026-07-31T09:37:23.3308173Z",
       "channelProtocols": [
-        "Tcp"
+        "Tcp",
+        "Udp",
+        "Quic"
       ],
       "isTcpProxySupported": true,
       "isTcpPacketSupported": true

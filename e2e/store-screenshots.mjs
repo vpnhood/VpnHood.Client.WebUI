@@ -1,292 +1,284 @@
 #!/usr/bin/env node
 /**
- * Build App Store screenshots for the iOS Client from the running Windows client.
+ * Generate store screenshots for the SPA — every store from one engine, no VpnHood client required.
  *
- * iOS and Windows render the SAME SPA and gate the same features off — WinDevice and
- * IosDevice both report IsExcludeAppsSupported=false outside debug mode, and
- * WinDeviceUiProvider/IosDeviceUiProvider both extend NullDeviceUiProvider — so a Chromium
- * capture at iPhone/iPad metrics shows what the iOS build shows. The feature table this relies on
- * lives in VpnHood/fastlane/README.md; re-read it before adding a screen here.
+ * By default it serves the production build from dist/ and answers every /api/** call from
+ * e2e/store/fixture.json plus the per-platform and per-shot patches in e2e/store/project.mjs.
+ * Nothing connects, no VPN runs, no secrets are needed, and the same input always produces the same
+ * PNG — which is what makes this runnable on a CI box.
  *
- * Both device slots App Store Connect requires are produced, because Info.plist declares
- * UIDeviceFamily [1, 2] (universal). Drop 'ipad-13' from DEVICES if iPad support is ever removed.
- * Everything is portrait: IosSpaWebViewController pins the mask to Portrait unless AllowRotation,
- * which nothing sets.
+ * The fixture keeps the SHAPE of a real /api/app/config response so the mock cannot drift from the
+ * contract, with every identifying value replaced by synthetic demo data. Each PLATFORM overlays a
+ * capability patch (mirroring its IDevice/IDeviceUiProvider flags) so the SPA renders exactly what
+ * that OS build shows.
+ *
+ * A fork customises e2e/store/project.mjs (platforms, devices, shots, patches) and fixture.json.
+ * This file is the engine and should not need editing.
  *
  * Two phases, either runnable alone:
- *   capture  drives the SPA served by the client ITSELF (not the Vite dev server, where
- *            edgeToEdgeTopHeight/BottomHeight short-circuit to null under import.meta.env.DEV)
- *            and writes supersampled raw PNGs to raw/.
- *   frame    wraps each raw PNG in a device mockup and writes the store-sized finals to framed/.
- *            Every shipped screenshot is framed; raw/ is an intermediate, not a deliverable.
- *
- * Prerequisites:
- *   - The RELEASE Windows client on :4700. A Debug build sets AppConfigs.AppName to
- *     "VpnHood! Client (DEBUG)" — which HomePageHeader.vue prints into the header — and
- *     re-enables app splitting, putting the SPLIT APPS row back on the home screen.
- *   - The client CONNECTED, for shot 1.
- *   - Chromium once per machine: npx playwright install chromium
+ *   capture  drives the SPA and writes supersampled raw PNGs to raw/<platform>/
+ *   frame    produces the store-ready files in final/<platform>/ — a device mockup (iOS), the bare
+ *            capture at store size (Google Play), or a desktop window composite (Microsoft Store).
+ *            raw/ is an intermediate, not a deliverable.
  *
  * Usage:
- *   node e2e/store-screenshots.mjs                          both devices, capture + frame
- *   node e2e/store-screenshots.mjs --device ipad-13         one device
- *   node e2e/store-screenshots.mjs --only 1 --speed 120/90  one shot, meter pinned
- *   node e2e/store-screenshots.mjs --frame-only             re-frame whatever is in raw/
- *   node e2e/store-screenshots.mjs --api http://localhost:4701
+ *   npm run store:screenshots                              build + all platforms + install
+ *   node e2e/store-screenshots.mjs                         all platforms, mocked — the normal path
+ *   node e2e/store-screenshots.mjs --install               also copy each set into its installDir
+ *   node e2e/store-screenshots.mjs --platform android-phone,android-tv
+ *   node e2e/store-screenshots.mjs --platform ios --only 1 --device ipad-13
+ *   node e2e/store-screenshots.mjs --frame-only            re-frame without re-capturing
+ *   node e2e/store-screenshots.mjs --api http://127.0.0.1:4700   against a live Release client
+ *
+ * Chromium once per machine: npx playwright install --with-deps chromium
  */
-import { promises as fs } from 'fs';
+import { promises as fs, createReadStream } from 'fs';
 import http from 'http';
 import path from 'path';
 import url from 'url';
 import { chromium } from 'playwright';
+import { ANGLE, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
+const distDir = path.join(projectRoot, 'dist');
 const outDir = path.join(projectRoot, 'test-results', 'store-screenshots');
-const rawDir = path.join(outDir, 'raw');
-const framedDir = path.join(outDir, 'framed');
+const fixturePath = path.join(__dirname, 'store', 'fixture.json');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
 };
-const apiBase = argValue('--api', 'http://localhost:4700').replace(/\/$/, '');
+const liveApi = argValue('--api', null)?.replace(/\/$/, '') ?? null;
 const doCapture = !args.includes('--frame-only');
 const doFrame = !args.includes('--capture-only');
-// --only 1,4 restricts the run to those shot numbers, for iterating on one screen without
-// re-shooting the whole set.
+const doInstall = args.includes('--install');
 const only = argValue('--only', null)?.split(',').map(s => s.trim()).filter(Boolean) ?? null;
 
-// --speed 120/90 pins the home meter to those Mbps figures by rewriting sessionStatus.speed on the
-// way out of the API, so the SPA renders them itself rather than anything being painted onto the
-// image afterwards. The meter is a live gauge and a capture catches whatever instant it fires on;
-// this pins it to a representative figure instead. Only ever set it to throughput the product
-// actually sustains — it is a performance claim on a store page.
-// ConnectionInfo.vue renders `(speed * 10 / 1000000).toFixed(2)`, hence 1 Mbps == 100_000 here.
-const MBPS_TO_API = 100_000;
-const speedArg = argValue('--speed', null);
-const speed = speedArg
-  ? { received: Number(speedArg.split('/')[0]) * MBPS_TO_API, sent: Number(speedArg.split('/')[1]) * MBPS_TO_API }
-  : null;
-if (speedArg && (!Number.isFinite(speed.received) || !Number.isFinite(speed.sent)))
-  throw new Error(`--speed expects <down>/<up> in Mbps, e.g. 120/90 — got "${speedArg}".`);
-
 // Capture above the output scale: the app is drawn into a device narrower than the canvas, so it is
-// downscaled on the way in, and shooting at the output scale left visibly soft text.
+// downscaled on the way in, and shooting at the output scale leaves visibly soft text.
 const CAPTURE_SUPERSAMPLE = 2;
-// Chromium rasterizes a 3D-transformed subtree into a texture and then resamples it, which undoes
-// that sharpness again. Render the frame above size too and downsample once, deliberately.
+// Chromium rasterizes a 3D-transformed subtree into a texture and resamples it, which undoes that
+// sharpness again. Render the frame above size too and downsample once, deliberately.
 const FRAME_SUPERSAMPLE = 2;
 
-// Straight-on for the whole set. This is also the sharpest option available: with no rotation there
-// is no 3D subtree for Chromium to rasterize into a texture and resample, so the device edges and
-// the app's text stay at full resolution through the frame pass. A shot can still opt out with its
-// own `angle` if a tilt is ever wanted.
-const ANGLE = { rotateX: 0, rotateY: 0, rotateZ: 0 };
-
-/**
- * index.html sets no viewport-fit=cover and the SPA uses no env(safe-area-inset-*), so on iOS
- * WebKit insets the visual viewport to the safe area by itself: the page never draws under the
- * Dynamic Island or the home indicator. So capture into the safe rect and let the frame paint the
- * two bands. The safe insets are the numbers here assumed rather than measured — worth checking
- * against a Simulator capture if one is ever available.
- */
-const DEVICES = {
-  'iphone-6.9': {
-    label: 'iPhone 6.9"',
-    prefix: '',
-    cssWidth: 430, cssHeight: 932, scale: 3,   // -> 1290x2796
-    safeTop: 59, safeBottom: 34,
-    screenW: 344,
-    bezel: 9, outerRadius: 54, screenRadius: 46,
-    island: { width: 86, height: 25 },
-    statusFont: 11.5, statusPad: 26,
-    indicatorWidth: 105,
-    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 ' +
-      '(KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1',
-  },
-  'ipad-13': {
-    label: 'iPad 13"',
-    prefix: 'ipad_',
-    cssWidth: 1032, cssHeight: 1376, scale: 2, // -> 2064x2752
-    safeTop: 24, safeBottom: 20,
-    screenW: 800,
-    // Proportionally thicker bezel and squarer corners than the phone, and no Dynamic Island —
-    // an iPad wearing an iPhone's cutout is the tell that a mockup was never checked.
-    bezel: 20, outerRadius: 58, screenRadius: 40,
-    island: null,
-    statusFont: 9, statusPad: 34,
-    indicatorWidth: 224,
-    userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_5 like Mac OS X) AppleWebKit/605.1.15 ' +
-      '(KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1',
-  },
-};
+const platformArg = argValue('--platform', null);
+const platformKeys = platformArg ? platformArg.split(',').map(s => s.trim()) : Object.keys(PLATFORMS);
+for (const key of platformKeys)
+  if (!PLATFORMS[key])
+    throw new Error(`Unknown --platform "${key}". Known: ${Object.keys(PLATFORMS).join(', ')}.`);
 
 const deviceArg = argValue('--device', null);
-const deviceKeys = deviceArg ? deviceArg.split(',').map(s => s.trim()) : Object.keys(DEVICES);
-for (const key of deviceKeys)
-  if (!DEVICES[key])
-    throw new Error(`Unknown --device "${key}". Known: ${Object.keys(DEVICES).join(', ')}.`);
+const deviceFilter = deviceArg ? deviceArg.split(',').map(s => s.trim()) : null;
+if (deviceFilter) {
+  const known = platformKeys.flatMap(p => Object.keys(PLATFORMS[p].devices));
+  for (const key of deviceFilter)
+    if (!known.includes(key))
+      throw new Error(`Unknown --device "${key}" for the selected platform(s). Known: ${known.join(', ')}.`);
+}
 
-// A shot is either captured live from `route`, or reused from a static `source` PNG. The navigation
-// drawer is absent from both lists on purpose: it shows profile names and session identifiers.
-const SHOTS = [
-  { num: '1', route: '/', label: 'Home (connected)' },
-  {
-    num: '2', label: 'Servers',
-    // Reused from the Play Store set rather than captured live: the Servers page is identical on
-    // both platforms (nothing on it is platform-gated), and the Android capture carries sanitised
-    // demo profiles with masked IPs, where a live capture would put the real profile names, SIDs
-    // and server IPs of whichever machine ran the script onto the listing.
-    source: '../VpnHood/fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png',
-  },
-  { num: '3', route: '/protocols', label: 'Protocols' },
-  { num: '4', route: '/protocols/cloak-mode', label: 'Cloak Mode' },
-  {
-    num: '5', route: '/split-tunneling', label: 'Split Tunneling',
-    // The "IP Leak Risk" chip is an accurate in-app caution about a setting the user opts into
-    // (split tunneling exposes your IP to whatever you route around the tunnel — true of every
-    // VPN). Out of context on a store page it reads as a claim about the product instead. Hidden
-    // for the capture only; the app still shows it to anyone who turns the setting on.
-    hide: ['.v-chip.text-warning'],
-  },
-  { num: '6', route: '/dns', label: 'DNS' },
-];
-
-const selected = () => only ? SHOTS.filter(s => only.includes(s.num)) : SHOTS;
+const platformDevices = (platform) =>
+  Object.entries(platform.devices).filter(([key]) => !deviceFilter || deviceFilter.includes(key)).map(([, d]) => d);
+const selected = (platform) => only ? platform.shots.filter(s => only.includes(s.num)) : platform.shots;
 const fileName = (device, shot) => `${device.prefix}${shot.num}_en-US.png`;
+const finalSize = (device) => device.frame === 'desktop'
+  ? { width: device.canvas.width, height: device.canvas.height }
+  : { width: device.cssWidth * device.scale, height: device.cssHeight * device.scale };
 
-// node:http instead of fetch, matching smoke.mjs: Node 24's undici intermittently hits a parser
-// assertion against these local servers and crashes the process instead of failing the probe.
-function request(method, urlToCall) {
-  return new Promise((resolve, reject) => {
-    const req = http.request(urlToCall, { method, timeout: 5000 }, (res) => {
-      let data = '';
-      res.on('data', (chunk) => data += chunk);
-      res.on('end', () => resolve({ status: res.statusCode ?? 0, body: data }));
-    });
-    req.on('timeout', () => req.destroy(new Error(`Timed out: ${method} ${urlToCall}`)));
-    req.on('error', reject);
-    req.end();
+/** Patches name only the fields that matter, so they merge into the fixture rather than replace it. */
+function deepMerge(base, patch) {
+  if (Array.isArray(patch) || patch === null || typeof patch !== 'object') return patch;
+  const merged = { ...base };
+  for (const [key, value] of Object.entries(patch))
+    merged[key] = key in merged ? deepMerge(merged[key], value) : value;
+  return merged;
+}
+
+const MIME = {
+  '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
+  '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+  '.ico': 'image/x-icon', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf',
+};
+
+/**
+ * Serves the production build. Deep links fall back to index.html the same way the client's own web
+ * server does (VpnHoodAppWebServer.DefaultRoute), so /protocols/cloak-mode resolves.
+ *
+ * dist/ specifically, never the Vite dev server: edgeToEdge* short-circuit to null under
+ * import.meta.env.DEV, and the split-CSS layer order that governs font sizing only applies to a
+ * production build.
+ */
+async function serveSpa() {
+  const server = http.createServer(async (req, res) => {
+    const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+    const candidate = path.join(distDir, pathname);
+    const file = await fs.stat(candidate).then(s => s.isFile() ? candidate : null).catch(() => null);
+    const served = file ?? path.join(distDir, 'index.html');
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(served)] ?? 'application/octet-stream' });
+    createReadStream(served).pipe(res);
+  });
+  await new Promise((resolve, reject) => server.listen(0, '127.0.0.1', resolve).on('error', reject));
+  return { origin: `http://127.0.0.1:${server.address().port}`, close: () => server.close() };
+}
+
+/**
+ * Answers /api/** from the platform-patched fixture. Anything the project has not declared is
+ * reported rather than quietly 404'd, so a screen that starts calling a new endpoint surfaces as a
+ * warning instead of a silently broken screenshot.
+ */
+async function mockApi(page, fixture, shot) {
+  const state = shot.patch ? deepMerge(fixture, shot.patch) : fixture;
+  const unhandled = new Set();
+
+  await page.route('**/api/**', async (route) => {
+    const request = route.request();
+    const key = `${request.method()} ${new URL(request.url()).pathname}`;
+    const handler = ROUTES[key];
+    if (!handler) {
+      unhandled.add(key);
+      return route.fulfill({ status: 200, contentType: 'application/json', body: 'null' });
+    }
+    return route.fulfill({ status: 200, contentType: 'application/json', json: handler(state) });
+  });
+
+  return unhandled;
+}
+
+/** Layers the live client's real responses with the same per-shot patch the mock would apply. */
+async function patchLiveApi(page, shot) {
+  if (!shot.patch) return;
+  await page.route('**/api/app/**', async (route) => {
+    const response = await route.fetch();
+    const body = await response.json().catch(() => null);
+    if (!body) return route.fulfill({ response });
+    // /api/app/state is the AppState itself; /api/app/config nests it under .state.
+    const patch = body.connectionState !== undefined ? shot.patch.state : shot.patch;
+    return route.fulfill({ response, json: deepMerge(body, patch ?? {}) });
   });
 }
 
-async function readConfig() {
-  const res = await request('GET', `${apiBase}/api/app/config`).catch(() => null);
-  if (!res || res.status < 200 || res.status >= 400)
-    throw new Error(
-      `The client API is not answering at ${apiBase}/api/app/config.\n` +
-      'Start the RELEASE Windows client (it serves the SPA and the API on :4700).');
-  return JSON.parse(res.body);
-}
+async function captureDevice(browser, platform, device, origin, fixture, rawDir) {
+  const unhandledAll = new Set();
 
-/** Fails loudly on the two states that silently poison a whole capture run. */
-function assertCaptureWorthy(config) {
-  const features = config.features ?? {};
-  if (/debug/i.test(features.appName ?? ''))
-    throw new Error(
-      `features.appName is "${features.appName}" — this is a Debug build and its name is ` +
-      'rendered into the header of every screenshot. Rebuild in Release.');
-  if (features.isExcludeAppsSupported || features.isIncludeAppsSupported)
-    throw new Error(
-      'This build reports app-splitting as supported, so the home screen will show a SPLIT APPS ' +
-      'row that the iOS build hides (WinDevice enables it in debug mode). Rebuild in Release.');
-}
-
-async function captureDevice(browser, device) {
-  // Opened on first live shot, so a run of only static-source shots needs neither a browser page
-  // nor the client running.
-  let context = null;
-  let page = null;
-  const openPage = async () => {
-    context = await browser.newContext({
-      viewport: { width: device.cssWidth, height: device.cssHeight - device.safeTop - device.safeBottom },
-      deviceScaleFactor: device.scale * CAPTURE_SUPERSAMPLE,
-      isMobile: true,
-      hasTouch: true,
-      userAgent: device.userAgent,
-    });
-    page = await context.newPage();
-
-    // Both endpoints carry the state the meter reads: /api/app/state is the AppState itself, while
-    // /api/app/config nests it under .state for the initial load.
-    if (speed) {
-      await page.route(/\/api\/app\/(state|config|configure)(\?|$)/, async (route) => {
-        const response = await route.fetch();
-        const body = await response.json().catch(() => null);
-        const state = body?.sessionStatus ? body : body?.state;
-        if (!state?.sessionStatus?.speed)
-          return route.fulfill({ response });
-        state.sessionStatus.speed = { ...state.sessionStatus.speed, ...speed };
-        return route.fulfill({ response, json: body });
-      });
-    }
-  };
-
-  for (const shot of selected()) {
+  for (const shot of selected(platform)) {
     // A static source is device-independent: the frame pass fits and crops it to each device's
-    // content box, so the same PNG serves both slots.
+    // content box, so one PNG serves every slot.
     if (shot.source) {
       await fs.copyFile(path.resolve(projectRoot, shot.source), path.join(rawDir, fileName(device, shot)));
       console.log(`reused    ${device.label.padEnd(11)} ${fileName(device, shot)}  ${shot.label}  <- ${path.basename(shot.source)}`);
       continue;
     }
 
-    if (!page) await openPage();
-    await page.goto(apiBase + shot.route, { waitUntil: 'load', timeout: 30000 });
+    // A context per shot, because the API patch differs per shot and the SPA reads it at startup.
+    const context = await browser.newContext({
+      viewport: { width: device.cssWidth, height: device.cssHeight - device.safeTop - device.safeBottom },
+      deviceScaleFactor: device.scale * CAPTURE_SUPERSAMPLE,
+      isMobile: device.isMobile ?? true,
+      hasTouch: device.hasTouch ?? true,
+      userAgent: device.userAgent,
+      reducedMotion: 'reduce', // no half-played transitions, and one less source of run-to-run drift
+    });
+    const page = await context.newPage();
+
+    // A broken mock shows up as an error dialog painted over the screenshot, which is easy to ship
+    // by accident. Surface it as a failure instead of leaving it to whoever eyeballs the PNG.
+    const failures = [];
+    const firstLine = (text) => String(text).split(/\r?\n/)[0];
+    page.on('pageerror', (err) => failures.push(firstLine(err)));
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') failures.push(firstLine(msg.text()));
+    });
+
+    const unhandled = liveApi ? (await patchLiveApi(page, shot), new Set()) : await mockApi(page, fixture, shot);
+
+    await page.goto(origin + shot.route, { waitUntil: 'load', timeout: 30000 });
     await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
-    // The app mounts only after its async startup (config round-trip + locale chunk), so wait on
+    // The app mounts only after its async startup (configure round-trip + locale chunk), so wait on
     // the condition rather than a fixed delay.
     await page.waitForFunction(() => document.querySelector('#app')?.children.length > 0,
       { timeout: 15000 }).catch(() => {});
-    await page.waitForTimeout(600); // let transitions and the speed meter settle
+    await page.waitForTimeout(500);
+
     if (shot.hide?.length) {
       const selector = shot.hide.join(', ');
       // Fail rather than quietly ship the element: a Vuetify upgrade that renames these classes
-      // would otherwise silently put the hidden chip back into the listing.
+      // would otherwise silently put a hidden chip back into the listing.
       const matched = await page.locator(selector).count();
       if (matched === 0)
         throw new Error(`${fileName(device, shot)}: nothing matched "${selector}", so it was not hidden.`);
       await page.addStyleTag({ content: `${selector} { display: none !important; }` });
       await page.waitForTimeout(150); // the row reflows without the chip
     }
+
+    // The SPA routes thrown errors through ErrorHandler.processError into a dialog rather than the
+    // console, so a TS regression can produce a perfectly "successful" run with an error panel
+    // painted over the screen. No store screenshot is ever meant to have a dialog open, so treat any
+    // visible overlay as a failure — that catches app errors, review prompts and anything added later.
+    const openDialog = await page.evaluate(() => {
+      const visible = [...document.querySelectorAll('.v-overlay--active, .v-dialog')]
+        .find(el => el.getBoundingClientRect().width > 0 && getComputedStyle(el).visibility !== 'hidden');
+      return visible ? visible.innerText.replace(/\s+/g, ' ').trim().slice(0, 300) : null;
+    });
+    if (openDialog)
+      failures.push(`a dialog was open over the screen: "${openDialog}"`);
+
+    if (failures.length)
+      throw new Error(
+        `${fileName(device, shot)}: the app errored while rendering, so the capture would show a ` +
+        'dialog over the screen.\n  ' + [...new Set(failures)].slice(0, 5).join('\n  '));
+
     await page.screenshot({ path: path.join(rawDir, fileName(device, shot)) });
     console.log(`captured  ${device.label.padEnd(11)} ${fileName(device, shot)}  ${shot.label}`);
+    unhandled.forEach(u => unhandledAll.add(u));
+    await context.close();
   }
 
-  if (context) await context.close();
+  return unhandledAll;
 }
 
 /**
- * The mockup is drawn in CSS rather than composited from an image asset: no binary to keep in the
- * repo, and the bezel geometry stays editable per device. Everything is inlined — the page never
- * makes a request.
+ * The mockups are drawn in CSS rather than composited from image assets: no binary to keep in the
+ * repo, and the geometry stays editable per device. Everything is inlined — the page never makes a
+ * request, which also means it renders identically on a CI box.
  */
-function framePage(dataUri, device, shot) {
+function phoneFramePage(dataUri, device, shot, fontDataUri) {
   const angle = shot.angle ?? ANGLE;
   const screenH = Math.round(device.screenW * (device.cssHeight / device.cssWidth));
   const bandScale = screenH / device.cssHeight;
   const topBand = +(device.safeTop * bandScale).toFixed(2);
   const bottomBand = +(device.safeBottom * bandScale).toFixed(2);
-  const island = device.island
-    ? `<div class="island"></div>`
-    : '';
   const islandCss = device.island ? `
   .island {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     width: ${device.island.width}px; height: ${device.island.height}px;
     border-radius: ${device.island.height / 2}px; background: #000;
   }` : '';
+  // An Android camera cutout is a centred punch hole, not an island.
+  const punchCss = device.punchHole ? `
+  .punch {
+    position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+    width: ${device.punchHole.size}px; height: ${device.punchHole.size}px;
+    border-radius: 50%; background: #000;
+  }` : '';
+  // The status cluster follows the OS: iOS is signal+battery; Android leads with the wifi fan.
+  const android = device.statusStyle === 'android';
 
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
+  /* Inlined, never fetched. An earlier version pointed the frame page at the SPA origin so this
+     face would resolve, which mounted the whole Vue app; setContent then swapped the document out
+     from under it and the app's pending timers re-rendered its dialogs into the frame — unstyled,
+     since Vuetify's CSS went with the old document. The frame must never load the app. */
+  @font-face { font-family: 'StoreFrame'; src: url(${fontDataUri}) format('truetype'); font-weight: 600; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: ${device.cssWidth}px; height: ${device.cssHeight}px; overflow: hidden; }
   body {
     display: flex; align-items: center; justify-content: center;
     background: radial-gradient(120% 80% at 50% 0%, #1c3fb0 0%, #10206b 45%, #070f38 100%);
-    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    /* The app's own face, inlined above: -apple-system/Segoe UI resolve to something different on a
+       Linux CI box, which would make the status bar drift between machines. */
+    font-family: 'StoreFrame', sans-serif;
   }
   .stage { perspective: ${device.cssWidth * 3.5}px; perspective-origin: 50% 45%; }
   .phone {
@@ -330,11 +322,15 @@ function framePage(dataUri, device, shot) {
     border: 1px solid rgba(255,255,255,.65); border-radius: 3px; padding: 1.5px;
   }
   .battery span { display: block; width: 100%; height: 100%; background: #fff; border-radius: 1px; }
+  .wifi {
+    width: ${device.statusFont * 0.95}px; height: ${device.statusFont * 0.8}px;
+    background: #fff; clip-path: polygon(50% 100%, 0 18%, 100% 18%);
+  }
   .indicator {
     position: absolute; bottom: ${bottomBand * 0.3}px; left: 50%; transform: translateX(-50%);
     width: ${device.indicatorWidth}px; height: ${Math.max(3, bottomBand * 0.17)}px;
     border-radius: 2px; background: rgba(255, 255, 255, .85);
-  }${islandCss}
+  }${islandCss}${punchCss}
 </style></head>
 <body>
   <div class="stage">
@@ -344,11 +340,12 @@ function framePage(dataUri, device, shot) {
           <div class="status">
             <span>9:41</span>
             <span class="right">
+              ${android ? '<span class="wifi"></span>' : ''}
               <span class="bars"><i></i><i></i><i></i><i></i></span>
               <span class="battery"><span></span></span>
             </span>
           </div>
-          ${island}
+          ${device.island ? '<div class="island"></div>' : ''}${device.punchHole ? '<div class="punch"></div>' : ''}
         </div>
         <img id="shot" src="${dataUri}" alt="">
         <div class="band bottom" id="bandBottom"><div class="indicator"></div></div>
@@ -356,8 +353,8 @@ function framePage(dataUri, device, shot) {
     </div>
   </div>
 <script>
-  // Sample the capture's own top and bottom edge so the bands continue the app's background
-  // instead of guessing a colour that drifts whenever the theme changes.
+  // Sample the capture's own top and bottom edge so the bands continue the app's background instead
+  // of guessing a colour that drifts whenever the theme changes.
   const img = document.getElementById('shot');
   const paint = () => {
     const canvas = document.createElement('canvas');
@@ -379,12 +376,88 @@ function framePage(dataUri, device, shot) {
 }
 
 /**
- * Resize through a canvas at imageSmoothingQuality 'high' rather than letting the screenshot land
- * at the output size directly — a deliberate 2:1 downsample of an already-rasterized image beats
- * Chromium's compositor filtering of a live 3D layer.
+ * The Microsoft Store composite: the app window on a brand-gradient backdrop. The backdrop is
+ * deliberately NOT a Windows wallpaper — that artwork is Microsoft's, not ours to put in a listing.
+ * The chrome mirrors the real shell: a title bar in the app's own background colour (sampled from
+ * the capture, as VpnHoodWpfSpaMainWindow tints its title bar), a minimize button, a disabled
+ * maximize (the window is ResizeMode.CanMinimize), and a close button.
  */
-async function downsample(page, buffer, width, height) {
-  const base64 = await page.evaluate(async ({ src, w, h }) => {
+function desktopFramePage(dataUri, device, fontDataUri) {
+  const { width, height, windowWidth, titleBar } = device.canvas;
+  const contentH = Math.round(windowWidth * (device.cssHeight / device.cssWidth));
+
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  @font-face { font-family: 'StoreFrame'; src: url(${fontDataUri}) format('truetype'); font-weight: 600; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: ${width}px; height: ${height}px; overflow: hidden; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(120% 80% at 50% 0%, #1c3fb0 0%, #10206b 45%, #070f38 100%);
+    font-family: 'StoreFrame', sans-serif;
+  }
+  .window {
+    width: ${windowWidth}px; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, .6), 0 8px 22px rgba(0, 0, 0, .4);
+  }
+  .titlebar {
+    height: ${titleBar}px; display: flex; align-items: center; justify-content: space-between;
+    padding-left: 14px; background: #06124b;
+  }
+  .titlebar .title { font-size: 12px; font-weight: 600; letter-spacing: .2px; color: rgba(255, 255, 255, .88); }
+  .caption { display: flex; height: 100%; }
+  .caption .btn { width: 46px; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .minimize i { display: block; width: 10px; height: 1px; background: #fff; }
+  .maximize i { display: block; width: 9px; height: 9px; border: 1px solid #fff; opacity: .35; }
+  .close { position: relative; }
+  .close i, .close i::after {
+    display: block; width: 13px; height: 1px; background: #fff; transform: rotate(45deg);
+  }
+  .close i::after { content: ''; transform: rotate(90deg); }
+  #shot {
+    display: block; width: ${windowWidth}px; height: ${contentH}px;
+    object-fit: cover; object-position: top center;
+  }
+</style></head>
+<body>
+  <div class="window">
+    <div class="titlebar" id="titlebar">
+      <span class="title">${device.windowTitle}</span>
+      <span class="caption">
+        <span class="btn minimize"><i></i></span>
+        <span class="btn maximize"><i></i></span>
+        <span class="btn close"><i></i></span>
+      </span>
+    </div>
+    <img id="shot" src="${dataUri}" alt="">
+  </div>
+<script>
+  // The real title bar is tinted WindowBackgroundColor, which is also the app's page background —
+  // so sample the capture's own top edge rather than hard-coding a colour that drifts with themes.
+  const img = document.getElementById('shot');
+  const paint = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const [r, g, b] = ctx.getImageData(Math.floor(canvas.width / 2), 1, 1, 1).data;
+    document.getElementById('titlebar').style.background = \`rgb(\${r}, \${g}, \${b})\`;
+    window.__framed = true;
+  };
+  if (img.complete) paint(); else img.addEventListener('load', paint);
+</script>
+</body></html>`;
+}
+
+/**
+ * Resize through a canvas at imageSmoothingQuality 'high' rather than letting the screenshot land at
+ * the output size directly — a deliberate 2:1 downsample of an already-rasterized image beats
+ * Chromium's compositor filtering of a live layer. `cover: true` scale-crops instead of stretching
+ * (top-aligned, matching the frames' object-position), for static sources whose aspect differs.
+ */
+async function downsample(page, buffer, width, height, cover = false) {
+  const base64 = await page.evaluate(async ({ src, w, h, cover }) => {
     const img = new Image();
     img.src = src;
     await img.decode();
@@ -394,63 +467,155 @@ async function downsample(page, buffer, width, height) {
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(img, 0, 0, w, h);
+    if (cover) {
+      const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+      const dw = img.naturalWidth * scale;
+      const dh = img.naturalHeight * scale;
+      ctx.drawImage(img, (w - dw) / 2, 0, dw, dh);
+    }
+    else {
+      ctx.drawImage(img, 0, 0, w, h);
+    }
     return canvas.toDataURL('image/png').split(',')[1];
-  }, { src: `data:image/png;base64,${buffer.toString('base64')}`, w: width, h: height });
+  }, { src: `data:image/png;base64,${buffer.toString('base64')}`, w: width, h: height, cover });
   return Buffer.from(base64, 'base64');
 }
 
-async function frameDevice(browser, resizer, device) {
-  const page = await browser.newPage({
-    viewport: { width: device.cssWidth, height: device.cssHeight },
-    deviceScaleFactor: device.scale * FRAME_SUPERSAMPLE,
-  });
+async function frameDevice(browser, resizer, platform, device, fontDataUri, rawDir, finalDir) {
+  const { width: outW, height: outH } = finalSize(device);
+  const framePage = device.frame === 'phone' || device.frame === 'desktop'
+    ? await browser.newPage({
+      viewport: device.frame === 'desktop'
+        ? { width: device.canvas.width, height: device.canvas.height }
+        : { width: device.cssWidth, height: device.cssHeight },
+      deviceScaleFactor: (device.frame === 'desktop' ? 1 : device.scale) * FRAME_SUPERSAMPLE,
+    })
+    : null;
 
   let count = 0;
-  for (const shot of selected()) {
+  for (const shot of selected(platform)) {
     const name = fileName(device, shot);
     const png = await fs.readFile(path.join(rawDir, name)).catch(() => null);
     if (!png) {
-      console.log(`skipped   ${device.label.padEnd(11)} ${name}  (not in raw/)`);
+      console.log(`skipped   ${device.label.padEnd(11)} ${name}  (not in raw/${path.basename(rawDir)})`);
       continue;
     }
-    await page.setContent(framePage(`data:image/png;base64,${png.toString('base64')}`, device, shot),
-      { waitUntil: 'load' });
-    await page.waitForFunction(() => window.__framed === true, { timeout: 10000 });
-    const supersampled = await page.screenshot();
-    await fs.writeFile(path.join(framedDir, name),
-      await downsample(resizer, supersampled, device.cssWidth * device.scale, device.cssHeight * device.scale));
-    console.log(`framed    ${device.label.padEnd(11)} ${name}  ${shot.label}`);
+
+    if (framePage) {
+      const html = device.frame === 'desktop'
+        ? desktopFramePage(`data:image/png;base64,${png.toString('base64')}`, device, fontDataUri)
+        : phoneFramePage(`data:image/png;base64,${png.toString('base64')}`, device, shot, fontDataUri);
+      await framePage.setContent(html, { waitUntil: 'load' });
+      await framePage.waitForFunction(() => window.__framed === true, { timeout: 10000 });
+      const supersampled = await framePage.screenshot();
+      await fs.writeFile(path.join(finalDir, name), await downsample(resizer, supersampled, outW, outH));
+    }
+    else {
+      // Bare (Google Play style): the supersampled capture lands at store size through one
+      // deliberate high-quality resize; a static source is cover-fitted the same way the frames do.
+      await fs.writeFile(path.join(finalDir, name), await downsample(resizer, png, outW, outH, true));
+    }
+    console.log(`finalized ${device.label.padEnd(11)} ${name}  ${shot.label}`);
     count++;
   }
 
-  await page.close();
+  await framePage?.close();
   return count;
 }
 
-if (doCapture) {
-  // Only reach for the client when something actually has to be captured from it.
-  if (selected().some(shot => !shot.source))
-    assertCaptureWorthy(await readConfig());
-  await fs.mkdir(rawDir, { recursive: true });
-  if (speed)
-    console.log(`speed override: down ${speed.received / MBPS_TO_API} Mbps, up ${speed.sent / MBPS_TO_API} Mbps`);
+/**
+ * Copies a platform's finals into its installDir and prunes numbered files the set no longer
+ * produces — so a shrunk set (e.g. TV going 8 -> 6) cannot leave stale screenshots for the
+ * uploader to ship. The expected-name list always comes from the FULL shot list, never the --only
+ * filter, so a partial run installs what it produced without deleting the rest.
+ */
+async function installPlatform(platform, devices, finalDir) {
+  const destDir = path.resolve(projectRoot, platform.installDir);
+  await fs.mkdir(destDir, { recursive: true });
+  let copied = 0;
 
-  const browser = await chromium.launch().catch((err) => {
-    throw new Error(`Could not launch Chromium — run 'npx playwright install chromium' once.\n${err.message.split('\n')[0]}`);
-  });
-  for (const key of deviceKeys) await captureDevice(browser, DEVICES[key]);
-  await browser.close();
+  for (const device of devices) {
+    const expected = new Set(platform.shots.map(shot => fileName(device, shot)));
+
+    for (const shot of platform.shots) {
+      const name = fileName(device, shot);
+      const from = path.join(finalDir, name);
+      const to = path.join(destDir, name);
+      // A static source that IS the installed file must not be overwritten with its own re-encode:
+      // the pixels are identical and the byte churn would dirty every diff.
+      if (shot.source && path.resolve(projectRoot, shot.source) === to) {
+        console.log(`kept      ${device.label.padEnd(11)} ${name}  (source is the installed file)`);
+        continue;
+      }
+      if (!await fs.stat(from).catch(() => null)) continue;
+      await fs.copyFile(from, to);
+      copied++;
+    }
+
+    // Prune by this device's own naming pattern, so the iPhone pass cannot touch ipad_ files.
+    const pattern = new RegExp(`^${device.prefix}\\d+_en-US\\.png$`);
+    for (const existing of await fs.readdir(destDir)) {
+      if (!pattern.test(existing) || expected.has(existing)) continue;
+      await fs.rm(path.join(destDir, existing));
+      console.log(`pruned    ${device.label.padEnd(11)} ${existing}  (no longer in the set)`);
+    }
+  }
+
+  console.log(`installed ${copied} file(s) -> ${path.relative(projectRoot, destDir)}`);
 }
 
-if (doFrame) {
-  await fs.mkdir(framedDir, { recursive: true });
-  const browser = await chromium.launch();
-  const resizer = await browser.newPage();
-  let total = 0;
-  for (const key of deviceKeys) total += await frameDevice(browser, resizer, DEVICES[key]);
-  await browser.close();
+const selectedPlatforms = platformKeys.map(key => ({ key, ...PLATFORMS[key] }));
+const needsSpa = doCapture && selectedPlatforms.some(p => selected(p).some(shot => !shot.source));
+if (needsSpa && !liveApi && !await fs.stat(path.join(distDir, 'index.html')).catch(() => null))
+  throw new Error(`No production build at ${path.relative(projectRoot, distDir)}. Run 'npm run build' first.`);
 
-  const sizes = deviceKeys.map(k => `${DEVICES[k].label} ${DEVICES[k].cssWidth * DEVICES[k].scale}x${DEVICES[k].cssHeight * DEVICES[k].scale}`);
-  console.log(`\n${total} framed screenshot(s) in ${path.relative(projectRoot, framedDir)} — ${sizes.join(', ')}`);
+const spa = needsSpa && !liveApi ? await serveSpa() : null;
+const origin = liveApi ?? spa?.origin ?? null;
+const baseFixture = liveApi ? null : JSON.parse(await fs.readFile(fixturePath, 'utf8'));
+console.log(liveApi ? `source: live client at ${liveApi}` : `source: mocked API over ${path.relative(projectRoot, distDir)}`);
+
+const browser = await chromium.launch().catch((err) => {
+  throw new Error(`Could not launch Chromium — run 'npx playwright install --with-deps chromium' once.\n${err.message.split('\n')[0]}`);
+});
+
+// Let the project synthesize fixture data that needs a renderer (e.g. demo app icons) before any
+// capture runs. Mock mode only — a live client answers /api/** itself.
+if (!liveApi && doCapture)
+  await prepare?.(browser, baseFixture);
+
+for (const platform of selectedPlatforms) {
+  const rawDir = path.join(outDir, 'raw', platform.key);
+  const finalDir = path.join(outDir, 'final', platform.key);
+  const devices = platformDevices(platform);
+  if (devices.length === 0) continue;
+  console.log(`\n=== ${platform.label} (${platform.key}) ===`);
+
+  if (doCapture) {
+    await fs.mkdir(rawDir, { recursive: true });
+    const fixture = baseFixture ? deepMerge(baseFixture, platform.patch ?? {}) : null;
+    const unhandled = new Set();
+    for (const device of devices)
+      (await captureDevice(browser, platform, device, origin, fixture, rawDir)).forEach(u => unhandled.add(u));
+    if (unhandled.size)
+      console.log(`unmocked endpoints (answered null, add to ROUTES in e2e/store/project.mjs):\n  ${[...unhandled].join('\n  ')}`);
+  }
+
+  if (doFrame) {
+    await fs.mkdir(finalDir, { recursive: true });
+    const resizer = await browser.newPage();
+    const font = await fs.readFile(path.join(projectRoot, 'src', 'assets', 'fonts', 'Poppins-SemiBold.ttf'));
+    const fontDataUri = `data:font/ttf;base64,${font.toString('base64')}`;
+    let total = 0;
+    for (const device of devices)
+      total += await frameDevice(browser, resizer, platform, device, fontDataUri, rawDir, finalDir);
+    await resizer.close();
+    const sizes = devices.map(d => `${d.label} ${finalSize(d).width}x${finalSize(d).height}`);
+    console.log(`${total} screenshot(s) in ${path.relative(projectRoot, finalDir)} — ${sizes.join(', ')}`);
+  }
+
+  if (doInstall && platform.installDir)
+    await installPlatform(platform, devices, finalDir);
 }
+
+await browser.close();
+spa?.close();

@@ -15,7 +15,8 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "i18n:unused": "node scripts/find-unused-i18n-keys.mjs",
-    "test:e2e": "node e2e/smoke.mjs"
+    "test:e2e": "node e2e/smoke.mjs",
+    "store:screenshots": "npm run build && node e2e/store-screenshots.mjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
