@@ -23,18 +23,31 @@ const projectRoot = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)
 export const ANGLE = { rotateX: 0, rotateY: 0, rotateZ: 0 };
 
 /**
- * Locales generated for every platform. `tag` is the filename suffix in test-results; `culture` is
- * the SPA language, applied through state.currentUiCultureInfo like the client does. fa is Persian
- * — it exercises the whole RTL path (rtl.css, IranSans faces, mirrored layouts).
+ * Locales generated for every platform — every language the SPA ships (src/locales). `tag` is the
+ * Google Play locale code, which is also the Microsoft Store folder and the filename suffix in
+ * test-results; `culture` is the SPA language, applied through state.currentUiCultureInfo like the
+ * client does. fa and ar exercise the whole RTL path (rtl.css, mirrored layouts).
  *
  * `--install` writes each locale into its own store directory (the <locale> token in installDir),
- * named by `tag` unless `stores` overrides it for that platform's store — null meaning the store
- * has no such locale, so that set is skipped there entirely.
+ * named by `tag` unless `stores` overrides it for that platform's store — App Store Connect spells
+ * several codes differently, and null means the store has no such locale, so that set is skipped
+ * there entirely.
  */
 export const LOCALES = [
   { tag: 'en-US', culture: 'en' },
+  { tag: 'ar', culture: 'ar', stores: { appStore: 'ar-SA' } },
+  { tag: 'de-DE', culture: 'de' },
+  { tag: 'es-ES', culture: 'es' },
   // App Store Connect offers no Persian locale at all, so the fa set cannot ship there.
   { tag: 'fa', culture: 'fa', stores: { appStore: null } },
+  { tag: 'fr-FR', culture: 'fr' },
+  { tag: 'hi-IN', culture: 'hi', stores: { appStore: 'hi' } },
+  { tag: 'it-IT', culture: 'it', stores: { appStore: 'it' } },
+  { tag: 'pt-BR', culture: 'pt-BR' },
+  { tag: 'pt-PT', culture: 'pt' },
+  { tag: 'ru-RU', culture: 'ru', stores: { appStore: 'ru' } },
+  { tag: 'tr-TR', culture: 'tr', stores: { appStore: 'tr' } },
+  { tag: 'zh-CN', culture: 'zh', stores: { appStore: 'zh-Hans' } },
 ];
 
 /**
