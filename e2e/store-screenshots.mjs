@@ -31,6 +31,7 @@
  *   node e2e/store-screenshots.mjs --frame-only            re-frame without re-capturing
  *   node e2e/store-screenshots.mjs --locale fa             one locale (default: all in LOCALES)
  *   node e2e/store-screenshots.mjs --api http://127.0.0.1:4700   against a live Release client
+ *   node e2e/store-screenshots.mjs --project ../Vpnhood.App.Connect/store/project.mjs
  *
  * Chromium once per machine: npx playwright install --with-deps chromium
  */
@@ -39,19 +40,25 @@ import http from 'http';
 import path from 'path';
 import url from 'url';
 import { chromium } from 'playwright';
-import { ANGLE, INSTALL_ROOT, LOCALES, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
 const distDir = path.join(projectRoot, 'dist');
 const outDir = path.join(projectRoot, 'test-results', 'store-screenshots');
-const fixturePath = path.join(__dirname, 'store', 'fixture.json');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
 };
+
+// The per-app configuration. The built-in ./store/project.mjs describes VpnHood! CLIENT (and
+// doubles as this repo's e2e config); --project loads another app's config instead — a store
+// repo's own store/project.mjs, resolved against the working directory. That app's fixture.json
+// is expected next to its project file.
+const projectFile = path.resolve(argValue('--project', null) ?? path.join(__dirname, 'store', 'project.mjs'));
+const { ANGLE, INSTALL_ROOT, LOCALES, PLATFORMS, ROUTES, prepare } = await import(url.pathToFileURL(projectFile).href);
+const fixturePath = path.join(path.dirname(projectFile), 'fixture.json');
 const liveApi = argValue('--api', null)?.replace(/\/$/, '') ?? null;
 const doCapture = !args.includes('--frame-only');
 const doFrame = !args.includes('--capture-only');

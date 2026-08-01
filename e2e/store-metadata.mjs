@@ -6,15 +6,21 @@
  * store locale — never hand-edited and never fed to a translator. The single source of truth is
  * store-i18n/ in the store-asset repo:
  *
- *   store-i18n/locales.json         the app's store locales; first entry is the source language
- *   store-i18n/store.<tag>.json     the texts, one file per locale, per-store sections
+ *   store-i18n/locales.json           the app's store locales; first entry is the source language
+ *   store-i18n/<locale>/store.json    the texts — a FLAT map of "<store>.<field>" keys
+ *                                     ("android.title", "ios.keywords", …) to strings
  *
- * Only store.<source>.json is written by humans; vhtranslator generates every other locale file
- * (the same rule as the SPA's en.json). This compiler fans them out into the fastlane trees and
- * FAILS LOUDLY on what hand-kept txt files get wrong silently: store character limits (translations
- * overflow English-sized fields), per-store locale availability (App Store Connect has no Persian),
- * missing or unknown fields (a typo in a key), and platform names inside App Store copy
- * (Guideline 2.3.10 — naming Android or Windows in iOS metadata is a rejection).
+ * The layout is vhtranslator's language-folder convention on purpose: only the source folder's
+ * file is written by humans, `vhtranslator` generates every sibling locale folder (the same rule
+ * as the SPA's en.json), and its JSON format is a flat key -> string map — which is why the
+ * sections are folded into dotted key names instead of nested objects.
+ *
+ * This compiler fans the locale files out into the fastlane trees and FAILS LOUDLY on what
+ * hand-kept txt files get wrong silently: store character limits (translations overflow
+ * English-sized fields), per-store locale availability (App Store Connect has no Persian),
+ * missing or unknown keys (a typo, or a translation drifting from the source), and platform
+ * names inside App Store copy (Guideline 2.3.10 — naming Android or Windows in iOS metadata is
+ * a rejection).
  *
  * Per-version files (changelogs/, release_notes.txt) belong to the release pipeline, and
  * screenshots to store-screenshots.mjs — this tool never touches either. Non-translated
@@ -25,7 +31,7 @@
  *   node e2e/store-metadata.mjs                              compile into INSTALL_ROOT (project.mjs)
  *   node e2e/store-metadata.mjs --root ../Vpnhood.App.Client
  *   node e2e/store-metadata.mjs --check                      validate only, write nothing
- *   node e2e/store-metadata.mjs --extract                    one-time: build store.<source>.json
+ *   node e2e/store-metadata.mjs --extract                    one-time: build <source>/store.json
  *                                                            from the existing fastlane txt files
  */
 import { promises as fs } from 'fs';
@@ -95,52 +101,62 @@ async function readLocales() {
   return locales;
 }
 
-/** One-time migration (and a fork's starting point): existing fastlane txt -> store.<source>.json. */
+/** One-time migration (and a fork's starting point): existing fastlane txt -> <source>/store.json. */
 async function extract(locales) {
   const source = locales[0];
   const data = {};
   for (const [name, store] of Object.entries(STORES)) {
     const dir = store.dir(source.tag);
-    if (!await fs.stat(dir).catch(() => null)) continue; // an app without this store has no section
-    data[name] = {};
+    if (!await fs.stat(dir).catch(() => null)) continue; // an app without this store has no keys
     for (const [field, spec] of Object.entries(store.fields)) {
       const text = await fs.readFile(path.join(dir, spec.file), 'utf8').catch(() => null);
       if (text === null)
         throw new Error(`${name}/${source.tag}: ${spec.file} is missing — every field of a present store must exist.`);
-      data[name][field] = text;
+      data[`${name}.${field}`] = text;
     }
   }
-  await fs.mkdir(i18nDir, { recursive: true });
-  const out = path.join(i18nDir, `store.${source.tag}.json`);
+  const outDir = path.join(i18nDir, source.tag);
+  await fs.mkdir(outDir, { recursive: true });
+  const out = path.join(outDir, 'store.json');
   await fs.writeFile(out, JSON.stringify(data, null, 2) + '\n');
-  console.log(`extracted ${Object.keys(data).join(' + ')} -> ${path.relative(root, out)}`);
+  console.log(`extracted ${Object.keys(data).length} keys -> ${path.relative(root, out)}`);
 }
 
 async function compile(locales) {
   const source = locales[0];
   const readLocale = async (locale) => {
-    const file = path.join(i18nDir, `store.${locale.tag}.json`);
+    const file = path.join(i18nDir, locale.tag, 'store.json');
     const raw = await fs.readFile(file, 'utf8').catch(() => null);
     if (raw === null)
       throw new Error(`${file} is missing — every locale in locales.json needs its translation ` +
-        '(vhtranslator generates it from the source file).');
+        '(vhtranslator generates it from the source folder).');
     return JSON.parse(raw);
   };
 
-  // The source locale defines the app's store set; every translation must match it exactly — a
-  // listing is a deliverable, so a locale either has the full set or is not declared at all.
+  // The source locale defines the app's key set; its keys must be complete per store, and every
+  // translation must match it exactly — a listing is a deliverable, so a locale either has the
+  // full set or is not declared at all.
   const sourceData = await readLocale(source);
-  const sections = Object.keys(sourceData);
+  const sourceKeys = Object.keys(sourceData);
+  for (const key of sourceKeys) {
+    const [section, field, ...rest] = key.split('.');
+    if (rest.length || !STORES[section] || !STORES[section].fields[field])
+      throw new Error(`${source.tag}/store.json: unknown key "${key}" — expected "<store>.<field>" with stores ` +
+        `${Object.keys(STORES).join('/')}.`);
+  }
+  const sections = [...new Set(sourceKeys.map(k => k.split('.')[0]))];
   for (const section of sections)
-    if (!STORES[section])
-      throw new Error(`store.${source.tag}.json: unknown section "${section}" — known: ${Object.keys(STORES).join(', ')}.`);
+    for (const field of Object.keys(STORES[section].fields))
+      if (!sourceKeys.includes(`${section}.${field}`))
+        throw new Error(`${source.tag}/store.json: "${section}.${field}" is missing — a present store needs every field.`);
 
   for (const locale of locales) {
     const data = locale === source ? sourceData : await readLocale(locale);
-    const extra = Object.keys(data).filter(s => !sections.includes(s));
-    const missing = sections.filter(s => !(s in data));
-    if (extra.length || missing.length)
-      throw new Error(`store.${locale.tag}.json: sections must match the source (${sections.join(', ')})` +
+    const keys = Object.keys(data);
+    const missing = sourceKeys.filter(k => !keys.includes(k));
+    const extra = keys.filter(k => !sourceKeys.includes(k));
+    if (missing.length || extra.length)
+      throw new Error(`${locale.tag}/store.json: keys must match the source exactly` +
         `${missing.length ? `; missing: ${missing.join(', ')}` : ''}${extra.length ? `; unexpected: ${extra.join(', ')}` : ''}.`);
 
     for (const section of sections) {
@@ -151,21 +167,16 @@ async function compile(locales) {
         continue;
       }
 
-      const fields = Object.keys(store.fields);
-      for (const key of Object.keys(data[section]))
-        if (!fields.includes(key))
-          throw new Error(`store.${locale.tag}.json ${section}: unknown field "${key}" — known: ${fields.join(', ')}.`);
-
       for (const [field, spec] of Object.entries(store.fields)) {
-        const text = data[section][field];
-        if (typeof text !== 'string')
-          throw new Error(`store.${locale.tag}.json ${section}: field "${field}" is missing.`);
+        const text = data[`${section}.${field}`];
+        if (typeof text !== 'string' || !text.trim())
+          throw new Error(`${locale.tag}/store.json "${section}.${field}": empty — a listing field cannot be blank.`);
         const count = charCount(text);
         if (count > spec.max)
-          throw new Error(`store.${locale.tag}.json ${section}.${field}: ${count} characters — the store allows ${spec.max}.`);
+          throw new Error(`${locale.tag}/store.json "${section}.${field}": ${count} characters — the store allows ${spec.max}.`);
         const banned = store.forbidden && text.match(store.forbidden);
         if (banned)
-          throw new Error(`store.${locale.tag}.json ${section}.${field}: contains "${banned[0]}" — ` +
+          throw new Error(`${locale.tag}/store.json "${section}.${field}": contains "${banned[0]}" — ` +
             'App Store metadata must not name another platform (Guideline 2.3.10).');
       }
 
@@ -173,7 +184,7 @@ async function compile(locales) {
       const dir = store.dir(folder);
       await fs.mkdir(dir, { recursive: true });
       for (const [field, spec] of Object.entries(store.fields))
-        await fs.writeFile(path.join(dir, spec.file), data[section][field]);
+        await fs.writeFile(path.join(dir, spec.file), data[`${section}.${field}`]);
       // URLs and the like are locale-independent: the source directory owns them, every other
       // locale gets a copy so the store never sees a locale with holes.
       if (locale !== source)

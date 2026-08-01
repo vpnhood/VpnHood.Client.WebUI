@@ -28,6 +28,12 @@ inputs:
     description: Comma-separated subset for --platform (empty = every platform).
     required: false
     default: ''
+  project:
+    description: >-
+      Per-app project.mjs overriding the built-in CLIENT config, with its fixture.json next to
+      it. Pass an absolute path, e.g. $GITHUB_WORKSPACE/store/project.mjs.
+    required: false
+    default: ''
   extra-args:
     description: Extra store-screenshots.mjs flags, passed verbatim (e.g. "--locale fa --only 1").
     required: false
@@ -67,4 +73,5 @@ runs:
         node e2e/store-screenshots.mjs --install
         --install-root "${{ inputs.install-root }}"
         ${{ inputs.platforms && format('--platform {0}', inputs.platforms) || '' }}
+        ${{ inputs.project && format('--project "{0}"', inputs.project) || '' }}
         ${{ inputs.extra-args }}
