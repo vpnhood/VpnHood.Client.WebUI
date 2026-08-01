@@ -30,6 +30,7 @@
  *   node e2e/store-screenshots.mjs --platform ios --only 1 --device ipad-13
  *   node e2e/store-screenshots.mjs --frame-only            re-frame without re-capturing
  *   node e2e/store-screenshots.mjs --locale fa             one locale (default: all in LOCALES)
+ *   node e2e/store-screenshots.mjs --jobs 8                captures in flight at once (default 4)
  *   node e2e/store-screenshots.mjs --api http://127.0.0.1:4700   against a live Release client
  *   node e2e/store-screenshots.mjs --project ../Vpnhood.App.Connect/store/project.mjs
  *
@@ -77,6 +78,10 @@ for (const tag of localeFilter ?? [])
   if (!locales.some(l => l.tag === tag))
     throw new Error(`Unknown --locale "${tag}". Known: ${locales.map(l => l.tag).join(', ')}.`);
 const selectedLocales = localeFilter ? locales.filter(l => localeFilter.includes(l.tag)) : locales;
+
+// Captures in flight at once. Most of a capture is waiting (load, network-idle, settle), not CPU,
+// so a small pool overlaps those waits; --jobs 1 restores the fully serial run.
+const JOBS = Math.max(1, parseInt(argValue('--jobs', '4'), 10) || 1);
 
 // Capture above the output scale: the app is drawn into a device narrower than the canvas, so it is
 // downscaled on the way in, and shooting at the output scale leaves visibly soft text.
@@ -192,17 +197,31 @@ async function patchLiveApi(page, shot, locale) {
   });
 }
 
+/** Runs thunks with up to `size` in flight; after the first failure no new work starts, and the
+ * error is rethrown once the in-flight tasks have settled — no capture is torn down mid-shot. */
+async function runPool(thunks, size) {
+  const queue = [...thunks];
+  let firstError = null;
+  const workers = Array.from({ length: Math.max(1, Math.min(size, queue.length)) }, async () => {
+    while (queue.length && !firstError) {
+      try { await queue.shift()(); }
+      catch (err) { firstError ??= err; }
+    }
+  });
+  await Promise.all(workers);
+  if (firstError) throw firstError;
+}
+
 async function captureDevice(browser, platform, device, origin, fixture, rawDir) {
   const unhandledAll = new Set();
 
-  for (const locale of selectedLocales)
-  for (const shot of selected(platform)) {
+  const captureShot = async (locale, shot) => {
     // A static source is device-independent: the frame pass fits and crops it to each device's
     // content box, so one PNG serves every slot.
     if (shot.source) {
       await fs.copyFile(path.resolve(projectRoot, shot.source), path.join(rawDir, fileName(device, shot, locale)));
       console.log(`reused    ${device.label.padEnd(11)} ${fileName(device, shot, locale)}  ${shot.label}  <- ${path.basename(shot.source)}`);
-      continue;
+      return;
     }
 
     // A context per shot, because the API patch differs per shot and the SPA reads it at startup.
@@ -269,7 +288,13 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
     console.log(`captured  ${device.label.padEnd(11)} ${fileName(device, shot, locale)}  ${shot.label}`);
     unhandled.forEach(u => unhandledAll.add(u));
     await context.close();
-  }
+  };
+
+  // Every shot owns its browser context and route mock, and the pixels do not depend on timing,
+  // so a pooled run produces the same bytes as a serial one — only the log order varies.
+  await runPool(
+    selectedLocales.flatMap(locale => selected(platform).map(shot => () => captureShot(locale, shot))),
+    JOBS);
 
   return unhandledAll;
 }
