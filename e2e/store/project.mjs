@@ -23,14 +23,18 @@ const projectRoot = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)
 export const ANGLE = { rotateX: 0, rotateY: 0, rotateZ: 0 };
 
 /**
- * Locales generated for every platform, first one primary (`--install` copies only that one, since
- * every installDir names a single store locale folder). `tag` is the store-style filename suffix;
- * `culture` is the SPA language, applied through state.currentUiCultureInfo like the client does.
- * fa is Persian — it exercises the whole RTL path (rtl.css, IranSans faces, mirrored layouts).
+ * Locales generated for every platform. `tag` is the filename suffix in test-results; `culture` is
+ * the SPA language, applied through state.currentUiCultureInfo like the client does. fa is Persian
+ * — it exercises the whole RTL path (rtl.css, IranSans faces, mirrored layouts).
+ *
+ * `--install` writes each locale into its own store directory (the <locale> token in installDir),
+ * named by `tag` unless `stores` overrides it for that platform's store — null meaning the store
+ * has no such locale, so that set is skipped there entirely.
  */
 export const LOCALES = [
   { tag: 'en-US', culture: 'en' },
-  { tag: 'fa', culture: 'fa' },
+  // App Store Connect offers no Persian locale at all, so the fa set cannot ship there.
+  { tag: 'fa', culture: 'fa', stores: { appStore: null } },
 ];
 
 /**
@@ -229,7 +233,7 @@ const ANDROID_PATCH = {
  * own screenshot.
  *
  * Google Play accepts AT MOST 8 screenshots per device type. The set deliberately generates every
- * marketable screen — upload the first 8 (the destination workflow is still to be decided).
+ * marketable screen — `--install` ships only the first 8 (installMax on the Play platforms).
  */
 const ANDROID_SHOTS = [
   { route: '/', label: 'Home (connected)', patch: CONNECTED },
@@ -245,13 +249,20 @@ const ANDROID_SHOTS = [
   { route: '/settings/proxies', label: 'Proxies' },
 ];
 
-/** installDir is relative to the WebUI repo root; used only when `--install` is passed. The npm
- * script does NOT install — screenshots stay in test-results/ until the destination is decided
- * (committing them into the main repo bloats it). */
+/**
+ * Where `--install` copies the finals. Every installDir is a path INSIDE the repo that owns the
+ * store assets, with `<locale>` standing for that store's locale folder; INSTALL_ROOT locates the
+ * checkout of that repo relative to the WebUI repo root, and `--install-root` overrides it (a CI
+ * caller points it at its own checkout). The npm script does NOT install — screenshots stay in
+ * test-results/ unless `--install` is passed.
+ */
+export const INSTALL_ROOT = '../Vpnhood.App.Client';
+
 export const PLATFORMS = {
   ios: {
     label: 'App Store',
-    installDir: '../VpnHood/fastlane/screenshots/ios/en-US',
+    store: 'appStore',
+    installDir: 'fastlane/screenshots/ios/<locale>',
     // No patch: the fixture IS the iOS capability profile. It was recorded from a Windows Release
     // client, and WinDevice/WinDeviceUiProvider gate off the same features IosDevice does — no app
     // split, no Private DNS, no kill switch (see the table in fastlane/README.md).
@@ -275,7 +286,10 @@ export const PLATFORMS = {
 
   'android-phone': {
     label: 'Google Play',
-    installDir: '../VpnHood/fastlane/metadata/android/en-US/images/phoneScreenshots',
+    store: 'googlePlay',
+    installDir: 'fastlane/metadata/android/<locale>/images/phoneScreenshots',
+    // Google Play accepts at most 8 screenshots per device type — see the note above ANDROID_SHOTS.
+    installMax: 8,
     patch: ANDROID_PATCH,
     devices: {
       'android-phone': {
@@ -299,7 +313,9 @@ export const PLATFORMS = {
 
   'android-tablet-7': {
     label: 'Google Play 7" tablet',
-    installDir: '../VpnHood/fastlane/metadata/android/en-US/images/sevenInchScreenshots',
+    store: 'googlePlay',
+    installDir: 'fastlane/metadata/android/<locale>/images/sevenInchScreenshots',
+    installMax: 8,
     patch: ANDROID_PATCH,
     devices: {
       'android-tablet-7': {
@@ -323,7 +339,9 @@ export const PLATFORMS = {
 
   'android-tablet-10': {
     label: 'Google Play 10" tablet',
-    installDir: '../VpnHood/fastlane/metadata/android/en-US/images/tenInchScreenshots',
+    store: 'googlePlay',
+    installDir: 'fastlane/metadata/android/<locale>/images/tenInchScreenshots',
+    installMax: 8,
     patch: ANDROID_PATCH,
     devices: {
       'android-tablet-10': {
@@ -347,7 +365,9 @@ export const PLATFORMS = {
 
   'android-tv': {
     label: 'Google Play TV',
-    installDir: '../VpnHood/fastlane/metadata/android/en-US/images/tvScreenshots',
+    store: 'googlePlay',
+    installDir: 'fastlane/metadata/android/<locale>/images/tvScreenshots',
+    installMax: 8,
     // AndroidDevice with AndroidUtils.IsTv() true: app split stays supported, but every
     // AndroidDeviceUiProvider intent is gated on !IsTv — so intentFeatures keep the fixture's
     // all-false baseline, and the SPA switches to its isTv layout.
@@ -390,8 +410,9 @@ export const PLATFORMS = {
 
   windows: {
     label: 'Microsoft Store',
+    store: 'microsoftStore',
     // No fastlane lane exists for the Microsoft Store — upload via Partner Center or the msstore CLI.
-    installDir: '../VpnHood/store/microsoft/en-US/screenshots',
+    installDir: 'store/microsoft/<locale>/screenshots',
     // No patch: the fixture was recorded from this exact build (WinDevice in Release: no app split,
     // WinDeviceUiProvider: no settings intents).
     patch: {},

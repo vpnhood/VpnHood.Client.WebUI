@@ -22,9 +22,10 @@
  *            raw/ is an intermediate, not a deliverable.
  *
  * Usage:
- *   npm run store:screenshots                              build + all platforms + install
+ *   npm run store:screenshots                              build + all platforms (no install)
  *   node e2e/store-screenshots.mjs                         all platforms, mocked — the normal path
- *   node e2e/store-screenshots.mjs --install               also copy each set into its installDir
+ *   node e2e/store-screenshots.mjs --install               also copy each set into its per-locale installDirs
+ *   node e2e/store-screenshots.mjs --install --install-root ../Vpnhood.App.Client
  *   node e2e/store-screenshots.mjs --platform android-phone,android-tv
  *   node e2e/store-screenshots.mjs --platform ios --only 1 --device ipad-13
  *   node e2e/store-screenshots.mjs --frame-only            re-frame without re-capturing
@@ -38,7 +39,7 @@ import http from 'http';
 import path from 'path';
 import url from 'url';
 import { chromium } from 'playwright';
-import { ANGLE, LOCALES, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
+import { ANGLE, INSTALL_ROOT, LOCALES, PLATFORMS, ROUTES, prepare } from './store/project.mjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
@@ -56,6 +57,11 @@ const doCapture = !args.includes('--frame-only');
 const doFrame = !args.includes('--capture-only');
 const doInstall = args.includes('--install');
 const only = argValue('--only', null)?.split(',').map(s => s.trim()).filter(Boolean) ?? null;
+
+// The checkout every installDir resolves inside: the repo that owns the store assets. The project
+// names its usual sibling checkout; a CI caller points --install-root at its own workspace.
+const installRoot = path.resolve(projectRoot, argValue('--install-root', null) ?? INSTALL_ROOT ?? '.');
+if (doInstall) console.log(`install root: ${installRoot}`);
 
 // A project.mjs that predates locale support keeps the historic single-locale behaviour.
 const locales = LOCALES?.length ? LOCALES : [{ tag: 'en-US', culture: 'en' }];
@@ -97,6 +103,9 @@ const platformDevices = (platform) =>
   Object.entries(platform.devices).filter(([key]) => !deviceFilter || deviceFilter.includes(key)).map(([, d]) => d);
 const selected = (platform) => only ? platform.shots.filter(s => only.includes(s.num)) : platform.shots;
 const fileName = (device, shot, locale) => `${device.prefix}${shot.num}_${locale.tag}.png`;
+// Installed files drop the locale suffix — the store's per-locale directory carries it, and plain
+// 1.png… is the layout supply/deliver (and the catalogs that scrape fastlane trees) read.
+const installName = (device, shot) => `${device.prefix}${shot.num}.png`;
 const finalSize = (device) => device.frame === 'desktop'
   ? { width: device.canvas.width, height: device.canvas.height }
   : { width: device.cssWidth * device.scale, height: device.cssHeight * device.scale };
@@ -546,14 +555,12 @@ async function frameDevice(browser, resizer, platform, device, fontDataUri, rawD
 }
 
 /**
- * Deletes numbered files a device's shot list no longer produces, so a shrunk or reordered set
- * cannot leave stale screenshots behind — in the store installDir or in test-results. Matches by
- * this device's own naming pattern (the iPhone pass cannot touch ipad_ files) and always against
- * the FULL shot list, never the --only filter, so a partial run cannot delete the rest.
+ * Deletes numbered files a directory should no longer contain, so a shrunk or reordered set cannot
+ * leave stale screenshots behind — in a store installDir or in test-results. Matches by the owning
+ * device's naming pattern (the iPhone pass cannot touch ipad_ files) and always against the FULL
+ * shot list, never the --only/--locale filters, so a partial run cannot delete the rest.
  */
-async function pruneDir(dir, platform, device, dirLocales = locales) {
-  const expected = new Set(platform.shots.flatMap(shot => dirLocales.map(locale => fileName(device, shot, locale))));
-  const pattern = new RegExp(`^${device.prefix}\\d+_[A-Za-z][\\w-]*\\.png$`);
+async function prune(dir, device, expected, pattern) {
   for (const existing of await fs.readdir(dir)) {
     if (!pattern.test(existing) || expected.has(existing)) continue;
     await fs.rm(path.join(dir, existing));
@@ -561,41 +568,69 @@ async function pruneDir(dir, platform, device, dirLocales = locales) {
   }
 }
 
+/** raw/ and final/ hold every locale side by side, locale-suffixed. */
+const pruneWorkDir = (dir, platform, device) => prune(dir, device,
+  new Set(platform.shots.flatMap(shot => locales.map(locale => fileName(device, shot, locale)))),
+  new RegExp(`^${device.prefix}\\d+_[A-Za-z][\\w-]*\\.png$`));
+
+/** The store folder a locale's set installs into on this platform's store: a `stores` override
+ * wins (null: the store has no such locale, skip the set), the tag otherwise. */
+const storeLocale = (platform, locale) =>
+  locale.stores && platform.store in locale.stores ? locale.stores[platform.store] : locale.tag;
+
 /**
- * Copies a platform's finals into its installDir and prunes numbered files the set no longer
- * produces — so a shrunk set (e.g. TV going 8 -> 6) cannot leave stale screenshots for the
- * uploader to ship.
+ * Copies a platform's finals into its per-locale installDirs and prunes numbered files the set no
+ * longer produces — so a shrunk set (e.g. TV going 8 -> 6) cannot leave stale screenshots for the
+ * uploader to ship. Always installs every locale of the full shot list: a store directory is a
+ * deliverable, never a partial, so a missing final fails the install rather than leaving a hole.
  */
 async function installPlatform(platform, devices, finalDir) {
-  const destDir = path.resolve(projectRoot, platform.installDir);
-  await fs.mkdir(destDir, { recursive: true });
-  let copied = 0;
+  if (!platform.installDir.includes('<locale>'))
+    throw new Error(`${platform.label}: installDir "${platform.installDir}" has no <locale> token — every store keeps one directory per locale.`);
 
-  // Every store keeps one directory per locale and installDir names exactly one of them, so only
-  // the primary locale is installed; per-locale destinations are part of the (still open)
-  // destination decision.
-  const locale = locales[0];
+  // Some stores cap the set (Google Play: 8 per device type) while the run deliberately generates
+  // every marketable screen — install ships the leading slice and names what it leaves out.
+  const shots = platform.installMax ? platform.shots.slice(0, platform.installMax) : platform.shots;
+  const capped = platform.shots.slice(shots.length);
+  if (capped.length)
+    console.log(`capped    ${platform.label}: installing 1-${shots.length}; left out: ${capped.map(s => `${s.num} ${s.label}`).join(', ')}`);
 
-  for (const device of devices) {
-    for (const shot of platform.shots) {
-      const name = fileName(device, shot, locale);
-      const from = path.join(finalDir, name);
-      const to = path.join(destDir, name);
-      // A static source that IS the installed file must not be overwritten with its own re-encode:
-      // the pixels are identical and the byte churn would dirty every diff.
-      if (shot.source && path.resolve(projectRoot, shot.source) === to) {
-        console.log(`kept      ${device.label.padEnd(11)} ${name}  (source is the installed file)`);
-        continue;
-      }
-      if (!await fs.stat(from).catch(() => null)) continue;
-      await fs.copyFile(from, to);
-      copied++;
+  for (const locale of locales) {
+    const folder = storeLocale(platform, locale);
+    if (folder === null) {
+      console.log(`skipped   ${platform.label} ${locale.tag}: this store has no such locale`);
+      continue;
     }
 
-    await pruneDir(destDir, platform, device, [locale]);
-  }
+    const destDir = path.resolve(installRoot, platform.installDir.replaceAll('<locale>', folder));
+    await fs.mkdir(destDir, { recursive: true });
+    let copied = 0;
 
-  console.log(`installed ${copied} file(s) -> ${path.relative(projectRoot, destDir)}`);
+    for (const device of devices) {
+      for (const shot of shots) {
+        const from = path.join(finalDir, fileName(device, shot, locale));
+        const to = path.join(destDir, installName(device, shot));
+        // A static source that IS the installed file must not be overwritten with its own re-encode:
+        // the pixels are identical and the byte churn would dirty every diff.
+        if (shot.source && path.resolve(projectRoot, shot.source) === to) {
+          console.log(`kept      ${device.label.padEnd(11)} ${installName(device, shot)}  (source is the installed file)`);
+          continue;
+        }
+        if (!await fs.stat(from).catch(() => null))
+          throw new Error(`${platform.label}: ${fileName(device, shot, locale)} is not in ` +
+            `${path.relative(projectRoot, finalDir)} — run a full generation (no --only/--locale) before --install.`);
+        await fs.copyFile(from, to);
+        copied++;
+      }
+
+      // The pattern also matches the retired locale-suffixed naming, so an installDir written by an
+      // older engine cleans itself up on the next install.
+      await prune(destDir, device, new Set(shots.map(shot => installName(device, shot))),
+        new RegExp(`^${device.prefix}\\d+(_[A-Za-z][\\w-]*)?\\.png$`));
+    }
+
+    console.log(`installed ${copied} file(s) -> ${path.relative(installRoot, destDir)}`);
+  }
 }
 
 const selectedPlatforms = platformKeys.map(key => ({ key, ...PLATFORMS[key] }));
@@ -630,7 +665,7 @@ for (const platform of selectedPlatforms) {
     const unhandled = new Set();
     for (const device of devices) {
       (await captureDevice(browser, platform, device, origin, fixture, rawDir)).forEach(u => unhandled.add(u));
-      await pruneDir(rawDir, platform, device);
+      await pruneWorkDir(rawDir, platform, device);
     }
     if (unhandled.size)
       console.log(`unmocked endpoints (answered null, add to ROUTES in e2e/store/project.mjs):\n  ${[...unhandled].join('\n  ')}`);
@@ -644,7 +679,7 @@ for (const platform of selectedPlatforms) {
     let total = 0;
     for (const device of devices) {
       total += await frameDevice(browser, resizer, platform, device, fontDataUri, rawDir, finalDir);
-      await pruneDir(finalDir, platform, device);
+      await pruneWorkDir(finalDir, platform, device);
     }
     await resizer.close();
     const sizes = devices.map(d => `${d.label} ${finalSize(d).width}x${finalSize(d).height}`);
