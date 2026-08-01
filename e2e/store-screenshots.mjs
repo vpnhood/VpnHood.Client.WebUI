@@ -675,9 +675,13 @@ const origin = liveApi ?? spa?.origin ?? null;
 const baseFixture = liveApi ? null : JSON.parse(await fs.readFile(fixturePath, 'utf8'));
 console.log(liveApi ? `source: live client at ${liveApi}` : `source: mocked API over ${path.relative(projectRoot, distDir)}`);
 
-const browser = await chromium.launch().catch((err) => {
-  throw new Error(`Could not launch Chromium — run 'npx playwright install --with-deps chromium' once.\n${err.message.split('\n')[0]}`);
-});
+// Only capture and frame render anything — an install-only run (--frame-only --capture-only
+// --install, e.g. a CI assemble job merging per-locale artifacts) needs no browser at all.
+const browser = doCapture || doFrame
+  ? await chromium.launch().catch((err) => {
+    throw new Error(`Could not launch Chromium — run 'npx playwright install --with-deps chromium' once.\n${err.message.split('\n')[0]}`);
+  })
+  : null;
 
 // Let the project synthesize fixture data that needs a renderer (e.g. demo app icons) before any
 // capture runs. Mock mode only — a live client answers /api/** itself.
@@ -722,5 +726,5 @@ for (const platform of selectedPlatforms) {
     await installPlatform(platform, devices, finalDir);
 }
 
-await browser.close();
+await browser?.close();
 spa?.close();

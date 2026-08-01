@@ -38,6 +38,12 @@ inputs:
     description: Extra store-screenshots.mjs flags, passed verbatim (e.g. "--locale fa --only 1").
     required: false
     default: ''
+  install:
+    description: >-
+      Pass 'false' to generate without installing — a matrix caller shoots one locale per job
+      (extra-args --locale <tag>), then merges the final/ artifacts and installs once.
+    required: false
+    default: 'true'
   node-version:
     description: Node.js version to build and run with (package.json engines wants 24+).
     required: false
@@ -70,7 +76,8 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}
       run: >
-        node e2e/store-screenshots.mjs --install
+        node e2e/store-screenshots.mjs
+        ${{ inputs.install == 'true' && '--install' || '' }}
         --install-root "${{ inputs.install-root }}"
         ${{ inputs.platforms && format('--platform {0}', inputs.platforms) || '' }}
         ${{ inputs.project && format('--project "{0}"', inputs.project) || '' }}
