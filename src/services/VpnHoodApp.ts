@@ -56,6 +56,7 @@ export class VpnHoodApp {
     this.vhFirebase = vhFirebase;
     this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
     this.data.uiState.configTime = this.data.state.configTime;
+    this.data.uiState.isReportSendingAvailable = vhFirebase !== null;
     VpnHoodApp._instance = this;
   }
 
@@ -83,7 +84,9 @@ export class VpnHoodApp {
       config.availableCultureInfos,
     );
 
-    const firebase = import.meta.env.DEV ? null : await VpnHoodApp.createFirebase(config.features);
+    const firebase = import.meta.env.DEV || !config.userSettings.allowAnonymousTracker
+      ? null
+      : await VpnHoodApp.createFirebase(config.features);
 
     return new VpnHoodApp(apiClient, clientProfileClient, intentsClient, proxyEndpointClient, appData, firebase);
   }
@@ -91,6 +94,11 @@ export class VpnHoodApp {
   // Firebase does analytics and report uploads. Loading it as its own chunk keeps the SDK out of
   // the startup bundle, but it stays best-effort: tryCreate already degrades to null on a bad
   // config, so a chunk that fails to load must degrade the same way rather than fail the launch.
+  //
+  // Only ever called once the user's allowAnonymousTracker consent is known to be granted. Merely
+  // constructing the SDK contacts Google (installations + remote config) and stamps a persistent
+  // per-install id via setUserId, so an opted-out user must not reach it at all — disabling
+  // collection after the fact would be too late.
   private static async createFirebase(features: AppFeatures): Promise<VhFirebaseApp | null> {
     try {
       const { VhFirebaseApp } = await import('@/services/Firebase');
@@ -101,6 +109,22 @@ export class VpnHoodApp {
       console.error('Firebase: Failed to load the Firebase module.', err);
       return null;
     }
+  }
+
+  // The consent toggle can flip at any time from the settings page while the SDK was decided once at
+  // startup, so neither direction may be left stale: withdrawing consent must silence a live SDK, and
+  // granting it must not force a restart to take effect.
+  private async syncAnalyticsConsent(): Promise<void> {
+    if (import.meta.env.DEV) return;
+
+    if (!this.data.userSettings.allowAnonymousTracker) {
+      this.vhFirebase?.setCollectionEnabled(false);
+      this.vhFirebase = null;
+    }
+    else if (this.vhFirebase) this.vhFirebase.setCollectionEnabled(true);
+    else this.vhFirebase = await VpnHoodApp.createFirebase(this.data.features);
+
+    this.data.uiState.isReportSendingAvailable = this.vhFirebase !== null;
   }
 
   public async reloadState(): Promise<void> {
@@ -159,6 +183,10 @@ export class VpnHoodApp {
 
     // Remove the built-in client profile if the user is premium
     this.data.clientProfileInfos = config.clientProfileInfos;
+
+    // userSettings just came back from the backend, so this is the one place that sees every change
+    // to the analytics consent flag regardless of which page made it.
+    await this.syncAnalyticsConsent();
 
     if (config.clientProfileInfos.length === 0) this.data.userSettings.clientProfileId = null;
 

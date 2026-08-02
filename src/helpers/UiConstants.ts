@@ -5,6 +5,16 @@ export class UiConstants {
   static logFileLocation: string = '/api/app/log.txt';
   static promotionFileLocation: string = '/api/app/promotion.jpg';
   static locationNumberOnCollapsedProfile: number = 8;
+  // Where to send a user who wants the CONNECT app. Interpolated into GET_SERVER_KEY_METHODS_DESC
+  // rather than written into the locale files: a store-specific URL baked into 13 translations
+  // reaches every platform, and an App Store build may not point at another mobile platform's
+  // store (App Review guideline 2.3.10).
+  // NOTE: this page offers Android / Android TV / Windows / Linux and carries Google Play badges —
+  // it has no iOS build, so it is NOT a valid destination for an App Store build. See the caller.
+  static connectAppUrl: string = 'https://www.vpnhood.com/free-vpn/download';
+  // The marketing site root. '/home' — used here until now — 404s.
+  static websiteUrl: string = 'https://www.vpnhood.com/';
+  static privacyPolicyUrl: string = 'https://www.vpnhood.com/privacy-policy';
 }
 
 export enum ComponentName {

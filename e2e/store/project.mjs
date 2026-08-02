@@ -220,6 +220,7 @@ const IOS_DEVICES = {
  */
 const ANDROID_PATCH = {
   features: {
+    osType: 'Android',                          // fixture records 'Windows'; drives OS-specific copy
     // AndroidDevice.IsExcludeAppsSupported / IsIncludeAppsSupported => true
     isExcludeAppsSupported: true,
     isIncludeAppsSupported: true,
@@ -276,10 +277,12 @@ export const PLATFORMS = {
     label: 'App Store',
     store: 'appStore',
     installDir: 'fastlane/screenshots/ios/<locale>',
-    // No patch: the fixture IS the iOS capability profile. It was recorded from a Windows Release
-    // client, and WinDevice/WinDeviceUiProvider gate off the same features IosDevice does — no app
-    // split, no Private DNS, no kill switch (see the table in fastlane/README.md).
-    patch: {},
+    // The fixture IS the iOS capability profile. It was recorded from a Windows Release client, and
+    // WinDevice/WinDeviceUiProvider gate off the same features IosDevice does — no app split, no
+    // Private DNS, no kill switch (see the table in fastlane/README.md). Only osType has to be
+    // corrected: the SPA drops the VpnHood! CONNECT pointer on the Servers screen for App Store
+    // builds, and with the fixture's recorded 'Windows' the capture would show copy iOS never renders.
+    patch: { features: { osType: 'Ios' } },
     devices: IOS_DEVICES,
     shots: [
       {
@@ -386,6 +389,7 @@ export const PLATFORMS = {
     // all-false baseline, and the SPA switches to its isTv layout.
     patch: {
       features: {
+        osType: 'Android',
         isTv: true,
         isExcludeAppsSupported: true,
         isIncludeAppsSupported: true,

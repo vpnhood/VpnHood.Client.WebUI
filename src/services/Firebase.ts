@@ -1,7 +1,7 @@
 // noinspection SpellCheckingInspection
 import {initializeApp} from 'firebase/app'
 import type {FirebaseApp,FirebaseOptions} from 'firebase/app'
-import { getAnalytics, logEvent, setUserId } from 'firebase/analytics';
+import { getAnalytics, logEvent, setAnalyticsCollectionEnabled, setUserId } from 'firebase/analytics';
 import type {Analytics} from 'firebase/analytics'
 import { getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 
@@ -22,7 +22,9 @@ export class VhFirebaseApp {
   }
 
   public constructor(firebaseOptions: FirebaseOptions, clientId:string){
-    const firebaseApp = initializeApp(firebaseOptions);
+    // initializeApp throws on a second call with different options; reuse the one we already made so
+    // re-enabling analytics mid-session (see VpnHoodApp.syncAnalyticsConsent) cannot fail the launch.
+    const firebaseApp = VhFirebaseApp._firebaseApp ?? initializeApp(firebaseOptions);
     VhFirebaseApp._firebaseApp = firebaseApp;
     this._analytics = getAnalytics(firebaseApp);
     setUserId(this._analytics, clientId );
@@ -49,6 +51,17 @@ export class VhFirebaseApp {
     catch(err){
       console.error('Firebase: Failed to initialize Firebase app:', err);
       return null;
+    }
+  }
+
+  // Stops/resumes GA4 collection on an instance that already exists. Withdrawing consent mid-session
+  // has to silence the SDK itself, not just our call sites: Firebase also gathers page_view and
+  // session events on its own, which no amount of not-calling-logEvent would suppress.
+  public setCollectionEnabled(enabled: boolean): void {
+    try {
+      setAnalyticsCollectionEnabled(this._analytics, enabled);
+    } catch (err: unknown) {
+      console.error(`An error occurred while changing the Analytics collection state. Error: ${err}`);
     }
   }
 

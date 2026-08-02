@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import AppBar from '@/components/AppBar.vue';
+import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { computed } from 'vue';
+import i18n from '@/locales/i18n';
+import SettingsToggleItem from '@/components/Settings/SettingsToggleItem.vue';
+import { UiConstants } from '@/helpers/UiConstants';
+
+const vhApp = VpnHoodApp.instance;
+const locale = i18n.global.t;
+
+// allowAnonymousTracker already gated the backend trackers (the GA4 tracker and the endpoint
+// tracker); it had simply never been surfaced, so it was stuck on its default of true and the
+// analytics running in this WebView ignored it entirely. Saving it re-reads the settings, which is
+// what re-syncs the analytics SDK — see VpnHoodApp.syncAnalyticsConsent.
+const isAnonymousTrackerAllowed = computed<boolean>({
+  get: () => vhApp.data.userSettings.allowAnonymousTracker,
+  set: async (value: boolean) => {
+    vhApp.data.userSettings.allowAnonymousTracker = value;
+    await vhApp.saveUserSetting();
+  }
+});
+</script>
+
+<template>
+  <v-sheet>
+    <app-bar/>
+
+    <settings-toggle-item
+      v-model="isAnonymousTrackerAllowed"
+      :title="locale('ALLOW_ANONYMOUS_TRACKER')"
+      :description="locale('ALLOW_ANONYMOUS_TRACKER_DESC')"
+    />
+
+    <config-card class="mt-4">
+      <v-card-item>
+        <p class="text-body-small text-disabled">{{ locale('ANONYMOUS_TRACKER_NOTICE') }}</p>
+
+        <v-btn
+          class="mt-3 ps-0"
+          variant="text"
+          color="highlight"
+          density="comfortable"
+          append-icon="mdi-open-in-new"
+          :href="UiConstants.privacyPolicyUrl"
+          target="_blank"
+          :text="locale('PRIVACY_POLICY')"
+        />
+      </v-card-item>
+    </config-card>
+
+  </v-sheet>
+</template>

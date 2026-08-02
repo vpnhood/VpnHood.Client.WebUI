@@ -4,7 +4,7 @@ import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import vuetify from '@/theme/vuetify';
-import { AppName } from '@/helpers/UiConstants';
+import { AppName, UiConstants } from '@/helpers/UiConstants';
 import { type RouteLocationRaw} from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';
 import { Util } from '@/helpers/Util';
@@ -195,8 +195,13 @@ function edgeToEdgeHeight(bottom: boolean): string{
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Check for update -->
+      <!-- Check for update. Hidden where the app has no updater: iOS ships without one (updates come
+           from the App Store, and an in-app update path is not allowed there), and the backend then
+           answers versionCheck with NotSupportedException. state.updaterStatus IS the capability
+           signal — VpnHoodApp fills it from Services.UpdaterService?.Status, so it is null exactly
+           when no updater was configured, and an object on every platform that has one. -->
       <v-list-item
+        v-if="vhApp.data.state.updaterStatus"
         class="border-b"
         @click="checkForUpdate()"
       >
@@ -261,13 +266,31 @@ function edgeToEdgeHeight(bottom: boolean): string{
         :nav="true"
         density="compact"
         class="opacity-80"
-        href="https://www.vpnhood.com/home"
+        :href="UiConstants.websiteUrl"
         @click="emit('update:modelValue',false)"
         target="_blank">
 
         <v-list-item-title>
           <v-icon icon="mdi-web" />
           <span class="ms-3 text-body-small">vpnhood.com</span>
+        </v-list-item-title>
+      </v-list-item>
+
+      <!-- Privacy policy. Always reachable: a VPN app must disclose what it collects and how it is
+           used (App Review guideline 5.4), and CONNECT's one-time accept screen is not shown in
+           CLIENT at all, which left CLIENT with no in-app policy anywhere. -->
+      <v-list-item
+        v-if="!vhApp.data.features.isTv"
+        :nav="true"
+        density="compact"
+        class="opacity-80"
+        :href="UiConstants.privacyPolicyUrl"
+        @click="emit('update:modelValue',false)"
+        target="_blank">
+
+        <v-list-item-title>
+          <v-icon icon="mdi-shield-account" />
+          <span class="ms-3 text-body-small">{{ locale('PRIVACY_POLICY') }}</span>
         </v-list-item-title>
       </v-list-item>
 

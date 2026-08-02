@@ -168,8 +168,11 @@ async function closeDialog(): Promise<void> {
             target="_blank"
           />
 
-          <!-- SendReport -->
-          <v-btn v-if="dialogState.showLogButton"
+          <!-- SendReport. The whole path runs through Firebase, which is absent when the user has
+               opted out of anonymous tracking (and in dev, and when no firebaseOptions are shipped),
+               so without this guard the button is present but does nothing. Open Report above still
+               works either way — it reads the log from the local server, no Firebase involved. -->
+          <v-btn v-if="dialogState.showLogButton && vhApp.data.uiState.isReportSendingAvailable"
             prepend-icon="mdi-send-outline"
             target="_blank"
             :text="locale('SEND_REPORT')"

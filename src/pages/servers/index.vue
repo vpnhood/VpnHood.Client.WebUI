@@ -8,10 +8,28 @@ import { ComponentName } from '@/helpers/UiConstants';
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 import { ref } from 'vue';
+import { UiConstants } from '@/helpers/UiConstants';
+import { AppOsType } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const addServerDialogModel = ref(new ComponentRouteController(ComponentName.AddServerDialog));
+
+// The default copy points a key-less user at VpnHood! CONNECT as a free alternative. That pointer is
+// dropped on iOS: its only destination is the website's download page, which offers Android/Android
+// TV/Windows/Linux behind Google Play badges and has no iOS build — so on an App Store build it
+// advertises something the user cannot install and links on to another mobile platform's store
+// (App Review guideline 2.3.10).
+//
+// Deliberately a SEPARATE key rather than a conditional edit of the shared one: the CONNECT sentence
+// is already translated into 12 locales, and any of those still carrying it would put the promo back
+// on screen for a non-English iOS user. iOS never reads that key, so it cannot resurface. Until
+// vhtranslator runs, the other locales simply fall back to English for this one card.
+function getServerKeyMethodsHtml(): string {
+  return vhApp.data.features.osType === AppOsType.Ios
+    ? locale('GET_SERVER_KEY_METHODS_NO_CONNECT_DESC')
+    : locale('GET_SERVER_KEY_METHODS_DESC', { connectAppUrl: UiConstants.connectAppUrl });
+}
 
 </script>
 
@@ -35,7 +53,7 @@ const addServerDialogModel = ref(new ComponentRouteController(ComponentName.AddS
     <div v-if="vhApp.data.features.isAddAccessKeySupported && vhApp.data.clientProfileInfos.length === 0">
       <alert-warning :title="locale('WARNING')" :text="locale('NO_SERVER_AVAILABLE')" class="mb-4" />
       <config-card>
-        <div v-html="locale('GET_SERVER_KEY_METHODS_DESC')" class="pa-4 text-body-small"></div>
+        <div v-html="getServerKeyMethodsHtml()" class="pa-4 text-body-small"></div>
       </config-card>
     </div>
 

@@ -171,6 +171,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'PRIVACY': RouteRecordInfo<
+      'PRIVACY',
+      '/settings/privacy',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'PROXIES': RouteRecordInfo<
       'PROXIES',
       '/settings/proxies',
@@ -430,6 +437,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/settings/notifications.vue': {
       routes:
         | 'NOTIFICATIONS'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/settings/privacy.vue': {
+      routes:
+        | 'PRIVACY'
       views:
         | never
       pathParamNames:

@@ -106,6 +106,18 @@ function isShowConnectivitySectionTitle(): boolean {
     <!-- PRIVACY & SECURITY SECTION -->
     <settings-section-title :title="locale('PRIVACY_AND_SECURITY')"/>
 
+    <!-- Privacy: analytics consent + the privacy policy link. No status chip: the row opens a page
+         that is more than one switch, and an On/Off chip on "Privacy" reads as if privacy itself were
+         switched off. The chip's on-state is styled as the healthy one, which is backwards here —
+         "on" means MORE data is shared, not that the user is better protected. -->
+    <settings-item
+      :title="locale('PRIVACY')"
+      :subtitle="locale('PRIVACY_DESC')"
+      :isPremium="false"
+      :is-show="true"
+      :click="{name: 'PRIVACY'}"
+    />
+
     <!-- Kill switch -->
     <settings-item
       :title="locale('KILL_SWITCH')"
