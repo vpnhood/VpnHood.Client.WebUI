@@ -76,7 +76,7 @@ const STORES = {
       keywords: { file: 'keywords.txt', max: 100 },
       promotional_text: { file: 'promotional_text.txt', max: 170 },
     },
-    passthrough: ['marketing_url.txt', 'support_url.txt'],
+    passthrough: ['marketing_url.txt', 'support_url.txt', 'privacy_url.txt'],
     // Guideline 2.3.10: App Store metadata must not name another platform. The app copy already
     // follows this; the lint keeps a translation (or a careless edit) from breaking it.
     forbidden: /android|google play|windows|linux|samsung/i,
