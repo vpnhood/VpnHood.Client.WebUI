@@ -95,12 +95,25 @@ async function fingerprint(store) {
     const files = await walk(dir, store.skip);
     for (const file of files) {
       hash.update(path.basename(dir) + '/' + file.relative + '\0');
-      hash.update(await fs.readFile(file.absolute));
+      hash.update(normalize(file.relative, await fs.readFile(file.absolute)));
       hash.update('\0');
     }
     total += files.length;
   }
   return total === 0 ? null : { digest: hash.digest('hex'), files: total };
+}
+
+/**
+ * Text files are hashed with LF line endings so the fingerprint means the same thing everywhere.
+ * With git's autocrlf a Windows checkout holds CRLF while Linux CI holds LF, so hashing raw bytes
+ * made the same commit fingerprint differently per platform — CI would record one value and a
+ * developer's machine would compute another and report a phantom change. Screenshots are compared
+ * byte for byte; only the listing's text files are normalized.
+ */
+function normalize(relative, bytes) {
+  return /\.(txt|json)$/i.test(relative)
+    ? Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n'), 'utf8')
+    : bytes;
 }
 
 async function readState() {
