@@ -167,7 +167,18 @@ const missingLocal = [...liveLocales].filter((l) => !localLocales.includes(l));
 if (missingLive.length || missingLocal.length)
   throw new Error(`locale drift — on disk but not on the listing: [${missingLive.join(', ')}]; on the listing but not on disk: [${missingLocal.join(', ')}] (deliver's text push creates localizations)`);
 
-let uploads = 0, deletions = 0, reorders = 0, drift = 0;
+// ---------- plan, then execute in phases ----------
+//
+// Replacing a screenshot is delete + create of the SAME fileName, and Apple 500s a create whose
+// deleted predecessor hasn't been garbage-collected yet ("ghost"). Empirically, hammering that
+// create keeps failing for 15+ minutes, while the same create done once, later, succeeds first
+// try. So the run is phased to put as much time as possible between a delete and the create that
+// reuses its name: ALL deletions happen first, then a grace pause (only when a name is reused),
+// then the uploads — and an upload that still hits persistent 5xx is queued for one final round
+// after another pause instead of being hammered or aborting the run. Reordering runs last for
+// every set regardless, so even a failed run leaves the listing orderly.
+
+const plans = [];
 for (const loc of localizations.sort((a, b) => a.attributes.locale.localeCompare(b.attributes.locale))) {
   const locale = loc.attributes.locale;
   const dir = path.join(shotsRoot, locale);
@@ -177,23 +188,8 @@ for (const loc of localizations.sort((a, b) => a.attributes.locale.localeCompare
   for (const family of FAMILIES) {
     const want = files.filter((n) => familyOf(n) === family).sort((a, b) => shotIndex(family, a) - shotIndex(family, b));
     if (!want.length) continue;
-    let set = sets.find((s) => s.attributes.screenshotDisplayType === family.type);
-    const actions = [];
-
-    if (!set) {
-      drift++;
-      if (checkOnly) { console.log(`  ${locale.padEnd(8)} ${family.type}: set MISSING (${want.length} to upload)`); continue; }
-      set = (await api('/v1/appScreenshotSets', 'POST', {
-        data: {
-          type: 'appScreenshotSets',
-          attributes: { screenshotDisplayType: family.type },
-          relationships: { appStoreVersionLocalization: { data: { type: 'appStoreVersionLocalizations', id: loc.id } } },
-        },
-      })).data;
-      actions.push('set created');
-    }
-
-    let shots = (await api(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=20`)).data;
+    const set = sets.find((s) => s.attributes.screenshotDisplayType === family.type) ?? null;
+    const shots = set ? (await api(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=20`)).data : [];
     const wantMd5 = new Map();
     for (const name of want) wantMd5.set(name, await md5(path.join(dir, name)));
 
@@ -208,45 +204,131 @@ for (const loc of localizations.sort((a, b) => a.attributes.locale.localeCompare
     const staleNames = new Set(stale.map(([s]) => s.attributes.fileName));
     const present = new Set(shots.filter((s) => !staleNames.has(s.attributes.fileName)).map((s) => s.attributes.fileName));
     const toUpload = want.filter((n) => !present.has(n));
-
-    if (stale.length || toUpload.length) {
-      drift++;
-      if (checkOnly) {
-        console.log(`  ${locale.padEnd(8)} ${family.type}: delete ${stale.length} (${stale.map(([s, why]) => `${s.attributes.fileName}: ${why}`).join('; ') || '-'}), upload ${toUpload.length} (${toUpload.join(' ')})`);
-        continue;
-      }
-      for (const [s, why] of stale) {
-        await api(`/v1/appScreenshots/${s.id}`, 'DELETE');
-        deletions++;
-        actions.push(`deleted ${s.attributes.fileName} (${why})`);
-      }
-      const newIds = [];
-      for (const name of toUpload) {
-        newIds.push(await uploadScreenshot(set.id, { name, absolute: path.join(dir, name) }));
-        uploads++;
-        actions.push(`uploaded ${name}`);
-      }
-      if (newIds.length) await waitComplete(set.id, newIds);
-      shots = (await api(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=20`)).data;
-    }
-
-    const names = shots.map((s) => s.attributes.fileName);
-    if (JSON.stringify(names) !== JSON.stringify(want)) {
-      drift++;
-      if (checkOnly) { console.log(`  ${locale.padEnd(8)} ${family.type}: order ${names.join(',')} -> ${want.join(',')}`); continue; }
-      const byName = new Map(shots.map((s) => [s.attributes.fileName, s.id]));
-      await api(`/v1/appScreenshotSets/${set.id}/relationships/appScreenshots`, 'PATCH',
-        { data: want.map((n) => ({ type: 'appScreenshots', id: byName.get(n) })) });
-      reorders++;
-      actions.push('reordered');
-    }
-
-    if (actions.length) console.log(`  ${locale.padEnd(8)} ${family.type}: ${actions.join(', ')}`);
+    plans.push({ locale, family, locId: loc.id, dir, want, set, stale, toUpload });
   }
 }
 
+const dirty = plans.filter((p) => !p.set || p.stale.length || p.toUpload.length);
 if (checkOnly) {
+  let drift = 0;
+  for (const p of plans) {
+    if (!p.set) { console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: set MISSING (${p.want.length} to upload)`); drift++; continue; }
+    if (p.stale.length || p.toUpload.length) {
+      console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: delete ${p.stale.length} (${p.stale.map(([s, why]) => `${s.attributes.fileName}: ${why}`).join('; ') || '-'}), upload ${p.toUpload.length} (${p.toUpload.join(' ')})`);
+      drift++;
+      continue;
+    }
+    const names = (await api(`/v1/appScreenshotSets/${p.set.id}/appScreenshots?limit=20`)).data.map((s) => s.attributes.fileName);
+    if (JSON.stringify(names) !== JSON.stringify(p.want)) {
+      console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: order ${names.join(',')} -> ${p.want.join(',')}`);
+      drift++;
+    }
+  }
   console.log(drift ? `\n${drift} set(s) out of sync` : 'listing screenshots are in sync with the repo');
   process.exit(drift ? 1 : 0);
 }
-console.log(`\nsync done — uploaded ${uploads}, deleted ${deletions}, reordered ${reorders} set(s)${uploads + deletions + reorders === 0 ? ' (already in sync)' : ''}`);
+
+let uploads = 0, deletions = 0, reorders = 0;
+
+// Phase 1 — create any missing sets (no ghost hazard; needed before uploads).
+for (const p of dirty.filter((p) => !p.set)) {
+  p.set = (await api('/v1/appScreenshotSets', 'POST', {
+    data: {
+      type: 'appScreenshotSets',
+      attributes: { screenshotDisplayType: p.family.type },
+      relationships: { appStoreVersionLocalization: { data: { type: 'appStoreVersionLocalizations', id: p.locId } } },
+    },
+  })).data;
+  console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: set created`);
+}
+
+// Phase 2 — ALL deletions, across every set, before any upload.
+let reusedNames = 0;
+for (const p of dirty) {
+  for (const [s, why] of p.stale) {
+    await api(`/v1/appScreenshots/${s.id}`, 'DELETE');
+    deletions++;
+    if (p.toUpload.includes(s.attributes.fileName)) reusedNames++;
+    console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: deleted ${s.attributes.fileName} (${why})`);
+  }
+}
+
+// Phase 3 — grace pause, only when a deleted fileName is about to be re-created: give Apple's
+// eventually-consistent delete time to settle so the create doesn't meet the ghost at all.
+const grace = Number(argValue('--grace', '90'));
+if (reusedNames > 0 && grace > 0) {
+  console.log(`\n  ${reusedNames} fileName(s) are re-used after deletion — waiting ${grace}s for the deletions to settle\n`);
+  await new Promise((r) => setTimeout(r, grace * 1000));
+}
+
+// Phase 4 — uploads. Persistent 5xx does NOT abort the run: the file goes to a final retry round
+// (phase 5) so one sick record can't take down the other 100+ files' work.
+const uploaded = []; // { plan, id }
+const deferred = []; // { plan, name, error }
+for (const p of dirty) {
+  for (const name of p.toUpload) {
+    try {
+      uploaded.push({ plan: p, id: await uploadScreenshot(p.set.id, { name, absolute: path.join(p.dir, name) }) });
+      uploads++;
+      console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: uploaded ${name}`);
+    } catch (error) {
+      deferred.push({ plan: p, name, error });
+      console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: ${name} deferred (${String(error.message).split('\n')[0]})`);
+    }
+  }
+}
+
+// Phase 5 — one final round for the deferred files after another pause. Before re-creating, check
+// whether the failed POST actually persisted a record (a 500 does not always mean nothing landed):
+// a good record is kept, a broken one is deleted first.
+const failures = [];
+if (deferred.length) {
+  console.log(`\n  retrying ${deferred.length} deferred file(s) after ${grace}s\n`);
+  await new Promise((r) => setTimeout(r, grace * 1000));
+  for (const d of deferred) {
+    try {
+      const shots = (await api(`/v1/appScreenshotSets/${d.plan.set.id}/appScreenshots?limit=20`)).data;
+      const existing = shots.find((s) => s.attributes.fileName === d.name);
+      if (existing) {
+        const ok = existing.attributes.assetDeliveryState?.state === 'COMPLETE'
+          && existing.attributes.sourceFileChecksum === await md5(path.join(d.plan.dir, d.name));
+        if (ok) { console.log(`  ${d.plan.locale.padEnd(8)} ${d.plan.family.type}: ${d.name} landed after all`); continue; }
+        await api(`/v1/appScreenshots/${existing.id}`, 'DELETE');
+      }
+      uploaded.push({ plan: d.plan, id: await uploadScreenshot(d.plan.set.id, { name: d.name, absolute: path.join(d.plan.dir, d.name) }) });
+      uploads++;
+      console.log(`  ${d.plan.locale.padEnd(8)} ${d.plan.family.type}: uploaded ${d.name} (retry)`);
+    } catch (error) {
+      failures.push(`${d.plan.locale}/${d.name}: ${String(error.message).split('\n')[0]}`);
+    }
+  }
+}
+
+// Phase 6 — wait for the new uploads to finish processing, per set, bounded.
+const bySet = new Map();
+for (const u of uploaded) {
+  if (!bySet.has(u.plan.set.id)) bySet.set(u.plan.set.id, []);
+  bySet.get(u.plan.set.id).push(u.id);
+}
+for (const [setId, ids] of bySet) await waitComplete(setId, ids);
+
+// Phase 7 — restore display order EVERYWHERE, including sets this run never touched and even when
+// some upload failed: a red run must still leave the listing orderly.
+for (const p of plans) {
+  if (!p.set) continue;
+  const shots = (await api(`/v1/appScreenshotSets/${p.set.id}/appScreenshots?limit=20`)).data;
+  const names = shots.map((s) => s.attributes.fileName);
+  const expected = p.want.filter((n) => names.includes(n));
+  if (JSON.stringify(names) === JSON.stringify(expected)) continue;
+  const byName = new Map(shots.map((s) => [s.attributes.fileName, s.id]));
+  await api(`/v1/appScreenshotSets/${p.set.id}/relationships/appScreenshots`, 'PATCH',
+    { data: expected.map((n) => ({ type: 'appScreenshots', id: byName.get(n) })) });
+  reorders++;
+  console.log(`  ${p.locale.padEnd(8)} ${p.family.type}: reordered`);
+}
+
+console.log(`\nsync ${failures.length ? 'INCOMPLETE' : 'done'} — uploaded ${uploads}, deleted ${deletions}, reordered ${reorders} set(s)${uploads + deletions + reorders === 0 ? ' (already in sync)' : ''}`);
+if (failures.length) {
+  console.error(`\nfailed after both rounds — re-run to sync just these:\n  ${failures.join('\n  ')}`);
+  process.exit(1);
+}
