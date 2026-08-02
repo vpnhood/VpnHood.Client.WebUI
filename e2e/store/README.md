@@ -79,6 +79,12 @@ binary and its changelog and **never** the listing (see the `playstore` lane com
 - **First-version quirks**: v1 has no "What's New" (`release_notes.txt` must not exist for it);
   deliver's first-version text push raises a benign "No data" (rescued in each store repo's
   Fastfile `upload_metadata` lane — removable once 1.0 is live).
+- **The listing locks while a version is in review or live with none open.** That is a normal
+  state between releases: the appstore module probes it (`--editable-check`, exit 3 = locked) and
+  warns + skips with `published=false`, so the gate re-publishes once a version opens. A locale on
+  the listing without local screenshots is likewise a warn-and-skip (staged rollout — text ships
+  before screenshots; the storefront falls back to the primary locale's images), while local
+  screenshots for a locale the listing lacks stay a hard error.
 - **ASC API**: JWT ES256, `exp` ≤ 20 min (Apple rejects at the cap; use 15). Subtitle and privacy
   URL live on `appInfoLocalizations`; description/keywords/promo/URLs on
   `appStoreVersionLocalizations`. `sourceFileChecksum` is the MD5 of the uploaded file — the basis

@@ -153,19 +153,34 @@ const app = (await api(`/v1/apps?filter[bundleId]=${bundleId}`)).data[0];
 if (!app) throw new Error(`no app with bundle id ${bundleId}`);
 const versions = (await api(`/v1/apps/${app.id}/appStoreVersions?limit=5`)).data;
 const version = versions.find((v) => v.attributes.appStoreState === 'PREPARE_FOR_SUBMISSION');
+
+// --editable-check: answer "can the listing be written at all?" and nothing else. Apple locks the
+// listing while a version is in review or live with none open; CI uses this to warn-and-skip the
+// whole App Store leg (exit 3) instead of failing red on a state that is normal between releases.
+if (args.includes('--editable-check')) {
+  if (version) { console.log(`editable: ${version.attributes.versionString} (PREPARE_FOR_SUBMISSION)`); process.exit(0); }
+  console.log(`locked: no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
+  process.exit(3);
+}
 if (!version)
   throw new Error(`no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
 console.log(`${app.attributes.name} ${version.attributes.versionString} — sync from ${path.relative(process.cwd(), shotsRoot) || '.'}\n`);
 
-const localizations = (await api(`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations?limit=50`)).data;
+const allLocalizations = (await api(`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations?limit=50`)).data;
 const localLocales = (await fs.readdir(shotsRoot, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name);
-const liveLocales = new Set(localizations.map((l) => l.attributes.locale));
-// Locales must agree in both directions: silent drift here would mean a storefront language whose
-// screenshots never update (or local work that never ships).
+const liveLocales = new Set(allLocalizations.map((l) => l.attributes.locale));
+// Screenshots on disk for a locale the listing doesn't have is a config error — that work would
+// never ship — so it fails. The REVERSE is a legitimate staged rollout (the text push creates a
+// localization before its screenshots exist, e.g. CONNECT's translations landing ahead of its
+// screenshot generation), so those locales are skipped with a loud warning, not an error: on the
+// storefront they fall back to the primary locale's screenshots until theirs arrive.
 const missingLive = localLocales.filter((l) => !liveLocales.has(l));
+if (missingLive.length)
+  throw new Error(`screenshots exist on disk for locales the listing does not have: [${missingLive.join(', ')}] (deliver's text push creates localizations — run it first)`);
 const missingLocal = [...liveLocales].filter((l) => !localLocales.includes(l));
-if (missingLive.length || missingLocal.length)
-  throw new Error(`locale drift — on disk but not on the listing: [${missingLive.join(', ')}]; on the listing but not on disk: [${missingLocal.join(', ')}] (deliver's text push creates localizations)`);
+if (missingLocal.length)
+  console.log(`  WARNING: no local screenshots for listing locale(s) [${missingLocal.join(', ')}] — skipped; they show the primary locale's screenshots until generated\n`);
+const localizations = allLocalizations.filter((l) => localLocales.includes(l.attributes.locale));
 
 // ---------- plan, then execute in phases ----------
 //
