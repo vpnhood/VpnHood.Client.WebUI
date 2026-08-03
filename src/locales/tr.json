@@ -570,6 +570,7 @@
   "ADAPTER_DNS_CUSTOM_DESC": "Kendi DNS sunucunuzu girin.",
   "DNS1_REQUIRED": "Lütfen DNS 1 için geçerli bir IP adresi girin.",
   "INVALID_IP": "Lütfen geçerli bir IPv4 veya IPv6 adresi girin.",
+  "CUSTOM_DNS_DISCARDED": "DNS 1 eksik veya geçersiz olduğu için Özel DNS kaydedilmedi.",
   "PRIVATE_DNS_AVAILABLE_ALERT_MSG": "Özel DNS şu an etkin; bu durum özel DNS ayarlarınızın kullanılmasını engelleyebilir.",
   "VPN_SERVICE_REVOKED_MSG": "VPN bağlantısı sistem veya başka bir VPN uygulaması tarafından iptal edildi",
   "IN_USE_FEATURES": "Aktif Özellikler",

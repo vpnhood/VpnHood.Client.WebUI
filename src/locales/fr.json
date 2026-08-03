@@ -570,6 +570,7 @@
   "ADAPTER_DNS_CUSTOM_DESC": "Entrez votre propre serveur DNS.",
   "DNS1_REQUIRED": "Veuillez entrer une adresse IP valide pour le DNS 1.",
   "INVALID_IP": "Veuillez saisir une adresse IPv4 ou IPv6 valide.",
+  "CUSTOM_DNS_DISCARDED": "Le DNS personnalisé n'a pas été enregistré car le DNS 1 est manquant ou invalide.",
   "PRIVATE_DNS_AVAILABLE_ALERT_MSG": "Le DNS privé est actif et peut empêcher l'utilisation d'un DNS personnalisé.",
   "VPN_SERVICE_REVOKED_MSG": "La connexion VPN a été révoquée par le système ou une autre application VPN.",
   "IN_USE_FEATURES": "Fonctionnalités actives",

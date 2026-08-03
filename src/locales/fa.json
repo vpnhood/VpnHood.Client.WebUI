@@ -570,6 +570,7 @@
   "ADAPTER_DNS_CUSTOM_DESC": "سرور DNS دلخواه خود را وارد کنید.",
   "DNS1_REQUIRED": "لطفاً یک آدرس IP معتبر برای DNS 1 وارد کنید.",
   "INVALID_IP": "لطفاً یک آدرس معتبر IPv4 یا IPv6 وارد کنید.",
+  "CUSTOM_DNS_DISCARDED": "دی‌ان‌اس سفارشی ذخیره نشد زیرا دی‌ان‌اس ۱ نامعتبر است یا وجود ندارد.",
   "PRIVATE_DNS_AVAILABLE_ALERT_MSG": "Private DNS فعال است و ممکن است مانع از عملکرد DNS سفارشی شود.",
   "VPN_SERVICE_REVOKED_MSG": "اتصال VPN توسط سیستم یا اپ VPN دیگر لغو شده است.",
   "IN_USE_FEATURES": "ویژگی‌های فعال",

@@ -570,6 +570,7 @@
   "ADAPTER_DNS_CUSTOM_DESC": "अपना स्वयं का DNS सर्वर दर्ज करें।",
   "DNS1_REQUIRED": "कृपया DNS 1 के लिए एक वैध IP पता दर्ज करें।",
   "INVALID_IP": "कृपया एक वैध IPv4 या IPv6 पता दर्ज करें।",
+  "CUSTOM_DNS_DISCARDED": "कस्टम DNS सहेज नहीं किया गया क्योंकि DNS 1 गायब है या अमान्य है।",
   "PRIVATE_DNS_AVAILABLE_ALERT_MSG": "प्राइवेट DNS अभी सक्रिय है, जो कस्टम DNS के उपयोग में बाधा डाल सकता है।",
   "VPN_SERVICE_REVOKED_MSG": "VPN कनेक्शन को सिस्टम या किसी अन्य VPN ऐप द्वारा रद्द कर दिया गया है",
   "IN_USE_FEATURES": "सक्रिय सुविधाएँ",

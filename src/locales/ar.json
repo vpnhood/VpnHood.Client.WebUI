@@ -570,6 +570,7 @@
   "ADAPTER_DNS_CUSTOM_DESC": "أدخل خادم DNS الخاص بك.",
   "DNS1_REQUIRED": "يرجى إدخال عنوان IP صالح لـ DNS 1.",
   "INVALID_IP": "يرجى إدخال عنوان IPv4 أو IPv6 صالح.",
+  "CUSTOM_DNS_DISCARDED": "لم يتم حفظ خادم DNS المخصص لأن الحقل الأول فارغ أو غير صالح.",
   "PRIVATE_DNS_AVAILABLE_ALERT_MSG": "خاصية DNS الخاص مفعلة حالياً، مما قد يمنع استخدام إعدادات DNS المخصصة.",
   "VPN_SERVICE_REVOKED_MSG": "تم إلغاء اتصال VPN بواسطة النظام أو تطبيق VPN آخر",
   "IN_USE_FEATURES": "الميزات النشطة",
