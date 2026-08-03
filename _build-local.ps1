@@ -42,9 +42,12 @@ if (!$translatorProject) {
 }
 
 # The Gemini key lives in the private OmegaHood.Secrets checkout (<Vh>/.user), never in this repo.
-# Per-repo location first, then the older repo-root spellings. The key is optional for a LOCAL build:
-# without it the translation step is skipped and src/locales is bundled exactly as it sits on disk.
+# The current spelling first — it mirrors the org secret GOOGLE_GEMINI_TRNSLATE_APP_API_KEY, the one
+# key shared by the SPA and both store listings — then the per-repo location and the older repo-root
+# spellings (including a historic typo) so an existing checkout keeps working. The key is optional
+# for a LOCAL build: without it translation is skipped and src/locales is bundled as it sits on disk.
 $geminiKeyCandidates = @(
+    (Join-Path $vhDir ".user/google_gemini_translate_app_api_key.txt"),
     (Join-Path $vhDir ".user/VpnHood.Client.WebUI/google_gemini_api_key.txt"),
     (Join-Path $vhDir ".user/google_gemini_api_key.txt"),
     (Join-Path $vhDir ".user/goolge_gemini_api_key.txt")
@@ -59,7 +62,7 @@ if ([string]::IsNullOrWhiteSpace($env:GEMINI_API_KEY)) {
         Write-Warning "The Gemini API key file $geminiKeyFile is empty.";
     }
     else {
-        Write-Warning "Could not find google_gemini_api_key.txt — expected it in $vhDir/.user/VpnHood.Client.WebUI.";
+        Write-Warning "Could not find the Gemini key — expected google_gemini_translate_app_api_key.txt in $vhDir/.user.";
     }
     Write-Warning "Skipping translation: the bundle keeps the locale files as they are, so anything you changed in en.json stays untranslated in the other languages.";
 }

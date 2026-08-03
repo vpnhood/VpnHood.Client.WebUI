@@ -64,9 +64,11 @@ jobs:
       - name: Translate locales
         shell: pwsh
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # ORG secret GOOGLE_GEMINI_TRNSLATE_APP_API_KEY (one key shared by the SPA and both store
+          # listings), exposed under the name vhtranslator itself reads.
+          GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_TRNSLATE_APP_API_KEY }}
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:GEMINI_API_KEY)) { throw "GEMINI_API_KEY is not set." }
+          if ([string]::IsNullOrWhiteSpace($env:GEMINI_API_KEY)) { throw "GOOGLE_GEMINI_TRNSLATE_APP_API_KEY is not set." }
           dotnet tool install --global VpnHood.Tools.ResourceTranslator
           $env:PATH = "$env:PATH" + [IO.Path]::PathSeparator + (Join-Path $HOME ".dotnet/tools")
           vhtranslator --base "src/locales/en.json" -m "gemini-flash-lite-latest"
