@@ -26,6 +26,8 @@ store-i18n/en-US/store.json     hand-written EN source texts   (store repo)
 store-metadata.mjs              compiles texts → fastlane/metadata/{android,ios}/<locale>/*.txt
 store-screenshots.mjs           renders SPA against fixture.json → fastlane screenshots/images
         │  both run in update-screenshots.yml (store repo), which commits the results
+        │  CLIENT uses the built-in e2e/store/*; CONNECT passes its own store/project.mjs
+        │  + store/fixture.json through the action's `project` input
         ▼
 publish_listing.yml (stub, store repo) → publish_listing.yml (main, reusable)
         ├─ gate: store-publish-state.mjs   fingerprint vs fastlane/publish-state.json
@@ -42,9 +44,9 @@ binary and its changelog and **never** the listing (see the `playstore` lane com
 
 | file | contract |
 |---|---|
-| `store/project.mjs` | All per-app config: locales (+ per-store code overrides), platforms, devices, shots, install dirs. Data only — change *what* is generated here, never in the engine. |
-| `store/fixture.json` | The mocked `/api/app` state screenshots render against. Never real keys/IPs/IDs. |
-| `store-screenshots.mjs` | Renders, frames, and installs screenshots. Deterministic: same inputs → same bytes. |
+| `store/project.mjs` | All per-app config: locales (+ per-store code overrides), platforms, devices, shots, install dirs. Data only — change *what* is generated here, never in the engine. This built-in copy is the **CLIENT**; CONNECT owns its own at `Vpnhood.App.Connect/store/project.mjs`, passed via `--project` (the action's `project` input). A store repo's config must import nothing outside Node built-ins — the workflow's `plan` job imports it in a checkout with no `node_modules` — and resolves engine assets through `process.cwd()`, which the action sets to the engine root. |
+| `store/fixture.json` | The mocked `/api/app` state screenshots render against. Never real keys/IPs/IDs. Connect's sits beside its project file. Anything derived from app logic (per-location `options`, category tags) must be computed with the rules in `ClientServerLocationInfo.cs`, never hand-written, or the listing can claim a tier the app would not grant. |
+| `store-screenshots.mjs` | Renders, frames, and installs screenshots. Intended to be deterministic (same inputs → same bytes) — but see "Known non-determinism" below; it does not hold for text-heavy pages. |
 | `store-metadata.mjs` | Compiles `store-i18n` texts into fastlane trees. Fails loud on limits/missing keys/platform names in iOS copy (Guideline 2.3.10). `--check` validates without writing. |
 | `store-publish-state.mjs` | Fingerprints what a publish would send; compares with `fastlane/publish-state.json` in the store repo. Text hashed as LF (CRLF checkouts must fingerprint identically to CI). Record only after a **verified** publish. |
 | `store-asc-screenshots.mjs` | Checksum-sync of App Store screenshots (the Play `sync_image_upload` equivalent). Replaces deliver's delete-all mode. Phased against Apple's ghost-delete 500s — the file header documents the observed evidence. `--check` reports drift. |
@@ -67,6 +69,28 @@ binary and its changelog and **never** the listing (see the `playstore` lane com
 6. **iOS copy never names other platforms** (Android/Google Play/Windows/Linux) — App Store
    Guideline 2.3.10. The compiler lints texts; screenshots must respect it too (the Servers page
    promo was removed on iOS for this — don't reintroduce it).
+
+## Known non-determinism (open)
+
+`store-screenshots.mjs` is *meant* to be byte-deterministic, and the gate assumes it: a shot that
+re-renders differently is re-uploaded to every store on every run, which is exactly what the
+fingerprint gate exists to prevent — and repeated App Store screenshot replacement is the fragile
+path (see the ghost-delete note below).
+
+**It does not hold for text-heavy pages.** Reproduced on Connect's Servers shot (a 22-row location
+list): six identical local runs produced **two** distinct outputs. The diff is ~4,200 sparse pixels
+confined to the text-glyph band, and the two states *cluster* across consecutive runs rather than
+alternating randomly — which points at the rasterization path, not at app or fixture behaviour.
+
+Ruled out: a webfont race. Awaiting `document.fonts.ready` before capture does **not** fix it
+(tested, then reverted — do not re-add it as a fix without new evidence).
+
+Still untested: forcing deterministic text rasterization at launch
+(`--disable-lcd-text`, `--font-render-hinting=none`, `--force-color-profile=srgb`). That would
+re-render every shot in both apps, so it needs its own verified change, not a drive-by.
+
+The CLIENT does not show this today only because its Servers shot is the short add-a-key screen.
+Any new long, text-dense shot will inherit the problem.
 
 ## Apple lore (hard-won, with evidence)
 
@@ -108,7 +132,17 @@ node e2e/store-asc-screenshots.mjs --bundle-id com.vpnhood.client.ios \
 # full pipeline, CI: dispatch and watch
 gh workflow run publish_listing.yml -R vpnhood/Vpnhood.App.Client
 gh workflow run update-screenshots.yml -R vpnhood/Vpnhood.App.Client -f webui-ref=develop
+
+# CONNECT: same workflows, but the engine needs Connect's own config
+node e2e/store-screenshots.mjs --project ../Vpnhood.App.Connect/store/project.mjs \
+  --platform ios --locale en-US --only 1
+gh workflow run update-screenshots.yml -R vpnhood/Vpnhood.App.Connect -f webui-ref=develop
 ```
+
+The Gemini key is the org secret `GOOGLE_GEMINI_TRNSLATE_APP_API_KEY` (one key for the SPA locales
+and both store listings). Workflows hand it to the tool as `GEMINI_API_KEY`, which is what
+vhtranslator reads — the two names differ on purpose. Locally it is
+`.user/google_gemini_translate_app_api_key.txt`.
 
 An unchanged listing must yield: gate green, both store jobs **skipped**, no record commit. A
 forced run (`-f force=true`) must yield all jobs green with the App Store leg ~1 minute.
