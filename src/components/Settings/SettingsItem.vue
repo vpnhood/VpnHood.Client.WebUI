@@ -37,9 +37,17 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <config-card v-if="props.isShow" class="pa-3" :disabled="props.disabled">
+  <!-- The click belongs on the card, not on an inner div: a VCard only becomes interactive when it
+       carries the handler itself, and without that the row answers a tap with nothing at all — no
+       ripple, no pressed state — until the next page finishes animating in, which reads as lag. -->
+  <config-card
+    v-if="props.isShow"
+    class="pa-3"
+    :disabled="props.disabled"
+    @click="!props.disabled && router.push(props.click)"
+  >
 
-    <div @click="!props.disabled && router.push(props.click)" >
+    <div>
 
       <!-- Title, selected item and status (If available) and premium icon (If available) -->
       <div class="d-flex align-center justify-space-between pb-1">
@@ -94,8 +102,9 @@ const emit = defineEmits<{
 
     </div>
 
-    <!-- Language contribute link -->
-    <div v-if="props.languageMoreAction" class="text-body-small">
+    <!-- Language contribute link. Swallows its own clicks now that the whole card navigates:
+         reaching for the GitHub link must not open the language page instead. -->
+    <div v-if="props.languageMoreAction" class="text-body-small" @click.stop>
       <v-divider class="my-3"/>
 
       <!-- Description -->

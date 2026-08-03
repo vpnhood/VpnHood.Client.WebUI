@@ -142,7 +142,7 @@ function isShowConnectivitySectionTitle(): boolean {
       :subtitle="locale('DNS_DESC')"
       :status="{
         state: vhApp.data.isDnsCustomized,
-        onText: locale('CUSTOM'),
+        onText: vhApp.data.isPrivateDnsCustomized ? locale('PRIVATE_DNS') : locale('CUSTOM'),
         offText: locale('DEFAULT')
       }"
       :isPremium="vhApp.data.isPremiumFeature(AppFeature.CustomDns)"

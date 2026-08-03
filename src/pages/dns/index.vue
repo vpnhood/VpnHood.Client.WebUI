@@ -17,6 +17,7 @@ const locale = i18n.global.t;
 
 const isPrivateDnsActive = computed(() => vhApp.data.isPrivateDnsActive);
 const isPrivateDnsCustomized = computed(() => vhApp.data.isPrivateDnsCustomized);
+const privateDnsProvider = computed(() => vhApp.data.state.systemPrivateDns?.provider);
 // Off, or running in Android's default "Automatic" mode, or pointed at a provider the user chose.
 const privateDnsStatusText = computed(() =>
   !isPrivateDnsActive.value ? locale('OFF') : isPrivateDnsCustomized.value ? locale('ON') : locale('AUTO'));
@@ -37,11 +38,19 @@ async function saveSettings() {
 }
 
 // Returning false cancels the navigation; returning nothing allows it (vue-router 5 guard style).
+//
+// An unfinished Custom entry must never cancel the leave. DNS 1 is required the moment Custom is
+// picked and it starts empty for anyone who has not set one, so refusing to leave killed both back
+// buttons — the app bar's router.go(-1) and Android's hardware back alike — with no way out but
+// typing an address. Nothing here is persisted until this guard runs, so an invalid form simply
+// discards the edit: userSettings still holds the mode that was saved before the radio moved.
 onBeforeRouteLeave(async () => {
   if ( isAdapterDnsAvailable.value && customDnsForm.value ) {
     const result = await customDnsForm.value.validate();
-    if (!result.valid)
-      return false;
+    if (!result.valid) {
+      vhApp.showGeneralSnackbar(locale('CUSTOM_DNS_DISCARDED'), 'warning');
+      return;
+    }
   }
 
   try {
@@ -116,6 +125,11 @@ function isShowEnforcedByServerAlert() {
           <!-- Premium icon for premium features -->
           <premium-icon :is-premium="AppFeature.CustomDns"/>
 
+        </div>
+
+        <!-- Provider hostname, reported only when the user chose one in the system settings -->
+        <div v-if="privateDnsProvider" class="text-highlight text-body-small pb-1 text-truncate" dir="ltr" style="text-align: start">
+          {{ privateDnsProvider }}
         </div>
 
         <!-- Item description (Show chevron icon if the item does not have the model) -->

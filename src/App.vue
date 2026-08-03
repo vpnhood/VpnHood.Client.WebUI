@@ -94,8 +94,11 @@ onMounted(async () => {
         <!-- Privacy policy page -->
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true" />
 
+        <!-- No 'out-in': that mode makes every navigation wait out the leave animation before the
+             new page even starts, so the tap that triggered it reads as lag. The two pages overlap
+             instead; see the leave rules below for what keeps the layout still while they do. -->
         <router-view v-else v-slot="{ Component, route }">
-          <transition :name="route.meta.transition?.toString()" mode="out-in">
+          <transition :name="route.meta.transition?.toString()">
             <component :is="Component" />
           </transition>
         </router-view>
@@ -123,20 +126,33 @@ onMounted(async () => {
 
 <!--suppress CssUnusedSymbol -->
 <style>
-.translate-with-fade-enter-from,
-.short-translate-leave-to {
-  opacity: 0;
-  transform: translateY(50px);
+/* Both pages are in the DOM together for the length of the animation, so the leaving one is taken
+   out of the flow — left in it, it would sit above the entering page and the layout would visibly
+   jump. v-main carries position-relative, which is what these offsets anchor to. */
+.translate-with-fade-leave-active,
+.short-translate-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
+/* transform and opacity only, never 'all': 'all' makes the engine interpolate every property that
+   differs between the two pages, which is what turns a viewport-sized transition into jank on a
+   mid-range phone. Both are compositor-friendly. */
 .translate-with-fade-enter-active,
-.short-translate-leave-active {
-  transition: all 0.2s ease;
+.short-translate-enter-active {
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .translate-with-fade-leave-active,
-.short-translate-enter-active {
-  transition: all 0.1s ease;
+.short-translate-leave-active {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.translate-with-fade-enter-from {
+  opacity: 0;
+  transform: translateY(50px);
 }
 
 .translate-with-fade-leave-to {
@@ -146,5 +162,10 @@ onMounted(async () => {
 .short-translate-enter-from {
   transform: translateY(-30px);
   opacity: 0;
+}
+
+.short-translate-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
 }
 </style>
