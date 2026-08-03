@@ -132,8 +132,20 @@ export class VpnHoodAppData {
     return this.state.splitTunnelingState.isLocalNetworkSplit;
   }
 
+  // DNS-over-TLS is in use on the current link. This is true even in Android's default "Automatic"
+  // (opportunistic) mode, so it does not mean the user configured anything.
+  get isPrivateDnsActive(): boolean {
+    return this.state.systemPrivateDns?.isActive === true;
+  }
+
+  // The user picked a provider hostname in the system settings (Android "hostname"/strict mode).
+  // The provider is reported only in that mode, so it is what tells a deliberate choice from the default.
+  get isPrivateDnsCustomized(): boolean {
+    return !!this.state.systemPrivateDns?.provider;
+  }
+
   get isDnsCustomized(): boolean{
-    if ( this.state.systemPrivateDns?.isActive)
+    if (this.isPrivateDnsCustomized)
       return true;
 
     return this.userSettings.dnsMode === DnsMode.AdapterDns && this.isPremiumFeatureAllowed(AppFeature.CustomDns);
@@ -214,6 +226,15 @@ export class VpnHoodAppData {
 
   public isShowProtocol(protocol: ChannelProtocol): boolean {
     return this.features.channelProtocols.includes(protocol);
+  }
+
+  // Does this build collect anonymous data at all? features.isAnonymousTrackerSupported answers for the
+  // native side — it is false when the tracker collapsed to a NullTracker — but this WebView has analytics
+  // of its own, which a build enables by shipping firebaseOptions. Either engine makes the consent real;
+  // neither means there is nothing to consent to, and the privacy page must not claim otherwise.
+  get isAnonymousTrackerSupported(): boolean {
+    return this.features.isAnonymousTrackerSupported ||
+      !!this.features.customData?.firebaseOptions;
   }
 
   //Add padding to the pages for handle edge-to-edge feature

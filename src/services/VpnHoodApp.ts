@@ -339,15 +339,6 @@ export class VpnHoodApp {
     return this.data.features.uiName === AppName.VpnHoodConnect;
   }
 
-  // Does this build collect anonymous data at all? isAnonymousTrackerSupported answers for the native
-  // side — it is false when the tracker collapsed to a NullTracker — but this WebView has analytics of its
-  // own, which a build enables by shipping firebaseOptions. Either engine makes the consent real; neither
-  // means there is nothing to consent to, and the privacy page must not claim otherwise.
-  public isAnonymousTrackerSupported(): boolean {
-    return this.data.features.isAnonymousTrackerSupported ||
-      !!this.data.features.customData?.firebaseOptions;
-  }
-
   public isSingleProfileMode(): boolean {
     return this.isConnectApp();
   }

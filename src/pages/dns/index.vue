@@ -15,7 +15,11 @@ import FeaturePageLayout from '@/components/Settings/FeaturePageLayout.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-const isPrivateDnsActive = computed(() => vhApp.data.state.systemPrivateDns?.isActive);
+const isPrivateDnsActive = computed(() => vhApp.data.isPrivateDnsActive);
+const isPrivateDnsCustomized = computed(() => vhApp.data.isPrivateDnsCustomized);
+// Off, or running in Android's default "Automatic" mode, or pointed at a provider the user chose.
+const privateDnsStatusText = computed(() =>
+  !isPrivateDnsActive.value ? locale('OFF') : isPrivateDnsCustomized.value ? locale('ON') : locale('AUTO'));
 const isAdapterDnsAvailable = computed(() => selectedDnsMode.value == DnsMode.AdapterDns);
 
 const dns1 = ref<string | null>(vhApp.data.userSettings.dnsServers[0] ?? null);
@@ -100,9 +104,9 @@ function isShowEnforcedByServerAlert() {
 
             <!-- Status -->
             <v-chip
-              :text="isPrivateDnsActive ? locale('ON') : locale('OFF')"
+              :text="privateDnsStatusText"
               :disabled="!isPrivateDnsActive"
-              :color="isPrivateDnsActive ? 'enable-premium' : ''"
+              :color="isPrivateDnsCustomized ? 'enable-premium' : ''"
               size="small"
               variant="tonal"
               density="comfortable"
@@ -139,8 +143,9 @@ function isShowEnforcedByServerAlert() {
       <!-- Enforced by server alert -->
       <alert-warning v-if="isShowEnforcedByServerAlert()" :text="locale('ENFORCED_BY_SERVER')" />
 
+      <!-- Only a chosen provider overrides the adapter DNS; the automatic mode still resolves through it. -->
       <alert-warning
-        v-if="isPrivateDnsActive && selectedDnsMode === DnsMode.AdapterDns"
+        v-if="isPrivateDnsCustomized && selectedDnsMode === DnsMode.AdapterDns"
         :text="locale('PRIVATE_DNS_AVAILABLE_ALERT_MSG')"
         class="my-3"
       />

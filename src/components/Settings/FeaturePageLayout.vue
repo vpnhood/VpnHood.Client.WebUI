@@ -19,7 +19,8 @@ const props = defineProps<{
   isActionButtonAvailable: boolean,
   isShowSkipBtn?: boolean
 }>();
-const isPrivateDnsActive = computed(() => vhApp.data.state.systemPrivateDns?.isActive);
+// Only a user-chosen provider is asked to be turned off; the automatic mode is Android's default.
+const isPrivateDnsCustomized = computed(() => vhApp.data.isPrivateDnsCustomized);
 
 function actionButtonClick(): void | null {
   return props.buttonClick ? props.buttonClick() : null;
@@ -71,7 +72,7 @@ function actionButtonClick(): void | null {
     <div v-else-if="props.title === 'PRIVATE_DNS_COLORED' && !vhApp.data.isPremiumUser">
       <!-- Continue as Free -->
       <v-row
-        v-if="isPrivateDnsActive"
+        v-if="isPrivateDnsCustomized"
         dense
         v-ripple
         :autofocus="vhApp.data.features.isTv"
@@ -99,7 +100,7 @@ function actionButtonClick(): void | null {
       </v-row>
 
       <!-- Divider -->
-      <div v-if="isPrivateDnsActive" class="d-flex align-center justify-center w-50 my-3 mx-auto">
+      <div v-if="isPrivateDnsCustomized" class="d-flex align-center justify-center w-50 my-3 mx-auto">
         <v-divider color="active" opacity=".25"/>
         <span class="position-relative text-active h3 px-2">{{locale('OR')}}</span>
         <v-divider color="active" opacity=".25"/>
