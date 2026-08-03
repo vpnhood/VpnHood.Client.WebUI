@@ -26,7 +26,10 @@ const isAnonymousTrackerAllowed = computed<boolean>({
   <v-sheet>
     <app-bar/>
 
+    <!-- A build that collects nothing (a fork shipping neither analytics nor a crash reporter) offers no
+         consent and makes no claim about data — it keeps only the privacy policy link below. -->
     <settings-toggle-item
+      v-if="vhApp.isAnonymousTrackerSupported()"
       v-model="isAnonymousTrackerAllowed"
       :title="locale('ALLOW_ANONYMOUS_TRACKER')"
       :description="locale('ALLOW_ANONYMOUS_TRACKER_DESC')"
@@ -34,7 +37,9 @@ const isAnonymousTrackerAllowed = computed<boolean>({
 
     <config-card class="mt-4">
       <v-card-item>
-        <p class="text-body-small text-disabled">{{ locale('ANONYMOUS_TRACKER_NOTICE') }}</p>
+        <p v-if="vhApp.isAnonymousTrackerSupported()" class="text-body-small text-disabled">
+          {{ locale('ANONYMOUS_TRACKER_NOTICE') }}
+        </p>
 
         <v-btn
           class="mt-3 ps-0"

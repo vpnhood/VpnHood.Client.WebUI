@@ -13,6 +13,7 @@
     "isQuicSupported": true,
     "isSplitDomainSupported": true,
     "isUserReviewSupported": false,
+    "isAnonymousTrackerSupported": true,
     "isTv": false,
     "osType": "Windows",
     "gaMeasurementId": null,
