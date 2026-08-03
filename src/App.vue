@@ -94,11 +94,13 @@ onMounted(async () => {
         <!-- Privacy policy page -->
         <PrivacyPolicy v-if="isShowPrivacyPolicyDialog" @accept="isShowPrivacyPolicyDialog = true" />
 
-        <!-- No 'out-in': that mode makes every navigation wait out the leave animation before the
-             new page even starts, so the tap that triggered it reads as lag. The two pages overlap
-             instead; see the leave rules below for what keeps the layout still while they do. -->
+        <!-- 'out-in' keeps exactly one page laid out at any moment. Overlapping the two is faster on
+             paper but puts two full-page sheets in the same box: the outgoing one has to leave the
+             flow, which re-flows it against the incoming page's height, and while both are part-way
+             transparent they ghost through each other. The responsiveness is bought back with short
+             durations and a press state that lands before the navigation, not with an overlap. -->
         <router-view v-else v-slot="{ Component, route }">
-          <transition :name="route.meta.transition?.toString()">
+          <transition :name="route.meta.transition?.toString()" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
@@ -126,28 +128,20 @@ onMounted(async () => {
 
 <!--suppress CssUnusedSymbol -->
 <style>
-/* Both pages are in the DOM together for the length of the animation, so the leaving one is taken
-   out of the flow — left in it, it would sit above the entering page and the layout would visibly
-   jump. v-main carries position-relative, which is what these offsets anchor to. */
-.translate-with-fade-leave-active,
-.short-translate-leave-active {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-
 /* transform and opacity only, never 'all': 'all' makes the engine interpolate every property that
    differs between the two pages, which is what turns a viewport-sized transition into jank on a
-   mid-range phone. Both are compositor-friendly. */
+   mid-range phone. Both are compositor-friendly.
+
+   Under 'out-in' these two run back to back, so their sum is the whole wait between the tap and the
+   page being there — keep it short. */
 .translate-with-fade-enter-active,
 .short-translate-enter-active {
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.13s ease, opacity 0.13s ease;
 }
 
 .translate-with-fade-leave-active,
 .short-translate-leave-active {
-  transition: transform 0.1s ease, opacity 0.1s ease;
+  transition: transform 0.09s ease, opacity 0.09s ease;
 }
 
 .translate-with-fade-enter-from {

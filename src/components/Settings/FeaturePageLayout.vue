@@ -1,5 +1,6 @@
 ﻿<script setup lang="ts">
 import { Util } from '@/helpers/Util';
+import { UiConstants } from '@/helpers/UiConstants';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -51,13 +52,19 @@ function actionButtonClick(): void | null {
       </div>
     </div>
 
-      <!-- Feature image -->
+      <!-- Feature image. Eager because it is the page: waiting for the intersection observer to
+           notice an image that is above the fold on arrival only delays it, and until it resolves
+           the sheet has nothing in the middle but background. The aspect ratio reserves that space
+           up front — without it the sheet lays out around a zero-height image and re-flows the
+           moment the file lands, which is the flick after the page appears. -->
       <v-img
         :src="Util.getAssetPath(props.image)"
         alt="Symbol image"
         width="100%"
         max-height="240px"
         class="mx-auto my-4"
+        :aspect-ratio="UiConstants.featureImageAspectRatio"
+        :eager="true"
       />
 
     <!-- Cloak mode page -->

@@ -46,6 +46,14 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 .config-card>.v-card-title + .v-card-text{
     padding-top: 12px;
 }
+/* Press feedback for the config rows that navigate. Vuetify tags a card it made clickable with
+   .v-card--link, so rows that only hold a switch are left alone. Deliberately un-animated: the row
+   is gone a breath after the tap, and anything with a duration gets cut off part-way through and
+   reads as a glitch — see the ripple note in theme/defaults.ts. brightness keeps it theme-agnostic,
+   so the CLIENT and CONNECT palettes both lift by the same amount without naming a colour. */
+.config-card.v-card--link:active{
+    filter: brightness(1.35);
+}
 
 /*noinspection CssUnusedSymbol*/
 .flasher{

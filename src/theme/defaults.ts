@@ -45,6 +45,11 @@ export const vuetifyDefaults = {
     color: 'config-card-bg',
     class: 'config-card',
     rounded: 'lg',
+    // A ripple needs 250ms to finish expanding, and a row that navigates hands the page over long
+    // before that, so it was always torn off mid-growth and read as a blink. The :active rule in
+    // general.css answers the press instead: it is a state, not an animation, so it shows on
+    // finger-down — ahead of the navigation rather than racing it — and cannot be cut short.
+    ripple: false,
     VCardTitle: { class: 'd-flex justify-space-between align-center pt-3 pb-0' },
     VCardSubtitle: { class: 'text-disabled text-wrap text-body-small' },
     VSwitch: { class: 'px-2', color: 'switch-btn', density: 'compact', hideDetails: true },
