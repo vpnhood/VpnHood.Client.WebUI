@@ -19,7 +19,13 @@ export class UiConstants {
   static connectAppUrl: string = 'https://www.vpnhood.com/free-vpn/download';
   // The marketing site root. '/home' — used here until now — 404s.
   static websiteUrl: string = 'https://www.vpnhood.com/';
-  static privacyPolicyUrl: string = 'https://www.vpnhood.com/privacy-policy';
+  // The per-product policies, not the /privacy-policy hub the app used to link: the hub only routes
+  // to these and discloses no SDK at all, while each product page names what it actually ships —
+  // Firebase/Google Analytics in both, plus AdMob, Crashlytics and AppsFlyer in CONNECT. That is the
+  // disclosure a store's data-safety declaration has to agree with, so the app must link the same
+  // document. Pick one through VpnHoodApp.privacyPolicyUrl() rather than reading these directly.
+  static connectPrivacyPolicyUrl: string = 'https://www.vpnhood.com/vpnhood-connect-privacy-policy';
+  static clientPrivacyPolicyUrl: string = 'https://www.vpnhood.com/vpnhood-client-privacy-policy';
 }
 
 export enum ComponentName {

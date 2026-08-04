@@ -284,7 +284,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
         :nav="true"
         density="compact"
         class="opacity-80"
-        :href="UiConstants.privacyPolicyUrl"
+        :href="vhApp.privacyPolicyUrl()"
         @click="emit('update:modelValue',false)"
         target="_blank">
 

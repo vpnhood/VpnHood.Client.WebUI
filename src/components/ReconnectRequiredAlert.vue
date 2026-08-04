@@ -9,8 +9,8 @@ const locale = i18n.global.t;
 
 // Under the page title, which is the slot Android apps give a persistent banner — not over it, and
 // above all not in the status bar strip, which is where a plain top:0 lands once edge-to-edge moves
-// the page down. The page's header publishes that offset (see PageHeaderAnchor); until one has, the
-// status bar height alone at least keeps the bar out from under the notch.
+// the page down. The page's header publishes that offset (see PageHeaderAnchor); until one has been
+// laid out, the status bar height alone at least keeps the bar out from under the notch.
 const topOffset = computed<number>(() =>
   vhApp.data.uiState.pageHeaderBottom ?? vhApp.data.edgeToEdgeTopHeight ?? 0);
 

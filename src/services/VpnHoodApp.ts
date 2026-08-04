@@ -14,7 +14,7 @@ import {
   SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName } from '@/helpers/UiConstants';
+import { AppName, ComponentName, UiConstants } from '@/helpers/UiConstants';
 import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
@@ -394,6 +394,12 @@ export class VpnHoodApp {
 
   public isSingleProfileMode(): boolean {
     return this.isConnectApp();
+  }
+
+  // CLIENT and CONNECT disclose different things — only CONNECT carries ads, crash reporting and
+  // accounts — so each build must link its own policy and never the shared hub.
+  public privacyPolicyUrl(): string {
+    return this.isConnectApp() ? UiConstants.connectPrivacyPolicyUrl : UiConstants.clientPrivacyPolicyUrl;
   }
 
   public async clearLastError(): Promise<void> {
