@@ -37,6 +37,7 @@ export class VpnHoodApp {
   public errorDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
   private lastStateJson: string = '';
+  private lastSavedUserSettingsJson: string = '';
   private isSaving: boolean = false;
 
   private constructor(
@@ -58,6 +59,8 @@ export class VpnHoodApp {
     this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
     this.data.uiState.configTime = this.data.state.configTime;
     this.data.uiState.isReportSendingAvailable = vhFirebase !== null;
+    // appData arrives freshly fetched, so it is the persisted truth saveUserSetting diffs against.
+    this.lastSavedUserSettingsJson = JSON.stringify(appData.userSettings);
     VpnHoodApp._instance = this;
   }
 
@@ -213,8 +216,13 @@ export class VpnHoodApp {
     if (JSON.stringify(config.features) !== JSON.stringify(this.data.features))
       this.data.features = config.features;
     
-    if (JSON.stringify(config.userSettings) !== JSON.stringify(this.data.userSettings))
+    const userSettingsJson = JSON.stringify(config.userSettings);
+    if (userSettingsJson !== JSON.stringify(this.data.userSettings))
       this.data.userSettings = config.userSettings;
+    // Either way the fetch is the persisted truth, so it is what saveUserSetting diffs against.
+    // The clientProfileId repairs below stay after this line on purpose: they change local
+    // settings, and the stale snapshot is what makes the next saveUserSetting persist them.
+    this.lastSavedUserSettingsJson = userSettingsJson;
 
     // Remove the built-in client profile if the user is premium
     if (JSON.stringify(config.clientProfileInfos) !== JSON.stringify(this.data.clientProfileInfos))
@@ -282,9 +290,18 @@ export class VpnHoodApp {
 
   // Save any change by user
   public async saveUserSetting(): Promise<void> {
+    // Skip when nothing changed since the last save. Several pages save on route-leave as a
+    // backstop after having saved each edit already, and blocking that navigation on a no-op
+    // round trip (set + state reload + config reload) is felt as click-to-navigate delay.
+    const userSettingsJson = JSON.stringify(this.data.userSettings);
+    if (userSettingsJson === this.lastSavedUserSettingsJson) 
+      return;
+
     try {
       this.isSaving = true;
       await this.appClient.setUserSettings(this.data.userSettings);
+      // Only a successful post is a save — on failure the snapshot stays stale so the next call retries.
+      this.lastSavedUserSettingsJson = userSettingsJson;
     } finally {
       this.isSaving = false;
     }
