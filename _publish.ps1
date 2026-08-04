@@ -7,8 +7,9 @@
 #
 # Flow:
 #   1. Refuse a dirty tree; publish only from develop.
-#   2. Pull, then push develop — CI publishes what is on GitHub, so your committed work must be there.
-#   3. Dispatch publish_nugets.yml on develop. A stable run also fast-forwards main (in CI).
+#   2. Build the SPA locally as a pre-flight gate — nothing is dispatched if it fails.
+#   3. Pull, then push develop — CI publishes what is on GitHub, so your committed work must be there.
+#   4. Dispatch publish_nugets.yml on develop. A stable run also fast-forwards main (in CI).
 #
 # Usage:
 #   ./_publish.ps1               # prompts for Prerelease / Stable
@@ -42,6 +43,20 @@ try {
 		$answer = Read-Host "Publish as a prerelease? [y/N]";
 		$prerelease = ($answer -match '^\s*[yY]');
 	}
+
+	# Pre-flight gate: the same Build-Spa.ps1 CI runs, so a type error or a broken bundle stops the
+	# publish HERE — before anything is pushed or dispatched. Without it the failure lands in CI after
+	# it has already bumped and committed "Publish SPA x.y.z", leaving a burnt version behind.
+	# `npm ci` is deliberately not skipped: CI installs from the lockfile, and a gate that builds
+	# against a drifted node_modules can pass where CI fails.
+	#
+	# This is a build ONLY — no translation, no bump. It leaves dist/ and nuget/.../Resources/spa.zip
+	# (both gitignored, so the clean-tree check above still holds) and steps the untracked
+	# .local-build-number. The bundle CI publishes is built by CI, not this one; to run the app against
+	# a local SPA use ./_build-local.ps1, which also translates.
+	Write-Host "Pre-flight: building the SPA locally ..." -ForegroundColor Magenta;
+	& (Join-Path $PSScriptRoot "pub/Build-Spa.ps1");
+	if ($LASTEXITCODE -ne 0) { throw "_publish: local SPA build failed (exit $LASTEXITCODE) — nothing was published."; }
 
 	git pull origin develop --no-rebase;
 	if ($LASTEXITCODE -ne 0) { throw "_publish: git pull failed (exit $LASTEXITCODE) — resolve and retry."; }
