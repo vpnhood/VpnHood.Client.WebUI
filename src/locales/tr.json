@@ -34,6 +34,7 @@
   "SAVE": "Kaydet",
   "OK": "Tamam",
   "NO_SERVER_SELECTED": "Sunucu Seçilmedi",
+  "NO_LOCATION_SELECTED": "Konum Yok",
   "SERVER": "Sunucu",
   "MANAGE_SERVERS": "Sunucuyu Değiştir",
   "WHATS_NEW": "Yenilikler Neler?",

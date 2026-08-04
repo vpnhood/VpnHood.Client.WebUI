@@ -34,6 +34,7 @@
   "SAVE": "保存",
   "OK": "确定",
   "NO_SERVER_SELECTED": "未选择服务器",
+  "NO_LOCATION_SELECTED": "未选择位置",
   "SERVER": "服务器",
   "MANAGE_SERVERS": "更改服务器",
   "WHATS_NEW": "有什么新特性？",
