@@ -43,6 +43,14 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 .v-alert + .v-alert{
     margin-top: 10px;
 }
+/* Inline actions inside an alert — the reconnect and turn-on links. Colour is the one property a
+   link does not inherit: the browser paints every <a href> in its own default, which lands as blue
+   on the warning alert's orange and is barely readable. Each alert type already carries a text
+   colour picked to read on its own background (on-warning and friends), so the action takes that;
+   the underline and the bold weight are what mark it tappable, not a colour of its own. */
+.v-alert a{
+    color: inherit;
+}
 .config-card>.v-card-title + .v-card-text{
     padding-top: 12px;
 }
