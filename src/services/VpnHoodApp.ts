@@ -102,6 +102,13 @@ export class VpnHoodApp {
   // collection after the fact would be too late.
   private static async createFirebase(features: AppFeatures): Promise<VhFirebaseApp | null> {
     try {
+      // A build without firebaseOptions can never create the SDK; decide that before the dynamic
+      // import so such builds never download and parse the Firebase chunk at all.
+      if (!features.customData?.firebaseOptions) {
+        console.log('the firebaseOptions is not set in the app features -> customData -> firebaseOptions.');
+        return null;
+      }
+
       const { VhFirebaseApp } = await import('@/services/Firebase');
 
       return VhFirebaseApp.tryCreate(features.customData?.firebaseOptions, features.clientId);
@@ -118,12 +125,24 @@ export class VpnHoodApp {
   private async syncAnalyticsConsent(): Promise<void> {
     if (import.meta.env.DEV) return;
 
-    if (!this.data.userSettings.allowAnonymousTracker) {
+    // Already in sync — the common case, since this runs on every settings reload and consent
+    // rarely changes. Bail before touching the SDK: re-enabling an enabled SDK is a wasted call
+    // per save, and the no-SDK path below would re-attempt a Firebase init inside the awaited
+    // save chain. Consent-on with a null SDK still falls through, so a failed init keeps its
+    // retry on the next reload.
+    const isTrackerAllowed = this.data.userSettings.allowAnonymousTracker;
+    const isTrackerActive = this.vhFirebase !== null;
+    if (isTrackerAllowed === isTrackerActive)
+      return;
+
+    if (!isTrackerAllowed) {
       this.vhFirebase?.setCollectionEnabled(false);
       this.vhFirebase = null;
     }
-    else if (this.vhFirebase) this.vhFirebase.setCollectionEnabled(true);
-    else this.vhFirebase = await VpnHoodApp.createFirebase(this.data.features);
+    else if (this.vhFirebase) 
+      this.vhFirebase.setCollectionEnabled(true);
+    else 
+      this.vhFirebase = await VpnHoodApp.createFirebase(this.data.features);
 
     this.data.uiState.isReportSendingAvailable = this.vhFirebase !== null;
   }
