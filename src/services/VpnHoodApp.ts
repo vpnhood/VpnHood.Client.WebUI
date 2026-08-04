@@ -2,6 +2,8 @@ import {
   ApiException,
   AppClient,
   AppFeatures,
+  AppSignInMethod,
+  AppSignInOptions,
   ClientProfileClient,
   ClientProfileInfo,
   ClientProfileUpdateParams,
@@ -447,7 +449,8 @@ export class VpnHoodApp {
     this.data.uiState.showLoadingDialog = true;
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
-      await accountClient.signInWithGoogle();
+      const signInMethod = this.data.features.signInMethods[0] ?? AppSignInMethod.Google;
+      await accountClient.signIn(new AppSignInOptions({ method: signInMethod }));
       await this.loadAccount();
     } catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;
