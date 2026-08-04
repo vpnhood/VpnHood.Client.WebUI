@@ -7,11 +7,12 @@
 #
 # Flow:
 #   1. Refuse a dirty tree; publish only from develop.
-#   2. Pull, then push develop — CI publishes what is on GitHub, so your committed work must be there.
-#   3. Dispatch publish_nugets.yml on develop. A stable run also fast-forwards main (in CI).
+#   2. Build the SPA locally as a pre-flight gate — nothing is dispatched if it fails.
+#   3. Pull, then push develop — CI publishes what is on GitHub, so your committed work must be there.
+#   4. Dispatch publish_nugets.yml on develop. A stable run also fast-forwards main (in CI).
 #
 # Usage:
-#   ./_publish.ps1               # prompts for Prerelease / Stable
+#   ./_publish.ps1               # prompts for Release / Prerelease (Enter = Release)
 #   ./_publish.ps1 -prerelease   # prerelease: commit X.Y.Z on develop,        NuGet X.Y.Z-prerelease
 #   ./_publish.ps1 -prerelease:$false  # stable:  commit X.Y.Z on develop, ff main, NuGet X.Y.Z
 #
@@ -37,11 +38,33 @@ try {
 	if ($dirty) { throw "_publish: working tree has uncommitted changes; commit or stash them first.`n$($dirty -join "`n")"; }
 
 	# Prompt for the release type unless it was passed explicitly (so automation can still be silent).
-	# Enter defaults to stable (N); prerelease requires an explicit y.
+	# The capital in [R/p] marks the default: Enter alone publishes a release. Anything that is not a
+	# recognised answer re-asks instead of falling through to the default — a publish is public, so a
+	# typo must never be the thing that decides which kind it is.
 	if (-not $PSBoundParameters.ContainsKey('prerelease')) {
-		$answer = Read-Host "Publish as a prerelease? [y/N]";
-		$prerelease = ($answer -match '^\s*[yY]');
+		do {
+			$reply = (Read-Host "Publish as Release or Prerelease? [R/p]").Trim();
+			$answer = if ($reply -eq "") { "r" } else { $reply };
+			$isValid = $answer -match '^(r|release|p|prerelease)$';
+			if (-not $isValid) { Write-Host "Answer R for a release or P for a prerelease." -ForegroundColor Yellow; }
+		} while (-not $isValid);
+
+		$prerelease = $answer -match '^(p|prerelease)$';
 	}
+
+	# Pre-flight gate: the same Build-Spa.ps1 CI runs, so a type error or a broken bundle stops the
+	# publish HERE — before anything is pushed or dispatched. Without it the failure lands in CI after
+	# it has already bumped and committed "Publish SPA x.y.z", leaving a burnt version behind.
+	# `npm ci` is deliberately not skipped: CI installs from the lockfile, and a gate that builds
+	# against a drifted node_modules can pass where CI fails.
+	#
+	# This is a build ONLY — no translation, no bump. It leaves dist/ and nuget/.../Resources/spa.zip
+	# (both gitignored, so the clean-tree check above still holds) and steps the untracked
+	# .local-build-number. The bundle CI publishes is built by CI, not this one; to run the app against
+	# a local SPA use ./_build-local.ps1, which also translates.
+	Write-Host "Pre-flight: building the SPA locally ..." -ForegroundColor Magenta;
+	& (Join-Path $PSScriptRoot "pub/Build-Spa.ps1");
+	if ($LASTEXITCODE -ne 0) { throw "_publish: local SPA build failed (exit $LASTEXITCODE) — nothing was published."; }
 
 	git pull origin develop --no-rebase;
 	if ($LASTEXITCODE -ne 0) { throw "_publish: git pull failed (exit $LASTEXITCODE) — resolve and retry."; }
