@@ -39,10 +39,11 @@ const filteredListItem = computed(() => {
 
 /*** Toggles a single item selection and notifies parent ***/
 const toggleListItem = (x: IListItemInfo) => {
-  const updatedList = props.list.map(item =>
-    item.id === x.id ? { ...item, isSelected: !item.isSelected } : item
-  );
-  emit('update:list', updatedList);
+  // Flip in place: items are reactive, so only the tapped row re-renders and the switch answers
+  // the tap at once. Rebuilding the array re-rendered every row per tap, which on a long app list
+  // blocked the main thread — the toggle lagged and the ripple never got a frame to grow.
+  x.isSelected = !x.isSelected;
+  emit('update:list', props.list);
 };
 
 /*** Select all items and notifies parent ***/
@@ -149,10 +150,9 @@ async function onClearAll() {
 
         <template v-else v-slot:prepend>
           <v-avatar :size="props.iconSize">
-            <v-img
-              :src="item.icon"
-              alt=""
-            />
+            <!-- plain img, not v-img: icons are inline base64, so v-img's lazy-load observer and
+                 fade transition buy nothing and cost a component per row -->
+            <img :src="item.icon" class="item-icon" alt=""/>
           </v-avatar>
         </template>
 
@@ -178,5 +178,10 @@ async function onClearAll() {
   width: 26px;
   height: 18px;
   border-radius: 2px;
+}
+.item-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

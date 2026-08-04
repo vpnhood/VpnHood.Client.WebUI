@@ -36,6 +36,7 @@ export class VpnHoodApp {
   public confirmDialogDeferred: Deferred<boolean> | null = null;
   public errorDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
+  private lastStateJson: string = '';
   private isSaving: boolean = false;
 
   private constructor(
@@ -136,7 +137,15 @@ export class VpnHoodApp {
     const state = await this.appClient.getState();
 
     if (reloadNumber !== this.lastReloadNumber) return; // Discard old data
-    this.data.state = state;
+
+    // data is reactive, so publishing the freshly parsed object graph invalidates every component
+    // that reads any part of state — once a second, even when nothing changed. Publish only real
+    // changes; the getState above still runs every poll, since its JSON is what tells them apart.
+    const stateJson = JSON.stringify(state);
+    if (stateJson !== this.lastStateJson) {
+      this.lastStateJson = stateJson;
+      this.data.state = state;
+    }
 
     // Setting has change and must reload
     if (this.data.uiState.configTime.getTime() !== this.data.state.configTime.getTime()) {
@@ -178,11 +187,19 @@ export class VpnHoodApp {
 
   private async reloadSettings(): Promise<void> {
     const config = await this.appClient.getConfig();
-    this.data.features = config.features;
-    this.data.userSettings = config.userSettings;
+
+    // Publish only real changes, per field — same reasoning as in reloadState. A save bumps
+    // configTime, which lands here on the next poll; the fetched settings then equal what the UI
+    // already shows, and republishing them re-rendered every settings reader right after each save.
+    if (JSON.stringify(config.features) !== JSON.stringify(this.data.features))
+      this.data.features = config.features;
+    
+    if (JSON.stringify(config.userSettings) !== JSON.stringify(this.data.userSettings))
+      this.data.userSettings = config.userSettings;
 
     // Remove the built-in client profile if the user is premium
-    this.data.clientProfileInfos = config.clientProfileInfos;
+    if (JSON.stringify(config.clientProfileInfos) !== JSON.stringify(this.data.clientProfileInfos))
+      this.data.clientProfileInfos = config.clientProfileInfos;
 
     // userSettings just came back from the backend, so this is the one place that sees every change
     // to the analytics consent flag regardless of which page made it.
