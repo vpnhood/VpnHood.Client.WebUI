@@ -17,6 +17,14 @@ const locale = i18n.global.t;
 // reads and writes the stored setting.
 const splitState = computed(() => vhApp.data.state.splitTunnelingState);
 
+// Split apps is the only platform-gated row on this page, so it is the only section title that can
+// be left standing over nothing. The guard names its sibling too, so it stays correct if the sibling
+// ever gains a gate of its own; the remaining sections hold ungated rows and are always shown.
+const isShowSplitApps = computed(() =>
+  vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported);
+const isShowSplitDomains: boolean = true;
+const isShowAppsAndDomainsSection = computed(() => isShowSplitApps.value || isShowSplitDomains);
+
 const isEnabled = computed<boolean>({
   get: () => vhApp.data.userSettings.splitTunneling.enabled,
   set: async (value: boolean) => {
@@ -49,7 +57,7 @@ const isEnabled = computed<boolean>({
     <alert-info v-if="splitState.isSplitByServer" :text="locale('SERVER_SPLIT_TRAFFIC_NOTICE')" class="mb-4"/>
 
     <!-- Apps & Domains -->
-    <settings-section-title :title="locale('APPS_AND_DOMAINS')"/>
+    <settings-section-title :title="locale('APPS_AND_DOMAINS')" :is-show="isShowAppsAndDomainsSection"/>
 
     <!-- Split apps: exempt from the super toggle — an app kept out of the VPN is a per-app choice
          and cannot expose the IP of the apps that stay inside, same reasoning as the local network.
@@ -59,7 +67,7 @@ const isEnabled = computed<boolean>({
       :title="locale('SPLIT_APPS')"
       :subtitle="locale('SPLIT_APPS_SHORT_DESC')"
       :is-premium="false"
-      :is-show="vhApp.data.features.isExcludeAppsSupported || vhApp.data.features.isIncludeAppsSupported"
+      :is-show="isShowSplitApps"
       :status="{
         state: splitState.isAppSplit,
         onText: vhApp.data.splitAppsStatusText,
@@ -74,7 +82,7 @@ const isEnabled = computed<boolean>({
       :title="locale('SPLIT_DOMAINS')"
       :subtitle="locale('SPLIT_DOMAINS_SHORT_DESC')"
       :is-premium="vhApp.data.isPremiumFeature(AppFeature.SplitDomain)"
-      :is-show="true"
+      :is-show="isShowSplitDomains"
       :status="{
         state: splitState.isDomainSplit,
         onText: locale('ON'),
@@ -85,7 +93,7 @@ const isEnabled = computed<boolean>({
     />
 
     <!-- IP Addresses -->
-    <settings-section-title :title="locale('IP_ADDRESSES')"/>
+    <settings-section-title :title="locale('IP_ADDRESSES')" :is-show="true"/>
 
     <!-- Filter by device -->
     <settings-item
@@ -136,7 +144,7 @@ const isEnabled = computed<boolean>({
     />
 
     <!-- Location -->
-    <settings-section-title :title="vhApp.isConnectApp() ? locale('LOCATIONS_TMP') : locale('LOCATIONS')"/>
+    <settings-section-title :title="vhApp.isConnectApp() ? locale('LOCATIONS_TMP') : locale('LOCATIONS')" :is-show="true"/>
 
     <!-- Local network: exempt from the super toggle — LAN traffic cannot expose the public IP -->
     <settings-item
@@ -170,7 +178,7 @@ const isEnabled = computed<boolean>({
     />
 
     <!-- DNS -->
-    <settings-section-title :title="locale('DNS')"/>
+    <settings-section-title :title="locale('DNS')" :is-show="true"/>
 
     <!-- Split DNS -->
     <settings-item

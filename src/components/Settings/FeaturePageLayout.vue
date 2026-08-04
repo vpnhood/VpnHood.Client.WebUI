@@ -5,9 +5,11 @@ import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed } from 'vue';
+import { usePageHeaderAnchor } from '@/helpers/PageHeaderAnchor';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const pageHeaderRef = usePageHeaderAnchor();
 
 const props = defineProps<{
   title: string,
@@ -32,7 +34,7 @@ function actionButtonClick(): void | null {
 <template>
   <grad-sheet>
 
-    <div>
+    <div ref="pageHeaderRef">
       <!-- Back button -->
       <v-btn
         v-if="!vhApp.data.features.isTv"

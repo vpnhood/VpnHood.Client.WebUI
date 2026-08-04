@@ -32,6 +32,10 @@ export class UiState {
   public edgeToEdgeTop: number | null = null;
   public edgeToEdgeBottom: number | null = null;
 
+  // Bottom edge of the current page's header, as an offset from v-main — see PageHeaderAnchor.
+  // Null until the first header with an anchor has been laid out.
+  public pageHeaderBottom: number | null = null;
+
   public isShowDeveloperDialog: boolean = false;
 
   public maxWidthOnLargeScreen = "959px";

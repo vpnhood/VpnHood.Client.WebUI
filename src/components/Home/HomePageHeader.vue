@@ -4,9 +4,11 @@ import i18n from '@/locales/i18n';
 import { computed, ref } from 'vue';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
+import { usePageHeaderAnchor } from '@/helpers/PageHeaderAnchor';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const pageHeaderRef = usePageHeaderAnchor();
 
 const openDebugDialogCounter = ref<number>(0);
 const navigationDrawerModel = ref(new ComponentRouteController(ComponentName.NavigationDrawer));
@@ -28,7 +30,7 @@ function openDebugDialog() {
 </script>
 
 <template>
-  <v-row class="align-center v-row--no-gutters mx-0">
+  <v-row ref="pageHeaderRef" class="align-center v-row--no-gutters mx-0">
 
     <!-- Navigation drawer button -->
     <v-col cols="3">
