@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "Google ile oturum aç",
   "SIGN_OUT": "Oturumu kapat",
   "SIGN_IN_TO_CONTINUE": "Devam etmek için lütfen oturum açın",
+  "SIGNED_IN_AS_X": "{email} olarak giriş yapıldı",
   "ALREADY_SUBSCRIBED": "Zaten abone olunmuş",
   "GLOBAL_SERVERS_NOTICE": "Global sunuculardan reklamları kaldır.",
   "CONGRATULATIONS": "Tebrikler",

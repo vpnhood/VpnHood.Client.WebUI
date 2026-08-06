@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "Sign in with Google",
   "SIGN_OUT": "Sign out",
   "SIGN_IN_TO_CONTINUE": "Please sign in to continue",
+  "SIGNED_IN_AS_X": "Signed in as {email}",
   "ALREADY_SUBSCRIBED": "Already subscribed",
   "GLOBAL_SERVERS_NOTICE": "Remove ads from global servers.",
   "CONGRATULATIONS": "Congratulations",

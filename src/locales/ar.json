@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "تسجيل الدخول باستخدام Google",
   "SIGN_OUT": "تسجيل الخروج",
   "SIGN_IN_TO_CONTINUE": "يرجى تسجيل الدخول للمتابعة",
+  "SIGNED_IN_AS_X": "تم تسجيل الدخول بصفتك {email}",
   "ALREADY_SUBSCRIBED": "مشترك بالفعل",
   "GLOBAL_SERVERS_NOTICE": "إزالة الإعلانات من الخوادم العالمية.",
   "CONGRATULATIONS": "تهانينا",
