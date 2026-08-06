@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "使用Google登录",
   "SIGN_OUT": "登出",
   "SIGN_IN_TO_CONTINUE": "请登录以继续",
+  "SIGNED_IN_AS_X": "已登录：{email}",
   "ALREADY_SUBSCRIBED": "已经订阅",
   "GLOBAL_SERVERS_NOTICE": "从全球服务器移除广告。",
   "CONGRATULATIONS": "恭喜",

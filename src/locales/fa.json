@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "ورود با حساب گوگل",
   "SIGN_OUT": "خروج از حساب کاربری",
   "SIGN_IN_TO_CONTINUE": "لطفا برای ادامه، وارد حساب کاربری شوید",
+  "SIGNED_IN_AS_X": "ورود با نام {email}",
   "ALREADY_SUBSCRIBED": "اکنون عضو هستید",
   "GLOBAL_SERVERS_NOTICE": "حذف تبلیغات از سرورهای جهانی",
   "CONGRATULATIONS": "تبریک می‌گوییم",

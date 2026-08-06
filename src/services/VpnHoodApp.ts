@@ -452,6 +452,13 @@ export class VpnHoodApp {
       const signInMethod = this.data.features.signInMethods[0] ?? AppSignInMethod.Google;
       await accountClient.signIn(new AppSignInOptions({ method: signInMethod }));
       await this.loadAccount();
+
+      // sign-in is otherwise silent: the drawer just closes, leaving no sign the
+      // account is now attached. A purchase confirms itself, so it stays quiet.
+      if (!onPurchase) {
+        const email = this.data.userState.userAccount?.email;
+        if (email) this.showGeneralSnackbar(i18n.global.t('SIGNED_IN_AS_X', { email }));
+      }
     } catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;
 

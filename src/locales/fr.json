@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "Se connecter avec Google",
   "SIGN_OUT": "Se déconnecter",
   "SIGN_IN_TO_CONTINUE": "Veuillez vous connecter pour continuer",
+  "SIGNED_IN_AS_X": "Connecté en tant que {email}",
   "ALREADY_SUBSCRIBED": "Déjà abonné",
   "GLOBAL_SERVERS_NOTICE": "Supprimez les publicités des serveurs mondiaux.",
   "CONGRATULATIONS": "Félicitations",

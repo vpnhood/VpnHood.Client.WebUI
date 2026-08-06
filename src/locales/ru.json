@@ -145,6 +145,7 @@
   "SIGN_IN_WITH_GOOGLE": "Войти через Google",
   "SIGN_OUT": "Выйти",
   "SIGN_IN_TO_CONTINUE": "Пожалуйста, войдите, чтобы продолжить",
+  "SIGNED_IN_AS_X": "Вход выполнен: {email}",
   "ALREADY_SUBSCRIBED": "Уже подписаны",
   "GLOBAL_SERVERS_NOTICE": "Убрать рекламу с глобальных серверов.",
   "CONGRATULATIONS": "Поздравляем",
