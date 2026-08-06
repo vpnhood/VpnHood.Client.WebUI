@@ -51,7 +51,7 @@ function buttonClickHandler() {
   <home-config-btn id="serverButton" prepend-icon="mdi-earth" tabindex="5" class="align-center mb-1"
     @click="buttonClickHandler()">
     <span class="config-btn-title" tabindex="-1">
-      {{ vhApp.isSingleProfileMode() ? locale('LOCATION_TMP') : locale('SERVER') }}
+      {{ vhApp.isSingleProfileMode() ? locale('LOCATION') : locale('SERVER') }}
     </span>
     <v-icon :icon="Util.getLocalizedRightChevron()" />
     <span
