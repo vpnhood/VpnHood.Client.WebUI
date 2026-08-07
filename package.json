@@ -46,6 +46,7 @@
     "eslint-plugin-vuetify": "^2.7.2",
     "npm-run-all2": "^9.0.2",
     "playwright": "^1.62.0",
+    "pngjs": "^7.0.0",
     "postcss": "^8.5.23",
     "postcss-preset-env": "^11.3.2",
     "typescript": "~6.0.0",

@@ -41,6 +41,7 @@ import http from 'http';
 import path from 'path';
 import url from 'url';
 import { chromium } from 'playwright';
+import { PNG } from 'pngjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
@@ -540,7 +541,39 @@ async function downsample(page, buffer, width, height, cover = false) {
     }
     return canvas.toDataURL('image/png').split(',')[1];
   }, { src: `data:image/png;base64,${buffer.toString('base64')}`, w: width, h: height, cover });
-  return Buffer.from(base64, 'base64');
+  return recompressPng(Buffer.from(base64, 'base64'));
+}
+
+/**
+ * Recompress a PNG without touching a single pixel. Chromium's `canvas.toDataURL('image/png')` —
+ * the encoder every framed and bare shot above goes through — optimises for speed, not size, and
+ * leaves roughly half the file on the table. Across a sample of the shipped Client set that is
+ * 35.2 MB of PNG down to 18.3 MB, every byte of image data identical. Repo size is the point: an
+ * IzzyOnDroid/F-Droid maintainer has to clone the store-asset repo to read our listing
+ * (vpnhood/VpnHood#765), and it had grown to hundreds of megabytes.
+ *
+ * Decode to raw RGBA and re-encode with adaptive filtering at maximum deflate. `deflateStrategy: 0`
+ * matters — the default (3, Z_RLE) is tuned for palette images and leaves these screenshots ~60%
+ * larger than strategy 0 does.
+ *
+ * WHY NOT AN IMAGE LIBRARY: sharp/libvips shrinks these files ~6x rather than ~2x, which is
+ * tempting until you diff the result — it alters up to 30% of subpixels by as much as 52/255 and
+ * silently drops the (fully opaque) alpha channel, verified against an independent decoder. That is
+ * a lossy re-encode wearing a lossless label. Store screenshots must not be quietly altered, so we
+ * take the smaller, honest win.
+ *
+ * RESIZING IS NOT AVAILABLE either: App Store screenshots must keep Apple's exact device resolution
+ * (1290x2796 and friends) or the upload is rejected. Google Play would allow smaller, but a
+ * per-store resize policy is a product decision, not a compression one.
+ *
+ * Pure function of the input bytes, so it neither helps nor worsens the byte-stability problem
+ * documented in e2e/store/README.md.
+ */
+function recompressPng(buffer) {
+  const png = PNG.sync.read(buffer);
+  const out = PNG.sync.write(png, { deflateLevel: 9, deflateStrategy: 0, filterType: -1 });
+  // Never grow a file: an already-well-packed source would otherwise get bigger.
+  return out.length < buffer.length ? out : buffer;
 }
 
 async function frameDevice(browser, resizer, platform, device, fontDataUri, rawDir, finalDir) {
