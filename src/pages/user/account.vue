@@ -91,5 +91,24 @@ async function removeCode(): Promise<void> {
       </v-card-actions>
     </config-card>
 
+    <!-- Delete account ("forget me") — the stores require it wherever sign-in exists, so it
+         shows for EVERY signed-in user, premium or not. Deliberately outside the premium
+         v-if/v-else-if chain above. The confirm dialog carries the whole contract; wording is
+         store-neutral (App Review 2.3.10). -->
+    <config-card v-if="vhApp.data.userState.userAccount">
+      <v-card-title class="text-error">{{ locale('DELETE_MY_ACCOUNT') }}</v-card-title>
+      <v-card-text>{{ locale('DELETE_MY_ACCOUNT_DESC') }}</v-card-text>
+      <v-card-actions>
+        <v-btn
+          class="ms-auto"
+          color="error"
+          variant="tonal"
+          size="small"
+          :text="locale('DELETE_MY_ACCOUNT')"
+          @click="vhApp.deleteAccount()"
+        />
+      </v-card-actions>
+    </config-card>
+
   </v-sheet>
 </template>

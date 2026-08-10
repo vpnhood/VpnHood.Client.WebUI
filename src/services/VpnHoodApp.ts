@@ -514,6 +514,24 @@ export class VpnHoodApp {
     await router.replace({ name: 'HOME' });
   }
 
+  // "Forget me" (Apple 5.1.1(v) / Play account deletion). The backend erases the person on
+  // every device; a later sign-in creates a brand-new account. The confirmation text carries
+  // the whole contract (store-neutral — never name a store) and the server refuses with an
+  // actionable message while web services are still active, which surfaces via the normal
+  // error dialog with the session intact.
+  public async deleteAccount(): Promise<void> {
+    const result = await this.showConfirmDialog(
+      i18n.global.t('CONFIRM_DELETE_ACCOUNT_TITLE'),
+      i18n.global.t('CONFIRM_DELETE_ACCOUNT_DESC'),
+    );
+    if (!result) return;
+
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    await accountClient.delete();
+    await this.loadAccount();
+    await router.replace({ name: 'HOME' });
+  }
+
   public async loadAccount(withRefresh: boolean = false): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
     if (withRefresh) await accountClient.refresh();
