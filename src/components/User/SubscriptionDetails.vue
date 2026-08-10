@@ -3,7 +3,6 @@ import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
-import { AppPackageName } from '@/helpers/UiConstants';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -56,17 +55,25 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
       </ul>
     </v-card-text>
 
-    <!-- Manage on google play button -->
-    <v-card-actions>
+    <!-- Manage-subscription button. The URL comes from the API per account
+         (userAccount.subscriptionManagementUrl) and is present only when THIS build's store billed
+         the active subscription — so this component knows NO store: no hardcoded URLs, no platform
+         branching, nothing for a fork to edit, and no way to name another platform's store inside an
+         App Store build (App Review 2.3.10/3.1.1). A subscription billed by another store gets a
+         neutral sentence instead of a link. -->
+    <v-card-actions v-if="userAccount?.subscriptionManagementUrl">
       <btn-style-1
         class="ms-auto"
         :append-icon="Util.getLocalizedRightChevron()"
-        :text="locale('MANAGE_ON_GOOGLE_PLAY')"
+        :text="locale('MANAGE_SUBSCRIPTION')"
         size="small"
-        :href="`https://play.google.com/store/account/subscriptions?sku=${userAccount?.providerSubscriptionId}&package=${vhApp.isConnectApp() ? AppPackageName.VpnHoodConnect : AppPackageName.VpnHoodClient}`"
+        :href="userAccount?.subscriptionManagementUrl"
         target="_blank"
       />
     </v-card-actions>
+    <v-card-text v-else class="text-body-small text-disabled pt-0">
+      {{ locale('SUBSCRIPTION_MANAGED_WHERE_PURCHASED') }}
+    </v-card-text>
 
   </config-card>
 </template>

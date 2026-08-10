@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import router from '@/services/router';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
@@ -11,6 +11,18 @@ import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+
+// "Sign in with X" label for the provider the tap will actually invoke (features.signInMethods —
+// free-form ids self-declared by the app's external auth provider: "google", "apple", or anything a
+// third-party provider declares). Convention over branching: a provider's label is its
+// SIGN_IN_WITH_<UPPERCASE-ID> i18n key, and an id without one (a fork's provider before it adds the
+// key) degrades to the plain "Sign in" instead of leaking a raw key on screen.
+const signInLabelKey = computed(() => {
+  const method = vhApp.data.features.signInMethods[0];
+  if (!method) return 'SIGN_IN';
+  const key = `SIGN_IN_WITH_${method.toUpperCase()}`;
+  return i18n.global.te(key) ? key : 'SIGN_IN';
+});
 
 const props = defineProps<{
   modelValue: boolean
@@ -164,7 +176,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
         <v-list-item-title class="d-flex align-center">
           <v-icon icon="mdi-account" />
           <span class="ms-3 d-flex flex-column">
-            <span>{{ vhApp.data.userState.userAccount ? locale('ACCOUNT') : locale('SIGN_IN_WITH_GOOGLE') }}</span>
+            <span>{{ locale(vhApp.data.userState.userAccount ? 'ACCOUNT' : signInLabelKey) }}</span>
             <span v-if="vhApp.data.userState.userAccount" class="text-disabled text-body-small text-truncate" style="max-width: 195px">
               {{vhApp.data.userState.userAccount.email}}
             </span>

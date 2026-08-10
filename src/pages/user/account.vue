@@ -33,10 +33,10 @@ async function removeCode(): Promise<void> {
     <!-- User details -->
     <user-details v-if="vhApp.data.userState.userAccount"/>
 
-    <!-- Premium user by google subscription -->
-    <template v-if="vhApp.data.isPremiumByGoogle">
+    <!-- Premium user by the account's store subscription (Play or App Store) -->
+    <template v-if="vhApp.data.isPremiumByAccount">
 
-      <!-- Sign out and remove google subscription -->
+      <!-- Sign out and detach the store subscription -->
       <change-premium-method
         :title="locale('WOULD_YOU_LIKE_TO_CHANGE')"
         :description="locale('SIGN_OUT_TO_USE_PREMIUM_CODE_MSG')"

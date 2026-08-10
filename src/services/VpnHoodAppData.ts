@@ -168,7 +168,9 @@ export class VpnHoodAppData {
     return this.state.clientProfile?.isAccessCodeFromAccount == true
   }
 
-  get isPremiumByGoogle(): boolean{
+  // Premium granted through the signed-in account's store subscription (Play or App Store —
+  // whichever store the platform build bills on), as opposed to a premium code.
+  get isPremiumByAccount(): boolean{
     return this.isPremiumUser && this.isAccessCodeFromAccount;
   }
   get isPremiumByCode(): boolean{

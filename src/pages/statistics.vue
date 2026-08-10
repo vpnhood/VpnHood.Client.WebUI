@@ -53,7 +53,7 @@ function calcUnit(total: number): string{
             <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumUser" class="border-b">
               <span>{{locale('PREMIUM_BY')}}</span>
               <span class="text-active">
-                {{locale(vhApp.data.isPremiumByGoogle ? 'PURCHASE_SUBSCRIPTION' : 'PREMIUM_CODE')}}
+                {{locale(vhApp.data.isPremiumByAccount ? 'PURCHASE_SUBSCRIPTION' : 'PREMIUM_CODE')}}
               </span>
             </li>
 

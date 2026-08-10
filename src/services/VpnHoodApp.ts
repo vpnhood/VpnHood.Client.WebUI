@@ -2,7 +2,6 @@ import {
   ApiException,
   AppClient,
   AppFeatures,
-  AppSignInMethod,
   AppSignInOptions,
   ClientProfileClient,
   ClientProfileInfo,
@@ -449,7 +448,12 @@ export class VpnHoodApp {
     this.data.uiState.showLoadingDialog = true;
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
-      const signInMethod = this.data.features.signInMethods[0] ?? AppSignInMethod.Google;
+      // The method id comes from the API (self-declared by the app's auth provider — free-form
+      // string, not an enum, so third-party providers flow through untouched); the UI never
+      // assumes one.
+      const signInMethod = this.data.features.signInMethods[0];
+      if (!signInMethod)
+        throw new Error('This build reports no sign-in method.');
       await accountClient.signIn(new AppSignInOptions({ method: signInMethod }));
       await this.loadAccount();
 
