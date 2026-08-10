@@ -3,11 +3,25 @@ import { computed } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
+import { GooglePlayBillingSubscriptionPeriods } from '@/helpers/googlePlayBilling/GooglePlayBillingSubscriptionPeriods';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const userAccount = computed(() => vhApp.data.userState.userAccount);
+
+// The price is what the store charged for ONE period, so it must be labelled with that
+// period — a yearly subscription shown as "/month" is simply a wrong number. The period
+// is an ISO-8601 duration; anything we have no wording for renders as a bare price
+// rather than a wrong or untranslated suffix.
+const pricePeriodLabel = computed<string>(() => {
+  switch (userAccount.value?.priceBillingPeriod) {
+    case GooglePlayBillingSubscriptionPeriods.P1M: return locale('PER_MONTH');
+    case GooglePlayBillingSubscriptionPeriods.P6M: return locale('PER_6_MONTHS');
+    case GooglePlayBillingSubscriptionPeriods.P1Y: return locale('PER_YEAR');
+    default: return '';
+  }
+});
 </script>
 
 <template>
@@ -17,9 +31,9 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
       <ul id="premiumInfoList">
 
         <!-- Created time -->
-        <li>
+        <li v-if="userAccount?.createdTime">
           <span class="text-label-large text-disabled">{{ locale('SUBSCRIBED_SINCE') }}:</span>
-          <span class="text-label-large">{{ Util.getShortDate(userAccount?.createdTime) }}</span>
+          <span class="text-label-large">{{ Util.getShortDate(userAccount.createdTime) }}</span>
         </li>
 
         <!-- Next payment or Expiration time -->
@@ -45,11 +59,11 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
         </li>
 
         <!-- Price -->
-        <li>
+        <li v-if="userAccount?.priceAmount != null">
           <span class="text-label-large text-disabled">{{ locale('PRICE') }}:</span>
           <span class="text-label-large">
-                <span class="text-body-small text-disabled">{{ userAccount?.priceCurrency }}</span>
-                {{ userAccount?.priceAmount }}{{ locale('PER_MONTH') }}
+                <span class="text-body-small text-disabled">{{ userAccount.priceCurrency }}</span>
+                {{ userAccount.priceAmount }}{{ pricePeriodLabel }}
               </span>
         </li>
       </ul>
