@@ -527,7 +527,18 @@ export class VpnHoodApp {
     if (!result) return;
 
     const accountClient = ClientApiFactory.instance.createAccountClient();
-    await accountClient.delete();
+    try {
+      await accountClient.delete();
+    } catch (err: unknown) {
+      // The portal's machine code rides ExceptionTypeName (problem+json `code`).
+      // This one is user-actionable, so it gets a localized sentence instead of
+      // the server's English prose; every other failure keeps the generic path.
+      if (err instanceof ApiException && err.exceptionTypeName === 'deletion_blocked') {
+        await this.showErrorMessage(i18n.global.t('DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES'));
+        return;
+      }
+      throw err;
+    }
     await this.loadAccount();
     await router.replace({ name: 'HOME' });
   }
