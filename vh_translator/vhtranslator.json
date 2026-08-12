@@ -1,5 +1,9 @@
 {
   "base": "src/locales/en.json",
   "model": "gemini-flash-lite-latest",
-  "batch": 20
+  "batch": 20,
+  "docs": {
+    "source": "src/content/en",
+    "languages": ["ar", "de", "es", "fa", "fr", "hi", "it", "pt-BR", "pt", "ru", "tr", "zh"]
+  }
 }

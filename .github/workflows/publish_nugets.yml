@@ -73,6 +73,10 @@ jobs:
           $env:PATH = "$env:PATH" + [IO.Path]::PathSeparator + (Join-Path $HOME ".dotnet/tools")
           vhtranslator --base "src/locales/en.json" -m "gemini-flash-lite-latest"
           if ($LASTEXITCODE -gt 0) { throw "translation failed (exit $LASTEXITCODE)." }
+          # Long-form markdown content (src/content/<lang>), configured by the "docs"
+          # section of vh_translator/vhtranslator.json.
+          vhtranslator docs -m "gemini-flash-lite-latest"
+          if ($LASTEXITCODE -gt 0) { throw "docs translation failed (exit $LASTEXITCODE)." }
 
       - name: Commit and push the release
         shell: pwsh
@@ -80,7 +84,7 @@ jobs:
           $version = "${{ steps.bump.outputs.version }}"
           # Version files always change; locales may or may not. Stage both; the version bump
           # guarantees the commit is never empty.
-          git add package.json package-lock.json Directory.Build.props src/locales
+          git add package.json package-lock.json Directory.Build.props src/locales src/content vh_translator/watches
           git commit -m "Publish SPA $version"
           if ($LASTEXITCODE -ne 0) { throw "git commit failed (exit $LASTEXITCODE)." }
           git push origin "HEAD:${{ github.ref_name }}"
