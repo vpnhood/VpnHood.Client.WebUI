@@ -13,6 +13,12 @@ import SubscriptionDetails from '@/components/User/SubscriptionDetails.vue';
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
+// The account is read once, when the app boots, so this page would otherwise render whatever was
+// true then. That matters after a deletion on another device: the app signs itself out as soon as
+// the backend rejects its session, but a screen holding the old value keeps showing the person who
+// was deleted. Re-reading here costs a local API call and makes this page tell the truth.
+vhApp.loadAccount().catch((error: unknown) => vhApp.processError(error));
+
 async function removeCode(): Promise<void> {
   const result = await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_PREMIUM_CODE'), locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
   if (!result)
