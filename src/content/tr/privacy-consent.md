@@ -4,11 +4,11 @@ translate_prompt: "Legal disclosure shown on first run. Translate literally and 
 lang: tr
 auto_translated: true
 ---
-VpnHood! CONNECT, hesap gerektirmeden kullanabileceğiniz bir VPN'dir. Gizlilik Politikamızın kısa özeti şöyledir:
+VpnHood! CONNECT, hesap gerektirmeden kullanabileceğiniz bir VPN'dir. Gizlilik Politikamızın kısa özeti:
 
 - Gezinme geçmişinizi kaydetmiyoruz. Sunucularımız, trafiğinizden ziyaret ettiğiniz varış noktalarını (alan adları, URL'ler veya IP adresleri) asla çıkarmaz.
-- IP adresiniz ve bağlantı süreleriniz 30 gün boyunca sunucu günlük dosyalarında kalır. Bunları yalnızca telif hakkı ihlali bildirimine istinaden işlem yapmak için kullanırız.
-- Uygulama, yalnızca rastgele bir kimlikle tanımlanan anonim kullanım ve tanılama verileri gönderir. Bunu Ayarlar → Gizlilik bölümünden istediğiniz zaman kapatabilirsiniz.
-- Uygulamayı nereden yüklediğinize bağlı olarak uygulama reklamlar gösterebilir, kilitlenme raporları gönderebilir ve abonelikler için isteğe bağlı bir oturum açma seçeneği sunabilir.
+- IP adresiniz ve bağlantı süreleriniz 30 gün boyunca sunucu günlüklerinde kalır ve yalnızca telif hakkı ihlali bildirimine istinaden işlem yapmak için kullanılır.
+- Uygulama, yalnızca rastgele bir kimliğe bağlı anonim kullanım ve tanılama verileri gönderir. Bunu istediğiniz zaman Ayarlar → Gizlilik bölümünden kapatabilirsiniz.
+- Uygulamayı nereden yüklediğinize bağlı olarak uygulama reklam gösterebilir, kilitlenme raporları gönderebilir ve abonelikler için isteğe bağlı bir oturum açma sunabilir.
 
-Politikanın tamamı bunların her birini açıklamaktadır. ‘Kabul et ve devam et’ seçeneğine dokunarak bunu kabul etmiş olursunuz.
+‘Kabul et ve devam et’ seçeneğine dokunarak politikanın tamamını kabul etmiş olursunuz.

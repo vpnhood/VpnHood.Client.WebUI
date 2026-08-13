@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "注销账号",
   "DELETE_MY_ACCOUNT_DESC": "永久删除您的账号以及我们服务器上的个人数据。",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "确认注销账号？",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "您的账号和个人数据将被永久删除且无法恢复；稍后重新登录将创建一个全新的空账号。您的订阅不会被自动取消，请在原购买商店进行管理，当前计费周期内已支付的服务仍可继续使用。发票将因法律原因保留。",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "您的账号和个人数据将被永久删除且无法恢复；再次登录将创建新账号。所有已登录的设备将被登出。您的订阅不会自动取消，请在购买的应用商店中管理，当前计费周期内仍可继续使用。发票将依法保留。",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "您在我们的网站上有未到期的服务。请先在网页端取消订阅，然后再注销账号。",
   "SUPPORT_ID": "支持ID",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "找不到VpnHood全球服务器的配置文件。",

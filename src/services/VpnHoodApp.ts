@@ -432,16 +432,22 @@ export class VpnHoodApp {
 
     if (!clientProfile.hasAccessCode) throw new Error('The profile does not have a premium code.');
 
-    if (this.data.isConnected) await this.disconnect();
+    // a disconnect plus one or two round trips, all of it invisible otherwise
+    this.data.uiState.showLoadingDialog = true;
+    try {
+      if (this.data.isConnected) await this.disconnect();
 
-    await this.clientProfileClient.update(
-      clientProfile.clientProfileId,
-      new ClientProfileUpdateParams({
-        accessCode: new PatchOfString({ value: null }),
-      }),
-    );
+      await this.clientProfileClient.update(
+        clientProfile.clientProfileId,
+        new ClientProfileUpdateParams({
+          accessCode: new PatchOfString({ value: null }),
+        }),
+      );
 
-    if (this.data.userState.userAccount?.subscriptionId) await this.loadAccount(true);
+      if (this.data.userState.userAccount?.subscriptionId) await this.loadAccount(true);
+    } finally {
+      this.data.uiState.showLoadingDialog = false;
+    }
   }
 
   public async signIn(onPurchase = false): Promise<void> {
@@ -508,10 +514,17 @@ export class VpnHoodApp {
     );
     if (!result) return;
 
-    const accountClient = ClientApiFactory.instance.createAccountClient();
-    await accountClient.signOut();
-    await this.loadAccount();
-    await router.replace({ name: 'HOME' });
+    // the confirm dialog closes on click, so without this the app looks frozen while the
+    // portal revokes the session and the account reloads
+    this.data.uiState.showLoadingDialog = true;
+    try {
+      const accountClient = ClientApiFactory.instance.createAccountClient();
+      await accountClient.signOut();
+      await this.loadAccount();
+      await router.replace({ name: 'HOME' });
+    } finally {
+      this.data.uiState.showLoadingDialog = false;
+    }
   }
 
   // "Forget me" (Apple 5.1.1(v) / Play account deletion). The backend erases the person on
@@ -526,21 +539,26 @@ export class VpnHoodApp {
     );
     if (!result) return;
 
-    const accountClient = ClientApiFactory.instance.createAccountClient();
+    let isBlockedByWebServices = false;
+    this.data.uiState.showLoadingDialog = true;
     try {
+      const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.delete();
+      await this.loadAccount();
+      await router.replace({ name: 'HOME' });
     } catch (err: unknown) {
       // The portal's machine code rides ExceptionTypeName (problem+json `code`).
       // This one is user-actionable, so it gets a localized sentence instead of
       // the server's English prose; every other failure keeps the generic path.
-      if (err instanceof ApiException && err.exceptionTypeName === 'deletion_blocked') {
-        await this.showErrorMessage(i18n.global.t('DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES'));
-        return;
-      }
-      throw err;
+      if (!(err instanceof ApiException && err.exceptionTypeName === 'deletion_blocked')) throw err;
+      isBlockedByWebServices = true;
+    } finally {
+      this.data.uiState.showLoadingDialog = false;
     }
-    await this.loadAccount();
-    await router.replace({ name: 'HOME' });
+
+    // told after the overlay is gone, so the message is not stacked underneath it
+    if (isBlockedByWebServices)
+      await this.showErrorMessage(i18n.global.t('DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES'));
   }
 
   public async loadAccount(withRefresh: boolean = false): Promise<void> {

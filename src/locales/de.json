@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Konto löschen",
   "DELETE_MY_ACCOUNT_DESC": "Lösche dein Konto und deine persönlichen Daten dauerhaft von unseren Servern.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Konto löschen?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Dein Konto und deine persönlichen Daten werden unwiderruflich von unseren Servern gelöscht und können nicht wiederhergestellt werden. Ein späteres Anmelden erstellt ein neues, leeres Konto. Dein Abo wird dadurch nicht gekündigt – verwalte es im Store deines Kaufs. Bereits bezahlter Zugriff bleibt bis zum Ende des Abrechnungszeitraums erhalten. Rechnungen werden aus rechtlichen Gründen aufbewahrt.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Dein Account und deine persönlichen Daten werden unwiderruflich von unseren Servern gelöscht. Ein neues Anmelden erstellt ein leeres Konto. Alle Geräte werden abgemeldet. Dein Abonnement wird nicht gekündigt – verwalte es im Store, wo du es gekauft hast. Bereits bezahlter Zugriff bleibt bis zum Ende des Abrechnungszeitraums aktiv. Rechnungen werden aus rechtlichen Gründen gespeichert.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "Du hast noch aktive Dienste, die auf unserer Website gekauft wurden. Kündige diese zuerst im Web-Kundenbereich und lösche dann dein Konto.",
   "SUPPORT_ID": "Support-ID",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "Das Profil der VpnHood Global Server konnte nicht gefunden werden.",

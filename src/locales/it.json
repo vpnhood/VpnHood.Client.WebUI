@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Elimina account",
   "DELETE_MY_ACCOUNT_DESC": "Elimina definitivamente il tuo account e i dati personali dai nostri server.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Eliminare l'account?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Il tuo account e i tuoi dati personali saranno eliminati definitivamente dai nostri server e non potranno essere recuperati; se effettui nuovamente l'accesso in futuro, verrà creato un nuovo account vuoto. Il tuo abbonamento non viene annullato: gestiscilo nello store in cui lo hai acquistato e l'accesso già pagato rimarrà attivo fino alla fine del periodo in corso. Le fatture saranno conservate per obblighi di legge.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Il tuo account e i tuoi dati personali verranno eliminati permanentemente dai nostri server e non potranno essere recuperati; se effettui nuovamente l'accesso in futuro, verrà creato un nuovo account vuoto. Tutti i dispositivi associati a questo account verranno disconnessi. L'abbonamento non viene annullato: gestiscilo nello store in cui lo hai acquistato e l'accesso già pagato rimarrà attivo fino alla fine del periodo corrente. Le fatture saranno conservate per obblighi di legge.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "Hai ancora servizi attivi acquistati sul nostro sito web. Annullali prima nell'area clienti web, quindi procedi all'eliminazione dell'account.",
   "SUPPORT_ID": "ID supporto",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "Impossibile trovare il profilo server globali VpnHood.",

@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Supprimer mon compte",
   "DELETE_MY_ACCOUNT_DESC": "Supprimez définitivement votre compte et vos données personnelles de nos serveurs.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Supprimer votre compte ?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Votre compte et vos données personnelles seront définitivement supprimés de nos serveurs et ne pourront pas être restaurés. Vous reconnecter plus tard créera un nouveau compte vide. Votre abonnement n'est pas annulé : gérez-le dans la boutique où vous l'avez acheté, et l'accès payé reste actif jusqu'à la fin de la période en cours. Les factures sont conservées pour des raisons légales.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Votre compte et vos données personnelles seront définitivement supprimés de nos serveurs sans possibilité de récupération. Toute reconnexion ultérieure créera un nouveau compte vide et déconnectera tous vos appareils. Votre abonnement n'est pas annulé : gérez-le dans la boutique où vous l'avez acheté. L'accès payé reste actif jusqu'à la fin de la période en cours. Les factures sont conservées pour des raisons légales.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "Vous avez encore des services actifs achetés sur notre site web. Annulez-les d'abord dans votre espace client en ligne, puis supprimez votre compte.",
   "SUPPORT_ID": "ID de support",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "Impossible de trouver le profil des serveurs mondiaux VpnHood.",

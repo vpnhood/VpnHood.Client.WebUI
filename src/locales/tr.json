@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Hesabımı sil",
   "DELETE_MY_ACCOUNT_DESC": "Hesabınızı ve kişisel verilerinizi sunucularımızdan kalıcı olarak silin.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Hesabınız silinsin mi?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Hesabınız ve kişisel verileriniz sunucularımızdan kalıcı olarak silinir ve geri getirilemez; daha sonra tekrar giriş yapmak yeni ve boş bir hesap oluşturur. Aboneliğiniz iptal edilmez — satın aldığınız mağazadan yönetin, ödemesini yaptığınız erişim mevcut dönem sonuna kadar çalışmaya devam eder. Faturalar yasal nedenlerle saklanır.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Hesabınız ve kişisel verileriniz sunucularımızdan kalıcı olarak silinir ve geri getirilemez; daha sonra tekrar giriş yapmanız yeni ve boş bir hesap oluşturur. Bu hesaba bağlı tüm cihazların oturumu kapatılacaktır. Aboneliğiniz iptal edilmez — satın aldığınız mağazadan yönetebilirsiniz ve mevcut dönem sonuna kadar ödemesini yaptığınız erişim devam eder. Faturalar yasal nedenlerle saklanır.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "Web sitemizde satın alınmış aktif hizmetleriniz var. Önce web müşteri panelinden bunları iptal edin, ardından hesabınızı silin.",
   "SUPPORT_ID": "Destek ID",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "VpnHood Global Sunucular profili bulunamadı.",

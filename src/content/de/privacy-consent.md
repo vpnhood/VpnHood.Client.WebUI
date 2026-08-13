@@ -4,11 +4,11 @@ translate_prompt: "Legal disclosure shown on first run. Translate literally and 
 lang: de
 auto_translated: true
 ---
-VpnHood! CONNECT ist ein VPN, das Sie ohne Konto nutzen können. Hier ist die Kurzfassung unserer Datenschutzerklärung:
+VpnHood! CONNECT ist ein VPN, das Sie ohne Konto nutzen können. Die Kurzfassung unserer Datenschutzerklärung:
 
-- Wir zeichnen Ihr Browsing nicht auf. Unsere Server extrahieren niemals die Ziele, die Sie besuchen – Domains, URLs oder IP-Adressen –, aus Ihrem Datenverkehr.
-- Ihre IP-Adresse und Verbindungszeiten bleiben 30 Tage lang in Server-Protokolldateien gespeichert. Wir verwenden diese ausschließlich, um auf eine Mitteilung über Urheberrechtsverletzungen zu reagieren.
-- Die App sendet anonyme Nutzungs- und Diagnosedaten, die nur durch eine zufällige ID identifiziert werden. Sie können dies jederzeit unter Einstellungen → Datenschutz ausschalten.
-- Je nachdem, wo Sie die App installiert haben, zeigt sie möglicherweise auch Werbung an, sendet Absturzberichte und bietet eine optionale Anmeldung für Abonnements an.
+- Wir zeichnen Ihr Browsing nicht auf. Unsere Server extrahieren niemals die Ziele, die Sie besuchen – Domains, URLs oder IP-Adressen – aus Ihrem Datenverkehr.
+- Ihre IP-Adresse und Verbindungszeiten bleiben 30 Tage in Server-Protokollen und werden ausschließlich verwendet, um auf eine Mitteilung über Urheberrechtsverletzungen zu reagieren.
+- Die App sendet anonyme Nutzungs- und Diagnosedaten, die nur einer zufälligen ID zugeordnet sind. Sie können dies jederzeit unter Einstellungen → Datenschutz ausschalten.
+- Je nachdem, wo Sie sie installiert haben, kann die App auch Werbung anzeigen, Absturzberichte senden und eine optionale Anmeldung für Abonnements anbieten.
 
-Die vollständige Richtlinie erläutert jeden dieser Punkte. Durch Tippen auf „Akzeptieren und fortfahren“ stimmen Sie dieser zu.
+Durch Tippen auf „Akzeptieren und fortfahren“ stimmen Sie der vollständigen Richtlinie zu.

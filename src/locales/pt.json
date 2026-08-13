@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Excluir minha conta",
   "DELETE_MY_ACCOUNT_DESC": "Exclua permanentemente sua conta e seus dados pessoais de nossos servidores.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Excluir sua conta?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Sua conta e seus dados pessoais serão excluídos permanentemente e não poderão ser recuperados. Entrar novamente criará uma nova conta vazia. Sua assinatura não é cancelada — gerencie-a na loja onde foi comprada, e o acesso pago continuará funcionando até o fim do período atual. As faturas são mantidas por motivos legais.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Sua conta e dados pessoais serão excluídos permanentemente e não poderão ser recuperados. Todos os dispositivos conectados serão desconectados. Sua assinatura não é cancelada automaticamente; gerencie-a na loja onde foi adquirida, e o acesso pago continua até o fim do período atual. Faturas são mantidas por motivos legais.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "Você ainda tem serviços ativos comprados em nosso site. Cancele-os na área do cliente web primeiro e, em seguida, exclua sua conta.",
   "SUPPORT_ID": "ID de suporte",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "Não foi possível encontrar o perfil dos Servidores Globais VpnHood.",

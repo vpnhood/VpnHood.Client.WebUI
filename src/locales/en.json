@@ -166,7 +166,7 @@
   "DELETE_MY_ACCOUNT": "Delete my account",
   "DELETE_MY_ACCOUNT_DESC": "Permanently delete your account and personal data from our servers.",
   "CONFIRM_DELETE_ACCOUNT_TITLE": "Delete your account?",
-  "CONFIRM_DELETE_ACCOUNT_DESC": "Your account and personal data will be permanently deleted from our servers and cannot be restored; signing in again later will create a new, empty account. Your subscription is not cancelled — manage it in the store where you purchased it, and access you have already paid for keeps working until the current period ends. Invoices are kept for legal reasons.",
+  "CONFIRM_DELETE_ACCOUNT_DESC": "Your account and personal data will be permanently deleted from our servers and cannot be restored; signing in again later will create a new, empty account. Every device signed in to this account will be signed out. Your subscription is not cancelled — manage it in the store where you purchased it, and access you have already paid for keeps working until the current period ends. Invoices are kept for legal reasons.",
   "DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES": "You still have active services purchased on our website. Cancel them in the web client area first, then delete your account.",
   "SUPPORT_ID": "Support ID",
   "COULD_NOT_FOUND_GLOBAL_SERVERS_PROFILE": "Could not found VpnHood Global Servers profile.",
