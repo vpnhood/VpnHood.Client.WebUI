@@ -34,6 +34,7 @@
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
     "@types/core-js": "^2.5.8",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.13.3",
     "@types/postcss-rtl": "^2.0.0",
     "@vitejs/plugin-legacy": "^8.2.2",
@@ -44,6 +45,7 @@
     "eslint": "^10.8.0",
     "eslint-plugin-vue": "^10.10.0",
     "eslint-plugin-vuetify": "^2.7.2",
+    "markdown-it": "^15.0.0",
     "npm-run-all2": "^9.0.2",
     "playwright": "^1.62.0",
     "pngjs": "^7.0.0",

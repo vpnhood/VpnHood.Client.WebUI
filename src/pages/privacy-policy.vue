@@ -1,11 +1,32 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { loadContentDocument } from '@/services/ContentDocuments';
+import i18n from '@/locales/i18n';
 
 const vhApp = VpnHoodApp.instance;
+const locale = i18n.global.t;
 
 const emit = defineEmits<{
   (e: 'accept', value: boolean): void,
 }>();
+
+// The disclosure itself is a document (src/content/<lang>/privacy-consent.md), not a resource
+// string: it is long-form prose, and vhtranslator's docs mode keeps every language in step with
+// the English source and verifies each translation structurally. Only the chrome around it —
+// button and link labels — lives in the locale files.
+// The document is fetched at setup rather than embedded so a user downloads their own language
+// only. Empty until it lands, which is a frame or two from the same bundle; a spinner would
+// flash for longer than the text takes to arrive.
+const documentHtml = ref<string>('');
+const documentTitle = ref<string>('');
+
+loadContentDocument('privacy-consent', i18n.global.locale.value)
+  .then(document => {
+    documentHtml.value = document.html;
+    documentTitle.value = document.title;
+  })
+  .catch((error: unknown) => vhApp.processError(error));
 </script>
 
 <template>
@@ -19,15 +40,11 @@ const emit = defineEmits<{
   <v-sheet class="privacy-policy-page pt-4 d-flex flex-column">
     <v-card color="transparent" class="d-flex flex-column flex-grow-1 overflow-hidden">
       <div tabindex="-1" class="d-flex flex-column flex-grow-1 overflow-hidden">
-        <v-card-title class="text-center flex-shrink-0">VpnHood! CONNECT Privacy Policy</v-card-title>
+        <!-- text-wrap because v-card-title is single-line with an ellipsis by default, and a
+             translated title is routinely longer than the English one it came from. -->
+        <v-card-title class="text-center text-wrap flex-shrink-0">{{ documentTitle }}</v-card-title>
         <v-divider class="flex-shrink-0"/>
 
-        <!-- The short version of docs/legal/end-user/vpnhood-connect-privacy-policy.md in the VpnHood
-             repo, which is what the link below opens (the website renders the slug from that file).
-             A consent screen that discloses nothing is not consent: the points below are the ones a
-             user would want to know before tapping Accept — what we never record, what our servers do
-             keep, and what the app sends. Keep them true to that file whenever it changes; the build
-             a user installed from decides which of the last ones apply, so they stay conditional. -->
         <!-- The wrapper anchors a fade-out overlay at the bottom of the scroll area: a fading
              last line is the cue that the text continues. The card-text's own bottom padding
              matches the fade height, so once the user HAS reached the end the fade sits over
@@ -35,22 +52,19 @@ const emit = defineEmits<{
              stops being true. -->
         <div class="scroll-area flex-grow-1 d-flex flex-column overflow-hidden">
           <v-card-text class="text-body-medium px-2 pb-12 flex-grow-1 overflow-y-auto">
-            <p class="pb-4 text-disabled">
-              VpnHood! CONNECT is a VPN you can use without an account. Here is the short version of our Privacy Policy:<br/><br/>
-              • We do not record your browsing. Our servers never extract the destinations you visit — domains, URLs, or IP addresses — from your traffic.<br/><br/>
-              • Your IP address and connection times stay in server log files for 30 days. We use them only to act on a copyright infringement notice.<br/><br/>
-              • The app sends anonymous usage and diagnostic data, identified only by a random id. You can turn this off at any time in Settings → Privacy.<br/><br/>
-              • Depending on where you installed the app from, it may also show ads, send crash reports, and offer an optional Google sign-in for subscriptions.<br/><br/>
-              The full policy explains each of these. By tapping ‘Accept and continue’, you agree to it.
-            </p>
-            <span>Please read our</span>
+            <!-- Repository content compiled into the bundle at build time — never user input. -->
+            <div class="content-document text-disabled" v-html="documentHtml"></div>
+
+            <!-- Stays in the template rather than the document: the address is decided at
+                 runtime by the app type, so it cannot be baked into translated markdown. -->
+            <span>{{ locale('PLEASE_READ_OUR') }}</span>
             <a
               tabindex="-1"
               class="text-highlight font-weight-bold ms-1"
               :href="vhApp.privacyPolicyUrl()"
               target="_blank"
             >
-              Privacy Policy
+              {{ locale('PRIVACY_POLICY') }}
               <v-icon icon="mdi-open-in-new"/>
             </a>
           </v-card-text>
@@ -73,7 +87,7 @@ const emit = defineEmits<{
           autofocus
           tabindex="1"
           block
-          text="Accept and continue"
+          :text="locale('ACCEPT_AND_CONTINUE')"
           @click="emit('accept', true)"
         />
       </v-card-actions>
@@ -108,5 +122,29 @@ const emit = defineEmits<{
   height: 48px;
   background: linear-gradient(to bottom, rgba(var(--v-theme-background), 0), rgb(var(--v-theme-background)));
   pointer-events: none;
+}
+
+/* The rendered document. :deep because the markup comes from v-html and carries no scope
+   attribute. Spacing is set here rather than left to the browser defaults, which give headings
+   and lists desktop-sized margins on a phone. */
+.content-document :deep(p) {
+  margin-bottom: 1rem;
+}
+.content-document :deep(ul),
+.content-document :deep(ol) {
+  /* Logical padding so the markers sit inside the text on both LTR and RTL. */
+  padding-inline-start: 1.25rem;
+  margin-bottom: 1rem;
+}
+.content-document :deep(li) {
+  margin-bottom: 0.5rem;
+}
+.content-document :deep(a) {
+  color: rgb(var(--v-theme-highlight));
+}
+.content-document :deep(h1),
+.content-document :deep(h2),
+.content-document :deep(h3) {
+  margin-bottom: 0.5rem;
 }
 </style>

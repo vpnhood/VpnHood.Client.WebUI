@@ -9,6 +9,6 @@ VpnHood! CONNECT es una VPN que puedes usar sin una cuenta. Aquí tienes la vers
 - No registramos tu navegación. Nuestros servidores nunca extraen los destinos que visitas —dominios, URL o direcciones IP— de tu tráfico.
 - Tu dirección IP y los tiempos de conexión permanecen en los archivos de registro del servidor durante 30 días. Los usamos únicamente para responder a una notificación de infracción de derechos de autor.
 - La aplicación envía datos anónimos de uso y diagnóstico, identificados únicamente por un ID aleatorio. Puedes desactivar esto en cualquier momento en Configuración → Privacidad.
-- Dependiendo de dónde hayas instalado la aplicación, también puede mostrar anuncios, enviar informes de fallos y ofrecer un inicio de sesión opcional de Google para las suscripciones.
+- Dependiendo de dónde hayas instalado la aplicación, también puede mostrar anuncios, enviar informes de fallos y ofrecer un inicio de sesión opcional para las suscripciones.
 
 La política completa explica cada uno de estos puntos. Al pulsar «Aceptar y continuar», la aceptas.

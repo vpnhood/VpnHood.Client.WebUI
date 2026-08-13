@@ -6,6 +6,7 @@ import vue from '@vitejs/plugin-vue';
 import vuetify from 'vite-plugin-vuetify';
 import legacy from '@vitejs/plugin-legacy';
 import postcssPresetEnv from 'postcss-preset-env';
+import { markdownContent } from './build/markdown-content-plugin';
 import { version } from './package.json';
 
 // The SPA carries its own version line, bumped by CI on every published build, so a shipped bundle
@@ -61,6 +62,7 @@ export default defineConfig(({ command }) => ({
     exclude: ['vuetify'],
   },
   plugins: [
+    markdownContent(),
     VueRouter({
       extensions: ['.vue'],
       importMode: 'async', // Keep lazy-loading
