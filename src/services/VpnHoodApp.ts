@@ -544,6 +544,11 @@ export class VpnHoodApp {
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.delete();
+
+      // Premium came from the account, so it goes with it. Drop the tunnel too: the profile loses
+      // its access code either way, but a session opened while premium would otherwise keep running
+      // on a premium server after the account that paid for it stopped existing.
+      if (this.data.isConnected) await this.disconnect();
       await this.loadAccount();
       await router.replace({ name: 'HOME' });
     } catch (err: unknown) {
