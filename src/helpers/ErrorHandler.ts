@@ -56,7 +56,7 @@ export class ErrorHandler {
     });
 
     // Private DNS error
-    if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.features.premiumFeatures.includes(AppFeature.CustomDns)) {
+    if (errorOptions.action?.isPrivateDnsError && VpnHoodApp.instance.data.isPremiumFeature(AppFeature.CustomDns)) {
       await router.push({ name: 'ERROR_PRIVATE_DNS' });
       await VpnHoodApp.instance.clearLastError();
       return;
@@ -211,7 +211,7 @@ export class ErrorHandler {
 
       // User is premium (by Code or Google) and attempt to connect while the premium is expired.
       case SessionErrorCode.AccessExpired:
-        if (VpnHoodApp.instance.data.features.isPremiumFlagSupported) {
+        if (VpnHoodApp.instance.data.isPremiumSupported) {
           return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: { 
             showRemovePremium: VpnHoodApp.instance.data.isPremiumUser } 
           };

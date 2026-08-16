@@ -118,7 +118,7 @@ function listItemClass(index: number): string{
         />
 
         <!---- Unblockable location icon ---->
-        <v-icon v-if="vhApp.data.features.isPremiumFlagSupported && location.options.hasUnblockable && isPremiumGroup"
+        <v-icon v-if="vhApp.data.isPremiumSupported && location.options.hasUnblockable && isPremiumGroup"
                 icon="mdi-sword-cross"
                 size="16"
                 :color="vhApp.data.premiumIconColor" />

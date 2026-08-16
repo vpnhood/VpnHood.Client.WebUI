@@ -3569,10 +3569,8 @@ export class AppFeatures implements IAppFeatures {
     isExcludeAppsSupported!: boolean;
     isIncludeAppsSupported!: boolean;
     uiName!: string | null;
-    isPremiumFlagSupported!: boolean;
     isAddAccessKeySupported!: boolean;
-    isPremiumCodeSupported!: boolean;
-    isPurchaseUrlSupported!: boolean;
+    premium!: AppPremiumOptions | null;
     isAccountSupported!: boolean;
     isBillingSupported!: boolean;
     authProviderIds!: string[];
@@ -3591,11 +3589,9 @@ export class AppFeatures implements IAppFeatures {
     isProxySupported!: boolean;
     adjustForSystemBars!: boolean;
     allowEndPointStrategy!: boolean;
-    autoRemoveExpiredPremium!: boolean;
     isAdSupported!: boolean;
     isRewardedAdSupported!: boolean;
     webUiPort!: number | null;
-    premiumFeatures!: AppFeature[];
     channelProtocols!: ChannelProtocol[];
     customData!: any | null;
     version!: string;
@@ -3610,7 +3606,6 @@ export class AppFeatures implements IAppFeatures {
         if (!data) {
             this.authProviderIds = [];
             this.debugCommands = [];
-            this.premiumFeatures = [];
             this.channelProtocols = [];
         }
     }
@@ -3622,10 +3617,8 @@ export class AppFeatures implements IAppFeatures {
             this.isExcludeAppsSupported = _data["isExcludeAppsSupported"] !== undefined ? _data["isExcludeAppsSupported"] : null as any;
             this.isIncludeAppsSupported = _data["isIncludeAppsSupported"] !== undefined ? _data["isIncludeAppsSupported"] : null as any;
             this.uiName = _data["uiName"] !== undefined ? _data["uiName"] : null as any;
-            this.isPremiumFlagSupported = _data["isPremiumFlagSupported"] !== undefined ? _data["isPremiumFlagSupported"] : null as any;
             this.isAddAccessKeySupported = _data["isAddAccessKeySupported"] !== undefined ? _data["isAddAccessKeySupported"] : null as any;
-            this.isPremiumCodeSupported = _data["isPremiumCodeSupported"] !== undefined ? _data["isPremiumCodeSupported"] : null as any;
-            this.isPurchaseUrlSupported = _data["isPurchaseUrlSupported"] !== undefined ? _data["isPurchaseUrlSupported"] : null as any;
+            this.premium = _data["premium"] ? AppPremiumOptions.fromJS(_data["premium"]) : null as any;
             this.isAccountSupported = _data["isAccountSupported"] !== undefined ? _data["isAccountSupported"] : null as any;
             this.isBillingSupported = _data["isBillingSupported"] !== undefined ? _data["isBillingSupported"] : null as any;
             if (Array.isArray(_data["authProviderIds"])) {
@@ -3658,18 +3651,9 @@ export class AppFeatures implements IAppFeatures {
             this.isProxySupported = _data["isProxySupported"] !== undefined ? _data["isProxySupported"] : null as any;
             this.adjustForSystemBars = _data["adjustForSystemBars"] !== undefined ? _data["adjustForSystemBars"] : null as any;
             this.allowEndPointStrategy = _data["allowEndPointStrategy"] !== undefined ? _data["allowEndPointStrategy"] : null as any;
-            this.autoRemoveExpiredPremium = _data["autoRemoveExpiredPremium"] !== undefined ? _data["autoRemoveExpiredPremium"] : null as any;
             this.isAdSupported = _data["isAdSupported"] !== undefined ? _data["isAdSupported"] : null as any;
             this.isRewardedAdSupported = _data["isRewardedAdSupported"] !== undefined ? _data["isRewardedAdSupported"] : null as any;
             this.webUiPort = _data["webUiPort"] !== undefined ? _data["webUiPort"] : null as any;
-            if (Array.isArray(_data["premiumFeatures"])) {
-                this.premiumFeatures = [] as any;
-                for (let item of _data["premiumFeatures"])
-                    this.premiumFeatures!.push(item);
-            }
-            else {
-                this.premiumFeatures = null as any;
-            }
             if (Array.isArray(_data["channelProtocols"])) {
                 this.channelProtocols = [] as any;
                 for (let item of _data["channelProtocols"])
@@ -3697,10 +3681,8 @@ export class AppFeatures implements IAppFeatures {
         data["isExcludeAppsSupported"] = this.isExcludeAppsSupported !== undefined ? this.isExcludeAppsSupported : null as any;
         data["isIncludeAppsSupported"] = this.isIncludeAppsSupported !== undefined ? this.isIncludeAppsSupported : null as any;
         data["uiName"] = this.uiName !== undefined ? this.uiName : null as any;
-        data["isPremiumFlagSupported"] = this.isPremiumFlagSupported !== undefined ? this.isPremiumFlagSupported : null as any;
         data["isAddAccessKeySupported"] = this.isAddAccessKeySupported !== undefined ? this.isAddAccessKeySupported : null as any;
-        data["isPremiumCodeSupported"] = this.isPremiumCodeSupported !== undefined ? this.isPremiumCodeSupported : null as any;
-        data["isPurchaseUrlSupported"] = this.isPurchaseUrlSupported !== undefined ? this.isPurchaseUrlSupported : null as any;
+        data["premium"] = this.premium ? this.premium.toJSON() : null as any;
         data["isAccountSupported"] = this.isAccountSupported !== undefined ? this.isAccountSupported : null as any;
         data["isBillingSupported"] = this.isBillingSupported !== undefined ? this.isBillingSupported : null as any;
         if (Array.isArray(this.authProviderIds)) {
@@ -3727,15 +3709,9 @@ export class AppFeatures implements IAppFeatures {
         data["isProxySupported"] = this.isProxySupported !== undefined ? this.isProxySupported : null as any;
         data["adjustForSystemBars"] = this.adjustForSystemBars !== undefined ? this.adjustForSystemBars : null as any;
         data["allowEndPointStrategy"] = this.allowEndPointStrategy !== undefined ? this.allowEndPointStrategy : null as any;
-        data["autoRemoveExpiredPremium"] = this.autoRemoveExpiredPremium !== undefined ? this.autoRemoveExpiredPremium : null as any;
         data["isAdSupported"] = this.isAdSupported !== undefined ? this.isAdSupported : null as any;
         data["isRewardedAdSupported"] = this.isRewardedAdSupported !== undefined ? this.isRewardedAdSupported : null as any;
         data["webUiPort"] = this.webUiPort !== undefined ? this.webUiPort : null as any;
-        if (Array.isArray(this.premiumFeatures)) {
-            data["premiumFeatures"] = [];
-            for (let item of this.premiumFeatures)
-                data["premiumFeatures"].push(item);
-        }
         if (Array.isArray(this.channelProtocols)) {
             data["channelProtocols"] = [];
             for (let item of this.channelProtocols)
@@ -3753,10 +3729,8 @@ export interface IAppFeatures {
     isExcludeAppsSupported: boolean;
     isIncludeAppsSupported: boolean;
     uiName: string | null;
-    isPremiumFlagSupported: boolean;
     isAddAccessKeySupported: boolean;
-    isPremiumCodeSupported: boolean;
-    isPurchaseUrlSupported: boolean;
+    premium: AppPremiumOptions | null;
     isAccountSupported: boolean;
     isBillingSupported: boolean;
     authProviderIds: string[];
@@ -3775,23 +3749,74 @@ export interface IAppFeatures {
     isProxySupported: boolean;
     adjustForSystemBars: boolean;
     allowEndPointStrategy: boolean;
-    autoRemoveExpiredPremium: boolean;
     isAdSupported: boolean;
     isRewardedAdSupported: boolean;
     webUiPort: number | null;
-    premiumFeatures: AppFeature[];
     channelProtocols: ChannelProtocol[];
     customData: any | null;
     version: string;
 }
 
-export enum AppOsType {
-    Unknown = "Unknown",
-    Windows = "Windows",
-    Linux = "Linux",
-    Android = "Android",
-    Ios = "Ios",
-    MacOs = "MacOs",
+export class AppPremiumOptions implements IAppPremiumOptions {
+    features!: AppFeature[];
+    isCodeSupported!: boolean;
+    isPurchaseUrlSupported!: boolean;
+    autoRemoveExpiredAccessCode!: boolean;
+
+    constructor(data?: IAppPremiumOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+        if (!data) {
+            this.features = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["features"])) {
+                this.features = [] as any;
+                for (let item of _data["features"])
+                    this.features!.push(item);
+            }
+            else {
+                this.features = null as any;
+            }
+            this.isCodeSupported = _data["isCodeSupported"] !== undefined ? _data["isCodeSupported"] : null as any;
+            this.isPurchaseUrlSupported = _data["isPurchaseUrlSupported"] !== undefined ? _data["isPurchaseUrlSupported"] : null as any;
+            this.autoRemoveExpiredAccessCode = _data["autoRemoveExpiredAccessCode"] !== undefined ? _data["autoRemoveExpiredAccessCode"] : null as any;
+        }
+    }
+
+    static fromJS(data: any): AppPremiumOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppPremiumOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.features)) {
+            data["features"] = [];
+            for (let item of this.features)
+                data["features"].push(item);
+        }
+        data["isCodeSupported"] = this.isCodeSupported !== undefined ? this.isCodeSupported : null as any;
+        data["isPurchaseUrlSupported"] = this.isPurchaseUrlSupported !== undefined ? this.isPurchaseUrlSupported : null as any;
+        data["autoRemoveExpiredAccessCode"] = this.autoRemoveExpiredAccessCode !== undefined ? this.autoRemoveExpiredAccessCode : null as any;
+        return data;
+    }
+}
+
+export interface IAppPremiumOptions {
+    features: AppFeature[];
+    isCodeSupported: boolean;
+    isPurchaseUrlSupported: boolean;
+    autoRemoveExpiredAccessCode: boolean;
 }
 
 export enum AppFeature {
@@ -3802,6 +3827,15 @@ export enum AppFeature {
     SplitIpViaDevice = "SplitIpViaDevice",
     SplitDomain = "SplitDomain",
     SplitCountry = "SplitCountry",
+}
+
+export enum AppOsType {
+    Unknown = "Unknown",
+    Windows = "Windows",
+    Linux = "Linux",
+    Android = "Android",
+    Ios = "Ios",
+    MacOs = "MacOs",
 }
 
 export enum ChannelProtocol {

@@ -7,7 +7,7 @@ import { ref } from 'vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const isPremiumFlagSupported = ref(vhApp.data.features.isPremiumFlagSupported);
+const isPremiumSupported = ref(vhApp.data.isPremiumSupported);
 function isShowCountdown(): boolean {
   // Do not display the expiry countdown for premium users. The expiration status of a premium account is
   // already shown elsewhere in the app. The countdown timer should only be visible for users on rewarded
@@ -23,7 +23,7 @@ function isShowCountdown(): boolean {
 
   <!-- You are premium button -->
   <v-chip
-    v-else-if="isPremiumFlagSupported && vhApp.data.isPremiumUser"
+    v-else-if="isPremiumSupported && vhApp.data.isPremiumUser"
     prepend-icon="mdi-crown"
     :text="locale('YOU_ARE_PREMIUM')"
     color="enable-premium"
@@ -35,7 +35,7 @@ function isShowCountdown(): boolean {
 
   <!-- Go Premium button -->
   <v-btn
-    v-else-if="isPremiumFlagSupported && vhApp.data.state.clientProfile?.canGoPremium == true"
+    v-else-if="isPremiumSupported && vhApp.data.state.clientProfile?.canGoPremium == true"
     variant="outlined"
     color="go-premium-btn"
     rounded="pill"

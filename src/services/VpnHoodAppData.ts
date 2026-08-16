@@ -102,8 +102,14 @@ export class VpnHoodAppData {
     return this.state.connectionState === AppConnectionState.Unstable;
   }
 
+  // The one place "does this build have a premium tier at all" is asked. Null features.premium is
+  // not "premium locked": it is the FULL app — no crown, no promotion, every feature allowed.
+  get isPremiumSupported(): boolean {
+    return this.features.premium != null;
+  }
+
   get premiumIconColor(): string {
-    return (!this.features.isPremiumFlagSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
+    return (!this.isPremiumSupported || this.isPremiumUser) ? 'enable-premium' : 'disable-premium';
   }
 
   // The split flags come from the app state, never computed here: the app owns the business logic
@@ -290,7 +296,8 @@ export class VpnHoodAppData {
   }
 
   public isPremiumFeature(appFeature: AppFeature): boolean {
-    return this.features.premiumFeatures.includes(appFeature)
+    // a build with no premium tier sells no feature — everything is everyone's
+    return this.features.premium?.features.includes(appFeature) ?? false;
   }
 
   public isPremiumFeatureAllowed(appFeature : AppFeature): boolean {

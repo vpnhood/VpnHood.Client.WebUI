@@ -50,7 +50,7 @@ function calcUnit(total: number): string{
         <v-card-text>
           <ul class="info-table">
 
-            <li v-if="vhApp.data.features.isPremiumFlagSupported && vhApp.data.isPremiumUser" class="border-b">
+            <li v-if="vhApp.data.isPremiumSupported && vhApp.data.isPremiumUser" class="border-b">
               <span>{{locale('PREMIUM_BY')}}</span>
               <span class="text-active">
                 {{locale(vhApp.data.isPremiumByAccount ? 'PURCHASE_SUBSCRIPTION' : 'PREMIUM_CODE')}}

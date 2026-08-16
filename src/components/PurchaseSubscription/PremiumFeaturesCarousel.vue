@@ -76,7 +76,7 @@ const displayedCarouselItems = computed(() => {
   let supportedItems = carouselItems.filter(i => i.isSupported !== false);
 
   // filter out features that are not supported, when the premium flag is not supported because we already have all features
-  if (!vhApp.data.features.isPremiumFlagSupported)
+  if (!vhApp.data.isPremiumSupported)
     supportedItems = supportedItems.filter(i => i.title !== 'ULTRA_FAST_SPEED');
   
     return supportedItems;

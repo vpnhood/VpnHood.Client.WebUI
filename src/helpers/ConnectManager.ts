@@ -67,7 +67,7 @@ export class ConnectManager {
 
     // If the user is not premium and the selected location is premium, then set the location to auto to show the
     // promoted dialog with the option to connect as free.
-    /*if (isPremiumLocationSelected && VpnHoodApp.instance.data.features.isPremiumFlagSupported && !VpnHoodApp.instance.isPremiumAccount()){
+    /*if (isPremiumLocationSelected && VpnHoodApp.instance.data.isPremiumSupported && !VpnHoodApp.instance.isPremiumAccount()){
       isPremiumLocationSelected = false;
       serverLocation = '*!/!*';
     }*/

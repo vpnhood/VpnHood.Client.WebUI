@@ -603,8 +603,8 @@ export class VpnHoodApp {
       this.data.state.clientProfile?.isAccessCodeFromAccount,
       ' CanGoPremium: ',
       this.data.state.clientProfile?.canGoPremium,
-      ' isPremiumFlagSupported: ',
-      this.data.features.isPremiumFlagSupported,
+      ' isPremiumSupported: ',
+      this.data.isPremiumSupported,
       'User Account: ',
       this.data.userState.userAccount,
     );

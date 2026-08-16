@@ -72,7 +72,7 @@ async function removeCode(): Promise<void> {
            per-build capability, lifecycle §9); the Remove card below stays in every build,
            because removing is the escape that re-opens store buying, not code entry. -->
       <change-premium-method
-        v-if="vhApp.data.features.isPremiumCodeSupported"
+        v-if="vhApp.data.features.premium?.isCodeSupported"
         :title="locale('CHANGE_PREMIUM_CODE')"
         :description="locale('CHANGE_PREMIUM_CODE_DESC')"
         :button-name="locale('CHANGE_CODE')"
