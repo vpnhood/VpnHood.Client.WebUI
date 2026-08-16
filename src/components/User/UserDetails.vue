@@ -12,8 +12,9 @@ const userAccount = computed(() => vhApp.data.userState.userAccount);
 <template>
   <config-card>
 
-    <!-- User name -->
-    <v-card-title>{{ userAccount?.name }}</v-card-title>
+    <!-- User name. The portal answers with an email and no name today, so the title is rendered only
+         when there is one — an empty title is a blank line above the address, not a heading. -->
+    <v-card-title v-if="userAccount?.name">{{ userAccount.name }}</v-card-title>
 
     <!-- User email -->
     <v-card-subtitle class="text-disabled">{{ userAccount?.email }}</v-card-subtitle>

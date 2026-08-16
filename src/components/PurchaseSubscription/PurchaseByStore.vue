@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import i18n from '@/locales/i18n';
 import { GooglePlayBillingSubscriptionPeriods } from '@/helpers/googlePlayBilling/GooglePlayBillingSubscriptionPeriods';
-import { ApiException, PurchaseParams, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
+import { ApiException, Account, PurchaseParams, SubscriptionPlan } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import PendingDialog from '@/components/PurchaseSubscription/PendingDialog.vue';
@@ -27,9 +27,29 @@ const oneMonthPlan = props.subscriptionPlans.find(
 basePrice.value = oneMonthPlan?.basePrice ?? 0;
 const selectedPlan = ref<SubscriptionPlan>(oneMonthPlan ?? props.subscriptionPlans[0]);
 
+// Is the signed-in account already served (lifecycle §8) — a store subscription, or the code the
+// backend chose for it? A separate function on purpose: onPurchase reads it AFTER signing in, and
+// an inline read there would be defeated by TypeScript's control-flow narrowing.
+function isAccountServed(): boolean {
+  const account: Account | null = vhApp.data.userState.userAccount;
+  return !!(account?.subscription || account?.accessCodeInfo);
+}
+
 async function onPurchase(): Promise<void> {
-  if (!vhApp.data.userState.userAccount) await vhApp.signIn(true);
-  const purchaseParams = new PurchaseParams({ purchaseToken: selectedPlan.value.planToken, })
+  if (!vhApp.data.userState.userAccount) {
+    await vhApp.signIn(true);
+
+    // Prevention (lifecycle §8): signing in may have just revealed an account that is already
+    // served. Stop here, before the store's payment sheet: after the sheet the money has moved
+    // and there is no undo. The app guard re-checks the same question against the server as the
+    // last word.
+    if (isAccountServed()) {
+      await router.replace({ name: 'ACCOUNT' });
+      await vhApp.showErrorMessage(locale('HAVE_ACTIVE_SUBSCRIPTION'));
+      return;
+    }
+  }
+  const purchaseParams = new PurchaseParams({ planToken: selectedPlan.value.planToken, })
   await purchase(purchaseParams);
 }
 
@@ -42,9 +62,9 @@ async function onRestore(): Promise<void> {
   try {
     if (!vhApp.data.userState.userAccount) await vhApp.signIn(true);
     const billingClient = ClientApiFactory.instance.createBillingClient();
-    const orderId = await billingClient.restorePurchase();
+    const restored = await billingClient.restorePurchase();
     await vhApp.loadAccount();
-    hasNothingToRestore = !orderId;
+    hasNothingToRestore = !restored;
     isShowPurchaseCompleteDialog.value = !hasNothingToRestore;
   } finally {
     isShowPendingDialog.value = false;

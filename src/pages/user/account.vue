@@ -3,21 +3,30 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import router from '@/services/router';
+import { ref } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import UserDetails from '@/components/User/UserDetails.vue';
 import ChangePremiumMethod from '@/components/User/ChangePremiumMethod.vue';
 import PremiumCodeDetails from '@/components/User/PremiumCodeDetails.vue';
 import UserPremiumImage from '@/components/User/UserPremiumImage.vue';
 import SubscriptionDetails from '@/components/User/SubscriptionDetails.vue';
+import DeleteAccountDialog from '@/components/User/DeleteAccountDialog.vue';
+import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+
+const showChangeCodeSheet = ref(false);
+const showDeleteDialog = ref(false);
 
 // The account is read once, when the app boots, so this page would otherwise render whatever was
 // true then. That matters after a deletion on another device: the app signs itself out as soon as
 // the backend rejects its session, but a screen holding the old value keeps showing the person who
 // was deleted. Re-reading here costs a local API call and makes this page tell the truth.
-vhApp.loadAccount().catch((error: unknown) => vhApp.processError(error));
+// NOTE deliberately absent (lifecycle §8): no code list, no picker, no deletion preview — the
+// backend hands the app ONE code or nothing, and the deletion dialog is static text.
+vhApp.loadAccount()
+  .catch((error: unknown) => vhApp.processError(error));
 
 async function removeCode(): Promise<void> {
   const result = await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_PREMIUM_CODE'), locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
@@ -58,6 +67,18 @@ async function removeCode(): Promise<void> {
     <!-- Premium user by code -->
     <template v-else-if="vhApp.data.isPremiumByCode">
 
+      <!-- Change code in ONE step: entering a new code replaces the current one — no
+           remove-first ritual. Only where this build may take a typed code at all (a
+           per-build capability, lifecycle §9); the Remove card below stays in every build,
+           because removing is the escape that re-opens store buying, not code entry. -->
+      <change-premium-method
+        v-if="vhApp.data.features.isPremiumCodeSupported"
+        :title="locale('CHANGE_PREMIUM_CODE')"
+        :description="locale('CHANGE_PREMIUM_CODE_DESC')"
+        :button-name="locale('CHANGE_CODE')"
+        @button-click="showChangeCodeSheet = true"
+      />
+
       <!-- Remove code -->
       <change-premium-method
         :title="locale('REMOVE_CURRENT_PREMIUM_CODE')"
@@ -97,10 +118,11 @@ async function removeCode(): Promise<void> {
       </v-card-actions>
     </config-card>
 
-    <!-- Delete account ("forget me") — the stores require it wherever sign-in exists, so it
-         shows for EVERY signed-in user, premium or not. Deliberately outside the premium
-         v-if/v-else-if chain above. The confirm dialog carries the whole contract; wording is
-         store-neutral (App Review 2.3.10). -->
+    <!-- Delete account — the stores require it wherever sign-in exists, so it shows for
+         EVERY signed-in user, premium or not. Deliberately outside the premium
+         v-if/v-else-if chain above. The dialog is static text plus an explicit
+         acknowledgement (lifecycle §10): no codes, no counts, nothing fetched — the
+         farewell mail is what carries the codes. -->
     <config-card v-if="vhApp.data.userState.userAccount">
       <v-card-title class="text-error">{{ locale('DELETE_MY_ACCOUNT') }}</v-card-title>
       <v-card-text>{{ locale('DELETE_MY_ACCOUNT_DESC') }}</v-card-text>
@@ -111,10 +133,19 @@ async function removeCode(): Promise<void> {
           variant="tonal"
           size="small"
           :text="locale('DELETE_MY_ACCOUNT')"
-          @click="vhApp.deleteAccount()"
+          @click="showDeleteDialog = true"
         />
       </v-card-actions>
     </config-card>
+
+    <!-- One-step change: the same code sheet the purchase page uses -->
+    <premium-by-code v-model="showChangeCodeSheet"/>
+
+    <!-- The static confirmation: warn, acknowledge, act -->
+    <delete-account-dialog
+      v-model="showDeleteDialog"
+      @confirm="() => vhApp.deleteAccount()"
+    />
 
   </v-sheet>
 </template>

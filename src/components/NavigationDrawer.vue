@@ -8,19 +8,23 @@ import { AppName, UiConstants } from '@/helpers/UiConstants';
 import { type RouteLocationRaw} from 'vue-router';
 import { ApiException } from '@/services/VpnHood.Client.Api';
 import { Util } from '@/helpers/Util';
+import SignInDialog from '@/components/User/SignInDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
-// "Sign in with X" label for the provider the tap will actually invoke (features.signInMethods —
+// "Sign in with X" label for the provider the tap will actually invoke (features.authProviderIds —
 // free-form ids self-declared by the app's external auth provider: "google", "apple", or anything a
 // third-party provider declares). Convention over branching: a provider's label is its
 // SIGN_IN_WITH_<UPPERCASE-ID> i18n key, and an id without one (a fork's provider before it adds the
-// key) degrades to the plain "Sign in" instead of leaking a raw key on screen.
+// key) degrades to the plain "Sign in" instead of leaking a raw key on screen. With more than one
+// provider the tap opens the chooser instead, so the label is the plain "Sign in" too.
+const showSignInDialog = ref(false);
+const hasSignInChoice = computed(() => vhApp.data.features.authProviderIds.length > 1);
 const signInLabelKey = computed(() => {
-  const method = vhApp.data.features.signInMethods[0];
-  if (!method) return 'SIGN_IN';
-  const key = `SIGN_IN_WITH_${method.toUpperCase()}`;
+  const providerId = vhApp.data.features.authProviderIds[0];
+  if (!providerId || hasSignInChoice.value) return 'SIGN_IN';
+  const key = `SIGN_IN_WITH_${providerId.toUpperCase()}`;
   return i18n.global.te(key) ? key : 'SIGN_IN';
 });
 
@@ -84,6 +88,13 @@ async function checkForUpdate() {
 }
 
 async function onSignIn() {
+  // more than one way in (store + the account website's password) → the chooser dialog; the
+  // store method stays the primary inside it. One method keeps today's direct flow.
+  if (hasSignInChoice.value) {
+    emit('update:modelValue', false);
+    showSignInDialog.value = true;
+    return;
+  }
   try {
     emit('update:modelValue', false);
     await vhApp.signIn();
@@ -358,5 +369,9 @@ function edgeToEdgeHeight(bottom: boolean): string{
       </a>
     </div>
   </v-navigation-drawer>
+
+  <!-- The sign-in chooser (store primary, email secondary); teleported, so it outlives the
+       drawer closing -->
+  <SignInDialog v-model="showSignInDialog" />
 
 </template>

@@ -2,7 +2,9 @@ import {
   ApiException,
   AppClient,
   AppFeatures,
-  AppSignInOptions,
+  SignInOptions,
+  SignInResult,
+  SignInState,
   ClientProfileClient,
   ClientProfileInfo,
   ClientProfileUpdateParams,
@@ -435,6 +437,9 @@ export class VpnHoodApp {
     // a disconnect plus one or two round trips, all of it invisible otherwise
     this.data.uiState.showLoadingDialog = true;
     try {
+      // A purely LOCAL act (lifecycle §8). Only a code the person typed themselves can be removed
+      // here — a code the account applied is not offered for removal at all and leaves only with
+      // the account. So nothing is reported to the backend, and nothing about the account changes.
       if (this.data.isConnected) await this.disconnect();
 
       await this.clientProfileClient.update(
@@ -443,11 +448,16 @@ export class VpnHoodApp {
           accessCode: new PatchOfString({ value: null }),
         }),
       );
-
-      if (this.data.userState.userAccount?.subscriptionId) await this.loadAccount(true);
     } finally {
       this.data.uiState.showLoadingDialog = false;
     }
+  }
+
+  // The store/IdP method (the primary sign-in everywhere it exists). "password" is the portal's own
+  // credential form, deliberately never the primary: it is appended by the provider, so the first
+  // method that is not "password" is the store one.
+  public primaryProviderId(): string | undefined {
+    return this.data.features.authProviderIds.find((x) => x !== 'password');
   }
 
   public async signIn(onPurchase = false): Promise<void> {
@@ -457,18 +467,11 @@ export class VpnHoodApp {
       // The method id comes from the API (self-declared by the app's auth provider — free-form
       // string, not an enum, so third-party providers flow through untouched); the UI never
       // assumes one.
-      const signInMethod = this.data.features.signInMethods[0];
-      if (!signInMethod)
+      const providerId = this.primaryProviderId();
+      if (!providerId)
         throw new Error('This build reports no sign-in method.');
-      await accountClient.signIn(new AppSignInOptions({ method: signInMethod }));
-      await this.loadAccount();
-
-      // sign-in is otherwise silent: the drawer just closes, leaving no sign the
-      // account is now attached. A purchase confirms itself, so it stays quiet.
-      if (!onPurchase) {
-        const email = this.data.userState.userAccount?.email;
-        if (email) this.showGeneralSnackbar(i18n.global.t('SIGNED_IN_AS_X', { email }));
-      }
+      await accountClient.signIn(new SignInOptions({ providerId: providerId }));
+      await this.afterSignedIn(onPurchase);
     } catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;
 
@@ -507,6 +510,44 @@ export class VpnHoodApp {
     }
   }
 
+  /**
+   * The portal's own credential form (the account website's email + password) — the SECONDARY
+   * sign-in, offered under the store method. Returns a state other than SignedIn when the account
+   * uses a second factor: nothing is signed in yet, complete with completeSignInChallenge. Errors carry
+   * the portal's machine code in err.data.Code (invalid_credentials, too_many_attempts, …) — the
+   * dialog maps them to localized messages; nothing here can tell whether an email exists,
+   * by design.
+   */
+  public async signInWithPassword(email: string, password: string): Promise<SignInResult> {
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    const result = await accountClient.signIn(
+      new SignInOptions({ providerId: 'password', userName: email, password }),
+    );
+    if (result.state === SignInState.SignedIn) await this.afterSignedIn(false);
+    return result;
+  }
+
+  /** The second step of the password form: the authenticator code or the account's backup code. */
+  public async completeSignInChallenge(code: string): Promise<SignInResult> {
+    const accountClient = ClientApiFactory.instance.createAccountClient();
+    const result = await accountClient.signIn(
+      new SignInOptions({ providerId: 'password', twoFactorCode: code }),
+    );
+    if (result.state === SignInState.SignedIn) await this.afterSignedIn(false);
+    return result;
+  }
+
+  private async afterSignedIn(onPurchase: boolean): Promise<void> {
+    await this.loadAccount();
+
+    // sign-in is otherwise silent: the drawer just closes, leaving no sign the
+    // account is now attached. A purchase confirms itself, so it stays quiet.
+    if (!onPurchase) {
+      const email = this.data.userState.userAccount?.email;
+      if (email) this.showGeneralSnackbar(i18n.global.t('SIGNED_IN_AS_X', { email }));
+    }
+  }
+
   public async signOut(): Promise<void> {
     const result = await this.showConfirmDialog(
       i18n.global.t('CONFIRM_SIGN_OUT_TITLE'),
@@ -527,43 +568,27 @@ export class VpnHoodApp {
     }
   }
 
-  // "Forget me" (Apple 5.1.1(v) / Play account deletion). The backend erases the person on
-  // every device; a later sign-in creates a brand-new account. The confirmation text carries
-  // the whole contract (store-neutral — never name a store) and the server refuses with an
-  // actionable message while web services are still active, which surfaces via the normal
-  // error dialog with the session intact.
+  // Permanent account deletion (Apple 5.1.1(v) / Play account-deletion policy). Nothing blocks it:
+  // the backend cancels website billing at the end of its paid period instead of refusing, and it
+  // never touches a store subscription — signing in again brings that back by itself. The
+  // CONFIRMATION lives with the caller (a static warning + explicit acknowledgement — the screen
+  // warns, the farewell MAIL delivers the codes); this method only executes.
   public async deleteAccount(): Promise<void> {
-    const result = await this.showConfirmDialog(
-      i18n.global.t('CONFIRM_DELETE_ACCOUNT_TITLE'),
-      i18n.global.t('CONFIRM_DELETE_ACCOUNT_DESC'),
-    );
-    if (!result) return;
-
-    let isBlockedByWebServices = false;
     this.data.uiState.showLoadingDialog = true;
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       await accountClient.delete();
 
-      // Premium came from the account, so it goes with it. Drop the tunnel too: the profile loses
-      // its access code either way, but a session opened while premium would otherwise keep running
-      // on a premium server after the account that paid for it stopped existing.
+      // Account-granted premium goes with the account. Drop the tunnel too: a session opened while
+      // premium must not keep running on a premium server after the account that paid for it
+      // stopped existing. A code the person owns (typed, or an applied website code) stays on the
+      // profile — it was bought outright, and the farewell mail carries it one last time.
       if (this.data.isConnected) await this.disconnect();
       await this.loadAccount();
       await router.replace({ name: 'HOME' });
-    } catch (err: unknown) {
-      // The portal's machine code rides ExceptionTypeName (problem+json `code`).
-      // This one is user-actionable, so it gets a localized sentence instead of
-      // the server's English prose; every other failure keeps the generic path.
-      if (!(err instanceof ApiException && err.exceptionTypeName === 'deletion_blocked')) throw err;
-      isBlockedByWebServices = true;
     } finally {
       this.data.uiState.showLoadingDialog = false;
     }
-
-    // told after the overlay is gone, so the message is not stacked underneath it
-    if (isBlockedByWebServices)
-      await this.showErrorMessage(i18n.global.t('DELETE_ACCOUNT_BLOCKED_BY_WEB_SERVICES'));
   }
 
   public async loadAccount(withRefresh: boolean = false): Promise<void> {

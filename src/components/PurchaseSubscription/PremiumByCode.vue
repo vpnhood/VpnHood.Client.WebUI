@@ -66,6 +66,12 @@ async function updatePremiumCode(): Promise<void> {
     return;
   }
 
+  // Pasting a code is a purely LOCAL act (lifecycle §8): nothing is reported to the backend,
+  // and the account's chosen code is never moved from here. Importing a code INTO an account
+  // is a portal act — the client-area codes page — where the person can actually see whether
+  // it was accepted; the same call from here succeeded or silently did nothing depending on
+  // which channel issued the code, with no way for anyone to tell.
+
   // try to connect to access server with new premium code
   try {
     emit('update:modelValue', false);

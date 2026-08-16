@@ -6,7 +6,13 @@ const locale = i18n.global.t;
 
 const props = defineProps<{
   errorMessage: string,
+  isRetrying: boolean,
 }>();
+
+// Retry is the whole offer while the store cannot be reached: there is no cached catalog to fall
+// back on, and starting a purchase against unconfirmed products would charge at the store with
+// nowhere to redeem the proof.
+const emit = defineEmits<{ retry: [] }>();
 </script>
 
 <template>
@@ -16,6 +22,18 @@ const props = defineProps<{
   >
     <v-icon class="pe-3" color="error" icon="mdi-alert-circle-outline" />
     <span class="text-error text-body-small">{{ locale('ONLINE_PURCHASE_IS_NOT_AVAILABLE') }}</span>
+    <v-btn
+      :text="locale('TRY_AGAIN')"
+      :loading="props.isRetrying"
+      color="error"
+      variant="flat"
+      rounded="pill"
+      size="small"
+      block
+      prepend-icon="mdi-refresh"
+      class="text-lowercase mt-2"
+      @click="emit('retry')"
+    />
     <v-btn
       :text="locale('MORE_INFO')"
       color="error"

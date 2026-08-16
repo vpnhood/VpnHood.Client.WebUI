@@ -18,16 +18,30 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 const route = useRoute();
 const purchaseOptions = ref<AppPurchaseOptions>();
+const isRetrying = ref(false);
 const premiumByCodeSheet = ref(new ComponentRouteController(ComponentName.EnterPremiumCode));
 
-onMounted(async () => {
+// Named so the store-unavailable card can ask for it again: the catalog comes from the portal and
+// nothing stands in for it, so a failed load is only recoverable by loading it again.
+async function loadPurchaseOptions(): Promise<void> {
     const clientProfileId = route.query.profileId as string ?? vhApp.data.clientProfileId;
     if (!clientProfileId)
       throw new Error('Client profile id is required.');
 
     const clientProfileClient = ClientApiFactory.instance.createClientProfileClient();
     purchaseOptions.value = await clientProfileClient.getPurchaseOptions(clientProfileId);
-});
+}
+
+async function onRetry(): Promise<void> {
+    isRetrying.value = true;
+    try {
+      await loadPurchaseOptions();
+    } finally {
+      isRetrying.value = false;
+    }
+}
+
+onMounted(loadPurchaseOptions);
 </script>
 
 <template>
@@ -72,11 +86,14 @@ onMounted(async () => {
       <store-unavailable
         v-else-if="purchaseOptions?.storeError"
         :error-message="purchaseOptions.storeError.message"
+        :is-retrying="isRetrying"
+        @retry="onRetry"
       />
 
-      <!-- Purchase by Web -->
+      <!-- Purchase by Web. Needs a browser to leave the app with; on a device without one the
+           button would be a dead end, so it is withheld rather than offered. -->
       <btn-style-1
-        v-if="purchaseOptions?.purchaseUrl"
+        v-if="purchaseOptions?.purchaseUrl && vhApp.data.intentFeatures.isWebBrowserSupported"
         class="mt-4 text-premium-code-btn"
         block
         rounded="pill"
