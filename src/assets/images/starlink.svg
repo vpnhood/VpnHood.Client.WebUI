@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 656" width="640" height="656" fill="none" role="img" aria-label="Starlink dish">
+  <defs>
+    <radialGradient id="starlinkGlow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#2FD3F0" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#2FD3F0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="starlinkFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#DCE4F2"/>
+      <stop offset="100%" stop-color="#A9B6CE"/>
+    </linearGradient>
+    <linearGradient id="starlinkEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8C99B4"/>
+      <stop offset="100%" stop-color="#5D6884"/>
+    </linearGradient>
+    <linearGradient id="starlinkPost" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8C99B4"/>
+      <stop offset="50%" stop-color="#C7D0E1"/>
+      <stop offset="100%" stop-color="#6B768F"/>
+    </linearGradient>
+    <linearGradient id="starlinkBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B7C2D8"/>
+      <stop offset="100%" stop-color="#59637E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky glow -->
+  <ellipse cx="320" cy="300" rx="300" ry="280" fill="url(#starlinkGlow)"/>
+
+  <!-- Stars -->
+  <g fill="#FFFFFF" opacity=".65">
+    <circle cx="96" cy="96" r="3"/>
+    <circle cx="168" cy="52" r="2"/>
+    <circle cx="252" cy="118" r="2.5"/>
+    <circle cx="404" cy="44" r="2"/>
+    <circle cx="588" cy="196" r="2.5"/>
+    <circle cx="64" cy="236" r="2"/>
+    <circle cx="556" cy="336" r="2"/>
+    <circle cx="120" cy="404" r="2.5"/>
+  </g>
+
+  <!-- Satellite, beaming down to the dish -->
+  <g stroke="#2FD3F0" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M507.1 138.3 A50 50 0 0 1 470.8 98.7" opacity=".85"/>
+    <path d="M499.3 167.3 A80 80 0 0 1 441.2 103.9" opacity=".6"/>
+    <path d="M491.5 196.3 A110 110 0 0 1 411.7 109.1" opacity=".38"/>
+  </g>
+  <g transform="rotate(-12 520 90)">
+    <rect x="462" y="79" width="42" height="22" rx="4" fill="#7E8BA6"/>
+    <rect x="536" y="79" width="42" height="22" rx="4" fill="#7E8BA6"/>
+    <g stroke="#4B5670" stroke-width="2">
+      <path d="M476 79v22M490 79v22M550 79v22M564 79v22"/>
+    </g>
+    <rect x="504" y="74" width="32" height="32" rx="8" fill="url(#starlinkEdge)"/>
+    <circle cx="520" cy="90" r="6" fill="#2FD3F0"/>
+  </g>
+
+  <!-- Ground shadow, then the mast: both sit behind the dish panel -->
+  <ellipse cx="320" cy="600" rx="150" ry="22" fill="#0B1020" opacity=".28"/>
+  <path d="M306 318h28v226h-28z" fill="url(#starlinkPost)"/>
+  <rect x="292" y="524" width="56" height="26" rx="10" fill="#6B768F"/>
+  <ellipse cx="320" cy="560" rx="104" ry="30" fill="url(#starlinkBase)"/>
+  <ellipse cx="320" cy="552" rx="104" ry="30" fill="#95A1BA"/>
+  <ellipse cx="320" cy="550" rx="72" ry="19" fill="#C7D0E1" opacity=".55"/>
+
+  <!-- The rectangular "Dishy" terminal, tilted at the sky -->
+  <g transform="rotate(-20 320 285)">
+    <rect x="184" y="196" width="272" height="196" rx="30" fill="url(#starlinkEdge)"/>
+    <rect x="190" y="190" width="260" height="190" rx="28" fill="url(#starlinkFace)"/>
+    <rect x="212" y="212" width="216" height="146" rx="18" fill="#FFFFFF" opacity=".45"/>
+    <circle cx="320" cy="285" r="34" fill="#C9D3E5" opacity=".8"/>
+    <circle cx="320" cy="285" r="16" fill="#2FD3F0" opacity=".9"/>
+  </g>
+</svg>

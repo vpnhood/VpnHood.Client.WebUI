@@ -656,5 +656,18 @@
   "RE_NEW_PREMIUM": "Renew premium",
   "EXIT_PREMIUM": "Exit premium",
   "SPLIT_TUNNELING": "Split Tunneling",
-  "SPLIT_TUNNELING_DESC": "Choose what uses the VPN and what connects directly."
+  "SPLIT_TUNNELING_DESC": "Choose what uses the VPN and what connects directly.",
+  "STARLINK_TOOLS": "Starlink Tools",
+  "STARLINK_TOOLS_SETTINGS_DESC": "Relay this device's traffic through a Starlink terminal on your network or over the internet.",
+  "STARLINK_TOOLS_DESC": "Send this device's traffic out through a Starlink terminal, either the one on your own network or one you reach over the internet.",
+  "STARLINK_MODE_DISABLED": "Off",
+  "STARLINK_MODE_DISABLED_DESC": "No Starlink relay. Traffic keeps its current path.",
+  "STARLINK_MODE_REMOTE": "Remote Starlink",
+  "STARLINK_MODE_REMOTE_DESC": "Relay through a Starlink terminal outside your network, reached over the internet at its public or static WAN address.",
+  "STARLINK_MODE_LOCAL": "Starlink router on this network",
+  "STARLINK_MODE_LOCAL_DESC": "Relay through the Starlink router on your local network. Enter its address, or let the app find it.",
+  "STARLINK_ENDPOINT": "Endpoint (address:port)",
+  "STARLINK_AUTO_FIND": "Find automatically",
+  "STARLINK_FIND": "Find",
+  "NOT_IMPLEMENTED_YET": "Not implemented yet."
 }

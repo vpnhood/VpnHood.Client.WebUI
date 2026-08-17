@@ -16,6 +16,7 @@ import {
   SplitAppMode
 } from '@/services/VpnHood.Client.Api';
 import i18n from '@/locales/i18n';
+import { DebugCommand } from '@/helpers/UiConstants';
 
 export class VpnHoodAppData {
   public readonly serverUrl: string | undefined = import.meta.env.VITE_API_BASE_URL;
@@ -92,6 +93,15 @@ export class VpnHoodAppData {
       case AppConnectionState.Unstable:
         return this.locale('UNSTABLE');
     }
+  }
+
+  // DebugData1 holds the debug commands as a space separated list, the same shape the app parses.
+  public hasDebugCommand(command: DebugCommand): boolean {
+    return this.userSettings.debugData1?.split(' ').includes(command) === true;
+  }
+
+  get isStarlinkToolsEnabled(): boolean {
+    return this.hasDebugCommand(DebugCommand.StarlinkTools);
   }
 
   get isConnected(): boolean {

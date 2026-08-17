@@ -21,6 +21,7 @@ const splitState = computed(() => vhApp.data.state.splitTunnelingState);
 const isShowLanguage: boolean = true;
 const isShowNotifications = computed(() => vhApp.data.intentFeatures.isAppNotificationSettingsSupported);
 const isShowQuickLaunch = computed(() => vhApp.data.intentFeatures.isQuickLaunchSupported);
+const isShowStarlinkToolsRow = computed(() => vhApp.data.isStarlinkToolsEnabled);
 const isShowProxies: boolean = true;
 const isShowSplitTunneling: boolean = true;
 const isShowDns: boolean = true;
@@ -31,7 +32,7 @@ const isShowAlwaysOn = computed(() => vhApp.data.intentFeatures.isAlwaysOnSettin
 const isShowAppSettingsSection = computed(() =>
   isShowLanguage || isShowNotifications.value || isShowQuickLaunch.value);
 const isShowConnectivitySection = computed(() =>
-  isShowProxies || isShowSplitTunneling || isShowDns);
+  isShowStarlinkToolsRow.value || isShowProxies || isShowSplitTunneling || isShowDns);
 const isShowPrivacyAndSecuritySection = computed(() =>
   isShowPrivacy || isShowKillSwitch.value || isShowAlwaysOn.value);
 
@@ -85,6 +86,16 @@ const isShowPrivacyAndSecuritySection = computed(() =>
     <!-- CONNECTIVITY SECTION: how traffic is carried — reaching the server, what enters the tunnel,
          and how names are resolved -->
     <settings-section-title :title="locale('CONNECTIVITY')" :is-show="isShowConnectivitySection"/>
+
+    <!-- Starlink Tools: a mock page, so the row stays behind the /starlink debug command and is
+         invisible to anyone who has not typed it into DebugData1 -->
+    <settings-item
+      :title="locale('STARLINK_TOOLS')"
+      :subtitle="locale('STARLINK_TOOLS_SETTINGS_DESC')"
+      :isPremium="false"
+      :is-show="isShowStarlinkToolsRow"
+      :click="{name: 'STARLINK_TOOLS'}"
+    />
 
     <!-- Proxies -->
     <settings-item

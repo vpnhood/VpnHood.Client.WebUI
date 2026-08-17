@@ -40,6 +40,13 @@ export enum ComponentName {
   AddOrEditProxySheet = "AddOrEditProxySheet",
 }
 
+// Debug commands the SPA acts on by itself — the app declares them in DebugCommands (so they are
+// offered in the developer dialog's dropdown) but does nothing with them. They are set in DebugData1
+// through that dialog, which is developer-only, so a feature behind one stays hidden from users.
+export enum DebugCommand {
+  StarlinkTools = '/starlink',
+}
+
 export enum LanguagesCode {
   SystemDefault = 'sys',
   English = 'en',

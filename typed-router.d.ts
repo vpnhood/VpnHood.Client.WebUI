@@ -192,6 +192,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'STARLINK_TOOLS': RouteRecordInfo<
+      'STARLINK_TOOLS',
+      '/settings/starlink-tools',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'SPLIT_TUNNELING': RouteRecordInfo<
       'SPLIT_TUNNELING',
       '/split-tunneling',
@@ -461,6 +468,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/settings/quick-launch.vue': {
       routes:
         | 'QUICK_LAUNCH'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/settings/starlink-tools.vue': {
+      routes:
+        | 'STARLINK_TOOLS'
       views:
         | never
       pathParamNames:
