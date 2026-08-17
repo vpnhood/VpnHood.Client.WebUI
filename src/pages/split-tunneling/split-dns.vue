@@ -60,8 +60,9 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
           :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
+            v-ripple
             :value="SplitDnsMode.IncludeAll"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
@@ -82,8 +83,9 @@ async function onSplitDnsModeChange(value: SplitDnsMode | null) {
           </v-radio>
 
           <v-radio
+            v-ripple
             :value="SplitDnsMode.DefaultRoute"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">

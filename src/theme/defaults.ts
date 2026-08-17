@@ -29,6 +29,11 @@ export const vuetifyDefaults = {
     },
   },
   VBtn: { class: 'text-transform-none' },
+  // Every radio in the app is a title over a description: radio-icon-top puts the button on the
+  // title line (general.css). ripple false kills Vuetify's own ripple around the button alone —
+  // each v-radio carries a v-ripple instead, so the press answers across the whole option, which is
+  // the area that actually takes the tap.
+  VRadio: { class: 'radio-icon-top', ripple: false },
   VSheet: { class: 'px-4 pb-4 fill-height', color: 'background' },
   GradSheet: { class: 'd-flex flex-column justify-space-between primary-bg-grad text-white fill-height px-4 pb-4' },
 

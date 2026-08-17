@@ -90,15 +90,25 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     /*noinspection CssUnresolvedCustomProperty*/
     background: linear-gradient(to top, rgb(var(--v-theme-colored-bg-dark)) 60%, rgb(var(--v-theme-colored-bg-light)));
 }
+/* Every radio in this app labels its option with a title over a description, and Vuetify centers the
+   button against that whole block, which leaves it hanging between the two lines. Applied to every
+   v-radio through the VRadio defaults, so a new radio is aligned without asking. */
 .radio-icon-top{
     align-items: start;
+    /* the row is the ripple's target (see the v-ripple on each v-radio), and .v-ripple__container
+       inherits this radius */
+    border-radius: 8px;
 }
 .radio-icon-top.v-selection-control--disabled .v-selection-control__input > .v-icon{
     opacity: 0.5;
 }
 
+/* Aligning to the top is only half of it: the button sits in a --v-selection-control-size box that
+   centers the icon in it, so it still lands below the title. Lifting the box by half the difference
+   between the title's line box and the box itself puts the icon on the title line, at any density
+   and any locale font size. transform, not margin, so nothing about the row's height moves. */
 .radio-icon-top>.v-selection-control__wrapper{
-    transform: translateY(-7px);
+    transform: translateY(calc((1.5em - var(--v-selection-control-size)) / 2));
 }
 /*** -------------------- Home Circle Section -------------------- ***/
 #connectionCircleIndicator{

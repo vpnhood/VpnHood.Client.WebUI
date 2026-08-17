@@ -61,8 +61,9 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
           :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
+            v-ripple
             :value="SplitUnsupportedIpMode.Block"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
@@ -83,8 +84,9 @@ async function onModeChange(value: SplitUnsupportedIpMode | null) {
           </v-radio>
 
           <v-radio
+            v-ripple
             :value="SplitUnsupportedIpMode.Exclude"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">

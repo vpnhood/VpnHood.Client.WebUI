@@ -172,7 +172,7 @@ function isShowEnforcedByServerAlert() {
         class="my-5"
       >
 
-        <v-radio :value="DnsMode.Default" class="mb-5">
+        <v-radio v-ripple :value="DnsMode.Default" class="mb-5">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale("DEFAULT") }}</span>
@@ -181,7 +181,7 @@ function isShowEnforcedByServerAlert() {
           </template>
         </v-radio>
 
-        <v-radio :value="DnsMode.AdapterDns">
+        <v-radio v-ripple :value="DnsMode.AdapterDns">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale("CUSTOM") }}</span>

@@ -130,8 +130,9 @@ onBeforeRouteLeave(async () => {
           :disabled="!isSplitTunnelingEnabled"
         >
           <v-radio
+            v-ripple
             :value="SplitCountryMode.IncludeAll"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
@@ -142,8 +143,9 @@ onBeforeRouteLeave(async () => {
           </v-radio>
 
           <v-radio
+            v-ripple
             :value="SplitCountryMode.ExcludeMyCountry"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
@@ -166,8 +168,9 @@ onBeforeRouteLeave(async () => {
           </v-radio>
 
           <v-radio
+            v-ripple
             :value="SplitCountryMode.ExcludeList"
-            class="radio-icon-top mb-3"
+            class="mb-3"
           >
             <template v-slot:label>
               <div class="d-flex flex-column">
