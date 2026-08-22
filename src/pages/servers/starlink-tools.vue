@@ -38,6 +38,12 @@ const remoteEndpoint = ref<string | null>(null);
 const localEndpoint = ref<string | null>(null);
 const isAutoFind = ref<boolean>(true);
 
+// Options sit an even distance apart; the one that is currently open pulls its own field close, so
+// the field reads as part of that option rather than as a fourth item in the list.
+function optionSpacing(mode: StarlinkRelayMode): string {
+  return relayMode.value === mode ? 'mb-2' : 'mb-5';
+}
+
 function findLocalRelay(): void {
   vhApp.showGeneralSnackbar(locale('NOT_IMPLEMENTED_YET'));
 }
@@ -69,7 +75,7 @@ function findLocalRelay(): void {
       <v-radio-group v-model="relayMode" :hide-details="true" color="highlight">
 
         <!-- Off -->
-        <v-radio v-ripple :value="StarlinkRelayMode.Disabled" class="mb-6">
+        <v-radio v-ripple :value="StarlinkRelayMode.Disabled" class="mb-5">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale('STARLINK_MODE_DISABLED') }}</span>
@@ -79,7 +85,7 @@ function findLocalRelay(): void {
         </v-radio>
 
         <!-- Remote relay, reached over the internet -->
-        <v-radio v-ripple :value="StarlinkRelayMode.Remote" class="mb-3">
+        <v-radio v-ripple :value="StarlinkRelayMode.Remote" :class="optionSpacing(StarlinkRelayMode.Remote)">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale('STARLINK_MODE_REMOTE') }}</span>
@@ -91,7 +97,7 @@ function findLocalRelay(): void {
         <v-locale-provider v-if="relayMode === StarlinkRelayMode.Remote" :rtl="false">
           <v-text-field
             v-model="remoteEndpoint"
-            placeholder="192.0.2.1:443"
+            placeholder="192.0.2.1"
             persistent-placeholder
             variant="outlined"
             density="compact"
@@ -99,12 +105,12 @@ function findLocalRelay(): void {
             color="highlight"
             hide-details="auto"
             clearable
-            class="mb-3 ms-8"
+            class="mb-5 ms-8"
           />
         </v-locale-provider>
 
         <!-- Local relay. Its own controls live outside this group on purpose — see below. -->
-        <v-radio v-ripple :value="StarlinkRelayMode.Local" class="mb-6">
+        <v-radio v-ripple :value="StarlinkRelayMode.Local" :class="optionSpacing(StarlinkRelayMode.Local)">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
               <span>{{ locale('STARLINK_MODE_LOCAL') }}</span>
@@ -126,7 +132,7 @@ function findLocalRelay(): void {
         <v-locale-provider :rtl="false">
           <v-text-field
             v-model="localEndpoint"
-            placeholder="192.0.2.1:443"
+            placeholder="192.0.2.1"
             persistent-placeholder
             variant="outlined"
             density="compact"
