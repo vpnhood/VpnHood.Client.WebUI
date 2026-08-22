@@ -16,6 +16,7 @@ import i18n from '@/locales/i18n'
 import LocationList from '@/components/Servers/LocationList.vue'
 import { ConnectManager } from '@/helpers/ConnectManager';
 import ExpansionPanelCollapsed from '@/components/Servers/ExpansionPanelCollapsed.vue';
+import router from '@/services/router';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -205,6 +206,18 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
                     @click="showEndpointDialog(clientProfileInfo)"
                   />
                   <v-divider />
+
+                  <!-- Starlink Tools: profile scoped like the custom address above it, and a mock
+                       page, so it stays behind the /starlink debug command — invisible to anyone who
+                       has not typed it into DebugData1 -->
+                  <template v-if="vhApp.data.isStarlinkToolsEnabled">
+                    <v-list-item
+                      :title="locale('STARLINK_TOOLS')"
+                      prepend-icon="mdi-satellite-uplink"
+                      @click="router.push({name: 'STARLINK_TOOLS', query: {clientProfileId: clientProfileInfo.clientProfileId}})"
+                    />
+                    <v-divider />
+                  </template>
 
                   <!-- Delete item -->
                   <v-list-item v-if="vhApp.data.features.isAddAccessKeySupported"

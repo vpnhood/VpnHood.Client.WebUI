@@ -136,6 +136,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'STARLINK_TOOLS': RouteRecordInfo<
+      'STARLINK_TOOLS',
+      '/servers/starlink-tools',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'SETTINGS': RouteRecordInfo<
       'SETTINGS',
       '/settings',
@@ -188,13 +195,6 @@ declare module 'vue-router/auto-routes' {
     'QUICK_LAUNCH': RouteRecordInfo<
       'QUICK_LAUNCH',
       '/settings/quick-launch',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    'STARLINK_TOOLS': RouteRecordInfo<
-      'STARLINK_TOOLS',
-      '/settings/starlink-tools',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -409,6 +409,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'src/pages/servers/starlink-tools.vue': {
+      routes:
+        | 'STARLINK_TOOLS'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'src/pages/settings/index.vue': {
       routes:
         | 'SETTINGS'
@@ -468,14 +476,6 @@ declare module 'vue-router/auto-routes' {
     'src/pages/settings/quick-launch.vue': {
       routes:
         | 'QUICK_LAUNCH'
-      views:
-        | never
-      pathParamNames:
-        | never
-    }
-    'src/pages/settings/starlink-tools.vue': {
-      routes:
-        | 'STARLINK_TOOLS'
       views:
         | never
       pathParamNames:

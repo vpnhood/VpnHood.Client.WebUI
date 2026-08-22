@@ -1,18 +1,32 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import AppBar from '@/components/AppBar.vue';
 import i18n from '@/locales/i18n';
 import { Util } from '@/helpers/Util';
 import { UiConstants } from '@/helpers/UiConstants';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { useRoute } from 'vue-router';
 
 // MOCK PAGE. Nothing here is wired to the app: no setting is read or saved, and the find button
 // only says so. It exists to show the shape of the feature behind the /starlink debug command; the
 // state below is local to the page and dies with it.
+//
+// VOCABULARY — one word per thing in the CODE: the "relay" is what this page points at (a service
+// that forwards requests on to the Starlink router behind it, never a bridge or a proxy), and its
+// "endpoint" is the address:port naming one. None of that reaches the SCREEN: the copy speaks of
+// "Starlink" and "the address it can be reached at", because relay, endpoint and WAN are words a
+// user should never have to learn to fill this page in. Keep new strings in that register.
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+const route = useRoute();
 
-// Where the Starlink terminal that carries the traffic lives — nowhere, out on the internet, or on this LAN.
+// The relay belongs to one server profile, not to the app: the page is opened from a profile's menu
+// and carries that profile's id, so the name below says whose relay is being configured. A page
+// reached without one (a hand-typed URL) simply shows no name rather than guessing a profile.
+const clientProfileName = computed(() =>
+  vhApp.data.clientProfileInfos.find(x => x.clientProfileId === route.query.clientProfileId)?.clientProfileName);
+
+// Which relay to connect to — none, one out on the internet, or one on this LAN.
 enum StarlinkRelayMode {
   Disabled = 'disabled',
   Remote = 'remote',
@@ -24,7 +38,7 @@ const remoteEndpoint = ref<string | null>(null);
 const localEndpoint = ref<string | null>(null);
 const isAutoFind = ref<boolean>(true);
 
-function findLocalRouter(): void {
+function findLocalRelay(): void {
   vhApp.showGeneralSnackbar(locale('NOT_IMPLEMENTED_YET'));
 }
 </script>
@@ -33,7 +47,7 @@ function findLocalRouter(): void {
   <v-sheet>
     <app-bar/>
 
-    <!-- Feature image, sized like every other settings page's -->
+    <!-- Feature image, sized like every other feature page's -->
     <v-img
       :src="Util.getAssetPath('starlink.svg')"
       alt="Symbol image"
@@ -43,7 +57,12 @@ function findLocalRouter(): void {
       :aspect-ratio="UiConstants.featureImageAspectRatio"
       :eager="true"
     />
-    <p class="mt-2 mb-5 text-disabled text-body-small px-3">{{ locale('STARLINK_TOOLS_DESC') }}</p>
+    <div class="mt-2 mb-5 px-3 text-body-small">
+      <p class="text-disabled">{{ locale('STARLINK_TOOLS_DESC') }}</p>
+      <p v-if="clientProfileName" class="text-highlight">
+        {{ locale('STARLINK_TOOLS_PROFILE_SCOPE', {profileName: clientProfileName}) }}
+      </p>
+    </div>
 
     <config-card class="pa-3">
 
@@ -59,7 +78,7 @@ function findLocalRouter(): void {
           </template>
         </v-radio>
 
-        <!-- Remote terminal, reached over the internet -->
+        <!-- Remote relay, reached over the internet -->
         <v-radio v-ripple :value="StarlinkRelayMode.Remote" class="mb-3">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
@@ -72,8 +91,8 @@ function findLocalRouter(): void {
         <v-locale-provider v-if="relayMode === StarlinkRelayMode.Remote" :rtl="false">
           <v-text-field
             v-model="remoteEndpoint"
-            :label="locale('STARLINK_ENDPOINT')"
-            placeholder="203.0.113.10:9200"
+            placeholder="192.0.2.1:443"
+            persistent-placeholder
             variant="outlined"
             density="compact"
             rounded="lg"
@@ -84,7 +103,7 @@ function findLocalRouter(): void {
           />
         </v-locale-provider>
 
-        <!-- Router on this network. Its own controls live outside this group on purpose — see below. -->
+        <!-- Local relay. Its own controls live outside this group on purpose — see below. -->
         <v-radio v-ripple :value="StarlinkRelayMode.Local" class="mb-6">
           <template v-slot:label>
             <div class="d-flex flex-column align-start">
@@ -101,37 +120,41 @@ function findLocalRouter(): void {
            deselects the radio and folds this block away the moment the box is ticked. Local is the
            last option, so rendering the block right after the group looks the same as nesting it. -->
       <div v-if="relayMode === StarlinkRelayMode.Local" class="ms-8">
+        <!-- Find sits in the field's append slot: it acts on that endpoint, so it belongs beside it
+             rather than a row away. The field keeps the locale provider's LTR direction; the button
+             rides along inside it. -->
         <v-locale-provider :rtl="false">
           <v-text-field
             v-model="localEndpoint"
-            :label="locale('STARLINK_ENDPOINT')"
-            placeholder="192.168.1.1:9200"
+            placeholder="192.0.2.1:443"
+            persistent-placeholder
             variant="outlined"
             density="compact"
             rounded="lg"
             color="highlight"
             hide-details="auto"
             clearable
-          />
+          >
+            <template v-slot:append>
+              <btn-style-2
+                :text="locale('STARLINK_FIND')"
+                size="small"
+                @click="findLocalRelay()"
+              />
+            </template>
+          </v-text-field>
         </v-locale-provider>
 
-        <!-- Auto-find fills the address in rather than taking the field over: it stays editable
-             either way, so a discovered address can still be corrected by hand. -->
-        <div class="d-flex align-center justify-space-between ga-3 mt-1">
-          <v-checkbox
-            v-model="isAutoFind"
-            :label="locale('STARLINK_AUTO_FIND')"
-            density="compact"
-            color="highlight"
-            hide-details
-          />
-
-          <btn-style-2
-            :text="locale('STARLINK_FIND')"
-            size="small"
-            @click="findLocalRouter()"
-          />
-        </div>
+        <!-- Auto-find fills the endpoint in rather than taking the field over: it stays editable
+             either way, so a discovered endpoint can still be corrected by hand. -->
+        <v-checkbox
+          v-model="isAutoFind"
+          :label="locale('STARLINK_AUTO_FIND')"
+          density="compact"
+          color="highlight"
+          hide-details
+          class="mt-1"
+        />
       </div>
 
     </config-card>

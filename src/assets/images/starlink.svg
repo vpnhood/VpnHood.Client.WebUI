@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 656" width="640" height="656" fill="none" role="img" aria-label="Starlink dish">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 656" width="640" height="656" fill="none" role="img" aria-label="Starlink">
   <defs>
     <radialGradient id="starlinkGlow" cx="50%" cy="45%" r="50%">
       <stop offset="0%" stop-color="#2FD3F0" stop-opacity=".28"/>
@@ -39,7 +39,7 @@
     <circle cx="120" cy="404" r="2.5"/>
   </g>
 
-  <!-- Satellite, beaming down to the dish -->
+  <!-- Satellite, beaming down to the antenna -->
   <g stroke="#2FD3F0" stroke-width="7" stroke-linecap="round" fill="none">
     <path d="M507.1 138.3 A50 50 0 0 1 470.8 98.7" opacity=".85"/>
     <path d="M499.3 167.3 A80 80 0 0 1 441.2 103.9" opacity=".6"/>
@@ -55,7 +55,7 @@
     <circle cx="520" cy="90" r="6" fill="#2FD3F0"/>
   </g>
 
-  <!-- Ground shadow, then the mast: both sit behind the dish panel -->
+  <!-- Ground shadow, then the mast: both sit behind the antenna panel -->
   <ellipse cx="320" cy="600" rx="150" ry="22" fill="#0B1020" opacity=".28"/>
   <path d="M306 318h28v226h-28z" fill="url(#starlinkPost)"/>
   <rect x="292" y="524" width="56" height="26" rx="10" fill="#6B768F"/>
@@ -63,7 +63,7 @@
   <ellipse cx="320" cy="552" rx="104" ry="30" fill="#95A1BA"/>
   <ellipse cx="320" cy="550" rx="72" ry="19" fill="#C7D0E1" opacity=".55"/>
 
-  <!-- The rectangular "Dishy" terminal, tilted at the sky -->
+  <!-- The Starlink antenna panel, tilted at the sky -->
   <g transform="rotate(-20 320 285)">
     <rect x="184" y="196" width="272" height="196" rx="30" fill="url(#starlinkEdge)"/>
     <rect x="190" y="190" width="260" height="190" rx="28" fill="url(#starlinkFace)"/>
