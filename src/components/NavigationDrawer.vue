@@ -20,7 +20,14 @@ const locale = i18n.global.t;
 // key) degrades to the plain "Sign in" instead of leaking a raw key on screen. With more than one
 // provider the tap opens the chooser instead, so the label is the plain "Sign in" too.
 const showSignInDialog = ref(false);
-const hasSignInChoice = computed(() => vhApp.data.features.authProviderIds.length > 1);
+// The dialog is needed whenever the portal's own password is in play: as a CHOOSER when an identity
+// provider sits beside it, and as the email FORM when password is the only method this build has.
+// Only an identity provider can be signed into directly — vhApp.signIn() asks for a primary provider
+// and password is deliberately not one, so a password-only build that skipped the dialog could never
+// sign in at all.
+const hasSignInChoice = computed(() =>
+  vhApp.data.features.authProviderIds.length > 1 ||
+  vhApp.data.features.authProviderIds[0] === 'password');
 const signInLabelKey = computed(() => {
   const providerId = vhApp.data.features.authProviderIds[0];
   if (!providerId || hasSignInChoice.value) return 'SIGN_IN';

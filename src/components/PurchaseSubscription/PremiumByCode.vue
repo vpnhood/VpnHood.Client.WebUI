@@ -66,11 +66,19 @@ async function updatePremiumCode(): Promise<void> {
     return;
   }
 
-  // Pasting a code is a purely LOCAL act (lifecycle §8): nothing is reported to the backend,
-  // and the account's chosen code is never moved from here. Importing a code INTO an account
-  // is a portal act — the client-area codes page — where the person can actually see whether
-  // it was accepted; the same call from here succeeded or silently did nothing depending on
-  // which channel issued the code, with no way for anyone to tell.
+  // The profile write above is the ONE door (keyring plan §7). It makes the code work here at once,
+  // and when somebody is signed in the app hands it to the account by itself — no prompt, because
+  // typing a code IS choosing to use it, and no second endpoint to call.
+
+  // …except against a live subscription, which always comes first (keyring plan §2). The code is
+  // saved and queued, not used, so say that here. Connecting would show a premium session that the
+  // next account read replaces with the subscription's own code — which reads as the code failing.
+  if (vhApp.data.isPremiumByAccount) {
+    emit('update:modelValue', false);
+    await vhApp.loadAccount(true); // follow the account now rather than mid-session
+    vhApp.showGeneralSnackbar(locale('PREMIUM_CODE_SAVED_FOR_LATER_MSG'), 'highlight', true);
+    return;
+  }
 
   // try to connect to access server with new premium code
   try {
@@ -78,9 +86,8 @@ async function updatePremiumCode(): Promise<void> {
     isShowPendingDialog.value = true;
     await vhApp.connect({clientProfileId: profileId, serverLocation: null, isPremium: true, planId: ConnectPlanId.Normal, isDiagnose: false, goToHome: false});
 
-    if (vhApp.data.isConnected && vhApp.data.isPremiumUser) {
+    if (vhApp.data.isConnected && vhApp.data.isPremiumUser)
       isShowPremiumCodeCompleteDialog.value = true;
-    }
 
   } finally {
     isShowPendingDialog.value = false;

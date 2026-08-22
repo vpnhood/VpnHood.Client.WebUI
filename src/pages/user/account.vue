@@ -12,6 +12,7 @@ import UserPremiumImage from '@/components/User/UserPremiumImage.vue';
 import SubscriptionDetails from '@/components/User/SubscriptionDetails.vue';
 import DeleteAccountDialog from '@/components/User/DeleteAccountDialog.vue';
 import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
+import { SessionErrorCode } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
@@ -19,17 +20,34 @@ const locale = i18n.global.t;
 const showChangeCodeSheet = ref(false);
 const showDeleteDialog = ref(false);
 
-// The account is read once, when the app boots, so this page would otherwise render whatever was
-// true then. That matters after a deletion on another device: the app signs itself out as soon as
-// the backend rejects its session, but a screen holding the old value keeps showing the person who
-// was deleted. Re-reading here costs a local API call and makes this page tell the truth.
+// The access server refused the kept code (keyring plan §6): say "expired" only when the server
+// said AccessExpired; a generic rejection is described as a rejection.
+function codeRefusedNotice(): string {
+  const refused = vhApp.data.state.clientProfile?.accessCodeRefusal;
+  if (!refused) return '';
+  const date = Util.getShortDate(refused.refusedTime);
+  return refused.errorCode === SessionErrorCode.AccessExpired
+    ? locale('CODE_REFUSED_EXPIRED_NOTICE', { date })
+    : locale('CODE_REFUSED_REJECTED_NOTICE', { date });
+}
+
+// THE refresh. The app deliberately never polls the account — no launch refresh, no recheck clock
+// — because a credential that still works needs no permission to go on working, and the people with
+// no premium at all are the many. Opening this page is the person asking, and it is the one place
+// they come to after buying on the website, being given a code, or wondering what they still have.
+// It is also what makes the page tell the truth after a deletion on another device: the backend
+// rejects the session, the app signs itself out, and this screen stops showing someone who is gone.
 // NOTE deliberately absent (lifecycle §8): no code list, no picker, no deletion preview — the
 // backend hands the app ONE code or nothing, and the deletion dialog is static text.
-vhApp.loadAccount()
+vhApp.loadAccount(true)
   .catch((error: unknown) => vhApp.processError(error));
 
+// Signed-out only (keyring plan §7): there the device's copy is the only one there is. The card is
+// hidden while signed in, where the ranking replaces a dead code by itself.
 async function removeCode(): Promise<void> {
-  const result = await vhApp.showConfirmDialog(locale('CONFIRM_REMOVE_PREMIUM_CODE'), locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
+  const result = await vhApp.showConfirmDialog(
+    locale('CONFIRM_REMOVE_PREMIUM_CODE'),
+    locale('CONFIRM_REMOVE_PREMIUM_CODE_DESC'));
   if (!result)
     return;
 
@@ -65,24 +83,36 @@ async function removeCode(): Promise<void> {
     </template>
 
     <!-- Premium user by code -->
-    <template v-else-if="vhApp.data.isPremiumByCode">
+    <template v-else-if="vhApp.data.state.clientProfile?.hasAccessCode">
+
+      <!-- The access server refused this code (keyring plan §6): it is KEPT — refusal never
+           deletes the credential — so the notice explains instead of a silent downgrade. -->
+      <alert-warning
+        v-if="vhApp.data.state.clientProfile?.accessCodeRefusal"
+        class="my-4"
+        :text="codeRefusedNotice()"
+      />
 
       <!-- Change code in ONE step: entering a new code replaces the current one — no
-           remove-first ritual. Only where this build may take a typed code at all (a
-           per-build capability, lifecycle §9); the Remove card below stays in every build,
-           because removing is the escape that re-opens store buying, not code entry. -->
+           remove-first ritual. Gated on the ONE rule (keyring plan §8): the server's per-token
+           policy AND this build's own capability, since one store forbids codes entirely. Only
+           TYPING is gated that far — reading the held code is offered wherever the operator
+           sells codes, on that build too. -->
       <change-premium-method
-        v-if="vhApp.data.features.premium?.isCodeSupported"
+        v-if="vhApp.data.canImportAccessCode"
         :title="locale('CHANGE_PREMIUM_CODE')"
         :description="locale('CHANGE_PREMIUM_CODE_DESC')"
         :button-name="locale('CHANGE_CODE')"
         @button-click="showChangeCodeSheet = true"
       />
 
-      <!-- Remove code -->
+      <!-- Remove code — signed OUT only (keyring plan §7). Signed in, the code is the account's
+           and the ranking replaces a dead one by itself; what the account holds is the panel's
+           business, and the app has no door to it. -->
       <change-premium-method
+        v-if="!vhApp.data.userState.userAccount"
         :title="locale('REMOVE_CURRENT_PREMIUM_CODE')"
-        :description="locale('REMOVE_CURRENT_PREMIUM_CODE_DESC')"
+        :description="locale('REMOVE_LOCAL_PREMIUM_CODE_DESC')"
         :button-name="locale('REMOVE_CODE')"
         @button-click="removeCode()"
       />

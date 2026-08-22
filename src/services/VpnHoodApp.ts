@@ -356,7 +356,8 @@ export class VpnHoodApp {
     errorDialogState.showLogButton = this.data.state.promptForLog;
     errorDialogState.showDiagnoseButton = (action?.showDiagnose && !this.data.state.hasDiagnoseRequested) ?? false;
     errorDialogState.showChangeServerToAutoButton = action?.showChangeServerToAuto ?? false;
-    errorDialogState.showRemovePremium = action?.showRemovePremium ?? false;
+    errorDialogState.showAccessCodeActions = action?.showAccessCodeActions ?? false;
+    errorDialogState.showChangeAccessCode = action?.showChangeAccessCode ?? false;
     errorDialogState.showTryPremium = action?.showTryPremium ?? false;
 
     await this.errorDialogModel.show(true);
@@ -434,19 +435,17 @@ export class VpnHoodApp {
 
     if (!clientProfile.hasAccessCode) throw new Error('The profile does not have a premium code.');
 
-    // a disconnect plus one or two round trips, all of it invisible otherwise
+    // Signed-out only (keyring plan §7): there the device's copy is the only one that exists, so
+    // removing it here removes it everywhere it was. Signed in there is no Remove at all — the
+    // ranking replaces a dead code by itself, and what an account holds is the panel's business.
+    // Nothing account-wide is attempted from here; the app has no door to the account's slot.
     this.data.uiState.showLoadingDialog = true;
     try {
-      // A purely LOCAL act (lifecycle §8). Only a code the person typed themselves can be removed
-      // here — a code the account applied is not offered for removal at all and leaves only with
-      // the account. So nothing is reported to the backend, and nothing about the account changes.
       if (this.data.isConnected) await this.disconnect();
 
       await this.clientProfileClient.update(
         clientProfile.clientProfileId,
-        new ClientProfileUpdateParams({
-          accessCode: new PatchOfString({ value: null }),
-        }),
+        new ClientProfileUpdateParams({ accessCode: new PatchOfString({ value: null }) }),
       );
     } finally {
       this.data.uiState.showLoadingDialog = false;
@@ -546,6 +545,11 @@ export class VpnHoodApp {
       const email = this.data.userState.userAccount?.email;
       if (email) this.showGeneralSnackbar(i18n.global.t('SIGNED_IN_AS_X', { email }));
     }
+
+    // NOTE: no "save this code to your account?" prompt any more (keyring plan §9). Typing a code
+    // IS choosing to use it, so the upload rides along with the profile write and needs no second
+    // answer. The only moment that still deserves a question is BEFORE signing in, where the choice
+    // is still free — sync it, sign in without it, or cancel (§6).
   }
 
   public async signOut(): Promise<void> {
@@ -593,14 +597,24 @@ export class VpnHoodApp {
 
   public async loadAccount(withRefresh: boolean = false): Promise<void> {
     const accountClient = ClientApiFactory.instance.createAccountClient();
-    if (withRefresh) await accountClient.refresh();
+
+    // Best-effort: the portal is often exactly what is blocked here, and a page that cannot reach it
+    // must still show what it knows instead of an error. get() below serves the cached account.
+    if (withRefresh) {
+      try {
+        await accountClient.refresh();
+      } catch (error: unknown) {
+        console.debug('Could not refresh the account. Showing the saved one.', error);
+      }
+    }
+
     this.data.userState.userAccount = await accountClient.get();
     // For developer
     console.debug(
       'IsPremiumUser: ',
       this.data.isPremiumUser,
-      ' IsAccessCodeFromAccount: ',
-      this.data.state.clientProfile?.isAccessCodeFromAccount,
+      ' IsPremiumByAccount: ',
+      this.data.isPremiumByAccount,
       ' CanGoPremium: ',
       this.data.state.clientProfile?.canGoPremium,
       ' isPremiumSupported: ',

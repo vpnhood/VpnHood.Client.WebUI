@@ -3,7 +3,8 @@ export class ErrorDialogState {
   public showDiagnoseButton: boolean = false;
   public showLogButton: boolean = false;
   public showChangeServerToAutoButton: boolean = false;
-  public showRemovePremium: boolean = false;
+  public showAccessCodeActions: boolean = false;
+  public showChangeAccessCode: boolean = false;
   public showSystemSettingButton: boolean = false;
   public showTryPremium: boolean = false;
 }

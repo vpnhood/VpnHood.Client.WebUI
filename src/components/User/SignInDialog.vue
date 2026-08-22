@@ -30,11 +30,13 @@ const errorMessage = ref('');
 const isWorking = ref(false);
 const showPassword = ref(false);
 
-// a reopened dialog starts from the beginning, holding no one's credentials
+// a reopened dialog starts from the beginning, holding no one's credentials. With no identity
+// provider to choose, the chooser would be a single button in front of the only form there is, so
+// the dialog opens on the form itself.
 watch(
   () => props.modelValue,
   () => {
-    step.value = 'start';
+    step.value = vhApp.primaryProviderId() ? 'start' : 'password';
     email.value = '';
     password.value = '';
     twoFactorCode.value = '';
@@ -224,7 +226,8 @@ async function submitChallenge(): Promise<void> {
           >{{ locale('FORGOT_PASSWORD') }}</a>
         </v-card-text>
         <v-card-actions>
-          <v-btn :text="locale('BACK')" @click="step = 'start'; errorMessage = ''" />
+          <!-- nothing to go back TO when the form is the whole dialog -->
+          <v-btn v-if="primaryMethod" :text="locale('BACK')" @click="step = 'start'; errorMessage = ''" />
           <v-spacer />
           <v-btn :text="locale('CANCEL')" @click="close()" />
         </v-card-actions>

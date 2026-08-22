@@ -180,17 +180,35 @@ export class VpnHoodAppData {
   get isPremiumUser(): boolean {
     return this.state.clientProfile?.isPremium == true;
   }
-  get isAccessCodeFromAccount(): boolean{
-    return this.state.clientProfile?.isAccessCodeFromAccount == true
-  }
-
   // Premium granted through the signed-in account's store subscription (Play or App Store —
   // whichever store the platform build bills on), as opposed to a premium code.
+  //
+  // A subscription now DELIVERS a code like every other channel, so "where did this code come from"
+  // is no longer a question the app can answer — it keeps no such provenance (keyring plan §9). The
+  // honest question, and the one every caller actually meant, is whether this account is paying a
+  // subscription.
   get isPremiumByAccount(): boolean{
-    return this.isPremiumUser && this.isAccessCodeFromAccount;
+    return this.isPremiumUser && this.userState.userAccount?.subscription != null;
   }
   get isPremiumByCode(): boolean{
-    return this.isPremiumUser && !this.isAccessCodeFromAccount;
+    return this.isPremiumUser && !this.isPremiumByAccount;
+  }
+
+  // THE gate for offering code ENTRY anywhere (keyring plan §8): the server's per-token policy AND
+  // this build's own capability — one store forbids unlocking with a code at all. Both halves are
+  // combined server-side into one field, so nothing is re-derived here and no screen can check only
+  // half of it. NOT the location's premiumByCode: that answers "can this person upgrade" and is
+  // false once they are already premium — which is precisely when Change code is offered.
+  get canImportAccessCode(): boolean{
+    return this.state.clientProfile?.canImportAccessCode == true;
+  }
+
+  // Reading the code this device already holds is a SEPARATE permission, and a wider one: the
+  // store that forbids typing a code does not forbid showing the one the buyer's own purchase
+  // produced. They read it here and type it on their Android or Windows device — premium follows
+  // the person, not the platform.
+  get canViewAccessCode(): boolean{
+    return this.state.clientProfile?.canViewAccessCode == true;
   }
 
   get canTryPremium(): boolean {

@@ -14,6 +14,8 @@ export class UiState {
   // Update message state
   public showUpdateSnackbar: boolean = false;
 
+  // Keyring plan §5.1: the save-code-to-account prompt is offered at most once per app session
+
   // Time of user ignored the last error message
   public configTime: Date = new Date();
 

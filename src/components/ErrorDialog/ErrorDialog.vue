@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { VpnHoodApp } from '@/services/VpnHoodApp';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import i18n from '@/locales/i18n';
 import { ClientProfileUpdateParams, ConnectPlanId, PatchOfBoolean, PatchOfString } from '@/services/VpnHood.Client.Api';
 import { UiConstants } from '@/helpers/UiConstants';
 import LearningButton from '@/components/LearningButton.vue';
+import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
 import router from '@/services/router';
 
 const vhApp = VpnHoodApp.instance;
@@ -22,6 +23,7 @@ const updateParams = new ClientProfileUpdateParams({
   selectedLocation: new PatchOfString({value: vhApp.data.uiState.autoLocationValue})
 });
 const dialogState = computed(() => vhApp.data.uiState.errorDialogState);
+const showChangeCodeSheet = ref(false);
 
 // Reconnect by Auto Location
 async function changeLocationToAuto(clientProfileId: string): Promise<void> {
@@ -60,22 +62,16 @@ async function sendReport(): Promise<void> {
   }
 }
 
-async function removePremiumCode(): Promise<void> {
-  try{
-    console.log('Removing premium code...');
-    vhApp.data.uiState.showLoadingDialog = true;
-    await vhApp.removePremiumCode();
-    console.log('Premium code removed successfully.');
-  } finally {
-    vhApp.data.uiState.showLoadingDialog = false;
-  }
-
-  // it must be at end otherwise the the raised alert will not be displayed properly.
+async function restorePremium(): Promise<void> {
   await closeDialog();
-}
-async function renewPremium(): Promise<void> {
-  await removePremiumCode();
   await router.replace({ name: 'PURCHASE_SUBSCRIPTION' });
+}
+
+// Change code, never Remove (keyring plan §7, §8): the refused code is KEPT, and entering a new one
+// replaces it in a single step. Removing would only turn the build into its own free edition.
+async function changeAccessCode(): Promise<void> {
+  await closeDialog();
+  showChangeCodeSheet.value = true;
 }
 async function closeDialog(): Promise<void> {
   await vhApp.clearLastError();
@@ -139,17 +135,18 @@ async function closeDialog(): Promise<void> {
            @click="tryPremium(vhApp.data.clientProfileId)"
           />
 
-          <!-- Remove premium code or profile -->
-          <div v-if="dialogState.showRemovePremium">
+          <!-- The refused code is KEPT; what is offered is what exists (keyring plan §8). -->
+          <div v-if="dialogState.showAccessCodeActions">
             <v-btn
               variant="flat"
-              :text="locale('RE_NEW_PREMIUM')"
-              @click="renewPremium()"
+              :text="locale('RESTORE_PREMIUM')"
+              @click="restorePremium()"
             />
             <v-btn
+              v-if="dialogState.showChangeAccessCode"
               variant="flat"
-              :text="locale('EXIT_PREMIUM')"
-              @click="removePremiumCode()"
+              :text="locale('CHANGE_CODE')"
+              @click="changeAccessCode()"
             />
           </div>
 
@@ -190,4 +187,7 @@ async function closeDialog(): Promise<void> {
 
     </v-card>
   </v-dialog>
+
+  <!-- One-step change: the same code sheet the purchase and account pages use -->
+  <premium-by-code v-model="showChangeCodeSheet"/>
 </template>

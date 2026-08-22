@@ -11,7 +11,8 @@ import { Util } from './Util';
 export interface ShowErrorActions {
   showDiagnose?: boolean,
   showChangeServerToAuto?: boolean,
-  showRemovePremium?: boolean,
+  showAccessCodeActions?: boolean,
+  showChangeAccessCode?: boolean,
   isPrivateDnsError?: boolean,
   showTryPremium?: boolean
 }
@@ -209,11 +210,23 @@ export class ErrorHandler {
       case SessionErrorCode.SessionSuppressedBy:
         return { localeKey: 'SESSION_SUPPRESSED_BY_OTHER' };
 
-      // User is premium (by Code or Google) and attempt to connect while the premium is expired.
+      // The access server, not a portal clock, said this credential is no longer usable.
       case SessionErrorCode.AccessExpired:
         if (VpnHoodApp.instance.data.isPremiumSupported) {
-          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: { 
-            showRemovePremium: VpnHoodApp.instance.data.isPremiumUser } 
+          // Somebody whose subscription is live is not somebody whose access ended (keyring plan
+          // §4): the account keeps serving a paid code even after a refusal, deliberately, so the
+          // refusal is OUR fault to fix and not theirs. Telling a payer their access expired and
+          // asking them to restore premium is both wrong and insulting.
+          if (VpnHoodApp.instance.data.isPremiumByAccount)
+            return { localeKey: 'SUBSCRIPTION_NOT_PROVISIONED_MSG' };
+
+          // Nothing to remove and nothing to choose (keyring plan §7, §8): the code is KEPT, and
+          // what the person is offered is what exists — Restore Premium, plus Change code wherever
+          // this build may take a typed one.
+          const profile = VpnHoodApp.instance.data.state.clientProfile;
+          return { localeKey: 'PREMIUM_ACCESS_EXPIRED_MSG', action: {
+            showAccessCodeActions: profile?.hasAccessCode === true,
+            showChangeAccessCode: VpnHoodApp.instance.data.canImportAccessCode }
           };
         }
         return { localeKey: 'SERVER_KEY_EXPIRED' };
@@ -226,11 +239,20 @@ export class ErrorHandler {
       case SessionErrorCode.DailyLimitExceeded:
         return { localeKey: 'DAILY_LIMIT_EXCEEDED_MSG' };
 
-      // Premium code is invalid
+      // The access server rejected the code. Said as a rejection, not an expiry (keyring plan
+      // §6); the code is kept until the person retries, changes, or removes it.
       case SessionErrorCode.AccessCodeRejected:
+        {
+        // the same rule as above: a live subscription's code being refused is a provisioning fault
+        if (VpnHoodApp.instance.data.isPremiumByAccount)
+          return { localeKey: 'SUBSCRIPTION_NOT_PROVISIONED_MSG' };
+
+        const profile = VpnHoodApp.instance.data.state.clientProfile;
         return { localeKey: 'INVALID_ACCESS_CODE', action: {
-          showRemovePremium: VpnHoodApp.instance.data.isPremiumUser }
+          showAccessCodeActions: profile?.hasAccessCode === true,
+          showChangeAccessCode: VpnHoodApp.instance.data.canImportAccessCode }
         };
+        }
 
       // Connection plan rejected by access server
       case SessionErrorCode.PlanRejected:
