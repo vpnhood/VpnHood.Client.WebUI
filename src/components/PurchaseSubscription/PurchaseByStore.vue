@@ -64,7 +64,13 @@ async function onRestore(): Promise<void> {
     const billingClient = ClientApiFactory.instance.createBillingClient();
     const restored = await billingClient.restorePurchase();
     await vhApp.loadAccount();
-    hasNothingToRestore = !restored;
+
+    // The button's real question is "am I premium again?", not "did the store hand back a
+    // subscription?" — and the two can honestly differ: signing in may have just served this
+    // account its code (lifecycle §8) while the store subscription behind it is long over, so the
+    // store restore finds nothing. Reporting "nothing to restore" over a page that now shows
+    // premium reads as a bug; being served IS the restored state, whichever channel delivered it.
+    hasNothingToRestore = !restored && !isAccountServed();
     isShowPurchaseCompleteDialog.value = !hasNothingToRestore;
   } finally {
     isShowPendingDialog.value = false;
