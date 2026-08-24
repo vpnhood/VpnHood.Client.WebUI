@@ -225,11 +225,12 @@ function edgeToEdgeHeight(bottom: boolean): string{
         </v-list-item-title>
       </v-list-item>
 
-      <!-- Check for update. Hidden where the app has no updater: iOS ships without one (updates come
-           from the App Store, and an in-app update path is not allowed there), and the backend then
-           answers versionCheck with NotSupportedException. state.updaterStatus IS the capability
-           signal — VpnHoodApp fills it from Services.UpdaterService?.Status, so it is null exactly
-           when no updater was configured, and an object on every platform that has one. -->
+      <!-- Check for update. Hidden where the app has no updater, and the backend then answers
+           versionCheck with NotSupportedException. state.updaterStatus IS the capability signal —
+           VpnHoodApp fills it from Services.UpdaterService?.Status, so it is null exactly when no
+           updater was configured, and an object on every platform that has one. iOS now has one too:
+           it compares against the version published on the App Store and opens the store page, which
+           the guidelines allow — what they forbid is downloading/installing code in-app. -->
       <v-list-item
         v-if="vhApp.data.state.updaterStatus"
         class="border-b"
