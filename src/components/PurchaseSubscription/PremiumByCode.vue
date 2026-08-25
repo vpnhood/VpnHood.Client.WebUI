@@ -24,6 +24,11 @@ const premiumCodeRawNumber = ref<string | null>(null);
 const isShowPremiumCodeCompleteDialog = ref(false);
 const isShowPendingDialog = ref(false);
 
+// The shape of a code, not a re-statement of the title above it: five groups of four is what the
+// person is holding, and the same mask PremiumCodeDetails shows. Locale-neutral, so it is not a
+// translation key.
+const premiumCodePlaceholder = 'XXXX-XXXX-XXXX-XXXX-XXXX';
+
 // Add a dash every 4 characters during input premium code
 /*
 watchEffect(() => {
@@ -97,12 +102,15 @@ async function updatePremiumCode(): Promise<void> {
 
 <template>
   <!-- Premium code sheet -->
+  <!-- NOT 'contained': that anchors the sheet to its offset parent, so on a long page (the account
+       page) it lands at the bottom of the CONTENT and the person has to scroll to find what they
+       just opened. Fixed to the viewport instead, capped to the app frame like every other sheet. -->
   <v-bottom-sheet
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
-    contained
+    location="bottom"
     width="100%"
-    max-width="100%"
+    :max-width="vhApp.data.uiState.maxWidthOnLargeScreen"
   >
     <v-card
       prepend-icon="mdi-key"
@@ -123,7 +131,7 @@ async function updatePremiumCode(): Promise<void> {
         >
           <v-text-field
             v-model="formattedPremiumCode"
-            :placeholder="locale('ENTER_YOUR_CODE')"
+            :placeholder="premiumCodePlaceholder"
             @input="premiumCodeHandleInput"
             :error-messages="invalidCodeError"
             hide-details="auto"
