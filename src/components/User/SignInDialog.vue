@@ -47,6 +47,14 @@ watch(
 );
 
 const primaryMethod = computed(() => vhApp.primaryProviderId());
+// Brand names are not translated, so this is a map rather than locale keys. The fallback
+// capitalizes an unknown id so a new provider degrades to something readable, never to a blank.
+const primaryProviderName = computed(() => {
+  const id = primaryMethod.value;
+  if (!id) return '';
+  const names: Record<string, string> = { apple: 'Apple', google: 'Google', microsoft: 'Microsoft' };
+  return names[id.toLowerCase()] ?? id.charAt(0).toUpperCase() + id.slice(1);
+});
 const primaryLabelKey = computed(() => {
   if (!primaryMethod.value) return 'SIGN_IN';
   const key = `SIGN_IN_WITH_${primaryMethod.value.toUpperCase()}`;
@@ -87,7 +95,11 @@ function messageForError(err: unknown): string {
       case 'unsupported_two_factor':
         return locale('SIGN_IN_UNSUPPORTED_TWO_FACTOR');
       case 'no_account':
-        return locale('SIGN_IN_NO_ACCOUNT');
+        // with a store provider, say where accounts DO come from — the person holding a wrong
+        // email may simply be a store-account holder on the wrong path
+        return primaryMethod.value
+          ? locale('SIGN_IN_NO_ACCOUNT_WITH_PROVIDER', { provider: primaryProviderName.value })
+          : locale('SIGN_IN_NO_ACCOUNT');
       case 'account_ambiguous':
         return locale('SIGN_IN_ACCOUNT_AMBIGUOUS');
     }
@@ -174,6 +186,11 @@ async function submitChallenge(): Promise<void> {
               :text="locale('SIGN_IN_WITH_EMAIL')"
               @click="step = 'password'"
             />
+            <!-- scopes the email path to website accounts BEFORE the tap: an IdP account has no
+                 password, and invalid_credentials deliberately cannot say so afterwards -->
+            <p class="text-disabled text-body-small text-center mt-2">
+              {{ locale('SIGN_IN_EMAIL_SCOPE_HINT') }}
+            </p>
           </template>
         </v-card-text>
         <v-card-actions>
@@ -185,7 +202,13 @@ async function submitChallenge(): Promise<void> {
       <template v-else-if="step === 'password'">
         <v-card-title>{{ locale('SIGN_IN_WITH_EMAIL') }}</v-card-title>
         <v-card-text class="text-general-dialog-text">
-          <p class="text-body-medium mb-4">{{ locale('SIGN_IN_WITH_EMAIL_DESC') }}</p>
+          <p class="text-body-medium" :class="primaryMethod ? 'mb-2' : 'mb-4'">{{ locale('SIGN_IN_WITH_EMAIL_DESC') }}</p>
+          <!-- the escape for a store-account holder who wandered in: their account has no
+               password, so no amount of typing here can succeed. Meaningless without a store,
+               hence gated. -->
+          <p v-if="primaryMethod" class="text-disabled text-body-small mb-4">
+            {{ locale('SIGN_IN_PROVIDER_HINT', { provider: primaryProviderName }) }}
+          </p>
           <v-form @submit.prevent="submitPassword()">
             <v-text-field
               v-model="email"
