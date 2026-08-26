@@ -134,3 +134,10 @@
 .v-btn--disabled.btn-style-2 .v-btn__overlay{
     opacity: 0;
 }
+/* The WebView2/Edge engine draws its own reveal and clear buttons INSIDE the input, which land next to
+   the ones the app draws — two eyes on every password field on Windows. The app's are the ones
+   that carry the theme and the aria-label, so the engine's are the pair that goes. */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
