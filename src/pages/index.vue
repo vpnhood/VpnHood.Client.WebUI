@@ -26,9 +26,8 @@ const locale = i18n.global.t;
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
 const isPremiumUser = computed((): boolean => {
-  return vhApp.data.isPremiumSupported && (
-  vhApp.data.isPremiumUser || (vhApp.data.state.sessionInfo?.isPremiumSession === true && vhApp.data.isConnected)
-  )
+  return (vhApp.data.isPremiumSupported && vhApp.data.isPremiumUser) ||
+    (vhApp.data.state.sessionInfo?.isPremiumSession === true && vhApp.data.isConnected);
 });
 
 let lastConnectPressedTime = Date.now() - 1000;
