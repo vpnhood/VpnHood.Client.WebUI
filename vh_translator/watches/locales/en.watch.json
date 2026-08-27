@@ -222,7 +222,7 @@
     "PURCHASE_SUBSCRIPTION": "Purchase Subscription",
     "HAVE_ACTIVE_SUBSCRIPTION": "You currently have an active subscription.",
     "SELECTED_PLAN_ALREADY_SUBSCRIBED": "The selected plan is already subscribed. You can choose another plan to change your current subscription.",
-    "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in with Google. If you wish, please proceed again.",
+    "SIGN_IN_CANCELED_BY_USER": "To purchase a subscription, you need to sign in. If you wish, please proceed again.",
     "CANCEL_ANYTIME_IN_STORE": "Cancel anytime in your store's subscription settings.",
     "ALWAYS_ON": "Always On",
     "ALWAYS_ON_COLORED": "Always <span class=\"text-promote-premium-color-premium\">On</span>",

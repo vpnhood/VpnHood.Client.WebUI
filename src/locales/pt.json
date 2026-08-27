@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Comprar Assinatura",
   "HAVE_ACTIVE_SUBSCRIPTION": "Você já tem uma assinatura ativa.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "O plano selecionado já está assinado. Você pode escolher outro plano para alterar sua assinatura atual.",
-  "SIGN_IN_CANCELED_BY_USER": "Para comprar uma assinatura, você precisa fazer login com o Google. Se desejar, por favor, prossiga novamente.",
+  "SIGN_IN_CANCELED_BY_USER": "Faça login para assinar. Tente novamente quando quiser.",
   "CANCEL_ANYTIME_IN_STORE": "Cancele quando quiser nas configurações da sua loja de apps.",
   "ALWAYS_ON": "Sempre ligado",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">Sempre</span> ativo",

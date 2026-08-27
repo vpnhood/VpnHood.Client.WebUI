@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Abonelik Satın Al",
   "HAVE_ACTIVE_SUBSCRIPTION": "Zaten aktif bir aboneliğiniz var.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "Seçilen plan zaten abone olmuş. Mevcut aboneliğinizi değiştirmek için başka bir plan seçebilirsiniz.",
-  "SIGN_IN_CANCELED_BY_USER": "Bir abonelik satın almak için Google ile oturum açmanız gerekiyor. İsterseniz, lütfen tekrar devam edin.",
+  "SIGN_IN_CANCELED_BY_USER": "Abonelik satın almak için giriş yapmanız gerekir. Lütfen tekrar deneyin.",
   "CANCEL_ANYTIME_IN_STORE": "Mağaza ayarlarınızdan istediğiniz an iptal edin.",
   "ALWAYS_ON": "Her Zaman Açık",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">Her zaman</span> etkin",

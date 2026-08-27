@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Compra de Suscripción",
   "HAVE_ACTIVE_SUBSCRIPTION": "Ya tienes una suscripción activa.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "El plan seleccionado ya está suscrito. Puedes elegir otro plan para cambiar tu suscripción actual.",
-  "SIGN_IN_CANCELED_BY_USER": "Para comprar una suscripción, necesitas iniciar sesión con Google. Si lo deseas, por favor, procede de nuevo.",
+  "SIGN_IN_CANCELED_BY_USER": "Inicia sesión para comprar una suscripción. Inténtalo de nuevo cuando quieras.",
   "CANCEL_ANYTIME_IN_STORE": "Cancela cuando quieras desde los ajustes de suscripción de la tienda.",
   "ALWAYS_ON": "Siempre encendido",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">Siempre</span> activo",

@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Abonnement kaufen",
   "HAVE_ACTIVE_SUBSCRIPTION": "Sie haben bereits ein aktives Abonnement.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "Der ausgewählte Plan ist bereits abonniert. Sie können einen anderen Plan auswählen, um Ihr aktuelles Abonnement zu ändern.",
-  "SIGN_IN_CANCELED_BY_USER": "Um ein Abonnement zu kaufen, müssen Sie sich bei Google anmelden. Wenn Sie möchten, können Sie den Vorgang erneut starten.",
+  "SIGN_IN_CANCELED_BY_USER": "Melden Sie sich an, um ein Abo zu kaufen. Bitte versuchen Sie es erneut.",
   "CANCEL_ANYTIME_IN_STORE": "Jederzeit in den Abo-Einstellungen deines Stores kündbar.",
   "ALWAYS_ON": "Immer an",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">Immer</span> aktiv",

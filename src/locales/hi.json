@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "सदस्यता खरीदें",
   "HAVE_ACTIVE_SUBSCRIPTION": "आपकी एक सक्रिय सदस्यता है।",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "चयनित योजना पहले से ही सदस्यता ली गई है। आप अपनी वर्तमान सदस्यता को बदलने के लिए एक अन्य योजना चुन सकते हैं।",
-  "SIGN_IN_CANCELED_BY_USER": "सदस्यता खरीदने के लिए, आपको Google के साथ साइन इन करने की आवश्यकता है। यदि आप चाहते हैं, तो कृपया फिर से आगे बढ़ें।",
+  "SIGN_IN_CANCELED_BY_USER": "सब्सक्रिप्शन खरीदने के लिए साइन इन करें। जारी रखने के लिए फिर से कोशिश करें।",
   "CANCEL_ANYTIME_IN_STORE": "स्टोर की सब्सक्रिप्शन सेटिंग्स से कभी भी रद्द करें।",
   "ALWAYS_ON": "हमेशा चालू",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">हमेशा</span> चालू",

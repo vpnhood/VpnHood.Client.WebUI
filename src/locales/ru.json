@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Покупка подписки",
   "HAVE_ACTIVE_SUBSCRIPTION": "У вас уже есть активная подписка.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "Выбранный план уже подписан. Вы можете выбрать другой план, чтобы изменить текущую подписку.",
-  "SIGN_IN_CANCELED_BY_USER": "Чтобы купить подписку, вам нужно войти через Google. Если вы хотите, пожалуйста, продолжите снова.",
+  "SIGN_IN_CANCELED_BY_USER": "Для покупки подписки войдите в аккаунт. Попробуйте еще раз.",
   "CANCEL_ANYTIME_IN_STORE": "Отмена в любой момент в настройках подписок магазина.",
   "ALWAYS_ON": "Всегда включен",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">Всегда</span> активен",

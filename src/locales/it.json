@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Acquista Abbonamento",
   "HAVE_ACTIVE_SUBSCRIPTION": "Hai già un abbonamento attivo.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "Il piano selezionato è già sottoscritto. Puoi scegliere un altro piano per modificare il tuo abbonamento attuale.",
-  "SIGN_IN_CANCELED_BY_USER": "Per acquistare un abbonamento, devi accedere con Google. Se lo desideri, procedi nuovamente.",
+  "SIGN_IN_CANCELED_BY_USER": "Accedi per acquistare un abbonamento. Riprova per continuare.",
   "CANCEL_ANYTIME_IN_STORE": "Disdici quando vuoi nelle impostazioni dello store.",
   "ALWAYS_ON": "Always On",
   "ALWAYS_ON_COLORED": "Always <span class=\"text-promote-premium-color-premium\">On</span>",

@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "شراء الاشتراك",
   "HAVE_ACTIVE_SUBSCRIPTION": "لديك اشتراك نشط حاليًا.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "الخطة المحددة مشترك فيها بالفعل. يمكنك اختيار خطة أخرى لتغيير اشتراكك الحالي.",
-  "SIGN_IN_CANCELED_BY_USER": "لشراء اشتراك، تحتاج إلى تسجيل الدخول باستخدام Google. إذا كنت ترغب في ذلك، يرجى المتابعة مرة أخرى.",
+  "SIGN_IN_CANCELED_BY_USER": "يرجى تسجيل الدخول لشراء اشتراك. يمكنك المحاولة مرة أخرى وقتما تشاء.",
   "CANCEL_ANYTIME_IN_STORE": "إلغاء الاشتراك في أي وقت من إعدادات المتجر.",
   "ALWAYS_ON": "دائما متصل",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">دائمًا</span> مفعّل",

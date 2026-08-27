@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "Acheter un abonnement",
   "HAVE_ACTIVE_SUBSCRIPTION": "Vous avez un abonnement actif.",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "Le forfait sélectionné est déjà souscrit. Vous pouvez choisir un autre forfait pour modifier votre abonnement actuel.",
-  "SIGN_IN_CANCELED_BY_USER": "Pour acheter un abonnement, vous devez vous connecter avec Google. Si vous le souhaitez, veuillez recommencer.",
+  "SIGN_IN_CANCELED_BY_USER": "Connectez-vous pour vous abonner. Veuillez réessayer.",
   "CANCEL_ANYTIME_IN_STORE": "Résiliez à tout moment dans les paramètres de votre compte store.",
   "ALWAYS_ON": "Toujours actif",
   "ALWAYS_ON_COLORED": "Toujours <span class=\"text-promote-premium-color-premium\">Actif</span>",

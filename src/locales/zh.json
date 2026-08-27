@@ -220,7 +220,7 @@
   "PURCHASE_SUBSCRIPTION": "购买订阅",
   "HAVE_ACTIVE_SUBSCRIPTION": "您当前拥有有效订阅。",
   "SELECTED_PLAN_ALREADY_SUBSCRIBED": "您选择的计划已经订阅。您可以选择另一个计划来更改当前的订阅。",
-  "SIGN_IN_CANCELED_BY_USER": "要购买订阅，您需要使用 Google 登录。如果您愿意，请再次进行。",
+  "SIGN_IN_CANCELED_BY_USER": "请先登录以购买订阅。如需继续，请重试。",
   "CANCEL_ANYTIME_IN_STORE": "可随时在应用商店的订阅设置中取消。",
   "ALWAYS_ON": "始终开启",
   "ALWAYS_ON_COLORED": "<span class=\"text-promote-premium-color-premium\">始终</span>开启",
