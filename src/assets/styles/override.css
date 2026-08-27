@@ -88,9 +88,13 @@
 }
 
 /*For handle UI in old browser*/
+/* Horizontal margin stays AUTO: the overlay content is absolutely positioned with left:0 and
+   right:0, so a dialog or bottom sheet capped by max-width (to the app frame) would resolve to the
+   LEFT edge of a wide window and sit outside the frame. Auto margins are what centre it there;
+   `margin: 0` alone left it stranded on the left on any screen wider than the cap. */
 /*noinspection CssUnusedSymbol*/
 .v-dialog > .v-overlay__content {
-    margin: 0;
+    margin: 0 auto;
 }
 
 /*noinspection CssUnusedSymbol*/
