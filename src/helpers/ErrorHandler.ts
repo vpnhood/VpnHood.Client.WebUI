@@ -2,10 +2,7 @@ import { ApiException, AppFeature, ExceptionType, SessionErrorCode } from '@/ser
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { AnalyticsCustomEvent } from '@/helpers/UiConstants';
-import { GooglePlayBillingPurchaseState } from '@/helpers/googlePlayBilling/GooglePlayBillingPurchaseState';
-import { GooglePlayBillingResponseCode } from '@/helpers/googlePlayBilling/GooglePlayBillingResponseCode';
 import router from '@/services/router';
-import { Validators } from '@/helpers/Validators';
 import { Util } from './Util';
 
 export interface ShowErrorActions {
@@ -188,12 +185,10 @@ export class ErrorHandler {
       case ExceptionType.UnreachableProxyServer:
         return { localeKey: 'UNREACHABLE_PROXIES_MESSAGE' };
 
-      // Device does not have Google Play
-      case 'GooglePlayUnavailableException':
-        return { localeKey: 'GOOGLE_PLAY_IS_UNAVAILABLE' };
-
-      case 'GoogleBillingException':
-        return this.googleBillingExceptionHandler(err);
+      // Store billing failures arrive store-agnostic: every billing provider maps its store's
+      // own codes into BillingErrorCode before anything crosses the client API.
+      case 'BillingException':
+        return this.billingExceptionHandler(err);
 
       case 'HttpRequestException':
         return { text: err.message };
@@ -294,65 +289,39 @@ export class ErrorHandler {
 
   }
 
-  private static async googleBillingExceptionHandler(err: ApiException): Promise<ShowErrorOptions> {
+  // Branches only on the store-agnostic BillingErrorCode; which store failed, and how it spells
+  // its errors, stays the billing provider's business. The store's own message is shown only on
+  // Unknown, where the generic text alone would explain nothing.
+  private static async billingExceptionHandler(err: ApiException): Promise<ShowErrorOptions> {
+    const storeMessage = err.data?.StoreMessage as string | undefined;
 
-    const googleMessageTitle = 'GOOGLE_EXCEPTION_MESSAGE';
-    const billingMessage = err.data?.BillingMessage;
-    const purchaseState = err.data?.PurchaseState;
-    const billingResponseCode = err.data?.BillingResponseCode;
-
-    if (purchaseState === GooglePlayBillingPurchaseState.Pending)
-      return { localeKey: 'GOOGLE_BILLING_PENDING_PURCHASE' };
-
-    switch (billingResponseCode) {
-
-      case GooglePlayBillingResponseCode.BillingUnavailable:
-        return { localeKey: 'GOOGLE_BILLING_BILLING_UNAVAILABLE' };
-
-      case GooglePlayBillingResponseCode.ServiceDisconnected:
-        return { localeKey: 'GOOGLE_BILLING_SERVICE_DISCONNECTED' };
-
-      case GooglePlayBillingResponseCode.Error:
-        if (purchaseState === '')
-          return { text: `${Validators.isEmptyString(billingMessage as string) ? i18n.global.t('GOOGLE_BILLING_NETWORK_ERROR') : billingMessage}` };
-        return {
-          localeKey: 'ORDER_PROCESSING_FAILED',
-          text: `${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`
-        };
-
-      case GooglePlayBillingResponseCode.DeveloperError:
-        return {
-          localeKey: 'GOOGLE_BILLING_DEVELOPER_ERROR',
-          text: `${billingMessage ? `${googleMessageTitle} ${billingMessage}` : ''}`
-        };
-
-      case GooglePlayBillingResponseCode.FeatureNotSupported:
-        return { localeKey: 'GOOGLE_BILLING_FEATURE_NOT_SUPPORTED' };
-
-      case GooglePlayBillingResponseCode.ItemAlreadyOwned:
-        return { localeKey: 'SELECTED_PLAN_ALREADY_SUBSCRIBED' };
-
-      case GooglePlayBillingResponseCode.ItemUnavailable:
-        return { localeKey: 'GOOGLE_BILLING_ITEM_UNAVAILABLE' };
-
-      case GooglePlayBillingResponseCode.ItemNotOwned:
-        return { localeKey: 'GOOGLE_BILLING_ITEM_NOT_OWNED' };
-
-      case GooglePlayBillingResponseCode.NetworkError:
-        return { localeKey: 'GOOGLE_BILLING_NETWORK_ERROR' };
-
-      case GooglePlayBillingResponseCode.ServiceTimeout:
-        return { localeKey: 'GOOGLE_BILLING_SERVICE_TIMEOUT' };
-
-      case GooglePlayBillingResponseCode.ServiceUnavailable:
-        return { localeKey: 'GOOGLE_BILLING_SERVICE_UNAVAILABLE' };
-
-      case GooglePlayBillingResponseCode.UserCancelled:
-        console.log(i18n.global.t('GOOGLE_BILLING_USER_CANCELED'));
+    switch (err.data?.BillingErrorCode) {
+      case 'Cancelled':
         return { ignoreMessage: true };
 
+      case 'Pending':
+        return { localeKey: 'BILLING_PENDING_PURCHASE' };
+
+      case 'Unavailable':
+        return { localeKey: 'BILLING_UNAVAILABLE' };
+
+      case 'NetworkError':
+        return { localeKey: 'BILLING_NETWORK_ERROR' };
+
+      case 'ProductUnavailable':
+        return { localeKey: 'BILLING_ITEM_UNAVAILABLE' };
+
+      case 'AlreadyOwned':
+        return { localeKey: 'SELECTED_PLAN_ALREADY_SUBSCRIBED' };
+
+      case 'NotOwned':
+        return { localeKey: 'BILLING_ITEM_NOT_OWNED' };
+
       default:
-        return { text: err.message ?? err };
+        return {
+          localeKey: 'ORDER_PROCESSING_FAILED',
+          text: storeMessage ? `${i18n.global.t('STORE_EXCEPTION_MESSAGE')} ${storeMessage}` : ''
+        };
     }
   }
 }
