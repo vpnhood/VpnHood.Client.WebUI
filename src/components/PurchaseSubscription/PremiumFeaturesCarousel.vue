@@ -29,6 +29,9 @@ const carouselItems: CarouselItem[] = [
     title: "REMOVE_AD",
     description: "REMOVE_AD_DESC",
     height: "200px",
+    // Only a build that HAS ads can sell their removal. Where none exists — the App Store head, any
+    // build with no ad provider — this promises to take away something the person never sees.
+    isSupported: vhApp.data.features.isAdSupported,
   },
   {
     image: "more-location.webp",

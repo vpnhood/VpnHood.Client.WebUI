@@ -9,6 +9,7 @@ import PremiumFeaturesCarousel from '@/components/PurchaseSubscription/PremiumFe
 import StoreUnavailable from '@/components/PurchaseSubscription/StoreUnavailable.vue';
 import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
 import PurchaseByStore from '@/components/PurchaseSubscription/PurchaseByStore.vue';
+import RestorePremium from '@/components/PurchaseSubscription/RestorePremium.vue';
 import type { AppPurchaseOptions } from '@/services/VpnHood.Client.Api';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
@@ -118,6 +119,10 @@ onMounted(loadPurchaseOptions);
         :text="locale('I_HAVE_A_PREMIUM_CODE')"
         @click="premiumByCodeSheet.show()"
       />
+
+      <!-- Restore what the person already owns. Page level, not inside the store card: it is needed
+           most exactly when the store is absent — failed to load, or this build has none. -->
+      <restore-premium class="mt-2" />
     </div>
 
     <!-- Input premium code -->

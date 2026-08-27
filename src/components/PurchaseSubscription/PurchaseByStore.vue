@@ -53,33 +53,6 @@ async function onPurchase(): Promise<void> {
   await purchase(purchaseParams);
 }
 
-// Apple 3.1.1 requires a way to get a paid subscription back without being charged again, and it is
-// the only route back to premium after "Delete my account": the account is gone, but the store still
-// owns the subscription, so restoring it onto a new account is what the delete dialog promises.
-async function onRestore(): Promise<void> {
-  let hasNothingToRestore = false;
-  isShowPendingDialog.value = true;
-  try {
-    if (!vhApp.data.userState.userAccount) await vhApp.signIn(true);
-    const billingClient = ClientApiFactory.instance.createBillingClient();
-    const restored = await billingClient.restorePurchase();
-    await vhApp.loadAccount();
-
-    // The button's real question is "am I premium again?", not "did the store hand back a
-    // subscription?" — and the two can honestly differ: signing in may have just served this
-    // account its code (lifecycle §8) while the store subscription behind it is long over, so the
-    // store restore finds nothing. Reporting "nothing to restore" over a page that now shows
-    // premium reads as a bug; being served IS the restored state, whichever channel delivered it.
-    hasNothingToRestore = !restored && !isAccountServed();
-    isShowPurchaseCompleteDialog.value = !hasNothingToRestore;
-  } finally {
-    isShowPendingDialog.value = false;
-  }
-
-  // told after the pending dialog is gone, so the message is not stacked underneath it
-  if (hasNothingToRestore) await vhApp.showErrorMessage(locale('NO_PURCHASE_TO_RESTORE'));
-}
-
 async function purchase(purchaseParams: PurchaseParams): Promise<void> {
   isShowPendingDialog.value = true;
   try {
@@ -207,7 +180,10 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
           locale(getPlanPricePeriod(selectedPlan.period ??
             GooglePlayBillingSubscriptionPeriods.P1M)) }}
       </li>
-      <li>{{ locale('CANCEL_ANYTIME_ON_GOOGLE_PLAY') }}</li>
+      <!-- Names no store, deliberately: one app ships on every platform and naming a competing one
+           is itself a violation (App Review 2.3.10). Neutral copy is true in every store, so there
+           is no per-platform branch to keep correct as stores are added. -->
+      <li>{{ locale('CANCEL_ANYTIME_IN_STORE') }}</li>
     </ul>
 
     <v-btn
@@ -221,16 +197,6 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
       :disabled="!selectedPlan"
       :text="locale('PURCHASE')"
       @click="onPurchase()"
-    />
-
-    <!-- Already subscribed elsewhere, or on a new account after deleting the old one -->
-    <v-btn
-      variant="text"
-      size="small"
-      class="text-transform-none mt-1"
-      block
-      :text="locale('RESTORE_PURCHASE')"
-      @click="onRestore()"
     />
 
     <!-- Pending purchase process dialog -->
