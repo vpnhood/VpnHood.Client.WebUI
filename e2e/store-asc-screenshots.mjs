@@ -162,6 +162,35 @@ if (args.includes('--editable-check')) {
   console.log(`locked: no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
   process.exit(3);
 }
+
+// --whatsnew-check: answer "does the editable version still need its release notes?" and nothing
+// else. Apple never carries "What's New" over to a newly created version — the field starts empty
+// and is required per localization once the app has a prior release — while the publish gate
+// compares only repo content, so an UNCHANGED listing plus a fresh version would be skipped and
+// the empty field would later block the submission. The gate runs this before honoring a skip:
+// exit 4 = at least one localization with a local release_notes.txt has an empty whatsNew (push
+// the unchanged text to fill it), exit 0 = nothing to fill (all set, or this app ships no release
+// notes — a FIRST version must not carry any), exit 3 = listing locked (nothing writable anyway).
+if (args.includes('--whatsnew-check')) {
+  if (!version) {
+    console.log(`locked: no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
+    process.exit(3);
+  }
+  const metaRoot = path.join(root, 'fastlane', 'metadata', 'ios');
+  const localized = (await api(`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations?limit=50`)).data;
+  const empty = [];
+  for (const loc of localized) {
+    const file = path.join(metaRoot, loc.attributes.locale, 'release_notes.txt');
+    if (!(await fs.stat(file).catch(() => null))) continue; // no local notes for this locale — nothing to fill
+    if (!loc.attributes.whatsNew?.trim()) empty.push(loc.attributes.locale);
+  }
+  if (empty.length) {
+    console.log(`whatsNew empty on ${version.attributes.versionString} for: ${empty.join(', ')}`);
+    process.exit(4);
+  }
+  console.log(`whatsNew present on ${version.attributes.versionString} for every locale with local release notes`);
+  process.exit(0);
+}
 if (!version)
   throw new Error(`no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
 console.log(`${app.attributes.name} ${version.attributes.versionString} — sync from ${path.relative(process.cwd(), shotsRoot) || '.'}\n`);

@@ -40,6 +40,22 @@ Binaries are a separate, parallel path: `publish_client.yml` / `connect_publish.
 `publish_app.yml` → build modules → TestFlight / Play / GitHub release. A release uploads the
 binary and its changelog and **never** the listing (see the `playstore` lane comments).
 
+**Release notes** ("What's New") have their own source — the monorepo's hand-maintained
+CHANGELOG.md — and their own refresh workflow, but ride the same translation and shipping rails:
+
+```
+vpnhood/VpnHood CHANGELOG.md    first H1 section ("# Latest"), hand-written EN, line tags:
+        │                       #client/#connect (product) · #android #ios #windows #linux
+        │                       (platforms, inclusive; none = all) · #store (Play's short note)
+        ▼ store-release-notes.mjs extract     runs in update-release-notes.yml (store repo)
+store-i18n/en-US/release-notes.json   one key per line (content-hashed: an edited line is
+store-i18n/release-notes.map.json     retranslated, the rest reused) + order/routing map
+        │ vhtranslator (same run) → sibling locales, changed lines only
+        ▼ store-release-notes.mjs compile
+fastlane/metadata/ios/<locale>/release_notes.txt          ships with the LISTING publish
+fastlane/metadata/android/<locale>/changelogs/default.txt ships with the RELEASE (any versionCode)
+```
+
 ## The tools (all in `e2e/`)
 
 | file | contract |
@@ -48,6 +64,7 @@ binary and its changelog and **never** the listing (see the `playstore` lane com
 | `store/fixture.json` | The mocked `/api/app` state screenshots render against. Never real keys/IPs/IDs. Connect's sits beside its project file. Anything derived from app logic (per-location `options`, category tags) must be computed with the rules in `ClientServerLocationInfo.cs`, never hand-written, or the listing can claim a tier the app would not grant. |
 | `store-screenshots.mjs` | Renders, frames, and installs screenshots. Every written PNG goes through `recompressPng` — Chromium's canvas encoder leaves ~half the file on the table, so this recompresses **pixel-for-pixel** (verified against an independent decoder; an image library was rejected for altering subpixels while claiming lossless). ~2x smaller, which is what keeps the store-asset repos clonable for the F-Droid/IzzyOnDroid catalogues. Intended to be deterministic (same inputs → same bytes) — but see "Known non-determinism" below; it does not hold for text-heavy pages. |
 | `store-metadata.mjs` | Compiles `store-i18n` texts into fastlane trees. Fails loud on limits/missing keys/platform names in iOS copy (Guideline 2.3.10). `--check` validates without writing. |
+| `store-release-notes.mjs` | Release notes from the monorepo CHANGELOG: `extract` (first H1 section → per-line store-i18n source + routing map) and `compile` (translations → iOS `release_notes.txt`, cap 4000, 2.3.10-linted; Play `changelogs/default.txt` from the `#store` lines, cap 500). Config is the project file's `RELEASE_NOTES` export — `product` picks the `#client`/`#connect` lines, `ios: false` deletes the iOS files (Apple rejects a FIRST App Store version that carries "What's New"). Missing map = not adopted, warn + skip; anything else wrong = red. |
 | `store-publish-state.mjs` | Fingerprints what a publish would send; compares with `fastlane/publish-state.json` in the store repo. Text hashed as LF (CRLF checkouts must fingerprint identically to CI). Record only after a **verified** publish. |
 | `store-asc-screenshots.mjs` | Checksum-sync of App Store screenshots (the Play `sync_image_upload` equivalent). Replaces deliver's delete-all mode. Phased against Apple's ghost-delete 500s — the file header documents the observed evidence. `--check` reports drift. |
 | `store-icon.mjs` | Strips alpha from iOS appiconsets (ITMS-90717). Refuses genuinely translucent pixels. |
@@ -56,7 +73,9 @@ binary and its changelog and **never** the listing (see the `playstore` lane com
 
 1. **Generated files are never hand-edited**: fastlane trees come from the compiler/engine;
    `store-i18n/<non-en>/` comes from vhtranslator; only `store-i18n/en-US/store.json` is written
-   by hand. Hand-edits are silently overwritten by the next generation run.
+   by hand. `store-i18n/en-US/release-notes.json` and `release-notes.map.json` are generated too
+   (from the monorepo CHANGELOG — the hand-written surface is the CHANGELOG's `# Latest` section).
+   Hand-edits are silently overwritten by the next generation run.
 2. **No repo writes to another repo.** If a change seems to need that, the design is wrong or a
    deliberate credential decision is being made (see main's `.github/DEPLOYMENT.md`).
 3. **`publish-state.json` records only verified publishes.** A cancelled or failed store leg must
@@ -100,9 +119,15 @@ Any new long, text-dense shot will inherit the problem.
   a delete-everything re-upload (deliver's `overwrite_screenshots`) into CI.
 - **A cancelled screenshot push scrambles display order** (uploads land in completion order; the
   ordering PATCH runs last). `store-asc-screenshots.mjs` restores order even on failed runs.
-- **First-version quirks**: v1 has no "What's New" (`release_notes.txt` must not exist for it);
-  deliver's first-version text push raises a benign "No data" (rescued in each store repo's
-  Fastfile `upload_metadata` lane — removable once 1.0 is live).
+- **First-version quirks**: v1 has no "What's New" (`release_notes.txt` must not exist for it —
+  `RELEASE_NOTES.ios: false` in the project config keeps it deleted); deliver's first-version text
+  push raises a benign "No data" (rescued in each store repo's Fastfile `upload_metadata` lane —
+  removable once 1.0 is live).
+- **"What's New" is never carried over to a new version** — the field starts empty and is required
+  per localization once the app has a prior release. The fingerprint gate compares only repo
+  content, so before honoring a skip it probes the live listing
+  (`store-asc-screenshots.mjs --whatsnew-check`, exit 4 = empty fields to fill) and pushes the
+  otherwise-unchanged text to fill them. No manual `force=true` needed for this case.
 - **The listing locks while a version is in review or live with none open.** That is a normal
   state between releases: the appstore module probes it (`--editable-check`, exit 3 = locked) and
   warns + skips with `published=false`, so the gate re-publishes once a version opens. A locale on
@@ -156,6 +181,12 @@ forced run (`-f force=true`) must yield all jobs green with the App Store leg ~1
   IS store order). Regenerate; the listing publish syncs the delta.
 - **Change store texts**: edit `store-i18n/en-US/store.json` in the store repo only; CI
   translates, compiles, commits; the gate picks up the change on the next listing publish.
+- **Update release notes for a release**: edit the monorepo CHANGELOG's `# Latest` section
+  (tags: `#client`/`#connect`, `#android #ios #windows #linux`, `#store` for Play's 500-char
+  note — all trailing, per line), then run `update-release-notes.yml` in each store repo. iOS
+  notes ship with the next listing publish; the Play note ships with the next release's AAB.
+  When an app's FIRST App Store version goes live, flip `RELEASE_NOTES.ios` to `true` in its
+  project config.
 - **Add a store (e.g. Microsoft)**: new `_publish_listing_<store>.yml` module in main following
   the appstore/play pattern (optional credential → warn+skip; `published` output), a `STORES`
   entry in `store-publish-state.mjs`, a compiler section in `store-metadata.mjs`. fastlane has no

@@ -272,6 +272,14 @@ const ANDROID_SHOTS = [
  */
 export const INSTALL_ROOT = '../Vpnhood.App.Client';
 
+/**
+ * Release-notes config for store-release-notes.mjs: `product` picks which #client/#connect-tagged
+ * CHANGELOG lines this app keeps; `ios: false` would suppress (and delete) the iOS "What's New"
+ * files — only correct before an app's FIRST App Store version, which Apple rejects when it
+ * carries release notes. The CLIENT is past 1.0, so iOS notes are on.
+ */
+export const RELEASE_NOTES = { product: 'client', ios: true };
+
 export const PLATFORMS = {
   ios: {
     label: 'App Store',
