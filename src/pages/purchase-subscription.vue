@@ -46,7 +46,7 @@ onMounted(loadPurchaseOptions);
 </script>
 
 <template>
-  <grad-sheet>
+  <grad-sheet class="purchase-page">
 
       <!-- Back button -->
       <v-btn
@@ -60,8 +60,11 @@ onMounted(loadPurchaseOptions);
         @click="router.go(-1)"
       />
 
-      <!-- Features Carousel -->
-      <div class="d-flex align-center justify-center flex-grow-1">
+      <!-- Features Carousel. min-height:0 lets this flex child actually shrink on short windows —
+           the decorative carousel is what yields, never the plans/actions below (their min-height
+           stays auto, so flex cannot crush them). The carousel bounds itself to the shrunken
+           space (see #featuresCarousel in PremiumFeaturesCarousel.vue). -->
+      <div class="d-flex align-center justify-center flex-grow-1" style="min-height: 0">
         <premium-features-carousel/>
       </div>
 
@@ -130,3 +133,16 @@ onMounted(loadPurchaseOptions);
 
   </grad-sheet>
 </template>
+
+<style scoped>
+/* This page must BE the viewport for its shrink chain to work: v-app/v-main only guarantee
+   min-height:100%, so GradSheet's fill-height resolves to auto and the page would simply grow past
+   the window, pushing the purchase/code/restore actions off screen. With a definite height the
+   carousel yields (min-height:0 on its wrapper) and the plan list scrolls (#planList cap); only a
+   window too short for even the actions alone falls back to scrolling the whole page. */
+.purchase-page {
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+}
+</style>

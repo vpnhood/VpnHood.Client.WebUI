@@ -6,7 +6,7 @@ import { ClientApiFactory } from '@/services/ClientApiFactory';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import PendingDialog from '@/components/PurchaseSubscription/PendingDialog.vue';
 import PurchaseCompleteDialog from '@/components/PurchaseSubscription/PurchaseCompleteDialog.vue';
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { Util } from '@/helpers/Util';
 import router from '@/services/router';
 
@@ -112,13 +112,44 @@ function calcDiscountPercentage(currentPrice: number, planPeriod: string): numbe
 }
 
 function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
-  return !(planPeriod === GooglePlayBillingSubscriptionPeriods.P1M && currentPrice === basePrice.value);
+  if (planPeriod === GooglePlayBillingSubscriptionPeriods.P1M && currentPrice === basePrice.value)
+    return false;
+  // A plan priced ABOVE the monthly base would render a "--13%"-style double-minus chip. No sane
+  // catalog does that, but a strikethrough base price and a negative "discount" must never show.
+  return calcDiscountPercentage(currentPrice, planPeriod) > 0;
 }
+
+// The plan list scrolls inside a cap (see #planListWrap); a partially visible item alone is an
+// easy-to-miss hint, so while anything is still below, the list's bottom edge fades out (the
+// .more-below mask). The fade must vanish at the end of the list — a permanent fade would make
+// the LAST plan look cut off — hence tracked state rather than static CSS.
+const planScroller = ref<HTMLElement | null>(null);
+const hasMoreBelow = ref(false);
+let scrollerResizeObserver: ResizeObserver | null = null;
+
+function updateScrollHint(): void {
+  const el = planScroller.value;
+  hasMoreBelow.value = !!el && el.scrollHeight - el.scrollTop - el.clientHeight > 1;
+}
+
+onMounted(() => {
+  updateScrollHint();
+  // The cap is viewport-relative (30vh), so a window resize can change what fits.
+  scrollerResizeObserver = new ResizeObserver(updateScrollHint);
+  if (planScroller.value) scrollerResizeObserver.observe(planScroller.value);
+});
+onUnmounted(() => scrollerResizeObserver?.disconnect());
 </script>
 
 <template>
 
-    <v-list id="planList" mandatory bg-color="transparent">
+    <div
+      id="planListWrap"
+      ref="planScroller"
+      :class="{ 'more-below': hasMoreBelow }"
+      @scroll.passive="updateScrollHint"
+    >
+    <v-list id="planList" mandatory bg-color="transparent" class="py-0">
       <!-- Plan item -->
       <v-list-item
         v-for="(plan, index) in props.subscriptionPlans"
@@ -171,6 +202,7 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
         </template>
       </v-list-item>
     </v-list>
+    </div>
 
     <!-- Plan Descriptions -->
     <ul class="text-white opacity-40 ps-4 mb-3 mt-2 text-body-small">
@@ -212,5 +244,25 @@ function isShowDiscount(currentPrice: number, planPeriod: string): boolean {
 #planList .v-list-item--active > .v-list-item__overlay,
 #planList .v-list-item[aria-haspopup=menu][aria-expanded=true] > .v-list-item__overlay{
   opacity: .08;
+}
+/* The PLAN LIST is the scrollable part of this page, never the page itself: with many plans the
+   purchase button and the code/restore rows below must stay on screen. The cap shows ~3 items
+   with a sliver of the next as the scroll affordance; with few plans it changes nothing. */
+#planListWrap {
+  max-height: min(224px, 30vh);
+  overflow-y: auto;
+  padding-top: 8px; /* replaces the v-list padding (py-0) so the top border is not clipped */
+}
+/* A discoverable scrollbar: the default one is invisible on this dark gradient. */
+#planListWrap::-webkit-scrollbar { width: 4px; }
+#planListWrap::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .25); border-radius: 2px; }
+/* More plans below: fade the bottom edge out. Removed at the end of the list (see hasMoreBelow),
+   so the last plan never looks amputated. */
+#planListWrap.more-below {
+  /* Deep on purpose: a shallow fade can land entirely on the margin between cards (the cap is
+     viewport-relative, so the cut can align with an item boundary) and become invisible — the
+     last visible card must clearly dissolve. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent 100%);
 }
 </style>
