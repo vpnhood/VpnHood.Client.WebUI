@@ -154,6 +154,7 @@
   "FORGOT_PASSWORD": "Forgot your password? Set or recover it on the account website.",
   "SIGN_IN_INVALID_CREDENTIALS": "The email or password is wrong — or this account has never set a password. Set or recover it on the account website, then sign in here.",
   "SIGN_IN_COOLDOWN": "Too many sign-in attempts. Wait a few minutes, then try again.",
+  "SIGN_IN_FAILED_MSG": "Sign-in failed. Make sure this device is signed in to its app store account, then try again.",
   "SIGN_IN_NO_ACCOUNT": "No account was found for this email. Accounts are created on our website.",
   "SIGN_IN_NO_ACCOUNT_WITH_PROVIDER": "No account was found for this email. Accounts are created when you sign in with {provider}, or on our website.",
   "SIGN_IN_ACCOUNT_AMBIGUOUS": "More than one account matches this login. Please contact support.",

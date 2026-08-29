@@ -483,6 +483,12 @@ export class VpnHoodApp {
           }
           return; // Silent cancel if not a purchase
 
+        // The provider's own failure (Apple/Google both throw AuthenticationException). The raw
+        // message is an untranslated NSError/SDK chain; the app has already logged it in full for
+        // the report, so the dialog gets the localized summary only.
+        case 'AuthenticationException':
+          throw new Error(i18n.global.t('SIGN_IN_FAILED_MSG'));
+
         case 'HttpRequestException':
           if (statusCode === 400) {
             throw new Error(i18n.global.t('LOGIN_CONNECTION_ERROR_MSG'));
