@@ -69,8 +69,12 @@ async function removeCode(): Promise<void> {
     <!-- Premium user by the account's store subscription (Play or App Store) -->
     <template v-if="vhApp.data.isPremiumByAccount">
 
-      <!-- Sign out and detach the store subscription -->
+      <!-- Sign out and detach the store subscription. Pitching a Premium Code is only honest on a
+           build that can accept one (keyring plan §8) — the App Store build cannot, and showing the
+           pitch there is both a dead end and an App Review steering risk. Sign-out itself stays
+           available in the user-details header on every build. -->
       <change-premium-method
+        v-if="vhApp.data.canImportAccessCode"
         :title="locale('WOULD_YOU_LIKE_TO_CHANGE')"
         :description="locale('SIGN_OUT_TO_USE_PREMIUM_CODE_MSG')"
         :button-name="locale('SIGN_OUT')"
