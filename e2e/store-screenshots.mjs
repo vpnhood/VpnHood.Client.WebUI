@@ -240,9 +240,17 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
     // by accident. Surface it as a failure instead of leaving it to whoever eyeballs the PNG.
     const failures = [];
     const firstLine = (text) => String(text).split(/\r?\n/)[0];
-    page.on('pageerror', (err) => failures.push(firstLine(err)));
+    // Keep the top of the stack, not just the message: a bare "Cannot read properties of null"
+    // with no location cost a real debugging round-trip (2026-08-29, the fixture's missing
+    // authProviderIds). The prod bundle is minified, so the frames are chunk:line:col rather than
+    // component names — still enough to bisect, and a SyntaxError shows which chunk failed to parse.
+    page.on('pageerror', (err) =>
+      failures.push(String(err?.stack ?? err).split(/\r?\n/).slice(0, 4).join('\n      ')));
     page.on('console', (msg) => {
-      if (msg.type() === 'error') failures.push(firstLine(msg.text()));
+      if (msg.type() !== 'error') return;
+      const { url = '', lineNumber } = msg.location() ?? {};
+      const at = url ? `  (${url.split('/').pop()}:${lineNumber})` : '';
+      failures.push(firstLine(msg.text()) + at);
     });
 
     const unhandled = liveApi
@@ -280,10 +288,17 @@ async function captureDevice(browser, platform, device, origin, fixture, rawDir)
     if (openDialog)
       failures.push(`a dialog was open over the screen: "${openDialog}"`);
 
-    if (failures.length)
+    if (failures.length) {
+      // The two usual suspects, named in the error so the fix needs no log spelunking: an endpoint
+      // the project never mocked (answered null), or a fixture missing a field the SPA now reads.
+      const hint = unhandled.size
+        ? `\n  unmocked endpoints answered null during this shot (a likely cause — mock them in ROUTES, ` +
+          `or add the missing fixture field they stand in for): ${[...unhandled].join(', ')}`
+        : '';
       throw new Error(
         `${fileName(device, shot, locale)}: the app errored while rendering, so the capture would show a ` +
-        'dialog over the screen.\n  ' + [...new Set(failures)].slice(0, 5).join('\n  '));
+        'dialog over the screen.\n  ' + [...new Set(failures)].slice(0, 5).join('\n  ') + hint);
+    }
 
     await page.screenshot({ path: path.join(rawDir, fileName(device, shot, locale)) });
     console.log(`captured  ${device.label.padEnd(11)} ${fileName(device, shot, locale)}  ${shot.label}`);
