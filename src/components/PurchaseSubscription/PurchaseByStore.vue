@@ -59,7 +59,15 @@ async function purchase(purchaseParams: PurchaseParams): Promise<void> {
     const billingClient = ClientApiFactory.instance.createBillingClient();
     await billingClient.purchase(purchaseParams);
     await vhApp.loadAccount();
-    isShowPurchaseCompleteDialog.value = true;
+
+    // Congratulate only what the refreshed account confirms. The store can answer a purchase with
+    // a stale transaction whose entitlement has since expired (seen with sandbox's cached
+    // transactions); the portal replays it honestly, the account stays unserved, and celebrating
+    // over a non-premium page reads as a lie — same rule as RestorePremium.
+    if (isAccountServed())
+      isShowPurchaseCompleteDialog.value = true;
+    else
+      await vhApp.showErrorMessage(locale('RESTORED_PURCHASE_EXPIRED_MSG'));
   }
   catch (err){
     console.error(err);

@@ -46,6 +46,7 @@ function onCloseButton(){
     location="top"
     :class="{'mt-5': !vuetify.display.smAndDown.value}"
     class="pt-2"
+    :style="`margin-top: ${vhApp.data.edgeToEdgeTopHeight}px;`"
     rounded="lg"
     vertical
     :timer="snackbarState.hasTimer ?? false"
