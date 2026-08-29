@@ -80,6 +80,11 @@ const STORES = {
     // Guideline 2.3.10: App Store metadata must not name another platform. The app copy already
     // follows this; the lint keeps a translation (or a careless edit) from breaking it.
     forbidden: /android|google play|windows|linux|samsung/i,
+    // App Store Connect rejects emoji in listing text — but only at UPLOAD time ("An attribute
+    // value has invalid characters", seen 2026-08-29 when the translator invented a 📧 in the
+    // fr-FR description), which fails the publish after everything else went green. The iOS source
+    // copy uses no emoji, so any pictograph here is a translation artifact — catch it at compile.
+    forbiddenChars: /\p{Extended_Pictographic}/gu,
   },
 };
 
@@ -178,6 +183,11 @@ async function compile(locales) {
         if (banned)
           throw new Error(`${locale.tag}/store.json "${section}.${field}": contains "${banned[0]}" — ` +
             'App Store metadata must not name another platform (Guideline 2.3.10).');
+        const chars = store.forbiddenChars && text.match(store.forbiddenChars);
+        if (chars)
+          throw new Error(`${locale.tag}/store.json "${section}.${field}": contains ${[...new Set(chars)].join(' ')} — ` +
+            'App Store Connect rejects emoji in listing text at upload. The source copy carries none, ' +
+            'so this is a translation artifact: remove it (and keep the translator from re-adding it).');
       }
 
       if (checkOnly) continue;
