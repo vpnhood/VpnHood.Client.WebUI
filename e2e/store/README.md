@@ -77,14 +77,14 @@ fastlane/metadata/android/<locale>/changelogs/default.txt ships with the RELEASE
    (from the monorepo CHANGELOG — the hand-written surface is the CHANGELOG's `# Latest` section).
    Hand-edits are silently overwritten by the next generation run.
 2. **No repo writes to another repo.** If a change seems to need that, the design is wrong or a
-   deliberate credential decision is being made (see main's `.github/DEPLOYMENT.md`).
+   deliberate credential decision is being made (see main's `docs/cicd/deployment.md`).
 3. **`publish-state.json` records only verified publishes.** A cancelled or failed store leg must
    not be recorded — otherwise the gate skips a store that never got the content. The workflow's
    `record` job enforces this via each module's `published` output.
 4. **Fail loud.** Every tool throws on missing files, unknown locales, limit overflows. Never add
    a silent fallback; VpnHood is fail-closed by policy.
 5. **Missing credential = warn + skip + green; present-but-failing = red.** The fork-friendliness
-   convention, documented per-secret in main's `.github/DEPLOYMENT.md`.
+   convention, documented per-secret in main's `docs/cicd/deployment.md`.
 6. **iOS copy never names other platforms** (Android/Google Play/Windows/Linux) — App Store
    Guideline 2.3.10. The compiler lints texts; screenshots must respect it too (the Servers page
    promo was removed on iOS for this — don't reintroduce it).
