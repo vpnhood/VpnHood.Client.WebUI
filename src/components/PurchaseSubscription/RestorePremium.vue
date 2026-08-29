@@ -52,6 +52,7 @@ async function onClick(): Promise<void> {
 
 async function restore(): Promise<void> {
   let hasNothingToRestore = false;
+  let isRestoredButExpired = false;
   isShowPendingDialog.value = true;
   try {
     if (!isSignedIn.value) {
@@ -73,12 +74,16 @@ async function restore(): Promise<void> {
     await vhApp.loadAccount();
 
     // The real question is "am I premium again?", not "did the store hand back a subscription?" —
-    // and the two can honestly differ: signing in may have just served this account its code
-    // (lifecycle §8) while the store subscription behind it is long over, so the store restore finds
-    // nothing. Reporting "nothing to restore" over a page that now shows premium reads as a bug;
-    // being served IS the restored state, whichever channel delivered it.
-    hasNothingToRestore = !restored && !isAccountServed();
-    isShowCompleteDialog.value = !hasNothingToRestore;
+    // and the two can honestly differ BOTH ways: signing in may have just served this account its
+    // code (lifecycle §8) while the store subscription behind it is long over, so the store restore
+    // finds nothing — being served IS the restored state, whichever channel delivered it. And the
+    // store can hand back a proof whose entitlement has since EXPIRED: the portal replays it
+    // honestly (201) but the account stays unserved, and congratulating over a page that is not
+    // premium reads as a lie. The account, refreshed above, is the only honest witness.
+    const isServed = isAccountServed();
+    hasNothingToRestore = !restored && !isServed;
+    isRestoredButExpired = restored && !isServed;
+    isShowCompleteDialog.value = isServed;
   }
   finally {
     isShowPendingDialog.value = false;
@@ -86,6 +91,7 @@ async function restore(): Promise<void> {
 
   // told after the pending dialog is gone, so the message is not stacked underneath it
   if (hasNothingToRestore) await vhApp.showErrorMessage(locale('NO_PURCHASE_TO_RESTORE'));
+  if (isRestoredButExpired) await vhApp.showErrorMessage(locale('RESTORED_PURCHASE_EXPIRED_MSG'));
 }
 
 // The chooser dialog closes on success as well as on cancel, so the account decides which happened.

@@ -391,6 +391,7 @@
   "RESTORE_PURCHASE": "Restore purchase",
   "ALREADY_PREMIUM": "Already premium? Sign in",
   "NO_PURCHASE_TO_RESTORE": "We could not find a subscription to restore. If you subscribed with a different store account, switch to it and try again.",
+  "RESTORED_PURCHASE_EXPIRED_MSG": "We found your previous purchase, but it is no longer active. To become premium again, start a new subscription.",
   "1_MONTH": "1 Month",
   "6_MONTHS": "6 Months",
   "1_YEAR": "1 Year",
