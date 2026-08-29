@@ -1,6 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, START_LOCATION } from 'vue-router';
 import { routes } from 'vue-router/auto-routes'
 import { VpnHoodApp } from '@/services/VpnHoodApp';
+import { ComponentName } from '@/helpers/UiConstants';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -11,6 +12,19 @@ const router = createRouter({
 // Change page title and add transition. Returning nothing continues the navigation; the next()
 // callback is deprecated in vue-router 5.
 router.beforeEach((to, from) => {
+  // Dialog visibility lives in the query (see ComponentRouteController) so the back button can
+  // close a dialog, but the state behind it lives only in memory. On a fresh page load that state
+  // is gone, so a leftover param like ?ErrorDialog=true is always stale and would reopen an empty
+  // dialog on every refresh — strip them once on the initial navigation, without a history entry.
+  if (from === START_LOCATION) {
+    const query = { ...to.query };
+    const staleParams = Object.values(ComponentName).filter(name => name in query);
+    if (staleParams.length > 0) {
+      staleParams.forEach(name => delete query[name]);
+      return { path: to.path, query, replace: true };
+    }
+  }
+
   const toDepth = to.path.split('/').length;
   const fromDepth = from.path.split('/').length;
   to.meta.transition = toDepth >= fromDepth ? 'translate-with-fade' : 'short-translate';

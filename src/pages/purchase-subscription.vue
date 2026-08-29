@@ -135,14 +135,14 @@ onMounted(loadPurchaseOptions);
 </template>
 
 <style scoped>
-/* This page must BE the viewport for its shrink chain to work: v-app/v-main only guarantee
-   min-height:100%, so GradSheet's fill-height resolves to auto and the page would simply grow past
-   the window, pushing the purchase/code/restore actions off screen. With a definite height the
-   carousel yields (min-height:0 on its wrapper) and the plan list scrolls (#planList cap); only a
-   window too short for even the actions alone falls back to scrolling the whole page. */
+/* The page's height comes from fill-height (100% of v-main — the layout chain is bound by
+   v-layout--full-height and already reserves the edge-to-edge system-bar padding). Never size
+   this page to the viewport (100vh/dvh): that inflates the chain past the window by exactly the
+   reserved padding, leaving a phantom page scroll on a page with free space. This rule only adds
+   the fallback: a window too short for even the actions alone scrolls the page itself — every
+   taller window fits because the carousel yields (min-height:0 on its wrapper) and the plan list
+   scrolls inside its own cap. */
 .purchase-page {
-  height: 100vh;
-  height: 100dvh;
   overflow-y: auto;
 }
 </style>
