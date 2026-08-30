@@ -21,10 +21,13 @@ store repo calls main's workflow, checkouts and commits land on the store repo w
 
 ```
 store-i18n/en-US/store.json     hand-written EN source texts   (store repo)
-        │ vhtranslator (Gemini) → 12 sibling locales
+store-i18n/en-US/subscriptions.json   hand-written EN subscription texts (store repo)
+        │ vhtranslator (Gemini) → 12 sibling locales (both files, same run)
         ▼
 store-metadata.mjs              compiles texts → fastlane/metadata/{android,ios}/<locale>/*.txt
 store-screenshots.mjs           renders SPA against fixture.json → fastlane screenshots/images
+store-subscriptions.mjs         pushes subscription texts DIRECT to App Store Connect (no fastlane
+                                path exists for in-app-purchase localizations), run by hand
         │  both run in update-screenshots.yml (store repo), which commits the results
         │  CLIENT uses the built-in e2e/store/*; CONNECT passes its own store/project.mjs
         │  + store/fixture.json through the action's `project` input
@@ -68,12 +71,13 @@ fastlane/metadata/android/<locale>/changelogs/default.txt ships with the RELEASE
 | `store-publish-state.mjs` | Fingerprints what a publish would send; compares with `fastlane/publish-state.json` in the store repo. Text hashed as LF (CRLF checkouts must fingerprint identically to CI). Record only after a **verified** publish. |
 | `store-asc-screenshots.mjs` | Checksum-sync of App Store screenshots (the Play `sync_image_upload` equivalent). Replaces deliver's delete-all mode. Phased against Apple's ghost-delete 500s — the file header documents the observed evidence. `--check` reports drift. |
 | `store-icon.mjs` | Strips alpha from iOS appiconsets (ITMS-90717). Refuses genuinely translucent pixels. |
+| `store-subscriptions.mjs` | Pushes subscription texts (group name, per-product name + description) from `store-i18n/*/subscriptions.json` straight to App Store Connect. Not part of the listing publish: fastlane has no in-app-purchase localization path, so `deliver` cannot carry these and the API is the only route. Keys are product ids, so a fork edits the JSON and no code — same choice `asc-iap.mjs` makes with `--products`. Enforces Apple's limits (name 30, description 45) before sending, and prints each product's state afterwards because editing a `READY_TO_SUBMIT` product can move it. Idempotent; `--check` reports drift. Play needs no equivalent — Google takes subscription texts from the Play Console only. |
 
 ## Invariants — do not break these
 
 1. **Generated files are never hand-edited**: fastlane trees come from the compiler/engine;
-   `store-i18n/<non-en>/` comes from vhtranslator; only `store-i18n/en-US/store.json` is written
-   by hand. `store-i18n/en-US/release-notes.json` and `release-notes.map.json` are generated too
+   `store-i18n/<non-en>/` comes from vhtranslator; only `store-i18n/en-US/store.json` and
+   `store-i18n/en-US/subscriptions.json` are written by hand. `store-i18n/en-US/release-notes.json` and `release-notes.map.json` are generated too
    (from the monorepo CHANGELOG — the hand-written surface is the CHANGELOG's `# Latest` section).
    Hand-edits are silently overwritten by the next generation run.
 2. **No repo writes to another repo.** If a change seems to need that, the design is wrong or a
