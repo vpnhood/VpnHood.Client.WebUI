@@ -131,9 +131,12 @@
     /*noinspection CssUnresolvedCustomProperty*/
     background: linear-gradient(90deg, rgba(var(--v-theme-skeleton-loader), 0), rgba(var(--v-theme-skeleton-loader), 0.3), rgba(var(--v-theme-skeleton-loader), 0));
 }
+/* Vuetify repaints a disabled flat button as 26% on-surface over the surface color, which on the
+   dark themes is a ghost. Keep the button's own theme colors and dim the whole button instead. */
 .v-btn--disabled.btn-style-2{
     opacity: 0.50;
-    background: inherit;
+    background: rgb(var(--v-theme-btn-style-2));
+    color: rgb(var(--v-theme-on-btn-style-2));
 }
 .v-btn--disabled.btn-style-2 .v-btn__overlay{
     opacity: 0;

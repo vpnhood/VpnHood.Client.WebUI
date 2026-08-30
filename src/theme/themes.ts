@@ -170,7 +170,7 @@ export const vhClientThemeColors = defineTheme({
   'app-bar': myColors.blue['330'],
   'on-app-bar': '#ffffff',
   'skeleton-loader': myColors.blue['300'],
-  'rate-icon': myColors.blue['300'],
+  'rate-icon': myColors.blue['100'],
   'rate-dialog-border': myColors.blue['100'],
   'rate-dialog-thanks': myColors.green['200'],
 

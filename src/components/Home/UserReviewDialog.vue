@@ -2,7 +2,7 @@
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { ref } from 'vue';
-import { AppUserReview } from '@/services/VpnHood.Client.Api';
+import { AppOsType, AppUserReview } from '@/services/VpnHood.Client.Api';
 import { Util } from '@/helpers/Util';
 
 const vhApp = VpnHoodApp.instance;
@@ -131,7 +131,7 @@ function isShowCloseBtn(): boolean{
               v-for="rate in rates"
               :key="rate.value"
               :value="rate.value"
-              :class="[selectedRate === rate.value ? 'opacity-100' : 'opacity-30']"
+              :class="[selectedRate === 0 || selectedRate === rate.value ? 'opacity-100' : 'opacity-40']"
               variant="plain"
               rounded="circle"
               width="60px"
@@ -179,8 +179,17 @@ function isShowCloseBtn(): boolean{
         <p class="mb-3">{{locale("THANK_YOU")}}</p>
       </v-card-item>
 
-      <!-- Submit button -->
+      <!-- Later/Cancel & Submit buttons -->
       <v-card-item v-if="!showReviewThanks" class="text-end mt-3">
+        <!-- iOS only: App Review requires the prompt to be dismissible; other platforms keep the flow as is. -->
+        <v-btn
+          v-if="vhApp.data.features.osType === AppOsType.Ios"
+          variant="text"
+          rounded="pill"
+          class="me-2"
+          :text="showReviewTextarea ? locale('CANCEL') : locale('LATER')"
+          @click="processSubmit(false)"
+        />
         <btn-style-2
           v-if="!showReviewTextarea"
           :text="locale('SUBMIT')"
