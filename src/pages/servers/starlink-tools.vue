@@ -53,12 +53,14 @@ function findLocalRelay(): void {
   <v-sheet>
     <app-bar/>
 
-    <!-- Feature image, sized like every other feature page's -->
+    <!-- Feature image, at the small feature-image height (SmallFeatureImageAndDescription's) rather
+         than a full feature page's: this page grows when an option opens its own fields, and the
+         taller image pushed the last option's address field and Auto Find off a phone screen. -->
     <v-img
       :src="Util.getAssetPath('starlink.svg')"
       alt="Symbol image"
       width="100%"
-      max-height="240px"
+      max-height="130px"
       class="mx-auto"
       :aspect-ratio="UiConstants.featureImageAspectRatio"
       :eager="true"
