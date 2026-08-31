@@ -102,8 +102,12 @@ export class VpnHoodAppData {
   }
 
   // Android only: the tools drive the Starlink app/dish, which exists on no other platform.
+  // A debug build bypasses that check, so the page stays reachable while developing it.
   get isStarlinkToolsEnabled(): boolean {
-    return this.features.osType === AppOsType.Android && this.hasDebugCommand(DebugCommand.StarlinkTools);
+    if (!this.hasDebugCommand(DebugCommand.StarlinkTools))
+      return false;
+
+    return this.features.isDebugMode || this.features.osType === AppOsType.Android;
   }
 
   get isConnected(): boolean {

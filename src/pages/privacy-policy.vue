@@ -11,17 +11,21 @@ const emit = defineEmits<{
   (e: 'accept', value: boolean): void,
 }>();
 
-// The disclosure itself is a document (src/content/<lang>/privacy-consent.md), not a resource
+// The disclosure itself is a document (src/content/<lang>/privacy-consent*.md), not a resource
 // string: it is long-form prose, and vhtranslator's docs mode keeps every language in step with
 // the English source and verifies each translation structurally. Only the chrome around it —
 // button and link labels — lives in the locale files.
 // The document is fetched at setup rather than embedded so a user downloads their own language
 // only. Empty until it lands, which is a frame or two from the same bundle; a spinner would
 // flash for longer than the text takes to arrive.
+// Unlike WHETHER the screen is shown (the head's IsLicenseAgreementRequired), WHICH text is shown
+// must depend on the product: CONNECT's summary describes our servers and their logging, while
+// CLIENT has no servers of ours to describe — it summarizes the bring-your-own-key reality
+// instead. Showing CONNECT's promises to a CLIENT user would misstate who handles their traffic.
 const documentHtml = ref<string>('');
 const documentTitle = ref<string>('');
 
-loadContentDocument('privacy-consent', i18n.global.locale.value)
+loadContentDocument(vhApp.isConnectApp() ? 'privacy-consent' : 'privacy-consent-client', i18n.global.locale.value)
   .then(document => {
     documentHtml.value = document.html;
     documentTitle.value = document.title;
