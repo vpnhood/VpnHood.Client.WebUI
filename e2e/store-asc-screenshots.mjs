@@ -152,13 +152,25 @@ async function waitComplete(setId, ids, minutes = 5) {
 const app = (await api(`/v1/apps?filter[bundleId]=${bundleId}`)).data[0];
 if (!app) throw new Error(`no app with bundle id ${bundleId}`);
 const versions = (await api(`/v1/apps/${app.id}/appStoreVersions?limit=5`)).data;
-const version = versions.find((v) => v.attributes.appStoreState === 'PREPARE_FOR_SUBMISSION');
+// States in which Apple still lets the listing be written. PREPARE_FOR_SUBMISSION is the ordinary
+// one; the rejected states matter just as much, because a rejection is precisely when corrected
+// metadata has to go up — treating them as locked makes the tool refuse at the only moment it is
+// urgently needed (observed 2026-08-31: a REJECTED version silently skipped the whole App Store leg
+// while the run stayed green). Anything else — in review, or live with no open version — is locked.
+const EDITABLE_STATES = new Set([
+  'PREPARE_FOR_SUBMISSION',
+  'REJECTED',            // App Review rejected it; the version reopens for editing
+  'DEVELOPER_REJECTED',  // we pulled it back ourselves
+  'METADATA_REJECTED',   // rejected on listing content alone
+  'INVALID_BINARY',      // build failed Apple's processing; metadata still writable
+]);
+const version = versions.find((v) => EDITABLE_STATES.has(v.attributes.appStoreState));
 
 // --editable-check: answer "can the listing be written at all?" and nothing else. Apple locks the
 // listing while a version is in review or live with none open; CI uses this to warn-and-skip the
 // whole App Store leg (exit 3) instead of failing red on a state that is normal between releases.
 if (args.includes('--editable-check')) {
-  if (version) { console.log(`editable: ${version.attributes.versionString} (PREPARE_FOR_SUBMISSION)`); process.exit(0); }
+  if (version) { console.log(`editable: ${version.attributes.versionString} (${version.attributes.appStoreState})`); process.exit(0); }
   console.log(`locked: no editable version — states: ${versions.map((v) => `${v.attributes.versionString}=${v.attributes.appStoreState}`).join(', ')}`);
   process.exit(3);
 }

@@ -164,6 +164,12 @@ Any new long, text-dense shot will inherit the problem.
   submitted with an auto-renewable subscription from within that group"* — a new group with nothing
   buyable in it. After any group-localization change on an unreleased group, add both product
   versions to the basket before submitting.
+- **A REJECTED version is still editable — the tooling used to disagree.** Apple reopens a version
+  for editing after App Review rejects it, which is exactly when corrected metadata has to go up.
+  `--editable-check` originally accepted only `PREPARE_FOR_SUBMISSION`, so a rejection made the gate
+  report "locked", skip the whole App Store leg, and finish **green** — a fix that looks published
+  and is not. The editable set is now `PREPARE_FOR_SUBMISSION`, `REJECTED`, `DEVELOPER_REJECTED`,
+  `METADATA_REJECTED`, `INVALID_BINARY`. Only in-review and live-with-no-open-version are locked.
 - **App icons must have no alpha channel** (ITMS-90717) — rejected on channel presence, not
   transparency. Applies to every size in the appiconset, app and extension both.
 
