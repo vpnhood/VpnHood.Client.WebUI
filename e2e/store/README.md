@@ -142,6 +142,28 @@ Any new long, text-dense shot will inherit the problem.
   URL live on `appInfoLocalizations`; description/keywords/promo/URLs on
   `appStoreVersionLocalizations`. `sourceFileChecksum` is the MD5 of the uploaded file — the basis
   of the sync diff.
+- **Review submissions are a basket (`reviewSubmissions`) whose contents are near-opaque.** Items
+  list with **empty relationships**, and `GET /v1/reviewSubmissionItems/<id>` is **403**, so the only
+  way to know what is in a basket is to base64-decode the item id: it is
+  `<submissionId>|<typeCode>|<targetId>`. Type codes seen so far — `6` appStoreVersion, `18`
+  subscriptionVersion, `19` subscriptionGroupVersion.
+- **To add a subscription to a submission, add its VERSION, not the product.** `reviewSubmissionItems`
+  has no `subscription` relationship — that returns `409 ENTITY_ERROR.RELATIONSHIP.UNKNOWN`, which
+  reads like a key/role problem and is not, and cost two rounds of chasing permissions. The
+  relationship is `subscriptionVersion`, taking an id from `/v1/subscriptions/<id>/versions`
+  (each product has one pending version, `PREPARE_FOR_SUBMISSION`):
+
+  ```jsonc
+  { "data": { "type": "reviewSubmissionItems", "relationships": {
+      "reviewSubmission":    { "data": { "type": "reviewSubmissions",    "id": "<submission id>" } },
+      "subscriptionVersion": { "data": { "type": "subscriptionVersions", "id": "<version id>" } } } } }
+  ```
+- **`store-subscriptions.mjs` has a submission side effect.** Writing group-level text creates a
+  pending *subscription group version* that joins the open review submission **by itself**; the
+  products do not follow. Submitting in that state fails with *"New subscription groups must be
+  submitted with an auto-renewable subscription from within that group"* — a new group with nothing
+  buyable in it. After any group-localization change on an unreleased group, add both product
+  versions to the basket before submitting.
 - **App icons must have no alpha channel** (ITMS-90717) — rejected on channel presence, not
   transparency. Applies to every size in the appiconset, app and extension both.
 
