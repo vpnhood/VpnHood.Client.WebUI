@@ -20,13 +20,13 @@ const isAnonymousTrackerAllowed = computed<boolean>({
   }
 });
 
-// A TV is not guaranteed to have a browser: target="_blank" fires an intent that nothing on the
-// device handles, so the tap either dies silently or takes the WebView down with it — which is why
-// the navigation drawer hides its outbound links there. The policy itself cannot be dropped along
-// with them: both stores want it reachable inside the app, not only on the listing (Apple 5.1.1,
-// Play's User Data policy, which names VPN apps). So TV gets the address as text to read and open
-// on a phone, and only the button — the part that needs a browser — is withheld.
-const isShowPrivacyPolicyButton = computed(() => !vhApp.data.features.isTv);
+// Both stores want the policy reachable inside the app, not only on the store listing (Apple
+// 5.1.1, Play's User Data policy, which names VPN apps), so the button appears on every device that
+// has an address to point at. What the tap DOES differs by device - a TV cannot hand a URL to a
+// browser, so there it raises a code to scan instead - but that is decided once, in
+// VpnHoodApp.onExternalLinkClick, and this page never needs to know which happened.
+// A build that ships no policy has nothing to link to and shows no button.
+const isShowPrivacyPolicyButton = computed(() => vhApp.privacyPolicyUrl() !== null);
 </script>
 
 <template>
@@ -55,21 +55,10 @@ const isShowPrivacyPolicyButton = computed(() => !vhApp.data.features.isTv);
           color="highlight"
           density="comfortable"
           append-icon="mdi-open-in-new"
-          :href="vhApp.privacyPolicyUrl()"
+          :href="vhApp.privacyPolicyUrl() ?? undefined"
           target="_blank"
           :text="locale('PRIVACY_POLICY')"
         />
-
-        <!-- The same policy for a device that cannot open it: an address, not a link. It carries no
-             new wording — the label is the string the button already used and the rest is a URL — so
-             nothing here waits on a translation. Forced LTR like every other address the app prints,
-             or an RTL locale reorders it into something that cannot be typed. -->
-        <div v-else class="mt-3">
-          <p class="text-body-small">{{ locale('PRIVACY_POLICY') }}</p>
-          <p dir="ltr" class="text-body-small text-highlight" style="text-align: start">
-            {{ vhApp.privacyPolicyUrl() }}
-          </p>
-        </div>
       </v-card-item>
     </config-card>
 

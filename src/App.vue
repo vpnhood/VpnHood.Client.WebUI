@@ -10,6 +10,7 @@ import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
 import vuetify from '@/theme/vuetify';
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
+import OpenOnPhoneDialog from '@/components/OpenOnPhoneDialog/OpenOnPhoneDialog.vue';
 import EngineErrorDialog from '@/components/EngineErrorDialog.vue';
 import ReconnectRequiredAlert from '@/components/ReconnectRequiredAlert.vue';
 import { AxiosError } from 'axios';
@@ -19,6 +20,7 @@ const showEngineErrorDialog = ref(false);
 const consecutiveConnectionRefusedCount = ref(0);
 const errorDialogModel = ref(new ComponentRouteController(ComponentName.ErrorDialog));
 const navigationDrawerModel = ref(new ComponentRouteController(ComponentName.NavigationDrawer));
+const openOnPhoneDialogModel = ref(new ComponentRouteController(ComponentName.OpenOnPhoneDialog));
 
 const isShowErrorDialog = computed<boolean>({
   get: () => {
@@ -32,7 +34,10 @@ const isShowErrorDialog = computed<boolean>({
 
 const isShowPrivacyPolicyDialog = computed<boolean>({
   get: () => {
-    if (!vhApp.isConnectApp())
+    // The HEAD decides whether acceptance is required: a website download has shown the user nothing
+    // beforehand, while a store build's user already accepted the store's own agreement. Never
+    // inferred from which product this is. See AppOptions.IsLicenseAgreementRequired.
+    if (!vhApp.data.features.isLicenseAgreementRequired)
       return false;
 
     return !vhApp.data.userSettings.isLicenseAccepted;
@@ -43,11 +48,36 @@ const isShowPrivacyPolicyDialog = computed<boolean>({
   }
 })
 
+// The mechanism behind VpnHoodApp.onExternalLinkClick, which is where the policy lives. One
+// document-level listener rather than a handler on each link: the invariant is "no external link is
+// ever a dead end", and a per-link handler only holds until someone adds link number thirteen.
+// Capture phase, because this has to beat the anchor's own navigation. A D-pad's Enter on a focused
+// link arrives as a click too, so keyboard activation needs nothing extra.
+// Same-origin and non-http hrefs are skipped: the app's own web server serves the SPA and the
+// diagnostic log, and neither is any use on somebody else's phone.
+function onExternalLinkClick(event: MouseEvent): void {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+
+  const anchor = target.closest('a[href]');
+  if (!(anchor instanceof HTMLAnchorElement)) return;
+  if (anchor.protocol !== 'http:' && anchor.protocol !== 'https:') return;
+  if (anchor.origin === window.location.origin) return;
+
+  // The link's own label is the phrase the user just read, so it names the dialog better than
+  // anything a call site could pass; an icon-only link falls back to its accessible name, then to
+  // no heading at all.
+  const title = anchor.innerText.trim() || anchor.getAttribute('aria-label') || '';
+  vhApp.onExternalLinkClick(event, anchor.href, title);
+}
+
 const isConnectionRefused = (error: unknown): boolean => {
   return error instanceof AxiosError && error.code === 'ERR_NETWORK';
 }
 
 onMounted(async () => {
+  document.addEventListener('click', onExternalLinkClick, true);
+
   // Reload 'state' every 1 second if the app window is focused.
   setInterval(async () => {
 
@@ -121,6 +151,11 @@ onMounted(async () => {
 
       <!-- General confirm dialog -->
       <confirm-dialog v-model="vhApp.data.uiState.confirmDialogState.isShow" />
+
+      <!-- Shown in place of following an outbound link on a device that cannot open one - see
+           VpnHoodApp.onExternalLinkClick. Mounted once here, beside the other global dialogs,
+           because every link in the app shares it. -->
+      <open-on-phone-dialog v-model="openOnPhoneDialogModel.isVisible" />
 
     </v-layout>
   </v-app>

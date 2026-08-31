@@ -1,12 +1,14 @@
 import { ErrorDialogState } from '@/helpers/ui-state/ErrorDialogState';
 import { GeneralSnackbarState } from '@/helpers/ui-state/GeneralSnackbarState';
 import { ConfirmDialogState } from '@/helpers/ui-state/ConfirmDialogState';
+import { OpenOnPhoneDialogState } from '@/helpers/ui-state/OpenOnPhoneDialogState';
 
 export class UiState {
 
   public errorDialogState: ErrorDialogState = new ErrorDialogState();
   public generalSnackbarState: GeneralSnackbarState = new GeneralSnackbarState();
   public confirmDialogState: ConfirmDialogState = new ConfirmDialogState();
+  public openOnPhoneDialogState: OpenOnPhoneDialogState = new OpenOnPhoneDialogState();
 
   // Suppress message state
   public userIgnoreSuppressToTime: Date | null = null;

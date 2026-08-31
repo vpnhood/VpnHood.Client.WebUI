@@ -79,7 +79,7 @@ const hasPasswordMethod = computed(() => vhApp.data.features.authProviderIds.inc
 // there is none — the link would open nothing — which is asked of the device rather than guessed
 // from "is this a TV": a television with a browser installed opens it fine.
 const accountWebsiteUrl = computed(() =>
-  vhApp.data.intentFeatures.isWebBrowserSupported ? vhApp.data.features.accountWebsiteUrl : null);
+  vhApp.isExternalLinkUsable() ? vhApp.data.features.accountWebsiteUrl : null);
 
 function close(): void {
   emit('update:modelValue', false);

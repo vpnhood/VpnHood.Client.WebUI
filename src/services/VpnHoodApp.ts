@@ -17,7 +17,7 @@ import {
   SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName, UiConstants } from '@/helpers/UiConstants';
+import { AppName, ComponentName } from '@/helpers/UiConstants';
 import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
@@ -38,6 +38,7 @@ export class VpnHoodApp {
   public vhFirebase: VhFirebaseApp | null;
   public confirmDialogDeferred: Deferred<boolean> | null = null;
   public errorDialogModel: ComponentRouteController;
+  public openOnPhoneDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
   private lastStateJson: string = '';
   private lastSavedUserSettingsJson: string = '';
@@ -60,6 +61,7 @@ export class VpnHoodApp {
     this.proxyEndPointClient = proxyEndPointClient;
     this.vhFirebase = vhFirebase;
     this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
+    this.openOnPhoneDialogModel = new ComponentRouteController(ComponentName.OpenOnPhoneDialog);
     this.data.uiState.configTime = this.data.state.configTime;
     this.data.uiState.isReportSendingAvailable = vhFirebase !== null;
     // appData arrives freshly fetched, so it is the persisted truth saveUserSetting diffs against.
@@ -400,10 +402,46 @@ export class VpnHoodApp {
     return this.isConnectApp();
   }
 
-  // CLIENT and CONNECT disclose different things — only CONNECT carries ads, crash reporting and
-  // accounts — so each build must link its own policy and never the shared hub.
-  public privacyPolicyUrl(): string {
-    return this.isConnectApp() ? UiConstants.connectPrivacyPolicyUrl : UiConstants.clientPrivacyPolicyUrl;
+  // Decided entirely by the app (AppFeatures) - never by which product the SPA thinks it is.
+  // Null means the build ships no such document: hide the link, never guess an address.
+  public privacyPolicyUrl(): string | null {
+    return this.data.features.privacyPolicyUrl;
+  }
+
+  public termsOfUseUrl(): string | null {
+    return this.data.features.termsOfUseUrl;
+  }
+
+  // A TV is not guaranteed to have a browser: target="_blank" fires an intent that nothing on the
+  // device handles, so the tap either dies silently or takes the WebView down with it. Every
+  // outbound link therefore keeps its real href - which a phone, a desktop and a reviewer's click
+  // all follow - and only on a TV is that click intercepted and turned into a code to scan, with the
+  // address printed beneath it for anyone who would rather type it. Dropping the link there is not
+  // an option: both stores require the legal documents reachable from inside the app, and a dead <a>
+  // satisfies nobody. App.vue catches the click for every link at once, so nothing opts in here.
+  // url is nullable only so a caller can pass privacyPolicyUrl() through without asserting it - a
+  // build with no such document renders no link, so nothing can be clicked. Event rather than
+  // MouseEvent because a keyboard activation reports as one, and all this needs is preventDefault().
+  public onExternalLinkClick(event: Event, url: string | null, title: string): void {
+    if (!this.data.features.isTv || url === null)
+      return;
+
+    event.preventDefault();
+
+    const dialogState = this.data.uiState.openOnPhoneDialogState;
+    dialogState.url = url;
+    dialogState.title = title;
+
+    // Shown through the route, not a bare flag: that is what puts a history entry behind the dialog,
+    // so the remote's Back button closes it. A plain v-model dialog would let Back navigate the page
+    // away and leave the code hanging over whatever loaded next.
+    this.openOnPhoneDialogModel.show(true).then();
+  }
+
+  // Whether an outbound link can get anywhere from this device - a browser to open it, or the TV
+  // fallback in onExternalLinkClick. Ask this before hiding a link for want of a browser.
+  public isExternalLinkUsable(): boolean {
+    return this.data.intentFeatures.isWebBrowserSupported || this.data.features.isTv;
   }
 
   public async clearLastError(): Promise<void> {

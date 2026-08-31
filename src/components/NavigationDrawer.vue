@@ -245,7 +245,6 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Whats new -->
       <v-list-item
-        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80 mt-4"
@@ -261,7 +260,6 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Send feedback -->
       <v-list-item
-        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -277,7 +275,7 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Create personal server -->
       <v-list-item
-        v-if="!vhApp.isConnectApp() && !vhApp.data.features.isTv"
+        v-if="!vhApp.isConnectApp()"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -293,7 +291,6 @@ function edgeToEdgeHeight(bottom: boolean): string{
 
       <!-- Website -->
       <v-list-item
-        v-if="!vhApp.data.features.isTv"
         :nav="true"
         density="compact"
         class="opacity-80"
@@ -311,11 +308,11 @@ function edgeToEdgeHeight(bottom: boolean): string{
            used (App Review guideline 5.4), and CONNECT's one-time accept screen is not shown in
            CLIENT at all, which left CLIENT with no in-app policy anywhere. -->
       <v-list-item
-        v-if="!vhApp.data.features.isTv"
+        v-if="vhApp.privacyPolicyUrl()"
         :nav="true"
         density="compact"
         class="opacity-80"
-        :href="vhApp.privacyPolicyUrl()"
+        :href="vhApp.privacyPolicyUrl() ?? undefined"
         @click="emit('update:modelValue',false)"
         target="_blank">
 
@@ -372,11 +369,12 @@ function edgeToEdgeHeight(bottom: boolean): string{
       </div>
 
       <!-- Powered by button -->
+      <!-- Focusable like every other outbound link: a control a D-pad cannot land on does not
+           exist, and on a TV this one opens a code to scan rather than a browser. -->
       <a
         class="d-block mb-2 text-body-small text-decoration-none text-active"
-        :href="!vhApp.data.features.isTv ? 'https://github.com/vpnhood/VpnHood' : ''"
+        href="https://github.com/vpnhood/VpnHood"
         target="_blank"
-        tabindex="-1"
       >
         <span class="text-highlight">{{ locale('POWERED_BY') }}</span><br/>
         <span>{{locale('VPNHOOD_ENGINE')}}</span>

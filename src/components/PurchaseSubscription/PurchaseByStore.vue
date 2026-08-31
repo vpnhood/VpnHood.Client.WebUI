@@ -224,6 +224,29 @@ onUnmounted(() => scrollerResizeObserver?.disconnect());
            is itself a violation (App Review 2.3.10). Neutral copy is true in every store, so there
            is no per-platform branch to keep correct as stores are added. -->
       <li>{{ locale('CANCEL_ANYTIME_IN_STORE') }}</li>
+      <!-- App Review 3.1.2 requires BOTH links to be reachable from the purchase screen itself, not
+           only from the store listing or the settings page: a reviewer must be able to read the terms
+           at the moment money is asked for. Store-neutral like the copy above, so the one build stays
+           correct everywhere. -->
+      <li v-if="vhApp.termsOfUseUrl() || vhApp.privacyPolicyUrl()">
+        <a
+          v-if="vhApp.termsOfUseUrl()"
+          class="text-white"
+          :href="vhApp.termsOfUseUrl() ?? undefined"
+          target="_blank"
+        >
+          {{ locale('TERMS_OF_USE') }}
+        </a>
+        <span v-if="vhApp.termsOfUseUrl() && vhApp.privacyPolicyUrl()" class="mx-1">&middot;</span>
+        <a
+          v-if="vhApp.privacyPolicyUrl()"
+          class="text-white"
+          :href="vhApp.privacyPolicyUrl() ?? undefined"
+          target="_blank"
+        >
+          {{ locale('PRIVACY_POLICY') }}
+        </a>
+      </li>
     </ul>
 
     <v-btn

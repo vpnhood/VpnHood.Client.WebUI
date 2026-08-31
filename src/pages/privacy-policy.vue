@@ -55,13 +55,28 @@ loadContentDocument('privacy-consent', i18n.global.locale.value)
             <!-- Repository content compiled into the bundle at build time — never user input. -->
             <div class="content-document text-disabled" v-html="documentHtml"></div>
 
-            <!-- Stays in the template rather than the document: the address is decided at
-                 runtime by the app type, so it cannot be baked into translated markdown. -->
-            <span>{{ locale('PLEASE_READ_OUR') }}</span>
+            <!-- Stays in the template rather than the document: both addresses are decided at
+                 runtime by the head, so they cannot be baked into translated markdown. The
+                 summary above is bundled precisely because these links may be unreachable at
+                 first run - the user has not connected yet, and may be somewhere our site is
+                 blocked - so the screen must still make sense with neither link followed. -->
+            <p class="mt-2 mb-1">{{ locale('ACCEPT_LICENSE_NOTICE') }}</p>
+            <!-- Focusable, unlike the rest of this screen's chrome: on a TV these two are the
+                 only way to reach the documents at all, and a control a D-pad cannot land on does
+                 not exist. The Accept button still takes focus first, through autofocus. -->
             <a
-              tabindex="-1"
-              class="text-highlight font-weight-bold ms-1"
-              :href="vhApp.privacyPolicyUrl()"
+              v-if="vhApp.termsOfUseUrl()"
+              class="text-highlight font-weight-bold d-block mt-3"
+              :href="vhApp.termsOfUseUrl() ?? undefined"
+              target="_blank"
+            >
+              {{ locale('TERMS_OF_USE') }}
+              <v-icon icon="mdi-open-in-new"/>
+            </a>
+            <a
+              v-if="vhApp.privacyPolicyUrl()"
+              class="text-highlight font-weight-bold d-block mt-3"
+              :href="vhApp.privacyPolicyUrl() ?? undefined"
               target="_blank"
             >
               {{ locale('PRIVACY_POLICY') }}

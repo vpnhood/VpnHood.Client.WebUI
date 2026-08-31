@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { Util } from '@/helpers/Util'
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import {
@@ -208,8 +208,8 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
                   <v-divider />
 
                   <!-- Starlink Tools: profile scoped like the custom address above it, and a mock
-                       page, so it stays behind the /starlink debug command — invisible to anyone who
-                       has not typed it into DebugData1 -->
+                       page, so it stays behind the /starlink debug command on Android — invisible to anyone
+                       who has not typed it into DebugData1, and hidden outright elsewhere -->
                   <template v-if="vhApp.data.isStarlinkToolsEnabled">
                     <v-list-item
                       :title="locale('STARLINK_TOOLS')"

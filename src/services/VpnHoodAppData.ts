@@ -5,6 +5,7 @@ import {
   AppConnectionState,
   AppFeature,
   AppFeatures,
+  AppOsType,
   DeviceIntentFeatures,
   AppState,
   ChannelProtocol,
@@ -100,8 +101,9 @@ export class VpnHoodAppData {
     return this.userSettings.debugData1?.split(' ').includes(command) === true;
   }
 
+  // Android only: the tools drive the Starlink app/dish, which exists on no other platform.
   get isStarlinkToolsEnabled(): boolean {
-    return this.hasDebugCommand(DebugCommand.StarlinkTools);
+    return this.features.osType === AppOsType.Android && this.hasDebugCommand(DebugCommand.StarlinkTools);
   }
 
   get isConnected(): boolean {

@@ -94,10 +94,11 @@ onMounted(loadPurchaseOptions);
         @retry="onRetry"
       />
 
-      <!-- Purchase by Web. Needs a browser to leave the app with; on a device without one the
-           button would be a dead end, so it is withheld rather than offered. -->
+      <!-- Purchase by Web. Offered wherever the address can reach the user: a browser to leave the
+           app with, or a code they can scan with their phone. Withheld only where it would be a dead
+           end - see VpnHoodApp.isExternalLinkUsable. -->
       <btn-style-1
-        v-if="purchaseOptions?.purchaseUrl && vhApp.data.intentFeatures.isWebBrowserSupported"
+        v-if="purchaseOptions?.purchaseUrl && vhApp.isExternalLinkUsable()"
         class="mt-4 text-premium-code-btn"
         block
         rounded="pill"
