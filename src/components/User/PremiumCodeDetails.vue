@@ -71,9 +71,9 @@ async function copyPremiumCode(): Promise<void> {
         <!-- Code — hidden behind the eye. Shown wherever the operator sells codes, including on a
              build that cannot take a typed one: that person still needs their code for the devices
              where typing it is allowed (keyring plan §8). -->
-        <li v-if="canShowCode">
+        <li v-if="canShowCode" class="code-row">
           <span class="text-label-large text-disabled">{{ locale('CODE') }}:</span>
-          <span class="text-label-large text-active">
+          <span class="text-label-large text-active code-line">
                 {{displayedCode}}
                 <v-btn
                   size="small"
@@ -185,5 +185,18 @@ async function copyPremiumCode(): Promise<void> {
 #premiumCodeInfoList > li:nth-child(odd) {
   /*noinspection CssUnresolvedCustomProperty*/
   background-color: rgb(var(--v-theme-zebra-on-config-card-bg));
+}
+
+/* The code plus its two buttons is the one value that can outgrow a narrow screen, and the
+   font must not shrink: the row wraps instead, dropping the code under the label as one
+   unbreakable unit that keeps its end alignment (margin-inline-start, so RTL mirrors). */
+#premiumCodeInfoList > li.code-row {
+  flex-wrap: wrap;
+}
+.code-line {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-inline-start: auto;
 }
 </style>
