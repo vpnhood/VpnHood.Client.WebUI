@@ -124,6 +124,18 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     border-radius: 50%;
     transition: all .8s ease;
 }
+/* In a landscape viewport the home page puts the circle in its own column (pages/index.vue), where
+   HEIGHT is what is scarce: the same 1920x1080 panel reports 720 CSS at tvdpi and 540 at xhdpi, an
+   iPad landscape is 768-1024, a phone on its side is 390. So it is sized against that rather than
+   fixed. The floor sits below the portrait 150 so a short landscape viewport can give the space to
+   the button and the rows instead; the ceiling is what the roomier panels can afford. Portrait
+   keeps the 150px above. */
+@media (min-width: 700px) and (orientation: landscape) {
+    #connectionCircleIndicator{
+        width: clamp(120px, 30vh, 210px);
+        height: clamp(120px, 30vh, 210px);
+    }
+}
 /*noinspection CssUnusedSymbol*/
 #connectionCircleIndicator:not(.disconnect,.none){
     /*noinspection CssUnresolvedCustomProperty*/

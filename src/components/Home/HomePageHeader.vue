@@ -44,7 +44,7 @@ function openDebugDialog() {
 
     <!-- App name -->
     <v-col cols="6" class="text-center text-home-app-bar" tabindex="-1">
-      <h4 dir="ltr" :class="{ 'mt-8': vhApp.data.features.isTv }">
+      <h4 dir="ltr">
         {{vhApp.data.features.appName}}
       </h4>
     </v-col>

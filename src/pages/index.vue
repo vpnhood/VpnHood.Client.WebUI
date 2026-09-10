@@ -78,13 +78,18 @@ function connectButtonText(): string {
     :class="[{'premium-user': isPremiumUser}, vhApp.data.features.uiName, vhApp.data.userSettings.cultureCode]"
   >
 
+    <!-- In a landscape viewport the two body columns sit side by side (see the media query in the
+         style block); in portrait this stays the single column that space-between spreads down the
+         screen. The switch is the viewport's shape, not the device: a TV, an iPad in landscape or
+         Stage Manager, and a desktop window are all the same problem. -->
     <v-row
-      :align-content="!vhApp.data.features.isTv ? 'space-between' : undefined"
+      align-content="space-between"
       justify="center"
-      class="fill-height v-row--no-gutters">
+      class="fill-height v-row--no-gutters landscape-home"
+      :class="{ 'tv-home': vhApp.data.features.isTv }">
 
       <!-- Home page app bar & Go Premium or Countdown button & home badge -->
-      <v-col cols="12">
+      <v-col cols="12" class="home-head">
         <home-page-header/>
         <v-row class="mt-0" align="center">
           <v-col cols="12" class="text-center position-relative">
@@ -95,7 +100,9 @@ function connectButtonText(): string {
       </v-col>
 
       <!-- Speed & Circle & Connect button -->
-      <v-col cols="12" :class="'text-center state-' + [vhApp.data.connectionState.toLowerCase()]">
+      <v-col
+        cols="12"
+        :class="['text-center state-' + [vhApp.data.connectionState.toLowerCase()], 'home-hero']">
 
         <!-- ConnectionStatistics & Speed -->
         <connection-info />
@@ -106,8 +113,6 @@ function connectButtonText(): string {
         <!-- Connect button -->
         <v-btn
           id="connectBtn"
-          height="40px"
-          min-width="180px"
           rounded="pill"
           :tabindex="vhApp.data.isConnected ? '4' : '3'"
           :disabled="vhApp.data.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
@@ -122,7 +127,7 @@ function connectButtonText(): string {
       </v-col>
 
       <!-- Config buttons -->
-      <v-col cols="12">
+      <v-col cols="12" class="home-config">
 
         <!-- Servers button -->
         <servers-button/>
@@ -240,7 +245,12 @@ function connectButtonText(): string {
 
 /*-------------------------- Connect button -------------------------*/
 /*----------- Disconnected state ----------*/
+/* Size here rather than through the v-btn height/min-width props: those render as an inline style,
+   which no stylesheet rule can override — the TV size in the landscape query below would never
+   apply. Same numbers the props carried. */
 #connectBtn {
+  height: 40px;
+  min-width: 180px;
   transition: all 0.4s ease;
   color: rgb(var(--v-theme-on-connect-btn-disconnected));
 }
@@ -301,6 +311,96 @@ function connectButtonText(): string {
 
 .limited-width-to-truncate {
   max-width: calc(100vw - 110px);
+}
+
+/*---------------------------- Landscape layout -----------------------------*/
+/* Driven by the SHAPE of the viewport, not by which device it is. A television was the first case,
+   but iPadOS 26 dropped fixed-orientation apps, so every iPad is resizable and lands here in
+   landscape and in Stage Manager too — and a desktop window has always been this shape. One rule
+   for all of them; only the 10-foot chrome further down is TV-specific.
+
+   The single portrait column leaves a dead band across the middle of any landscape viewport and
+   pushes the config rows below the fold, which is the bug this fixes. */
+@media (min-width: 700px) and (orientation: landscape) {
+  /* Grid rather than the wrapped flex a v-row normally is: the header takes its own height while
+     the body takes ALL the rest, and wrapped flex lines cannot express that — align-content either
+     packs both lines at the top (a dead third at the bottom) or splits the height evenly and pushes
+     the hero down. `auto 1fr` says it directly.
+
+     Fluid tracks under a capped, centred measure rather than fixed widths: an Android TV panel is
+     960 CSS wide at xhdpi and 1280 at tvdpi, an iPad is 1024-1366, and a window can be dragged to
+     anything. Fractions keep the columns in proportion at any width; the max-width stops them
+     drifting to opposite edges on a wide one. The rows column is the wider of the two because it
+     carries text, while the hero is a fixed-aspect circle. */
+  .landscape-home {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+  }
+
+  /* v-col sizes itself with flex-basis and a max-width that mean nothing to a grid child — the 50%
+     from v-col-6 would halve each column a second time inside its own track. */
+  .landscape-home > .home-head,
+  .landscape-home > .home-hero,
+  .landscape-home > .home-config {
+    max-width: none;
+  }
+
+  /* The header spans both tracks; the body columns take one each. Naming the placement rather than
+     leaving it to auto-flow keeps it right if a column is ever hidden on a build. */
+  .landscape-home > .home-head {
+    grid-column: 1 / -1;
+    align-self: start;
+  }
+
+  .landscape-home > .home-hero {
+    grid-column: 1;
+  }
+
+  /* The rows were stretching the full width because they are block buttons in a full-width column. */
+  .landscape-home > .home-config {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  /* The value truncates against its own column, not the viewport: the portrait rule assumes a
+     full-width row and would never bite here, leaving a long server name to widen the row. */
+  .landscape-home > .home-config .limited-width-to-truncate {
+    max-width: 280px;
+  }
+
+  /* 10-foot only: an iPad or a desktop window is at arm's length and wants the standard control.
+     The circle's landscape size lives beside its base rule in general.css. */
+  .tv-home #connectBtn {
+    height: 52px;
+    min-width: 220px;
+    font-size: 1.05rem;
+  }
+}
+
+/*------------------------------- TV chrome ---------------------------------*/
+/* Only what a television needs on top of the landscape layout. A good number of panels still crop
+   the edges, so the page is inset by the 5% overscan margin (48px x 27px at 1080p) that Android's
+   TV guidance asks for. An iPad and a desktop window need none of this. */
+/* Flat, not fluid: overscan is a property of the panel, not of the window, and every TV this runs
+   on is at least 960 CSS wide. A vw-based inset would shrink it below the 5% the guidance asks for
+   exactly on the smaller panel that needs it most. */
+.tv-home {
+  padding: 27px 48px;
+}
+
+/* 10-foot type: the value beside each title is text-body-small, legible on a phone at arm's length
+   and not from three metres. The row grows with it. */
+.tv-home > .home-config .config-item {
+  min-height: 52px;
+}
+
+.tv-home > .home-config .config-btn-value {
+  font-size: 0.9rem;
 }
 
 .config-btn-title,
