@@ -9,6 +9,7 @@ import router from '@/services/router';
 import { ConnectManager } from '@/helpers/ConnectManager';
 import { ComponentName } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
+import { useInitialFocus } from '@/helpers/InitialFocus';
 import { computed, ref } from 'vue';
 import UserReviewDialog from '@/components/Home/UserReviewDialog.vue';
 import BadgeDialog from '@/components/Home/BadgeDialog.vue';
@@ -24,6 +25,8 @@ const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
+// On a TV the page opens with Connect under the remote; see InitialFocus.
+const connectBtnRef = useInitialFocus();
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
 const isPremiumUser = computed((): boolean => {
   return (vhApp.data.isPremiumSupported && vhApp.data.isPremiumUser) ||
@@ -86,7 +89,7 @@ function connectButtonText(): string {
       align-content="space-between"
       justify="center"
       class="fill-height v-row--no-gutters landscape-home"
-      :class="{ 'tv-home': vhApp.data.features.isTv }">
+      :class="{ 'tv-home': vhApp.data.isTvUi }">
 
       <!-- Home page app bar & Go Premium or Countdown button & home badge -->
       <v-col cols="12" class="home-head">
@@ -113,13 +116,14 @@ function connectButtonText(): string {
         <!-- Connect button -->
         <v-btn
           id="connectBtn"
+          ref="connectBtnRef"
           rounded="pill"
           :tabindex="vhApp.data.isConnected ? '4' : '3'"
           :disabled="vhApp.data.connectionState !== AppConnectionState.None && !vhApp.data.state.canDisconnect"
           class="font-weight-bold mt-5 mb-4"
           :class="[vhApp.isConnectApp() ? 'connect-app' : 'client-app',
           { 'connected': vhApp.data.isConnected },
-          { 'tv-device': vhApp.data.features.isTv }
+          { 'tv-device': vhApp.data.isTvUi }
           ]"
           :text="connectButtonText()"
           @click="onConnectButtonClick()" />
@@ -386,12 +390,7 @@ function connectButtonText(): string {
 /* Only what a television needs on top of the landscape layout. A good number of panels still crop
    the edges, so the page is inset by the 5% overscan margin (48px x 27px at 1080p) that Android's
    TV guidance asks for. An iPad and a desktop window need none of this. */
-/* Flat, not fluid: overscan is a property of the panel, not of the window, and every TV this runs
-   on is at least 960 CSS wide. A vw-based inset would shrink it below the 5% the guidance asks for
-   exactly on the smaller panel that needs it most. */
-.tv-home {
-  padding: 27px 48px;
-}
+/* The overscan inset itself comes from the page root (tv-page, general.css), like every other page. */
 
 /* 10-foot type: the value beside each title is text-body-small, legible on a phone at arm's length
    and not from three metres. The row grows with it. */

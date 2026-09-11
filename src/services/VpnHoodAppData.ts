@@ -31,13 +31,18 @@ export class VpnHoodAppData {
   public cultureInfos: UiCultureInfo[];
   public locale = i18n.global.t;
 
+  // Another device on the LAN, not the app's own web view. Decided by the app per request from
+  // where the request came, so a browser on a PC's own LAN address counts too.
+  public readonly isRemote: boolean;
+
   public constructor(
     state: AppState,
     userSettings: UserSettings,
     features: AppFeatures,
     intentFeatures: DeviceIntentFeatures,
     clientProfileInfos: ClientProfileInfo[],
-    cultureInfos: UiCultureInfo[]
+    cultureInfos: UiCultureInfo[],
+    isRemote: boolean
   ) {
     this.state = state;
     this.userSettings = userSettings;
@@ -45,6 +50,15 @@ export class VpnHoodAppData {
     this.intentFeatures = intentFeatures;
     this.clientProfileInfos = clientProfileInfos;
     this.cultureInfos = cultureInfos;
+    this.isRemote = isRemote;
+  }
+
+  // Render the TV layout: the device is a TV (or /tv-mode says so) AND this is its own screen. A
+  // phone that opened the app over the LAN renders the full layout of the same app, which is what
+  // it is there for. Layout, focus and link handling key off this; the crash report keeps
+  // features.isTv, the device fact.
+  get isTvUi(): boolean {
+    return this.features.isTv && !this.isRemote;
   }
 
   get connectionState(): AppConnectionState {

@@ -100,6 +100,8 @@ function isShowEnforcedByServerAlert() {
     <config-card
       v-if="vhApp.data.intentFeatures.isPrivateDnsSettingsSupported"
       @click="router.push({name: 'PRIVATE_DNS'})"
+      tabindex="0"
+      @keydown.enter.prevent="router.push({name: 'PRIVATE_DNS'})"
       class="pa-3"
     >
         <!-- Title, status and premium icon -->

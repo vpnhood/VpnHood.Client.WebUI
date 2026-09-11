@@ -18,7 +18,7 @@ const pageInfo = computed((): RouteLocationNormalizedLoaded => {
 <template>
   <!-- Page header -->
   <div ref="pageHeaderRef" class="d-flex align-center position-relative text-white mb-5 pt-4">
-    <template v-if="!vhApp.data.features.isTv">
+    <template v-if="!vhApp.data.isTvUi">
       <!-- Back button -->
       <v-btn
         :icon="Util.getLocalizedLeftChevron()"

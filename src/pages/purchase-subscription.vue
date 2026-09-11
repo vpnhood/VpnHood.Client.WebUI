@@ -50,7 +50,7 @@ onMounted(loadPurchaseOptions);
 
       <!-- Back button -->
       <v-btn
-        v-if="!vhApp.data.features.isTv"
+        v-if="!vhApp.data.isTvUi"
         :icon="Util.getLocalizedLeftChevron()"
         variant="text"
         width="43px"

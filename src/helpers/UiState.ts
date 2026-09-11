@@ -2,6 +2,7 @@ import { ErrorDialogState } from '@/helpers/ui-state/ErrorDialogState';
 import { GeneralSnackbarState } from '@/helpers/ui-state/GeneralSnackbarState';
 import { ConfirmDialogState } from '@/helpers/ui-state/ConfirmDialogState';
 import { OpenOnPhoneDialogState } from '@/helpers/ui-state/OpenOnPhoneDialogState';
+import { RemoteAccessDialogState } from '@/helpers/ui-state/RemoteAccessDialogState';
 
 export class UiState {
 
@@ -9,6 +10,7 @@ export class UiState {
   public generalSnackbarState: GeneralSnackbarState = new GeneralSnackbarState();
   public confirmDialogState: ConfirmDialogState = new ConfirmDialogState();
   public openOnPhoneDialogState: OpenOnPhoneDialogState = new OpenOnPhoneDialogState();
+  public remoteAccessDialogState: RemoteAccessDialogState = new RemoteAccessDialogState();
 
   // Suppress message state
   public userIgnoreSuppressToTime: Date | null = null;

@@ -16,9 +16,13 @@ router.beforeEach((to, from) => {
   // close a dialog, but the state behind it lives only in memory. On a fresh page load that state
   // is gone, so a leftover param like ?ErrorDialog=true is always stale and would reopen an empty
   // dialog on every refresh — strip them once on the initial navigation, without a history entry.
+  // The remote-access dialog is the exception: its state is held by the app, and the dialog rebuilds
+  // it by asking for it again (RemoteAccessDialog.vue). A reload lands back in it on purpose - the
+  // listener a phone is using comes back on the same port, and the screen keeps saying so.
   if (from === START_LOCATION) {
     const query = { ...to.query };
-    const staleParams = Object.values(ComponentName).filter(name => name in query);
+    const staleParams = Object.values(ComponentName)
+      .filter(name => name !== ComponentName.RemoteAccessDialog && name in query);
     if (staleParams.length > 0) {
       staleParams.forEach(name => delete query[name]);
       return { path: to.path, query, replace: true };

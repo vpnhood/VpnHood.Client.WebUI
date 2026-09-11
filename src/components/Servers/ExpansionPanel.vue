@@ -174,8 +174,9 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
             </h4>
           </v-col>
 
-          <!-- Menu button -->
-          <v-col cols="auto">
+          <!-- Menu button. Not on the TV UI: everything in it is done from a phone through remote
+               access (§3.1 of the TV plan), and a popup menu is a poor fit for a D-pad anyway. -->
+          <v-col v-if="!vhApp.data.isTvUi" cols="auto">
             <v-btn :icon="true" density="compact" variant="plain">
               <v-icon>mdi-dots-vertical</v-icon>
               <v-menu activator="parent">
@@ -230,7 +231,8 @@ function expansionPanelClick(clientProfileInfo: ClientProfileInfo): void{
             </v-btn>
           </v-col>
 
-          <!-- Expand/Collapse button -->
+          <!-- Expand/Collapse mark. The +/- circles, kept after trying a chevron (the location groups
+               beneath already use one as their own mark), the unfold pair and the caret pair. -->
           <v-col v-if="!Util.isSingleLocation(clientProfileInfo.locationInfos.length)" cols="auto" class="ps-0">
               <v-icon v-if="expandedPanels[index] === 0" size="27" opacity=".6" icon="mdi-minus-circle-outline" />
               <v-icon v-else icon="mdi-plus-circle-outline" opacity=".6" size="27" />

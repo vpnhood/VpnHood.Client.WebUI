@@ -71,7 +71,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
     <div>
       <!-- Back button -->
       <v-btn
-        v-if="!vhApp.data.features.isTv"
+        v-if="!vhApp.data.isTvUi"
         :icon="Util.getLocalizedLeftChevron()"
         variant="text"
         width="43px"
@@ -109,7 +109,7 @@ async function actionByConnectPlan(planId: MyConnectPlanId): Promise<void> {
         <v-row v-if="isFreeAvailable()"
            dense
            v-ripple
-           :autofocus="vhApp.data.features.isTv"
+           :autofocus="vhApp.data.isTvUi"
            align="center"
            class="px-2 py-1 mx-0 rounded-lg card-on-grad-bg"
            tabindex="1"

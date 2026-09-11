@@ -4,7 +4,7 @@ import {ComponentRouteController} from "@/services/ComponentRouteController";
 import i18n from '@/locales/i18n'
 import ExpansionPanel from '@/components/Servers/ExpansionPanel.vue'
 import LocationList from '@/components/Servers/LocationList.vue'
-import { ComponentName } from '@/helpers/UiConstants';
+import { ComponentName, RemoteAccessHint } from '@/helpers/UiConstants';
 import AddServerDialog from '@/components/Servers/AddServerDialog.vue';
 import AppBar from '@/components/AppBar.vue';
 import { ref } from 'vue';
@@ -31,6 +31,17 @@ function getServerKeyMethodsHtml(): string {
     : locale('GET_SERVER_KEY_METHODS_DESC', { connectAppUrl: UiConstants.connectAppUrl });
 }
 
+// A vh:// key is a long base64 blob that no remote can type - the blocker a TV reviewer hits first.
+// So on the TV UI this button never opens the key field: it opens the pairing dialog, told to say
+// that servers are added and removed from the phone (the per-server menu, with Remove in it, is
+// hidden there too). The full UI a phone gets over the LAN has the field and the menu as always.
+function onAddServer(): void {
+  if (vhApp.data.isTvUi)
+    vhApp.showRemoteAccessDialog(RemoteAccessHint.Servers);
+  else
+    addServerDialogModel.value.show(true).then();
+}
+
 </script>
 
 <template>
@@ -44,9 +55,9 @@ function getServerKeyMethodsHtml(): string {
       block
       variant="tonal"
       min-height="40px"
-      prepend-icon="mdi-plus-circle"
-      :text="locale('ADD_SERVER')"
-      @click="addServerDialogModel.show(true)"
+      :prepend-icon="vhApp.data.isTvUi ? 'mdi-cellphone' : 'mdi-plus-circle'"
+      :text="locale(vhApp.data.isTvUi ? 'ADD_OR_REMOVE_SERVERS' : 'ADD_SERVER')"
+      @click="onAddServer()"
     />
 
     <!-- Show alert, if user does not have any server -->

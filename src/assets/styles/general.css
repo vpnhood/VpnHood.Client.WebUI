@@ -24,6 +24,54 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 }
 .v-application:not(.v-locale--is-rtl){font-size: 15px !important;}
 
+/*** -------------------- TV focus ring -------------------- ***/
+/* On a television focus IS the cursor: a control the remote has landed on but cannot be seen to
+   have landed on does not exist. Vuetify's own cue is an 8% overlay, which reads from a hand's
+   length and not from three metres. One rule for every focusable control under the TV root
+   (App.vue puts tv-device on v-app), so nothing opts in per component and nothing gets missed.
+   :focus-visible rather than :focus so a mouse on a desktop build is left alone. The outline is
+   !important because several Vuetify components reset it; the glow matches the connect button's. */
+.v-application.tv-device :focus-visible{
+    outline: 2px solid rgba(255, 255, 255, 0.9) !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
+}
+/* A switch or checkbox focuses its <input>, which Vuetify lays over the control at opacity 0 — so
+   the ring above lands on something invisible. Vuetify flags the control itself when that input has
+   focus-visible; draw the ring on the visible thumb area instead. */
+.v-application.tv-device .v-selection-control--focus-visible .v-selection-control__wrapper{
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+    border-radius: 50%;
+    box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
+}
+
+/*** -------------------- TV page inset and measure -------------------- ***/
+/* App.vue puts tv-page on every page's root element. Two things every page needs on a television
+   and none needs anywhere else:
+   - The overscan inset. A good number of panels still crop the edges, so content keeps the 5%
+     margin Android's TV guidance asks for (48px x 27px at 1080p). Flat, not fluid: overscan is a
+     property of the panel, not the window, and every TV this runs on is at least 960 CSS wide — a
+     vw-based inset would shrink below 5% exactly on the smaller panel that needs it most. On the
+     root's padding so a page's own background still reaches the edges.
+   - A reading measure. Every inner page is a phone column, and a phone column stretched across a
+     1280px panel puts a one-line subtitle in a card thirteen hundred pixels wide. Capped and centred
+     per child rather than on the root, again so backgrounds stay full-bleed. The home page's row is
+     exempt: it lays out its own two columns under a wider cap (pages/index.vue). */
+.v-application.tv-device .tv-page{
+    padding: 27px 48px;
+}
+.v-application.tv-device .tv-page > :not(.landscape-home){
+    max-width: 880px;
+    margin-inline: auto;
+}
+/* A block button is min-width: 100%, and min-width beats max-width, so it alone would span the panel
+   while everything beside it sits on the measure. width keeps it filling up to the cap. */
+.v-application.tv-device .tv-page > .v-btn--block{
+    min-width: 0;
+    width: 100%;
+}
+
 /*noinspection CssUnresolvedCustomProperty*/
 .opacity-0 {transition: opacity 1.4s ease;}
 .opacity-30 {transition: opacity 1.4s ease;}

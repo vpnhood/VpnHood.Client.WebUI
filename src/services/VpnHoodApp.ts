@@ -17,7 +17,7 @@ import {
   SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName } from '@/helpers/UiConstants';
+import { AppName, ComponentName, RemoteAccessHint } from '@/helpers/UiConstants';
 import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
@@ -39,6 +39,7 @@ export class VpnHoodApp {
   public confirmDialogDeferred: Deferred<boolean> | null = null;
   public errorDialogModel: ComponentRouteController;
   public openOnPhoneDialogModel: ComponentRouteController;
+  public remoteAccessDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
   private lastStateJson: string = '';
   private lastSavedUserSettingsJson: string = '';
@@ -62,6 +63,7 @@ export class VpnHoodApp {
     this.vhFirebase = vhFirebase;
     this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
     this.openOnPhoneDialogModel = new ComponentRouteController(ComponentName.OpenOnPhoneDialog);
+    this.remoteAccessDialogModel = new ComponentRouteController(ComponentName.RemoteAccessDialog);
     this.data.uiState.configTime = this.data.state.configTime;
     this.data.uiState.isReportSendingAvailable = vhFirebase !== null;
     // appData arrives freshly fetched, so it is the persisted truth saveUserSetting diffs against.
@@ -91,6 +93,7 @@ export class VpnHoodApp {
       config.intentFeatures,
       config.clientProfileInfos,
       config.availableCultureInfos,
+      config.isRemote,
     );
 
     const firebase = import.meta.env.DEV || !config.userSettings.allowAnonymousTracker
@@ -423,7 +426,7 @@ export class VpnHoodApp {
   // build with no such document renders no link, so nothing can be clicked. Event rather than
   // MouseEvent because a keyboard activation reports as one, and all this needs is preventDefault().
   public onExternalLinkClick(event: Event, url: string | null, title: string): void {
-    if (!this.data.features.isTv || url === null)
+    if (!this.data.isTvUi || url === null)
       return;
 
     event.preventDefault();
@@ -439,9 +442,19 @@ export class VpnHoodApp {
   }
 
   // Whether an outbound link can get anywhere from this device - a browser to open it, or the TV
-  // fallback in onExternalLinkClick. Ask this before hiding a link for want of a browser.
+  // fallback in onExternalLinkClick. Ask this before hiding a link for want of a browser. A remote
+  // browser is a browser: the link opens right there, whatever the TV can do.
   public isExternalLinkUsable(): boolean {
-    return this.data.intentFeatures.isWebBrowserSupported || this.data.features.isTv;
+    return this.data.isRemote || this.data.intentFeatures.isWebBrowserSupported || this.data.isTvUi;
+  }
+
+  // The pairing screen: a code for a phone to scan and manage this device with. Only the TV UI
+  // opens it - the home Settings button, and the places whose job cannot be done with a remote,
+  // which pass a hint saying where on the phone to go next. Shown through the route for the same
+  // reason as the open-on-phone dialog: the history entry is what lets Back close it.
+  public showRemoteAccessDialog(hint: RemoteAccessHint | null = null): void {
+    this.data.uiState.remoteAccessDialogState.hint = hint;
+    this.remoteAccessDialogModel.show(true).then();
   }
 
   public async clearLastError(): Promise<void> {
