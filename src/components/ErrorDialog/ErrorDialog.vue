@@ -158,7 +158,7 @@ async function closeDialog(): Promise<void> {
           />
 
           <!-- OpenReport -->
-          <v-btn v-if="dialogState.showLogButton && (!vhApp.data.features.isTv)"
+          <v-btn v-if="dialogState.showLogButton && (!vhApp.data.isTvUi)"
             prepend-icon="mdi-open-in-new"
             :href="vhApp.data.serverUrl + UiConstants.logFileLocation"
             :text="locale('OPEN_REPORT')"

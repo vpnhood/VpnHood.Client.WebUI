@@ -32,13 +32,25 @@ function openDebugDialog() {
 <template>
   <v-row ref="pageHeaderRef" class="align-center v-row--no-gutters mx-0">
 
-    <!-- Navigation drawer button -->
+    <!-- Navigation drawer button. On the TV UI the drawer is never opened: everything it leads to
+         is done from a phone through remote access, and Settings is the way there. -->
     <v-col cols="3">
       <v-app-bar-nav-icon
+        v-if="!vhApp.data.isTvUi"
         tabindex="1"
         color="home-app-bar"
         class="ms-n3 me-0"
         @click="navigationDrawerModel.show()"
+      />
+      <v-btn
+        v-else
+        tabindex="1"
+        variant="text"
+        color="home-app-bar"
+        class="ms-n3 me-0"
+        prepend-icon="mdi-cog"
+        :text="locale('SETTINGS')"
+        @click="vhApp.showRemoteAccessDialog()"
       />
     </v-col>
 

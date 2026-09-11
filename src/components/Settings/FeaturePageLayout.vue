@@ -37,7 +37,7 @@ function actionButtonClick(): void | null {
     <div ref="pageHeaderRef">
       <!-- Back button -->
       <v-btn
-        v-if="!vhApp.data.features.isTv"
+        v-if="!vhApp.data.isTvUi"
         :icon="Util.getLocalizedLeftChevron()"
         variant="text"
         width="43px"
@@ -59,11 +59,13 @@ function actionButtonClick(): void | null {
            the sheet has nothing in the middle but background. The aspect ratio reserves that space
            up front — without it the sheet lays out around a zero-height image and re-flows the
            moment the file lands, which is the flick after the page appears. -->
+      <!-- Shorter on a TV: a 1080p panel is 540 or 720 CSS tall, and 240px of art above the
+           controls is a third of it; the smaller size keeps the page's identity. -->
       <v-img
         :src="Util.getAssetPath(props.image)"
         alt="Symbol image"
         width="100%"
-        max-height="240px"
+        :max-height="vhApp.data.isTvUi ? '140px' : '240px'"
         class="mx-auto my-4"
         :aspect-ratio="UiConstants.featureImageAspectRatio"
         :eager="true"
@@ -84,7 +86,7 @@ function actionButtonClick(): void | null {
         v-if="isPrivateDnsCustomized"
         dense
         v-ripple
-        :autofocus="vhApp.data.features.isTv"
+        :autofocus="vhApp.data.isTvUi"
         align="center"
         class="px-2 py-1 mx-0 rounded-lg card-on-grad-bg"
         tabindex="1"

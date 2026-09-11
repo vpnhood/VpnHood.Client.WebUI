@@ -32,6 +32,13 @@ export enum ComponentName {
   BadgeDialog = 'BadgeDialog',
   AddOrEditProxySheet = "AddOrEditProxySheet",
   OpenOnPhoneDialog = 'OpenOnPhoneDialog',
+  RemoteAccessDialog = 'RemoteAccessDialog',
+}
+
+// Why the remote-access dialog was opened. The dialog adds one line for it - where on the phone to
+// go next - over the same code and address; nothing else about the dialog changes with it.
+export enum RemoteAccessHint {
+  AddServer = 'AddServer',
 }
 
 // Debug commands the SPA acts on by itself — the app declares them in DebugCommands (so they are

@@ -34,17 +34,29 @@ const emit = defineEmits<{
 }>();
 
 
+
+async function activate(): Promise<void> {
+  if (props.disabled)
+    return;
+  await router.push(props.click);
+}
 </script>
 
 <template>
   <!-- The click belongs on the card, not on an inner div: a VCard only becomes interactive when it
        carries the handler itself, and without that the row answers a tap with nothing at all — no
        ripple, no pressed state — until the next page finishes animating in, which reads as lag. -->
+  <!-- tabindex + Enter: a VCard with a click is mouse-and-touch only. Vuetify 4 gives it v-card--link
+       and onClick but no tabindex and no key handling, so a remote could neither reach the row nor
+       press it. tabindex puts it under the D-pad; Enter is the remote's centre press. .prevent, so a
+       WebView that already turns Enter into a click cannot navigate twice. -->
   <config-card
     v-if="props.isShow"
     class="pa-3"
     :disabled="props.disabled"
-    @click="!props.disabled && router.push(props.click)"
+    :tabindex="props.disabled ? -1 : 0"
+    @click="activate()"
+    @keydown.enter.prevent="activate()"
   >
 
     <div>

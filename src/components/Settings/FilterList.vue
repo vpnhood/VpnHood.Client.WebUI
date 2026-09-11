@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const search = ref<string | null>(null);
-const isShowSearchBox = ref<boolean>(!vhApp.data.features.isTv);
+const isShowSearchBox = ref<boolean>(!vhApp.data.isTvUi);
 
 /*** Filters the list items based on search input. ***/
 const filteredListItem = computed(() => {
