@@ -631,6 +631,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "अभी तक कोई डिवाइस कनेक्ट नहीं है।",
   "REMOTE_ACCESS_CONNECTED_FROM": "{address} से कनेक्टेड।",
   "REMOTE_ACCESS_HINT_SERVERS": "सर्वर जोड़ने या हटाने के लिए अपने फोन पर 'सर्वर' खोलें।",
+  "MANAGE_FROM_YOUR_PHONE": "अपने फ़ोन से प्रबंधित करें",
   "ACCEPT_AND_CONTINUE": "स्वीकार करें और जारी रखें",
   "ALLOW_ANONYMOUS_TRACKER": "अनाम उपयोग डेटा साझा करें",
   "ALLOW_ANONYMOUS_TRACKER_DESC": "अनाम उपयोग और डायग्नोस्टिक डेटा भेजकर ऐप को बेहतर बनाने में हमारी मदद करें।",

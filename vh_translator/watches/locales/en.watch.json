@@ -633,6 +633,7 @@
     "REMOTE_ACCESS_NO_DEVICE": "No device connected yet.",
     "REMOTE_ACCESS_CONNECTED_FROM": "Connected from {address}.",
     "REMOTE_ACCESS_HINT_SERVERS": "On your phone, open Servers to add or remove servers.",
+    "MANAGE_FROM_YOUR_PHONE": "Manage from your phone",
     "ACCEPT_AND_CONTINUE": "Accept and continue",
     "ALLOW_ANONYMOUS_TRACKER": "Share anonymous usage data",
     "ALLOW_ANONYMOUS_TRACKER_DESC": "Help us improve the app by sending anonymous usage and diagnostic data.",

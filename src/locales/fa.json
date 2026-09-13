@@ -631,6 +631,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "هنوز دستگاهی متصل نشده است.",
   "REMOTE_ACCESS_CONNECTED_FROM": "متصل شده از {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "برای افزودن یا حذف سرورها، بخش سرورها را در گوشی خود باز کنید.",
+  "MANAGE_FROM_YOUR_PHONE": "مدیریت از طریق گوشی",
   "ACCEPT_AND_CONTINUE": "پذیرش و ادامه",
   "ALLOW_ANONYMOUS_TRACKER": "اشتراک‌گذاری داده‌های ناشناس مصرف",
   "ALLOW_ANONYMOUS_TRACKER_DESC": "با ارسال داده‌های ناشناس مصرف و عیب‌یابی به ما در بهبود اپلیکیشن کمک کنید.",

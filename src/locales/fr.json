@@ -631,6 +631,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "Aucun appareil connecté.",
   "REMOTE_ACCESS_CONNECTED_FROM": "Connecté depuis {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "Sur votre téléphone, ouvrez Serveurs pour en ajouter ou en supprimer.",
+  "MANAGE_FROM_YOUR_PHONE": "Gérer depuis votre téléphone",
   "ACCEPT_AND_CONTINUE": "Accepter et continuer",
   "ALLOW_ANONYMOUS_TRACKER": "Partager les données d'utilisation anonymes",
   "ALLOW_ANONYMOUS_TRACKER_DESC": "Aidez-nous à améliorer l'app en envoyant des données de diagnostic et d'utilisation anonymes.",
