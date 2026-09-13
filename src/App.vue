@@ -137,7 +137,10 @@ onMounted(async () => {
     <v-layout width="100%" :max-width="isFramed ? vhApp.data.uiState.maxWidthOnLargeScreen : undefined" full-height class="mx-auto"
       :class="{ 'border border-highlight border-opacity-50 elevation-3 rounded-lg my-5': isFramed }">
 
-      <NavigationDrawer v-model="navigationDrawerModel.isVisible" />
+      <!-- Not on the TV UI: the drawer is the door to the pages the phone does (proxies, DNS,
+           the split lists), and Vuetify's temporary drawer opens on a swipe from the edge, so a
+           touch TV or a desktop in TV mode could still open it. The home row is Settings there. -->
+      <NavigationDrawer v-if="!vhApp.data.isTvUi" v-model="navigationDrawerModel.isVisible" />
 
       <!-- DO NOT REMOVE 'full-height' to support legacy browsers -->
       <!-- position-relative anchors the overlaid reconnect-required bar to this element -->

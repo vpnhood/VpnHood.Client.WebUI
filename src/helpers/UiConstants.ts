@@ -40,6 +40,7 @@ export enum ComponentName {
 // go next - over the same code and address; nothing else about the dialog changes with it.
 export enum RemoteAccessHint {
   Servers = 'Servers',
+  Settings = 'Settings',
 }
 
 // Debug commands the SPA acts on by itself — the app declares them in DebugCommands (so they are

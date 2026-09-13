@@ -10,7 +10,7 @@ import type { RemoteAccessState } from '@/services/VpnHood.Client.Api';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
-const { target: closeBtnRef, onAfterEnter } = useDialogFocus();
+const { target: doneBtnRef, onAfterEnter } = useDialogFocus();
 
 const props = defineProps<{
   modelValue: boolean,
@@ -40,6 +40,7 @@ const isAlwaysOn = computed(() => remoteAccess.value?.isAlwaysOn === true);
 const hintText = computed(() => {
   switch (dialogState.hint) {
     case RemoteAccessHint.Servers: return locale('REMOTE_ACCESS_HINT_SERVERS');
+    case RemoteAccessHint.Settings: return locale('REMOTE_ACCESS_HINT_SETTINGS');
     default: return null;
   }
 });
@@ -105,7 +106,7 @@ function onClosed(): void {
   remoteAccess.value = null;
 }
 
-// Opening and closing are the boundaries, however the close came - the Close button, Back, or a
+// Opening and closing are the boundaries, however the close came - the Done button, Back, or a
 // click outside. Immediate, for a dialog already open when the SPA loads: whether it is shown lives
 // in the route, and a reload keeps the route.
 watch(() => props.modelValue, (isOpen, wasOpen) => {
@@ -123,7 +124,7 @@ onBeforeUnmount(() => {
 
 // Emit rather than clear a flag: the route controller behind this model has a history entry to pop,
 // and closing any other way would leave it stranded.
-function onClose(): void {
+function onDone(): void {
   emit('update:modelValue', false);
 }
 </script>
@@ -131,13 +132,17 @@ function onClose(): void {
 <template>
   <!-- Opened by VpnHoodApp.showRemoteAccessDialog, from the TV UI only: a phone that opened the app
        over the LAN never sees an entry, and the app refuses it the calls anyway. -->
-  <v-dialog :model-value="modelValue" :max-width="isLandscape ? 720 : 480" @update:model-value="onClose()" @after-enter="onAfterEnter">
+  <!-- close-on-back off: the route decides (Back pops this dialog's entry). Vuetify's own Back
+       handling cancels the navigation and closes the dialog itself, and when this dialog sits on
+       another routed one (the home badge's), the pop that follows was taken by that one as a Back
+       of its own. -->
+  <v-dialog :model-value="modelValue" :max-width="isLandscape ? 720 : 480" :close-on-back="false" @update:model-value="onDone()" @after-enter="onAfterEnter">
     <v-card color="general-dialog" class="text-general-dialog-text">
       <v-card-title class="text-center text-wrap mt-2">{{ locale('REMOTE_ACCESS') }}</v-card-title>
 
       <!-- The code with its addresses on one side and every line of text on the other once the
            viewport is a landscape one, which a TV always is: stacked, the card is taller than a
-           540px panel and scrolls, which a remote parked on Close cannot do. Portrait keeps the
+           540px panel and scrolls, which a remote parked on Done cannot do. Portrait keeps the
            stack, code first. -->
       <v-card-text class="remote-access-body">
         <div class="remote-access-code">
@@ -176,9 +181,11 @@ function onClose(): void {
 
       <v-card-actions>
         <v-spacer/>
-        <!-- Focused on arrival, so a remote has something under it: this dialog is only ever raised
-             on a device driven by a D-pad, which has no way to reach an unfocused control. -->
-        <v-btn ref="closeBtnRef" :text="locale('CLOSE')" @click="onClose()"/>
+        <!-- Done, not Close: the button ends the remote session, which the note above says in the
+             same word. Focused on arrival, so a remote has something under it: this dialog is only
+             ever raised on a device driven by a D-pad, which has no way to reach an unfocused
+             control. -->
+        <v-btn ref="doneBtnRef" :text="locale('DONE')" @click="onDone()"/>
       </v-card-actions>
     </v-card>
   </v-dialog>
