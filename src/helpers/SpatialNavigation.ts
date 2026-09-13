@@ -180,7 +180,72 @@ function onKeydown(e: KeyboardEvent): void {
     window.scrollBy({ top: direction === 'down' ? SCROLL_STEP : -SCROLL_STEP, behavior: 'smooth' });
 }
 
-// Call once, from App.vue. The listener is a no-op off the TV UI.
+// Where the remote was, per scope: the page, or an overlay's content. A dialog closing takes its
+// focused button away with it, and the browser moves focus to the body without a word — no blur, no
+// focusout, the focus fixup fires nothing — so the next press started from the page's first target
+// (owner, the countries page's Clear dialog). Restored the moment an overlay stops being active,
+// while its buttons are still fading, so the ring is back on the button that opened it before the
+// next press. Nothing to go back to (a page that changed under it) leaves the start to App.vue's
+// first-control rule and the engine's first-target start.
+// A remembered element can also be gone for good — a button that a press replaced with a field, a
+// list row re-rendered — so its place is kept too, and the target now nearest that place takes over.
+const lastFocused = new WeakMap<Element, { el: HTMLElement; rect: DOMRect }>();
+
+function scopeRootOf(el: Element): Element {
+  return el.closest('.v-overlay__content') ?? document.body;
+}
+
+function onFocusIn(e: FocusEvent): void {
+  if (e.target instanceof HTMLElement && e.target !== document.body)
+    lastFocused.set(scopeRootOf(e.target), { el: e.target, rect: rowOf(e.target).getBoundingClientRect() });
+}
+
+function centerDistance(a: DOMRect, b: DOMRect): number {
+  return Math.hypot((a.left + a.right) / 2 - (b.left + b.right) / 2, (a.top + a.bottom) / 2 - (b.top + b.bottom) / 2);
+}
+
+function restoreFocus(): void {
+  const active = document.activeElement;
+  const lost = !active || active === document.body || active.closest('.v-overlay:not(.v-overlay--active)') !== null;
+  if (!lost)
+    return;
+
+  const root = scopeRoot();
+  const remembered = lastFocused.get(root);
+  if (!remembered)
+    return;
+
+  if (remembered.el.isConnected && isTarget(remembered.el)) {
+    remembered.el.focus({ preventScroll: true });
+    return;
+  }
+
+  let nearest: HTMLElement | null = null;
+  let nearestDistance = Infinity;
+  for (const el of Array.from(root.querySelectorAll<HTMLElement>(TARGET_SELECTOR)).filter(isTarget)) {
+    const distance = centerDistance(remembered.rect, rowOf(el).getBoundingClientRect());
+    if (distance < nearestDistance) {
+      nearest = el;
+      nearestDistance = distance;
+    }
+  }
+  nearest?.focus({ preventScroll: true });
+}
+
+function onMutation(records: MutationRecord[]): void {
+  if (!VpnHoodApp.instance.data.isTvUi)
+    return;
+
+  // an overlay going inactive, or the focused element gone with a re-render
+  const overlayClosed = records.some(r => r.type === 'attributes' && r.target instanceof Element
+    && r.target.classList.contains('v-overlay') && !r.target.classList.contains('v-overlay--active'));
+  if (overlayClosed || !document.activeElement || document.activeElement === document.body)
+    restoreFocus();
+}
+
+// Call once, from App.vue. Everything here is a no-op off the TV UI.
 export function installSpatialNavigation(): void {
   document.addEventListener('keydown', onKeydown, true);
+  document.addEventListener('focusin', onFocusIn, true);
+  new MutationObserver(onMutation).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 }
