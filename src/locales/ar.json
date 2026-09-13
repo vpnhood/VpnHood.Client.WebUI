@@ -631,7 +631,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "لا يوجد جهاز متصل بعد.",
   "REMOTE_ACCESS_CONNECTED_FROM": "متصل من {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "افتح الخوادم على هاتفك لإضافة أو إزالة الخوادم.",
-  "MANAGE_FROM_YOUR_PHONE": "أدر من هاتفك",
+  "MANAGE_FROM_YOUR_PHONE": "من هاتفك",
   "ACCEPT_AND_CONTINUE": "قبول ومتابعة",
   "ALLOW_ANONYMOUS_TRACKER": "مشاركة بيانات الاستخدام مجهولة المصدر",
   "ALLOW_ANONYMOUS_TRACKER_DESC": "ساعدنا في تحسين التطبيق عن طريق إرسال بيانات الاستخدام والتشخيص مجهولة المصدر.",
