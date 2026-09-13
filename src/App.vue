@@ -178,7 +178,7 @@ onMounted(async () => {
       <general-snackbar v-model="vhApp.data.uiState.generalSnackbarState.isShow" />
 
       <!-- General confirm dialog -->
-      <confirm-dialog v-model="vhApp.data.uiState.confirmDialogState.isShow" />
+      <confirm-dialog v-model="vhApp.confirmDialogModel.isVisible" />
 
       <!-- Shown in place of following an outbound link on a device that cannot open one - see
            VpnHoodApp.onExternalLinkClick. Mounted once here, beside the other global dialogs,

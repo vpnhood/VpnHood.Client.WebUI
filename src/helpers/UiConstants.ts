@@ -24,6 +24,7 @@ export class UiConstants {
 export enum ComponentName {
   NavigationDrawer = 'NavigationDrawer',
   ErrorDialog = 'ErrorDialog',
+  ConfirmDialog = 'ConfirmDialog',
   AddServerDialog = 'AddServerDialog',
   RenameServerDialog = 'RenameServerDialog',
   ConfirmDeleteServerDialog = 'ConfirmDeleteServerDialog',

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { useDialogFocus } from '@/helpers/InitialFocus';
@@ -13,20 +14,42 @@ const props = defineProps<{
   modelValue: boolean,
 }>();
 
-function onConfirm(): void{
-  vhApp.confirmDialogDeferred?.resolve(true);
-  vhApp.data.uiState.confirmDialogState.isShow = false;
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void,
+}>();
+
+// Answered once: by a button, or by the dialog closing some other way (Back pops its route entry).
+function settle(answer: boolean): void {
+  vhApp.confirmDialogDeferred?.resolve(answer);
+  vhApp.confirmDialogDeferred = null;
 }
-function onCancel(): void{
-  vhApp.confirmDialogDeferred?.resolve(false);
-  vhApp.data.uiState.confirmDialogState.isShow = false;
+
+function onConfirm(): void {
+  settle(true);
+  emit('update:modelValue', false);
 }
+
+function onCancel(): void {
+  settle(false);
+  emit('update:modelValue', false);
+}
+
+watch(() => props.modelValue, (isOpen, wasOpen) => {
+  if (!isOpen && wasOpen)
+    settle(false);
+});
 </script>
 
 <template>
+    <!-- Route-controlled (App.vue binds it to VpnHoodApp.confirmDialogModel): Back pops the entry
+         and the watcher above answers No. close-on-back is off because Vuetify would otherwise
+         intercept that Back itself, and for a persistent dialog it cancels the navigation and
+         shakes, so the dialog could never be closed by Back. persistent stays: a question is not
+         dismissed by a click beside it. -->
     <v-dialog
       :modelValue="props.modelValue"
       :persistent="true"
+      :close-on-back="false"
       @after-enter="onAfterEnter"
       >
       <v-card

@@ -40,6 +40,7 @@ export class VpnHoodApp {
   public errorDialogModel: ComponentRouteController;
   public openOnPhoneDialogModel: ComponentRouteController;
   public remoteAccessDialogModel: ComponentRouteController;
+  public confirmDialogModel: ComponentRouteController;
   private lastReloadNumber: number = 0;
   private lastStateJson: string = '';
   private lastSavedUserSettingsJson: string = '';
@@ -64,6 +65,7 @@ export class VpnHoodApp {
     this.errorDialogModel = new ComponentRouteController(ComponentName.ErrorDialog);
     this.openOnPhoneDialogModel = new ComponentRouteController(ComponentName.OpenOnPhoneDialog);
     this.remoteAccessDialogModel = new ComponentRouteController(ComponentName.RemoteAccessDialog);
+    this.confirmDialogModel = new ComponentRouteController(ComponentName.ConfirmDialog);
     this.data.uiState.configTime = this.data.state.configTime;
     this.data.uiState.isReportSendingAvailable = vhFirebase !== null;
     // appData arrives freshly fetched, so it is the persisted truth saveUserSetting diffs against.
@@ -682,13 +684,16 @@ export class VpnHoodApp {
     await this.reloadSettings();
   }
 
+  // Route-controlled like every other dialog, so that Back closes it as No instead of moving the
+  // page underneath it (a TV remote, or the keyboard's Backspace standing in for it). The answer
+  // comes from the dialog: Yes, No, or its closing by Back.
   public showConfirmDialog(title: string, message: string): Promise<boolean> {
     const confirmDialogState = this.data.uiState.confirmDialogState;
-    confirmDialogState.isShow = true;
     confirmDialogState.title = title;
     confirmDialogState.message = message;
 
     this.confirmDialogDeferred = createDeferred<boolean>();
+    this.confirmDialogModel.show(true).then();
     return this.confirmDialogDeferred.promise;
   }
 }
