@@ -632,6 +632,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "Устройства пока не подключены.",
   "REMOTE_ACCESS_CONNECTED_FROM": "Подключено с {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "Откройте раздел «Серверы» на телефоне, чтобы управлять ими.",
+  "REMOTE_ACCESS_HINT_SETTINGS": "Откройте Настройки телефона, чтобы изменить их.",
   "MANAGE_FROM_YOUR_PHONE": "С телефона",
   "ACCEPT_AND_CONTINUE": "Принять и продолжить",
   "ALLOW_ANONYMOUS_TRACKER": "Передавать анонимные данные",

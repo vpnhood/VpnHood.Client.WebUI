@@ -632,6 +632,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "尚未连接设备。",
   "REMOTE_ACCESS_CONNECTED_FROM": "已从 {address} 连接。",
   "REMOTE_ACCESS_HINT_SERVERS": "在手机上打开“服务器”以添加或移除服务器。",
+  "REMOTE_ACCESS_HINT_SETTINGS": "请在手机的“设置”中进行更改。",
   "MANAGE_FROM_YOUR_PHONE": "在手机上",
   "ACCEPT_AND_CONTINUE": "同意并继续",
   "ALLOW_ANONYMOUS_TRACKER": "共享匿名使用数据",

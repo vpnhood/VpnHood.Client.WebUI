@@ -632,6 +632,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "Henüz bağlı cihaz yok.",
   "REMOTE_ACCESS_CONNECTED_FROM": "{address} adresinden bağlanıldı.",
   "REMOTE_ACCESS_HINT_SERVERS": "Sunucu ekleyip çıkarmak için telefonunuzda Sunucular'ı açın.",
+  "REMOTE_ACCESS_HINT_SETTINGS": "Değiştirmek için telefonunuzda Ayarlar'ı açın.",
   "MANAGE_FROM_YOUR_PHONE": "Telefonunuzdan",
   "ACCEPT_AND_CONTINUE": "Kabul et ve devam et",
   "ALLOW_ANONYMOUS_TRACKER": "Anonim kullanım verilerini paylaş",

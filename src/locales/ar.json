@@ -632,6 +632,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "لا يوجد جهاز متصل بعد.",
   "REMOTE_ACCESS_CONNECTED_FROM": "متصل من {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "افتح الخوادم على هاتفك لإضافة أو إزالة الخوادم.",
+  "REMOTE_ACCESS_HINT_SETTINGS": "افتح الإعدادات على هاتفك لتغييرها.",
   "MANAGE_FROM_YOUR_PHONE": "من هاتفك",
   "ACCEPT_AND_CONTINUE": "قبول ومتابعة",
   "ALLOW_ANONYMOUS_TRACKER": "مشاركة بيانات الاستخدام مجهولة المصدر",

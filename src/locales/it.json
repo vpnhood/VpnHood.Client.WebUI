@@ -632,6 +632,7 @@
   "REMOTE_ACCESS_NO_DEVICE": "Nessun dispositivo connesso.",
   "REMOTE_ACCESS_CONNECTED_FROM": "Connesso da {address}.",
   "REMOTE_ACCESS_HINT_SERVERS": "Apri i server sul telefono per aggiungerli o rimuoverli.",
+  "REMOTE_ACCESS_HINT_SETTINGS": "Apri le Impostazioni sul tuo telefono per modificarle.",
   "MANAGE_FROM_YOUR_PHONE": "Dal telefono",
   "ACCEPT_AND_CONTINUE": "Accetta e continua",
   "ALLOW_ANONYMOUS_TRACKER": "Condividi dati di utilizzo anonimi",
