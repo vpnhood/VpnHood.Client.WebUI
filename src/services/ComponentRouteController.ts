@@ -58,11 +58,19 @@ export class ComponentRouteController {
             // so loop may occur
             const query = { ...route.query };
             delete query[componentName];
-             await router.replace({ path: route.path, query: query });
+            const pageLocation = router.resolve({ path: route.path, query: query }).fullPath;
+            await router.replace(pageLocation);
 
-            // remove the route from browser history
-            /// router.replace can not remove the history entry
-            router.back();
+            // Remove the entry the dialog pushed from the browser history (router.replace cannot) -
+            // but only when the entry below it is this page, which is what the push put it on top of.
+            // It is not when the dialog was raised while a navigation away was being cancelled: a
+            // leave guard that shows a message runs after the browser has already moved to the
+            // previous page, so the dialog's entry sits on top of THAT, and going back would leave
+            // the page, run the guard, and show the dialog again, for ever (the countries page's
+            // "enable at least one country", 2026-09-13). The router records where each entry
+            // came from in history.state.back.
+            if (window.history.state?.back === pageLocation)
+                router.back();
         }
     }
 }

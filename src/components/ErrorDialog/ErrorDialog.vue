@@ -7,9 +7,13 @@ import { UiConstants } from '@/helpers/UiConstants';
 import LearningButton from '@/components/LearningButton.vue';
 import PremiumByCode from '@/components/PurchaseSubscription/PremiumByCode.vue';
 import router from '@/services/router';
+import { useDialogFocus } from '@/helpers/InitialFocus';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+// On a TV the message opens with Close under the remote: a control rather than the dialog's
+// wrapper, which is where Vuetify parks focus and where the arrows have nowhere to go.
+const { target: closeBtnRef, onAfterEnter } = useDialogFocus();
 
 const props = defineProps<{
   modelValue: boolean,
@@ -84,6 +88,7 @@ async function closeDialog(): Promise<void> {
     :modelValue="props.modelValue"
     @update:modelValue="emit('update:modelValue',$event)"
     :persistent="true"
+    @after-enter="onAfterEnter"
   >
     <v-card
       :title="locale('MESSAGE')"
@@ -182,7 +187,7 @@ async function closeDialog(): Promise<void> {
 
       <v-card-actions >
         <!-- Close -->
-        <v-btn :text="locale('CLOSE')" @click="closeDialog()" />
+        <v-btn ref="closeBtnRef" :text="locale('CLOSE')" @click="closeDialog()" />
       </v-card-actions>
 
     </v-card>

@@ -62,6 +62,11 @@ function rowOf(el: HTMLElement): HTMLElement {
   return el.closest<HTMLElement>(ROW_SELECTOR) ?? el;
 }
 
+function isRtl(): boolean {
+  const app = document.querySelector('.v-application') ?? document.documentElement;
+  return getComputedStyle(app).direction === 'rtl';
+}
+
 function isTextEntry(el: Element | null): boolean {
   return el instanceof HTMLTextAreaElement
     || (el instanceof HTMLInputElement && TEXT_INPUT_TYPES.has(el.type))
@@ -107,8 +112,13 @@ function scoreOf(from: DOMRect, to: DOMRect, direction: Direction): number | nul
   if (orthogonal > primary * cone.slope + cone.base)
     return null;
 
-  const centerOffset = Math.abs((fromStart + fromEnd) / 2 - (toStart + toEnd) / 2);
-  return primary + 2 * orthogonal + 0.1 * centerOffset;
+  // Among rows that all overlap, the one whose leading edge is nearest wins: stepping down from a
+  // full-width row into a row of three buttons lands on the first of them, the reading start (left
+  // in LTR, right in RTL), not the middle one, which is what nearest-centre gave. Sideways, top edges.
+  const alignment = vertical
+    ? (isRtl() ? Math.abs(to.right - from.right) : Math.abs(to.left - from.left))
+    : Math.abs(to.top - from.top);
+  return primary + 2 * orthogonal + 0.1 * alignment;
 }
 
 // Moves focus one step; false when nothing lies that way.
