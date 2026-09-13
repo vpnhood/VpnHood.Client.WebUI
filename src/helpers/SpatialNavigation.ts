@@ -174,6 +174,22 @@ function onKeydown(e: KeyboardEvent): void {
     return;
   }
 
+  // A keyboard's Backspace stands in for the remote's Back key, which on a TV never reaches the page
+  // (the Android host turns it into the web view's own back). The same step here, so a keyboard on
+  // a TV, or the TV mode on Windows, can leave a page. Not inside a text field, where it deletes.
+  if (e.key === 'Backspace' || e.key === 'BrowserBack') {
+    if (isTextEntry(active))
+      return;
+    e.preventDefault();
+    window.history.back();
+    return;
+  }
+
+  // a modified arrow is not a D-pad press: Alt+Left is the browser's own Back, and Ctrl or Shift
+  // with an arrow keeps whatever meaning the control gives it
+  if (e.altKey || e.ctrlKey || e.metaKey)
+    return;
+
   const direction = DIRECTIONS[e.key];
   if (!direction)
     return;
