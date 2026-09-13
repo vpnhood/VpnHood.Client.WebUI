@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import i18n from '@/locales/i18n';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
+import vuetify from '@/theme/vuetify';
 import { RemoteAccessHint } from '@/helpers/UiConstants';
 import QrPlate from '@/components/OpenOnPhoneDialog/QrPlate.vue';
 import { useDialogFocus } from '@/helpers/InitialFocus';
@@ -20,6 +21,11 @@ const emit = defineEmits<{
 }>();
 
 const dialogState = vhApp.data.uiState.remoteAccessDialogState;
+
+// The stylesheet's shape rule (a landscape viewport, whatever the device), for the one thing CSS
+// cannot set: the dialog's width is an inline style from Vuetify's max-width prop.
+const isLandscape = computed(() =>
+  vuetify.display.width.value >= 700 && vuetify.display.width.value > vuetify.display.height.value);
 
 const remoteAccess = ref<RemoteAccessState | null>(null);
 const url = computed(() => remoteAccess.value?.urls[0] ?? null);
@@ -125,31 +131,43 @@ function onClose(): void {
 <template>
   <!-- Opened by VpnHoodApp.showRemoteAccessDialog, from the TV UI only: a phone that opened the app
        over the LAN never sees an entry, and the app refuses it the calls anyway. -->
-  <v-dialog :model-value="modelValue" max-width="480" @update:model-value="onClose()" @after-enter="onAfterEnter">
+  <v-dialog :model-value="modelValue" :max-width="isLandscape ? 720 : 480" @update:model-value="onClose()" @after-enter="onAfterEnter">
     <v-card color="general-dialog" class="text-general-dialog-text">
       <v-card-title class="text-center text-wrap">{{ locale('REMOTE_ACCESS') }}</v-card-title>
 
-      <v-card-text class="text-center">
-        <p class="text-body-medium mb-4">{{ locale('REMOTE_ACCESS_DESC') }}</p>
+      <!-- The code with its addresses on one side and every line of text on the other once the
+           viewport is a landscape one, which a TV always is: stacked, the card is taller than a
+           540px panel and scrolls, which a remote parked on Close cannot do. Portrait keeps the
+           stack, code first. -->
+      <v-card-text class="remote-access-body">
+        <div class="remote-access-code">
+          <template v-if="url">
+            <qr-plate :url="url"/>
+            <!-- A PC holds more than one address a phone could dial; a TV nearly never does. The
+                 code encodes the first, and the rest are here for anyone whose phone did not reach
+                 it. -->
+            <p v-if="otherUrls.length" dir="ltr" class="text-body-small text-disabled mt-1">
+              {{ locale('REMOTE_ACCESS_OTHER_ADDRESSES') }} {{ otherUrls.join('   ') }}
+            </p>
+          </template>
+          <v-progress-circular v-else indeterminate class="my-8"/>
+        </div>
 
-        <template v-if="url">
-          <qr-plate :url="url"/>
-          <!-- A PC holds more than one address a phone could dial; a TV nearly never does. The code
-               encodes the first, and the rest are here for anyone whose phone did not reach it. -->
-          <p v-if="otherUrls.length" dir="ltr" class="text-body-small text-disabled mt-1">
-            {{ locale('REMOTE_ACCESS_OTHER_ADDRESSES') }} {{ otherUrls.join('   ') }}
+        <div class="remote-access-text">
+          <p class="text-body-medium">{{ locale('REMOTE_ACCESS_DESC') }}</p>
+
+          <!-- Where on the phone to go next, and that the address dies with the dialog: boxed like
+               the app's other notices, because on a panel read from the sofa a bare sentence under
+               a code is just more text. -->
+          <alert-info v-if="hintText" icon="mdi-cellphone" :text="hintText" class="mt-4"/>
+          <alert-note v-if="!isAlwaysOn" :text="locale('REMOTE_ACCESS_KEEP_OPEN')" class="mt-2"/>
+
+          <p class="text-body-small mt-3">
+            {{ connectedDevices.length
+              ? locale('REMOTE_ACCESS_CONNECTED_FROM', { address: connectedDevices.join(', ') })
+              : locale('REMOTE_ACCESS_NO_DEVICE') }}
           </p>
-        </template>
-        <v-progress-circular v-else indeterminate class="my-8"/>
-
-        <p v-if="hintText" class="text-body-medium mt-4">{{ hintText }}</p>
-        <p v-if="!isAlwaysOn" class="text-body-small mt-4">{{ locale('REMOTE_ACCESS_KEEP_OPEN') }}</p>
-
-        <p class="text-body-small mt-2">
-          {{ connectedDevices.length
-            ? locale('REMOTE_ACCESS_CONNECTED_FROM', { address: connectedDevices.join(', ') })
-            : locale('REMOTE_ACCESS_NO_DEVICE') }}
-        </p>
+        </div>
       </v-card-text>
 
       <v-card-actions>
@@ -161,3 +179,40 @@ function onClose(): void {
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.remote-access-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.remote-access-code,
+.remote-access-text {
+  width: 100%;
+  min-width: 0;
+}
+
+/* The same shape rule as the home page: a landscape viewport, whatever the device. */
+@media (min-width: 700px) and (orientation: landscape) {
+  .remote-access-body {
+    flex-direction: row;
+    text-align: start;
+    gap: 24px;
+  }
+
+  /* As wide as its addresses need, up to half the card; the code sits centred over them. */
+  .remote-access-code {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 50%;
+    text-align: center;
+  }
+
+  .remote-access-text {
+    flex: 1 1 0;
+  }
+}
+</style>
