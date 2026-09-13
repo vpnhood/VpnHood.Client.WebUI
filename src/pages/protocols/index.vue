@@ -142,8 +142,7 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
       <v-card-item class="ps-2">
         <v-radio-group v-model="activeProtocol" :hide-details="true" color="highlight">
           <template v-for="item in protocolItems" :key="item.value">
-            <!-- data-tv-row: on the TV the row is the step and wears the ring, not the radio at its edge -->
-            <v-radio v-if="item.isShow" v-ripple :value="item.value" :disabled="!item.isEnabled" class="mb-3" data-tv-row>
+            <v-radio v-if="item.isShow" v-ripple :value="item.value" :disabled="!item.isEnabled" class="mb-3">
               <template v-slot:label>
                 <div class="d-flex flex-column align-start">
                   <!-- Radio label -->

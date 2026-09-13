@@ -12,9 +12,9 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 // - what a target is: a link, a button, a form control, or anything the app gave a tabindex other
 //   than -1 (Vuetify's list items carry -2; -1 is the app's mark for a decorative control);
 // - where a step goes: to the nearest target in the pressed direction, measured on rectangles —
-//   a target inside a data-tv-row element is measured on that row, so a radio's or a switch's step
-//   is the whole row and not the 40px control at its edge, and general.css draws the ring on the
-//   row for the same reason (Leanback's model: the row is the thing you are on);
+//   a target inside a data-tv-row element, or inside a radio, is measured on that row, so a radio's
+//   or a switch's step is the whole row and not the 40px control at its edge, and general.css draws
+//   the ring on the row for the same reason (Leanback's model: the row is the thing you are on);
 // - inside an open dialog or menu only that overlay's targets count, which is also what the eye sees.
 // Enter on a radio or a checkbox clicks it: the D-pad centre arrives as Enter, which those inputs
 // do nothing with by themselves (Space is their key). A text field keeps Left and Right for its
@@ -30,7 +30,8 @@ const DIRECTIONS: Record<string, Direction> = {
 };
 
 const TARGET_SELECTOR = 'a[href], button, input:not([type="hidden"]), select, textarea, [tabindex]';
-const ROW_SELECTOR = '[data-tv-row]';
+// Every radio in the app is a title over a description, so a radio's row is a row by nature.
+const ROW_SELECTOR = '[data-tv-row], .v-radio';
 const TEXT_INPUT_TYPES = new Set(['text', 'password', 'search', 'url', 'email', 'number', 'tel']);
 const SCROLL_STEP = 120;
 
@@ -118,8 +119,10 @@ function move(direction: Direction): boolean {
     ? document.activeElement
     : null;
 
-  // nothing (or nothing of ours) under the remote yet: the first target is the place to start
-  if (!active || !root.contains(active)) {
+  // nothing under the remote yet, or a container rather than a target (Vuetify parks focus on a
+  // dialog's content wrapper, whose rectangle holds every button, so no button is "below" it):
+  // the first target is the place to start
+  if (!active || !root.contains(active) || !targets.includes(active)) {
     targets[0]?.focus();
     return targets[0] !== undefined;
   }

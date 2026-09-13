@@ -45,19 +45,23 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     border-radius: 50%;
     box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
 }
-/* A row that stands for its control (data-tv-row: a radio's row, a switch's title row) wears the
-   ring itself, Leanback's model, and the control's own ring is put away. The D-pad engine
-   (helpers/SpatialNavigation.ts) steps by the row's rectangle for the same reason. focus-within
-   rather than focus-visible: the focused thing is the control inside, and a remote never focuses
-   by pointer, so every focus here is a keyboard one. */
-.v-application.tv-device [data-tv-row]:focus-within{
+/* A row that stands for its control wears the ring itself, Leanback's model, and the control's
+   own ring is put away: a switch's title row (data-tv-row), and every radio, since every radio in
+   the app is a title over a description. The D-pad engine (helpers/SpatialNavigation.ts) steps by
+   the row's rectangle for the same reason. focus-within rather than focus-visible: the focused
+   thing is the control inside, and a remote never focuses by pointer, so every focus here is a
+   keyboard one. Written out twice rather than with :is(), for the oldest WebViews. */
+.v-application.tv-device [data-tv-row]:focus-within,
+.v-application.tv-device .v-radio:focus-within{
     outline: 2px solid rgba(255, 255, 255, 0.9);
     outline-offset: 2px;
     border-radius: 8px;
     box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
 }
 .v-application.tv-device [data-tv-row] :focus-visible,
-.v-application.tv-device [data-tv-row] .v-selection-control__wrapper{
+.v-application.tv-device [data-tv-row] .v-selection-control__wrapper,
+.v-application.tv-device .v-radio :focus-visible,
+.v-application.tv-device .v-radio .v-selection-control__wrapper{
     outline: none !important;
     box-shadow: none !important;
 }
@@ -73,6 +77,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
 }
 /* Room for the ring when a step scrolls its target into view. */
 .v-application.tv-device [data-tv-row],
+.v-application.tv-device .v-radio,
 .v-application.tv-device [tabindex],
 .v-application.tv-device button,
 .v-application.tv-device a{
