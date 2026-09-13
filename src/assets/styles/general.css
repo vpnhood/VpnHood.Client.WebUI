@@ -45,6 +45,47 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, .title{
     border-radius: 50%;
     box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
 }
+/* A row that stands for its control (data-tv-row: a radio's row, a switch's title row) wears the
+   ring itself, Leanback's model, and the control's own ring is put away. The D-pad engine
+   (helpers/SpatialNavigation.ts) steps by the row's rectangle for the same reason. focus-within
+   rather than focus-visible: the focused thing is the control inside, and a remote never focuses
+   by pointer, so every focus here is a keyboard one. */
+.v-application.tv-device [data-tv-row]:focus-within{
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+    border-radius: 8px;
+    box-shadow: 0 0 18px 0 rgba(253, 251, 155, 0.64);
+}
+.v-application.tv-device [data-tv-row] :focus-visible,
+.v-application.tv-device [data-tv-row] .v-selection-control__wrapper{
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* A card item clips its content box, and a ring drawn just outside a row or a button inside it
+   was cut to its top and bottom lines. Nothing on a TV page relies on that clipping. */
+.v-application.tv-device .v-card-item__content{
+    overflow: visible;
+}
+/* A list item fills its list edge to edge, and a ring drawn outside it is cut to two lines by the
+   panel around it; drawn just inside, it is whole, and the row itself is what lights up. */
+.v-application.tv-device .v-list-item:focus-visible{
+    outline-offset: -3px;
+}
+/* Room for the ring when a step scrolls its target into view. */
+.v-application.tv-device [data-tv-row],
+.v-application.tv-device [tabindex],
+.v-application.tv-device button,
+.v-application.tv-device a{
+    scroll-margin: 24px;
+}
+/* Elsewhere the radio sits on its title line (radio-icon-top, below); a row read from the sofa
+   wants it centred on the whole label. */
+.v-application.tv-device .radio-icon-top{
+    align-items: center;
+}
+.v-application.tv-device .radio-icon-top > .v-selection-control__wrapper{
+    transform: none;
+}
 
 /*** -------------------- TV page inset and measure -------------------- ***/
 /* App.vue puts tv-page on every page's root element. Two things every page needs on a television

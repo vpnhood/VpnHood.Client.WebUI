@@ -28,7 +28,8 @@ function onSwitchChange(value: boolean | null): void {
 <template>
   <config-card class="pb-2">
     <v-card-item>
-      <div class="d-flex align-center justify-space-between">
+      <!-- data-tv-row: on the TV the whole title row is the step and wears the ring, not the switch -->
+      <div class="d-flex align-center justify-space-between" data-tv-row>
         <div class="d-flex align-center ga-2">
           <span>{{ props.title }}</span>
 

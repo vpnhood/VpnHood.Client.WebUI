@@ -96,11 +96,12 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
     <!-- Cloak Mode -->
     <config-card v-if="vhApp.data.features.isTcpProxySupported" class="pb-3">
 
-      <!-- Switch button -->
+      <!-- Switch button. data-tv-row: on the TV the whole title row is the step and wears the ring,
+           not the switch at its edge (helpers/SpatialNavigation.ts, general.css). -->
       <v-card-item class="pb-0">
-        <div class="d-flex align-center justify-space-between" :class="{ 'opacity-60': !canChangeCloakMode }">
+        <div class="d-flex align-center justify-space-between" data-tv-row :class="{ 'opacity-60': !canChangeCloakMode }">
           <span>{{ locale('CLOAK_MODE') }}</span>
-          <v-switch v-model="cloakMode" :disabled="!canChangeCloakMode" />
+          <v-switch v-model="cloakMode" :disabled="!canChangeCloakMode" hide-details />
         </div>
 
 
@@ -109,8 +110,9 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
         <alert-warning v-else-if="isCloakEnforcedByDomainFilter" :text="locale('ENFORCED_BY_DOMAIN_FILTER')"
           class="mb-2" />
 
-        <!-- Description and learn more button -->
-        <v-card-subtitle class="pb-0">
+        <!-- Description and learn more button. overflow-visible: a subtitle clips its overflow, and
+             on the TV that cut the focus ring off the button. -->
+        <v-card-subtitle class="pb-0 overflow-visible">
           <p>{{ locale("CLOAK_MODE_SHORT_DESC") }}</p>
           <v-btn :text="locale('LEARN_MORE')" variant="text" class="pa-0" :ripple="false" color="highlight"
             :append-icon="Util.getLocalizedRightChevron()" @click="router.push({ name: 'CLOAK_MODE' })" />
@@ -122,9 +124,9 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
         <v-divider opacity=".1" class="mb-2" />
 
         <!-- Switch button -->
-        <div class="d-flex align-center justify-space-between">
+        <div class="d-flex align-center justify-space-between" data-tv-row>
           <span>{{ locale('PROTOCOL_BLOCK_QUIC') }}</span>
-          <v-switch v-model="dropQuic" />
+          <v-switch v-model="dropQuic" hide-details />
         </div>
 
         <!-- Description and learn more button -->
@@ -140,7 +142,8 @@ const isCloakEnforecedByServer = computed<boolean>(() =>
       <v-card-item class="ps-2">
         <v-radio-group v-model="activeProtocol" :hide-details="true" color="highlight">
           <template v-for="item in protocolItems" :key="item.value">
-            <v-radio v-if="item.isShow" v-ripple :value="item.value" :disabled="!item.isEnabled" class="mb-3">
+            <!-- data-tv-row: on the TV the row is the step and wears the ring, not the radio at its edge -->
+            <v-radio v-if="item.isShow" v-ripple :value="item.value" :disabled="!item.isEnabled" class="mb-3" data-tv-row>
               <template v-slot:label>
                 <div class="d-flex flex-column align-start">
                   <!-- Radio label -->
