@@ -17,6 +17,7 @@ import ReconnectRequiredAlert from '@/components/ReconnectRequiredAlert.vue';
 import { AxiosError } from 'axios';
 import router from '@/services/router';
 import { focusFirstControl } from '@/helpers/InitialFocus';
+import { bridgeListsToSpatialNavigation } from '@/helpers/SpatialNavigation';
 
 const vhApp = VpnHoodApp.instance;
 const showEngineErrorDialog = ref(false);
@@ -97,6 +98,7 @@ const isConnectionRefused = (error: unknown): boolean => {
 
 onMounted(async () => {
   document.addEventListener('click', onExternalLinkClick, true);
+  bridgeListsToSpatialNavigation(); // a TV remote must get out of a Vuetify list by the arrows
   router.isReady().then(() => nextTick(onPageEntered));
 
   // Reload 'state' every 1 second if the app window is focused.

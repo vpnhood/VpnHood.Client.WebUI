@@ -187,6 +187,24 @@ function connectButtonText(): string {
 
         </home-config-btn>
 
+        <!-- Settings, TV UI only. The last row rather than a header button: the rows are the 10-foot
+             controls and the one path the remote walks, and on a TV "Settings" means managing the
+             app from a phone, which the value line says. Phone and desktop keep the drawer icon. -->
+        <home-config-btn
+          v-if="vhApp.data.isTvUi"
+          id="settingsButton"
+          prepend-icon="mdi-cog"
+          tabindex="9"
+          class="align-center mt-1"
+          @click="vhApp.showRemoteAccessDialog()"
+        >
+          <span class="config-btn-title">{{ locale('SETTINGS') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <span class="config-btn-value text-white text-body-small text-truncate limited-width-to-truncate opacity-50">
+            {{ locale('MANAGE_FROM_YOUR_PHONE') }}
+          </span>
+        </home-config-btn>
+
       </v-col>
 
     </v-row>
@@ -418,7 +436,8 @@ function connectButtonText(): string {
 
 #serverButton .v-btn__content,
 #excludeCountryButton .v-btn__content,
-#protocolButton .v-btn__content {
+#protocolButton .v-btn__content,
+#settingsButton .v-btn__content {
   flex-grow: 1;
   justify-content: start;
 }

@@ -33,7 +33,9 @@ function openDebugDialog() {
   <v-row ref="pageHeaderRef" class="align-center v-row--no-gutters mx-0">
 
     <!-- Navigation drawer button. On the TV UI the drawer is never opened: everything it leads to
-         is done from a phone through remote access, and Settings is the way there. -->
+         is done from a phone through remote access, and the way there is the Settings row at the
+         end of the home page (pages/index.vue), so the header holds nothing to focus. The column
+         stays, to keep the app name centred. -->
     <v-col cols="3">
       <v-app-bar-nav-icon
         v-if="!vhApp.data.isTvUi"
@@ -41,16 +43,6 @@ function openDebugDialog() {
         color="home-app-bar"
         class="ms-n3 me-0"
         @click="navigationDrawerModel.show()"
-      />
-      <v-btn
-        v-else
-        tabindex="1"
-        variant="text"
-        color="home-app-bar"
-        class="ms-n3 me-0"
-        prepend-icon="mdi-cog"
-        :text="locale('SETTINGS')"
-        @click="vhApp.showRemoteAccessDialog()"
       />
     </v-col>
 

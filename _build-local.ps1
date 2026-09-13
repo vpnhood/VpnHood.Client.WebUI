@@ -74,21 +74,27 @@ else {
     dotnet run --project $translatorProject --no-launch-profile -- --base "$solutionDir/src/locales/en.json" -m "gemini-flash-lite-latest";
     if ($LASTEXITCODE -gt 0) { throw "Translation failed. ExitCode: $LASTEXITCODE"; }
 
-    # Commit the results (locale files AND vh_translator/watches/en.watch.json). The watch file records
-    # the source text behind every key; if it is not committed, the next machine to run this retranslates
-    # everything from scratch. The pathspec keeps this commit to src/locales, so anything else you
-    # have staged is left untouched.
+    # Commit the results: the locale files AND the watch files. A watch file records the source text
+    # behind every key; if it is not committed, the next machine to run this retranslates everything
+    # from scratch. The pathspec keeps this commit to those paths, so anything else you have staged
+    # is left untouched.
     #
     # The watch file used to sit directly in vh_translator/; newer translator versions keep it in the
     # watches/ subfolder and migrate the old file on their first save (read from the old path, written
-    # to the new one, old one deleted). `git add -A` below stages both sides of that move, so the
-    # incremental state survives — do NOT move the file by hand, or an older translator build would
-    # stop finding it and retranslate every language.
-    $localesPath = "src/locales";
-    if (git -C $solutionDir status --porcelain -- $localesPath) {
+    # to the new one, old one deleted). Both places are in the pathspec, so both sides of that move
+    # are committed and the incremental state survives: the legacy files are listed through git, so
+    # one the migration deleted is still staged (:(glob) keeps * out of watches/), and each path is
+    # added only when it exists, since a pathspec that matches nothing makes git add fail. Do NOT
+    # move the file by hand, or an older translator build would stop finding it and retranslate
+    # every language.
+    $commitPaths = @("src/locales");
+    if (Test-Path (Join-Path $solutionDir "vh_translator/watches")) { $commitPaths += "vh_translator/watches"; }
+    $legacyWatchFiles = @(git -C $solutionDir ls-files -- ":(glob)vh_translator/*.watch.json");
+    if ($legacyWatchFiles.Count -gt 0) { $commitPaths += $legacyWatchFiles; }
+    if (git -C $solutionDir status --porcelain -- $commitPaths) {
         Write-Host "Committing updated locales ..." -ForegroundColor Magenta;
-        git -C $solutionDir add -A -- $localesPath;
-        git -C $solutionDir commit -m "Update translated locales" -- $localesPath;
+        git -C $solutionDir add -A -- $commitPaths;
+        git -C $solutionDir commit -m "Update translated locales" -- $commitPaths;
         if ($LASTEXITCODE -gt 0) { throw "Could not commit locales. ExitCode: $LASTEXITCODE"; }
     }
     else {
