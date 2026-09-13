@@ -133,7 +133,7 @@ function onClose(): void {
        over the LAN never sees an entry, and the app refuses it the calls anyway. -->
   <v-dialog :model-value="modelValue" :max-width="isLandscape ? 720 : 480" @update:model-value="onClose()" @after-enter="onAfterEnter">
     <v-card color="general-dialog" class="text-general-dialog-text">
-      <v-card-title class="text-center text-wrap">{{ locale('REMOTE_ACCESS') }}</v-card-title>
+      <v-card-title class="text-center text-wrap mt-2">{{ locale('REMOTE_ACCESS') }}</v-card-title>
 
       <!-- The code with its addresses on one side and every line of text on the other once the
            viewport is a landscape one, which a TV always is: stacked, the card is taller than a
@@ -160,13 +160,17 @@ function onClose(): void {
                the app's other notices, because on a panel read from the sofa a bare sentence under
                a code is just more text. -->
           <alert-info v-if="hintText" icon="mdi-cellphone" :text="hintText" class="mt-4"/>
-          <alert-note v-if="!isAlwaysOn" :text="locale('REMOTE_ACCESS_KEEP_OPEN')" class="mt-2"/>
+          <alert-note v-if="!isAlwaysOn" icon="mdi-timer-sand" :text="locale('REMOTE_ACCESS_KEEP_OPEN')" class="mt-2"/>
 
-          <p class="text-body-small mt-3">
-            {{ connectedDevices.length
-              ? locale('REMOTE_ACCESS_CONNECTED_FROM', { address: connectedDevices.join(', ') })
-              : locale('REMOTE_ACCESS_NO_DEVICE') }}
-          </p>
+          <!-- The one proof that the pairing worked, so it is the one line here that is loud;
+               "nothing yet" stays quiet. -->
+          <alert-success
+            v-if="connectedDevices.length"
+            icon="mdi-cellphone-link"
+            :text="locale('REMOTE_ACCESS_CONNECTED_FROM', { address: connectedDevices.join(', ') })"
+            class="mt-2"
+          />
+          <p v-else class="text-body-small text-disabled mt-3">{{ locale('REMOTE_ACCESS_NO_DEVICE') }}</p>
         </div>
       </v-card-text>
 
@@ -193,6 +197,12 @@ function onClose(): void {
 .remote-access-text {
   width: 100%;
   min-width: 0;
+}
+
+/* Vuetify tops the icon against a notice's first line; these are one or two lines read from a
+   distance, and the icon reads better centred on them. */
+.remote-access-text :deep(.v-alert__prepend) {
+  align-self: center;
 }
 
 /* The same shape rule as the home page: a landscape viewport, whatever the device. */

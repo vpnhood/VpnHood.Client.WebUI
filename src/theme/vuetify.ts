@@ -24,6 +24,7 @@ export default createVuetify({
     CardOnGrad: VCard,
     AlertWarning: VAlert,
     AlertInfo: VAlert,
+    AlertSuccess: VAlert,
     AlertNote: VAlert,
     ...buttonAliases, // BtnStyle1..7
   },

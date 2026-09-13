@@ -73,4 +73,5 @@ export const vuetifyDefaults = {
   AlertWarning: { ...baseAlert, type: 'warning' },
   AlertNote: { ...baseAlert, type: 'note' },
   AlertInfo: { ...baseAlert, type: 'info' },
+  AlertSuccess: { ...baseAlert, type: 'success' },
 };
