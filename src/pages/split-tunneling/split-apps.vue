@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { SplitAppMode } from '@/services/VpnHood.Client.Api';
 import {UiConstants} from "@/helpers/UiConstants";
+import { Util } from '@/helpers/Util';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { computed, onMounted, ref } from 'vue';
@@ -39,7 +40,7 @@ onMounted(async () => {
     const futureInstalledAppInfo: IListItemInfo = {
       id: "$",
       name: locale('ALL_FUTURE_APPS'),
-      icon: vhApp.isConnectApp() ? UiConstants.futureAppsIconConnect : UiConstants.futureAppsIconClient,
+      icon: Util.getAssetPath(vhApp.isConnectApp() ? UiConstants.futureAppsIconConnect : UiConstants.futureAppsIconClient),
       isSelected: splitMode.value === SplitAppMode.All || splitMode.value === SplitAppMode.Exclude
     };
     appList.value.push(futureInstalledAppInfo);

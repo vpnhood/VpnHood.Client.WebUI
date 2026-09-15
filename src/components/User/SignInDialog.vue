@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import { ApiException, SignInState } from '@/services/VpnHood.Client.Api';
+import { useDialogFocus } from '@/helpers/InitialFocus';
 
 // The sign-in chooser. The store/IdP method is the PRIMARY everywhere it exists — one prominent
 // button — and the portal's own email + password is the secondary path beneath it, for people who
@@ -11,6 +12,8 @@ import { ApiException, SignInState } from '@/services/VpnHood.Client.Api';
 // account website appears exactly once, as the "forgot password" escape hatch in the browser.
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
+// On a TV the dialog opens with the primary button under the remote.
+const { target: focusRef, onAfterEnter } = useDialogFocus();
 
 const props = defineProps<{
   modelValue: boolean;
@@ -18,6 +21,9 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
+  // the TV UI's 'Sign in on your phone': the page that mounted this dialog closes it and opens the
+  // pairing dialog in its place - both are routed, so the order is the page's to keep
+  (e: 'signInOnPhone'): void;
 }>();
 
 type Step = 'start' | 'password' | 'challenge' | 'backup-code';
@@ -75,6 +81,9 @@ const primaryBrand = computed(() => {
 const primaryBrandStyle = computed(() =>
   primaryBrand.value ? brandButtonStyles[primaryBrand.value] : undefined);
 const hasPasswordMethod = computed(() => vhApp.data.features.authProviderIds.includes('password'));
+// On the TV UI the email form is not offered - there is nothing to type on - and the phone stands
+// in for it: the pairing dialog, whose paired browser has the same form and the same app behind it.
+const isPhoneForEmail = computed(() => vhApp.data.isTvUi && hasPasswordMethod.value);
 // The account website is a WEB page, so it needs a browser to LEAVE the app with. Withheld where
 // there is none — the link would open nothing — which is asked of the device rather than guessed
 // from "is this a TV": a television with a browser installed opens it fine.
@@ -83,6 +92,12 @@ const accountWebsiteUrl = computed(() =>
 
 function close(): void {
   emit('update:modelValue', false);
+}
+
+// The phone is the TV's keyboard: the pairing dialog takes this one's place, with a hint saying
+// where on the phone to go, and it says so itself once the account arrives.
+function signInOnPhone(): void {
+  emit('signInOnPhone');
 }
 
 async function signInWithPrimary(): Promise<void> {
@@ -170,6 +185,7 @@ async function submitChallenge(): Promise<void> {
     :modelValue="props.modelValue"
     max-width="420"
     @update:modelValue="close()"
+    @after-enter="onAfterEnter"
   >
     <v-card color="general-dialog">
       <!-- Step 1: the chooser — store sign-in above, email beneath -->
@@ -180,6 +196,7 @@ async function submitChallenge(): Promise<void> {
                paths and the Apple mark takes the button text colour. -->
           <v-btn
             v-if="primaryMethod"
+            ref="focusRef"
             block
             size="large"
             :variant="primaryBrand ? 'flat' : undefined"
@@ -203,7 +220,23 @@ async function submitChallenge(): Promise<void> {
               </v-icon>
             </template>
           </v-btn>
-          <template v-if="hasPasswordMethod">
+          <template v-if="isPhoneForEmail">
+            <div v-if="primaryMethod" class="d-flex align-center my-4">
+              <v-divider />
+              <span class="mx-3 text-disabled text-body-small">{{ locale('OR') }}</span>
+              <v-divider />
+            </div>
+            <v-btn
+              block
+              variant="outlined"
+              size="large"
+              class="text-transform-none"
+              prepend-icon="mdi-cellphone-arrow-down"
+              :text="locale('SIGN_IN_ON_YOUR_PHONE')"
+              @click="signInOnPhone()"
+            />
+          </template>
+          <template v-else-if="hasPasswordMethod">
             <div v-if="primaryMethod" class="d-flex align-center my-4">
               <v-divider />
               <span class="mx-3 text-disabled text-body-small">{{ locale('OR') }}</span>

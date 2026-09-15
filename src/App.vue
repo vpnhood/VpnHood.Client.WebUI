@@ -5,6 +5,8 @@ import { ComponentRouteController } from './services/ComponentRouteController';
 import { ComponentName } from '@/helpers/UiConstants';
 import ErrorDialog from "@/components/ErrorDialog/ErrorDialog.vue";
 import LoadingDialog from "@/components/LoadingDialog.vue";
+import ContinueOnTvDialog from '@/components/ContinueOnTvDialog.vue';
+import ManagingTvBanner from '@/components/ManagingTvBanner.vue';
 import PrivacyPolicy from "@/pages/privacy-policy.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import GeneralSnackbar from '@/components/GeneralSnackbar/GeneralSnackbar.vue';
@@ -146,6 +148,9 @@ onMounted(async () => {
       <!-- position-relative anchors the overlaid reconnect-required bar to this element -->
       <v-main ref="mainRef" class="fill-height position-relative">
 
+        <!-- A browser on the network driving a TV: says so, on every page -->
+        <managing-tv-banner />
+
         <!-- Reconnect required bar -->
         <reconnect-required-alert />
 
@@ -170,6 +175,9 @@ onMounted(async () => {
 
       <!-- Global Loading dialog -->
       <loading-dialog v-model="vhApp.data.uiState.showLoadingDialog" />
+
+      <!-- A step whose UI is on the TV, seen from the browser that asked for it -->
+      <continue-on-tv-dialog v-model="vhApp.data.uiState.showContinueOnTvDialog" />
 
       <!-- Global alert dialog -->
       <error-dialog v-model="isShowErrorDialog" />

@@ -57,7 +57,9 @@ async function purchase(purchaseParams: PurchaseParams): Promise<void> {
   isShowPendingDialog.value = true;
   try {
     const billingClient = ClientApiFactory.instance.createBillingClient();
-    await billingClient.purchase(purchaseParams);
+    // the store's payment sheet opens on the device the app is on; from a phone managing a TV,
+    // that is the TV
+    await vhApp.withContinueOnTv(() => billingClient.purchase(purchaseParams));
     await vhApp.loadAccount();
 
     // Congratulate only what the refreshed account confirms. The store can answer a purchase with

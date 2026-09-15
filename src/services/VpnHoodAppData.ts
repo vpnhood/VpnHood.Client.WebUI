@@ -61,6 +61,13 @@ export class VpnHoodAppData {
     return this.features.isTv && !this.isRemote;
   }
 
+  // The other side of the same pairing: a browser on the network driving a TV's app. The full
+  // layout, plus a banner saying so, and a flow whose UI opens on the TV (the store's sign-in, its
+  // payment sheet) tells the person to look at the TV - see VpnHoodApp.withContinueOnTv.
+  get isManagingTv(): boolean {
+    return this.features.isTv && this.isRemote;
+  }
+
   get connectionState(): AppConnectionState {
     const orgConnectionState = this.state.connectionState;
 

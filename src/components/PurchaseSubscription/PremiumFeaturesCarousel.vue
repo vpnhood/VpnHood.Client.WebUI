@@ -157,7 +157,7 @@ onBeforeMount(() => {
 
 #rocketWrapper {
   position: relative;
-  background: url('@/assets/images/rocket-bg.webp') no-repeat top center;
+  background: url('/assets/images/rocket-bg.webp') no-repeat top center;
   background-size: contain;
   width: 100%;
   max-height: 335px;
@@ -170,7 +170,7 @@ onBeforeMount(() => {
 }
 
 #rocket {
-  background: url('@/assets/images/rocket.webp') no-repeat top center;
+  background: url('/assets/images/rocket.webp') no-repeat top center;
   background-size: contain;
   width: 100%;
   height: 56%;
@@ -179,7 +179,7 @@ onBeforeMount(() => {
 }
 
 #rocketSmoke {
-  background: url('@/assets/images/rocket-smoke.webp') no-repeat top center;
+  background: url('/assets/images/rocket-smoke.webp') no-repeat top center;
   background-size: contain;
   width: 42%;
   height: 35%;

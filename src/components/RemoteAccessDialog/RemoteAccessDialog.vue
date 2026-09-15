@@ -41,14 +41,19 @@ const hintText = computed(() => {
   switch (dialogState.hint) {
     case RemoteAccessHint.Servers: return locale('REMOTE_ACCESS_HINT_SERVERS');
     case RemoteAccessHint.Settings: return locale('REMOTE_ACCESS_HINT_SETTINGS');
+    case RemoteAccessHint.SignIn: return locale('REMOTE_ACCESS_HINT_SIGN_IN');
     default: return null;
   }
 });
 
 // This dialog owns the listener: it starts it on opening and stops it on closing, and the app keeps
-// it alive in between. Hidden counts as closed, because on Android the activity stays alive in the
-// background with nothing on screen and the app cannot tell. Coming back starts it again, on the
-// same port when it is free, so a phone already on the address just reconnects.
+// it alive in between. Hidden does NOT count as closed (it did until 2026-09-13): a step the phone
+// asks for can put the store's sign-in or payment sheet over this page on the TV, and stopping
+// then cut the phone off in the middle of the very thing it was doing. So the listener lives
+// while the dialog is open, and ends with it - Done, Back, a click outside, the page unloading -
+// or when the app drops the activity. The cost: on Android, Home pressed with this dialog open
+// leaves the listener up in the background until the activity is destroyed; §4.3's rule that
+// backgrounding ends it now holds only for the process, not the screen.
 async function start(): Promise<void> {
   remoteAccess.value = await vhApp.appClient.startRemoteAccess();
 }
@@ -61,20 +66,20 @@ async function stop(): Promise<void> {
 }
 
 // The presence list, polled only while the dialog is open. Never before the first start answered:
-// until then there is nothing to refresh.
+// until then there is nothing to refresh. Opened for a sign-in, the same poll watches for the
+// account: the phone signs the app in, and this screen is the one looking at the TV.
 async function refresh(): Promise<void> {
   if (document.hidden || remoteAccess.value === null)
     return;
 
   remoteAccess.value = await vhApp.appClient.getRemoteAccess();
+  if (dialogState.hint === RemoteAccessHint.SignIn && !vhApp.data.userState.userAccount)
+    await vhApp.loadAccount();
 }
 
-function onVisibilityChange(): void {
-  if (document.hidden)
-    void stop();
-  else
-    void start();
-}
+// The sign-in's own proof, once the phone has done it.
+const signedInEmail = computed(() =>
+  dialogState.hint === RemoteAccessHint.SignIn ? vhApp.data.userState.userAccount?.email ?? null : null);
 
 // Unloaded, not hidden: a request started now would be cancelled with the page, and a beacon is
 // the one request the browser promises to deliver. A POST with no body, which is all the endpoint
@@ -90,7 +95,6 @@ function onPageHide(): void {
 let refreshTimer = 0;
 
 function onOpened(): void {
-  document.addEventListener('visibilitychange', onVisibilityChange);
   window.addEventListener('pagehide', onPageHide);
   refreshTimer = window.setInterval(() => void refresh(), 2000);
   void start();
@@ -99,7 +103,6 @@ function onOpened(): void {
 // Cleared after the stop, which reads isAlwaysOn off it; and cleared at all so the next opening
 // shows the spinner until its own start answers, not last time's address on a port that may differ.
 function onClosed(): void {
-  document.removeEventListener('visibilitychange', onVisibilityChange);
   window.removeEventListener('pagehide', onPageHide);
   window.clearInterval(refreshTimer);
   void stop();
@@ -176,6 +179,13 @@ function onDone(): void {
             class="mt-2"
           />
           <p v-else class="text-body-small text-disabled mt-3">{{ locale('REMOTE_ACCESS_NO_DEVICE') }}</p>
+
+          <alert-success
+            v-if="signedInEmail"
+            icon="mdi-account-check"
+            :text="locale('SIGNED_IN_AS_X', { email: signedInEmail })"
+            class="mt-2"
+          />
         </div>
       </v-card-text>
 

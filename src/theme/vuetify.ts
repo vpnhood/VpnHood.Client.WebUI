@@ -1,4 +1,7 @@
-import '@mdi/font/css/materialdesignicons.css';
+// The icon font is the subset in the assets folder, not @mdi/font's 1.3 MB stylesheet and four
+// font files: build/icon-font-plugin.ts writes this module with the @font-face and one class per
+// icon the pages use.
+import 'virtual:vh-icon-font.css';
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import { en, fa } from 'vuetify/locale';

@@ -63,9 +63,10 @@ async function submitRate() {
     await vhApp.appClient.setUserReview(userReview);
     await vhApp.reloadState();
 
-    // Show the Google Play dialog if the user rates 3.
+    // Show the Google Play dialog if the user rates 3. The store's prompt opens on the device the
+    // app is on; from a phone managing a TV, that is the TV.
     if (selectedRate.value == 3)
-      await vhApp.intentsClient.requestUserReview();
+      await vhApp.withContinueOnTv(() => vhApp.intentsClient.requestUserReview());
 
     // Production mode only
     if (!import.meta.env.DEV)

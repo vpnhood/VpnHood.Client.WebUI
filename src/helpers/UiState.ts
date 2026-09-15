@@ -25,6 +25,9 @@ export class UiState {
 
   public showLoadingDialog: boolean = false;
 
+  // A flow whose UI is on the TV while this browser waits for it - VpnHoodApp.withContinueOnTv.
+  public showContinueOnTvDialog: boolean = false;
+
   // Mirrors "VpnHoodApp.vhFirebase is available" for the templates. The app instance itself is
   // deliberately non-reactive (see VpnHoodAppData's header note), so a template cannot watch that
   // field directly, and it now changes at runtime as the user grants/withdraws analytics consent.

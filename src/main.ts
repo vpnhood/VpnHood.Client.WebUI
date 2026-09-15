@@ -18,6 +18,10 @@ async function main(): Promise<void> {
   try {
     console.log("Current Mode: " + import.meta.env.MODE);
 
+    // The fallback language, from the assets folder, before anything renders - the error page
+    // below included, which is why it comes before the app is created.
+    await loadLocale('en');
+
     // Init app
     const vpnHoodApp: VpnHoodApp = await VpnHoodApp.create();
     const app = createApp(App);

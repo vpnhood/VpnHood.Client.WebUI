@@ -29,9 +29,7 @@ const label = computed(() => isSignedIn.value ? locale('RESTORE_PURCHASE') : loc
 // More than one way in (an identity provider + the account website's password), or password alone →
 // the chooser dialog; vhApp.signIn() asks for a primary provider and password is deliberately not
 // one, so a password-only build could never sign in through it. Mirrors NavigationDrawer.
-const hasSignInChoice = computed(() =>
-  vhApp.data.features.authProviderIds.length > 1 ||
-  vhApp.data.features.authProviderIds[0] === 'password');
+const hasSignInChoice = computed(() => vhApp.hasSignInChoice());
 
 // Is the signed-in account already served (lifecycle §8) — a store subscription, or the code the
 // backend chose for it? Read as a function, never inline: it is asked AFTER signing in, where
@@ -69,7 +67,7 @@ async function restore(): Promise<void> {
     // A build with no store has nothing to ask; signing in and refreshing the account is the whole
     // of the restore there, and calling into a billing service it does not have would only throw.
     const restored = vhApp.data.features.isBillingSupported
-      ? await ClientApiFactory.instance.createBillingClient().restorePurchase()
+      ? await vhApp.withContinueOnTv(() => ClientApiFactory.instance.createBillingClient().restorePurchase())
       : false;
     await vhApp.loadAccount();
 

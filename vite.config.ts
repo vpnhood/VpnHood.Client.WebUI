@@ -7,6 +7,8 @@ import vuetify from 'vite-plugin-vuetify';
 import legacy from '@vitejs/plugin-legacy';
 import postcssPresetEnv from 'postcss-preset-env';
 import { markdownContent } from './build/markdown-content-plugin';
+import { iconFont } from './build/icon-font-plugin';
+import { assetsFolder } from './build/assets-folder-plugin';
 import { version } from './package.json';
 
 // The SPA carries its own version line, bumped by CI on every published build, so a shipped bundle
@@ -61,8 +63,19 @@ export default defineConfig(({ command }) => ({
   optimizeDeps: {
     exclude: ['vuetify'],
   },
+  // The assets folder: /assets in the bundle holds the images, the flags, the fonts, the locale
+  // files and the content documents under their own names - no hash, no inlining - because the
+  // pages load them from there at runtime, and so does the native UI (Avalonia) from the same
+  // extracted folder. src/assets is its source (with src/locales and src/content); the two plugins add what is generated (the
+  // subset icon font) and what the translator owns (locales, content). Vite's own hashed output
+  // goes to /bundle so the two never mix.
+  build: {
+    assetsDir: 'bundle',
+  },
   plugins: [
     markdownContent(),
+    iconFont(),
+    assetsFolder(),
     VueRouter({
       extensions: ['.vue'],
       importMode: 'async', // Keep lazy-loading

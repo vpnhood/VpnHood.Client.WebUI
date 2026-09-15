@@ -7,7 +7,7 @@ import { VpnHoodApp } from '@/services/VpnHoodApp';
 import i18n from '@/locales/i18n';
 import router from '@/services/router';
 import { ConnectManager } from '@/helpers/ConnectManager';
-import { ComponentName } from '@/helpers/UiConstants';
+import { ComponentName, RemoteAccessHint } from '@/helpers/UiConstants';
 import { Util } from '@/helpers/Util';
 import { useInitialFocus } from '@/helpers/InitialFocus';
 import { computed, ref } from 'vue';
@@ -20,11 +20,41 @@ import HomeBadge from '@/components/Home/HomeBadge.vue';
 import ConnectionInfo from '@/components/Home/ConnectionInfo.vue';
 import SplitCountryButton from '@/components/Home/SplitCountryButton.vue';
 import ServersButton from '@/components/Home/ServersButton.vue';
+import SignInDialog from '@/components/User/SignInDialog.vue';
 
 const vhApp = VpnHoodApp.instance;
 const locale = i18n.global.t;
 
 const badgeDialogModel = ref(new ComponentRouteController(ComponentName.BadgeDialog));
+// The TV UI's sign-in dialog, through the route so the remote's Back closes it; the drawer, which
+// holds the account elsewhere, never opens on a TV.
+const signInDialogModel = ref(new ComponentRouteController(ComponentName.SignInDialog));
+
+// The chooser's entry popped first, then the pairing dialog pushed on the page: two routed dialogs
+// closing and opening at once race in the history, and a pairing dialog stacked on the chooser
+// would leave a person who has just signed in looking at Sign in with Google.
+async function onSignInOnPhone(): Promise<void> {
+  await signInDialogModel.value.show(false);
+  vhApp.showRemoteAccessDialog(RemoteAccessHint.SignIn);
+}
+
+async function onAccountClick(): Promise<void> {
+  if (vhApp.data.userState.userAccount) {
+    await router.push({ name: 'ACCOUNT' });
+    return;
+  }
+  // no store method to press here: the phone is the keyboard, straight to the pairing dialog
+  if (!vhApp.primaryProviderId()) {
+    vhApp.showRemoteAccessDialog(RemoteAccessHint.SignIn);
+    return;
+  }
+  // the chooser whenever there is something to choose; a lone store method keeps the direct flow,
+  // as in the drawer
+  if (vhApp.hasSignInChoice())
+    await signInDialogModel.value.show();
+  else
+    await vhApp.signIn();
+}
 // On a TV the page opens with Connect under the remote; see InitialFocus.
 const connectBtnRef = useInitialFocus();
 const isShowUserReview = computed((): boolean => vhApp.data.state.userReviewRecommended !== 0);
@@ -187,6 +217,24 @@ function connectButtonText(): string {
 
         </home-config-btn>
 
+        <!-- Account, TV UI only, for a build with an account: signed out it opens the sign-in dialog
+             (where the phone stands in for the email form - see SignInDialog), signed in the
+             account page. -->
+        <home-config-btn
+          v-if="vhApp.data.isTvUi && vhApp.data.features.isAccountSupported"
+          id="accountButton"
+          prepend-icon="mdi-account-circle"
+          tabindex="9"
+          class="align-center mt-1"
+          @click="onAccountClick()"
+        >
+          <span class="config-btn-title">{{ locale('ACCOUNT') }}</span>
+          <v-icon :icon="Util.getLocalizedRightChevron()" />
+          <span class="config-btn-value text-white text-body-small text-truncate limited-width-to-truncate opacity-50">
+            {{ vhApp.data.userState.userAccount?.email ?? locale('SIGN_IN') }}
+          </span>
+        </home-config-btn>
+
         <!-- Settings, TV UI only. The last row rather than a header button: the rows are the 10-foot
              controls and the one path the remote walks, and on a TV "Settings" means managing the
              app from a phone, which the value line says. Phone and desktop keep the drawer icon. -->
@@ -194,7 +242,7 @@ function connectButtonText(): string {
           v-if="vhApp.data.isTvUi"
           id="settingsButton"
           prepend-icon="mdi-cog"
-          tabindex="9"
+          tabindex="10"
           class="align-center mt-1"
           @click="vhApp.showRemoteAccessDialog()"
         >
@@ -213,6 +261,7 @@ function connectButtonText(): string {
     <UpdateSnackbar v-model="vhApp.data.uiState.showUpdateSnackbar" />
     <UserReviewDialog v-model="isShowUserReview" />
     <badge-dialog v-model="badgeDialogModel.isVisible" />
+    <sign-in-dialog v-if="vhApp.data.isTvUi" v-model="signInDialogModel.isVisible" @sign-in-on-phone="onSignInOnPhone()" />
     <developer-dialog v-model="vhApp.data.uiState.isShowDeveloperDialog" />
 
   </v-sheet>
@@ -221,7 +270,7 @@ function connectButtonText(): string {
 <!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style scoped>
 #homeContainer {
-  background: url("@/assets/images/body-bg.png"),
+  background: url("/assets/images/body-bg.png"),
     linear-gradient(rgb(var(--v-theme-home-bg-grad-1)), rgb(var(--v-theme-home-bg-grad-2))), no-repeat, center top, fixed;
   background-size: cover;
   position: relative;
@@ -245,12 +294,12 @@ function connectButtonText(): string {
 }
 
 #homeContainer:before {
-  background-image: url("@/assets/images/premium-bg-left.webp");
+  background-image: url("/assets/images/premium-bg-left.webp");
   background-position-x: left;
 }
 
 #homeContainer:after {
-  background-image: url("@/assets/images/premium-bg-right.webp");
+  background-image: url("/assets/images/premium-bg-right.webp");
   background-position-x: right;
 }
 
@@ -437,6 +486,7 @@ function connectButtonText(): string {
 #serverButton .v-btn__content,
 #excludeCountryButton .v-btn__content,
 #protocolButton .v-btn__content,
+#accountButton .v-btn__content,
 #settingsButton .v-btn__content {
   flex-grow: 1;
   justify-content: start;

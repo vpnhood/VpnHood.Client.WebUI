@@ -36,8 +36,10 @@ export class Util {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  // A file of the assets folder (src/assets/images), by its own name: the folder is served as
+  // it is - no hash, no inlining - and the same file is what the native UI reads from it.
   public static getAssetPath(fileName: string): string {
-    return new URL(`../assets/images/${fileName}`, import.meta.url).href;
+    return `/assets/images/${fileName}`;
   }
 
   public static protocolTitle(protocol: ChannelProtocol): string {

@@ -17,7 +17,7 @@ import {
   SessionSuppressType,
 } from '@/services/VpnHood.Client.Api';
 import { ClientApiFactory } from '@/services/ClientApiFactory';
-import { AppName, ComponentName, RemoteAccessHint } from '@/helpers/UiConstants';
+import { AppName, AuthProviderIds, ComponentName, RemoteAccessHint } from '@/helpers/UiConstants';
 import type { ShowErrorActions } from '@/helpers/ErrorHandler';
 import { ComponentRouteController } from '@/services/ComponentRouteController';
 import { reactive } from 'vue';
@@ -383,16 +383,10 @@ export class VpnHoodApp {
     await this.appClient.versionCheck();
   }
 
+  // The flag of a country, one PNG per ISO code in the assets folder (src/assets/flags).
   public getCountryFlag(countryCode: string | null | undefined): string {
-    try {
-      if (!countryCode || countryCode.trim() === '') {
-        return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href;
-      }
-      return new URL(`../assets/images/country_flags/${countryCode.toLowerCase()}.png`, import.meta.url).href;
-    } catch (error: unknown) {
-      console.log(error);
-      return new URL(`../assets/images/country_flags/no-flag.png`, import.meta.url).href;
-    }
+    const code = countryCode?.trim().toLowerCase();
+    return `/assets/flags/${code ? code : 'no-flag'}.png`;
   }
 
   public isActiveClientProfile(clientProfileId: string): boolean {
@@ -509,11 +503,36 @@ export class VpnHoodApp {
   // credential form, deliberately never the primary: it is appended by the provider, so the first
   // method that is not "password" is the store one.
   public primaryProviderId(): string | undefined {
-    return this.data.features.authProviderIds.find((x) => x !== 'password');
+    return this.data.features.authProviderIds.find((x) => x !== AuthProviderIds.Password);
+  }
+
+  // Whether a tap on Sign in needs the chooser dialog: more than one way in (a store method beside
+  // the account website's password), or password alone, which vhApp.signIn() cannot take.
+  public hasSignInChoice(): boolean {
+    const ids = this.data.features.authProviderIds;
+    return ids.length > 1 || ids[0] === AuthProviderIds.Password;
+  }
+
+  // Runs a step whose UI belongs to the device the app is on: the store's sign-in, its payment
+  // sheet, its restore, the in-app review prompt. On the device itself nothing changes. Asked from
+  // a browser that manages a TV over the network, the sheet opens on the TV, not in the browser,
+  // so the browser says where to look and waits; the call returns when the TV is done, or when
+  // the person cancels there, and the notice goes with it.
+  public async withContinueOnTv<T>(work: () => Promise<T>): Promise<T> {
+    if (!this.data.isManagingTv)
+      return work();
+
+    this.data.uiState.showContinueOnTvDialog = true;
+    try {
+      return await work();
+    } finally {
+      this.data.uiState.showContinueOnTvDialog = false;
+    }
   }
 
   public async signIn(onPurchase = false): Promise<void> {
-    this.data.uiState.showLoadingDialog = true;
+    // the spinner, unless the notice that the sign-in is on the TV takes its place
+    this.data.uiState.showLoadingDialog = !this.data.isManagingTv;
     try {
       const accountClient = ClientApiFactory.instance.createAccountClient();
       // The method id comes from the API (self-declared by the app's auth provider — free-form
@@ -522,7 +541,7 @@ export class VpnHoodApp {
       const providerId = this.primaryProviderId();
       if (!providerId)
         throw new Error('This build reports no sign-in method.');
-      await accountClient.signIn(new SignInOptions({ providerId: providerId }));
+      await this.withContinueOnTv(() => accountClient.signIn(new SignInOptions({ providerId: providerId })));
       await this.afterSignedIn(onPurchase);
     } catch (err: unknown) {
       if (!(err instanceof ApiException)) throw err;

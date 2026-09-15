@@ -237,6 +237,10 @@ FodyWeavers.xsd
 # a version, and committing it would conflict on every build.
 /.local-build-number
 
+# The icon font of the assets folder is generated on every build and dev start by
+# build/icon-font-plugin.ts (a subset of @mdi/font), never committed.
+/src/assets/fonts/MaterialDesignIcons.ttf
+
 # nuget project build output
 nuget/**/bin/
 nuget/**/obj/

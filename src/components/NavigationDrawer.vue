@@ -25,9 +25,7 @@ const showSignInDialog = ref(false);
 // Only an identity provider can be signed into directly — vhApp.signIn() asks for a primary provider
 // and password is deliberately not one, so a password-only build that skipped the dialog could never
 // sign in at all.
-const hasSignInChoice = computed(() =>
-  vhApp.data.features.authProviderIds.length > 1 ||
-  vhApp.data.features.authProviderIds[0] === 'password');
+const hasSignInChoice = computed(() => vhApp.hasSignInChoice());
 const signInLabelKey = computed(() => {
   const providerId = vhApp.data.features.authProviderIds[0];
   if (!providerId || hasSignInChoice.value) return 'SIGN_IN';
