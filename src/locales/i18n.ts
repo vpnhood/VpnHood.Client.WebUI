@@ -1,30 +1,15 @@
 import { createI18n } from 'vue-i18n';
 import type { I18nOptions } from 'vue-i18n';
-import en from './en.json';
+import { availableLocales } from 'virtual:vh-locales';
 
-interface MessageModule {
-  default: Record<string, string>;
-}
-
-// A glob WITHOUT `eager` yields the paths at build time but leaves each JSON in its own chunk, so a
-// user downloads their own language instead of all of them. English is imported directly because it
-// is the fallback locale and must be present before anything renders.
-const messageLoaders = import.meta.glob<MessageModule>('./*.json');
-
-function localeCodeOf(path: string): string {
-  const matched = path.match(/([A-Za-z0-9-_]+)\./i);
-  if (!matched) throw new Error(`Could not read a locale code from '${path}'.`);
-
-  return matched[1];
-}
-
-// Every locale this SPA ships, known without loading any of them. VpnHoodApp reports this list to
-// the backend before a language has been chosen, so it cannot be derived from the loaded messages.
-export const availableLocales: string[] = Object.keys(messageLoaders).map(localeCodeOf);
+// Every locale the assets folder ships, known at build time without loading any of them
+// (build/assets-folder-plugin.ts). VpnHoodApp reports this list to the backend before a language
+// has been chosen, so it cannot be derived from the loaded messages.
+export { availableLocales };
 
 // Typed as I18nOptions['messages'] rather than left to inference: a concrete object would narrow
-// the instance's locale type to 'en' and then reject every language loaded later.
-const messages: I18nOptions['messages'] = { en };
+// the instance's locale type and then reject every language loaded later.
+const messages: I18nOptions['messages'] = {};
 
 const i18n = createI18n({
   legacy: false,
@@ -34,15 +19,17 @@ const i18n = createI18n({
   messages
 });
 
-// Pulls one locale's chunk in and registers it. Await this before activating the locale, otherwise
-// the UI renders in the fallback language instead.
+// Reads one locale's file from the assets folder and registers it, so a user downloads their own
+// language and no other. Await this before activating the locale, otherwise the UI renders in the
+// fallback language instead - and load 'en' before anything renders: it is the fallback.
 export async function loadLocale(code: string): Promise<void> {
   if (i18n.global.availableLocales.includes(code)) return;
+  if (!availableLocales.includes(code)) throw new Error(`No locale file is shipped for '${code}'.`);
 
-  const loader = messageLoaders[`./${code}.json`];
-  if (!loader) throw new Error(`No message bundle is shipped for the locale '${code}'.`);
+  const response = await fetch(`/assets/locales/${code}.json`);
+  if (!response.ok) throw new Error(`The locale file for '${code}' could not be read: HTTP ${response.status}.`);
 
-  i18n.global.setLocaleMessage(code, (await loader()).default);
+  i18n.global.setLocaleMessage(code, await response.json());
 }
 
 export default i18n;
