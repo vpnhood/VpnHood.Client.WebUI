@@ -65,7 +65,7 @@ function openDebugDialog() {
         @click="openDebugDialog()"
       >
         <span :class="{ 'text-white opacity-40': !isDebugDataHasValue }">
-          {{ locale('ABBREVIATION_VERSION') + ' ' + vhApp.getAppVersion(false) }}
+          {{ 'v' + vhApp.getAppVersion(false) }}
         </span>
       </v-chip>
     </v-col>
