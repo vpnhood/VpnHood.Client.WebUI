@@ -59,8 +59,13 @@ if (!(Test-Path $indexHtml)) {
 }
 
 New-Item -ItemType Directory -Path (Split-Path -Parent $spaZipFile) -Force | Out-Null;
-# NoCompression: the app extracts this on every version change; the assets are already compressed.
-Compress-Archive -Path "$distDir/*" -DestinationPath $spaZipFile -CompressionLevel NoCompression -Force;
+# Without dist/assets: the images, flags, fonts, locales and documents are the content package's
+# (VpnHood.AppLib.Assets in the VpnHood repo, which _sync-assets.ps1 fills from dist/assets), and the
+# app's web server serves them to this SPA at /assets/ from there - one copy on the device for every
+# UI. What is left is the SPA's own bundle, index.html, the branding and the upgrade page: text that
+# compresses 5:1, so Optimal, where NoCompression once fit a folder of already-compressed images.
+$zipItems = Get-ChildItem $distDir | Where-Object { $_.Name -ne "assets" } | ForEach-Object { $_.FullName };
+Compress-Archive -Path $zipItems -DestinationPath $spaZipFile -CompressionLevel Optimal -Force;
 
 $sizeMb = [math]::Round((Get-Item $spaZipFile).Length / 1MB, 1);
 Write-Host "SPA bundle written: $spaZipFile ($sizeMb MB)" -ForegroundColor Green;
