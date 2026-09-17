@@ -448,7 +448,16 @@ export class VpnHoodApp {
   // opens it - the home Settings button, and the places whose job cannot be done with a remote,
   // which pass a hint saying where on the phone to go next. Shown through the route for the same
   // reason as the open-on-phone dialog: the history entry is what lets Back close it.
+  // False when this build runs no listener a phone could reach: the three remote-access calls
+  // throw then, so nothing may offer the screen. Every head that serves this SPA has one, so it
+  // guards a head added later rather than one shipping today.
+  public isRemoteAccessSupported(): boolean {
+    return this.data.features.isRemoteAccessSupported;
+  }
+
   public showRemoteAccessDialog(hint: RemoteAccessHint | null = null): void {
+    if (!this.isRemoteAccessSupported())
+      return;
     this.data.uiState.remoteAccessDialogState.hint = hint;
     this.remoteAccessDialogModel.show(true).then();
   }

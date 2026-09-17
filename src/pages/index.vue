@@ -239,7 +239,7 @@ function connectButtonText(): string {
              controls and the one path the remote walks, and on a TV "Settings" means managing the
              app from a phone, which the value line says. Phone and desktop keep the drawer icon. -->
         <home-config-btn
-          v-if="vhApp.data.isTvUi"
+          v-if="vhApp.data.isTvUi && vhApp.isRemoteAccessSupported()"
           id="settingsButton"
           prepend-icon="mdi-cog"
           tabindex="10"
