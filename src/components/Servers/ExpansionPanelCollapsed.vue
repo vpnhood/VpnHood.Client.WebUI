@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { type ClientProfileInfo, ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { type ClientProfileInfo, ServerLocationItem } from '@/services/VpnHood.Client.Api';
 import { Util } from '@/helpers/Util';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 import { UiConstants } from '@/helpers/UiConstants';
@@ -10,7 +10,7 @@ const props = defineProps<{
   clientProfileInfo: ClientProfileInfo,
 }>()
 
-function isShowFlagOnCollapseState(serverLocationInfo: ClientServerLocationInfo, index: number): boolean{
+function isShowFlagOnCollapseState(serverLocationInfo: ServerLocationItem, index: number): boolean{
   return !serverLocationInfo.isNestedCountry
     && !vhApp.data.isLocationAutoSelected(serverLocationInfo.countryCode)
     && index <= UiConstants.locationNumberOnCollapsedProfile;

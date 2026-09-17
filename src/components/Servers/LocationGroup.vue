@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import LocationListItem from '@/components/Servers/LocationListItem.vue';
-import type { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import type { ServerLocationItem } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp';
 
 const vhApp = VpnHoodApp.instance;
@@ -8,7 +8,7 @@ const componentProps = defineProps<{
   listType: string,
   groupTitle: string,
   clientProfileId: string,
-  locationList: ClientServerLocationInfo[],
+  locationList: ServerLocationItem[],
   isPremiumLocationSelected: boolean
 }>();
 </script>

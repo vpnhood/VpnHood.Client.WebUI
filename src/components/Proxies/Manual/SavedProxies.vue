@@ -7,7 +7,6 @@ import {
   AppConnectionState,
   type AppProxyEndPointInfo,
   ProxyEndPoint,
-  ProxyEndPointInfo,
   type ProxyEndPointStatus,
   ProxyProtocol
 } from '@/services/VpnHood.Client.Api';
@@ -172,7 +171,7 @@ function addProxy(): void {
   addOrEditSheetType.value = ProxySheetType.Add;
   showAddOrEditSheet.value.show();
 }
-function editProxy(selectedProxyEndPoint: ProxyEndPointInfo): void {
+function editProxy(selectedProxyEndPoint: AppProxyEndPointInfo): void {
   proxyStatus.value = selectedProxyEndPoint.status;
   proxyEndPoint.value =  selectedProxyEndPoint.endPoint;
   addOrEditSheetType.value = ProxySheetType.Edit;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Util } from '@/helpers/Util'
-import { ClientServerLocationInfo } from '@/services/VpnHood.Client.Api';
+import { ServerLocationItem } from '@/services/VpnHood.Client.Api';
 import { VpnHoodApp } from '@/services/VpnHoodApp'
 import i18n from '@/locales/i18n'
 import { ConnectManager } from '@/helpers/ConnectManager';
@@ -11,12 +11,12 @@ const locale = i18n.global.t;
 
 const props = defineProps<{
   clientProfileId: string,
-  locationsList: ClientServerLocationInfo[],
+  locationsList: ServerLocationItem[],
   isPremiumGroup: boolean,
   isPremiumLocationSelected: boolean,
 }>();
 
-function internalConnect(location: ClientServerLocationInfo): void {
+function internalConnect(location: ServerLocationItem): void {
   if (!vhApp.isConnectApp() && Util.isSingleLocation(props.locationsList.length))
     return;
 
@@ -28,7 +28,7 @@ function internalConnect(location: ClientServerLocationInfo): void {
 
   ConnectManager.connectWithLocation({clientProfileId: props.clientProfileId, serverLocation: location.serverLocation, isPremiumLocation: props.isPremiumGroup, isDiagnose: false});
 }
-function isActiveItem(location: ClientServerLocationInfo): boolean{
+function isActiveItem(location: ServerLocationItem): boolean{
   // This situation happened in the Client app
   if (!vhApp.isActiveClientProfile(props.clientProfileId))
     return false;

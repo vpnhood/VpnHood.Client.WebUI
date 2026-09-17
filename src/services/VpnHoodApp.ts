@@ -218,38 +218,38 @@ export class VpnHoodApp {
   }
 
   private async reloadSettings(): Promise<void> {
-    const config = await this.appClient.getConfig();
+    const appInfo = await this.appClient.getInfo();
 
     // Publish only real changes, per field — same reasoning as in reloadState. A save bumps
     // configTime, which lands here on the next poll; the fetched settings then equal what the UI
     // already shows, and republishing them re-rendered every settings reader right after each save.
-    if (JSON.stringify(config.features) !== JSON.stringify(this.data.features))
-      this.data.features = config.features;
+    if (JSON.stringify(appInfo.features) !== JSON.stringify(this.data.features))
+      this.data.features = appInfo.features;
     
-    const userSettingsJson = JSON.stringify(config.userSettings);
+    const userSettingsJson = JSON.stringify(appInfo.userSettings);
     if (userSettingsJson !== JSON.stringify(this.data.userSettings))
-      this.data.userSettings = config.userSettings;
+      this.data.userSettings = appInfo.userSettings;
     // Either way the fetch is the persisted truth, so it is what saveUserSetting diffs against.
     // The clientProfileId repairs below stay after this line on purpose: they change local
     // settings, and the stale snapshot is what makes the next saveUserSetting persist them.
     this.lastSavedUserSettingsJson = userSettingsJson;
 
     // Remove the built-in client profile if the user is premium
-    if (JSON.stringify(config.clientProfileInfos) !== JSON.stringify(this.data.clientProfileInfos))
-      this.data.clientProfileInfos = config.clientProfileInfos;
+    if (JSON.stringify(appInfo.clientProfileInfos) !== JSON.stringify(this.data.clientProfileInfos))
+      this.data.clientProfileInfos = appInfo.clientProfileInfos;
 
     // userSettings just came back from the backend, so this is the one place that sees every change
     // to the analytics consent flag regardless of which page made it.
     await this.syncAnalyticsConsent();
 
-    if (config.clientProfileInfos.length === 0) this.data.userSettings.clientProfileId = null;
+    if (appInfo.clientProfileInfos.length === 0) this.data.userSettings.clientProfileId = null;
 
     // select first profile if the current selected profile is not exist anymore after reload
     if (
       this.data.userSettings.clientProfileId &&
-      !config.clientProfileInfos.some((p) => p.clientProfileId === this.data.userSettings.clientProfileId)
+      !appInfo.clientProfileInfos.some((p) => p.clientProfileId === this.data.userSettings.clientProfileId)
     )
-      this.data.userSettings.clientProfileId = config.clientProfileInfos[0]?.clientProfileId ?? null;
+      this.data.userSettings.clientProfileId = appInfo.clientProfileInfos[0]?.clientProfileId ?? null;
   }
 
   public async connect(connectParams: ConnectParams): Promise<void> {
